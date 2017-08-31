@@ -48,7 +48,7 @@
     "test": "npm run clean && BABEL_ENV=coverage karma start karma.conf.js --single-run",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "test:watch": "karma start karma.conf.js",
-    "lint": "eslint --ext js,html,md example-templates/ examples/ src/ spec/",
+    "lint": "eslint --ext js,html,md example-templates/ examples/ src/",
     "start": "webpack-dev-server --config webpack.examples.config.js --content-base ./build/ --hot",
     "build:examples": "node tasks/build-examples.js",
     "build:docs": "jsdoc --package ./package.json --readme ./README.md -c .jsdoc",

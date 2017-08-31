@@ -1,5 +1,6 @@
+/*eslint-env mocha*/
 import expect from 'expect.js';
-import MapBuilder from '../../src/Map/MapBuilder';
+import MapBuilder from './MapBuilder';
 import Map from 'ol/map';
 
 describe('MapBuilder', () => {
