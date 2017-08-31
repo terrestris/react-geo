@@ -1,0 +1,23 @@
+.btn-toggle {
+  :disabled, :focus {
+    color: #fff;
+    background-color: @primary-color;
+    border-color: @primary-color;
+  }
+}
+
+button.btn-pressed {
+  color: @primary-color;
+  background-color: @component-background;
+  border-color: darken(@component-background, 10);
+
+  &:hover, &:focus {
+    color: lighten(@primary-color, 20);
+    background-color: @component-background;
+    border-color: darken(@component-background, 10);
+  }
+
+  &:focus {
+    color: @primary-color;
+  }
+}

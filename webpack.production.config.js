@@ -3,6 +3,11 @@ const webpack = require('webpack');
 
 commonConfig.devtool = 'cheap-module-source-map';
 commonConfig.plugins = [
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify('production')
+    }
+  }),
   new webpack.optimize.UglifyJsPlugin({
     sourceMap: 'source-map',
     mangle: true,
