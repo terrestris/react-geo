@@ -1,4 +1,4 @@
-# react-geo
+# react-geo :runner:
 
 [![Build Status](https://travis-ci.org/terrestris/react-geo.svg?branch=master)](https://travis-ci.org/terrestris/react-geo)
 [![Coverage Status](https://coveralls.io/repos/github/terrestris/react-geo/badge.svg?branch=master)](https://coveralls.io/github/terrestris/react-geo?branch=master)
