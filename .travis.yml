@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+- node
+before_install:
+- npm install -g greenkeeper-lockfile@1
+before_script:
+- greenkeeper-lockfile-update
+script:
+- npm test -- --browsers PhantomJS
+after_script:
+- greenkeeper-lockfile-upload
+after_success:
+- npm run-script coveralls
+cache:
+  directories:
+  - node_modules
+env:
+  global:
+    secure: 0KhGiEEwX3VFDn0v4Crlf+TIy1dyfuKMxM9wdArrV1Z49m3640C1VQkN19/wSruHHXDCfPV+BOfciiGvXuNqQt41Ssd0VUdRvu7jhh9DRWxNiXRagCnnEfF0sGndekQCWNAm3+8az1HbgXTDoV9lgxP2TIrx4lin1fV9VFvvaEE8IZcHDNM/Bi/QDRiQzErxxiIxZ7WuIB+L1l7DZ/pb0FVYb+s38O6Y4byapvY8/iUOsvrKzx1aepn7RLisr24LqHHxswrJDo810K05trt9XvVN+BaxJ8miKmcbBuhL8Egr8FKsJzH8iaIG1sanMyyurKnalEPzQOFYCKl2ydLvh3O8CcOq/LVdSMZtJShReeYMtPTUdKB+kWAuY0JUfcjVMeKM8Bkvpe+C61HRWBZoc1z71ItBDROaGvCygi57YBkZNEjPI+JkX9Wzc+Fdvjh4v3FZpnze5ndPr/mpvXLYZGo8luw9o3Mra2DIg7yVL0aYFIkmWSP3JOP4T44hHCswDRzZjFiJ7TiPwNwT3GzC2ti7tZYcaJ2xiiW3f1NXpgr1wNLmc1mIuFhDVDayEJO+QvU7m4IRWB36EmD5K83cbf4nxHUzhw3qd/R5Hq+Nez9Ybk5BT2q5aouAtHuKpZf8QlYq+2u/xs9sZkaZvHJ+14hrCLSRbSkRiv7yqWSgbjo=
