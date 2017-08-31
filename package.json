@@ -56,6 +56,8 @@
     "build": "npm run test && npm run build:examples && npm run build:docs && npm run build:js"
   },
   "dependencies": {
+    "lodash": "4.17.4",
+    "loglevel": "1.4.1",
     "ol": "4.3.2"
   },
   "devDependencies": {
@@ -89,7 +91,9 @@
     "minami": "1.2.3",
     "mocha": "3.5.0",
     "rimraf": "2.6.1",
+    "sinon": "3.2.1",
     "webpack": "3.5.5",
-    "webpack-dev-server": "2.7.1"
+    "webpack-dev-server": "2.7.1",
+    "whatwg-fetch": "2.0.3"
   }
 }
