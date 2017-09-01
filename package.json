@@ -56,7 +56,7 @@
     "build": "npm run test && npm run build:examples && npm run build:docs && npm run build:js"
   },
   "dependencies": {
-    "ol": "4.3.1"
+    "ol": "4.3.2"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
