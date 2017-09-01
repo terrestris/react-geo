@@ -1,6 +1,6 @@
 ---
 layout: index.html
-title: Sol examples
+title: Examples of components in react-geo package
 ---
 
 A list of all examples:

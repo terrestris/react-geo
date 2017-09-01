@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    sol: [
+    reactgeo: [
       './src/index.js'
     ]
   },
