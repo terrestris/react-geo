@@ -17,7 +17,6 @@ import Logger from './Logger';
  **/
 class CsrfUtil {
 
-
   /**
    * @static getContentFromMetaTagByName - Description
    *
