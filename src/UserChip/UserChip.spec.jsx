@@ -45,4 +45,14 @@ describe('<UserChip />', () => {
     expect(wrapper.find('ul.user-appinfo-menu').node).to.be(undefined);
   });
 
+  it('should pass style prop', () => {
+    const props = {
+      style: {
+        'backgroundColor': 'yellow'
+      }
+    };
+    const wrapper =TestUtils.mountComponent(UserChip, props);
+    expect(wrapper.find('div.userchip').node.style.backgroundColor).to.be('yellow');
+  });
+
 });

@@ -29,7 +29,13 @@ class UserChip extends React.Component {
      * The react element representing the user menu
      * @type {Element}
      */
-    userMenu: PropTypes.element
+    userMenu: PropTypes.element,
+
+    /**
+     * The style object
+     * @type {Element}
+     */
+    style: PropTypes.object
   }
 
   /**
@@ -75,7 +81,7 @@ class UserChip extends React.Component {
    * @return {type} Description
    */
   getUserMenu() {
-    return <div className="userchip">
+    return <div className="userchip" style={this.props.style}>
       <Avatar src={this.props.imageSrc} size="large" className="userimage"> {this.props.imageSrc ? '' : this.getInitials()} </Avatar>
       <span className="username">{this.props.userName}</span>
     </div>;
