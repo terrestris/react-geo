@@ -67,7 +67,7 @@
     "babel-plugin-istanbul": "4.1.4",
     "babel-preset-es2015": "6.24.1",
     "coveralls": "2.13.1",
-    "eslint": "4.5.0",
+    "eslint": "4.6.0",
     "eslint-plugin-html": "3.2.0",
     "eslint-plugin-markdown": "1.0.0-beta.7",
     "expect.js": "0.3.1",
