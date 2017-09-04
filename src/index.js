@@ -14,6 +14,7 @@ import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
 import UserChip from './UserChip/UserChip.jsx';
+import CircleMenu from './CircleMenu/CircleMenu.jsx';
 
 import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
 import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
@@ -29,6 +30,7 @@ import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/Visi
 import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent.jsx';
 
 export {
+  CircleMenu,
   SimpleButton,
   ToggleButton,
   ToggleGroup,
