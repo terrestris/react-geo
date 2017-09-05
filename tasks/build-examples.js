@@ -22,7 +22,7 @@ function fixImports(jsSource) {
 }
 
 /**
- * Determine the macthing key in the files object.
+ * Determine the matching key in the files object.
  *
  * @param {Object} files The object containing the files information.
  * @param {String} jsFilename The filename.
@@ -85,7 +85,7 @@ new Metalsmith('.')
   .use(augmentExamples)
   .use(markdown())
   .use(collections({
-    'Tutorials': {
+    'Examples': {
       // pattern: ['*.md', '!index.md'],
       sortBy: 'name'
     }
