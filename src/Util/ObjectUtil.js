@@ -22,28 +22,30 @@ class ObjectUtil {
    *     in the provided object.
    *
    * @param {String} queryKey The key to be searched.
-   * @param {Object} [queryObject] The object to be searched on. If not
-   *     provided the global application context (on root-level) will
-   *     be used.
+   * @param {Object} queryObject The object to be searched on
    *
    * @return {*} The target value or `undefined` if the given couldn't be
-   *     found.
+   *     found, or `false` on unexpected input, or an object if a path was
+   *     passed, from which we only could find a part, but not the most specific
+   *     one. TODO Harmonize return values
    */
   static getValue(queryKey, queryObject) {
     var queryMatch;
 
+    if (!isString(queryKey)) {
+      // TODO Replace with new logger after logger implementation
+      // Ext.Logger.error('Missing input parameter queryKey <String>!');
+      // TODO why don't we return undefined?
+      return false;
+    }
     if (!isObject(queryObject)) {
       // TODO Replace with new logger after logger implementation
       // Ext.Logger.error('Missing input parameter ' +
       //   'queryObject <Object>!');
+      // TODO why don't we return undefined?
       return false;
     }
 
-    if (!isString(queryKey)) {
-      // TODO Replace with new logger after logger implementation
-      // Ext.Logger.error('Missing input parameter queryKey <String>!');
-      return false;
-    }
 
     // if the queryKey contains backslashes we understand this as the
     // path in the object-hierarchy and will return the last matching
@@ -73,26 +75,29 @@ class ObjectUtil {
         return value;
       }
 
-      // if the value is an object, let's call ourself recursively
-      if (isObject(value)) {
-        queryMatch = this.getValue(queryKey, value);
-        if (queryMatch) {
-          return queryMatch;
-        }
-      }
-
+      // TODO MJ: I do not like this too much, see the appropriate test.
+      // I fear we can only reach this if the original key was not a path,
+      // right?
+      //
       // if the value is an array and the array contains an object as
       // well, let's call ourself recursively for this object
       if (isArray(value)) {
         for (var i = 0; i < value.length; i++) {
           var val = value[i];
           if (isObject(val)) {
-            queryMatch = this.getValue(
-              queryKey, val);
+            queryMatch = this.getValue(queryKey, val);
             if (queryMatch) {
               return queryMatch;
             }
           }
+        }
+      }
+
+      // if the value is an object, let's call ourself recursively
+      if (isObject(value)) {
+        queryMatch = this.getValue(queryKey, value);
+        if (queryMatch) {
+          return queryMatch;
         }
       }
     }
