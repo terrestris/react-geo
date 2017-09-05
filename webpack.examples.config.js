@@ -1,11 +1,11 @@
 const commonConfig = require('./webpack.common.config.js');
 
 commonConfig.entry = {
-  userChip: './examples/userChip.js'
+  UserChip: './src/UserChip/UserChip.example.jsx'
 };
 
 commonConfig.output = {
-  filename: '[name].js',
+  filename: '[name]/[name].js',
   path: __dirname + '/build/examples/'
 };
 
