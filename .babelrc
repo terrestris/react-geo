@@ -1,6 +1,8 @@
 {
   "presets": [
-    "es2015"
+    "es2015",
+    "stage-0",
+    "react"
   ],
   "env": {
     "coverage": {
@@ -14,5 +16,11 @@
         ]
       ]
     }
-  }
+  },
+  "plugins": [
+    ["import", {
+      "libraryName": "antd",
+      "style": "css"
+    }]
+  ]
 }

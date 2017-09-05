@@ -15,8 +15,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      './src/**/*.spec.js',
-      'node_modules/whatwg-fetch/fetch.js'
+      'node_modules/babel-polyfill/dist/polyfill.js',
+      'node_modules/whatwg-fetch/fetch.js',
+      './src/**/*.spec.js*'
     ],
 
     // list of files to exclude
@@ -26,7 +27,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/**/*.spec.js': ['webpack', 'sourcemap']
+      'src/**/*.spec.js*': ['webpack', 'sourcemap']
     },
 
     client: {
@@ -41,6 +42,12 @@ module.exports = function(config) {
       module: {
         // Reuse the same loaders as declared in webpack.config.js.
         loaders: require('./webpack.common.config.js').module.loaders,
+      },
+      externals: {
+        'react/addons': 'react',
+        'react/lib/ReactContext': 'react',
+        'react/lib/ExecutionEnvironment': 'react',
+        'react-addons-test-utils': 'react-dom'
       },
       watch: true
     },

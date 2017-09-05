@@ -7,7 +7,7 @@ import Logger from './Logger';
  * Some methods to access the csrf-token information served by spring security.
  *
  * The methods herein assume a certain HTML structure, which is easiest achieved
- * by including a markup like the following in your base HTML:
+ * by including a markup like the following in your base HTML file:
  *
  * <meta name="_csrf" content="${_csrf.token}" />
  * <meta name="_csrf_header" content="${_csrf.headerName}" />

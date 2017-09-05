@@ -1,9 +1,11 @@
 {
   "extends": [
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   "plugins": [
     "html",
+    "react",
     "markdown"
   ],
   "env": {

@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    sol: [
+    reactgeo: [
       './src/index.js'
     ]
   },
@@ -11,15 +11,28 @@ module.exports = {
     path: path.join(__dirname, 'build'),
     filename: '[name].js',
     // publicPath: '/build/', // mostly relevant for the webpack-debug server
-    library: 'Sol',
+    library: 'ReactGeo',
     libraryTarget: 'umd'
   },
 
   module: {
     loaders: [{
-      test: /\.js$/,
+      test: /\.jsx?$/,
       exclude: /node_modules/,
       loader: 'babel-loader'
+    }, {
+      test: /\.(less|css)$/,
+      loaders: [
+        'style-loader',
+        'css-loader',
+        'less-loader'
+      ]
+    }, {
+      test: /\.(jpe?g|png|gif|ico)$/i,
+      loaders: [
+        'file-loader?name=img/[name].[ext]',
+        'image-webpack-loader'
+      ]
     }]
   }
 };

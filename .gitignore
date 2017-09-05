@@ -9,8 +9,9 @@ node_modules
 # Optional npm cache directory
 .npm
 
-# Build folder
+# Build & dist folders
 build
+dist
 
 # Docs folder
 docs
