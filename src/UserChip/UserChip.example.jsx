@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import UserChip from '../src/UserChip/UserChip.jsx';
+import UserChip from './UserChip.jsx'; //@react-geo@
 
 render(
   <div>
