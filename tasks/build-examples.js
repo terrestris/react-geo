@@ -10,7 +10,7 @@ var destDir = path.join(__dirname, '..', 'build', 'examples');
 var tplDir = path.join(__dirname, '..', 'example-templates');
 
 /**
- * Fixes the import string in the example source to use 'react-gepo' instead of
+ * Fixes the import string in the example source to use 'react-geo' instead of
  * the path.
  *
  * @param {String} jsSource The source of the example.
