@@ -40,9 +40,7 @@ commonConfig.module = {
         publicPath: basePath
       }
     },
-    'image-webpack-loader',
-
-    ]
+    'image-webpack-loader']
   }, {
     test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
     loader: 'url-loader',
