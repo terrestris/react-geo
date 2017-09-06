@@ -28,12 +28,6 @@ describe('<ToggleButton />', () => {
     expect(wrapper).not.to.be(undefined);
   });
 
-  it('renders a span containing a default FA class', () => {
-    const wrapper = setup();
-    expect(wrapper.find('span').length).to.equal(1);
-    expect(wrapper.find('span.fa-hand-lizard-o').length).to.equal(1);
-  });
-
   it('allows to set some props', () => {
     const wrapper = setup();
 
