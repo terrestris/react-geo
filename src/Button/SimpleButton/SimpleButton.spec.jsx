@@ -1,0 +1,85 @@
+/*eslint-env mocha*/
+import React from 'react';
+import expect from 'expect.js';
+import { mount } from 'enzyme';
+import sinon from 'sinon';
+
+import SimpleButton from './SimpleButton.jsx';
+import Logger from '../../Util/Logger';
+
+describe('<SimpleButton />', () => {
+
+  /**
+   * Wraps the component.
+   *
+   * @return {Object} The wrapped component.
+   */
+  const setup = () => {
+    const wrapper = mount(<SimpleButton />);
+    return wrapper;
+  };
+
+  it('is defined', () => {
+    expect(SimpleButton).not.to.be(undefined);
+  });
+
+  it('can be rendered', () => {
+    const wrapper = setup();
+    expect(wrapper).not.to.be(undefined);
+  });
+
+  it('renders a span containing a default FA class', () => {
+    const wrapper = setup();
+    expect(wrapper.find('span').length).to.equal(1);
+    expect(wrapper.find('span.fa-hand-lizard-o').length).to.equal(1);
+  });
+
+  it('allows to set some props', () => {
+    const wrapper = setup();
+
+    wrapper.setProps({
+      type: 'secondary',
+      icon: 'bath',
+      shape: 'circle',
+      size: 'small',
+      disabled: true
+    });
+
+    expect(wrapper.props().type).to.equal('secondary');
+    expect(wrapper.props().icon).to.equal('bath');
+    expect(wrapper.props().shape).to.equal('circle');
+    expect(wrapper.props().size).to.equal('small');
+    expect(wrapper.props().disabled).to.equal(true);
+
+    expect(wrapper.find('button.ant-btn-secondary').length).to.equal(1);
+    expect(wrapper.find('span.fa-bath').length).to.equal(1);
+    expect(wrapper.find('button.ant-btn-circle').length).to.equal(1);
+    expect(wrapper.find('button.ant-btn-sm').length).to.equal(1);
+    expect(wrapper.find({disabled: true}).length).to.equal(1);
+  });
+
+  it('warns if no click callback method is given', () => {
+    const wrapper = setup();
+    const logSpy = sinon.spy(Logger, 'debug');
+
+    wrapper.find('button').simulate('click');
+
+    expect(logSpy).to.have.property('callCount', 1);
+
+    Logger.debug.restore();
+  });
+
+  it('calls a given click callback method onClick', () => {
+    const wrapper = setup();
+    const onClick = sinon.spy();
+
+    wrapper.setProps({
+      onClick: onClick
+    });
+
+    wrapper.find('button').simulate('click');
+
+    expect(onClick).to.have.property('callCount', 1);
+  });
+
+});

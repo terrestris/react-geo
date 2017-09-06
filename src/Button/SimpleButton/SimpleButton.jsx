@@ -6,7 +6,7 @@ import {
 } from 'antd';
 import { Icon } from 'react-fa';
 
-import Logger from '../../util/Logger';
+import Logger from '../../Util/Logger';
 
 /**
  * The SimpleButton.

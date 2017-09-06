@@ -7,7 +7,7 @@ import {
 import { Icon } from 'react-fa';
 import { isFunction } from 'lodash';
 
-import Logger from '../../util/Logger';
+import Logger from '../../Util/Logger';
 
 /**
  * The ToggleButton.
