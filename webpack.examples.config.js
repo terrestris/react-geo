@@ -8,6 +8,8 @@ commonConfig.entry = {
   'Button/ToggleGroup/ToggleGroup': './src/Button/ToggleGroup/ToggleGroup.example.jsx',
   'Toolbar/Toolbar': './src/Toolbar/Toolbar.example.jsx',
   'UserChip/UserChip': './src/UserChip/UserChip.example.jsx',
+  'Map/FloatingMapLogo/FloatingMapLogo': './src/Map/FloatingMapLogo/FloatingMapLogo.example.jsx',
+  'Map/ScaleCombo/ScaleCombo': './src/Map/ScaleCombo/ScaleCombo.example.jsx',
   'VisibleComponent/VisibleComponent': './src/VisibleComponent/VisibleComponent.example.jsx'
 };
 
