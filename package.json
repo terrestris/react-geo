@@ -51,7 +51,7 @@
     "test:watch": "karma start karma.conf.js",
     "lint": "eslint --ext js,html,md example-templates/ examples/ src/",
     "start": "webpack-dev-server --config webpack.examples.config.js --content-base ./build/ --hot",
-    "build:examples": "rimraf ./build/examples/* && node tasks/build-examples.js && webpack --config webpack.examples.config.js",
+    "build:examples": "rimraf ./build/examples/* && node tasks/build-examples.js && webpack -p --config webpack.examples.config.js",
     "build:docs": "jsdoc --package ./package.json --readme ./README.md -c .jsdoc",
     "build:js": "webpack --config webpack.development.config.js && webpack -p --config webpack.production.config.js",
     "build:dist": "BABEL_ENV=build babel src -d dist",
