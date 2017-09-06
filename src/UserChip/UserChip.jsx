@@ -33,7 +33,7 @@ class UserChip extends React.Component {
 
     /**
      * The style object
-     * @type {Element}
+     * @type {Object}
      */
     style: PropTypes.object
   }
