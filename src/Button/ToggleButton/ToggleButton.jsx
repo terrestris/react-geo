@@ -9,6 +9,8 @@ import { isFunction } from 'lodash';
 
 import Logger from '../../Util/Logger';
 
+import './ToggleButton.less';
+
 /**
  * The ToggleButton.
  *
@@ -43,7 +45,7 @@ class ToggleButton extends React.Component {
    */
   static defaultProps = {
     type: 'primary',
-    icon: 'hand-lizard-o',
+    icon: '',
     shape: 'circle',
     size: 'default',
     disabled: false,
@@ -124,7 +126,8 @@ class ToggleButton extends React.Component {
    * The render function.
    */
   render() {
-    const pressedClass = this.state.pressed ? this.toggleClass : '';
+    const pressedClass = this.state.pressed ? ' ' + this.toggleClass : '';
+    const className = this.props.className ? ' ' + this.props.className : '';
     const iconName = this.state.pressed
       ? this.props.pressedIcon || this.props.icon
       : this.props.icon;
@@ -140,7 +143,7 @@ class ToggleButton extends React.Component {
           size={this.props.size}
           disabled={this.props.disabled}
           onClick={this.onClick}
-          className={`btn-toggle ${pressedClass} ${this.props.className}`}
+          className={`btn-toggle${pressedClass}${className}`}
         >
           <Icon
             name={iconName}

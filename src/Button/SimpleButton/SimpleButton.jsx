@@ -8,6 +8,8 @@ import { Icon } from 'react-fa';
 
 import Logger from '../../Util/Logger';
 
+import './SimpleButton.less';
+
 /**
  * The SimpleButton.
  *
@@ -37,7 +39,7 @@ class SimpleButton extends React.Component {
    */
   static defaultProps = {
     type: 'primary',
-    icon: 'hand-lizard-o',
+    icon: '',
     shape: 'circle',
     size: 'default',
     disabled: false

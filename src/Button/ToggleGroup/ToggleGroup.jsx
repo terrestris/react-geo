@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isFunction } from 'lodash';
 
+import './ToggleGroup.less';
+
 /**
  * A group for toggle components (e.g. buttons)
  *
