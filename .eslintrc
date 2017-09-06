@@ -15,7 +15,8 @@
   "parser": "babel-eslint",
   "globals": {
     "ol": false,
-    "Promise": false
+    "Promise": false,
+    "__EXAMPLE_MAP__": true
   },
   "rules": {
     "indent": ["error", 2, { "SwitchCase": 1 }],

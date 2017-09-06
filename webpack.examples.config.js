@@ -8,6 +8,8 @@ commonConfig.entry = {
   'Button/ToggleGroup/ToggleGroup': './src/Button/ToggleGroup/ToggleGroup.example.jsx',
   'Toolbar/Toolbar': './src/Toolbar/Toolbar.example.jsx',
   'UserChip/UserChip': './src/UserChip/UserChip.example.jsx',
+  'Map/FloatingMapLogo/FloatingMapLogo': './src/Map/FloatingMapLogo/FloatingMapLogo.example.jsx',
+  'Map/ScaleCombo/ScaleCombo': './src/Map/ScaleCombo/ScaleCombo.example.jsx',
   'VisibleComponent/VisibleComponent': './src/VisibleComponent/VisibleComponent.example.jsx'
 };
 
@@ -30,10 +32,15 @@ commonConfig.module = {
     ]
   }, {
     test: /\.(jpe?g|png|gif|ico)$/i,
-    loaders: [
-      'file-loader?name=img/[name].[ext]',
-      'image-webpack-loader'
-    ]
+    loaders: [{
+      loader: 'file-loader?name=img/[name].[ext]',
+      options: {
+        outputPath: 'resources/',
+        name: '[hash].[ext]',
+        publicPath: basePath
+      }
+    },
+    'image-webpack-loader']
   }, {
     test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
     loader: 'url-loader',
