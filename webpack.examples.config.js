@@ -32,9 +32,16 @@ commonConfig.module = {
     ]
   }, {
     test: /\.(jpe?g|png|gif|ico)$/i,
-    loaders: [
-      'file-loader?name=img/[name].[ext]',
-      'image-webpack-loader'
+    loaders: [{
+      loader: 'file-loader?name=img/[name].[ext]',
+      options: {
+        outputPath: 'resources/',
+        name: '[hash].[ext]',
+        publicPath: basePath
+      }
+    },
+    'image-webpack-loader',
+
     ]
   }, {
     test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
