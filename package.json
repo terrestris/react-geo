@@ -54,7 +54,8 @@
     "build:examples": "rimraf ./build/examples/* && node tasks/build-examples.js && webpack --config webpack.examples.config.js",
     "build:docs": "jsdoc --package ./package.json --readme ./README.md -c .jsdoc",
     "build:js": "webpack --config webpack.development.config.js && webpack -p --config webpack.production.config.js",
-    "build": "npm run clean && BABEL_ENV=build babel src -d dist"
+    "build:dist": "BABEL_ENV=build babel src -d dist",
+    "build": "npm run test && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
   },
   "dependencies": {
     "antd": "2.12.8",
