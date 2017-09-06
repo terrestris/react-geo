@@ -1,6 +1,6 @@
 {
   "name": "react-geo",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "A set of geo related modules. To use in combination with react, antd and ol.",
   "license": "BSD-2-Clause",
   "author": "terrestris GmbH & Co. KG <info@terrestris.de>",
@@ -39,6 +39,7 @@
     "type": "git",
     "url": "https://github.com/terrestris/react-geo.git"
   },
+  "main": "dist/index.js",
   "files": [
     "dist"
   ],
@@ -53,15 +54,18 @@
     "build:examples": "rimraf ./build/examples/* && node tasks/build-examples.js && webpack --config webpack.examples.config.js",
     "build:docs": "jsdoc --package ./package.json --readme ./README.md -c .jsdoc",
     "build:js": "webpack --config webpack.development.config.js && webpack -p --config webpack.production.config.js",
-    "build": "npm run test && npm run build:examples && npm run build:docs && npm run build:js"
+    "build:dist": "BABEL_ENV=build babel src -d dist",
+    "build": "npm run test && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
   },
   "dependencies": {
     "antd": "2.12.8",
     "lodash": "4.17.4",
     "loglevel": "1.4.1",
     "ol": "4.3.2",
+    "prop-types": "15.5.10",
     "react": "15.6.1",
-    "react-dom": "15.6.1"
+    "react-dom": "15.6.1",
+    "react-fa": "4.2.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -70,6 +74,7 @@
     "babel-loader": "7.1.2",
     "babel-plugin-import": "1.4.0",
     "babel-plugin-istanbul": "4.1.4",
+    "babel-plugin-transform-import-extension-jsx-to-js": "0.1.0",
     "babel-polyfill": "6.26.0",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-react": "6.24.1",
@@ -79,6 +84,7 @@
     "enzyme": "2.9.1",
     "eslint": "4.6.1",
     "eslint-plugin-html": "3.2.1",
+    "css-loader": "0.28.7",
     "eslint-plugin-markdown": "1.0.0-beta.7",
     "eslint-plugin-react": "7.3.0",
     "expect.js": "0.3.1",
@@ -109,6 +115,7 @@
     "rimraf": "2.6.1",
     "sinon": "3.2.1",
     "style-loader": "0.18.2",
+    "url-loader": "0.5.9",
     "webpack": "3.5.5",
     "webpack-dev-server": "2.7.1",
     "whatwg-fetch": "2.0.3"

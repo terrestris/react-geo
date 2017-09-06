@@ -5,6 +5,11 @@
     "react"
   ],
   "env": {
+    "build": {
+      "plugins": [
+        "babel-plugin-transform-import-extension-jsx-to-js"
+      ]
+    },
     "coverage": {
       "plugins": [
         [
