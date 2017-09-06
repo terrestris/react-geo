@@ -11,6 +11,7 @@ import Logger from '../Util/Logger';
  * in the state, it will be rendered, if not, it wont.
  *
  * @param {Component} WrappedComponent The component to wrap and enhance.
+ * @param {Object} options The options to apply.
  * @return {Component} The wrapped component.
  */
 export function isVisibleComponent(WrappedComponent, {
