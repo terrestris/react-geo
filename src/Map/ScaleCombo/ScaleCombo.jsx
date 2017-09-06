@@ -10,7 +10,7 @@ import MapUtils from '../../Util/MapUtil';
 /**
  * Class representating a scale combo to choose map scale via a dropdown menu.
  *
- * @class The FloatingMapLogo
+ * @class The ScaleCombo
  * @extends React.Component
  */
 class ScaleCombo extends React.Component {
@@ -72,41 +72,38 @@ class ScaleCombo extends React.Component {
 
     this.pushScaleOption = this.pushScaleOption.bind(this);
     this.getOptionsFromMap = this.getOptionsFromMap.bind(this);
-    this.getVal = this.getVal.bind(this);
+    this.determineOptionKeyForZoomLevel = this.determineOptionKeyForZoomLevel.bind(this);
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
     this.getInputElement = this.getInputElement.bind(this);
     this.componentWillMount = this.componentWillMount.bind(this);
 
     this.state = {
-      zoomLevel: props.zoomLevel
+      zoomLevel: props.zoomLevel,
+      scales: props.scales
     };
   }
 
   /**
-   * Unknown - Description
+   * @function pushScaleOption: Helper function to create a {@link Option} scale component
+   * based on a resolution and the {@link Ol.View}
    *
-   * @param {type} resolution Description
-   * @param {type} mv         Description
+   * @param {Number} resolution map cresolution to generate the option for
+   * @param {Ol.View} mv The map view
    *
-   * @return {type} Description
    */
   pushScaleOption = (resolution, mv) => {
     let scale = MapUtils.getScaleForResolution(resolution, mv.getProjection().getUnits());
     let roundScale = Math.round(scale);
     let option = <Option key={roundScale.toString()} value={roundScale.toString()}>1:{roundScale.toLocaleString()}</Option>;
-    this.props.scales.push(option);
+    this.state.scales.push(option);
   };
 
   /**
-   * Unknown - Description
-   *
-   * @param {type} resolution Description
-   * @param {type} mv         Description
-   *
-   * @return {type} Description
+   * @function getOptionsFromMap: Helper function generate {@link Option} scale components
+   * based on an existing instance of {@link Ol.Map}
    */
   getOptionsFromMap = () => {
-    if (!isEmpty(this.props.scales)) {
+    if (!isEmpty(this.state.scales)) {
       Logger.debug('Array with scales found. Returning');
       return;
     }
@@ -138,11 +135,11 @@ class ScaleCombo extends React.Component {
    *
    * @return {Element} Option element for provided zoom level
    */
-  getVal (zoom) {
-    if (!isNumber(zoom) || (this.props.scales.length - 1 - zoom) < 0) {
+  determineOptionKeyForZoomLevel (zoom) {
+    if (!isNumber(zoom) || (this.state.scales.length - 1 - zoom) < 0) {
       return undefined;
     }
-    return this.props.scales[this.props.scales.length - 1 - zoom].key;
+    return this.state.scales[this.state.scales.length - 1 - zoom].key;
   }
 
   /**
@@ -172,7 +169,7 @@ class ScaleCombo extends React.Component {
    * @return {type} Description
    */
   componentWillMount() {
-    if (isEmpty(this.props.scales) && this.props.map) {
+    if (isEmpty(this.state.scales) && this.props.map) {
       this.getOptionsFromMap();
     }
   }
@@ -193,12 +190,12 @@ class ScaleCombo extends React.Component {
           onChange={onZoomLevelSelect}
           getInputElement={this.getInputElement}
           filterOption={false}
-          value={this.getVal(this.state.zoomLevel)}
+          value={this.determineOptionKeyForZoomLevel(this.state.zoomLevel)}
           size="small"
           style={style}
           className = "scale-select"
         >
-          {this.props.scales}
+          {this.state.scales}
         </Select>
       </div>);
   }

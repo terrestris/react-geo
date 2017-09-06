@@ -93,9 +93,9 @@ describe('<ScaleCombo />', () => {
     });
   });
 
-  describe('#getVal', () => {
+  describe('#determineOptionKeyForZoomLevel', () => {
     it('is defined', () => {
-      expect(wrapper.instance().getVal).not.to.be(undefined);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel).not.to.be(undefined);
     });
 
     it('returns "undefied" for erronous zoom level or if exceeds number of valid zoom levels ', () => {
@@ -108,11 +108,11 @@ describe('<ScaleCombo />', () => {
         scales: scaleArray
       });
 
-      expect(wrapper.instance().getVal(undefined)).to.be(undefined);
-      expect(wrapper.instance().getVal(null)).to.be(undefined);
-      expect(wrapper.instance().getVal('foo')).to.be(undefined);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(undefined)).to.be(undefined);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(null)).to.be(undefined);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel('foo')).to.be(undefined);
 
-      expect(wrapper.instance().getVal(scaleArray.length)).to.be(undefined);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(scaleArray.length)).to.be(undefined);
     });
 
     it('returns matching key for zoom level', () => {
@@ -126,7 +126,7 @@ describe('<ScaleCombo />', () => {
       });
 
       const index = 1;
-      expect(wrapper.instance().getVal(index)).to.be(scaleArray[index].key);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(index)).to.be(scaleArray[index].key);
     });
 
   });
