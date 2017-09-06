@@ -6,7 +6,8 @@ commonConfig.entry = {
   'Button/ToggleButton/ToggleButton': './src/Button/ToggleButton/ToggleButton.example.jsx',
   'Button/ToggleGroup/ToggleGroup': './src/Button/ToggleGroup/ToggleGroup.example.jsx',
   'Toolbar/Toolbar': './src/Toolbar/Toolbar.example.jsx',
-  'UserChip/UserChip': './src/UserChip/UserChip.example.jsx'
+  'UserChip/UserChip': './src/UserChip/UserChip.example.jsx',
+  'VisibleComponent/VisibleComponent': './src/VisibleComponent/VisibleComponent.example.jsx'
 };
 
 commonConfig.output = {
@@ -52,5 +53,29 @@ commonConfig.module = {
     }
   }]
 };
+
+commonConfig.devtool = 'cheap-module-source-map';
+commonConfig.plugins = [
+  ...commonConfig.plugins || [],
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify('production')
+    }
+  }),
+  new webpack.optimize.UglifyJsPlugin({
+    sourceMap: 'source-map',
+    mangle: true,
+    compress: {
+      warnings: false,
+      pure_getters: true,
+      unsafe: true,
+      unsafe_comps: true,
+      screw_ie8: true
+    },
+    output: {
+      comments: false
+    }
+  })
+];
 
 module.exports = commonConfig;
