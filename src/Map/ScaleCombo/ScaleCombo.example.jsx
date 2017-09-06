@@ -30,6 +30,6 @@ var onZoomLevelSelect = (selectedScale) => {
 
 
 render(
-  <ScaleCombo onZoomLevelSelect={onZoomLevelSelect} map={__EXAMPLE_MAP__} style={{'margin': '1em', 'width': '300px'}} ref={ (instance) => {scaleCombo = instance;}}/>,
+  <ScaleCombo onZoomLevelSelect={onZoomLevelSelect} map={__EXAMPLE_MAP__} style={{'margin': '5px', 'width': '300px'}} ref={ (instance) => {scaleCombo = instance;}} />,
   document.getElementById('exampleContainerInMap')
 );
