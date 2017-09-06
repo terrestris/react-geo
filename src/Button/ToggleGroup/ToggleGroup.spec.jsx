@@ -1,35 +1,26 @@
 /*eslint-env mocha*/
 import React from 'react';
 import expect from 'expect.js';
-import { mount } from 'enzyme';
 import sinon from 'sinon';
 
-import ToggleGroup from './ToggleGroup.jsx';
+import TestUtils from '../../Util/TestUtils';
+
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
+import ToggleGroup from './ToggleGroup.jsx';
 
 describe('<ToggleGroup />', () => {
-
-  /**
-   * Wraps the component.
-   *
-   * @return {Object} The wrapped component.
-   */
-  const setup = (props, context) => {
-    const wrapper = mount(<ToggleGroup {...props} />, {context});
-    return wrapper;
-  };
 
   it('is defined', () => {
     expect(ToggleGroup).not.to.be(undefined);
   });
 
   it('can be rendered', () => {
-    const wrapper = setup();
+    const wrapper = TestUtils.mountComponent(ToggleGroup);
     expect(wrapper).not.to.be(undefined);
   });
 
   it('renders it\'s children horizontally or vertically', () => {
-    const wrapper = setup();
+    const wrapper = TestUtils.mountComponent(ToggleGroup);
 
     wrapper.setProps({
       orientation: 'vertical'
@@ -52,7 +43,7 @@ describe('<ToggleGroup />', () => {
         <ToggleButton key="3" name="香川 真司" />
       ]
     };
-    const wrapper = setup(props);
+    const wrapper = TestUtils.mountComponent(ToggleGroup, props);
 
     expect(wrapper.find(ToggleButton).length).to.equal(3);
   });
@@ -65,7 +56,7 @@ describe('<ToggleGroup />', () => {
         <ToggleButton key="1" name="Shinji" />
       ]
     };
-    const wrapper = setup(props);
+    const wrapper = TestUtils.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).simulate('click');
 
@@ -82,7 +73,7 @@ describe('<ToggleGroup />', () => {
         <ToggleButton key="3" name="香川 真司" />
       ]
     };
-    const wrapper = setup(props);
+    const wrapper = TestUtils.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).first().simulate('click');
     expect(wrapper.state().selectedName).to.equal('Shinji');
@@ -102,7 +93,7 @@ describe('<ToggleGroup />', () => {
         <ToggleButton key="3" name="香川 真司" />
       ]
     };
-    const wrapper = setup(props);
+    const wrapper = TestUtils.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).first().simulate('click');
     expect(wrapper.state().selectedName).to.equal('Shinji');

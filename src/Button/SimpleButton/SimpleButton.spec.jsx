@@ -1,35 +1,24 @@
 /*eslint-env mocha*/
-import React from 'react';
 import expect from 'expect.js';
-import { mount } from 'enzyme';
 import sinon from 'sinon';
 
-import SimpleButton from './SimpleButton.jsx';
+import TestUtils from '../../Util/TestUtils';
 import Logger from '../../Util/Logger';
 
+import SimpleButton from './SimpleButton.jsx';
+
 describe('<SimpleButton />', () => {
-
-  /**
-   * Wraps the component.
-   *
-   * @return {Object} The wrapped component.
-   */
-  const setup = () => {
-    const wrapper = mount(<SimpleButton />);
-    return wrapper;
-  };
-
   it('is defined', () => {
     expect(SimpleButton).not.to.be(undefined);
   });
 
   it('can be rendered', () => {
-    const wrapper = setup();
+    const wrapper = TestUtils.mountComponent(SimpleButton);
     expect(wrapper).not.to.be(undefined);
   });
 
   it('allows to set some props', () => {
-    const wrapper = setup();
+    const wrapper = TestUtils.mountComponent(SimpleButton);
 
     wrapper.setProps({
       type: 'secondary',
@@ -53,7 +42,7 @@ describe('<SimpleButton />', () => {
   });
 
   it('warns if no click callback method is given', () => {
-    const wrapper = setup();
+    const wrapper = TestUtils.mountComponent(SimpleButton);
     const logSpy = sinon.spy(Logger, 'debug');
 
     wrapper.find('button').simulate('click');
@@ -64,7 +53,7 @@ describe('<SimpleButton />', () => {
   });
 
   it('calls a given click callback method onClick', () => {
-    const wrapper = setup();
+    const wrapper = TestUtils.mountComponent(SimpleButton);
     const onClick = sinon.spy();
 
     wrapper.setProps({

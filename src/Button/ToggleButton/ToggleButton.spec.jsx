@@ -1,35 +1,25 @@
 /*eslint-env mocha*/
-import React from 'react';
 import expect from 'expect.js';
-import { mount } from 'enzyme';
 import sinon from 'sinon';
 
-import ToggleButton from './ToggleButton.jsx';
+import TestUtils from '../../Util/TestUtils';
 import Logger from '../../Util/Logger';
 
-describe('<ToggleButton />', () => {
+import ToggleButton from './ToggleButton.jsx';
 
-  /**
-   * Wraps the component.
-   *
-   * @return {Object} The wrapped component.
-   */
-  const setup = (props, context) => {
-    const wrapper = mount(<ToggleButton {...props} />, {context});
-    return wrapper;
-  };
+describe('<ToggleButton />', () => {
 
   it('is defined', () => {
     expect(ToggleButton).not.to.be(undefined);
   });
 
   it('can be rendered', () => {
-    const wrapper = setup();
+    const wrapper = TestUtils.mountComponent(ToggleButton);
     expect(wrapper).not.to.be(undefined);
   });
 
   it('allows to set some props', () => {
-    const wrapper = setup();
+    const wrapper = TestUtils.mountComponent(ToggleButton);
 
     wrapper.setProps({
       name: 'Shinji',
@@ -57,7 +47,7 @@ describe('<ToggleButton />', () => {
   });
 
   it('sets a pressed class if the pressed state becomes truthy', () => {
-    const wrapper = setup({
+    const wrapper = TestUtils.mountComponent(ToggleButton, {
       onToggle: () => {}
     });
     let toggleClass = wrapper.instance().toggleClass;
@@ -74,7 +64,7 @@ describe('<ToggleButton />', () => {
 
   it('warns if no toggle callback method is given', () => {
     const logSpy = sinon.spy(Logger, 'debug');
-    const wrapper = setup({
+    const wrapper = TestUtils.mountComponent(ToggleButton, {
       onToggle: () => {}
     });
 
@@ -93,7 +83,7 @@ describe('<ToggleButton />', () => {
       onToggle: onToggle
     };
 
-    const wrapper = setup(props);
+    const wrapper = TestUtils.mountComponent(ToggleButton, props);
 
     wrapper.setProps({
       pressed: true
@@ -103,7 +93,7 @@ describe('<ToggleButton />', () => {
   });
 
   it('changes the pressed state of the component on click (if standalone button)', () => {
-    const wrapper = setup();
+    const wrapper = TestUtils.mountComponent(ToggleButton);
 
     wrapper.find('button').simulate('click');
 
@@ -117,7 +107,7 @@ describe('<ToggleButton />', () => {
         onChange: onChangeSpy
       }
     };
-    const wrapper = setup(null, context);
+    const wrapper = TestUtils.mountComponent(ToggleButton, null, context);
 
     wrapper.find('button').simulate('click');
 
