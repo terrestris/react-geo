@@ -48,8 +48,8 @@ SRC_DIR=$TRAVIS_BUILD_DIR/build
 rm -Rf ./examples ./docs
 
 # copy the src dir from previous build folder
-cp -r $SRC_DIR/examples/* .
-cp -r $SRC_DIR/docs/* .
+cp -r $SRC_DIR/examples .
+cp -r $SRC_DIR/docs .
 
 git add .
 git commit -m "$GH_PAGES_COMMIT_MSG"

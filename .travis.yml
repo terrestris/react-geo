@@ -11,7 +11,7 @@ after_script:
 - greenkeeper-lockfile-upload
 after_success:
 - npm run-script coveralls
-- "./.ci/update-gh-pages.sh"
+- "./.ci/update-gh-pages.sh > /dev/null 2>&1"
 cache:
   directories:
   - node_modules
