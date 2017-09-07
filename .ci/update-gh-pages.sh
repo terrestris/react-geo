@@ -23,7 +23,7 @@ ORIGINAL_AUTHOR_EMAIL=$(git show -s --format="%ae" $TRAVIS_COMMIT)
 GH_PAGES_BRANCH=gh-pages
 GH_PAGES_REPO_FROM_SLUG="github.com/terrestris/react-geo.git"
 GH_PAGES_REPO="https://$GH_PAGES_REPO_FROM_SLUG"
-GH_PAGES_REPO_AUTHENTICATED="https://$GHTOKEN@$GH_PAGES_REPO_FROM_SLUG"
+GH_PAGES_REPO_AUTHENTICATED="https://$GH_TOKEN@$GH_PAGES_REPO_FROM_SLUG"
 GH_PAGES_DIR=/tmp/react-geo-gh-pages
 GH_PAGES_COMMIT_MSG=$(cat <<EOF
 Update resources on gh-pages branch
