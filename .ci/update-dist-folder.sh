@@ -36,6 +36,7 @@ git config --global user.email "$ORIGINAL_AUTHOR_EMAIL"
 
 cd $TRAVIS_BUILD_DIR
 
+git checkout $MASTER_BRANCH
 git add --force ./$DIST_DIR
 git commit -m "$COMMIT_MSG"
 git push --quiet $REPO_AUTHENTICATED $MASTER_BRANCH
