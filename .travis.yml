@@ -6,7 +6,7 @@ before_install:
 before_script:
 - greenkeeper-lockfile-update
 script:
-- npm test -- --browsers PhantomJS
+- npm run build
 after_script:
 - greenkeeper-lockfile-upload
 after_success:
