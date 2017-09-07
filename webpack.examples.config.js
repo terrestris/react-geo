@@ -6,10 +6,12 @@ commonConfig.entry = {
   'Button/SimpleButton/SimpleButton': './src/Button/SimpleButton/SimpleButton.example.jsx',
   'Button/ToggleButton/ToggleButton': './src/Button/ToggleButton/ToggleButton.example.jsx',
   'Button/ToggleGroup/ToggleGroup': './src/Button/ToggleGroup/ToggleGroup.example.jsx',
-  'Toolbar/Toolbar': './src/Toolbar/Toolbar.example.jsx',
-  'UserChip/UserChip': './src/UserChip/UserChip.example.jsx',
   'Map/FloatingMapLogo/FloatingMapLogo': './src/Map/FloatingMapLogo/FloatingMapLogo.example.jsx',
   'Map/ScaleCombo/ScaleCombo': './src/Map/ScaleCombo/ScaleCombo.example.jsx',
+  'Panel/Panel/Panel': './src/Panel/Panel/Panel.example.jsx',
+  'Panel/Titlebar/Titlebar': './src/Panel/Titlebar/Titlebar.example.jsx',
+  'Toolbar/Toolbar': './src/Toolbar/Toolbar.example.jsx',
+  'UserChip/UserChip': './src/UserChip/UserChip.example.jsx',
   'VisibleComponent/VisibleComponent': './src/VisibleComponent/VisibleComponent.example.jsx'
 };
 
@@ -62,28 +64,28 @@ commonConfig.module = {
   }]
 };
 
-commonConfig.devtool = 'cheap-module-source-map';
-commonConfig.plugins = [
-  ...commonConfig.plugins || [],
-  new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify('production')
-    }
-  }),
-  new webpack.optimize.UglifyJsPlugin({
-    sourceMap: 'source-map',
-    mangle: true,
-    compress: {
-      warnings: false,
-      pure_getters: true,
-      unsafe: true,
-      unsafe_comps: true,
-      screw_ie8: true
-    },
-    output: {
-      comments: false
-    }
-  })
-];
+// commonConfig.devtool = 'cheap-module-source-map';
+// commonConfig.plugins = [
+//   ...commonConfig.plugins || [],
+//   new webpack.DefinePlugin({
+//     'process.env': {
+//       NODE_ENV: JSON.stringify('production')
+//     }
+//   }),
+//   new webpack.optimize.UglifyJsPlugin({
+//     sourceMap: 'source-map',
+//     mangle: true,
+//     compress: {
+//       warnings: false,
+//       pure_getters: true,
+//       unsafe: true,
+//       unsafe_comps: true,
+//       screw_ie8: true
+//     },
+//     output: {
+//       comments: false
+//     }
+//   })
+// ];
 
 module.exports = commonConfig;

@@ -51,7 +51,7 @@
     "test:watch": "karma start karma.conf.js",
     "lint": "eslint --ext js,html,md example-templates/ examples/ src/",
     "start": "webpack-dev-server --config webpack.examples.config.js --content-base ./build/ --hot",
-    "build:examples": "rimraf ./build/examples/* && node tasks/build-examples.js && webpack -p --config webpack.examples.config.js",
+    "build:examples": "rimraf ./build/examples/* && node tasks/build-examples.js && webpack --config webpack.examples.config.js",
     "build:docs": "jsdoc --package ./package.json --readme ./README.md -c .jsdoc",
     "build:js": "webpack --config webpack.development.config.js && webpack -p --config webpack.production.config.js",
     "build:dist": "BABEL_ENV=build babel src --out-dir dist --copy-files --ignore spec.js,example.js,.md",
@@ -62,12 +62,15 @@
   },
   "dependencies": {
     "antd": "2.13.1",
+    "i18next": "9.0.0",
     "lodash": "4.17.4",
     "loglevel": "1.4.1",
     "ol": "4.3.2",
     "prop-types": "15.5.10",
     "react-dom": "15.6.1",
-    "react-fa": "4.2.0"
+    "react-fa": "4.2.0",
+    "react-i18next": "5.2.0",
+    "react-rnd": "5.1.2"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
