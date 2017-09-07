@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ToggleGroup example</title>
+  <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>/*global hljs*/ hljs.initHighlightingOnLoad();</script>
+</head>
+<style>
+.example-block {
+  padding: 20px;
+}
+.example-block > span {
+  margin-right: 10px;
+}
+</style>
+
+<body>
+  <h2>ToggleGroup example</h2>
+  <div id="exampleContainer" class="app"></div>
+  <p>This demonstrates the use of ToggleGroups.</p>
+
+  <pre>
+    <code class="javascript">import React from &#x27;react&#x27;;
+import { render } from &#x27;react-dom&#x27;;
+import ToggleGroup from &#x27;react-geo&#x27;;
+import ToggleButton from &#x27;react-geo&#x27;;
+
+render(
+  &lt;div&gt;
+    &lt;div className&#x3D;&quot;example-block&quot;&gt;
+      &lt;span&gt;Just a ToggleGroup:&lt;/span&gt;
+
+      &lt;ToggleGroup
+        allowDeselect&#x3D;{true}
+        selectedName&#x3D;&quot;one&quot;
+      &gt;
+        &lt;ToggleButton
+          name&#x3D;&quot;one&quot;
+          icon&#x3D;&quot;frown-o&quot;
+          pressedIcon&#x3D;&quot;smile-o&quot;
+        /&gt;
+        &lt;ToggleButton
+          name&#x3D;&quot;two&quot;
+          icon&#x3D;&quot;smile-o&quot;
+          pressedIcon&#x3D;&quot;frown-o&quot;
+        /&gt;
+      &lt;/ToggleGroup&gt;
+
+    &lt;/div&gt;
+
+  &lt;/div&gt;,
+  document.getElementById(&#x27;exampleContainer&#x27;)
+);
+</code>
+  </pre>
+  <script src="ToggleGroup.js"></script>
+</body>
+</html>
