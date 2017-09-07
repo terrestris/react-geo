@@ -30,11 +30,7 @@ describe('ObjectUtil', () => {
       expect(ObjectUtil.getValue).not.to.be(undefined);
     });
 
-    // TODO Enable  after logger implementation
-    // it('does throw on empty getValue call', function() {
-    //   expect(ObjectUtil.getValue).to.throwError();
-    // });
-    it('returns false on unexpected key datatype', function() {
+    it('returns undefined on unexpected key datatype', function() {
       var unexpectedKeys = [
         1, false, true, null, undefined, {}, [], function() {}, NaN, /./g
       ];
@@ -46,7 +42,7 @@ describe('ObjectUtil', () => {
         obj[Object.prototype.toString.call(unexpectedKey)] = true;
       });
       unexpectedKeys.forEach(unexpectedKey => {
-        expect(ObjectUtil.getValue(unexpectedKey, obj)).to.be(false);
+        expect(ObjectUtil.getValue(unexpectedKey, obj)).to.be(undefined);
       });
     });
 
@@ -57,7 +53,7 @@ describe('ObjectUtil', () => {
       // we do *not* skip for [], new String('') etc.
       // See: https://lodash.com/docs/#isObject
       unexpectedObjs.forEach(unexpectedObj => {
-        expect(ObjectUtil.getValue('', unexpectedObj)).to.be(false);
+        expect(ObjectUtil.getValue('', unexpectedObj)).to.be(undefined);
       });
     });
 

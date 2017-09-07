@@ -3,6 +3,7 @@ import {
   isString,
   isArray
 } from 'lodash';
+import Logger from './Logger';
 
 /**
  * This class provides some static methods which might be helpful when working
@@ -25,27 +26,21 @@ class ObjectUtil {
    * @param {Object} queryObject The object to be searched on
    *
    * @return {*} The target value or `undefined` if the given couldn't be
-   *     found, or `false` on unexpected input, or an object if a path was
-   *     passed, from which we only could find a part, but not the most specific
-   *     one. TODO Harmonize return values
+   *     found, or an object if a path was passed, from which we only could
+   *     find a part, but not the most specific one.
+   *     TODO Harmonize return values
    */
   static getValue(queryKey, queryObject) {
     var queryMatch;
 
     if (!isString(queryKey)) {
-      // TODO Replace with new logger after logger implementation
-      // Ext.Logger.error('Missing input parameter queryKey <String>!');
-      // TODO why don't we return undefined?
-      return false;
+      Logger.error('Missing input parameter queryKey <String>');
+      return undefined;
     }
     if (!isObject(queryObject)) {
-      // TODO Replace with new logger after logger implementation
-      // Ext.Logger.error('Missing input parameter ' +
-      //   'queryObject <Object>!');
-      // TODO why don't we return undefined?
-      return false;
+      Logger.error('Missing input parameter queryObject <Object>');
+      return undefined;
     }
-
 
     // if the queryKey contains backslashes we understand this as the
     // path in the object-hierarchy and will return the last matching
