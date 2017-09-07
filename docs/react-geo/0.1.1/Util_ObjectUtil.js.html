@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Button/ToggleGroup/ToggleGroup.jsx</title>
+    <title>JSDoc: Source: Util/ObjectUtil.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Button/ToggleGroup/ToggleGroup.jsx</h1>
+    <h1 class="page-title">Source: Util/ObjectUtil.js</h1>
 
     
 
@@ -26,158 +26,111 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React from 'react';
-import PropTypes from 'prop-types';
-import { isFunction } from 'lodash';
-
-import './ToggleGroup.less';
+            <pre class="prettyprint source linenums"><code>import {
+  isObject,
+  isString,
+  isArray
+} from 'lodash';
+import Logger from './Logger';
 
 /**
- * A group for toggle components (e.g. buttons)
+ * This class provides some static methods which might be helpful when working
+ * with objects.
  *
- * @class The ToggleGroup
- * @extends React.Component
+ * @class ObjectUtil
  */
-class ToggleGroup extends React.Component {
+class ObjectUtil {
 
   /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * The name of this group.
-     * @type {String}
-     */
-    name: PropTypes.string,
-
-    /**
-     * The orientation of the children. Either `vertical` (default)
-     * or `horizontal`.
-     * @type {String}
-     */
-    orientation: PropTypes.string,
-
-    /**
-     * Whether it's allowed to deselect a children or not.
-     * @type {Boolean}
-     */
-    allowDeselect: PropTypes.bool,
-
-    /**
-     * The value fo the `name` attribute of the children to select/press
-     * initially.
-     * @type {String}
-     */
-    selectedName: PropTypes.string,
-
-    /**
-     * Callback function for onChange.
-     * @type {Function}
-     */
-    onChange: PropTypes.func,
-
-    /**
-     * The children of this group. Typically a set of `ToggleButton`s.
-     * @type {Object}
-     */
-    children: PropTypes.node
-  }
-
-  /**
-   * The default properties.
-   * @type {Object}
-   */
-  static defaultProps = {
-    orientation: 'vertical',
-    allowDeselect: false
-  }
-
-  /**
-   * The child context types.
-   * @type {Object}
-   */
-  static childContextTypes = {
-    toggleGroup: PropTypes.object
-  }
-
-  /**
-   * The constructor.
+   * Method may be used to return a value of a given input object by a
+   * provided query key. The query key can be used in two ways:
+   *   * Single-value: Find the first matching key in the provided object
+   *     (Use with caution as the object/array order may not be as
+   *     expected and/or deterministic!).
+   *   * Backslash ("/") separated value: Find the last (!) matching key
+   *     in the provided object.
    *
-   * @param {Object} props The properties.
-   */
-  constructor(props) {
-    super(props);
-
-    /**
-     * The initial state.
-     * @type {Object}
-     */
-    this.state = {
-      selectedName: props.selectedName
-    };
-  }
-
-  /**
-   * Returns the context for the children.
+   * @param {String} queryKey The key to be searched.
+   * @param {Object} queryObject The object to be searched on
    *
-   * @return {Object} The child context.
+   * @return {*} The target value or `undefined` if the given couldn't be
+   *     found, or an object if a path was passed, from which we only could
+   *     find a part, but not the most specific one.
+   *     TODO Harmonize return values
    */
-  getChildContext() {
-    return {
-      toggleGroup: {
-        name: this.props.name,
-        selectedName: this.props.selectedName,
-        onChange: this.onChange
-      }
-    };
-  }
+  static getValue(queryKey, queryObject) {
+    var queryMatch;
 
-  /**
-   * The onChange handler.
-   *
-   * @param {Object} childProps The properties if the children.
-   */
-  onChange = (childProps) => {
-
-    if (isFunction(this.props.onChange)) {
-      this.props.onChange(childProps);
+    if (!isString(queryKey)) {
+      Logger.error('Missing input parameter queryKey &lt;String>');
+      return undefined;
+    }
+    if (!isObject(queryObject)) {
+      Logger.error('Missing input parameter queryObject &lt;Object>');
+      return undefined;
     }
 
-    // Allow deselect.
-    if (this.props.allowDeselect &amp;&amp; (childProps.name === this.state.selectedName)) {
-      this.setState({selectedName: null});
-    } else {
-      this.setState({selectedName: childProps.name});
-    }
-  }
-
-  /**
-   * The render function.
-   */
-  render() {
-    const {orientation, children} = this.props;
-
-    const childrenWithProps = React.Children.map(children,
-      (child) => React.cloneElement(child, {
-        pressed: (this.state.selectedName === child.props.name) ? true : false
-      })
-    );
-
-    return (
-      &lt;div
-        className={(orientation === 'vertical') ?
-          'vertical-toggle-group' :
-          'horizontal-toggle-group'
+    // if the queryKey contains backslashes we understand this as the
+    // path in the object-hierarchy and will return the last matching
+    // value
+    if (queryKey.split('/').length > 1) {
+      queryKey.split('/').forEach(function(key) {
+        if (queryObject[key]) {
+          queryObject = queryObject[key];
+        } else {
+          // if the last entry wasn't found return the last match
+          return queryObject;
         }
-      >
-        {childrenWithProps}
-      &lt;/div>
-    );
+      });
+      return queryObject;
+    }
+
+    // iterate over the input object and return the first matching
+    // value
+    for (var key in queryObject) {
+
+      // get the current value
+      var value = queryObject[key];
+
+      // if the given key is the queryKey, let's return the
+      // corresponding value
+      if (key === queryKey) {
+        return value;
+      }
+
+      // TODO MJ: I do not like this too much, see the appropriate test.
+      // I fear we can only reach this if the original key was not a path,
+      // right?
+      //
+      // if the value is an array and the array contains an object as
+      // well, let's call ourself recursively for this object
+      if (isArray(value)) {
+        for (var i = 0; i &lt; value.length; i++) {
+          var val = value[i];
+          if (isObject(val)) {
+            queryMatch = this.getValue(queryKey, val);
+            if (queryMatch) {
+              return queryMatch;
+            }
+          }
+        }
+      }
+
+      // if the value is an object, let's call ourself recursively
+      if (isObject(value)) {
+        queryMatch = this.getValue(queryKey, value);
+        if (queryMatch) {
+          return queryMatch;
+        }
+      }
+    }
+
+    // if we couldn't find any match, return undefined
+    return undefined;
   }
 }
 
-export default ToggleGroup;
+export default ObjectUtil;
 </code></pre>
         </article>
     </section>
