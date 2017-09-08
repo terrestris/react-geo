@@ -212,8 +212,13 @@ export class Panel extends React.Component {
    * Close the panel and remove it from the dom.
    */
   close = () => {
-    const div = document.getElementById(this.state.id);
-    ReactDOM.unmountComponentAtNode(div);
+    let div = document.getElementById(this.state.id);
+    if (div) {
+      ReactDOM.unmountComponentAtNode(div);
+    } else {
+      div = document.getElementsByClassName(this.state.id)[0];
+    }
+
     div.parentElement.removeChild(div);
   }
 
