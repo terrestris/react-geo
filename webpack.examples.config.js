@@ -8,6 +8,7 @@ commonConfig.entry = {
   'Button/ToggleGroup/ToggleGroup': './src/Button/ToggleGroup/ToggleGroup.example.jsx',
   'Map/FloatingMapLogo/FloatingMapLogo': './src/Map/FloatingMapLogo/FloatingMapLogo.example.jsx',
   'Map/ScaleCombo/ScaleCombo': './src/Map/ScaleCombo/ScaleCombo.example.jsx',
+  'LayerTree/LayerTree': './src/LayerTree/LayerTree.example.jsx',
   'Panel/Panel/Panel': './src/Panel/Panel/Panel.example.jsx',
   'Panel/Titlebar/Titlebar': './src/Panel/Titlebar/Titlebar.example.jsx',
   'Toolbar/Toolbar': './src/Toolbar/Toolbar.example.jsx',
@@ -26,11 +27,19 @@ commonConfig.module = {
     exclude: /node_modules/,
     loader: 'babel-loader'
   }, {
-    test: /\.(less|css)$/,
+    test: /\.css$/,
+    loaders: [
+      'style-loader',
+      'css-loader'
+    ]
+  }, {
+    test: /\.less$/,
     loaders: [
       'style-loader',
       'css-loader',
-      'less-loader'
+      {
+        loader: 'less-loader'
+      }
     ]
   }, {
     test: /\.(jpe?g|png|gif|ico)$/i,
