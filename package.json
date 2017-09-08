@@ -54,7 +54,7 @@
     "build:examples": "rimraf ./build/examples/* && node tasks/build-examples.js && webpack -p --config webpack.examples.config.js",
     "build:docs": "jsdoc --package ./package.json --readme ./README.md -c .jsdoc",
     "build:js": "webpack --config webpack.development.config.js && webpack -p --config webpack.production.config.js",
-    "build:dist": "BABEL_ENV=build babel src -d dist",
+    "build:dist": "BABEL_ENV=build babel src --out-dir dist --copy-files --ignore spec.js,example.js,.md",
     "build": "npm run test -- --browsers PhantomJS && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
   },
   "dependencies": {
