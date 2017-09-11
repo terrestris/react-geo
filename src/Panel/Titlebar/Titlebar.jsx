@@ -51,13 +51,11 @@ export class Titlebar extends React.Component {
      * @type {boolean}
      */
     closable: PropTypes.bool,
-
     /**
      * The tooltip of the compress button.
      * @type {String}
      */
     compressTooltip: PropTypes.string,
-
     /**
      * The tooltip of the close button.
      * @type {String}

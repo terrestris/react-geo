@@ -1,5 +1,7 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
+import sinon from 'sinon';
+
 import OlGroupLayer from 'ol/layer/group';
 import OlTileLayer from 'ol/layer/tile';
 import OlTileWMS from 'ol/source/tilewms';
@@ -38,6 +40,23 @@ describe('<LayerTree />', () => {
   it('can be rendered', () => {
     const wrapper = TestUtils.mountComponent(LayerTree);
     expect(wrapper).not.to.be(undefined);
+  });
+
+  describe('new layerGroup as prop', () => {
+
+    it('calls treeNodesFromLayerGroup and checkedKeysFromLayerGroup', () => {
+      const wrapper = TestUtils.mountComponent(LayerTree);
+      const spy1 = sinon.spy(wrapper.instance(), 'treeNodesFromLayerGroup');
+      const spy2 = sinon.spy(wrapper.instance(), 'checkedKeysFromLayerGroup');
+
+      wrapper.setProps({
+        layerGroup: new OlGroupLayer({})
+      });
+
+      expect(spy1).to.have.property('callCount', 1);
+      expect(spy2).to.have.property('callCount', 1);
+
+    });
   });
 
   describe('<TreeNode> creation', () => {
@@ -143,8 +162,63 @@ describe('<LayerTree />', () => {
     });
   });
 
-  // TODO
   describe('onDrop', () => {
+
+    describe('getLayerPositionInfo', () => {
+      let props;
+      let subLayer;
+      let nestedLayerGroup;
+
+      beforeEach(() => {
+        props = {
+          layerGroup,
+          map
+        };
+        subLayer = new OlTileLayer({
+          name: 'subLayer',
+          source: new OlTileWMS()
+        });
+        nestedLayerGroup = new OlGroupLayer({
+          name: 'nestedLayerGroup',
+          layers: [subLayer]
+        });
+        layerGroup.getLayers().push(nestedLayerGroup);
+      });
+
+      it('uses the map if second argument is empty', () => {
+        const wrapper = TestUtils.mountComponent(LayerTree, props);
+        const layer = layerGroup.getLayers().item(0);
+        const layerPositionInfo = wrapper.instance().getLayerPositionInfo(layer);
+
+        expect(layerPositionInfo).to.be.eql({
+          position: 0,
+          collection: layerGroup.getLayers()
+        });
+      });
+
+      it('uses the layerGroup if given as second argument', () => {
+        const wrapper = TestUtils.mountComponent(LayerTree, props);
+        const layerPositionInfo = wrapper.instance().getLayerPositionInfo(subLayer, nestedLayerGroup);
+
+        expect(layerPositionInfo).to.be.eql({
+          position: 0,
+          collection: nestedLayerGroup.getLayers()
+        });
+      });
+
+      it('works iterative', () => {
+        const wrapper = TestUtils.mountComponent(LayerTree, props);
+        const layerPositionInfo = wrapper.instance().getLayerPositionInfo(subLayer, map);
+
+        expect(layerPositionInfo).to.be.eql({
+          position: 0,
+          collection: nestedLayerGroup.getLayers()
+        });
+      });
+
+    });
+
+    // TODO add test when bug in react-component/tree is fixed
     // let props = {};
     //
     // beforeEach(() => {
