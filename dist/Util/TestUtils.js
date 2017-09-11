@@ -27,6 +27,14 @@ var _vector3 = require('ol/layer/vector');
 
 var _vector4 = _interopRequireDefault(_vector3);
 
+var _pointerevent = require('ol/pointer/pointerevent');
+
+var _pointerevent2 = _interopRequireDefault(_pointerevent);
+
+var _mapbrowserpointerevent = require('ol/mapbrowserpointerevent');
+
+var _mapbrowserpointerevent2 = _interopRequireDefault(_mapbrowserpointerevent);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -105,6 +113,28 @@ TestUtils.removeMap = function (map) {
     map.dispose();
   }
   TestUtils.unmountMapDiv();
+};
+
+TestUtils.simulatePointerEvent = function (map, type, x, y, opt_shiftKey, dragging) {
+  var viewport = map.getViewport();
+  // Calculated in case body has top < 0 (test runner with small window).
+  var position = viewport.getBoundingClientRect();
+  var shiftKey = opt_shiftKey !== undefined ? opt_shiftKey : false;
+  var event = new _pointerevent2.default(type, {
+    clientX: position.left + x + TestUtils.mapDivWidth / 2,
+    clientY: position.top + y + TestUtils.mapDivHeight / 2,
+    shiftKey: shiftKey
+  });
+  map.handleMapBrowserEvent(new _mapbrowserpointerevent2.default(type, map, event, dragging));
+};
+
+TestUtils.createVectorLayer = function (properties) {
+  var source = new _vector2.default();
+  var layer = new _vector4.default({ source: source });
+
+  layer.setProperties(properties);
+
+  return layer;
 };
 
 exports.default = TestUtils;

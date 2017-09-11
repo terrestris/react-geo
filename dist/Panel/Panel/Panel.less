@@ -1,0 +1,45 @@
+@import '../../style/variables.less';
+
+@handlestyle: 5px solid fade(@primary-color, 50%);
+
+.panel {
+  z-index: 100;
+
+  .body {
+    background-color: @component-background;
+  }
+
+  .resize-handle {
+
+    &:hover {
+      &.resize-handle-right {
+        border-right: @handlestyle;
+      }
+      &.resize-handle-left {
+        border-left: @handlestyle;
+      }
+      &.resize-handle-top {
+        border-top: @handlestyle;
+      }
+      &.resize-handle-bottom {
+        border-top: @handlestyle;
+      }
+      &.resize-handle-bottom-right {
+        border-bottom: @handlestyle;
+        border-right: @handlestyle;
+      }
+      &.resize-handle-bottom-left {
+        border-bottom: @handlestyle;
+        border-left: @handlestyle;
+      }
+      &.resize-handle-top-right {
+        border-top: @handlestyle;
+        border-right: @handlestyle;
+      }
+      &.resize-handle-top-left {
+        border-top: @handlestyle;
+        border-left: @handlestyle;
+      }
+    }
+  }
+}
