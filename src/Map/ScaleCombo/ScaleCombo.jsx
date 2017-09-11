@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
 const Option = Select.Option;
-import { isNumber, isEmpty } from 'lodash';
+import { isNumber, isEmpty, isEqual, reverse, clone } from 'lodash';
 
 import Logger from '../../Util/Logger';
 import MapUtils from '../../Util/MapUtil';
@@ -84,6 +84,19 @@ class ScaleCombo extends React.Component {
   }
 
   /**
+   * Called on componentWillReceiveProps lifecycle event.
+   *
+   * @param {Object} newProps The new properties.
+   */
+  componentWillReceiveProps(newProps) {
+    if (!isEqual(newProps.zoomLevel, this.props.zoomLevel)) {
+      this.setState({
+        zoomLevel: newProps.zoomLevel
+      });
+    }
+  }
+
+  /**
    * @function pushScaleOption: Helper function to create a {@link Option} scale component
    * based on a resolution and the {@link Ol.View}
    *
@@ -93,7 +106,8 @@ class ScaleCombo extends React.Component {
    */
   pushScaleOption = (resolution, mv) => {
     let scale = MapUtils.getScaleForResolution(resolution, mv.getProjection().getUnits());
-    let roundScale = Math.round(scale);
+    // Round scale to nearest multiple of 10.
+    let roundScale = Math.round(scale / 10) * 10;
     let option = <Option key={roundScale.toString()} value={roundScale.toString()}>1:{roundScale.toLocaleString()}</Option>;
     this.state.scales.push(option);
   };
@@ -107,12 +121,12 @@ class ScaleCombo extends React.Component {
       Logger.debug('Array with scales found. Returning');
       return;
     }
-    if (! this.props.map) {
+    if (!this.props.map) {
       Logger.warn('Map component not found. Could not initialize options array.');
       return;
     }
-    let map = this.props.map;
 
+    let map = this.props.map;
     let mv = map.getView();
     // use existing resolutions array if exists
     let resolutions = mv.getResolutions();
@@ -122,7 +136,8 @@ class ScaleCombo extends React.Component {
         this.pushScaleOption(resolution, mv);
       }
     } else {
-      resolutions.forEach((resolution) => {
+      let reversedResolutions = reverse(clone(resolutions));
+      reversedResolutions.forEach((resolution) => {
         this.pushScaleOption(resolution, mv);
       });
     }
