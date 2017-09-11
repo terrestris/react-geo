@@ -28,6 +28,9 @@
         <article>
             <pre class="prettyprint source linenums"><code>import OlMap from 'ol/map';
 import OlProjection from 'ol/proj';
+import OlLayerGroup from 'ol/layer/group';
+
+import FeatureUtil from './FeatureUtil';
 
 import Logger from './Logger.js';
 
@@ -128,6 +131,130 @@ export class MapUtil {
     return parseFloat(resolution) * mpu * inchesPerMeter * dpi;
   }
 
+  /**
+   * Returns all layers of a collection. Even the hidden ones.
+   *
+   * @param {ol.Map|ol.layer.Group} collection The collection to get the layers
+   *                                           from. This can be an ol.layer.Group
+   *                                           or and ol.Map.
+   * @return {Array} An array of all Layers.
+   */
+  static getAllLayers(collection) {
+    if (!(collection instanceof OlMap) &amp;&amp; !(collection instanceof OlLayerGroup)) {
+      Logger.error('Input parameter collection must be from type `ol.Map`' +
+        'or `ol.layer.Group`.');
+    }
+
+    var layers = collection.getLayers().getArray();
+    var allLayers = [];
+
+    layers.forEach(function(layer) {
+      if (layer instanceof OlLayerGroup) {
+        MapUtil.getAllLayers(layer).forEach((layeri) => {
+          allLayers.push(layeri);
+        });
+      }
+      allLayers.push(layer);
+    });
+    return allLayers;
+  }
+
+  /**
+   * Get a layer by its key (ol_uid).
+   *
+   * @param {ol.Map} map The map to use for lookup.
+   * @param {String} ol_uid The ol_uid of a layer.
+   * @return {ol.layer.Layer} The layer.
+   */
+  static getLayerByOlUid = (map, ol_uid) => {
+    const layers = MapUtil.getAllLayers(map);
+    const layer = layers.find((l) => {
+      return ol_uid === l.ol_uid.toString();
+    });
+    return layer;
+  }
+
+  /**
+   * Returns the layer from the provided map by the given name
+   * (parameter LAYERS).
+   *
+   * @param {ol.Map} map The map to use for lookup.
+   * @param {String} name The name to get the layer by.
+   * @return {ol.Layer} The result layer or undefined if the layer could not
+   *                    be found.
+   */
+  static getLayerByName(map, name) {
+    let layers = MapUtil.getMapLayers(map);
+    let layerCandidate;
+
+    for (let layer of layers) {
+      if (layer.getSource &amp;&amp;
+        layer.getSource().getParams &amp;&amp;
+        layer.getSource().getParams()['LAYERS'] === name) {
+        layerCandidate = layer;
+        break;
+      }
+    }
+
+    return layerCandidate;
+  }
+
+  /**
+   * Returns the layer from the provided map by the given feature.
+   *
+   * @param {ol.Map} map The map to use for lookup.
+   * @param {ol.Feature} feature The feature to get the layer by.
+   * @param {Array} namespaces list of supported GeoServer namespaces.
+   * @return {ol.Layer} The result layer or undefined if the layer could not
+   *                    be found.
+   */
+  static getLayerByFeature(map, feature, namespaces) {
+    let featureTypeName = FeatureUtil.getFeatureTypeName(feature);
+    let layerCandidate;
+
+    for (let namespace of namespaces) {
+      let qualifiedFeatureTypeName = `${namespace}:${featureTypeName}`;
+      let layer = MapUtil.getLayerByName(map, qualifiedFeatureTypeName);
+      if (layer) {
+        layerCandidate = layer;
+        break;
+      }
+    }
+
+    return layerCandidate;
+  }
+
+  /**
+   * Returns all layers of the specified layer group recursively.
+   *
+   * @param {ol.Map} map The map to use for lookup.
+   * @param {ol.Layer.Group} layerGroup The group to flatten.
+   * @return {Array} The (flattened) layers from the group
+   */
+  static getLayersByGroup(map, layerGroup) {
+    let layerCandidates = [];
+
+    layerGroup.getLayers().forEach((layer) => {
+      if (layer instanceof OlLayerGroup) {
+        layerCandidates.push(...MapUtil.getLayersByGroup(map, layer));
+      } else {
+        layerCandidates.push(layer);
+      }
+    });
+
+    return layerCandidates;
+  }
+
+  /**
+   * Returns all layers of the provided map.
+   *
+   * @param {ol.Map} map The map to use for lookup.
+   * @return {Array} An array of all map layers.
+   */
+  static getMapLayers(map) {
+    return MapUtil.getLayersByGroup(map, map.getLayerGroup());
+  }
+
 }
 
 export default MapUtil;
@@ -141,15 +268,15 @@ export default MapUtil;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="TestUtils.html">TestUtils</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
-based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
-based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtils.html">TestUtils</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
+based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
+based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Sep 11 2017 08:57:05 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Mon Sep 11 2017 09:13:56 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>
