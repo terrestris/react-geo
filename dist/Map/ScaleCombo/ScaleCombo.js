@@ -60,7 +60,8 @@ var ScaleCombo = function (_React$Component) {
 
     _this.pushScaleOption = function (resolution, mv) {
       var scale = _MapUtil2.default.getScaleForResolution(resolution, mv.getProjection().getUnits());
-      var roundScale = Math.round(scale);
+      // Round scale to nearest multiple of 10.
+      var roundScale = Math.round(scale / 10) * 10;
       var option = _react2.default.createElement(
         Option,
         { key: roundScale.toString(), value: roundScale.toString() },
@@ -79,8 +80,8 @@ var ScaleCombo = function (_React$Component) {
         _Logger2.default.warn('Map component not found. Could not initialize options array.');
         return;
       }
-      var map = _this.props.map;
 
+      var map = _this.props.map;
       var mv = map.getView();
       // use existing resolutions array if exists
       var resolutions = mv.getResolutions();
@@ -90,7 +91,8 @@ var ScaleCombo = function (_React$Component) {
           _this.pushScaleOption(resolution, mv);
         }
       } else {
-        resolutions.forEach(function (resolution) {
+        var reversedResolutions = (0, _lodash.reverse)((0, _lodash.clone)(resolutions));
+        reversedResolutions.forEach(function (resolution) {
           _this.pushScaleOption(resolution, mv);
         });
       }
@@ -121,12 +123,9 @@ var ScaleCombo = function (_React$Component) {
   }
 
   /**
-   * @function pushScaleOption: Helper function to create a {@link Option} scale component
-   * based on a resolution and the {@link Ol.View}
+   * Called on componentWillReceiveProps lifecycle event.
    *
-   * @param {Number} resolution map cresolution to generate the option for
-   * @param {Ol.View} mv The map view
-   *
+   * @param {Object} newProps The new properties.
    */
 
 
@@ -135,13 +134,32 @@ var ScaleCombo = function (_React$Component) {
    */
 
 
-  /**
-   * @function getOptionsFromMap: Helper function generate {@link Option} scale components
-   * based on an existing instance of {@link Ol.Map}
-   */
-
-
   _createClass(ScaleCombo, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(newProps) {
+      if (!(0, _lodash.isEqual)(newProps.zoomLevel, this.props.zoomLevel)) {
+        this.setState({
+          zoomLevel: newProps.zoomLevel
+        });
+      }
+    }
+
+    /**
+     * @function pushScaleOption: Helper function to create a {@link Option} scale component
+     * based on a resolution and the {@link Ol.View}
+     *
+     * @param {Number} resolution map cresolution to generate the option for
+     * @param {Ol.View} mv The map view
+     *
+     */
+
+
+    /**
+     * @function getOptionsFromMap: Helper function generate {@link Option} scale components
+     * based on an existing instance of {@link Ol.Map}
+     */
+
+  }, {
     key: 'determineOptionKeyForZoomLevel',
 
 
