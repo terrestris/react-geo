@@ -15,6 +15,7 @@ import MapUtil from './Util/MapUtil.js';
 import ObjectUtil from './Util/ObjectUtil.js';
 import StringUtil from './Util/StringUtil.js';
 import UndoUtil from './Util/UndoUtil.js';
+import UrlUtil from './Util/UrlUtil.js';
 import { isVisibleComponent } from './VisibleComponent/VisibleComponent.jsx';
 
 export {
@@ -35,5 +36,6 @@ export {
   ObjectUtil,
   StringUtil,
   UndoUtil,
+  UrlUtil,
   isVisibleComponent
 };
