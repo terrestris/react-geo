@@ -21,11 +21,19 @@ module.exports = {
       exclude: /node_modules/,
       loader: 'babel-loader'
     }, {
-      test: /\.(less|css)$/,
+      test: /\.css$/,
+      loaders: [
+        'style-loader',
+        'css-loader'
+      ]
+    }, {
+      test: /\.less$/,
       loaders: [
         'style-loader',
         'css-loader',
-        'less-loader'
+        {
+          loader: 'less-loader'
+        }
       ]
     }, {
       test: /\.(jpe?g|png|gif|ico)$/i,
