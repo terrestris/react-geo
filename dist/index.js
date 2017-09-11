@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
+exports.isVisibleComponent = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -73,6 +73,10 @@ var _UndoUtil = require('./Util/UndoUtil.js');
 
 var _UndoUtil2 = _interopRequireDefault(_UndoUtil);
 
+var _UrlUtil = require('./Util/UrlUtil.js');
+
+var _UrlUtil2 = _interopRequireDefault(_UrlUtil);
+
 var _VisibleComponent = require('./VisibleComponent/VisibleComponent.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -94,4 +98,5 @@ exports.MapUtil = _MapUtil2.default;
 exports.ObjectUtil = _ObjectUtil2.default;
 exports.StringUtil = _StringUtil2.default;
 exports.UndoUtil = _UndoUtil2.default;
+exports.UrlUtil = _UrlUtil2.default;
 exports.isVisibleComponent = _VisibleComponent.isVisibleComponent;
