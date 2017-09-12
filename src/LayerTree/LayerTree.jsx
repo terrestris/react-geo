@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
 import { Tree } from 'antd';
 import OlGroupLayer from 'ol/layer/group';
+import olObservable from 'ol/observable';
 
 import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil';
@@ -18,6 +19,14 @@ const TreeNode = Tree.TreeNode;
  */
 class LayerTree extends React.Component {
 
+
+  /**
+   * @type {Array<ol.EventsKey>} An array of ol.EventsKey as returned by on() or
+   *                             once().
+   * @private
+   */
+  olListenerKeys = []
+
   /**
    * The properties.
    * @type {Object}
@@ -28,7 +37,7 @@ class LayerTree extends React.Component {
     layerGroup: PropTypes.instanceOf(OlGroupLayer),
 
     map: PropTypes.object
-  };
+  }
 
   /**
    * The default properties.
@@ -63,6 +72,13 @@ class LayerTree extends React.Component {
   }
 
   /**
+   * Determines what to do on the initial mount.
+   */
+  componentWillUnmount() {
+    olObservable.unByKey(this.olListenerKeys);
+  }
+
+  /**
    * Determines what to do with new props.
    *
    * @param {Object} nextProps The new props.
@@ -94,24 +110,75 @@ class LayerTree extends React.Component {
    */
   registerAddRemoveListeners = (groupLayer) => {
     const collection = groupLayer.getLayers();
-    collection.on('add', (evt) => {
-      if (evt.element instanceof OlGroupLayer) {
-        this.registerAddRemoveListeners(evt.element);
-      }
-      this.rebuildTreeNodes();
-    });
-    collection.on('remove', (evt) => {
-      if (evt.element instanceof OlGroupLayer) {
-        // TODO unregister listeners
-        // this.registerAddRemoveListeners(evt.element);
-      }
-      this.rebuildTreeNodes();
-    });
+    const addEvtKey = collection.on('add', this.onCollectionAdd);
+    const removeEvtKey = collection.on('remove', this.onCollectionRemove);
+
+    this.olListenerKeys.push(addEvtKey, removeEvtKey);
+
     collection.forEach((layer) => {
       if (layer instanceof OlGroupLayer) {
         this.registerAddRemoveListeners(layer);
       }
     });
+  }
+
+  /**
+   * Listens to the collections add event of a collection.
+   * Registers add/remove listeners if element is a collection and rebuilds the
+   * treeNodes.
+   *
+   * @param {ol.Collection.Event} evt The add event.
+   */
+  onCollectionAdd = (evt) => {
+    if (evt.element instanceof OlGroupLayer) {
+      this.registerAddRemoveListeners(evt.element);
+    }
+    this.rebuildTreeNodes();
+  }
+
+  /**
+   * Listens to the collections remove event of a collection.
+   * Unregisters the events of deleted layers and rebuilds the treeNodes.
+   *
+   * @param {ol.Collection.Event} evt The remove event.
+   */
+  onCollectionRemove = (evt) => {
+    this.unregisterEventsByLayer(evt.element);
+    if (evt.element instanceof OlGroupLayer) {
+      evt.element.getLayers().forEach((layer) => {
+        this.unregisterEventsByLayer(layer);
+      });
+    }
+    this.rebuildTreeNodes();
+  }
+
+  /**
+   * Unregisters the Events of a given layer.
+   *
+   * @param {[type]} layer [description]
+   * @return {[type]} [description]
+   */
+  unregisterEventsByLayer = (layer) => {
+    this.olListenerKeys = this.olListenerKeys.filter((key) => {
+      if (layer instanceof OlGroupLayer) {
+        const layers = layer.getLayers();
+        if (key.target === layers) {
+          if ((key.type === 'add' && key.listener === this.onCollectionAdd) ||
+          (key.type === 'remove' && key.listener === this.onCollectionRemove)){
+
+            olObservable.unByKey(key);
+            return false;
+          }
+        }
+      } else if (key.target === layer) {
+        if (key.type === 'change:visible' && key.listener === this.onLayerChangeVisible) {
+          olObservable.unByKey(key);
+          return false;
+        }
+      }
+      return true;
+    });
+    window.olListenerKeys = this.olListenerKeys;
   }
 
   /**
@@ -146,7 +213,10 @@ class LayerTree extends React.Component {
         return this.treeNodeFromLayer(childLayer);
       });
     } else {
-      layer.on('change:visible', this.onLayerChangeVisible);
+      if (!this.hasListener(layer, 'change:visible', this.onLayerChangeVisible)) {
+        const eventKey = layer.on('change:visible', this.onLayerChangeVisible);
+        this.olListenerKeys.push(eventKey);
+      }
     }
 
     treeNode = <TreeNode
@@ -156,6 +226,24 @@ class LayerTree extends React.Component {
       {childNodes}
     </TreeNode>;
     return treeNode;
+  }
+
+  /**
+   * Determines if the target has allready registered the given listener for the
+   * given eventtype.
+   *
+   * @param {Object} target The event target.
+   * @param {String} type The events type (name).
+   * @param {function} listener The function.
+   * @return {Boolean} True if the listener is allready contained in
+   *                   this.olListenerKeys.
+   */
+  hasListener = (target, type, listener) => {
+    return this.olListenerKeys.some((listenerKey) => {
+      return listenerKey.target === target
+        && listenerKey.type === type
+        && listenerKey.listener === listener;
+    });
   }
 
   /**

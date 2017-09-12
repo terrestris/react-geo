@@ -1,6 +1,5 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
-import sinon from 'sinon';
 
 import OlGroupLayer from 'ol/layer/group';
 import OlTileLayer from 'ol/layer/tile';
