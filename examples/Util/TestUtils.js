@@ -5,8 +5,6 @@ import OlView from 'ol/view';
 import OlMap from 'ol/map';
 import OlSourceVector from 'ol/source/vector';
 import OlLayerVector from 'ol/layer/vector';
-import OlPointerEvent from 'ol/pointer/pointerevent';
-import OlMapBrowserPointerEvent from 'ol/mapbrowserpointerevent';
 
 /**
  * A set of some useful static helper methods.
@@ -105,45 +103,6 @@ export class TestUtils {
     }
     TestUtils.unmountMapDiv();
   };
-
-  /**
-   * Simulates a browser pointer event on the map viewport.
-   * Origin: https://github.com/openlayers/openlayers/blob/master/test/spec/ol/interaction/draw.test.js#L67
-   *
-   * @param {ol.Map} map The map to use.
-   * @param {string} type Event type.
-   * @param {number} x Horizontal offset from map center.
-   * @param {number} y Vertical offset from map center.
-   * @param {boolean} opt_shiftKey Shift key is pressed
-   * @param {boolean} dragging Whether the map is being dragged or not.
-   */
-  static simulatePointerEvent = (map, type, x, y, opt_shiftKey, dragging) => {
-    let viewport = map.getViewport();
-    // Calculated in case body has top < 0 (test runner with small window).
-    let position = viewport.getBoundingClientRect();
-    let shiftKey = opt_shiftKey !== undefined ? opt_shiftKey : false;
-    let event = new OlPointerEvent(type, {
-      clientX: position.left + x + TestUtils.mapDivWidth / 2,
-      clientY: position.top + y + TestUtils.mapDivHeight / 2,
-      shiftKey: shiftKey
-    });
-    map.handleMapBrowserEvent(new OlMapBrowserPointerEvent(type, map, event, dragging));
-  }
-
-  /**
-   * Creates and returns an empty vector layer.
-   *
-   * @param {Object} properties The properties to set.
-   * @return {ol.layer.Vector} The layer.
-   */
-  static createVectorLayer = (properties) => {
-    let source = new OlSourceVector();
-    let layer = new OlLayerVector({source: source});
-
-    layer.setProperties(properties);
-
-    return layer;
-  }
 
 }
 
