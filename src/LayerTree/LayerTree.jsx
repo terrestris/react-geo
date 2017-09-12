@@ -13,7 +13,7 @@ const TreeNode = Tree.TreeNode;
  *
  * Note. This component expects that all layerGroups are permanently visibile.
  *
- * @class The LayerTree
+ * @class LayerTree
  * @extends React.Component
  */
 class LayerTree extends React.Component {
@@ -57,11 +57,8 @@ class LayerTree extends React.Component {
    */
   componentDidMount() {
     if (this.props.layerGroup) {
-      this.treeNodesFromLayerGroup(this.props.layerGroup);
-      const checkedKeys = this.getVisibleOlUids();
-      this.setState({
-        checkedKeys
-      });
+      this.registerAddRemoveListeners(this.props.layerGroup);
+      this.rebuildTreeNodes();
     }
   }
 
@@ -72,11 +69,8 @@ class LayerTree extends React.Component {
    */
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.layerGroup, nextProps.layerGroup)) {
-      this.treeNodesFromLayerGroup(nextProps.layerGroup);
-      const checkedKeys = this.getVisibleOlUids();
-      this.setState({
-        checkedKeys
-      });
+      this.registerAddRemoveListeners(this.props.layerGroup);
+      this.rebuildTreeNodes();
     }
   }
 
@@ -91,6 +85,44 @@ class LayerTree extends React.Component {
       return this.treeNodeFromLayer(layer);
     });
     this.setState({treeNodes});
+  }
+
+  /**
+   * Registers the add/remove listeners recursively for all ol.layer.Group.
+   *
+   * @param {ol.layer.Group} groupLayer A ol.layer.Group
+   */
+  registerAddRemoveListeners = (groupLayer) => {
+    const collection = groupLayer.getLayers();
+    collection.on('add', (evt) => {
+      if (evt.element instanceof OlGroupLayer) {
+        this.registerAddRemoveListeners(evt.element);
+      }
+      this.rebuildTreeNodes();
+    });
+    collection.on('remove', (evt) => {
+      if (evt.element instanceof OlGroupLayer) {
+        // TODO unregister listeners
+        // this.registerAddRemoveListeners(evt.element);
+      }
+      this.rebuildTreeNodes();
+    });
+    collection.forEach((layer) => {
+      if (layer instanceof OlGroupLayer) {
+        this.registerAddRemoveListeners(layer);
+      }
+    });
+  }
+
+  /**
+   * Rebuilds the treeNodes and its checked staes.
+   */
+  rebuildTreeNodes = () => {
+    this.treeNodesFromLayerGroup(this.props.layerGroup);
+    const checkedKeys = this.getVisibleOlUids();
+    this.setState({
+      checkedKeys
+    });
   }
 
   /**
@@ -206,11 +238,13 @@ class LayerTree extends React.Component {
   onDrop = (e) => {
     const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
     const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
+    // debugger
+    const dragCollection = dragInfo.groupLayer.getLayers();
     const dropLayer = MapUtil.getLayerByOlUid(this.props.map, e.node.props.eventKey);
     const dropPos = e.node.props.pos.split('-');
     const location = e.dropPosition - Number(dropPos[dropPos.length - 1]);
 
-    dragInfo.groupLayer.remove(dragLayer);
+    dragCollection.remove(dragLayer);
 
     const info = MapUtil.getLayerPositionInfo(dropLayer, this.props.map);
     const dropPosition = info.position;
@@ -235,7 +269,7 @@ class LayerTree extends React.Component {
       dropCollection.insertAt(dropPosition + 1, dragLayer);
     }
 
-    this.treeNodesFromLayerGroup(this.props.layerGroup);
+    this.rebuildTreeNodes();
   }
 
   /**

@@ -244,7 +244,7 @@ export class MapUtil {
 
     if (layers.indexOf(layer) < 0) {
       layers.forEach((childLayer) => {
-        if (childLayer instanceof OlLayerGroup) {
+        if (childLayer instanceof OlLayerGroup && !info.groupLayer) {
           info = MapUtil.getLayerPositionInfo(layer, childLayer);
         }
       });
