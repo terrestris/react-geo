@@ -12,15 +12,17 @@ import TestUtils from '../Util/TestUtils';
 describe('<LayerTree />', () => {
   let layerGroup;
   let map;
+  let layer1;
+  let layer2;
 
   beforeEach(() => {
     const layerSource1 = new OlTileWMS();
-    const layer1 = new OlTileLayer({
+    layer1 = new OlTileLayer({
       name: 'layer1',
       source: layerSource1
     });
     const layerSource2 = new OlTileWMS();
-    const layer2 = new OlTileLayer({
+    layer2 = new OlTileLayer({
       name: 'layer2',
       visible: false,
       source: layerSource2
@@ -40,23 +42,6 @@ describe('<LayerTree />', () => {
   it('can be rendered', () => {
     const wrapper = TestUtils.mountComponent(LayerTree);
     expect(wrapper).not.to.be(undefined);
-  });
-
-  describe('new layerGroup as prop', () => {
-
-    it('calls treeNodesFromLayerGroup and checkedKeysFromLayerGroup', () => {
-      const wrapper = TestUtils.mountComponent(LayerTree);
-      const spy1 = sinon.spy(wrapper.instance(), 'treeNodesFromLayerGroup');
-      const spy2 = sinon.spy(wrapper.instance(), 'checkedKeysFromLayerGroup');
-
-      wrapper.setProps({
-        layerGroup: new OlGroupLayer({})
-      });
-
-      expect(spy1).to.have.property('callCount', 1);
-      expect(spy2).to.have.property('callCount', 1);
-
-    });
   });
 
   describe('<TreeNode> creation', () => {
@@ -79,7 +64,6 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-
       const subLayer = new OlTileLayer({
         name: 'subLayer',
         source: new OlTileWMS()
@@ -162,61 +146,26 @@ describe('<LayerTree />', () => {
     });
   });
 
-  describe('onDrop', () => {
+  describe('visiblity changes triggerd by ol', () => {
 
-    describe('getLayerPositionInfo', () => {
-      let props;
-      let subLayer;
-      let nestedLayerGroup;
+    it('sets the correct visibility to the layer from the checked state', () => {
+      const props = {
+        layerGroup,
+        map
+      };
+      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const treeNode = wrapper.childAt(0).node;
 
-      beforeEach(() => {
-        props = {
-          layerGroup,
-          map
-        };
-        subLayer = new OlTileLayer({
-          name: 'subLayer',
-          source: new OlTileWMS()
-        });
-        nestedLayerGroup = new OlGroupLayer({
-          name: 'nestedLayerGroup',
-          layers: [subLayer]
-        });
-        layerGroup.getLayers().push(nestedLayerGroup);
-      });
-
-      it('uses the map if second argument is empty', () => {
-        const wrapper = TestUtils.mountComponent(LayerTree, props);
-        const layer = layerGroup.getLayers().item(0);
-        const layerPositionInfo = wrapper.instance().getLayerPositionInfo(layer);
-
-        expect(layerPositionInfo).to.be.eql({
-          position: 0,
-          collection: layerGroup.getLayers()
-        });
-      });
-
-      it('uses the layerGroup if given as second argument', () => {
-        const wrapper = TestUtils.mountComponent(LayerTree, props);
-        const layerPositionInfo = wrapper.instance().getLayerPositionInfo(subLayer, nestedLayerGroup);
-
-        expect(layerPositionInfo).to.be.eql({
-          position: 0,
-          collection: nestedLayerGroup.getLayers()
-        });
-      });
-
-      it('works iterative', () => {
-        const wrapper = TestUtils.mountComponent(LayerTree, props);
-        const layerPositionInfo = wrapper.instance().getLayerPositionInfo(subLayer, map);
-
-        expect(layerPositionInfo).to.be.eql({
-          position: 0,
-          collection: nestedLayerGroup.getLayers()
-        });
-      });
-
+      expect(treeNode.props.checked).to.be(true);
+      layer1.setVisible(false);
+      expect(treeNode.props.checked).to.be(false);
+      layer1.setVisible(true);
+      expect(treeNode.props.checked).to.be(true);
     });
+
+  });
+
+  describe('onDrop', () => {
 
     // TODO add test when bug in react-component/tree is fixed
     // let props = {};

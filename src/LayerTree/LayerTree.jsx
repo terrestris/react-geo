@@ -4,11 +4,14 @@ import { isEqual } from 'lodash';
 import { Tree } from 'antd';
 import OlGroupLayer from 'ol/layer/group';
 
-import MapUtils from '../Util/MapUtil';
+import Logger from '../Util/Logger';
+import MapUtil from '../Util/MapUtil';
 const TreeNode = Tree.TreeNode;
 
 /**
  * The LayerTree.
+ *
+ * Note. This component expects that all layerGroups are permanently visibile.
  *
  * @class The LayerTree
  * @extends React.Component
@@ -55,7 +58,10 @@ class LayerTree extends React.Component {
   componentDidMount() {
     if (this.props.layerGroup) {
       this.treeNodesFromLayerGroup(this.props.layerGroup);
-      this.checkedKeysFromLayerGroup(this.props.layerGroup);
+      const checkedKeys = this.getVisibleOlUids();
+      this.setState({
+        checkedKeys
+      });
     }
   }
 
@@ -67,7 +73,10 @@ class LayerTree extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.layerGroup, nextProps.layerGroup)) {
       this.treeNodesFromLayerGroup(nextProps.layerGroup);
-      this.checkedKeysFromLayerGroup(nextProps.layerGroup);
+      const checkedKeys = this.getVisibleOlUids();
+      this.setState({
+        checkedKeys
+      });
     }
   }
 
@@ -85,23 +94,6 @@ class LayerTree extends React.Component {
   }
 
   /**
-   * Determines the checkedKeys from a given layerGroup. Iterates over its children
-   * and adds visibile layers to the checkedKeysArray in the state.
-   *
-   * @param {ol.layer.Group} groupLayer A grouplayer.
-   */
-  checkedKeysFromLayerGroup(groupLayer) {
-    const allLayers = MapUtils.getAllLayers(groupLayer);
-    let checkedKeys = [];
-    allLayers.forEach((layer) => {
-      if (layer.getVisible()) {
-        checkedKeys.push(layer.ol_uid.toString());
-      }
-    });
-    this.setState({checkedKeys});
-  }
-
-  /**
    * Creates a treeNode from a given layer.
    *
    * @param {ol.layer.Layer} layer The given layer.
@@ -110,12 +102,21 @@ class LayerTree extends React.Component {
   treeNodeFromLayer(layer) {
     let childNodes;
     let treeNode;
+
     if (layer instanceof OlGroupLayer) {
+      if (!layer.getVisible()) {
+        Logger.warn('Your map configuration contains layerGroups that are' +
+        'invisible. This might lead to buggy behaviour.');
+      }
+
       const childLayers = layer.getLayers().getArray();
       childNodes = childLayers.map((childLayer) => {
         return this.treeNodeFromLayer(childLayer);
       });
+    } else {
+      layer.on('change:visible', this.onLayerChangeVisible);
     }
+
     treeNode = <TreeNode
       title={layer.get('name')}
       key={layer.ol_uid}
@@ -126,6 +127,30 @@ class LayerTree extends React.Component {
   }
 
   /**
+   * Reacts to the layer change:visible event and calls setCheckedState.
+   *
+   * @param {ol.Object.Event} evt The change:visible event
+   */
+  onLayerChangeVisible = () => {
+    const checkedKeys = this.getVisibleOlUids();
+    this.setState({
+      checkedKeys
+    });
+  }
+
+  /**
+   * Get the flat array of ol_uids from visible non groupLayers.
+   *
+   * @return {Array<String>} The visible ol_uids.
+   */
+  getVisibleOlUids = () => {
+    const layers = MapUtil.getAllLayers(this.props.layerGroup, (layer) => {
+      return !(layer instanceof OlGroupLayer) && layer.getVisible();
+    });
+    return layers.map(l => l.ol_uid.toString());
+  }
+
+  /**
    * Sets the visibility of a layer due to its checked state.
    *
    * @param {Array<String>} checkedKeys Contains all checkedKeys.
@@ -133,11 +158,43 @@ class LayerTree extends React.Component {
    */
   onCheck = (checkedKeys, e) => {
     const {checked} = e;
-    const layer = MapUtils.getLayerByOlUid(this.props.map, e.node.props.eventKey);
-    if (layer) {
-      layer.setVisible(checked);
+    const eventKey = e.node.props.eventKey;
+    const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
+
+    this.setLayerVisibility(layer, checked);
+  }
+
+  /**
+   * Sets the layer visibility. Calls itself recursively for groupLayers.
+   *
+   * @param {ol.layer.Base} layer The layer.
+   * @param {Boolean} visiblity The visiblity.
+   */
+  setLayerVisibility = (layer, visiblity) => {
+    if (!layer) {
+      Logger.error('LayerTree.setLayerVisibility called without layer.');
+      return;
     }
-    this.setState({checkedKeys});
+    if (layer instanceof OlGroupLayer) {
+      layer.getLayers().forEach((subLayer) => {
+        this.setLayerVisibility(subLayer, visiblity);
+      });
+    } else {
+      layer.setVisible(visiblity);
+    }
+  }
+
+  /**
+   * Remove layerGroup.ol_uids from checkedKeys array.
+   *
+   * @param {Array<String>} checkedKeys The checkedKeys.
+   * @return {Array<String>} The cleaned up checkedKeys.
+   */
+  cleanupCheckedKeys = (checkedKeys) => {
+    return checkedKeys.filter((key) => {
+      const layer = MapUtil.getLayerByOlUid(this.props.map, key);
+      return !(layer instanceof OlGroupLayer);
+    });
   }
 
   /**
@@ -147,17 +204,17 @@ class LayerTree extends React.Component {
    * @param {Object} e The ant-tree event object for this event. See ant docs.
    */
   onDrop = (e) => {
-    const dragLayer = MapUtils.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
-    const dragInfo = this.getLayerPositionInfo(dragLayer);
-    const dropLayer = MapUtils.getLayerByOlUid(this.props.map, e.node.props.eventKey);
+    const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
+    const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
+    const dropLayer = MapUtil.getLayerByOlUid(this.props.map, e.node.props.eventKey);
     const dropPos = e.node.props.pos.split('-');
     const location = e.dropPosition - Number(dropPos[dropPos.length - 1]);
 
-    dragInfo.collection.remove(dragLayer);
+    dragInfo.groupLayer.remove(dragLayer);
 
-    const info = this.getLayerPositionInfo(dropLayer);
+    const info = MapUtil.getLayerPositionInfo(dropLayer, this.props.map);
     const dropPosition = info.position;
-    const dropCollection = info.collection;
+    const dropCollection = info.groupLayer.getLayers();
 
     // drop before node
     if (location === -1) {
@@ -179,37 +236,6 @@ class LayerTree extends React.Component {
     }
 
     this.treeNodesFromLayerGroup(this.props.layerGroup);
-  }
-
-  /**
-   * Get information about the LayerPosition in the tree.
-   *
-   * @param {ol.layer.Layer} layer The layer to get the information.
-   * @param {ol.layer.Group} [groupLayer = this.props.map] The groupLayer
-   *                                     containg the layer.
-   * @return {Object} An object with these keys:
-   *    {ol.layer.Group} collection The collection containing the layer.
-   *    {Integer} position The position of the layer in the collection.
-   */
-  getLayerPositionInfo = (layer, groupLayer) => {
-    const map = this.props.map;
-    const collection = groupLayer instanceof OlGroupLayer
-      ? groupLayer.getLayers()
-      : map.getLayers();
-    const layers = collection.getArray();
-    let info = {};
-
-    if (layers.indexOf(layer) < 0) {
-      layers.forEach((childLayer) => {
-        if (childLayer instanceof OlGroupLayer) {
-          info = this.getLayerPositionInfo(layer, childLayer);
-        }
-      });
-    } else {
-      info.position = layers.indexOf(layer);
-      info.collection = collection;
-    }
-    return info;
   }
 
   /**
