@@ -185,7 +185,69 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line141">line 141</a>
+        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line149">line 149</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="getLayerPositionInfo"><span class="type-signature"></span>getLayerPositionInfo<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Get information about the LayerPosition in the tree.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line238">line 238</a>
     </li></ul></dd>
     
 
@@ -213,7 +275,7 @@
     
 
     
-    <h4 class="name" id=".getAllLayers"><span class="type-signature">(static) </span>getAllLayers<span class="signature">(collection)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id=".getAllLayers"><span class="type-signature">(static) </span>getAllLayers<span class="signature">(collection, filter<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
     
 
     
@@ -245,6 +307,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -273,12 +337,55 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last"><p>The collection to get the layers
                                           from. This can be an ol.layer.Group
                                           or and ol.Map.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A filter function that receives the layer.
+                           If it returns true it will be included in the
+                           returned layers.</p></td>
         </tr>
 
     
@@ -319,7 +426,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line114">line 114</a>
+        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line117">line 117</a>
     </li></ul></dd>
     
 
@@ -882,7 +989,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line183">line 183</a>
+        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line191">line 191</a>
     </li></ul></dd>
     
 
@@ -1064,7 +1171,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line158">line 158</a>
+        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line166">line 166</a>
     </li></ul></dd>
     
 
@@ -1245,7 +1352,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line206">line 206</a>
+        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line214">line 214</a>
     </li></ul></dd>
     
 
@@ -1273,163 +1380,6 @@
         
 <div class="param-desc">
     <p>The (flattened) layers from the group</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".getMapLayers"><span class="type-signature">(static) </span>getMapLayers<span class="signature">(map)</span><span class="type-signature"> &rarr; {Array}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Returns all layers of the provided map.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>map</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ol.Map</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The map to use for lookup.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_MapUtil.js.html">Util/MapUtil.js</a>, <a href="Util_MapUtil.js.html#line226">line 226</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>An array of all map layers.</p>
 </div>
 
 
@@ -1841,7 +1791,7 @@ based on a resolution and the Ol.View</a></li><li><a href="global.html#resizeOpt
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Wed Sep 13 2017 10:00:01 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Wed Sep 13 2017 11:21:06 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>
