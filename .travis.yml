@@ -3,8 +3,8 @@ node_js:
 - node
 before_install:
 - npm install -g greenkeeper-lockfile@1
-- npm install --no-save react
 before_script:
+- npm install --no-save react
 - greenkeeper-lockfile-update
 script:
 - npm run build
