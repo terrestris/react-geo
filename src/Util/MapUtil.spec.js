@@ -298,34 +298,142 @@ describe('MapUtil', () => {
     });
   });
 
-  describe('#getMapLayers', () => {
-    it('returns all layers of the provided map', () => {
-      let layerGroup = new OlLayerGroup({
-        layers: [
-          TestUtils.createVectorLayer({name: 'Layer 1'}),
-          TestUtils.createVectorLayer({name: 'Layer 2'}),
-          new OlLayerGroup({
-            layers: [
-              TestUtils.createVectorLayer({name: 'Sublayer 1'}),
-              TestUtils.createVectorLayer({name: 'Sublayer 2'}),
-              new OlLayerGroup({
-                layers: [
-                  TestUtils.createVectorLayer({name: 'Subsublayer 1'}),
-                  TestUtils.createVectorLayer({name: 'Subsublayer 2'}),
-                ]
-              }),
-              TestUtils.createVectorLayer({name: 'Sublayer 3'})
-            ]
-          }),
-          TestUtils.createVectorLayer({name: 'Layer 3'})
-        ]
-      });
+  describe('#getAllLayers', () => {
+    let subLayer;
+    let nestedLayerGroup;
+    let layer1;
+    let layer2;
+    let layerGroup;
 
+    beforeEach(() => {
+      const layerSource1 = new OlSourceTileWMS();
+      layer1 = new OlLayerTile({
+        name: 'layer1',
+        source: layerSource1
+      });
+      const layerSource2 = new OlSourceTileWMS();
+      layer2 = new OlLayerTile({
+        name: 'layer2',
+        visible: false,
+        source: layerSource2
+      });
+      subLayer = new OlLayerTile({
+        name: 'subLayer',
+        source: new OlSourceTileWMS()
+      });
+      nestedLayerGroup = new OlLayerGroup({
+        name: 'nestedLayerGroup',
+        layers: [subLayer]
+      });
+      layerGroup = new OlLayerGroup({
+        layers: [layer1, layer2, nestedLayerGroup]
+      });
+      map = TestUtils.createMap();
       map.setLayerGroup(layerGroup);
-      let got = MapUtil.getMapLayers(map);
+    });
+
+    it('Logs an error and returns an empty array on invalid argument', () => {
+      const logSpy = sinon.spy(Logger, 'error');
+      const got = MapUtil.getAllLayers();
 
       expect(got).to.be.an(Array);
-      expect(got).to.have.length(8);
+      expect(got).to.have.length(0);
+      expect(logSpy).to.have.property('callCount', 1);
+
+      logSpy.restore();
     });
+
+    it('returns a flat list of all layers (map passed)', () => {
+      const got = MapUtil.getAllLayers(map);
+
+      expect(got).to.be.an(Array);
+      expect(got).to.have.length(4);
+      expect(got).to.contain(layer1);
+      expect(got).to.contain(layer2);
+      expect(got).to.contain(nestedLayerGroup);
+      expect(got).to.contain(subLayer);
+    });
+
+    it('returns a flat list of all layers (layergroup passed)', () => {
+      const got = MapUtil.getAllLayers(nestedLayerGroup);
+
+      expect(got).to.be.an(Array);
+      expect(got).to.have.length(1);
+      expect(got).to.contain(subLayer);
+    });
+
+    it('can be used with a filter', () => {
+      const got = MapUtil.getAllLayers(map, l => l.get('name') === 'layer1');
+
+      expect(got).to.be.an(Array);
+      expect(got).to.have.length(1);
+      expect(got).to.contain(layer1);
+    });
+
   });
+
+  describe('getLayerPositionInfo', () => {
+    let subLayer;
+    let nestedLayerGroup;
+    let layer1;
+    let layer2;
+    let layerGroup;
+
+    beforeEach(() => {
+      const layerSource1 = new OlSourceTileWMS();
+      layer1 = new OlLayerTile({
+        name: 'layer1',
+        source: layerSource1
+      });
+      const layerSource2 = new OlSourceTileWMS();
+      layer2 = new OlLayerTile({
+        name: 'layer2',
+        visible: false,
+        source: layerSource2
+      });
+      subLayer = new OlLayerTile({
+        name: 'subLayer',
+        source: new OlSourceTileWMS()
+      });
+      nestedLayerGroup = new OlLayerGroup({
+        name: 'nestedLayerGroup',
+        layers: [subLayer]
+      });
+      layerGroup = new OlLayerGroup({
+        layers: [layer1, layer2, nestedLayerGroup]
+      });
+      map = TestUtils.createMap();
+      map.setLayerGroup(layerGroup);
+    });
+
+    it('uses the map if second argument is a map', () => {
+      const layerPositionInfo = MapUtil.getLayerPositionInfo(layer1, map);
+
+      expect(layerPositionInfo).to.be.eql({
+        position: 0,
+        groupLayer: layerGroup
+      });
+    });
+
+    it('uses the layerGroup if given as second argument', () => {
+      const layerPositionInfo = MapUtil.getLayerPositionInfo(subLayer, nestedLayerGroup);
+
+      expect(layerPositionInfo).to.be.eql({
+        position: 0,
+        groupLayer: nestedLayerGroup
+      });
+    });
+
+    it('works iterative', () => {
+      const layerPositionInfo = MapUtil.getLayerPositionInfo(subLayer, map);
+
+      expect(layerPositionInfo).to.be.eql({
+        position: 0,
+        groupLayer: nestedLayerGroup
+      });
+    });
+
+  });
+
+
 });

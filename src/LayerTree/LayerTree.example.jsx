@@ -73,7 +73,7 @@ render(
     </div>
 
     <div className="example-block">
-      <span>{'A LayerTree configured with concrete layerGroup:'}:</span>
+      <span>{'A LayerTree configured with concrete layerGroup:'}</span>
 
       <LayerTree
         layerGroup={layerGroup}
