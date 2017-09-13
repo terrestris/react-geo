@@ -24,9 +24,21 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _lodash = require('lodash');
 
+var _base = require('ol/layer/base');
+
+var _base2 = _interopRequireDefault(_base);
+
 var _group = require('ol/layer/group');
 
 var _group2 = _interopRequireDefault(_group);
+
+var _observable = require('ol/observable');
+
+var _observable2 = _interopRequireDefault(_observable);
+
+var _Logger = require('../Util/Logger');
+
+var _Logger2 = _interopRequireDefault(_Logger);
 
 var _MapUtil = require('../Util/MapUtil');
 
@@ -45,7 +57,9 @@ var TreeNode = _tree2.default.TreeNode;
 /**
  * The LayerTree.
  *
- * @class The LayerTree
+ * Note. This component expects that all layerGroups are permanently visibile.
+ *
+ * @class LayerTree
  * @extends React.Component
  */
 
@@ -68,28 +82,126 @@ var LayerTree = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (LayerTree.__proto__ || Object.getPrototypeOf(LayerTree)).call(this, props));
 
+    _this.olListenerKeys = [];
+
+    _this.registerAddRemoveListeners = function (groupLayer) {
+      var collection = groupLayer.getLayers();
+      var addEvtKey = collection.on('add', _this.onCollectionAdd);
+      var removeEvtKey = collection.on('remove', _this.onCollectionRemove);
+
+      _this.olListenerKeys.push(addEvtKey, removeEvtKey);
+
+      collection.forEach(function (layer) {
+        if (layer instanceof _group2.default) {
+          _this.registerAddRemoveListeners(layer);
+        }
+      });
+    };
+
+    _this.onCollectionAdd = function (evt) {
+      if (evt.element instanceof _group2.default) {
+        _this.registerAddRemoveListeners(evt.element);
+      }
+      _this.rebuildTreeNodes();
+    };
+
+    _this.onCollectionRemove = function (evt) {
+      _this.unregisterEventsByLayer(evt.element);
+      if (evt.element instanceof _group2.default) {
+        evt.element.getLayers().forEach(function (layer) {
+          _this.unregisterEventsByLayer(layer);
+        });
+      }
+      _this.rebuildTreeNodes();
+    };
+
+    _this.unregisterEventsByLayer = function (layer) {
+      _this.olListenerKeys = _this.olListenerKeys.filter(function (key) {
+        if (layer instanceof _group2.default) {
+          var layers = layer.getLayers();
+          if (key.target === layers) {
+            if (key.type === 'add' && key.listener === _this.onCollectionAdd || key.type === 'remove' && key.listener === _this.onCollectionRemove) {
+
+              _observable2.default.unByKey(key);
+              return false;
+            }
+          }
+        } else if (key.target === layer) {
+          if (key.type === 'change:visible' && key.listener === _this.onLayerChangeVisible) {
+            _observable2.default.unByKey(key);
+            return false;
+          }
+        }
+        return true;
+      });
+    };
+
+    _this.rebuildTreeNodes = function () {
+      _this.treeNodesFromLayerGroup(_this.state.layerGroup);
+      var checkedKeys = _this.getVisibleOlUids();
+      _this.setState({
+        checkedKeys: checkedKeys
+      });
+    };
+
+    _this.hasListener = function (target, type, listener) {
+      return _this.olListenerKeys.some(function (listenerKey) {
+        return listenerKey.target === target && listenerKey.type === type && listenerKey.listener === listener;
+      });
+    };
+
+    _this.onLayerChangeVisible = function () {
+      var checkedKeys = _this.getVisibleOlUids();
+      _this.setState({
+        checkedKeys: checkedKeys
+      });
+    };
+
+    _this.getVisibleOlUids = function () {
+      var layers = _MapUtil2.default.getAllLayers(_this.state.layerGroup, function (layer) {
+        return !(layer instanceof _group2.default) && layer.getVisible();
+      });
+      return layers.map(function (l) {
+        return l.ol_uid.toString();
+      });
+    };
+
     _this.onCheck = function (checkedKeys, e) {
       var checked = e.checked;
 
-      var layer = _MapUtil2.default.getLayerByOlUid(_this.props.map, e.node.props.eventKey);
-      if (layer) {
-        layer.setVisible(checked);
+      var eventKey = e.node.props.eventKey;
+      var layer = _MapUtil2.default.getLayerByOlUid(_this.props.map, eventKey);
+
+      _this.setLayerVisibility(layer, checked);
+    };
+
+    _this.setLayerVisibility = function (layer, visiblity) {
+      if (!(layer instanceof _base2.default) || !(0, _lodash.isBoolean)(visiblity)) {
+        _Logger2.default.error('setLayerVisibility called without layer or visiblity.');
+        return;
       }
-      _this.setState({ checkedKeys: checkedKeys });
+      if (layer instanceof _group2.default) {
+        layer.getLayers().forEach(function (subLayer) {
+          _this.setLayerVisibility(subLayer, visiblity);
+        });
+      } else {
+        layer.setVisible(visiblity);
+      }
     };
 
     _this.onDrop = function (e) {
       var dragLayer = _MapUtil2.default.getLayerByOlUid(_this.props.map, e.dragNode.props.eventKey);
-      var dragInfo = _this.getLayerPositionInfo(dragLayer);
+      var dragInfo = _MapUtil2.default.getLayerPositionInfo(dragLayer, _this.props.map);
+      var dragCollection = dragInfo.groupLayer.getLayers();
       var dropLayer = _MapUtil2.default.getLayerByOlUid(_this.props.map, e.node.props.eventKey);
       var dropPos = e.node.props.pos.split('-');
       var location = e.dropPosition - Number(dropPos[dropPos.length - 1]);
 
-      dragInfo.collection.remove(dragLayer);
+      dragCollection.remove(dragLayer);
 
-      var info = _this.getLayerPositionInfo(dropLayer);
+      var info = _MapUtil2.default.getLayerPositionInfo(dropLayer, _this.props.map);
       var dropPosition = info.position;
-      var dropCollection = info.collection;
+      var dropCollection = info.groupLayer.getLayers();
 
       // drop before node
       if (location === -1) {
@@ -110,29 +222,11 @@ var LayerTree = function (_React$Component) {
         dropCollection.insertAt(dropPosition + 1, dragLayer);
       }
 
-      _this.treeNodesFromLayerGroup(_this.props.layerGroup);
-    };
-
-    _this.getLayerPositionInfo = function (layer, groupLayer) {
-      var map = _this.props.map;
-      var collection = groupLayer instanceof _group2.default ? groupLayer.getLayers() : map.getLayers();
-      var layers = collection.getArray();
-      var info = {};
-
-      if (layers.indexOf(layer) < 0) {
-        layers.forEach(function (childLayer) {
-          if (childLayer instanceof _group2.default) {
-            info = _this.getLayerPositionInfo(layer, childLayer);
-          }
-        });
-      } else {
-        info.position = layers.indexOf(layer);
-        info.collection = collection;
-      }
-      return info;
+      _this.rebuildTreeNodes();
     };
 
     _this.state = {
+      layerGrop: null,
       treeNodes: [],
       checkedKeys: []
     };
@@ -146,17 +240,41 @@ var LayerTree = function (_React$Component) {
 
   /**
    * The default properties.
+   *
    * @type {Object}
+   */
+
+
+  /**
+   *  An array of ol.EventsKey as returned by on() or once().
+   * @type {Array<ol.EventsKey>}
+   * @private
    */
 
 
   _createClass(LayerTree, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      var _this2 = this;
+
       if (this.props.layerGroup) {
-        this.treeNodesFromLayerGroup(this.props.layerGroup);
-        this.checkedKeysFromLayerGroup(this.props.layerGroup);
+        this.setState({
+          layerGroup: this.props.layerGroup
+        }, function () {
+          _this2.registerAddRemoveListeners(_this2.state.layerGroup);
+          _this2.rebuildTreeNodes();
+        });
       }
+    }
+
+    /**
+     * Determines what to do on the initial mount.
+     */
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      _observable2.default.unByKey(this.olListenerKeys);
     }
 
     /**
@@ -168,9 +286,18 @@ var LayerTree = function (_React$Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
+      var _this3 = this;
+
       if (!(0, _lodash.isEqual)(this.props.layerGroup, nextProps.layerGroup)) {
-        this.treeNodesFromLayerGroup(nextProps.layerGroup);
-        this.checkedKeysFromLayerGroup(nextProps.layerGroup);
+        _observable2.default.unByKey(this.olListenerKeys);
+        this.olListenerKeys = [];
+
+        this.setState({
+          layerGroup: nextProps.layerGroup
+        }, function () {
+          _this3.registerAddRemoveListeners(_this3.state.layerGroup);
+          _this3.rebuildTreeNodes();
+        });
       }
     }
 
@@ -183,34 +310,53 @@ var LayerTree = function (_React$Component) {
   }, {
     key: 'treeNodesFromLayerGroup',
     value: function treeNodesFromLayerGroup(groupLayer) {
-      var _this2 = this;
+      var _this4 = this;
 
       var layerArray = groupLayer.getLayers().getArray();
       var treeNodes = layerArray.map(function (layer) {
-        return _this2.treeNodeFromLayer(layer);
+        return _this4.treeNodeFromLayer(layer);
       });
       this.setState({ treeNodes: treeNodes });
     }
 
     /**
-     * Determines the checkedKeys from a given layerGroup. Iterates over its children
-     * and adds visibile layers to the checkedKeysArray in the state.
+     * Registers the add/remove listeners recursively for all ol.layer.Group.
      *
-     * @param {ol.layer.Group} groupLayer A grouplayer.
+     * @param {ol.layer.Group} groupLayer A ol.layer.Group
+     */
+
+
+    /**
+     * Listens to the collections add event of a collection.
+     * Registers add/remove listeners if element is a collection and rebuilds the
+     * treeNodes.
+     *
+     * @param {ol.Collection.Event} evt The add event.
+     */
+
+
+    /**
+     * Listens to the collections remove event of a collection.
+     * Unregisters the events of deleted layers and rebuilds the treeNodes.
+     *
+     * @param {ol.Collection.Event} evt The remove event.
+     */
+
+
+    /**
+     * Unregisters the Events of a given layer.
+     *
+     * @param {ol.layer.Base} layer An ol.layer.Base.
+     */
+
+
+    /**
+     * Rebuilds the treeNodes and its checked states.
      */
 
   }, {
-    key: 'checkedKeysFromLayerGroup',
-    value: function checkedKeysFromLayerGroup(groupLayer) {
-      var allLayers = _MapUtil2.default.getAllLayers(groupLayer);
-      var checkedKeys = [];
-      allLayers.forEach(function (layer) {
-        if (layer.getVisible()) {
-          checkedKeys.push(layer.ol_uid.toString());
-        }
-      });
-      this.setState({ checkedKeys: checkedKeys });
-    }
+    key: 'treeNodeFromLayer',
+
 
     /**
      * Creates a treeNode from a given layer.
@@ -218,23 +364,32 @@ var LayerTree = function (_React$Component) {
      * @param {ol.layer.Layer} layer The given layer.
      * @return {TreeNode} The corresponding TreeNode Element.
      */
-
-  }, {
-    key: 'treeNodeFromLayer',
     value: function treeNodeFromLayer(layer) {
-      var _this3 = this;
+      var _this5 = this;
 
       var childNodes = void 0;
       var treeNode = void 0;
+
       if (layer instanceof _group2.default) {
+        if (!layer.getVisible()) {
+          _Logger2.default.warn('Your map configuration contains layerGroups that are' + 'invisible. This might lead to buggy behaviour.');
+        }
+
         var childLayers = layer.getLayers().getArray();
         childNodes = childLayers.map(function (childLayer) {
-          return _this3.treeNodeFromLayer(childLayer);
+          return _this5.treeNodeFromLayer(childLayer);
         });
+      } else {
+        if (!this.hasListener(layer, 'change:visible', this.onLayerChangeVisible)) {
+          var eventKey = layer.on('change:visible', this.onLayerChangeVisible);
+          this.olListenerKeys.push(eventKey);
+        }
       }
+
       treeNode = _react2.default.createElement(
         TreeNode,
         {
+          className: 'react-geo-layertree-node',
           title: layer.get('name'),
           key: layer.ol_uid
         },
@@ -242,6 +397,32 @@ var LayerTree = function (_React$Component) {
       );
       return treeNode;
     }
+
+    /**
+     * Determines if the target has already registered the given listener for the
+     * given eventtype.
+     *
+     * @param {Object} target The event target.
+     * @param {String} type The events type (name).
+     * @param {function} listener The function.
+     * @return {Boolean} True if the listener is allready contained in
+     *                   this.olListenerKeys.
+     */
+
+
+    /**
+     * Reacts to the layer change:visible event and calls setCheckedState.
+     *
+     * @param {ol.Object.Event} evt The change:visible event
+     */
+
+
+    /**
+     * Get the flat array of ol_uids from visible non groupLayers.
+     *
+     * @return {Array<String>} The visible ol_uids.
+     */
+
 
     /**
      * Sets the visibility of a layer due to its checked state.
@@ -252,22 +433,18 @@ var LayerTree = function (_React$Component) {
 
 
     /**
-     * The callback method for the drop event. Layers will get reordered in the map
-     * and the tree.
+     * Sets the layer visibility. Calls itself recursively for groupLayers.
      *
-     * @param {Object} e The ant-tree event object for this event. See ant docs.
+     * @param {ol.layer.Base} layer The layer.
+     * @param {Boolean} visiblity The visiblity.
      */
 
 
     /**
-     * Get information about the LayerPosition in the tree.
+     * The callback method for the drop event. Layers will get reordered in the map
+     * and the tree.
      *
-     * @param {ol.layer.Layer} layer The layer to get the information.
-     * @param {ol.layer.Group} [groupLayer = this.props.map] The groupLayer
-     *                                     containg the layer.
-     * @return {Object} An object with these keys:
-     *    {ol.layer.Group} collection The collection containing the layer.
-     *    {Integer} position The position of the layer in the collection.
+     * @param {Object} e The ant-tree event object for this event. See ant docs.
      */
 
   }, {
@@ -312,8 +489,7 @@ LayerTree.propTypes = {
 
   layerGroup: _propTypes2.default.instanceOf(_group2.default),
 
-  map: _propTypes2.default.object
-};
+  map: _propTypes2.default.object };
 LayerTree.defaultProps = {
   draggable: true };
 exports.default = LayerTree;

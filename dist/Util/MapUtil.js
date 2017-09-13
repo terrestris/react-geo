@@ -152,14 +152,22 @@ var MapUtil = exports.MapUtil = function () {
      * @param {ol.Map|ol.layer.Group} collection The collection to get the layers
      *                                           from. This can be an ol.layer.Group
      *                                           or and ol.Map.
+     * @param {function} [filter] A filter function that receives the layer.
+     *                            If it returns true it will be included in the
+     *                            returned layers.
      * @return {Array} An array of all Layers.
      */
 
   }, {
     key: 'getAllLayers',
     value: function getAllLayers(collection) {
+      var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
+        return true;
+      };
+
       if (!(collection instanceof _map2.default) && !(collection instanceof _group2.default)) {
         _Logger2.default.error('Input parameter collection must be from type `ol.Map`' + 'or `ol.layer.Group`.');
+        return [];
       }
 
       var layers = collection.getLayers().getArray();
@@ -168,10 +176,14 @@ var MapUtil = exports.MapUtil = function () {
       layers.forEach(function (layer) {
         if (layer instanceof _group2.default) {
           MapUtil.getAllLayers(layer).forEach(function (layeri) {
-            allLayers.push(layeri);
+            if (filter(layeri)) {
+              allLayers.push(layeri);
+            }
           });
         }
-        allLayers.push(layer);
+        if (filter(layer)) {
+          allLayers.push(layer);
+        }
       });
       return allLayers;
     }
@@ -198,7 +210,7 @@ var MapUtil = exports.MapUtil = function () {
      *                    be found.
      */
     value: function getLayerByName(map, name) {
-      var layers = MapUtil.getMapLayers(map);
+      var layers = MapUtil.getAllLayers(map);
       var layerCandidate = void 0;
 
       var _iteratorNormalCompletion = true;
@@ -306,17 +318,16 @@ var MapUtil = exports.MapUtil = function () {
     }
 
     /**
-     * Returns all layers of the provided map.
+     * Get information about the LayerPosition in the tree.
      *
-     * @param {ol.Map} map The map to use for lookup.
-     * @return {Array} An array of all map layers.
+     * @param {ol.layer.Layer} layer The layer to get the information.
+     * @param {ol.layer.Group|ol.Map} [groupLayerOrMap] The groupLayer or map
+     *                                                  containing the layer.
+     * @return {Object} An object with these keys:
+     *    {ol.layer.Group} groupLayer The groupLayer containing the layer.
+     *    {Integer} position The position of the layer in the collection.
      */
 
-  }, {
-    key: 'getMapLayers',
-    value: function getMapLayers(map) {
-      return MapUtil.getLayersByGroup(map, map.getLayerGroup());
-    }
   }]);
 
   return MapUtil;
@@ -328,6 +339,24 @@ MapUtil.getLayerByOlUid = function (map, ol_uid) {
     return ol_uid === l.ol_uid.toString();
   });
   return layer;
+};
+
+MapUtil.getLayerPositionInfo = function (layer, groupLayerOrMap) {
+  var groupLayer = groupLayerOrMap instanceof _group2.default ? groupLayerOrMap : groupLayerOrMap.getLayerGroup();
+  var layers = groupLayer.getLayers().getArray();
+  var info = {};
+
+  if (layers.indexOf(layer) < 0) {
+    layers.forEach(function (childLayer) {
+      if (childLayer instanceof _group2.default && !info.groupLayer) {
+        info = MapUtil.getLayerPositionInfo(layer, childLayer);
+      }
+    });
+  } else {
+    info.position = layers.indexOf(layer);
+    info.groupLayer = groupLayer;
+  }
+  return info;
 };
 
 exports.default = MapUtil;
