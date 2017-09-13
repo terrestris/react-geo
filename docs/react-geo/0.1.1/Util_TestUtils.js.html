@@ -33,6 +33,8 @@ import OlView from 'ol/view';
 import OlMap from 'ol/map';
 import OlSourceVector from 'ol/source/vector';
 import OlLayerVector from 'ol/layer/vector';
+import OlPointerEvent from 'ol/pointer/pointerevent';
+import OlMapBrowserPointerEvent from 'ol/mapbrowserpointerevent';
 
 /**
  * A set of some useful static helper methods.
@@ -132,6 +134,45 @@ export class TestUtils {
     TestUtils.unmountMapDiv();
   };
 
+  /**
+   * Simulates a browser pointer event on the map viewport.
+   * Origin: https://github.com/openlayers/openlayers/blob/master/test/spec/ol/interaction/draw.test.js#L67
+   *
+   * @param {ol.Map} map The map to use.
+   * @param {string} type Event type.
+   * @param {number} x Horizontal offset from map center.
+   * @param {number} y Vertical offset from map center.
+   * @param {boolean} opt_shiftKey Shift key is pressed
+   * @param {boolean} dragging Whether the map is being dragged or not.
+   */
+  static simulatePointerEvent = (map, type, x, y, opt_shiftKey, dragging) => {
+    let viewport = map.getViewport();
+    // Calculated in case body has top &lt; 0 (test runner with small window).
+    let position = viewport.getBoundingClientRect();
+    let shiftKey = opt_shiftKey !== undefined ? opt_shiftKey : false;
+    let event = new OlPointerEvent(type, {
+      clientX: position.left + x + TestUtils.mapDivWidth / 2,
+      clientY: position.top + y + TestUtils.mapDivHeight / 2,
+      shiftKey: shiftKey
+    });
+    map.handleMapBrowserEvent(new OlMapBrowserPointerEvent(type, map, event, dragging));
+  }
+
+  /**
+   * Creates and returns an empty vector layer.
+   *
+   * @param {Object} properties The properties to set.
+   * @return {ol.layer.Vector} The layer.
+   */
+  static createVectorLayer = (properties) => {
+    let source = new OlSourceVector();
+    let layer = new OlLayerVector({source: source});
+
+    layer.setProperties(properties);
+
+    return layer;
+  }
+
 }
 
 export default TestUtils;
@@ -145,15 +186,15 @@ export default TestUtils;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="TestUtils.html">TestUtils</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
-based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
-based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtils.html">TestUtils</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
+based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
+based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Tue Sep 12 2017 09:08:55 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Wed Sep 13 2017 10:00:01 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>

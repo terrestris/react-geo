@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: LayerTree/LayerTree.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: LayerTree/LayerTree.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import PropTypes from 'prop-types';
+import { isEqual } from 'lodash';
+import { Tree } from 'antd';
+import OlGroupLayer from 'ol/layer/group';
+
+import MapUtils from '../Util/MapUtil';
+const TreeNode = Tree.TreeNode;
+
+/**
+ * The LayerTree.
+ *
+ * @class The LayerTree
+ * @extends React.Component
+ */
+class LayerTree extends React.Component {
+
+  /**
+   * The properties.
+   * @type {Object}
+   */
+  static propTypes = {
+    draggable: PropTypes.bool,
+
+    layerGroup: PropTypes.instanceOf(OlGroupLayer),
+
+    map: PropTypes.object
+  };
+
+  /**
+   * The default properties.
+   * @type {Object}
+   */
+  static defaultProps = {
+    draggable: true
+  }
+
+  /**
+   * Create the LayerTree.
+   *
+   * @constructs LayerTree
+   */
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      treeNodes: [],
+      checkedKeys: []
+    };
+  }
+
+  /**
+   * Determines what to do on the initial mount.
+   */
+  componentDidMount() {
+    if (this.props.layerGroup) {
+      this.treeNodesFromLayerGroup(this.props.layerGroup);
+      this.checkedKeysFromLayerGroup(this.props.layerGroup);
+    }
+  }
+
+  /**
+   * Determines what to do with new props.
+   *
+   * @param {Object} nextProps The new props.
+   */
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.layerGroup, nextProps.layerGroup)) {
+      this.treeNodesFromLayerGroup(nextProps.layerGroup);
+      this.checkedKeysFromLayerGroup(nextProps.layerGroup);
+    }
+  }
+
+  /**
+   * Creates TreeNodes from a given layergroup and sets the treeNodes in the state.
+   *
+   * @param {ol.layer.Group} groupLayer A grouplayer.
+   */
+  treeNodesFromLayerGroup(groupLayer) {
+    const layerArray = groupLayer.getLayers().getArray();
+    const treeNodes = layerArray.map((layer) => {
+      return this.treeNodeFromLayer(layer);
+    });
+    this.setState({treeNodes});
+  }
+
+  /**
+   * Determines the checkedKeys from a given layerGroup. Iterates over its children
+   * and adds visibile layers to the checkedKeysArray in the state.
+   *
+   * @param {ol.layer.Group} groupLayer A grouplayer.
+   */
+  checkedKeysFromLayerGroup(groupLayer) {
+    const allLayers = MapUtils.getAllLayers(groupLayer);
+    let checkedKeys = [];
+    allLayers.forEach((layer) => {
+      if (layer.getVisible()) {
+        checkedKeys.push(layer.ol_uid.toString());
+      }
+    });
+    this.setState({checkedKeys});
+  }
+
+  /**
+   * Creates a treeNode from a given layer.
+   *
+   * @param {ol.layer.Layer} layer The given layer.
+   * @return {TreeNode} The corresponding TreeNode Element.
+   */
+  treeNodeFromLayer(layer) {
+    let childNodes;
+    let treeNode;
+    if (layer instanceof OlGroupLayer) {
+      const childLayers = layer.getLayers().getArray();
+      childNodes = childLayers.map((childLayer) => {
+        return this.treeNodeFromLayer(childLayer);
+      });
+    }
+    treeNode = &lt;TreeNode
+      title={layer.get('name')}
+      key={layer.ol_uid}
+    >
+      {childNodes}
+    &lt;/TreeNode>;
+    return treeNode;
+  }
+
+  /**
+   * Sets the visibility of a layer due to its checked state.
+   *
+   * @param {Array&lt;String>} checkedKeys Contains all checkedKeys.
+   * @param {e} checked The ant-tree event object for this event. See ant docs.
+   */
+  onCheck = (checkedKeys, e) => {
+    const {checked} = e;
+    const layer = MapUtils.getLayerByOlUid(this.props.map, e.node.props.eventKey);
+    if (layer) {
+      layer.setVisible(checked);
+    }
+    this.setState({checkedKeys});
+  }
+
+  /**
+   * The callback method for the drop event. Layers will get reordered in the map
+   * and the tree.
+   *
+   * @param {Object} e The ant-tree event object for this event. See ant docs.
+   */
+  onDrop = (e) => {
+    const dragLayer = MapUtils.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
+    const dragInfo = this.getLayerPositionInfo(dragLayer);
+    const dropLayer = MapUtils.getLayerByOlUid(this.props.map, e.node.props.eventKey);
+    const dropPos = e.node.props.pos.split('-');
+    const location = e.dropPosition - Number(dropPos[dropPos.length - 1]);
+
+    dragInfo.collection.remove(dragLayer);
+
+    const info = this.getLayerPositionInfo(dropLayer);
+    const dropPosition = info.position;
+    const dropCollection = info.collection;
+
+    // drop before node
+    if (location === -1) {
+      if (dropPosition === 0) {
+        dropCollection.insertAt(0, dragLayer);
+      } else {
+        dropCollection.insertAt(dropPosition, dragLayer);
+      }
+    // drop on node
+    } else if (location === 0) {
+      if (dropLayer instanceof OlGroupLayer) {
+        dropLayer.getLayers().push(dragLayer);
+      } else {
+        dropCollection.insertAt(dropPosition + 1, dragLayer);
+      }
+    // drop after node
+    } else if (location === 1) {
+      dropCollection.insertAt(dropPosition + 1, dragLayer);
+    }
+
+    this.treeNodesFromLayerGroup(this.props.layerGroup);
+  }
+
+  /**
+   * Get information about the LayerPosition in the tree.
+   *
+   * @param {ol.layer.Layer} layer The layer to get the information.
+   * @param {ol.layer.Group} [groupLayer = this.props.map] The groupLayer
+   *                                     containg the layer.
+   * @return {Object} An object with these keys:
+   *    {ol.layer.Group} collection The collection containing the layer.
+   *    {Integer} position The position of the layer in the collection.
+   */
+  getLayerPositionInfo = (layer, groupLayer) => {
+    const map = this.props.map;
+    const collection = groupLayer instanceof OlGroupLayer
+      ? groupLayer.getLayers()
+      : map.getLayers();
+    const layers = collection.getArray();
+    let info = {};
+
+    if (layers.indexOf(layer) &lt; 0) {
+      layers.forEach((childLayer) => {
+        if (childLayer instanceof OlGroupLayer) {
+          info = this.getLayerPositionInfo(layer, childLayer);
+        }
+      });
+    } else {
+      info.position = layers.indexOf(layer);
+      info.collection = collection;
+    }
+    return info;
+  }
+
+  /**
+   * The render function.
+   */
+  render() {
+    const props = {...this.props};
+    let ddListeners;
+    if (props.draggable) {
+      ddListeners = {
+        onDragStart: this.onDragStart,
+        onDragEnter: this.onDragEnter,
+        onDragOver: this.onDragOver,
+        onDragLeave: this.onDragLeave,
+        onDragEnd: this.onDragEnd,
+        onDrop: this.onDrop
+      };
+    }
+
+    return (
+      &lt;Tree
+        checkable
+        {...ddListeners}
+        {...props}
+        checkedKeys={this.state.checkedKeys}
+        onCheck={this.onCheck}
+      >
+        {this.state.treeNodes}
+      &lt;/Tree>
+    );
+  }
+}
+
+export default LayerTree;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtils.html">TestUtils</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
+based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
+based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Wed Sep 13 2017 10:00:01 GMT+0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

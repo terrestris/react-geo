@@ -88,7 +88,8 @@ describe('<ScaleCombo />', () => {
       expect(wrapper.props().scales).to.be.an('array');
       expect(wrapper.props().scales).to.have.length(testResolutions.length);
 
-      let roundScale = (Math.round(MapUtil.getScaleForResolution(testResolutions[0] ,'m'))).toString();
+      let roundScale = (Math.round(MapUtil.getScaleForResolution(
+        testResolutions[testResolutions.length - 1] ,'m'))).toString();
       expect(wrapper.props().scales[0].key).to.be(roundScale);
     });
   });
