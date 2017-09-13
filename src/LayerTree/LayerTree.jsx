@@ -22,8 +22,8 @@ class LayerTree extends React.Component {
 
 
   /**
-   * @type {Array<ol.EventsKey>} An array of ol.EventsKey as returned by on() or
-   *                             once().
+   *  An array of ol.EventsKey as returned by on() or once().
+   * @type {Array<ol.EventsKey>}
    * @private
    */
   olListenerKeys = []
@@ -42,6 +42,7 @@ class LayerTree extends React.Component {
 
   /**
    * The default properties.
+   *
    * @type {Object}
    */
   static defaultProps = {
@@ -168,8 +169,7 @@ class LayerTree extends React.Component {
   /**
    * Unregisters the Events of a given layer.
    *
-   * @param {[type]} layer [description]
-   * @return {[type]} [description]
+   * @param {ol.layer.Base} layer An ol.layer.Base.
    */
   unregisterEventsByLayer = (layer) => {
     this.olListenerKeys = this.olListenerKeys.filter((key) => {
@@ -194,7 +194,7 @@ class LayerTree extends React.Component {
   }
 
   /**
-   * Rebuilds the treeNodes and its checked staes.
+   * Rebuilds the treeNodes and its checked states.
    */
   rebuildTreeNodes = () => {
     this.treeNodesFromLayerGroup(this.state.layerGroup);
@@ -242,7 +242,7 @@ class LayerTree extends React.Component {
   }
 
   /**
-   * Determines if the target has allready registered the given listener for the
+   * Determines if the target has already registered the given listener for the
    * given eventtype.
    *
    * @param {Object} target The event target.
