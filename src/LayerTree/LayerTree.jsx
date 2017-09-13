@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { isEqual } from 'lodash';
+import { isEqual, isBoolean } from 'lodash';
 import { Tree } from 'antd';
+import OlLayerBase from 'ol/layer/base';
 import OlGroupLayer from 'ol/layer/group';
 import olObservable from 'ol/observable';
 
@@ -56,6 +57,7 @@ class LayerTree extends React.Component {
     super(props);
 
     this.state = {
+      layerGrop: null,
       treeNodes: [],
       checkedKeys: []
     };
@@ -66,8 +68,12 @@ class LayerTree extends React.Component {
    */
   componentDidMount() {
     if (this.props.layerGroup) {
-      this.registerAddRemoveListeners(this.props.layerGroup);
-      this.rebuildTreeNodes();
+      this.setState({
+        layerGroup: this.props.layerGroup
+      }, () => {
+        this.registerAddRemoveListeners(this.state.layerGroup);
+        this.rebuildTreeNodes();
+      });
     }
   }
 
@@ -85,8 +91,15 @@ class LayerTree extends React.Component {
    */
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.layerGroup, nextProps.layerGroup)) {
-      this.registerAddRemoveListeners(this.props.layerGroup);
-      this.rebuildTreeNodes();
+      olObservable.unByKey(this.olListenerKeys);
+      this.olListenerKeys = [];
+
+      this.setState({
+        layerGroup: nextProps.layerGroup
+      }, () => {
+        this.registerAddRemoveListeners(this.state.layerGroup);
+        this.rebuildTreeNodes();
+      });
     }
   }
 
@@ -178,14 +191,13 @@ class LayerTree extends React.Component {
       }
       return true;
     });
-    window.olListenerKeys = this.olListenerKeys;
   }
 
   /**
    * Rebuilds the treeNodes and its checked staes.
    */
   rebuildTreeNodes = () => {
-    this.treeNodesFromLayerGroup(this.props.layerGroup);
+    this.treeNodesFromLayerGroup(this.state.layerGroup);
     const checkedKeys = this.getVisibleOlUids();
     this.setState({
       checkedKeys
@@ -220,6 +232,7 @@ class LayerTree extends React.Component {
     }
 
     treeNode = <TreeNode
+      className="react-geo-layertree-node"
       title={layer.get('name')}
       key={layer.ol_uid}
     >
@@ -264,7 +277,7 @@ class LayerTree extends React.Component {
    * @return {Array<String>} The visible ol_uids.
    */
   getVisibleOlUids = () => {
-    const layers = MapUtil.getAllLayers(this.props.layerGroup, (layer) => {
+    const layers = MapUtil.getAllLayers(this.state.layerGroup, (layer) => {
       return !(layer instanceof OlGroupLayer) && layer.getVisible();
     });
     return layers.map(l => l.ol_uid.toString());
@@ -291,8 +304,8 @@ class LayerTree extends React.Component {
    * @param {Boolean} visiblity The visiblity.
    */
   setLayerVisibility = (layer, visiblity) => {
-    if (!layer) {
-      Logger.error('LayerTree.setLayerVisibility called without layer.');
+    if (!(layer instanceof OlLayerBase) || !isBoolean(visiblity)) {
+      Logger.error('setLayerVisibility called without layer or visiblity.');
       return;
     }
     if (layer instanceof OlGroupLayer) {
@@ -305,19 +318,6 @@ class LayerTree extends React.Component {
   }
 
   /**
-   * Remove layerGroup.ol_uids from checkedKeys array.
-   *
-   * @param {Array<String>} checkedKeys The checkedKeys.
-   * @return {Array<String>} The cleaned up checkedKeys.
-   */
-  cleanupCheckedKeys = (checkedKeys) => {
-    return checkedKeys.filter((key) => {
-      const layer = MapUtil.getLayerByOlUid(this.props.map, key);
-      return !(layer instanceof OlGroupLayer);
-    });
-  }
-
-  /**
    * The callback method for the drop event. Layers will get reordered in the map
    * and the tree.
    *
@@ -326,7 +326,6 @@ class LayerTree extends React.Component {
   onDrop = (e) => {
     const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
     const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
-    // debugger
     const dragCollection = dragInfo.groupLayer.getLayers();
     const dropLayer = MapUtil.getLayerByOlUid(this.props.map, e.node.props.eventKey);
     const dropPos = e.node.props.pos.split('-');
