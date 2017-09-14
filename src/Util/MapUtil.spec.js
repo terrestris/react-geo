@@ -4,6 +4,7 @@ import OlDragRotateAndZoom from 'ol/interaction/dragrotateandzoom';
 import OlDraw from 'ol/interaction/draw';
 import OlLayerTile from 'ol/layer/tile';
 import OlSourceTileWMS from 'ol/source/tilewms';
+import OlTileJsonSource from 'ol/source/tilejson';
 import OlFeature from 'ol/feature';
 import OlGeomPoint from 'ol/geom/point';
 import OlLayerGroup from 'ol/layer/group';
@@ -431,6 +432,92 @@ describe('MapUtil', () => {
         position: 0,
         groupLayer: nestedLayerGroup
       });
+    });
+
+  });
+
+  describe('getLegendGraphicUrl', () => {
+
+    let layer1;
+    let layer2;
+
+    beforeEach(() => {
+      layer1 = new OlLayerTile({
+        name: 'OSM-WMS',
+        source: new OlSourceTileWMS({
+          url: 'https://ows.terrestris.de/osm-gray/service',
+          params: {'LAYERS': 'OSM-WMS', 'TILED': true},
+          serverType: 'geoserver'
+        })
+      });
+      layer2 = new OlLayerTile({
+        name: 'Food insecurity',
+        source: new OlTileJsonSource({
+          url: 'https://api.tiles.mapbox.com/v3/mapbox.20110804-hoa-foodinsecurity-3month.json?secure',
+          crossOrigin: 'anonymous'
+        })
+      });
+    });
+
+    it('logs an error if called without a layer', () => {
+      const logSpy = sinon.spy(Logger, 'error');
+      const legendUrl = MapUtil.getLegendGraphicUrl();
+      expect(legendUrl).to.be(undefined);
+      expect(logSpy.calledWith('Invalid input parameter for MapUtil.getLegendGraphicUrl.')).to.be.ok();
+      expect(logSpy.calledOnce).to.be.ok();
+
+      logSpy.restore();
+    });
+
+    it('logs a warning if called with an unsupported layersource', () => {
+      const logSpy = sinon.spy(Logger, 'warn');
+      const legendUrl = MapUtil.getLegendGraphicUrl(layer2);
+      expect(legendUrl).to.be(undefined);
+      expect(logSpy.calledWith('Source of "Food insecurity" is currently not supported by MapUtil.getLegendGraphicUrl.')).to.be.ok();
+      expect(logSpy.calledOnce).to.be.ok();
+      logSpy.restore();
+    });
+
+    it('returns a getLegendGraphicUrl from a given layer', () => {
+      const legendUrl = MapUtil.getLegendGraphicUrl(layer1);
+      const url = 'https://ows.terrestris.de/osm-gray/service?';
+      const layerParam = 'LAYER=OSM-WMS';
+      const versionParam = 'VERSION=1.3.0';
+      const serviceParam = 'SERVICE=WMS';
+      const requestParam = 'REQUEST=getLegendGraphic';
+      const formatParam = 'FORMAT=image/png';
+
+      expect(legendUrl).to.contain(url);
+      expect(legendUrl).to.contain(layerParam);
+      expect(legendUrl).to.contain(versionParam);
+      expect(legendUrl).to.contain(serviceParam);
+      expect(legendUrl).to.contain(requestParam);
+      expect(legendUrl).to.contain(formatParam);
+    });
+
+    it('accecpts extraParams for the request', () => {
+      const extraParams = {
+        HEIGHT: 10,
+        WIDTH: 10
+      };
+      const legendUrl = MapUtil.getLegendGraphicUrl(layer1, extraParams);
+      const url = 'https://ows.terrestris.de/osm-gray/service?';
+      const layerParam = 'LAYER=OSM-WMS';
+      const versionParam = 'VERSION=1.3.0';
+      const serviceParam = 'SERVICE=WMS';
+      const requestParam = 'REQUEST=getLegendGraphic';
+      const formatParam = 'FORMAT=image/png';
+      const heightParam = 'HEIGHT=10';
+      const widthParam = 'WIDTH=10';
+
+      expect(legendUrl).to.contain(url);
+      expect(legendUrl).to.contain(layerParam);
+      expect(legendUrl).to.contain(versionParam);
+      expect(legendUrl).to.contain(serviceParam);
+      expect(legendUrl).to.contain(requestParam);
+      expect(legendUrl).to.contain(formatParam);
+      expect(legendUrl).to.contain(heightParam);
+      expect(legendUrl).to.contain(widthParam);
     });
 
   });

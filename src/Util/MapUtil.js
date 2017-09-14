@@ -1,8 +1,12 @@
 import OlMap from 'ol/map';
 import OlProjection from 'ol/proj';
+import OlSourceTileWMS from 'ol/source/tilewms';
+import OlLayerTile from 'ol/layer/tile';
 import OlLayerGroup from 'ol/layer/group';
+import OlLayerBase from 'ol/layer/base';
 
 import FeatureUtil from './FeatureUtil';
+import UrlUtil from './UrlUtil';
 
 import Logger from './Logger.js';
 
@@ -253,6 +257,40 @@ export class MapUtil {
       info.groupLayer = groupLayer;
     }
     return info;
+  }
+
+  /**
+   * Get the getlegendGraphic url of a layer. Designed for geoserver.
+   * Currently supported Sources:
+   *  - ol.source.TileWms
+   *
+   * @param {ol.layer.Layer} layer The layer that you
+   */
+  static getLegendGraphicUrl(layer, extraParams) {
+    if (!(layer instanceof OlLayerBase)) {
+      Logger.error('Invalid input parameter for MapUtil.getLegendGraphicUrl.');
+      return;
+    }
+
+    if (layer instanceof OlLayerTile && layer.getSource() instanceof OlSourceTileWMS) {
+      const source = layer.getSource();
+      const url = source.getUrls()[0];
+      const params = {
+        LAYER: source.getParams().LAYERS,
+        VERSION: '1.3.0',
+        SERVICE: 'WMS',
+        REQUEST: 'getLegendGraphic',
+        FORMAT: 'image/png'
+      };
+
+      const queryString = UrlUtil.objectToRequestString(
+        Object.assign(params, extraParams));
+
+      return `${url}?${queryString}`;
+    } else {
+      Logger.warn(`Source of "${layer.get('name')}" is currently not supported by MapUtil.getLegendGraphicUrl.`);
+      return;
+    }
   }
 
 }
