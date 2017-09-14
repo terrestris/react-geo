@@ -1,8 +1,9 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
-import FloatingMapLogo from './FloatingMapLogo.jsx';
 import testLogo from '../../UserChip/user.png';
 import TestUtils from '../../Util/TestUtils';
+
+import {FloatingMapLogo} from '../../index';
 
 describe('<FloatingMapLogo />', () => {
   let wrapper;

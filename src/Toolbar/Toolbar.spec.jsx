@@ -1,8 +1,9 @@
 /*eslint-env mocha*/
 import React from 'react';
 import expect from 'expect.js';
-import Toolbar from './Toolbar.jsx';
 import TestUtils from '../Util/TestUtils';
+
+import {Toolbar} from '../index';
 
 const testChildren = [
   <div key="testdiv1" id="testdiv1" />,

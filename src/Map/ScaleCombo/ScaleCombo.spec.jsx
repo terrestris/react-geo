@@ -5,10 +5,13 @@ import expect from 'expect.js';
 import { Select } from 'antd';
 const Option = Select.Option;
 
-import ScaleCombo from './ScaleCombo.jsx';
 import TestUtils from '../../Util/TestUtils';
-import MapUtil from '../../Util/MapUtil';
-import Logger from '../../Util/Logger';
+
+import {
+  ScaleCombo,
+  MapUtil,
+  Logger
+} from '../../index';
 
 describe('<ScaleCombo />', () => {
   let wrapper;

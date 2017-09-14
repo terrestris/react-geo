@@ -3,8 +3,10 @@ import expect from 'expect.js';
 import { template } from 'lodash';
 import sinon from 'sinon';
 
-import CsrfUtil from './CsrfUtil';
-import Logger from './Logger';
+import {
+  CsrfUtil,
+  Logger
+} from '../index';
 
 const tokenValue = 'my-csrf-token-value';
 const headerName = 'my-csrf-header-name';

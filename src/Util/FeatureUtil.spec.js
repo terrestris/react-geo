@@ -3,7 +3,9 @@ import expect from 'expect.js';
 import OlFeature from 'ol/feature';
 import OlGeomPoint from 'ol/geom/point';
 
-import FeatureUtil from './FeatureUtil.js';
+import {
+  FeatureUtil,
+} from '../index';
 
 describe('FeatureUtil', () => {
   let coords;

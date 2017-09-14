@@ -1,7 +1,9 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
 
-import ObjectUtil from './ObjectUtil.js';
+import {
+  ObjectUtil,
+} from '../index';
 
 describe('ObjectUtil', () => {
   it('is defined', () => {
