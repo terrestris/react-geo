@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil';
 
 /**
- * Class representating the Legend.
+ * Class representing the Legend.
  *
  * @class Legend
  * @extends React.Component
@@ -17,7 +18,7 @@ export class Legend extends React.Component {
    * @type {String}
    * @private
    */
-  className: 'react-geo-legend'
+  className = 'react-geo-legend'
 
   /**
    * The properties.
@@ -82,21 +83,33 @@ export class Legend extends React.Component {
   }
 
   /**
+   * onError handler for the rendered img.
+   */
+  onError() {
+    Logger.warn(`Image error for legend of "${this.props.layer.get('name')}".`);
+  }
+
+  /**
    * The render function.
    */
   render() {
     let {
-      className,
       layer
     } = this.props;
-    className = className ? className + ' react-geo-legend' : 'react-geo-legend';
+    const className = this.props.className
+      ? `${this.props.className} ${this.className}`
+      : this.className;
     const alt = layer.get('name')
       ? layer.get('name') + ' legend'
       : 'layer legend';
 
     return (
       <div className={className}>
-        <img src={this.state.legendUrl} alt={alt} />
+        <img
+          src={this.state.legendUrl}
+          alt={alt}
+          onError={this.onError.bind(this)}
+        />
       </div>
     );
   }

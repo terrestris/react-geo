@@ -262,9 +262,10 @@ export class MapUtil {
   /**
    * Get the getlegendGraphic url of a layer. Designed for geoserver.
    * Currently supported Sources:
-   *  - ol.source.TileWms
+   *  - ol.source.TileWms (with url configured)
    *
-   * @param {ol.layer.Layer} layer The layer that you
+   * @param {ol.layer.Layer} layer The layer that you want to have a legendUrlfor.
+   * @return {String|undefined} The getLegendGraphicUrl.
    */
   static getLegendGraphicUrl(layer, extraParams) {
     if (!(layer instanceof OlLayerBase)) {
@@ -272,9 +273,10 @@ export class MapUtil {
       return;
     }
 
-    if (layer instanceof OlLayerTile && layer.getSource() instanceof OlSourceTileWMS) {
+    if (layer instanceof OlLayerTile
+        && layer.getSource() instanceof OlSourceTileWMS) {
       const source = layer.getSource();
-      const url = source.getUrls()[0];
+      const url = source.getUrls() ? source.getUrls()[0] : '';
       const params = {
         LAYER: source.getParams().LAYERS,
         VERSION: '1.3.0',
@@ -288,7 +290,8 @@ export class MapUtil {
 
       return `${url}?${queryString}`;
     } else {
-      Logger.warn(`Source of "${layer.get('name')}" is currently not supported by MapUtil.getLegendGraphicUrl.`);
+      Logger.warn(`Source of "${layer.get('name')}" is currently not supported `
+        + `by MapUtil.getLegendGraphicUrl.`);
       return;
     }
   }

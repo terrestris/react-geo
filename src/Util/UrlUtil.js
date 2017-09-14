@@ -146,7 +146,7 @@ export class UrlUtil {
    */
   static objectToRequestString(object) {
     const requestString = Object.keys(object).map(function(key) {
-      return key + '=' + object[key];
+      return encodeURIComponent(key) + '=' + encodeURIComponent(object[key]);
     }).join('&');
 
     return requestString;

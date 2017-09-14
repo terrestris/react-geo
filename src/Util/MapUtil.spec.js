@@ -485,7 +485,7 @@ describe('MapUtil', () => {
       const versionParam = 'VERSION=1.3.0';
       const serviceParam = 'SERVICE=WMS';
       const requestParam = 'REQUEST=getLegendGraphic';
-      const formatParam = 'FORMAT=image/png';
+      const formatParam = 'FORMAT=image%2Fpng';
 
       expect(legendUrl).to.contain(url);
       expect(legendUrl).to.contain(layerParam);
@@ -495,7 +495,7 @@ describe('MapUtil', () => {
       expect(legendUrl).to.contain(formatParam);
     });
 
-    it('accecpts extraParams for the request', () => {
+    it('accepts extraParams for the request', () => {
       const extraParams = {
         HEIGHT: 10,
         WIDTH: 10
@@ -506,7 +506,7 @@ describe('MapUtil', () => {
       const versionParam = 'VERSION=1.3.0';
       const serviceParam = 'SERVICE=WMS';
       const requestParam = 'REQUEST=getLegendGraphic';
-      const formatParam = 'FORMAT=image/png';
+      const formatParam = 'FORMAT=image%2Fpng';
       const heightParam = 'HEIGHT=10';
       const widthParam = 'WIDTH=10';
 
