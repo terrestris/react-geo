@@ -131,6 +131,24 @@ describe('UrlUtil', () => {
         });
       });
     });
+
+    describe('#objectToRequestString', () => {
+      it('is defined', () => {
+        expect(UrlUtil.objectToRequestString).to.not.be(undefined);
+      });
+      it('returns a requestString from an object', () => {
+        const requestString = 'LAYER=OSM-WMS&VERSION=1.3.0&SERVICE=WMS&REQUEST=getLegendGraphic&FORMAT=image%2Fpng';
+        const params = {
+          LAYER: 'OSM-WMS',
+          VERSION: '1.3.0',
+          SERVICE: 'WMS',
+          REQUEST: 'getLegendGraphic',
+          FORMAT: 'image/png'
+        };
+        const got = UrlUtil.objectToRequestString(params);
+        expect(got).to.eql(requestString);
+      });
+    });
   });
 
 });

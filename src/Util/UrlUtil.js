@@ -136,6 +136,22 @@ export class UrlUtil {
     return featureInfoUrlColl;
   }
 
+  /**
+   * Transforms an object into a string containing requestParams (without
+   * leading questionmark).
+   *
+   * @param {Object} object An object containing kvp for the request.
+   *                        e.g. {height:400, width:200}
+   * @return {String} The kvps as a requestString. e.g. "height=400&width=200"
+   */
+  static objectToRequestString(object) {
+    const requestString = Object.keys(object).map(function(key) {
+      return encodeURIComponent(key) + '=' + encodeURIComponent(object[key]);
+    }).join('&');
+
+    return requestString;
+  }
+
 }
 
 export default UrlUtil;
