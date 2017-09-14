@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 8.4.0 # to work around https://github.com/jsdoc3/jsdoc/issues/1438
+- "8"
 before_install:
 - npm install -g greenkeeper-lockfile@1
 before_script:
