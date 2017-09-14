@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Util/ObjectUtil.js</title>
+    <title>JSDoc: Source: Legend/Legend.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Util/ObjectUtil.js</h1>
+    <h1 class="page-title">Source: Legend/Legend.jsx</h1>
 
     
 
@@ -26,111 +26,124 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import {
-  isObject,
-  isString,
-  isArray
-} from 'lodash';
-import Logger from './Logger';
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import PropTypes from 'prop-types';
+
+import Logger from '../Util/Logger';
+import MapUtil from '../Util/MapUtil';
 
 /**
- * This class provides some static methods which might be helpful when working
- * with objects.
+ * Class representing the Legend.
  *
- * @class ObjectUtil
+ * @class Legend
+ * @extends React.Component
  */
-class ObjectUtil {
+export class Legend extends React.Component {
+
 
   /**
-   * Method may be used to return a value of a given input object by a
-   * provided query key. The query key can be used in two ways:
-   *   * Single-value: Find the first matching key in the provided object
-   *     (Use with caution as the object/array order may not be as
-   *     expected and/or deterministic!).
-   *   * Backslash ("/") separated value: Find the last (!) matching key
-   *     in the provided object.
-   *
-   * @param {String} queryKey The key to be searched.
-   * @param {Object} queryObject The object to be searched on
-   *
-   * @return {*} The target value or `undefined` if the given couldn't be
-   *     found, or an object if a path was passed, from which we only could
-   *     find a part, but not the most specific one.
-   *     TODO Harmonize return values
+   * The className added to this component.
+   * @type {String}
+   * @private
    */
-  static getValue(queryKey, queryObject) {
-    var queryMatch;
+  className = 'react-geo-legend'
 
-    if (!isString(queryKey)) {
-      Logger.error('Missing input parameter queryKey &lt;String>');
-      return undefined;
+  /**
+   * The properties.
+   * @type {Object}
+   */
+  static propTypes = {
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
+    /**
+     * The layer you want to display the legend of.
+     * @type {ol.layer.Layer}
+     */
+    layer: PropTypes.object.isRequired,
+
+    /**
+     * An object containing additional request params like "{HEIGHT: 400}" will
+     * be transformed to "&amp;HEIGHT=400" an added to the GetLegendGraphic request.
+     * @type {Object}
+     */
+    extraParams: PropTypes.object
+  }
+
+  /**
+   * Create the Legend.
+   *
+   * @constructs Legend
+   */
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      legendUrl: null
+    };
+  }
+
+  /**
+   * Calls getLegendUrl.
+   */
+  componentWillMount() {
+    this.getLegendUrl();
+  }
+
+  /**
+   * Get the corresponding legendGraphic of a layer. If layer is configured with
+   * "legendUrl" this will be used. Otherwise a getLegendGraphic requestString
+   * will be created by the MapUtil.
+   *
+   */
+  getLegendUrl() {
+    const {layer} = this.props;
+    let legendUrl;
+    if (layer.get('legendUrl')) {
+      legendUrl = layer.get('legendUrl');
+    } else {
+      legendUrl = MapUtil.getLegendGraphicUrl(layer, this.props.extraParams);
     }
-    if (!isObject(queryObject)) {
-      Logger.error('Missing input parameter queryObject &lt;Object>');
-      return undefined;
-    }
+    this.setState({legendUrl});
+  }
 
-    // if the queryKey contains backslashes we understand this as the
-    // path in the object-hierarchy and will return the last matching
-    // value
-    if (queryKey.split('/').length > 1) {
-      queryKey.split('/').forEach(function(key) {
-        if (queryObject[key]) {
-          queryObject = queryObject[key];
-        } else {
-          // if the last entry wasn't found return the last match
-          return queryObject;
-        }
-      });
-      return queryObject;
-    }
+  /**
+   * onError handler for the rendered img.
+   */
+  onError() {
+    Logger.warn(`Image error for legend of "${this.props.layer.get('name')}".`);
+  }
 
-    // iterate over the input object and return the first matching
-    // value
-    for (var key in queryObject) {
+  /**
+   * The render function.
+   */
+  render() {
+    let {
+      layer
+    } = this.props;
+    const className = this.props.className
+      ? `${this.props.className} ${this.className}`
+      : this.className;
+    const alt = layer.get('name')
+      ? layer.get('name') + ' legend'
+      : 'layer legend';
 
-      // get the current value
-      var value = queryObject[key];
-
-      // if the given key is the queryKey, let's return the
-      // corresponding value
-      if (key === queryKey) {
-        return value;
-      }
-
-      // TODO MJ: I do not like this too much, see the appropriate test.
-      // I fear we can only reach this if the original key was not a path,
-      // right?
-      //
-      // if the value is an array and the array contains an object as
-      // well, let's call ourself recursively for this object
-      if (isArray(value)) {
-        for (var i = 0; i &lt; value.length; i++) {
-          var val = value[i];
-          if (isObject(val)) {
-            queryMatch = this.getValue(queryKey, val);
-            if (queryMatch) {
-              return queryMatch;
-            }
-          }
-        }
-      }
-
-      // if the value is an object, let's call ourself recursively
-      if (isObject(value)) {
-        queryMatch = this.getValue(queryKey, value);
-        if (queryMatch) {
-          return queryMatch;
-        }
-      }
-    }
-
-    // if we couldn't find any match, return undefined
-    return undefined;
+    return (
+      &lt;div className={className}>
+        &lt;img
+          src={this.state.legendUrl}
+          alt={alt}
+          onError={this.onError.bind(this)}
+        />
+      &lt;/div>
+    );
   }
 }
 
-export default ObjectUtil;
+export default Legend;
 </code></pre>
         </article>
     </section>
