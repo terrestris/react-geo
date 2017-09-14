@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import TestUtils from '../../Util/TestUtils';
 import Logger from '../../Util/Logger';
 
-import SimpleButton from './SimpleButton.jsx';
+import { SimpleButton } from '../../index';
 
 describe('<SimpleButton />', () => {
   it('is defined', () => {

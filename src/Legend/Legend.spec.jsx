@@ -6,11 +6,12 @@ import OlTileLayer from 'ol/layer/tile';
 import OlSourceTileWMS from 'ol/source/tilewms';
 import OlTileJsonSource from 'ol/source/tilejson';
 
-import Logger from '../Util/Logger.js';
 import TestUtils from '../Util/TestUtils';
-import MapUtil from '../Util/MapUtil';
 
-import Legend from './Legend.jsx';
+import {
+  MapUtil,
+  Legend
+} from '../index';
 
 describe('<Legend />', () => {
   let layer1;

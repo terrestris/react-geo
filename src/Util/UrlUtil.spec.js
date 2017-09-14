@@ -2,7 +2,9 @@
 import expect from 'expect.js';
 import URL from 'url-parse';
 
-import UrlUtil from './UrlUtil.js';
+import {
+  UrlUtil
+} from '../index';
 
 describe('UrlUtil', () => {
 

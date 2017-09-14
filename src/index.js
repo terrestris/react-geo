@@ -2,6 +2,7 @@ import SimpleButton from './Button/SimpleButton/SimpleButton.jsx';
 import ToggleButton from './Button/ToggleButton/ToggleButton.jsx';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup.jsx';
 import LayerTree from './LayerTree/LayerTree.jsx';
+import Legend from './Legend/Legend.jsx';
 import FloatingMapLogo from './Map/FloatingMapLogo/FloatingMapLogo.jsx';
 import ScaleCombo from './Map/ScaleCombo/ScaleCombo.jsx';
 import Panel from './Panel/Panel/Panel.jsx';
@@ -23,6 +24,7 @@ export {
   ToggleButton,
   ToggleGroup,
   LayerTree,
+  Legend,
   FloatingMapLogo,
   ScaleCombo,
   Panel,

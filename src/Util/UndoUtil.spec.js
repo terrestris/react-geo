@@ -1,7 +1,9 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
 
-import UndoUtil from './UndoUtil.js';
+import {
+  UndoUtil
+} from '../index';
 
 describe('UndoUtil', () => {
 

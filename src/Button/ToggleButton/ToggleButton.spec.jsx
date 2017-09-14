@@ -3,9 +3,11 @@ import expect from 'expect.js';
 import sinon from 'sinon';
 
 import TestUtils from '../../Util/TestUtils';
-import Logger from '../../Util/Logger';
 
-import ToggleButton from './ToggleButton.jsx';
+import {
+  Logger,
+  ToggleButton
+} from '../../index';
 
 describe('<ToggleButton />', () => {
 

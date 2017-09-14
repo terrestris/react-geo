@@ -1,7 +1,9 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
 
-import StringUtil from './StringUtil.js';
+import {
+  StringUtil
+} from '../index';
 
 describe('StringUtil', () => {
 

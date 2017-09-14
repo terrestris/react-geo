@@ -2,7 +2,7 @@
 import expect from 'expect.js';
 import TestUtils from '../../Util/TestUtils';
 
-import { Panel } from './Panel.jsx';
+import { Panel } from '../../index';
 
 describe('<Panel />', () => {
 

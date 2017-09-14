@@ -5,8 +5,10 @@ import sinon from 'sinon';
 
 import TestUtils from '../../Util/TestUtils';
 
-import ToggleButton from '../ToggleButton/ToggleButton.jsx';
-import ToggleGroup from './ToggleGroup.jsx';
+import{
+  ToggleButton,
+  ToggleGroup
+} from '../../index';
 
 describe('<ToggleGroup />', () => {
 
