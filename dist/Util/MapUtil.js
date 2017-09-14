@@ -15,13 +15,29 @@ var _proj = require('ol/proj');
 
 var _proj2 = _interopRequireDefault(_proj);
 
+var _tilewms = require('ol/source/tilewms');
+
+var _tilewms2 = _interopRequireDefault(_tilewms);
+
+var _tile = require('ol/layer/tile');
+
+var _tile2 = _interopRequireDefault(_tile);
+
 var _group = require('ol/layer/group');
 
 var _group2 = _interopRequireDefault(_group);
 
+var _base = require('ol/layer/base');
+
+var _base2 = _interopRequireDefault(_base);
+
 var _FeatureUtil = require('./FeatureUtil');
 
 var _FeatureUtil2 = _interopRequireDefault(_FeatureUtil);
+
+var _UrlUtil = require('./UrlUtil');
+
+var _UrlUtil2 = _interopRequireDefault(_UrlUtil);
 
 var _Logger = require('./Logger.js');
 
@@ -328,6 +344,43 @@ var MapUtil = exports.MapUtil = function () {
      *    {Integer} position The position of the layer in the collection.
      */
 
+  }, {
+    key: 'getLegendGraphicUrl',
+
+
+    /**
+     * Get the getlegendGraphic url of a layer. Designed for geoserver.
+     * Currently supported Sources:
+     *  - ol.source.TileWms (with url configured)
+     *
+     * @param {ol.layer.Layer} layer The layer that you want to have a legendUrlfor.
+     * @return {String|undefined} The getLegendGraphicUrl.
+     */
+    value: function getLegendGraphicUrl(layer, extraParams) {
+      if (!(layer instanceof _base2.default)) {
+        _Logger2.default.error('Invalid input parameter for MapUtil.getLegendGraphicUrl.');
+        return;
+      }
+
+      if (layer instanceof _tile2.default && layer.getSource() instanceof _tilewms2.default) {
+        var source = layer.getSource();
+        var url = source.getUrls() ? source.getUrls()[0] : '';
+        var params = {
+          LAYER: source.getParams().LAYERS,
+          VERSION: '1.3.0',
+          SERVICE: 'WMS',
+          REQUEST: 'getLegendGraphic',
+          FORMAT: 'image/png'
+        };
+
+        var queryString = _UrlUtil2.default.objectToRequestString(Object.assign(params, extraParams));
+
+        return url + '?' + queryString;
+      } else {
+        _Logger2.default.warn('Source of "' + layer.get('name') + '" is currently not supported ' + 'by MapUtil.getLegendGraphicUrl.');
+        return;
+      }
+    }
   }]);
 
   return MapUtil;
