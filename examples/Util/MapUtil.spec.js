@@ -11,8 +11,11 @@ import OlLayerGroup from 'ol/layer/group';
 import sinon from 'sinon';
 
 import TestUtils from './TestUtils.js';
-import Logger from './Logger.js';
-import MapUtil from './MapUtil.js';
+
+import {
+  Logger,
+  MapUtil,
+} from '../index';
 
 describe('MapUtil', () => {
   const testResolutions = {

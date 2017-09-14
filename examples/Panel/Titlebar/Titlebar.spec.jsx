@@ -2,7 +2,8 @@
 import React from 'react';
 import expect from 'expect.js';
 import { shallow } from 'enzyme';
-import { Titlebar } from './Titlebar.jsx';
+
+import { Titlebar } from '../../index';
 
 describe('<Titlebar />', () => {
 

@@ -7,10 +7,12 @@ import OlTileLayer from 'ol/layer/tile';
 import OlTileWMS from 'ol/source/tilewms';
 import olObservable from 'ol/observable';
 
-import Logger from '../Util/Logger.js';
 import TestUtils from '../Util/TestUtils';
 
-import LayerTree from './LayerTree.jsx';
+import {
+  Logger,
+  LayerTree
+} from '../index';
 
 describe('<LayerTree />', () => {
   let layerGroup;

@@ -1,8 +1,9 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
-import UserChip from './UserChip.jsx';
 import testImage from  './user.png';
 import TestUtils from '../Util/TestUtils';
+
+import {UserChip} from '../index';
 
 describe('<UserChip />', () => {
 
