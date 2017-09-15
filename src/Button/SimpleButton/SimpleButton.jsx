@@ -19,10 +19,22 @@ import './SimpleButton.less';
 class SimpleButton extends React.Component {
 
   /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-simplebutton'
+
+  /**
    * The properties.
    * @type {Object}
    */
   static propTypes = {
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
     icon: PropTypes.string,
     fontIcon: PropTypes.string,
     shape: PropTypes.string,
@@ -75,8 +87,13 @@ class SimpleButton extends React.Component {
       tooltipPlacement,
       icon,
       fontIcon,
+      className,
       ...antBtnProps
     } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
 
     return (
       <Tooltip
@@ -84,7 +101,7 @@ class SimpleButton extends React.Component {
         placement={tooltipPlacement}
       >
         <Button
-          className="btn-simple"
+          className={finalClassName}
           onClick={this.onClick}
           {...antBtnProps}
         >

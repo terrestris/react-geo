@@ -52,16 +52,16 @@ describe('<ToggleButton />', () => {
     const wrapper = TestUtil.mountComponent(ToggleButton, {
       onToggle: () => {}
     });
-    let toggleClass = wrapper.instance().toggleClass;
+    let pressedClass = wrapper.instance().pressedClass;
 
-    expect(toggleClass).to.be.a('string');
-    expect(wrapper.find(`button.${toggleClass}`).length).to.equal(0);
+    expect(pressedClass).to.be.a('string');
+    expect(wrapper.find(`button.${pressedClass}`).length).to.equal(0);
 
     wrapper.setProps({
       pressed: true
     });
 
-    expect(wrapper.find(`button.${toggleClass}`).length).to.equal(1);
+    expect(wrapper.find(`button.${pressedClass}`).length).to.equal(1);
   });
 
   it('warns if no toggle callback method is given', () => {

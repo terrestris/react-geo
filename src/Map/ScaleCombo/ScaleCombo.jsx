@@ -15,7 +15,21 @@ import MapUtils from '../../Util/MapUtil';
  */
 class ScaleCombo extends React.Component {
 
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-scalecombo'
+
   static propTypes = {
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
     /**
      * The zoomLevel.
      * @type {Number}
@@ -193,26 +207,30 @@ class ScaleCombo extends React.Component {
    * The render function.
    */
   render() {
-    let {
+    const {
       onZoomLevelSelect,
-      style
+      style,
+      className
     } = this.props;
 
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
     return (
-      <div>
-        <Select
-          showSearch
-          onChange={onZoomLevelSelect}
-          getInputElement={this.getInputElement}
-          filterOption={false}
-          value={this.determineOptionKeyForZoomLevel(this.state.zoomLevel)}
-          size="small"
-          style={style}
-          className = "scale-select"
-        >
-          {this.state.scales}
-        </Select>
-      </div>);
+      <Select
+        showSearch
+        onChange={onZoomLevelSelect}
+        getInputElement={this.getInputElement}
+        filterOption={false}
+        value={this.determineOptionKeyForZoomLevel(this.state.zoomLevel)}
+        size="small"
+        style={style}
+        className={finalClassName}
+      >
+        {this.state.scales}
+      </Select>
+    );
   }
 }
 

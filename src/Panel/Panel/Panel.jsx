@@ -39,6 +39,13 @@ const defaultWindowProps = {
 export class Panel extends React.Component {
 
   /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-panel'
+
+  /**
    * The properties.
    * @type {Object}
    */
@@ -235,7 +242,11 @@ export class Panel extends React.Component {
       ...rndOpts
     } = this.props;
 
-    const rndClassName = `panel ${this.state.id} ${className}`;
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
+    const rndClassName = `${finalClassName} ${this.state.id}`;
     const disableDragging = !draggable;
     const enableResizing = resizeOpts === true ? undefined : resizeOpts;
 
@@ -290,7 +301,7 @@ export class Panel extends React.Component {
         dragHandlerClassName=".drag-handle"
         disableDragging={disableDragging}
         enableResizing={enableResizing}
-        resizeHandlerClasses={{
+        resizeHandleClasses={{
           bottom: 'resize-handle resize-handle-bottom',
           bottomLeft: 'resize-handle resize-handle-bottom-left',
           bottomRight: 'resize-handle resize-handle-bottom-right',

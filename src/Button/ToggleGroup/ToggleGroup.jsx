@@ -12,11 +12,25 @@ import './ToggleGroup.less';
  */
 class ToggleGroup extends React.Component {
 
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-togglegroup'
+
   /**
    * The properties.
    * @type {Object}
    */
   static propTypes = {
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
     /**
      * The name of this group.
      * @type {String}
@@ -129,6 +143,12 @@ class ToggleGroup extends React.Component {
    */
   render() {
     const {orientation, children} = this.props;
+    const className = this.props.className
+      ? `${this.props.className} ${this.className}`
+      : this.className;
+    const orientationClass = (orientation === 'vertical')
+      ? 'vertical-toggle-group'
+      : 'horizontal-toggle-group';
 
     const childrenWithProps = React.Children.map(children,
       (child) => React.cloneElement(child, {
@@ -138,10 +158,7 @@ class ToggleGroup extends React.Component {
 
     return (
       <div
-        className={(orientation === 'vertical') ?
-          'vertical-toggle-group' :
-          'horizontal-toggle-group'
-        }
+        className={`${className} ${orientationClass}`}
       >
         {childrenWithProps}
       </div>
