@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import MapUtils from '../../Util/MapUtil'; //@react-geo@
+import MapUtil from '../../Util/MapUtil'; //@react-geo@
 import ScaleCombo from './ScaleCombo.jsx'; //@react-geo@
 
 let scaleCombo;
@@ -24,7 +24,7 @@ __EXAMPLE_MAP__.on('moveend', function(evt) {
  **/
 var onZoomLevelSelect = (selectedScale) => {
   let mv = __EXAMPLE_MAP__.getView();
-  let calculatedResolution = MapUtils.getResolutionForScale(selectedScale, mv.getProjection().getUnits());
+  let calculatedResolution = MapUtil.getResolutionForScale(selectedScale, mv.getProjection().getUnits());
   mv.setResolution(calculatedResolution);
 };
 
