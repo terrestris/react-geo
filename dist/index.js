@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
+exports.isVisibleComponent = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -36,6 +36,10 @@ var _ScaleCombo2 = _interopRequireDefault(_ScaleCombo);
 var _Panel = require('./Panel/Panel/Panel.js');
 
 var _Panel2 = _interopRequireDefault(_Panel);
+
+var _LayerTransparencySlider = require('./Slider/LayerTransparencySlider.js');
+
+var _LayerTransparencySlider2 = _interopRequireDefault(_LayerTransparencySlider);
 
 var _Titlebar = require('./Panel/Titlebar/Titlebar.js');
 
@@ -93,6 +97,7 @@ exports.Legend = _Legend2.default;
 exports.FloatingMapLogo = _FloatingMapLogo2.default;
 exports.ScaleCombo = _ScaleCombo2.default;
 exports.Panel = _Panel2.default;
+exports.LayerTransparencySlider = _LayerTransparencySlider2.default;
 exports.Titlebar = _Titlebar2.default;
 exports.Toolbar = _Toolbar2.default;
 exports.UserChip = _UserChip2.default;
