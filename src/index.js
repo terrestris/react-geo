@@ -20,7 +20,7 @@ import ObjectUtil from './Util/ObjectUtil.js';
 import StringUtil from './Util/StringUtil.js';
 import UndoUtil from './Util/UndoUtil.js';
 import UrlUtil from './Util/UrlUtil.js';
-import { isVisibleComponent } from './VisibleComponent/VisibleComponent.jsx';
+import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/VisibleComponent.jsx';
 
 export {
   SimpleButton,
