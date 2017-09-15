@@ -1,14 +1,14 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
 
-import TestUtils from '../Util/TestUtils';
+import TestUtil from '../Util/TestUtil';
 import { LayerTransparencySlider } from '../index';
 
 describe('<LayerTransparencySlider />', () => {
   let layer;
 
   beforeEach(() => {
-    layer = TestUtils.createVectorLayer();
+    layer = TestUtil.createVectorLayer();
   });
 
   it('is defined', () => {
@@ -19,7 +19,7 @@ describe('<LayerTransparencySlider />', () => {
     const props = {
       layer: layer
     };
-    const wrapper = TestUtils.mountComponent(LayerTransparencySlider, props);
+    const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
     expect(wrapper).not.to.be(undefined);
   });
 
@@ -29,7 +29,7 @@ describe('<LayerTransparencySlider />', () => {
       layer: layer
     };
 
-    const wrapper = TestUtils.mountComponent(LayerTransparencySlider, props);
+    const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
     let transparency = wrapper.instance().getLayerTransparency();
     expect(transparency).to.equal(91);
   });
@@ -38,7 +38,7 @@ describe('<LayerTransparencySlider />', () => {
     const props = {
       layer: layer
     };
-    const wrapper = TestUtils.mountComponent(LayerTransparencySlider, props);
+    const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
 
     wrapper.instance().setLayerTransparency(91);
     expect(layer.getOpacity()).to.equal(0.09);

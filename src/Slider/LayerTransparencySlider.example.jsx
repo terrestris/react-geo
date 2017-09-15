@@ -3,8 +3,8 @@ import { render } from 'react-dom';
 
 import OlMap from 'ol/map';
 import OlView from 'ol/view';
-import OlTileLayer from 'ol/layer/tile';
-import OlOsmSource from 'ol/source/osm';
+import OlLayerTile from 'ol/layer/tile';
+import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
 
 import LayerTransparencySlider from './LayerTransparencySlider.jsx'; //@react-geo@
@@ -12,9 +12,9 @@ import LayerTransparencySlider from './LayerTransparencySlider.jsx'; //@react-ge
 //
 // ***************************** SETUP *****************************************
 //
-const layer = new OlTileLayer({
+const layer = new OlLayerTile({
   name: 'OSM',
-  source: new OlOsmSource()
+  source: new OlSourceOsm()
 });
 const map = new OlMap({
   layers: [
