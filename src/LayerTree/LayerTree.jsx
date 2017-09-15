@@ -402,9 +402,16 @@ class LayerTree extends React.Component {
    * The render function.
    */
   render() {
-    const props = {...this.props};
+    const {
+      className,
+      draggable,
+      layerGroup,
+      map,
+      ...passThroughProps
+    } = this.props;
+
     let ddListeners;
-    if (props.draggable) {
+    if (draggable) {
       ddListeners = {
         onDragStart: this.onDragStart,
         onDragEnter: this.onDragEnter,
@@ -415,13 +422,18 @@ class LayerTree extends React.Component {
       };
     }
 
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
     return (
       <Tree
+        className={finalClassName}
         checkable
-        {...ddListeners}
-        {...props}
         checkedKeys={this.state.checkedKeys}
         onCheck={this.onCheck}
+        {...ddListeners}
+        {...passThroughProps}
       >
         {this.state.treeNodes}
       </Tree>
