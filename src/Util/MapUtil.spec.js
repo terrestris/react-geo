@@ -1,10 +1,10 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
-import OlDragRotateAndZoom from 'ol/interaction/dragrotateandzoom';
-import OlDraw from 'ol/interaction/draw';
+import OlInteractionDragRotateAndZoom from 'ol/interaction/dragrotateandzoom';
+import OlInteractionDraw from 'ol/interaction/draw';
 import OlLayerTile from 'ol/layer/tile';
 import OlSourceTileWMS from 'ol/source/tilewms';
-import OlTileJsonSource from 'ol/source/tilejson';
+import OlSourceTileJson from 'ol/source/tilejson';
 import OlFeature from 'ol/feature';
 import OlGeomPoint from 'ol/geom/point';
 import OlLayerGroup from 'ol/layer/group';
@@ -59,7 +59,7 @@ describe('MapUtil', () => {
 
     it('returns an empty array if no interaction candidate is found', () => {
       let dragInteractionName = 'Drag Queen';
-      let dragInteraction = new OlDragRotateAndZoom();
+      let dragInteraction = new OlInteractionDragRotateAndZoom();
       dragInteraction.set('name', dragInteractionName);
       map.addInteraction(dragInteraction);
 
@@ -71,7 +71,7 @@ describe('MapUtil', () => {
 
     it('returns the requested interactions by name', () => {
       let dragInteractionName = 'Drag Queen';
-      let dragInteraction = new OlDragRotateAndZoom();
+      let dragInteraction = new OlInteractionDragRotateAndZoom();
       dragInteraction.set('name', dragInteractionName);
       map.addInteraction(dragInteraction);
 
@@ -80,7 +80,7 @@ describe('MapUtil', () => {
 
       expect(returnedInteractions).to.have.length(1);
 
-      let anotherDragInteraction = new OlDragRotateAndZoom();
+      let anotherDragInteraction = new OlInteractionDragRotateAndZoom();
       anotherDragInteraction.set('name', dragInteractionName);
       map.addInteraction(anotherDragInteraction);
 
@@ -99,7 +99,7 @@ describe('MapUtil', () => {
     it('needs to be called with a map instance', () => {
       const logSpy = sinon.spy(Logger, 'debug');
 
-      let returnedInteractions = MapUtil.getInteractionsByClass(null, OlDragRotateAndZoom);
+      let returnedInteractions = MapUtil.getInteractionsByClass(null, OlInteractionDragRotateAndZoom);
 
       expect(logSpy).to.have.property('callCount', 1);
       expect(returnedInteractions).to.have.length(0);
@@ -108,29 +108,29 @@ describe('MapUtil', () => {
     });
 
     it('returns an empty array if no interaction candidate is found', () => {
-      let dragInteraction = new OlDragRotateAndZoom();
+      let dragInteraction = new OlInteractionDragRotateAndZoom();
       map.addInteraction(dragInteraction);
 
       let returnedInteractions = MapUtil.getInteractionsByClass(
-        map, OlDraw);
+        map, OlInteractionDraw);
 
       expect(returnedInteractions).to.have.length(0);
     });
 
     it('returns the requested interactions by class', () => {
-      let dragInteraction = new OlDragRotateAndZoom();
+      let dragInteraction = new OlInteractionDragRotateAndZoom();
       map.addInteraction(dragInteraction);
 
       let returnedInteractions = MapUtil.getInteractionsByClass(
-        map, OlDragRotateAndZoom);
+        map, OlInteractionDragRotateAndZoom);
 
       expect(returnedInteractions).to.have.length(1);
 
-      let anotherDragInteraction = new OlDragRotateAndZoom();
+      let anotherDragInteraction = new OlInteractionDragRotateAndZoom();
       map.addInteraction(anotherDragInteraction);
 
       returnedInteractions = MapUtil.getInteractionsByClass(
-        map, OlDragRotateAndZoom);
+        map, OlInteractionDragRotateAndZoom);
 
       expect(returnedInteractions).to.have.length(2);
     });
@@ -455,7 +455,7 @@ describe('MapUtil', () => {
       });
       layer2 = new OlLayerTile({
         name: 'Food insecurity',
-        source: new OlTileJsonSource({
+        source: new OlSourceTileJson({
           url: 'https://api.tiles.mapbox.com/v3/mapbox.20110804-hoa-foodinsecurity-3month.json?secure',
           crossOrigin: 'anonymous'
         })
