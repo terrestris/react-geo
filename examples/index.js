@@ -6,6 +6,7 @@ import Legend from './Legend/Legend.jsx';
 import FloatingMapLogo from './Map/FloatingMapLogo/FloatingMapLogo.jsx';
 import ScaleCombo from './Map/ScaleCombo/ScaleCombo.jsx';
 import Panel from './Panel/Panel/Panel.jsx';
+import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
 import Titlebar from './Panel/Titlebar/Titlebar.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
 import UserChip from './UserChip/UserChip.jsx';
@@ -28,6 +29,7 @@ export {
   FloatingMapLogo,
   ScaleCombo,
   Panel,
+  LayerTransparencySlider,
   Titlebar,
   Toolbar,
   UserChip,

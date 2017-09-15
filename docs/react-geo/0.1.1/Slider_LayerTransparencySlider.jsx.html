@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Toolbar/Toolbar.jsx</title>
+    <title>JSDoc: Source: Slider/LayerTransparencySlider.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Toolbar/Toolbar.jsx</h1>
+    <h1 class="page-title">Source: Slider/LayerTransparencySlider.jsx</h1>
 
     
 
@@ -28,87 +28,89 @@
         <article>
             <pre class="prettyprint source linenums"><code>import React from 'react';
 import PropTypes from 'prop-types';
-import './Toolbar.less';
+import { Slider } from 'antd';
+import OlLayerBase from 'ol/layer/base';
 
 /**
- * A base class representating a toolbar having n children
- * The child components of this toolbar can be aligned in vertical and
- * horizontal (default) way
+ * The LayerTransparencySlider.
  *
- * @class The Toolbar
+ * @class The LayerTransparencySlider
  * @extends React.Component
  */
-class Toolbar extends React.Component {
-
-  /**
-   * The className added to this component.
-   * @type {String}
-   * @private
-   */
-  className = 'react-geo-toolbar'
+class LayerTransparencySlider extends React.Component {
 
   /**
    * The properties.
    * @type {Object}
    */
   static propTypes = {
-
     /**
-     * The className which should be added.
-     * @type {String}
+     * The layer to handle.
+     * @type {ol.layer.Base}
      */
-    className: PropTypes.string,
-
-    /**
-     * The children.
-     * @type {Array}
-     */
-    children: PropTypes.node,
-
-    /**
-     * The alignment of the sub components.
-     * @type {String}
-     */
-    alignment: PropTypes.oneOf(['horizontal', 'vertical']),
-
-    /**
-     * An object containing style informations. Applied to Toolbar.
-     * @type {Boolean}
-     */
-    style: PropTypes.object
-  }
+    layer: PropTypes.instanceOf(OlLayerBase).isRequired
+  };
 
   /**
-   * The default properties.
-   * @type {Object}
+   * Create the LayerTransparencySlider.
+   *
+   * @constructs LayerTransparencySlider
    */
-  static defaultProps = {
-    children: [],
-    alignment: 'horizontal'
+  constructor(props) {
+    super(props);
   }
 
   /**
-   * The render function
+   * Sets the transparency to the provided layer.
+   *
+   * @param {Number} transparency The transparency to set, provide a value
+   *                              between 0 (fully visible) and 100 (fully
+   *                              transparent).
+   */
+  setLayerTransparency(transparency) {
+    let opacity = 1 - (transparency / 100);
+    // Round the opacity to two digits.
+    opacity = Math.round((opacity) * 100) / 100;
+    this.props.layer.setOpacity(opacity);
+  }
+
+  /**
+   * Returns the transparency from the provided layer.
+   *
+   * @return {Number} The transparency of the layer.
+   */
+  getLayerTransparency() {
+    // 1 = fully opaque/visible.
+    let opacity = this.props.layer.getOpacity();
+    let transparency = (1 - opacity) * 100;
+    // Remove any digits.
+    transparency = Math.round(transparency);
+    return transparency;
+  }
+
+  /**
+   * The render function.
    */
   render() {
     const {
-      style,
-      className
+      layer,
+      ...passThroughProps
     } = this.props;
 
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
-
     return (
-      &lt;div className={`${finalClassName} ${this.props.alignment}-toolbar`} style={style}>
-        {this.props.children}
-      &lt;/div>
+      &lt;Slider
+        tipFormatter={value => `${value}%`}
+        defaultValue={this.getLayerTransparency()}
+        onChange={(value) => {
+          this.setLayerTransparency(value);
+        }}
+        {...passThroughProps}
+      />
     );
   }
 }
 
-export default Toolbar;
+export default LayerTransparencySlider;
 </code></pre>
         </article>
     </section>
