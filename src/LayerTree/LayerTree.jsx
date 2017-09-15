@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { isEqual, isBoolean } from 'lodash';
+import { isEqual, isBoolean, isFunction } from 'lodash';
 import { Tree } from 'antd';
 import OlLayerBase from 'ol/layer/base';
 import OlLayerGroup from 'ol/layer/group';
@@ -51,7 +51,15 @@ class LayerTree extends React.Component {
 
     layerGroup: PropTypes.instanceOf(OlLayerGroup),
 
-    map: PropTypes.object
+    map: PropTypes.object,
+
+    /**
+     * A function that can be used to pass a custom node title. It can return
+     * any renderable element (String, Number, Element etc.) and receives
+     * the layer instance of the current tree node.
+     * @type {Function}
+     */
+    nodeTitleRenderer: PropTypes.func
   }
 
   /**
@@ -219,10 +227,27 @@ class LayerTree extends React.Component {
   }
 
   /**
+   * Returns the title to render in the LayerTreeNode. If a nodeTitleRenderer
+   * has been passed as prop, it will be called and the (custom) return value
+   * will be rendered. Note: This can be any renderable element collection! If
+   * no function is given (the default) the layer name will be passed.
+   *
+   * @param {ol.layer.Base} layer The layer attached to the tree node.
+   * @return {Element} The title composition to render.
+   */
+  getTreeNodeTitle(layer) {
+    if (isFunction(this.props.nodeTitleRenderer)) {
+      return this.props.nodeTitleRenderer.call(this, layer);
+    } else {
+      return layer.get('name');
+    }
+  }
+
+  /**
    * Creates a treeNode from a given layer.
    *
-   * @param {ol.layer.Layer} layer The given layer.
-   * @return {TreeNode} The corresponding TreeNode Element.
+   * @param {ol.layer.Base} layer The given layer.
+   * @return {LayerTreeNode} The corresponding LayerTreeNode Element.
    */
   treeNodeFromLayer(layer) {
     let childNodes;
@@ -246,7 +271,7 @@ class LayerTree extends React.Component {
     }
 
     treeNode = <LayerTreeNode
-      title={layer.get('name')}
+      title={this.getTreeNodeTitle(layer)}
       key={layer.ol_uid}
     >
       {childNodes}

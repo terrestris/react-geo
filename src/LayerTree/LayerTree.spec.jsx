@@ -1,4 +1,5 @@
 /*eslint-env mocha*/
+import React from 'react';
 import expect from 'expect.js';
 import sinon from 'sinon';
 
@@ -122,7 +123,7 @@ describe('<LayerTree />', () => {
       expect(subNode.props.title).to.eql(subLayer.get('name'));
     });
 
-    it('sets the right titles for the layers', () => {
+    it('sets the layer name as title per default', () => {
       const props = {
         layerGroup,
         map
@@ -132,6 +133,34 @@ describe('<LayerTree />', () => {
       treeNodes.forEach((node, index) => {
         const layer = layerGroup.getLayers().item(index);
         expect(node.props().title).to.eql(layer.get('name'));
+      });
+    });
+
+    it('accepts a custom title renderer function', () => {
+      const nodeTitleRenderer = function(layer) {
+        return (
+          <span className="span-1">
+            <span className="sub-span-1">
+              {layer.get('name')}
+            </span>
+            <span className="sub-span-2" />
+          </span>
+        );
+      };
+      const props = {
+        layerGroup,
+        map,
+        nodeTitleRenderer
+      };
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
+      const treeNodes = wrapper.children('LayerTreeNode');
+
+      treeNodes.forEach((node, index) => {
+        const layer = layerGroup.getLayers().item(index);
+        expect(node.find('span.span-1').length).to.equal(1);
+        expect(node.find('span.sub-span-1').length).to.equal(1);
+        expect(node.find('span.sub-span-1').props().children).to.equal(layer.get('name'));
+        expect(node.find('span.sub-span-2').length).to.equal(1);
       });
     });
 
