@@ -2,7 +2,7 @@
 import React from 'react';
 import expect from 'expect.js';
 
-import TestUtils from '../Util/TestUtils';
+import TestUtil from '../Util/TestUtil';
 
 import { isVisibleComponent } from '../index';
 
@@ -31,7 +31,7 @@ describe('isVisibleComponent', () => {
     });
 
     it('can be rendered', () => {
-      const wrapper = TestUtils.mountComponent(EnhancedComponent);
+      const wrapper = TestUtil.mountComponent(EnhancedComponent);
 
       expect(wrapper).not.to.be(undefined);
       expect(wrapper.first().is(EnhancedComponent)).to.be(true);
@@ -49,7 +49,7 @@ describe('isVisibleComponent', () => {
         someProp: '09',
         name: 'shinjiKagawaModule'
       };
-      const wrapper = TestUtils.mountComponent(EnhancedComponent, props);
+      const wrapper = TestUtil.mountComponent(EnhancedComponent, props);
       const wrappedInstance = wrapper.instance().getWrappedInstance();
 
       expect(wrappedInstance.props).to.eql(expectedProps);
@@ -62,7 +62,7 @@ describe('isVisibleComponent', () => {
           name: 'shinjiKagawaModule'
         }]
       };
-      const wrapper = TestUtils.mountComponent(EnhancedComponent, props);
+      const wrapper = TestUtil.mountComponent(EnhancedComponent, props);
       const wrappedInstance = wrapper.instance().getWrappedInstance();
 
       expect(wrappedInstance).to.be.an(MockComponent);
@@ -71,7 +71,7 @@ describe('isVisibleComponent', () => {
         withRef: false
       });
 
-      const wrapperNoRef = TestUtils.mountComponent(EnhancedComponentNoRef, props);
+      const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props);
       const wrappedInstanceNoRef = wrapperNoRef.instance().getWrappedInstance();
 
       expect(wrappedInstanceNoRef).to.be(undefined);
@@ -79,17 +79,17 @@ describe('isVisibleComponent', () => {
 
     it('shows or hides the wrapped component in relation to it\'s representation in the activeModules prop', () => {
       // 1. No name and no activeModules.
-      let wrapper = TestUtils.mountComponent(EnhancedComponent);
+      let wrapper = TestUtil.mountComponent(EnhancedComponent);
       expect(wrapper.find('div').length).to.equal(0);
 
       // 2. Name and no activeModules.
-      wrapper = TestUtils.mountComponent(EnhancedComponent, {
+      wrapper = TestUtil.mountComponent(EnhancedComponent, {
         name: 'shinjiKagawaModule'
       });
       expect(wrapper.find('div').length).to.equal(0);
 
       // 3. Name and activeModules.
-      wrapper = TestUtils.mountComponent(EnhancedComponent, {
+      wrapper = TestUtil.mountComponent(EnhancedComponent, {
         name: 'shinjiKagawaModule',
         activeModules: [{
           name: 'shinjiKagawaModule'
@@ -98,7 +98,7 @@ describe('isVisibleComponent', () => {
       expect(wrapper.find('div').length).to.equal(1);
 
       // 4. Name and activeModules, but name not in activeModules.
-      wrapper = TestUtils.mountComponent(EnhancedComponent, {
+      wrapper = TestUtil.mountComponent(EnhancedComponent, {
         name: 'someModule',
         activeModules: [{
           name: 'shinjiKagawaModule'
@@ -107,7 +107,7 @@ describe('isVisibleComponent', () => {
       expect(wrapper.find('div').length).to.equal(0);
 
       // 5. No name and activeModules.
-      wrapper = TestUtils.mountComponent(EnhancedComponent, {
+      wrapper = TestUtil.mountComponent(EnhancedComponent, {
         activeModules: [{
           name: 'shinjiKagawaModule'
         }]
@@ -115,7 +115,7 @@ describe('isVisibleComponent', () => {
       expect(wrapper.find('div').length).to.equal(0);
 
       // 6. Name and activeModules, but no name in activeModules
-      wrapper = TestUtils.mountComponent(EnhancedComponent, {
+      wrapper = TestUtil.mountComponent(EnhancedComponent, {
         name: 'shinjiKagawaModule',
         activeModules: [{
           notName: 'shinjiKagawaModule'

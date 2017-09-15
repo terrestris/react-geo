@@ -6,7 +6,7 @@ import OlTileLayer from 'ol/layer/tile';
 import OlSourceTileWMS from 'ol/source/tilewms';
 import OlTileJsonSource from 'ol/source/tilejson';
 
-import TestUtils from '../Util/TestUtils';
+import TestUtil from '../Util/TestUtil';
 
 import {
   MapUtil,
@@ -41,20 +41,20 @@ describe('<Legend />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtils.mountComponent(Legend, {layer: layer1});
+    const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
     expect(wrapper).not.to.be(undefined);
   });
 
   describe('Legend created with Layer', () => {
 
     it('takes the legendGraphic from layer.get("legendUrl") if configured', () => {
-      const wrapper = TestUtils.mountComponent(Legend, {layer: layer2});
+      const wrapper = TestUtil.mountComponent(Legend, {layer: layer2});
       const img = wrapper.children('img').node;
       expect(img.src).to.eql(layer2.get('legendUrl'));
     });
 
     it('generates getLegendGraphicUrl if no "legendUrl" configured', () => {
-      const wrapper = TestUtils.mountComponent(Legend, {layer: layer1});
+      const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
       const img = wrapper.children('img').node;
       const legendUrl = MapUtil.getLegendGraphicUrl(layer1);
       expect(img.src).to.eql(legendUrl);
@@ -66,7 +66,7 @@ describe('<Legend />', () => {
         WIDTH: 400,
         LANGUAGE: 'de'
       };
-      const wrapper = TestUtils.mountComponent(Legend, {
+      const wrapper = TestUtil.mountComponent(Legend, {
         layer: layer1,
         extraParams: extraParams
       });
@@ -76,7 +76,7 @@ describe('<Legend />', () => {
     });
 
     it('creates an alt attribute corresponding to layername', () => {
-      const wrapper = TestUtils.mountComponent(Legend, {layer: layer1});
+      const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
       const img = wrapper.children('img').node;
       expect(img.alt).to.eql(`${layer1.get('name')} legend`);
     });

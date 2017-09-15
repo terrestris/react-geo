@@ -2,7 +2,7 @@
 import expect from 'expect.js';
 import sinon from 'sinon';
 
-import TestUtils from '../../Util/TestUtils';
+import TestUtil from '../../Util/TestUtil';
 import Logger from '../../Util/Logger';
 
 import { SimpleButton } from '../../index';
@@ -13,12 +13,12 @@ describe('<SimpleButton />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtils.mountComponent(SimpleButton);
+    const wrapper = TestUtil.mountComponent(SimpleButton);
     expect(wrapper).not.to.be(undefined);
   });
 
   it('allows to set some props', () => {
-    const wrapper = TestUtils.mountComponent(SimpleButton);
+    const wrapper = TestUtil.mountComponent(SimpleButton);
 
     wrapper.setProps({
       type: 'secondary',
@@ -42,7 +42,7 @@ describe('<SimpleButton />', () => {
   });
 
   it('warns if no click callback method is given', () => {
-    const wrapper = TestUtils.mountComponent(SimpleButton);
+    const wrapper = TestUtil.mountComponent(SimpleButton);
     const logSpy = sinon.spy(Logger, 'debug');
 
     wrapper.find('button').simulate('click');
@@ -53,7 +53,7 @@ describe('<SimpleButton />', () => {
   });
 
   it('calls a given click callback method onClick', () => {
-    const wrapper = TestUtils.mountComponent(SimpleButton);
+    const wrapper = TestUtil.mountComponent(SimpleButton);
     const onClick = sinon.spy();
 
     wrapper.setProps({

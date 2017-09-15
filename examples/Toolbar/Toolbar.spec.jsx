@@ -1,7 +1,7 @@
 /*eslint-env mocha*/
 import React from 'react';
 import expect from 'expect.js';
-import TestUtils from '../Util/TestUtils';
+import TestUtil from '../Util/TestUtil';
 
 import {Toolbar} from '../index';
 
@@ -15,7 +15,7 @@ describe('<Toolbar />', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = TestUtils.mountComponent(Toolbar);
+    wrapper = TestUtil.mountComponent(Toolbar);
   });
 
   it('is defined', () => {
@@ -38,7 +38,7 @@ describe('<Toolbar /> - CSS-class "vertical-toolbar"', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = TestUtils.mountComponent(Toolbar, {
+    wrapper = TestUtil.mountComponent(Toolbar, {
       alignment: 'vertical',
       children: testChildren
     });
@@ -66,7 +66,7 @@ describe('<Toolbar /> - CSS-class "horizontal-toolbar"', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = TestUtils.mountComponent(Toolbar, {
+    wrapper = TestUtil.mountComponent(Toolbar, {
       alignment: 'horizontal',
       children: testChildren
     });

@@ -1,7 +1,7 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
 import testLogo from '../../UserChip/user.png';
-import TestUtils from '../../Util/TestUtils';
+import TestUtil from '../../Util/TestUtil';
 
 import {FloatingMapLogo} from '../../index';
 
@@ -12,7 +12,7 @@ describe('<FloatingMapLogo />', () => {
     let props = {
       imageSrc: testLogo
     };
-    wrapper = TestUtils.mountComponent(FloatingMapLogo, props);
+    wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
   });
 
   it('is defined', () => {
@@ -41,7 +41,7 @@ describe('<FloatingMapLogo />', () => {
         position: 'inherit'
       }
     };
-    wrapper = TestUtils.mountComponent(FloatingMapLogo, props);
+    wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
     let imageElement = wrapper.find('img');
     expect(imageElement.node.style.backgroundColor).to.be('yellow');
     expect(imageElement.node.style.position).to.be('inherit');
@@ -55,7 +55,7 @@ describe('<FloatingMapLogo />', () => {
         backgroundColor: 'yellow'
       }
     };
-    wrapper = TestUtils.mountComponent(FloatingMapLogo, props);
+    wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
     let imageElement = wrapper.find('img');
     expect(imageElement.node.className).to.be('map-logo');
     expect(imageElement.node.style.position).to.be('absolute');

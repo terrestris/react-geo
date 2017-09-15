@@ -2,7 +2,7 @@
 import expect from 'expect.js';
 import sinon from 'sinon';
 
-import TestUtils from '../../Util/TestUtils';
+import TestUtil from '../../Util/TestUtil';
 
 import {
   Logger,
@@ -16,12 +16,12 @@ describe('<ToggleButton />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtils.mountComponent(ToggleButton);
+    const wrapper = TestUtil.mountComponent(ToggleButton);
     expect(wrapper).not.to.be(undefined);
   });
 
   it('allows to set some props', () => {
-    const wrapper = TestUtils.mountComponent(ToggleButton);
+    const wrapper = TestUtil.mountComponent(ToggleButton);
 
     wrapper.setProps({
       name: 'Shinji',
@@ -49,7 +49,7 @@ describe('<ToggleButton />', () => {
   });
 
   it('sets a pressed class if the pressed state becomes truthy', () => {
-    const wrapper = TestUtils.mountComponent(ToggleButton, {
+    const wrapper = TestUtil.mountComponent(ToggleButton, {
       onToggle: () => {}
     });
     let toggleClass = wrapper.instance().toggleClass;
@@ -66,7 +66,7 @@ describe('<ToggleButton />', () => {
 
   it('warns if no toggle callback method is given', () => {
     const logSpy = sinon.spy(Logger, 'debug');
-    const wrapper = TestUtils.mountComponent(ToggleButton, {
+    const wrapper = TestUtil.mountComponent(ToggleButton, {
       onToggle: () => {}
     });
 
@@ -85,7 +85,7 @@ describe('<ToggleButton />', () => {
       onToggle: onToggle
     };
 
-    const wrapper = TestUtils.mountComponent(ToggleButton, props);
+    const wrapper = TestUtil.mountComponent(ToggleButton, props);
 
     wrapper.setProps({
       pressed: true
@@ -95,7 +95,7 @@ describe('<ToggleButton />', () => {
   });
 
   it('changes the pressed state of the component on click (if standalone button)', () => {
-    const wrapper = TestUtils.mountComponent(ToggleButton);
+    const wrapper = TestUtil.mountComponent(ToggleButton);
 
     wrapper.find('button').simulate('click');
 
@@ -109,7 +109,7 @@ describe('<ToggleButton />', () => {
         onChange: onChangeSpy
       }
     };
-    const wrapper = TestUtils.mountComponent(ToggleButton, null, context);
+    const wrapper = TestUtil.mountComponent(ToggleButton, null, context);
 
     wrapper.find('button').simulate('click');
 

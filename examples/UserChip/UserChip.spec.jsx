@@ -1,7 +1,7 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
 import testImage from  './user.png';
-import TestUtils from '../Util/TestUtils';
+import TestUtil from '../Util/TestUtil';
 
 import {UserChip} from '../index';
 
@@ -10,7 +10,7 @@ describe('<UserChip />', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = TestUtils.mountComponent(UserChip);
+    wrapper = TestUtil.mountComponent(UserChip);
   });
 
   it('is defined', () => {
@@ -31,7 +31,7 @@ describe('<UserChip />', () => {
     const props = {
       imageSrc: testImage
     };
-    const wrapper =TestUtils.mountComponent(UserChip, props);
+    const wrapper =TestUtil.mountComponent(UserChip, props);
     expect(wrapper.find('img').node.src).to.contain(testImage);
   });
 
@@ -52,7 +52,7 @@ describe('<UserChip />', () => {
         'backgroundColor': 'yellow'
       }
     };
-    const wrapper =TestUtils.mountComponent(UserChip, props);
+    const wrapper =TestUtil.mountComponent(UserChip, props);
     expect(wrapper.find('div.userchip').node.style.backgroundColor).to.be('yellow');
   });
 

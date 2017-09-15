@@ -13,7 +13,7 @@ import OlMapBrowserPointerEvent from 'ol/mapbrowserpointerevent';
  *
  * @class
  */
-export class TestUtils {
+export class TestUtil {
 
   static mapDivId = 'map';
   static mapDivHeight = 256;
@@ -43,9 +43,9 @@ export class TestUtils {
     style.position = 'absolute';
     style.left = '-1000px';
     style.top = '-1000px';
-    style.width = TestUtils.mapDivWidth + 'px';
-    style.height = TestUtils.mapDivHeight + 'px';
-    div.id = TestUtils.mapDivId;
+    style.width = TestUtil.mapDivWidth + 'px';
+    style.height = TestUtil.mapDivHeight + 'px';
+    div.id = TestUtil.mapDivId;
 
     document.body.appendChild(div);
 
@@ -56,7 +56,7 @@ export class TestUtils {
    * Removes the map div element from the body.
    */
   static unmountMapDiv = () => {
-    let div = document.querySelector(`div#${TestUtils.mapDivId}`);
+    let div = document.querySelector(`div#${TestUtil.mapDivId}`);
     if (!div) {
       return;
     }
@@ -76,7 +76,7 @@ export class TestUtils {
   static createMap = (mapOpts) => {
     let source = new OlSourceVector();
     let layer = new OlLayerVector({source: source});
-    let targetDiv = TestUtils.mountMapDiv();
+    let targetDiv = TestUtil.mountMapDiv();
     let defaultMapOpts = {
       target: targetDiv,
       layers: [layer],
@@ -103,7 +103,7 @@ export class TestUtils {
     if (map instanceof OlMap) {
       map.dispose();
     }
-    TestUtils.unmountMapDiv();
+    TestUtil.unmountMapDiv();
   };
 
   /**
@@ -123,8 +123,8 @@ export class TestUtils {
     let position = viewport.getBoundingClientRect();
     let shiftKey = opt_shiftKey !== undefined ? opt_shiftKey : false;
     let event = new OlPointerEvent(type, {
-      clientX: position.left + x + TestUtils.mapDivWidth / 2,
-      clientY: position.top + y + TestUtils.mapDivHeight / 2,
+      clientX: position.left + x + TestUtil.mapDivWidth / 2,
+      clientY: position.top + y + TestUtil.mapDivHeight / 2,
       shiftKey: shiftKey
     });
     map.handleMapBrowserEvent(new OlMapBrowserPointerEvent(type, map, event, dragging));
@@ -147,4 +147,4 @@ export class TestUtils {
 
 }
 
-export default TestUtils;
+export default TestUtil;

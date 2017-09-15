@@ -3,7 +3,7 @@ import React from 'react';
 import expect from 'expect.js';
 import sinon from 'sinon';
 
-import TestUtils from '../../Util/TestUtils';
+import TestUtil from '../../Util/TestUtil';
 
 import{
   ToggleButton,
@@ -17,12 +17,12 @@ describe('<ToggleGroup />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtils.mountComponent(ToggleGroup);
+    const wrapper = TestUtil.mountComponent(ToggleGroup);
     expect(wrapper).not.to.be(undefined);
   });
 
   it('renders it\'s children horizontally or vertically', () => {
-    const wrapper = TestUtils.mountComponent(ToggleGroup);
+    const wrapper = TestUtil.mountComponent(ToggleGroup);
 
     wrapper.setProps({
       orientation: 'vertical'
@@ -45,7 +45,7 @@ describe('<ToggleGroup />', () => {
         <ToggleButton key="3" name="香川 真司" />
       ]
     };
-    const wrapper = TestUtils.mountComponent(ToggleGroup, props);
+    const wrapper = TestUtil.mountComponent(ToggleGroup, props);
 
     expect(wrapper.find(ToggleButton).length).to.equal(3);
   });
@@ -58,7 +58,7 @@ describe('<ToggleGroup />', () => {
         <ToggleButton key="1" name="Shinji" />
       ]
     };
-    const wrapper = TestUtils.mountComponent(ToggleGroup, props);
+    const wrapper = TestUtil.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).simulate('click');
 
@@ -75,7 +75,7 @@ describe('<ToggleGroup />', () => {
         <ToggleButton key="3" name="香川 真司" />
       ]
     };
-    const wrapper = TestUtils.mountComponent(ToggleGroup, props);
+    const wrapper = TestUtil.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).first().simulate('click');
     expect(wrapper.state().selectedName).to.equal('Shinji');
@@ -95,7 +95,7 @@ describe('<ToggleGroup />', () => {
         <ToggleButton key="3" name="香川 真司" />
       ]
     };
-    const wrapper = TestUtils.mountComponent(ToggleGroup, props);
+    const wrapper = TestUtil.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).first().simulate('click');
     expect(wrapper.state().selectedName).to.equal('Shinji');
