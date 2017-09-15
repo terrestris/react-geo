@@ -5,7 +5,7 @@ import OlView from 'ol/view';
 import OlMap from 'ol/map';
 import OlSourceVector from 'ol/source/vector';
 import OlLayerVector from 'ol/layer/vector';
-import OlPointerEvent from 'ol/pointer/pointerevent';
+import OlPointerPointerEvent from 'ol/pointer/pointerevent';
 import OlMapBrowserPointerEvent from 'ol/mapbrowserpointerevent';
 
 /**
@@ -122,7 +122,7 @@ export class TestUtil {
     // Calculated in case body has top < 0 (test runner with small window).
     let position = viewport.getBoundingClientRect();
     let shiftKey = opt_shiftKey !== undefined ? opt_shiftKey : false;
-    let event = new OlPointerEvent(type, {
+    let event = new OlPointerPointerEvent(type, {
       clientX: position.left + x + TestUtil.mapDivWidth / 2,
       clientY: position.top + y + TestUtil.mapDivHeight / 2,
       shiftKey: shiftKey
