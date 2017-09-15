@@ -12,7 +12,20 @@ import './UserChip.less';
  */
 class UserChip extends React.Component {
 
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-userchip'
+
   static propTypes = {
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
     /**
      * The user aname.
      * @type {String}
@@ -81,8 +94,18 @@ class UserChip extends React.Component {
    * @return {type} Description
    */
   getUserMenu() {
-    return <div className="userchip" style={this.props.style}>
-      <Avatar src={this.props.imageSrc} size="large" className="userimage"> {this.props.imageSrc ? '' : this.getInitials()} </Avatar>
+
+    const className = this.props.className
+      ? `${this.props.className} ${this.className}`
+      : this.className;
+
+    return <div className={className} style={this.props.style}>
+      <Avatar
+        src={this.props.imageSrc}
+        size="large"
+        className="userimage">
+        {this.props.imageSrc ? '' : this.getInitials()}
+      </Avatar>
       <span className="username">{this.props.userName}</span>
     </div>;
   }
@@ -91,9 +114,16 @@ class UserChip extends React.Component {
    * The render function
    */
   render() {
+
     if (this.props.userMenu && React.isValidElement(this.props.userMenu)) {
       return (
-        <Dropdown overlay={this.props.userMenu} trigger={['click']} getPopupContainer={() => document.getElementsByClassName('userchip')[0]}>
+        <Dropdown
+          overlay={this.props.userMenu}
+          trigger={['click']}
+          getPopupContainer={() => {
+            return document.getElementsByClassName('userchip')[0];
+          }}
+        >
           {this.getUserMenu()}
         </Dropdown>
       );

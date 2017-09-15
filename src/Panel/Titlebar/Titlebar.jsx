@@ -12,6 +12,13 @@ import './Titlebar.less';
 export class Titlebar extends React.Component {
 
   /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-titlebar'
+
+  /**
    * The properties.
    * @type {Object}
    */
@@ -76,14 +83,17 @@ export class Titlebar extends React.Component {
    * The render function.
    */
   render() {
-    let {
+    const {
       className,
       tools
     } = this.props;
-    className = className ? className + ' titlebar' : 'titlebar';
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
 
     return (
-      <div className={className}>
+      <div className={finalClassName}>
         <span className="title">
           {this.props.children}
         </span>

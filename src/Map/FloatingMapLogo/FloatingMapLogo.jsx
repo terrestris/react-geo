@@ -11,10 +11,23 @@ import './FloatingMapLogo.less';
 class FloatingMapLogo extends React.Component {
 
   /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-floatingmaplogo'
+
+  /**
    * The properties.
    * @type {Object}
    */
   static propTypes = {
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
     /**
      * The imageSrc (required property).
      * @type {String}
@@ -57,8 +70,13 @@ class FloatingMapLogo extends React.Component {
       imageSrc,
       imageHeight,
       absolutelyPostioned,
+      className,
       style
     } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
 
     if (absolutelyPostioned) {
       Object.assign(style, {'position': 'absolute'});
@@ -66,7 +84,7 @@ class FloatingMapLogo extends React.Component {
 
     return (
       <img
-        className="map-logo"
+        className={finalClassName}
         src={imageSrc}
         height={imageHeight}
         style={style}

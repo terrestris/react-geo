@@ -25,12 +25,12 @@ describe('<FloatingMapLogo />', () => {
 
   it('contains img element with predefined class', () => {
     let imageElement = wrapper.find('img');
-    expect(imageElement.node.className).to.be('map-logo');
+    expect(imageElement.node.className).to.be(wrapper.instance().className);
   });
 
   it('is not positioned absolutely by default', () => {
     let imageElement = wrapper.find('img');
-    expect(imageElement.node.className).to.be('map-logo');
+    expect(imageElement.node.className).to.be(wrapper.instance().className);
   });
 
   it('passes style prop', () => {
@@ -39,11 +39,14 @@ describe('<FloatingMapLogo />', () => {
       style: {
         backgroundColor: 'yellow',
         position: 'inherit'
-      }
+      },
+      className: 'peter'
     };
     wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
     let imageElement = wrapper.find('img');
     expect(imageElement.node.style.backgroundColor).to.be('yellow');
+    expect(imageElement.node.className).to.contain(wrapper.instance().className);
+    expect(imageElement.node.className).to.contain('peter');
     expect(imageElement.node.style.position).to.be('inherit');
   });
 
@@ -57,7 +60,7 @@ describe('<FloatingMapLogo />', () => {
     };
     wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
     let imageElement = wrapper.find('img');
-    expect(imageElement.node.className).to.be('map-logo');
+    expect(imageElement.node.className).to.be(wrapper.instance().className);
     expect(imageElement.node.style.position).to.be('absolute');
     expect(imageElement.node.style.backgroundColor).to.be('yellow');
   });
