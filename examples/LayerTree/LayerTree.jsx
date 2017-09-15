@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { isEqual, isBoolean } from 'lodash';
 import { Tree } from 'antd';
 import OlLayerBase from 'ol/layer/base';
-import OlGroupLayer from 'ol/layer/group';
+import OlLayerGroup from 'ol/layer/group';
 import olObservable from 'ol/observable';
 
 import Logger from '../Util/Logger';
@@ -49,7 +49,7 @@ class LayerTree extends React.Component {
 
     draggable: PropTypes.bool,
 
-    layerGroup: PropTypes.instanceOf(OlGroupLayer),
+    layerGroup: PropTypes.instanceOf(OlLayerGroup),
 
     map: PropTypes.object
   }
@@ -144,7 +144,7 @@ class LayerTree extends React.Component {
     this.olListenerKeys.push(addEvtKey, removeEvtKey);
 
     collection.forEach((layer) => {
-      if (layer instanceof OlGroupLayer) {
+      if (layer instanceof OlLayerGroup) {
         this.registerAddRemoveListeners(layer);
       }
     });
@@ -158,7 +158,7 @@ class LayerTree extends React.Component {
    * @param {ol.Collection.Event} evt The add event.
    */
   onCollectionAdd = (evt) => {
-    if (evt.element instanceof OlGroupLayer) {
+    if (evt.element instanceof OlLayerGroup) {
       this.registerAddRemoveListeners(evt.element);
     }
     this.rebuildTreeNodes();
@@ -172,7 +172,7 @@ class LayerTree extends React.Component {
    */
   onCollectionRemove = (evt) => {
     this.unregisterEventsByLayer(evt.element);
-    if (evt.element instanceof OlGroupLayer) {
+    if (evt.element instanceof OlLayerGroup) {
       evt.element.getLayers().forEach((layer) => {
         this.unregisterEventsByLayer(layer);
       });
@@ -187,7 +187,7 @@ class LayerTree extends React.Component {
    */
   unregisterEventsByLayer = (layer) => {
     this.olListenerKeys = this.olListenerKeys.filter((key) => {
-      if (layer instanceof OlGroupLayer) {
+      if (layer instanceof OlLayerGroup) {
         const layers = layer.getLayers();
         if (key.target === layers) {
           if ((key.type === 'add' && key.listener === this.onCollectionAdd) ||
@@ -228,7 +228,7 @@ class LayerTree extends React.Component {
     let childNodes;
     let treeNode;
 
-    if (layer instanceof OlGroupLayer) {
+    if (layer instanceof OlLayerGroup) {
       if (!layer.getVisible()) {
         Logger.warn('Your map configuration contains layerGroups that are' +
         'invisible. This might lead to buggy behaviour.');
@@ -292,7 +292,7 @@ class LayerTree extends React.Component {
    */
   getVisibleOlUids = () => {
     const layers = MapUtil.getAllLayers(this.state.layerGroup, (layer) => {
-      return !(layer instanceof OlGroupLayer) && layer.getVisible();
+      return !(layer instanceof OlLayerGroup) && layer.getVisible();
     });
     return layers.map(l => l.ol_uid.toString());
   }
@@ -322,7 +322,7 @@ class LayerTree extends React.Component {
       Logger.error('setLayerVisibility called without layer or visiblity.');
       return;
     }
-    if (layer instanceof OlGroupLayer) {
+    if (layer instanceof OlLayerGroup) {
       layer.getLayers().forEach((subLayer) => {
         this.setLayerVisibility(subLayer, visiblity);
       });
@@ -360,7 +360,7 @@ class LayerTree extends React.Component {
       }
     // drop on node
     } else if (location === 0) {
-      if (dropLayer instanceof OlGroupLayer) {
+      if (dropLayer instanceof OlLayerGroup) {
         dropLayer.getLayers().push(dragLayer);
       } else {
         dropCollection.insertAt(dropPosition + 1, dragLayer);

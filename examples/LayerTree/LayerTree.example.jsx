@@ -3,10 +3,10 @@ import { render } from 'react-dom';
 
 import OlMap from 'ol/map';
 import OlView from 'ol/view';
-import OlGroupLayer from 'ol/layer/group';
-import OlTileLayer from 'ol/layer/tile';
-import OlTileJsonSource from 'ol/source/tilejson';
-import OlOsmSource from 'ol/source/osm';
+import OlLayerGroup from 'ol/layer/group';
+import OlLayerTile from 'ol/layer/tile';
+import OlSourceTileJson from 'ol/source/tilejson';
+import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
 
 import LayerTree from './LayerTree.jsx'; //@react-geo@
@@ -15,19 +15,19 @@ import LayerTree from './LayerTree.jsx'; //@react-geo@
 //
 // ***************************** SETUP *****************************************
 //
-const layerGroup = new OlGroupLayer({
+const layerGroup = new OlLayerGroup({
   name: 'Layergroup',
   layers: [
-    new OlTileLayer({
+    new OlLayerTile({
       name: 'Food insecurity layer',
-      source: new OlTileJsonSource({
+      source: new OlSourceTileJson({
         url: 'https://api.tiles.mapbox.com/v3/mapbox.20110804-hoa-foodinsecurity-3month.json?secure',
         crossOrigin: 'anonymous'
       })
     }),
-    new OlTileLayer({
+    new OlLayerTile({
       name: 'World borders layer',
-      source: new OlTileJsonSource({
+      source: new OlSourceTileJson({
         url: 'https://api.tiles.mapbox.com/v3/mapbox.world-borders-light.json?secure',
         crossOrigin: 'anonymous'
       })
@@ -37,9 +37,9 @@ const layerGroup = new OlGroupLayer({
 
 const map = new OlMap({
   layers: [
-    new OlTileLayer({
+    new OlLayerTile({
       name: 'OSM',
-      source: new OlOsmSource()
+      source: new OlSourceOsm()
     }),
     layerGroup
   ],

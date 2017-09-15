@@ -39,7 +39,7 @@
     <code class="javascript">import React from &#x27;react&#x27;;
 import { render } from &#x27;react-dom&#x27;;
 
-import MapUtils from &#x27;react-geo&#x27;;
+import MapUtil from &#x27;react-geo&#x27;;
 import ScaleCombo from &#x27;react-geo&#x27;;
 
 let scaleCombo;
@@ -62,7 +62,7 @@ __EXAMPLE_MAP__.on(&#x27;moveend&#x27;, function(evt) {
  **/
 var onZoomLevelSelect &#x3D; (selectedScale) &#x3D;&gt; {
   let mv &#x3D; __EXAMPLE_MAP__.getView();
-  let calculatedResolution &#x3D; MapUtils.getResolutionForScale(selectedScale, mv.getProjection().getUnits());
+  let calculatedResolution &#x3D; MapUtil.getResolutionForScale(selectedScale, mv.getProjection().getUnits());
   mv.setResolution(calculatedResolution);
 };
 

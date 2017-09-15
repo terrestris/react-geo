@@ -2,9 +2,9 @@
 import expect from 'expect.js';
 import sinon from 'sinon';
 
-import OlGroupLayer from 'ol/layer/group';
-import OlTileLayer from 'ol/layer/tile';
-import OlTileWMS from 'ol/source/tilewms';
+import OlLayerGroup from 'ol/layer/group';
+import OlLayerTile from 'ol/layer/tile';
+import OlSourceTileWMS from 'ol/source/tilewms';
 import olObservable from 'ol/observable';
 
 import TestUtil from '../Util/TestUtil';
@@ -21,18 +21,18 @@ describe('<LayerTree />', () => {
   let layer2;
 
   beforeEach(() => {
-    const layerSource1 = new OlTileWMS();
-    layer1 = new OlTileLayer({
+    const layerSource1 = new OlSourceTileWMS();
+    layer1 = new OlLayerTile({
       name: 'layer1',
       source: layerSource1
     });
-    const layerSource2 = new OlTileWMS();
-    layer2 = new OlTileLayer({
+    const layerSource2 = new OlSourceTileWMS();
+    layer2 = new OlLayerTile({
       name: 'layer2',
       visible: false,
       source: layerSource2
     });
-    layerGroup = new OlGroupLayer({
+    layerGroup = new OlLayerGroup({
       name: 'layerGroup',
       layers: [layer1, layer2]
     });
@@ -68,11 +68,11 @@ describe('<LayerTree />', () => {
     };
     const wrapper = TestUtil.mountComponent(LayerTree, props);
 
-    const subLayer = new OlTileLayer({
+    const subLayer = new OlLayerTile({
       name: 'subLayer',
-      source: new OlTileWMS()
+      source: new OlSourceTileWMS()
     });
-    const nestedLayerGroup = new OlGroupLayer({
+    const nestedLayerGroup = new OlLayerGroup({
       name: 'nestedLayerGroup',
       layers: [subLayer]
     });
@@ -104,11 +104,11 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const subLayer = new OlTileLayer({
+      const subLayer = new OlLayerTile({
         name: 'subLayer',
-        source: new OlTileWMS()
+        source: new OlSourceTileWMS()
       });
-      const nestedLayerGroup = new OlGroupLayer({
+      const nestedLayerGroup = new OlLayerGroup({
         name: 'nestedLayerGroup',
         layers: [subLayer]
       });
@@ -242,8 +242,8 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const layer = new OlTileLayer({
-        source: new OlTileWMS()
+      const layer = new OlLayerTile({
+        source: new OlSourceTileWMS()
       });
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
@@ -259,10 +259,10 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const layer = new OlTileLayer({
-        source: new OlTileWMS()
+      const layer = new OlLayerTile({
+        source: new OlSourceTileWMS()
       });
-      const group = new OlGroupLayer({
+      const group = new OlLayerGroup({
         layers: [layer]
       });
       const wrapper = TestUtil.mountComponent(LayerTree, props);
@@ -299,13 +299,13 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const subLayer1 = new OlTileLayer({
-        source: new OlTileWMS()
+      const subLayer1 = new OlLayerTile({
+        source: new OlSourceTileWMS()
       });
-      const subLayer2 = new OlTileLayer({
-        source: new OlTileWMS()
+      const subLayer2 = new OlLayerTile({
+        source: new OlSourceTileWMS()
       });
-      const nestedLayerGroup = new OlGroupLayer({
+      const nestedLayerGroup = new OlLayerGroup({
         name: 'nestedLayerGroup',
         layers: [subLayer1, subLayer2]
       });
@@ -330,13 +330,13 @@ describe('<LayerTree />', () => {
           layerGroup,
           map
         };
-        const subLayer1 = new OlTileLayer({
-          source: new OlTileWMS()
+        const subLayer1 = new OlLayerTile({
+          source: new OlSourceTileWMS()
         });
-        const subLayer2 = new OlTileLayer({
-          source: new OlTileWMS()
+        const subLayer2 = new OlLayerTile({
+          source: new OlSourceTileWMS()
         });
-        const nestedLayerGroup = new OlGroupLayer({
+        const nestedLayerGroup = new OlLayerGroup({
           name: 'nestedLayerGroup',
           layers: [subLayer1, subLayer2]
         });
@@ -361,13 +361,13 @@ describe('<LayerTree />', () => {
           layerGroup,
           map
         };
-        const subLayer1 = new OlTileLayer({
-          source: new OlTileWMS()
+        const subLayer1 = new OlLayerTile({
+          source: new OlSourceTileWMS()
         });
-        const subLayer2 = new OlTileLayer({
-          source: new OlTileWMS()
+        const subLayer2 = new OlLayerTile({
+          source: new OlSourceTileWMS()
         });
-        const nestedLayerGroup = new OlGroupLayer({
+        const nestedLayerGroup = new OlLayerGroup({
           name: 'nestedLayerGroup',
           layers: [subLayer1, subLayer2]
         });
@@ -455,15 +455,15 @@ describe('<LayerTree />', () => {
     //     layerGroup,
     //     map
     //   };
-    //   const layer3 = new OlTileLayer({
+    //   const layer3 = new OlLayerTile({
     //     name: 'layer3',
-    //     source: new OlTileWMS()
+    //     source: new OlSourceTileWMS()
     //   });
-    //   const subLayer = new OlTileLayer({
+    //   const subLayer = new OlLayerTile({
     //     name: 'subLayer',
-    //     source: new OlTileWMS()
+    //     source: new OlSourceTileWMS()
     //   });
-    //   const nestedLayerGroup = new OlGroupLayer({
+    //   const nestedLayerGroup = new OlLayerGroup({
     //     name: 'nestedLayerGroup',
     //     layers: [subLayer]
     //   });
