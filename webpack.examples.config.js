@@ -12,6 +12,7 @@ commonConfig.entry = {
   'LayerTree/LayerTree': './src/LayerTree/LayerTree.example.jsx',
   'Panel/Panel/Panel': './src/Panel/Panel/Panel.example.jsx',
   'Panel/Titlebar/Titlebar': './src/Panel/Titlebar/Titlebar.example.jsx',
+  'Slider/LayerTransparencySlider': './src/Slider/LayerTransparencySlider.example.jsx',
   'Toolbar/Toolbar': './src/Toolbar/Toolbar.example.jsx',
   'UserChip/UserChip': './src/UserChip/UserChip.example.jsx',
   'VisibleComponent/VisibleComponent': './src/VisibleComponent/VisibleComponent.example.jsx'
