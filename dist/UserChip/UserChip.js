@@ -53,7 +53,10 @@ var UserChip = function (_React$Component) {
   function UserChip(props) {
     _classCallCheck(this, UserChip);
 
-    return _possibleConstructorReturn(this, (UserChip.__proto__ || Object.getPrototypeOf(UserChip)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (UserChip.__proto__ || Object.getPrototypeOf(UserChip)).call(this, props));
+
+    _this.className = 'react-geo-userchip';
+    return _this;
   }
 
   /**
@@ -71,6 +74,13 @@ var UserChip = function (_React$Component) {
   /**
    * The default properties.
    * @type {Object}
+   */
+
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
    */
 
 
@@ -94,15 +104,19 @@ var UserChip = function (_React$Component) {
   }, {
     key: 'getUserMenu',
     value: function getUserMenu() {
+
+      var className = this.props.className ? this.props.className + ' ' + this.className : this.className;
+
       return _react2.default.createElement(
         'div',
-        { className: 'userchip', style: this.props.style },
+        { className: className, style: this.props.style },
         _react2.default.createElement(
           _avatar2.default,
-          { src: this.props.imageSrc, size: 'large', className: 'userimage' },
-          ' ',
-          this.props.imageSrc ? '' : this.getInitials(),
-          ' '
+          {
+            src: this.props.imageSrc,
+            size: 'large',
+            className: 'userimage' },
+          this.props.imageSrc ? '' : this.getInitials()
         ),
         _react2.default.createElement(
           'span',
@@ -119,12 +133,17 @@ var UserChip = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+
       if (this.props.userMenu && _react2.default.isValidElement(this.props.userMenu)) {
         return _react2.default.createElement(
           _dropdown2.default,
-          { overlay: this.props.userMenu, trigger: ['click'], getPopupContainer: function getPopupContainer() {
+          {
+            overlay: this.props.userMenu,
+            trigger: ['click'],
+            getPopupContainer: function getPopupContainer() {
               return document.getElementsByClassName('userchip')[0];
-            } },
+            }
+          },
           this.getUserMenu()
         );
       }
@@ -137,6 +156,12 @@ var UserChip = function (_React$Component) {
 }(_react2.default.Component);
 
 UserChip.propTypes = {
+  /**
+   * The className which should be added.
+   * @type {String}
+   */
+  className: _propTypes2.default.string,
+
   /**
    * The user aname.
    * @type {String}

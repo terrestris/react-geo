@@ -77,11 +77,19 @@ var LayerTree = function (_React$Component) {
    * The properties.
    * @type {Object}
    */
+
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
   function LayerTree(props) {
     _classCallCheck(this, LayerTree);
 
     var _this = _possibleConstructorReturn(this, (LayerTree.__proto__ || Object.getPrototypeOf(LayerTree)).call(this, props));
 
+    _this.className = 'react-geo-layertree';
     _this.olListenerKeys = [];
 
     _this.registerAddRemoveListeners = function (groupLayer) {
@@ -485,6 +493,12 @@ var LayerTree = function (_React$Component) {
 }(_react2.default.Component);
 
 LayerTree.propTypes = {
+  /**
+   * The className which should be added.
+   * @type {String}
+   */
+  className: _propTypes2.default.string,
+
   draggable: _propTypes2.default.bool,
 
   layerGroup: _propTypes2.default.instanceOf(_group2.default),

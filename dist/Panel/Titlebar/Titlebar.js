@@ -35,10 +35,36 @@ var Titlebar = exports.Titlebar = function (_React$Component) {
   _inherits(Titlebar, _React$Component);
 
   function Titlebar() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, Titlebar);
 
-    return _possibleConstructorReturn(this, (Titlebar.__proto__ || Object.getPrototypeOf(Titlebar)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Titlebar.__proto__ || Object.getPrototypeOf(Titlebar)).call.apply(_ref, [this].concat(args))), _this), _this.className = 'react-geo-titlebar', _temp), _possibleConstructorReturn(_this, _ret);
   }
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+
+
+  /**
+   * The properties.
+   * @type {Object}
+   */
+
+
+  /**
+   * The default props
+   */
+
 
   _createClass(Titlebar, [{
     key: 'render',
@@ -47,22 +73,17 @@ var Titlebar = exports.Titlebar = function (_React$Component) {
     /**
      * The render function.
      */
-
-
-    /**
-     * The properties.
-     * @type {Object}
-     */
     value: function render() {
       var _props = this.props,
           className = _props.className,
           tools = _props.tools;
 
-      className = className ? className + ' titlebar' : 'titlebar';
+
+      var finalClassName = className ? className + ' ' + this.className : this.className;
 
       return _react2.default.createElement(
         'div',
-        { className: className },
+        { className: finalClassName },
         _react2.default.createElement(
           'span',
           { className: 'title' },
@@ -75,11 +96,6 @@ var Titlebar = exports.Titlebar = function (_React$Component) {
         )
       );
     }
-
-    /**
-     * The default props
-     */
-
   }]);
 
   return Titlebar;

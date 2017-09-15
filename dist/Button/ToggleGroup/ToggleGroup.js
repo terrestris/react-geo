@@ -46,6 +46,13 @@ var ToggleGroup = function (_React$Component) {
    * The default properties.
    * @type {Object}
    */
+
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
   function ToggleGroup(props) {
     _classCallCheck(this, ToggleGroup);
 
@@ -54,6 +61,8 @@ var ToggleGroup = function (_React$Component) {
      * @type {Object}
      */
     var _this = _possibleConstructorReturn(this, (ToggleGroup.__proto__ || Object.getPrototypeOf(ToggleGroup)).call(this, props));
+
+    _this.className = 'react-geo-togglegroup';
 
     _this.onChange = function (childProps) {
 
@@ -126,6 +135,8 @@ var ToggleGroup = function (_React$Component) {
           orientation = _props.orientation,
           children = _props.children;
 
+      var className = this.props.className ? this.props.className + ' ' + this.className : this.className;
+      var orientationClass = orientation === 'vertical' ? 'vertical-toggle-group' : 'horizontal-toggle-group';
 
       var childrenWithProps = _react2.default.Children.map(children, function (child) {
         return _react2.default.cloneElement(child, {
@@ -136,7 +147,7 @@ var ToggleGroup = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         {
-          className: orientation === 'vertical' ? 'vertical-toggle-group' : 'horizontal-toggle-group'
+          className: className + ' ' + orientationClass
         },
         childrenWithProps
       );
@@ -147,6 +158,12 @@ var ToggleGroup = function (_React$Component) {
 }(_react2.default.Component);
 
 ToggleGroup.propTypes = {
+  /**
+   * The className which should be added.
+   * @type {String}
+   */
+  className: _propTypes2.default.string,
+
   /**
    * The name of this group.
    * @type {String}

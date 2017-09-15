@@ -36,10 +36,37 @@ var Toolbar = function (_React$Component) {
   _inherits(Toolbar, _React$Component);
 
   function Toolbar() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, Toolbar);
 
-    return _possibleConstructorReturn(this, (Toolbar.__proto__ || Object.getPrototypeOf(Toolbar)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Toolbar.__proto__ || Object.getPrototypeOf(Toolbar)).call.apply(_ref, [this].concat(args))), _this), _this.className = 'react-geo-toolbar', _temp), _possibleConstructorReturn(_this, _ret);
   }
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+
+
+  /**
+   * The properties.
+   * @type {Object}
+   */
+
+
+  /**
+   * The default properties.
+   * @type {Object}
+   */
+
 
   _createClass(Toolbar, [{
     key: 'render',
@@ -48,33 +75,33 @@ var Toolbar = function (_React$Component) {
     /**
      * The render function
      */
-
-
-    /**
-     * The properties.
-     * @type {Object}
-     */
     value: function render() {
-      var style = this.props.style;
+      var _props = this.props,
+          style = _props.style,
+          className = _props.className;
+
+
+      var finalClassName = className ? className + ' ' + this.className : this.className;
 
       return _react2.default.createElement(
         'div',
-        { className: this.props.alignment + '-toolbar', style: style },
+        { className: finalClassName + ' ' + this.props.alignment + '-toolbar', style: style },
         this.props.children
       );
     }
-
-    /**
-     * The default properties.
-     * @type {Object}
-     */
-
   }]);
 
   return Toolbar;
 }(_react2.default.Component);
 
 Toolbar.propTypes = {
+
+  /**
+   * The className which should be added.
+   * @type {String}
+   */
+  className: _propTypes2.default.string,
+
   /**
    * The children.
    * @type {Array}

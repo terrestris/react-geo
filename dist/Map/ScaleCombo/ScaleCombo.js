@@ -58,6 +58,8 @@ var ScaleCombo = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (ScaleCombo.__proto__ || Object.getPrototypeOf(ScaleCombo)).call(this, props));
 
+    _this.className = 'react-geo-scalecombo';
+
     _this.pushScaleOption = function (resolution, mv) {
       var scale = _MapUtil2.default.getScaleForResolution(resolution, mv.getProjection().getUnits());
       // Round scale to nearest multiple of 10.
@@ -131,6 +133,13 @@ var ScaleCombo = function (_React$Component) {
 
   /**
    * The default props
+   */
+
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
    */
 
 
@@ -215,26 +224,25 @@ var ScaleCombo = function (_React$Component) {
     value: function render() {
       var _props = this.props,
           onZoomLevelSelect = _props.onZoomLevelSelect,
-          style = _props.style;
+          style = _props.style,
+          className = _props.className;
 
+
+      var finalClassName = className ? className + ' ' + this.className : this.className;
 
       return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
-          _select2.default,
-          {
-            showSearch: true,
-            onChange: onZoomLevelSelect,
-            getInputElement: this.getInputElement,
-            filterOption: false,
-            value: this.determineOptionKeyForZoomLevel(this.state.zoomLevel),
-            size: 'small',
-            style: style,
-            className: 'scale-select'
-          },
-          this.state.scales
-        )
+        _select2.default,
+        {
+          showSearch: true,
+          onChange: onZoomLevelSelect,
+          getInputElement: this.getInputElement,
+          filterOption: false,
+          value: this.determineOptionKeyForZoomLevel(this.state.zoomLevel),
+          size: 'small',
+          style: style,
+          className: finalClassName
+        },
+        this.state.scales
       );
     }
   }]);
@@ -243,6 +251,12 @@ var ScaleCombo = function (_React$Component) {
 }(_react2.default.Component);
 
 ScaleCombo.propTypes = {
+  /**
+   * The className which should be added.
+   * @type {String}
+   */
+  className: _propTypes2.default.string,
+
   /**
    * The zoomLevel.
    * @type {Number}

@@ -71,6 +71,8 @@ var SimpleButton = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (SimpleButton.__proto__ || Object.getPrototypeOf(SimpleButton)).call(this, props));
 
+    _this.className = 'react-geo-simplebutton';
+
     _this.onClick = function () {
       if (_this.props.onClick) {
         _this.props.onClick();
@@ -93,6 +95,13 @@ var SimpleButton = function (_React$Component) {
    */
 
 
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+
+
   _createClass(SimpleButton, [{
     key: 'render',
 
@@ -106,7 +115,10 @@ var SimpleButton = function (_React$Component) {
           tooltipPlacement = _props.tooltipPlacement,
           icon = _props.icon,
           fontIcon = _props.fontIcon,
-          antBtnProps = _objectWithoutProperties(_props, ['tooltip', 'tooltipPlacement', 'icon', 'fontIcon']);
+          className = _props.className,
+          antBtnProps = _objectWithoutProperties(_props, ['tooltip', 'tooltipPlacement', 'icon', 'fontIcon', 'className']);
+
+      var finalClassName = className ? className + ' ' + this.className : this.className;
 
       return _react2.default.createElement(
         _tooltip2.default,
@@ -117,7 +129,7 @@ var SimpleButton = function (_React$Component) {
         _react2.default.createElement(
           _button2.default,
           _extends({
-            className: 'btn-simple',
+            className: finalClassName,
             onClick: this.onClick
           }, antBtnProps),
           _react2.default.createElement(_reactFa.Icon, {
@@ -133,6 +145,11 @@ var SimpleButton = function (_React$Component) {
 }(_react2.default.Component);
 
 SimpleButton.propTypes = {
+  /**
+   * The className which should be added.
+   * @type {String}
+   */
+  className: _propTypes2.default.string,
   icon: _propTypes2.default.string,
   fontIcon: _propTypes2.default.string,
   shape: _propTypes2.default.string,

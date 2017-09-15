@@ -34,10 +34,37 @@ var FloatingMapLogo = function (_React$Component) {
   _inherits(FloatingMapLogo, _React$Component);
 
   function FloatingMapLogo() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, FloatingMapLogo);
 
-    return _possibleConstructorReturn(this, (FloatingMapLogo.__proto__ || Object.getPrototypeOf(FloatingMapLogo)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = FloatingMapLogo.__proto__ || Object.getPrototypeOf(FloatingMapLogo)).call.apply(_ref, [this].concat(args))), _this), _this.className = 'react-geo-floatingmaplogo', _temp), _possibleConstructorReturn(_this, _ret);
   }
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+
+
+  /**
+   * The properties.
+   * @type {Object}
+   */
+
+
+  /**
+   * The default properties.
+   * @type {Object}
+   */
+
 
   _createClass(FloatingMapLogo, [{
     key: 'render',
@@ -46,43 +73,40 @@ var FloatingMapLogo = function (_React$Component) {
     /**
      * The render function.
      */
-
-
-    /**
-     * The properties.
-     * @type {Object}
-     */
     value: function render() {
       var _props = this.props,
           imageSrc = _props.imageSrc,
           imageHeight = _props.imageHeight,
           absolutelyPostioned = _props.absolutelyPostioned,
+          className = _props.className,
           style = _props.style;
 
+
+      var finalClassName = className ? className + ' ' + this.className : this.className;
 
       if (absolutelyPostioned) {
         Object.assign(style, { 'position': 'absolute' });
       }
 
       return _react2.default.createElement('img', {
-        className: 'map-logo',
+        className: finalClassName,
         src: imageSrc,
         height: imageHeight,
         style: style
       });
     }
-
-    /**
-     * The default properties.
-     * @type {Object}
-     */
-
   }]);
 
   return FloatingMapLogo;
 }(_react2.default.Component);
 
 FloatingMapLogo.propTypes = {
+  /**
+   * The className which should be added.
+   * @type {String}
+   */
+  className: _propTypes2.default.string,
+
   /**
    * The imageSrc (required property).
    * @type {String}

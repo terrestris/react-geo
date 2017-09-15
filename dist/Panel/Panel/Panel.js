@@ -95,6 +95,8 @@ var Panel = exports.Panel = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Panel.__proto__ || Object.getPrototypeOf(Panel)).call(this, props));
 
+    _this.className = 'react-geo-panel';
+
     _this.toggleCollapse = function () {
       _this.setState({
         collapsed: !_this.state.collapsed
@@ -153,6 +155,13 @@ var Panel = exports.Panel = function (_React$Component) {
 
 
   /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+
+
+  /**
    * Function called while resizing.
    *
    * @param {MouseEvent|TouchEvent} evt The MouseEvent event.
@@ -195,7 +204,9 @@ var Panel = exports.Panel = function (_React$Component) {
           className = _props.className,
           rndOpts = _objectWithoutProperties(_props, ['closable', 'collapsible', 'draggable', 'resizeOpts', 'className']);
 
-      var rndClassName = 'panel ' + this.state.id + ' ' + className;
+      var finalClassName = className ? className + ' ' + this.className : this.className;
+
+      var rndClassName = finalClassName + ' ' + this.state.id;
       var disableDragging = !draggable;
       var enableResizing = resizeOpts === true ? undefined : resizeOpts;
 
@@ -253,7 +264,7 @@ var Panel = exports.Panel = function (_React$Component) {
           dragHandlerClassName: '.drag-handle',
           disableDragging: disableDragging,
           enableResizing: enableResizing,
-          resizeHandlerClasses: {
+          resizeHandleClasses: {
             bottom: 'resize-handle resize-handle-bottom',
             bottomLeft: 'resize-handle resize-handle-bottom-left',
             bottomRight: 'resize-handle resize-handle-bottom-right',

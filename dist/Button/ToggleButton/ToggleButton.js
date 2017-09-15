@@ -64,14 +64,19 @@ var ToggleButton = function (_React$Component) {
    * The default properties.
    * @type {Object}
    */
+
+
+  /**
+   * The class to apply for a toggled/pressed button.
+   * @type {String}
+   */
   function ToggleButton(props) {
     _classCallCheck(this, ToggleButton);
 
-    /**
-     * The class to apply for a toggled/pressed button.
-     * @type {String}
-     */
     var _this = _possibleConstructorReturn(this, (ToggleButton.__proto__ || Object.getPrototypeOf(ToggleButton)).call(this, props));
+
+    _this.className = 'react-geo-togglebutton';
+    _this.pressedClass = 'btn-pressed';
 
     _this.onClick = function () {
       if (_this.context.toggleGroup && (0, _lodash.isFunction)(_this.context.toggleGroup.onChange)) {
@@ -84,8 +89,6 @@ var ToggleButton = function (_React$Component) {
         pressed: !_this.state.pressed
       });
     };
-
-    _this.toggleClass = 'btn-pressed';
 
     if (!props.onToggle) {
       _Logger2.default.debug('No onToggle method given. Please provide it as ' + 'prop to this instance.');
@@ -119,6 +122,13 @@ var ToggleButton = function (_React$Component) {
    */
 
 
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+
+
   _createClass(ToggleButton, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
@@ -149,9 +159,9 @@ var ToggleButton = function (_React$Component) {
      * The render function.
      */
     value: function render() {
-      var pressedClass = this.state.pressed ? ' ' + this.toggleClass : '';
-      var className = this.props.className ? ' ' + this.props.className : '';
       var iconName = this.state.pressed ? this.props.pressedIcon || this.props.icon : this.props.icon;
+      var className = this.props.className ? this.props.className + ' ' + this.className : this.className;
+      var pressedClass = this.state.pressed ? ' ' + this.pressedClass : '';
 
       return _react2.default.createElement(
         _tooltip2.default,
@@ -167,7 +177,7 @@ var ToggleButton = function (_React$Component) {
             size: this.props.size,
             disabled: this.props.disabled,
             onClick: this.onClick,
-            className: 'btn-toggle' + pressedClass + className
+            className: '' + className + pressedClass
           },
           _react2.default.createElement(_reactFa.Icon, {
             name: iconName,
