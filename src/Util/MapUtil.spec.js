@@ -10,7 +10,7 @@ import OlGeomPoint from 'ol/geom/point';
 import OlLayerGroup from 'ol/layer/group';
 import sinon from 'sinon';
 
-import TestUtils from './TestUtils.js';
+import TestUtil from './TestUtil.js';
 
 import {
   Logger,
@@ -30,11 +30,11 @@ describe('MapUtil', () => {
 
 
   beforeEach(() => {
-    map = TestUtils.createMap();
+    map = TestUtil.createMap();
   });
 
   afterEach(() => {
-    TestUtils.removeMap(map);
+    TestUtil.removeMap(map);
   });
 
   it('is defined', () => {
@@ -275,22 +275,22 @@ describe('MapUtil', () => {
     it('returns a flattened array of layers out of a given layergroup', () => {
       let layerGroup = new OlLayerGroup({
         layers: [
-          TestUtils.createVectorLayer({name: 'Layer 1'}),
-          TestUtils.createVectorLayer({name: 'Layer 2'}),
+          TestUtil.createVectorLayer({name: 'Layer 1'}),
+          TestUtil.createVectorLayer({name: 'Layer 2'}),
           new OlLayerGroup({
             layers: [
-              TestUtils.createVectorLayer({name: 'Sublayer 1'}),
-              TestUtils.createVectorLayer({name: 'Sublayer 2'}),
+              TestUtil.createVectorLayer({name: 'Sublayer 1'}),
+              TestUtil.createVectorLayer({name: 'Sublayer 2'}),
               new OlLayerGroup({
                 layers: [
-                  TestUtils.createVectorLayer({name: 'Subsublayer 1'}),
-                  TestUtils.createVectorLayer({name: 'Subsublayer 2'}),
+                  TestUtil.createVectorLayer({name: 'Subsublayer 1'}),
+                  TestUtil.createVectorLayer({name: 'Subsublayer 2'}),
                 ]
               }),
-              TestUtils.createVectorLayer({name: 'Sublayer 3'})
+              TestUtil.createVectorLayer({name: 'Sublayer 3'})
             ]
           }),
-          TestUtils.createVectorLayer({name: 'Layer 3'})
+          TestUtil.createVectorLayer({name: 'Layer 3'})
         ]
       });
 
@@ -332,7 +332,7 @@ describe('MapUtil', () => {
       layerGroup = new OlLayerGroup({
         layers: [layer1, layer2, nestedLayerGroup]
       });
-      map = TestUtils.createMap();
+      map = TestUtil.createMap();
       map.setLayerGroup(layerGroup);
     });
 
@@ -406,7 +406,7 @@ describe('MapUtil', () => {
       layerGroup = new OlLayerGroup({
         layers: [layer1, layer2, nestedLayerGroup]
       });
-      map = TestUtils.createMap();
+      map = TestUtil.createMap();
       map.setLayerGroup(layerGroup);
     });
 

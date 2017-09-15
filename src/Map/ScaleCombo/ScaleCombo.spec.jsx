@@ -5,7 +5,7 @@ import expect from 'expect.js';
 import { Select } from 'antd';
 const Option = Select.Option;
 
-import TestUtils from '../../Util/TestUtils';
+import TestUtil from '../../Util/TestUtil';
 
 import {
   ScaleCombo,
@@ -18,11 +18,11 @@ describe('<ScaleCombo />', () => {
   let map;
 
   beforeEach(() => {
-    wrapper = TestUtils.mountComponent(ScaleCombo);
+    wrapper = TestUtil.mountComponent(ScaleCombo);
   });
 
   afterEach(function() {
-    TestUtils.removeMap(map);
+    TestUtil.removeMap(map);
   });
 
   it('is defined', () => {
@@ -39,7 +39,7 @@ describe('<ScaleCombo />', () => {
         'backgroundColor': 'yellow'
       }
     };
-    const wrapper = TestUtils.mountComponent(ScaleCombo, props);
+    const wrapper = TestUtil.mountComponent(ScaleCombo, props);
     expect(wrapper.find('div.scale-select').node.style.backgroundColor).to.be('yellow');
   });
 
@@ -60,7 +60,7 @@ describe('<ScaleCombo />', () => {
       const scaleArray = [
         <Option key={'100'} value={'100'}>1:100</Option>
       ];
-      wrapper = TestUtils.mountComponent(ScaleCombo, {
+      wrapper = TestUtil.mountComponent(ScaleCombo, {
         scales: scaleArray
       });
       wrapper.instance().getOptionsFromMap();
@@ -69,8 +69,8 @@ describe('<ScaleCombo />', () => {
     });
 
     it('creates options array from given map without resolutions and updates scales prop', () => {
-      map = TestUtils.createMap();
-      wrapper = TestUtils.mountComponent(ScaleCombo, {
+      map = TestUtil.createMap();
+      wrapper = TestUtil.mountComponent(ScaleCombo, {
         scales: [],
         map: map
       });
@@ -80,10 +80,10 @@ describe('<ScaleCombo />', () => {
 
     it('creates options array from given map with resolutions and updates scales prop', () => {
       const testResolutions = [560, 280, 140, 70, 28];
-      map = TestUtils.createMap({
+      map = TestUtil.createMap({
         resolutions: testResolutions
       });
-      wrapper = TestUtils.mountComponent(ScaleCombo, {
+      wrapper = TestUtil.mountComponent(ScaleCombo, {
         scales: [],
         map: map
       });
@@ -108,7 +108,7 @@ describe('<ScaleCombo />', () => {
         <Option key={'200'} value={'200'}>1:100</Option>,
         <Option key={'300'} value={'300'}>1:100</Option>
       ];
-      wrapper = TestUtils.mountComponent(ScaleCombo, {
+      wrapper = TestUtil.mountComponent(ScaleCombo, {
         scales: scaleArray
       });
 
@@ -125,7 +125,7 @@ describe('<ScaleCombo />', () => {
         <Option key={'200'} value={'200'}>1:100</Option>,
         <Option key={'300'} value={'300'}>1:100</Option>
       ];
-      wrapper = TestUtils.mountComponent(ScaleCombo, {
+      wrapper = TestUtil.mountComponent(ScaleCombo, {
         scales: scaleArray
       });
 
@@ -142,7 +142,7 @@ describe('<ScaleCombo />', () => {
 
     it('calls onZoomLevelSelect if ENTER key is pressed', () => {
       const onZoomLevelSelect = sinon.spy();
-      wrapper = TestUtils.mountComponent(ScaleCombo, {
+      wrapper = TestUtil.mountComponent(ScaleCombo, {
         onZoomLevelSelect: onZoomLevelSelect
       });
 

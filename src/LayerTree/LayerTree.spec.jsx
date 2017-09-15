@@ -7,7 +7,7 @@ import OlTileLayer from 'ol/layer/tile';
 import OlTileWMS from 'ol/source/tilewms';
 import olObservable from 'ol/observable';
 
-import TestUtils from '../Util/TestUtils';
+import TestUtil from '../Util/TestUtil';
 
 import {
   Logger,
@@ -37,7 +37,7 @@ describe('<LayerTree />', () => {
       layers: [layer1, layer2]
     });
 
-    map = TestUtils.createMap();
+    map = TestUtil.createMap();
     map.setLayerGroup(layerGroup);
   });
 
@@ -46,13 +46,13 @@ describe('<LayerTree />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtils.mountComponent(LayerTree);
+    const wrapper = TestUtil.mountComponent(LayerTree);
     expect(wrapper).not.to.be(undefined);
   });
 
   it('unmount removes listeners', () => {
     const unByKeySpy = sinon.spy(olObservable, 'unByKey');
-    const wrapper = TestUtils.mountComponent(LayerTree);
+    const wrapper = TestUtil.mountComponent(LayerTree);
     const olListenerKeys = wrapper.instance().olListenerKeys;
     wrapper.unmount();
     expect(unByKeySpy.callCount).to.equal(1);
@@ -66,7 +66,7 @@ describe('<LayerTree />', () => {
       layerGroup,
       map
     };
-    const wrapper = TestUtils.mountComponent(LayerTree, props);
+    const wrapper = TestUtil.mountComponent(LayerTree, props);
 
     const subLayer = new OlTileLayer({
       name: 'subLayer',
@@ -91,7 +91,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.children('TreeNode');
 
       expect(treeNodes).to.have.length(layerGroup.getLayers().getLength());
@@ -114,7 +114,7 @@ describe('<LayerTree />', () => {
       });
       layerGroup.getLayers().push(nestedLayerGroup);
 
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.children('TreeNode');
 
       // It is not an instanceof TreeNode see: https://github.com/ant-design/ant-design/issues/4688
@@ -127,7 +127,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.children('TreeNode');
       treeNodes.forEach((node, index) => {
         const layer = layerGroup.getLayers().item(index);
@@ -140,7 +140,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.children('TreeNode');
 
       treeNodes.forEach((node, index) => {
@@ -154,7 +154,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.children('TreeNode');
 
       treeNodes.forEach((node, index) => {
@@ -173,7 +173,7 @@ describe('<LayerTree />', () => {
         layerGroup.setVisible(false);
 
         const logSpy = sinon.spy(Logger, 'warn');
-        const wrapper = TestUtils.mountComponent(LayerTree, props);
+        const wrapper = TestUtil.mountComponent(LayerTree, props);
         wrapper.instance().treeNodeFromLayer(layerGroup);
 
         expect(logSpy).to.have.property('callCount', 1);
@@ -189,7 +189,7 @@ describe('<LayerTree />', () => {
         };
         layerGroup.setVisible(false);
 
-        const wrapper = TestUtils.mountComponent(LayerTree, props);
+        const wrapper = TestUtil.mountComponent(LayerTree, props);
         const treeNode = wrapper.instance().treeNodeFromLayer(layer1);
 
         expect(treeNode.props.title).to.eql(layer1.get('name'));
@@ -205,7 +205,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.children('TreeNode');
 
       treeNodes.forEach((node, index) => {
@@ -227,7 +227,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNode = wrapper.childAt(0).node;
 
       expect(treeNode.props.checked).to.be(true);
@@ -245,7 +245,7 @@ describe('<LayerTree />', () => {
       const layer = new OlTileLayer({
         source: new OlTileWMS()
       });
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
 
       layerGroup.getLayers().push(layer);
@@ -265,7 +265,7 @@ describe('<LayerTree />', () => {
       const group = new OlGroupLayer({
         layers: [layer]
       });
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
       const registerSpy = sinon.spy(wrapper.instance(), 'registerAddRemoveListeners');
 
@@ -282,7 +282,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
       const unregisterSpy = sinon.spy(wrapper.instance(), 'unregisterEventsByLayer');
 
@@ -311,7 +311,7 @@ describe('<LayerTree />', () => {
       });
       layerGroup.getLayers().push(nestedLayerGroup);
 
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
       const unregisterSpy = sinon.spy(wrapper.instance(), 'unregisterEventsByLayer');
 
@@ -342,7 +342,7 @@ describe('<LayerTree />', () => {
         });
         layerGroup.getLayers().push(nestedLayerGroup);
 
-        const wrapper = TestUtils.mountComponent(LayerTree, props);
+        const wrapper = TestUtil.mountComponent(LayerTree, props);
         const oldOlListenerKey = wrapper.instance().olListenerKeys;
         const unByKeySpy = sinon.spy(olObservable, 'unByKey');
 
@@ -373,7 +373,7 @@ describe('<LayerTree />', () => {
         });
         layerGroup.getLayers().push(nestedLayerGroup);
 
-        const wrapper = TestUtils.mountComponent(LayerTree, props);
+        const wrapper = TestUtil.mountComponent(LayerTree, props);
         const oldOlListenerKey = wrapper.instance().olListenerKeys;
         const unByKeySpy = sinon.spy(olObservable, 'unByKey');
 
@@ -399,7 +399,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
 
       wrapper.instance().setLayerVisibility();
       expect(logSpy.callCount).to.equal(1);
@@ -414,7 +414,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       layer1.setVisible(true);
 
       wrapper.instance().setLayerVisibility(layer1, false);
@@ -428,7 +428,7 @@ describe('<LayerTree />', () => {
         layerGroup,
         map
       };
-      const wrapper = TestUtils.mountComponent(LayerTree, props);
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
       layer1.setVisible(true);
       layer2.setVisible(true);
 
@@ -472,7 +472,7 @@ describe('<LayerTree />', () => {
     // });
     //
     // it('can handle drop on leaf', () => {
-    //   const wrapper = TestUtils.mountComponent(LayerTree, props);
+    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
     //   const firstNode = wrapper.childAt(0);
     //   const thirdNode = wrapper.childAt(2);
     //   const dragTarget = firstNode.find('.ant-tree-node-content-wrapper');
@@ -501,21 +501,21 @@ describe('<LayerTree />', () => {
     // });
 
     // it('can handle drop before leaf', () => {
-    //   const wrapper = TestUtils.mountComponent(LayerTree, props);
+    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
     //   const treeNodes = wrapper.children('TreeNode');
     //   const firstNode = treeNodes.get(0);
     //   const thirdNode = treeNodes.get(2);
     // });
     //
     // it('can handle drop after leaf', () => {
-    //   const wrapper = TestUtils.mountComponent(LayerTree, props);
+    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
     //   const treeNodes = wrapper.children('TreeNode');
     //   const firstNode = treeNodes.get(0);
     //   const thirdNode = treeNodes.get(2);
     // });
     //
     // it('can handle drop on folder', () => {
-    //   const wrapper = TestUtils.mountComponent(LayerTree, props);
+    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
     //   const treeNodes = wrapper.children('TreeNode');
     //   const firstNode = treeNodes.get(0);
     //   const folderNode = treeNodes.get(3);
