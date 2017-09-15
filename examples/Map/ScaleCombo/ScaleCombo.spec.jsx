@@ -40,7 +40,7 @@ describe('<ScaleCombo />', () => {
       }
     };
     const wrapper = TestUtil.mountComponent(ScaleCombo, props);
-    expect(wrapper.find('div.scale-select').node.style.backgroundColor).to.be('yellow');
+    expect(wrapper.props().style.backgroundColor).to.be('yellow');
   });
 
   describe('#getOptionsFromMap', () => {

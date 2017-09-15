@@ -22,6 +22,14 @@ class LayerTree extends React.Component {
 
 
   /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-layertree'
+
+
+  /**
    *  An array of ol.EventsKey as returned by on() or once().
    * @type {Array<ol.EventsKey>}
    * @private
@@ -33,6 +41,12 @@ class LayerTree extends React.Component {
    * @type {Object}
    */
   static propTypes = {
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
     draggable: PropTypes.bool,
 
     layerGroup: PropTypes.instanceOf(OlGroupLayer),

@@ -13,10 +13,24 @@ import './Toolbar.less';
 class Toolbar extends React.Component {
 
   /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-toolbar'
+
+  /**
    * The properties.
    * @type {Object}
    */
   static propTypes = {
+
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
     /**
      * The children.
      * @type {Array}
@@ -49,9 +63,17 @@ class Toolbar extends React.Component {
    * The render function
    */
   render() {
-    const {style} = this.props;
+    const {
+      style,
+      className
+    } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
     return (
-      <div className={this.props.alignment + '-toolbar'} style={style}>
+      <div className={`${finalClassName} ${this.props.alignment}-toolbar`} style={style}>
         {this.props.children}
       </div>
     );

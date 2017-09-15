@@ -52,8 +52,9 @@ describe('<UserChip />', () => {
         'backgroundColor': 'yellow'
       }
     };
-    const wrapper =TestUtil.mountComponent(UserChip, props);
-    expect(wrapper.find('div.userchip').node.style.backgroundColor).to.be('yellow');
+    const wrapper = TestUtil.mountComponent(UserChip, props);
+    const className = wrapper.instance().className;
+    expect(wrapper.find(`div.${className}`).node.style.backgroundColor).to.be('yellow');
   });
 
 });

@@ -19,6 +19,20 @@ import './ToggleButton.less';
  */
 class ToggleButton extends React.Component {
 
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-togglebutton'
+
+  /**
+   * The class to apply for a toggled/pressed button.
+   * @type {String}
+   */
+  pressedClass = 'btn-pressed';
+
   /**
    * The properties.
    * @type {Object}
@@ -67,12 +81,6 @@ class ToggleButton extends React.Component {
    */
   constructor(props) {
     super(props);
-
-    /**
-     * The class to apply for a toggled/pressed button.
-     * @type {String}
-     */
-    this.toggleClass = 'btn-pressed';
 
     if (!props.onToggle) {
       Logger.debug('No onToggle method given. Please provide it as ' +
@@ -126,11 +134,13 @@ class ToggleButton extends React.Component {
    * The render function.
    */
   render() {
-    const pressedClass = this.state.pressed ? ' ' + this.toggleClass : '';
-    const className = this.props.className ? ' ' + this.props.className : '';
     const iconName = this.state.pressed
       ? this.props.pressedIcon || this.props.icon
       : this.props.icon;
+    const className = this.props.className
+      ? `${this.props.className} ${this.className}`
+      : this.className;
+    const pressedClass = this.state.pressed ? ' ' + this.pressedClass : '';
 
     return (
       <Tooltip
@@ -143,7 +153,7 @@ class ToggleButton extends React.Component {
           size={this.props.size}
           disabled={this.props.disabled}
           onClick={this.onClick}
-          className={`btn-toggle${pressedClass}${className}`}
+          className={`${className}${pressedClass}`}
         >
           <Icon
             name={iconName}
