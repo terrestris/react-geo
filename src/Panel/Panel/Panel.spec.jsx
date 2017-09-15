@@ -1,6 +1,6 @@
 /*eslint-env mocha*/
 import expect from 'expect.js';
-import TestUtils from '../../Util/TestUtils';
+import TestUtil from '../../Util/TestUtil';
 
 import { Panel } from '../../index';
 
@@ -11,12 +11,12 @@ describe('<Panel />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtils.mountComponent(Panel);
+    const wrapper = TestUtil.mountComponent(Panel);
     expect(wrapper).not.to.be(undefined);
   });
 
   it('passed props are added to Rnd', () => {
-    const wrapper = TestUtils.mountComponent(Panel, {
+    const wrapper = TestUtil.mountComponent(Panel, {
       className: 'podolski',
       fc: 'koeln'
     });
@@ -26,7 +26,7 @@ describe('<Panel />', () => {
   });
 
   describe('#toggleCollapse', () => {
-    const wrapper = TestUtils.mountComponent(Panel);
+    const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
       expect(wrapper.instance().toggleCollapse).not.to.be(undefined);
@@ -41,7 +41,7 @@ describe('<Panel />', () => {
   });
 
   describe('#onResize', () => {
-    const wrapper = TestUtils.mountComponent(Panel);
+    const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
       expect(wrapper.instance().onResize).not.to.be(undefined);
@@ -54,7 +54,7 @@ describe('<Panel />', () => {
   });
 
   describe('#onResizeStart', () => {
-    const wrapper = TestUtils.mountComponent(Panel);
+    const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
       expect(wrapper.instance().onResizeStart).not.to.be(undefined);
@@ -68,7 +68,7 @@ describe('<Panel />', () => {
   });
 
   describe('#onResizeStop', () => {
-    const wrapper = TestUtils.mountComponent(Panel);
+    const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
       expect(wrapper.instance().onResizeStop).not.to.be(undefined);
@@ -82,7 +82,7 @@ describe('<Panel />', () => {
   });
 
   describe('#close', () => {
-    const wrapper = TestUtils.mountComponent(Panel);
+    const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
       expect(wrapper.instance().close).not.to.be(undefined);
