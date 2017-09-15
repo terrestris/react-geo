@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Logger from '../Util/Logger';
-import MapUtil from '../Util/MapUtil';
+import MapUtil from '../Util/MapUtil/MapUtil';
 
 /**
  * Class representing the Legend.

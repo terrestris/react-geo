@@ -7,7 +7,7 @@ import OlLayerGroup from 'ol/layer/group';
 import olObservable from 'ol/observable';
 
 import Logger from '../Util/Logger';
-import MapUtil from '../Util/MapUtil';
+import MapUtil from '../Util/MapUtil/MapUtil';
 import LayerTreeNode from '../LayerTreeNode/LayerTreeNode.jsx';
 
 /**

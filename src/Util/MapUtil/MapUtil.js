@@ -5,10 +5,10 @@ import OlLayerTile from 'ol/layer/tile';
 import OlLayerGroup from 'ol/layer/group';
 import OlLayerBase from 'ol/layer/base';
 
-import FeatureUtil from './FeatureUtil';
-import UrlUtil from './UrlUtil';
+import FeatureUtil from '../FeatureUtil/FeatureUtil';
+import UrlUtil from '../UrlUtil/UrlUtil';
 
-import Logger from './Logger.js';
+import Logger from '../Logger';
 
 /**
  * Helper Class for the ol3 map.

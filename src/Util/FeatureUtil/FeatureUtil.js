@@ -1,6 +1,6 @@
 import { isString } from 'lodash';
 
-import StringUtil from './StringUtil';
+import StringUtil from '../StringUtil/StringUtil';
 
 /**
  * Helper Class for the ol features.

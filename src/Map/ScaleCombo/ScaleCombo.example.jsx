@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import MapUtil from '../../Util/MapUtil'; //@react-geo@
+import MapUtil from '../../Util/MapUtil/MapUtil'; //@react-geo@
 import ScaleCombo from './ScaleCombo.jsx'; //@react-geo@
 
 let scaleCombo;

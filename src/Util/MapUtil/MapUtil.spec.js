@@ -10,12 +10,12 @@ import OlGeomPoint from 'ol/geom/point';
 import OlLayerGroup from 'ol/layer/group';
 import sinon from 'sinon';
 
-import TestUtil from './TestUtil.js';
+import TestUtil from '../TestUtil';
 
 import {
   Logger,
   MapUtil,
-} from '../index';
+} from '../../index';
 
 describe('MapUtil', () => {
   const testResolutions = {

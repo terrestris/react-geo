@@ -1,5 +1,5 @@
 import { template } from 'lodash';
-import Logger from './Logger';
+import Logger from '../Logger';
 
 /**
  * CSRF Utility methods.

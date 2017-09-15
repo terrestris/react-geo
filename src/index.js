@@ -8,18 +8,19 @@ import FloatingMapLogo from './Map/FloatingMapLogo/FloatingMapLogo.jsx';
 import ScaleCombo from './Map/ScaleCombo/ScaleCombo.jsx';
 import Panel from './Panel/Panel/Panel.jsx';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
+import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
 import Titlebar from './Panel/Titlebar/Titlebar.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
 import UserChip from './UserChip/UserChip.jsx';
-import CsrfUtil from './Util/CsrfUtil.js';
-import FeatureUtil from './Util/FeatureUtil.js';
-import Logger from './Util/Logger.js';
-import MapUtil from './Util/MapUtil.js';
-import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
-import ObjectUtil from './Util/ObjectUtil.js';
-import StringUtil from './Util/StringUtil.js';
-import UndoUtil from './Util/UndoUtil.js';
-import UrlUtil from './Util/UrlUtil.js';
+
+import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
+import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
+import Logger from './Util/Logger';
+import MapUtil from './Util/MapUtil/MapUtil';
+import ObjectUtil from './Util/ObjectUtil/ObjectUtil';
+import StringUtil from './Util/StringUtil/StringUtil';
+import UndoUtil from './Util/UndoUtil/UndoUtil';
+import UrlUtil from './Util/UrlUtil/UrlUtil';
 import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/VisibleComponent.jsx';
 
 export {

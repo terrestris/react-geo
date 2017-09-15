@@ -3,7 +3,7 @@ import {
   isString,
   isArray
 } from 'lodash';
-import Logger from './Logger';
+import Logger from '../Logger';
 
 /**
  * This class provides some static methods which might be helpful when working

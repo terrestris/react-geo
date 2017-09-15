@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import {
   CsrfUtil,
   Logger
-} from '../index';
+} from '../../index';
 
 const tokenValue = 'my-csrf-token-value';
 const headerName = 'my-csrf-header-name';
