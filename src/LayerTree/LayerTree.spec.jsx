@@ -84,15 +84,15 @@ describe('<LayerTree />', () => {
     expect(wrapper.instance().olListenerKeys).to.have.length(3);
   });
 
-  describe('<TreeNode> creation', () => {
+  describe('<LayerTreeNode> creation', () => {
 
-    it('adds a <TreeNode> for every child', () => {
+    it('adds a <LayerTreeNode> for every child', () => {
       const props = {
         layerGroup,
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.children('TreeNode');
+      const treeNodes = wrapper.children('LayerTreeNode');
 
       expect(treeNodes).to.have.length(layerGroup.getLayers().getLength());
     });
@@ -115,7 +115,7 @@ describe('<LayerTree />', () => {
       layerGroup.getLayers().push(nestedLayerGroup);
 
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.children('TreeNode');
+      const treeNodes = wrapper.children('LayerTreeNode');
 
       // It is not an instanceof TreeNode see: https://github.com/ant-design/ant-design/issues/4688
       const subNode = treeNodes.nodes[2].props.children[0];
@@ -128,7 +128,7 @@ describe('<LayerTree />', () => {
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.children('TreeNode');
+      const treeNodes = wrapper.children('LayerTreeNode');
       treeNodes.forEach((node, index) => {
         const layer = layerGroup.getLayers().item(index);
         expect(node.props().title).to.eql(layer.get('name'));
@@ -141,7 +141,7 @@ describe('<LayerTree />', () => {
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.children('TreeNode');
+      const treeNodes = wrapper.children('LayerTreeNode');
 
       treeNodes.forEach((node, index) => {
         const layer = layerGroup.getLayers().item(index);
@@ -155,7 +155,7 @@ describe('<LayerTree />', () => {
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.children('TreeNode');
+      const treeNodes = wrapper.children('LayerTreeNode');
 
       treeNodes.forEach((node, index) => {
         const layer = layerGroup.getLayers().item(index);
@@ -182,7 +182,7 @@ describe('<LayerTree />', () => {
         layerGroup.setVisible(true);
       });
 
-      it('returns a TreeNode when called with a layer', () => {
+      it('returns a LayerTreeNode when called with a layer', () => {
         const props = {
           layerGroup,
           map
@@ -206,7 +206,7 @@ describe('<LayerTree />', () => {
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.children('TreeNode');
+      const treeNodes = wrapper.children('LayerTreeNode');
 
       treeNodes.forEach((node, index) => {
         const layer = layerGroup.getLayers().item(index);

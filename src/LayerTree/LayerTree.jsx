@@ -8,7 +8,7 @@ import olObservable from 'ol/observable';
 
 import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil';
-const TreeNode = Tree.TreeNode;
+import LayerTreeNode from '../LayerTreeNode/LayerTreeNode.jsx';
 
 /**
  * The LayerTree.
@@ -245,13 +245,13 @@ class LayerTree extends React.Component {
       }
     }
 
-    treeNode = <TreeNode
-      className="react-geo-layertree-node"
+    treeNode = <LayerTreeNode
       title={layer.get('name')}
       key={layer.ol_uid}
     >
       {childNodes}
-    </TreeNode>;
+    </LayerTreeNode>;
+
     return treeNode;
   }
 
