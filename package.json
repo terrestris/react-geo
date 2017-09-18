@@ -121,7 +121,7 @@
     "mocha": "3.5.3",
     "react-test-renderer": "15.6.1",
     "rimraf": "2.6.2",
-    "sinon": "3.2.1",
+    "sinon": "3.3.0",
     "style-loader": "0.18.2",
     "url-loader": "0.5.9",
     "webpack": "3.6.0",
