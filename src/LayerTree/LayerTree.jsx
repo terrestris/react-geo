@@ -47,8 +47,6 @@ class LayerTree extends React.Component {
      */
     className: PropTypes.string,
 
-    draggable: PropTypes.bool,
-
     layerGroup: PropTypes.instanceOf(OlLayerGroup),
 
     map: PropTypes.object,
@@ -68,7 +66,8 @@ class LayerTree extends React.Component {
    * @type {Object}
    */
   static defaultProps = {
-    draggable: true
+    draggable: true,
+    checkable: true
   }
 
   /**
@@ -404,14 +403,14 @@ class LayerTree extends React.Component {
   render() {
     const {
       className,
-      draggable,
       layerGroup,
       map,
+      nodeTitleRenderer,
       ...passThroughProps
     } = this.props;
 
     let ddListeners;
-    if (draggable) {
+    if (passThroughProps.draggable) {
       ddListeners = {
         onDragStart: this.onDragStart,
         onDragEnter: this.onDragEnter,
@@ -429,7 +428,6 @@ class LayerTree extends React.Component {
     return (
       <Tree
         className={finalClassName}
-        checkable
         checkedKeys={this.state.checkedKeys}
         onCheck={this.onCheck}
         {...ddListeners}
