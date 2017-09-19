@@ -44,15 +44,19 @@ var _MapUtil = require('../Util/MapUtil');
 
 var _MapUtil2 = _interopRequireDefault(_MapUtil);
 
+var _LayerTreeNode = require('../LayerTreeNode/LayerTreeNode.js');
+
+var _LayerTreeNode2 = _interopRequireDefault(_LayerTreeNode);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var TreeNode = _tree2.default.TreeNode;
 
 /**
  * The LayerTree.
@@ -62,7 +66,6 @@ var TreeNode = _tree2.default.TreeNode;
  * @class LayerTree
  * @extends React.Component
  */
-
 var LayerTree = function (_React$Component) {
   _inherits(LayerTree, _React$Component);
 
@@ -363,15 +366,35 @@ var LayerTree = function (_React$Component) {
      */
 
   }, {
-    key: 'treeNodeFromLayer',
+    key: 'getTreeNodeTitle',
 
+
+    /**
+     * Returns the title to render in the LayerTreeNode. If a nodeTitleRenderer
+     * has been passed as prop, it will be called and the (custom) return value
+     * will be rendered. Note: This can be any renderable element collection! If
+     * no function is given (the default) the layer name will be passed.
+     *
+     * @param {ol.layer.Base} layer The layer attached to the tree node.
+     * @return {Element} The title composition to render.
+     */
+    value: function getTreeNodeTitle(layer) {
+      if ((0, _lodash.isFunction)(this.props.nodeTitleRenderer)) {
+        return this.props.nodeTitleRenderer.call(this, layer);
+      } else {
+        return layer.get('name');
+      }
+    }
 
     /**
      * Creates a treeNode from a given layer.
      *
-     * @param {ol.layer.Layer} layer The given layer.
-     * @return {TreeNode} The corresponding TreeNode Element.
+     * @param {ol.layer.Base} layer The given layer.
+     * @return {LayerTreeNode} The corresponding LayerTreeNode Element.
      */
+
+  }, {
+    key: 'treeNodeFromLayer',
     value: function treeNodeFromLayer(layer) {
       var _this5 = this;
 
@@ -395,14 +418,14 @@ var LayerTree = function (_React$Component) {
       }
 
       treeNode = _react2.default.createElement(
-        TreeNode,
+        _LayerTreeNode2.default,
         {
-          className: 'react-geo-layertree-node',
-          title: layer.get('name'),
+          title: this.getTreeNodeTitle(layer),
           key: layer.ol_uid
         },
         childNodes
       );
+
       return treeNode;
     }
 
@@ -463,9 +486,15 @@ var LayerTree = function (_React$Component) {
      * The render function.
      */
     value: function render() {
-      var props = _extends({}, this.props);
+      var _props = this.props,
+          className = _props.className,
+          layerGroup = _props.layerGroup,
+          map = _props.map,
+          nodeTitleRenderer = _props.nodeTitleRenderer,
+          passThroughProps = _objectWithoutProperties(_props, ['className', 'layerGroup', 'map', 'nodeTitleRenderer']);
+
       var ddListeners = void 0;
-      if (props.draggable) {
+      if (passThroughProps.draggable) {
         ddListeners = {
           onDragStart: this.onDragStart,
           onDragEnter: this.onDragEnter,
@@ -476,14 +505,15 @@ var LayerTree = function (_React$Component) {
         };
       }
 
+      var finalClassName = className ? className + ' ' + this.className : this.className;
+
       return _react2.default.createElement(
         _tree2.default,
         _extends({
-          checkable: true
-        }, ddListeners, props, {
+          className: finalClassName,
           checkedKeys: this.state.checkedKeys,
           onCheck: this.onCheck
-        }),
+        }, ddListeners, passThroughProps),
         this.state.treeNodes
       );
     }
@@ -499,11 +529,18 @@ LayerTree.propTypes = {
    */
   className: _propTypes2.default.string,
 
-  draggable: _propTypes2.default.bool,
-
   layerGroup: _propTypes2.default.instanceOf(_group2.default),
 
-  map: _propTypes2.default.object };
+  map: _propTypes2.default.object,
+
+  /**
+   * A function that can be used to pass a custom node title. It can return
+   * any renderable element (String, Number, Element etc.) and receives
+   * the layer instance of the current tree node.
+   * @type {Function}
+   */
+  nodeTitleRenderer: _propTypes2.default.func };
 LayerTree.defaultProps = {
-  draggable: true };
+  draggable: true,
+  checkable: true };
 exports.default = LayerTree;

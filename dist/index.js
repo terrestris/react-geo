@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
+exports.isVisibleComponent = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -20,6 +20,10 @@ var _ToggleGroup2 = _interopRequireDefault(_ToggleGroup);
 var _LayerTree = require('./LayerTree/LayerTree.js');
 
 var _LayerTree2 = _interopRequireDefault(_LayerTree);
+
+var _LayerTreeNode = require('./LayerTreeNode/LayerTreeNode.js');
+
+var _LayerTreeNode2 = _interopRequireDefault(_LayerTreeNode);
 
 var _Legend = require('./Legend/Legend.js');
 
@@ -93,6 +97,7 @@ exports.SimpleButton = _SimpleButton2.default;
 exports.ToggleButton = _ToggleButton2.default;
 exports.ToggleGroup = _ToggleGroup2.default;
 exports.LayerTree = _LayerTree2.default;
+exports.LayerTreeNode = _LayerTreeNode2.default;
 exports.Legend = _Legend2.default;
 exports.FloatingMapLogo = _FloatingMapLogo2.default;
 exports.ScaleCombo = _ScaleCombo2.default;
