@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _css = require('antd/lib/select/style/css');
+var _style2 = require('antd/lib/select/style');
 
 var _select = require('antd/lib/select');
 

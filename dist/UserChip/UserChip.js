@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _css = require('antd/lib/dropdown/style/css');
+var _style3 = require('antd/lib/dropdown/style');
 
 var _dropdown = require('antd/lib/dropdown');
 
 var _dropdown2 = _interopRequireDefault(_dropdown);
 
-var _css2 = require('antd/lib/avatar/style/css');
+var _style4 = require('antd/lib/avatar/style');
 
 var _avatar = require('antd/lib/avatar');
 

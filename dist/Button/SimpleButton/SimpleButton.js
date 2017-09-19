@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _css = require('antd/lib/tooltip/style/css');
+var _style3 = require('antd/lib/tooltip/style');
 
 var _tooltip = require('antd/lib/tooltip');
 
 var _tooltip2 = _interopRequireDefault(_tooltip);
 
-var _css2 = require('antd/lib/button/style/css');
+var _style4 = require('antd/lib/button/style');
 
 var _button = require('antd/lib/button');
 

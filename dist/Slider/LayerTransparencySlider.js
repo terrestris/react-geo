@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _css = require('antd/lib/slider/style/css');
+var _style2 = require('antd/lib/slider/style');
 
 var _slider = require('antd/lib/slider');
 
