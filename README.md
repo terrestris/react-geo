@@ -28,6 +28,6 @@ Build everything (outputs will live in `build/`-directory)
 
     npm run build
 
-Start development server with hot reloading (open `http://0.0.0.0:4809/` and find your way through the directory listing)
+## Examples and API documentation
 
-    npm start
+Visit https://terrestris.github.io/react-geo/
