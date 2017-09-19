@@ -28,7 +28,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>import React from 'react';
 import PropTypes from 'prop-types';
-import { isEqual, isBoolean } from 'lodash';
+import { isEqual, isBoolean, isFunction } from 'lodash';
 import { Tree } from 'antd';
 import OlLayerBase from 'ol/layer/base';
 import OlLayerGroup from 'ol/layer/group';
@@ -36,7 +36,7 @@ import olObservable from 'ol/observable';
 
 import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil';
-const TreeNode = Tree.TreeNode;
+import LayerTreeNode from '../LayerTreeNode/LayerTreeNode.jsx';
 
 /**
  * The LayerTree.
@@ -75,11 +75,17 @@ class LayerTree extends React.Component {
      */
     className: PropTypes.string,
 
-    draggable: PropTypes.bool,
-
     layerGroup: PropTypes.instanceOf(OlLayerGroup),
 
-    map: PropTypes.object
+    map: PropTypes.object,
+
+    /**
+     * A function that can be used to pass a custom node title. It can return
+     * any renderable element (String, Number, Element etc.) and receives
+     * the layer instance of the current tree node.
+     * @type {Function}
+     */
+    nodeTitleRenderer: PropTypes.func
   }
 
   /**
@@ -88,7 +94,8 @@ class LayerTree extends React.Component {
    * @type {Object}
    */
   static defaultProps = {
-    draggable: true
+    draggable: true,
+    checkable: true
   }
 
   /**
@@ -247,10 +254,27 @@ class LayerTree extends React.Component {
   }
 
   /**
+   * Returns the title to render in the LayerTreeNode. If a nodeTitleRenderer
+   * has been passed as prop, it will be called and the (custom) return value
+   * will be rendered. Note: This can be any renderable element collection! If
+   * no function is given (the default) the layer name will be passed.
+   *
+   * @param {ol.layer.Base} layer The layer attached to the tree node.
+   * @return {Element} The title composition to render.
+   */
+  getTreeNodeTitle(layer) {
+    if (isFunction(this.props.nodeTitleRenderer)) {
+      return this.props.nodeTitleRenderer.call(this, layer);
+    } else {
+      return layer.get('name');
+    }
+  }
+
+  /**
    * Creates a treeNode from a given layer.
    *
-   * @param {ol.layer.Layer} layer The given layer.
-   * @return {TreeNode} The corresponding TreeNode Element.
+   * @param {ol.layer.Base} layer The given layer.
+   * @return {LayerTreeNode} The corresponding LayerTreeNode Element.
    */
   treeNodeFromLayer(layer) {
     let childNodes;
@@ -273,13 +297,13 @@ class LayerTree extends React.Component {
       }
     }
 
-    treeNode = &lt;TreeNode
-      className="react-geo-layertree-node"
-      title={layer.get('name')}
+    treeNode = &lt;LayerTreeNode
+      title={this.getTreeNodeTitle(layer)}
       key={layer.ol_uid}
     >
       {childNodes}
-    &lt;/TreeNode>;
+    &lt;/LayerTreeNode>;
+
     return treeNode;
   }
 
@@ -405,9 +429,16 @@ class LayerTree extends React.Component {
    * The render function.
    */
   render() {
-    const props = {...this.props};
+    const {
+      className,
+      layerGroup,
+      map,
+      nodeTitleRenderer,
+      ...passThroughProps
+    } = this.props;
+
     let ddListeners;
-    if (props.draggable) {
+    if (passThroughProps.draggable) {
       ddListeners = {
         onDragStart: this.onDragStart,
         onDragEnter: this.onDragEnter,
@@ -418,13 +449,17 @@ class LayerTree extends React.Component {
       };
     }
 
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
     return (
       &lt;Tree
-        checkable
-        {...ddListeners}
-        {...props}
+        className={finalClassName}
         checkedKeys={this.state.checkedKeys}
         onCheck={this.onCheck}
+        {...ddListeners}
+        {...passThroughProps}
       >
         {this.state.treeNodes}
       &lt;/Tree>
@@ -443,15 +478,15 @@ export default LayerTree;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
-based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
+based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
 based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Sep 19 2017 13:27:39 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Sep 19 2017 13:27:48 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>

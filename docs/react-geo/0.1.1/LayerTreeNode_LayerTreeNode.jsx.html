@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Util/CsrfUtil.js</title>
+    <title>JSDoc: Source: LayerTreeNode/LayerTreeNode.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Util/CsrfUtil.js</h1>
+    <h1 class="page-title">Source: LayerTreeNode/LayerTreeNode.jsx</h1>
 
     
 
@@ -26,128 +26,60 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { template } from 'lodash';
-import Logger from './Logger';
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import {
+  Tree
+} from 'antd';
+const TreeNode = Tree.TreeNode;
+
+import './LayerTreeNode.less';
 
 /**
- * CSRF Utility methods.
  *
- * Some methods to access the csrf-token information served by spring security.
- *
- * The methods herein assume a certain HTML structure, which is easiest achieved
- * by including a markup like the following in your base HTML file:
- *
- * &lt;meta name="_csrf" content="${_csrf.token}" />
- * &lt;meta name="_csrf_header" content="${_csrf.headerName}" />
- * &lt;meta name="_csrf_parameter_name" content="${_csrf.parameterName}" />
- *
- * @class
- **/
-class CsrfUtil {
+ */
+class LayerTreeNode extends React.Component {
 
   /**
-   * @static getContentFromMetaTagByName - Description
-   *
-   * @param {type} name Description
-   *
-   * @return {type} Description
+   * The prop types.
+   * @type {Object}
    */
-  static getContentFromMetaTagByName (name) {
-    let compiledSelector = template('meta[name="&lt;%= metaTagName %>"]');
-    let element = document.querySelector(compiledSelector({ 'metaTagName': name }));
-    let content;
-    if (element) {
-      content = element.content || '';
-    } else {
-      let warnTpl = template('Failed to find tag &lt;meta name=&lt;%= metaTagName %> />. Is it ' +
-          ' present in the page DOM?');
-      Logger.warn(warnTpl({ 'metaTagName': name }));
-      content = '';
-    }
-    return content;
+  static propTypes = {
   }
 
   /**
-   * Get the CSRF token value.
+   * The constructor.
    *
-   * In order for this method to produce reliable output, your base HTML
-   * page should contain a `&lt;meta>`-tag in the `&lt;head>` with name
-   * `_csrf`. The `content` attribute is best filled from Spring by
-   * using this variable: `${_csrf.token}`.
-   *
-   * @return {String} - the key value, e.g. "741a3b1-221f-4d1d-..." or the
-   *     empty string if the meta tag cannot be found.
+   * @param {Object} props The initial props.
    */
-  static getCsrfValue() {
-    let metaName = '_csrf';
-    return CsrfUtil.getContentFromMetaTagByName(metaName);
+  constructor(props) {
+    super(props);
   }
 
   /**
-   * Get the CSRF token key. This can be used if you want to send CSRF
-   * tokens as header. If you want to send it using a form parameter, use
-   * the method #getParamName instead.
+   * The render function.
    *
-   * In order for this method to produce reliable output, your base HTML
-   * page should contain a `&lt;meta>`-tag in the `&lt;head>` with name
-   * `_csrf_header`. The `content` attribute is best filled from Spring by
-   * using this variable: `${_csrf.headerName}`.
-   *
-   * @return {String} - the key string, e.g. "X-CSRF-TOKEN" ort the empty
-   *     string if the meta tag cannot be found.
+   * @return {Element} The element.
    */
-  static getCsrfHeaderName() {
-    let metaName = '_csrf_header';
-    return CsrfUtil.getContentFromMetaTagByName(metaName);
-  }
+  render() {
+    const {
+      ...passThroughProps
+    } = this.props;
 
-  /**
-   * Get the name of the parameter to send when you want to pass CSRF
-   * tokens via a form. Alternatively you can use #getKey to get the name
-   * of the header to send for CSRF-protection.
-   *
-   * In order for this method to produce reliable output, your base HTML
-   * page should contain a `&lt;meta>`-tag in the `&lt;head>` with name
-   * `_csrf_parameter_name`. The `content` attribute is best filled from
-   * Spring by using this variable: `${_csrf.parameterName}`.
-   *
-   * @return {String} The name of the parameter to send when sending CSRF
-   *     tokens via forms, e.g. "_csrf" or the empty string if the meta
-   *     tag cannot be found.
-   */
-  static getCsrfParameterName() {
-    let metaName = '_csrf_parameter_name';
-    return CsrfUtil.getContentFromMetaTagByName(metaName);
-  }
-
-  /**
-   * Get the full CSRF token header object. Can directly be used in fetch, e.g.
-   * in the following way:
-   *
-   * let csrfHeader = CsrfUtil.getHeader();
-   *
-   * fetch(targetUrl, {
-   *   method: 'POST',
-   *   headers: csrfHeader
-   * })
-   *
-   * @return {Header} header - the header containing the CSRF key and
-   *     value or an empty object if any of the required meta fields
-   *     cannot be found.
-   */
-  static getHeader() {
-    let headerObj = new Headers();
-    let csrfKey = CsrfUtil.getCsrfValue();
-    let csrfHeaderName = CsrfUtil.getCsrfHeaderName();
-    if (csrfKey !== '' &amp;&amp; csrfHeaderName !== '') {
-      headerObj.append(csrfHeaderName, csrfKey);
-    }
-    return headerObj;
+    return(
+      &lt;TreeNode
+        className="react-geo-layertree-node"
+        {...passThroughProps}
+      />
+    );
   }
 
 }
 
-export default CsrfUtil;
+// Otherwise rc-tree wouldn't recognize this component as TreeNode, see
+// https://github.com/react-component/tree/blob/master/src/TreeNode.jsx#L328
+LayerTreeNode.isTreeNode = 1;
+
+export default LayerTreeNode;
 </code></pre>
         </article>
     </section>
