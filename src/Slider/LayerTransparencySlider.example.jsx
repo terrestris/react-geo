@@ -35,8 +35,7 @@ render(
     <div id="map" style={{
       width: '400px',
       height: '400px',
-      right: '0px',
-      position: 'absolute'
+      position: 'relative'
     }} />
 
     <div className="example-block">
