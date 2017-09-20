@@ -306,6 +306,8 @@ class LayerTree extends React.Component {
     const checkedKeys = this.getVisibleOlUids();
     this.setState({
       checkedKeys
+    }, () => {
+      this.rebuildTreeNodes();
     });
   }
 
