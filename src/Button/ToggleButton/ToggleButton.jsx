@@ -39,13 +39,9 @@ class ToggleButton extends React.Component {
    */
   static propTypes = {
     name: PropTypes.string,
-    type: PropTypes.string,
     icon: PropTypes.string,
     pressedIcon: PropTypes.string,
     fontIcon: PropTypes.string,
-    shape: PropTypes.string,
-    size: PropTypes.string,
-    disabled: PropTypes.bool,
     pressed: PropTypes.bool,
     onToggle: PropTypes.func,
     tooltip: PropTypes.string,
@@ -60,9 +56,6 @@ class ToggleButton extends React.Component {
   static defaultProps = {
     type: 'primary',
     icon: '',
-    shape: 'circle',
-    size: 'default',
-    disabled: false,
     pressed: false
   }
 
@@ -91,6 +84,8 @@ class ToggleButton extends React.Component {
     this.state = {
       pressed: props.pressed
     };
+
+    this.onClick = this.onClick.bind(this);
   }
 
   // TODO I think we should not call the onToggle Handler here. This needs to be
@@ -118,7 +113,7 @@ class ToggleButton extends React.Component {
   /**
    * Called on click
    */
-  onClick = () => {
+  onClick() {
     if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
       this.context.toggleGroup.onChange(this.props);
     } else if (this.props.onToggle) {
@@ -134,11 +129,24 @@ class ToggleButton extends React.Component {
    * The render function.
    */
   render() {
+    const {
+      className,
+      name,
+      icon,
+      pressedIcon,
+      fontIcon,
+      pressed,
+      onToggle,
+      tooltip,
+      tooltipPlacement,
+      ...antBtnProps
+    } = this.props;
+
     const iconName = this.state.pressed
       ? this.props.pressedIcon || this.props.icon
       : this.props.icon;
-    const className = this.props.className
-      ? `${this.props.className} ${this.className}`
+    const finalClassName = className
+      ? `${className} ${this.className}`
       : this.className;
     const pressedClass = this.state.pressed ? ' ' + this.pressedClass : '';
 
@@ -148,12 +156,9 @@ class ToggleButton extends React.Component {
         placement={this.props.tooltipPlacement}
       >
         <Button
-          type={this.props.type}
-          shape={this.props.shape}
-          size={this.props.size}
-          disabled={this.props.disabled}
+          className={`${finalClassName}${pressedClass}`}
           onClick={this.onClick}
-          className={`${className}${pressedClass}`}
+          {...antBtnProps}
         >
           <Icon
             name={iconName}
