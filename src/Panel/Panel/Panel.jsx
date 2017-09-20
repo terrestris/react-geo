@@ -353,13 +353,21 @@ export class Panel extends React.Component {
  * @return {Promise} A promise that contains the win when resolved.
  *                   "reject" is not expect and so not handled.
  */
-Panel.showWindow = function showWindow(props) {
-  props = {...defaultWindowProps, ...props};
+Panel.showWindow = function(props) {
+  props = {
+    ...defaultWindowProps,
+    ...props
+  };
   let {i18n} = props;
+  let windowClassName = 'react-geo-window';
+
+  props.className = props.className
+    ? `${props.className} ${windowClassName}`
+    : windowClassName;
 
   let container = document.getElementById(props.containerId);
   let div = document.createElement('div');
-  let id = uniqueId('window-');
+  let id = uniqueId(`${windowClassName}-`);
 
   div.style.position = 'absolute';
   div.style.left = 0;
