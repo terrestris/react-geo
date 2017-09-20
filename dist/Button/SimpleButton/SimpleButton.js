@@ -73,14 +73,7 @@ var SimpleButton = function (_React$Component) {
 
     _this.className = 'react-geo-simplebutton';
 
-    _this.onClick = function () {
-      if (_this.props.onClick) {
-        _this.props.onClick();
-      } else {
-        _Logger2.default.debug('No onClick method given. Please provide it as ' + 'prop to this instance.');
-      }
-    };
-
+    _this.onClick = _this.onClick.bind(_this);
     return _this;
   }
 
@@ -103,20 +96,30 @@ var SimpleButton = function (_React$Component) {
 
 
   _createClass(SimpleButton, [{
-    key: 'render',
-
+    key: 'onClick',
+    value: function onClick() {
+      if (this.props.onClick) {
+        this.props.onClick();
+      } else {
+        _Logger2.default.debug('No onClick method given. Please provide it as ' + 'prop to this instance.');
+      }
+    }
 
     /**
      * The render function.
      */
+
+  }, {
+    key: 'render',
     value: function render() {
       var _props = this.props,
-          tooltip = _props.tooltip,
-          tooltipPlacement = _props.tooltipPlacement,
+          className = _props.className,
           icon = _props.icon,
           fontIcon = _props.fontIcon,
-          className = _props.className,
-          antBtnProps = _objectWithoutProperties(_props, ['tooltip', 'tooltipPlacement', 'icon', 'fontIcon', 'className']);
+          onClick = _props.onClick,
+          tooltip = _props.tooltip,
+          tooltipPlacement = _props.tooltipPlacement,
+          antBtnProps = _objectWithoutProperties(_props, ['className', 'icon', 'fontIcon', 'onClick', 'tooltip', 'tooltipPlacement']);
 
       var finalClassName = className ? className + ' ' + this.className : this.className;
 
@@ -134,8 +137,13 @@ var SimpleButton = function (_React$Component) {
           }, antBtnProps),
           _react2.default.createElement(_reactFa.Icon, {
             name: icon,
-            className: fontIcon
-          })
+            className: fontIcon,
+            style: {
+              paddingRight: '5px',
+              display: icon ? 'inherit' : 'none'
+            }
+          }),
+          antBtnProps.children
         )
       );
     }
@@ -152,17 +160,11 @@ SimpleButton.propTypes = {
   className: _propTypes2.default.string,
   icon: _propTypes2.default.string,
   fontIcon: _propTypes2.default.string,
-  shape: _propTypes2.default.string,
-  size: _propTypes2.default.string,
-  disabled: _propTypes2.default.bool,
   onClick: _propTypes2.default.func,
   tooltip: _propTypes2.default.string,
   tooltipPlacement: _propTypes2.default.string
 };
 SimpleButton.defaultProps = {
   type: 'primary',
-  icon: '',
-  shape: 'circle',
-  size: 'default',
-  disabled: false };
+  icon: '' };
 exports.default = SimpleButton;

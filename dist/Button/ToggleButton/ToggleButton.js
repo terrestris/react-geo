@@ -16,6 +16,8 @@ var _button = require('antd/lib/button');
 
 var _button2 = _interopRequireDefault(_button);
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -37,6 +39,8 @@ var _Logger2 = _interopRequireDefault(_Logger);
 require('./ToggleButton.less');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -78,17 +82,6 @@ var ToggleButton = function (_React$Component) {
     _this.className = 'react-geo-togglebutton';
     _this.pressedClass = 'btn-pressed';
 
-    _this.onClick = function () {
-      if (_this.context.toggleGroup && (0, _lodash.isFunction)(_this.context.toggleGroup.onChange)) {
-        _this.context.toggleGroup.onChange(_this.props);
-      } else if (_this.props.onToggle) {
-        _this.props.onToggle(!_this.state.pressed);
-      }
-
-      _this.setState({
-        pressed: !_this.state.pressed
-      });
-    };
 
     if (!props.onToggle) {
       _Logger2.default.debug('No onToggle method given. Please provide it as ' + 'prop to this instance.');
@@ -98,6 +91,8 @@ var ToggleButton = function (_React$Component) {
     _this.state = {
       pressed: props.pressed
     };
+
+    _this.onClick = _this.onClick.bind(_this);
     return _this;
   }
 
@@ -152,15 +147,40 @@ var ToggleButton = function (_React$Component) {
      */
 
   }, {
-    key: 'render',
+    key: 'onClick',
+    value: function onClick() {
+      if (this.context.toggleGroup && (0, _lodash.isFunction)(this.context.toggleGroup.onChange)) {
+        this.context.toggleGroup.onChange(this.props);
+      } else if (this.props.onToggle) {
+        this.props.onToggle(!this.state.pressed);
+      }
 
+      this.setState({
+        pressed: !this.state.pressed
+      });
+    }
 
     /**
      * The render function.
      */
+
+  }, {
+    key: 'render',
     value: function render() {
+      var _props = this.props,
+          className = _props.className,
+          name = _props.name,
+          icon = _props.icon,
+          pressedIcon = _props.pressedIcon,
+          fontIcon = _props.fontIcon,
+          pressed = _props.pressed,
+          onToggle = _props.onToggle,
+          tooltip = _props.tooltip,
+          tooltipPlacement = _props.tooltipPlacement,
+          antBtnProps = _objectWithoutProperties(_props, ['className', 'name', 'icon', 'pressedIcon', 'fontIcon', 'pressed', 'onToggle', 'tooltip', 'tooltipPlacement']);
+
       var iconName = this.state.pressed ? this.props.pressedIcon || this.props.icon : this.props.icon;
-      var className = this.props.className ? this.props.className + ' ' + this.className : this.className;
+      var finalClassName = className ? className + ' ' + this.className : this.className;
       var pressedClass = this.state.pressed ? ' ' + this.pressedClass : '';
 
       return _react2.default.createElement(
@@ -171,14 +191,10 @@ var ToggleButton = function (_React$Component) {
         },
         _react2.default.createElement(
           _button2.default,
-          {
-            type: this.props.type,
-            shape: this.props.shape,
-            size: this.props.size,
-            disabled: this.props.disabled,
-            onClick: this.onClick,
-            className: '' + className + pressedClass
-          },
+          _extends({
+            className: '' + finalClassName + pressedClass,
+            onClick: this.onClick
+          }, antBtnProps),
           _react2.default.createElement(_reactFa.Icon, {
             name: iconName,
             className: this.props.fontIcon
@@ -193,13 +209,9 @@ var ToggleButton = function (_React$Component) {
 
 ToggleButton.propTypes = {
   name: _propTypes2.default.string,
-  type: _propTypes2.default.string,
   icon: _propTypes2.default.string,
   pressedIcon: _propTypes2.default.string,
   fontIcon: _propTypes2.default.string,
-  shape: _propTypes2.default.string,
-  size: _propTypes2.default.string,
-  disabled: _propTypes2.default.bool,
   pressed: _propTypes2.default.bool,
   onToggle: _propTypes2.default.func,
   tooltip: _propTypes2.default.string,
@@ -209,9 +221,6 @@ ToggleButton.propTypes = {
 ToggleButton.defaultProps = {
   type: 'primary',
   icon: '',
-  shape: 'circle',
-  size: 'default',
-  disabled: false,
   pressed: false };
 ToggleButton.contextTypes = {
   toggleGroup: _propTypes2.default.object

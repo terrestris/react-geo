@@ -165,6 +165,8 @@ var LayerTree = function (_React$Component) {
       var checkedKeys = _this.getVisibleOlUids();
       _this.setState({
         checkedKeys: checkedKeys
+      }, function () {
+        _this.rebuildTreeNodes();
       });
     };
 
