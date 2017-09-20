@@ -37,9 +37,6 @@ class SimpleButton extends React.Component {
     className: PropTypes.string,
     icon: PropTypes.string,
     fontIcon: PropTypes.string,
-    shape: PropTypes.string,
-    size: PropTypes.string,
-    disabled: PropTypes.bool,
     onClick: PropTypes.func,
     tooltip: PropTypes.string,
     tooltipPlacement: PropTypes.string
@@ -51,10 +48,7 @@ class SimpleButton extends React.Component {
    */
   static defaultProps = {
     type: 'primary',
-    icon: '',
-    shape: 'circle',
-    size: 'default',
-    disabled: false
+    icon: ''
   }
 
   /**
@@ -64,12 +58,13 @@ class SimpleButton extends React.Component {
    */
   constructor(props) {
     super(props);
+    this.onClick = this.onClick.bind(this);
   }
 
   /**
    * Handles the given click callback.
    */
-  onClick = () => {
+  onClick() {
     if (this.props.onClick) {
       this.props.onClick();
     } else {
@@ -83,11 +78,12 @@ class SimpleButton extends React.Component {
    */
   render() {
     const {
-      tooltip,
-      tooltipPlacement,
+      className,
       icon,
       fontIcon,
-      className,
+      onClick,
+      tooltip,
+      tooltipPlacement,
       ...antBtnProps
     } = this.props;
 
@@ -108,7 +104,12 @@ class SimpleButton extends React.Component {
           <Icon
             name={icon}
             className={fontIcon}
+            style={{
+              paddingRight: '5px',
+              display: icon ? 'inherit' : 'none'
+            }}
           />
+          {antBtnProps.children}
         </Button>
       </Tooltip>
     );
