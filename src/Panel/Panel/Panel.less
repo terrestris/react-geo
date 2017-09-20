@@ -7,6 +7,7 @@
 
   .body {
     background-color: @component-background;
+    border: darken(@component-background, 10) 1px solid;
   }
 
   .resize-handle {
@@ -42,4 +43,11 @@
       }
     }
   }
+}
+
+.react-geo-window {
+  // First group shadows the right & bottom while the second group shadows the left (by using negative value) & bottom.
+  -moz-box-shadow: 2px 2px 10px -2px darken(@component-background, 20), -2px 2px 10px -2px darken(@component-background, 20);
+  -webkit-box-shadow: 2px 2px 10px -2px darken(@component-background, 20), -2px 2px 10px -2px darken(@component-background, 20);
+  box-shadow: 2px 2px 10px -2px darken(@component-background, 20), -2px 2px 10px -2px darken(@component-background, 20);
 }
