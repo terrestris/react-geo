@@ -1,6 +1,8 @@
 @import '../../style/variables.less';
 
 .react-geo-titlebar {
+  display: flex;
+  align-items: center;
   overflow: auto;
   background-color: darken(@component-background, 10);
   color: @primary-color;
@@ -11,14 +13,10 @@
   }
 
   .title {
-    float: left;
-    display: inline-flex;
-    align-items: center;
+    flex: 1;
   }
 
   .controls {
-    float: right;
-
     >button {
       margin-right: 2px;
     }
