@@ -53,7 +53,7 @@
     "coveralls": "cat coverage/lcov.info | coveralls",
     "test:watch": "karma start karma.conf.js",
     "lint": "eslint --ext js,html,md example-templates/ examples/ src/",
-    "lint:fix": "eslint --fix --ext js,html,md example-templates/ examples/ src/",
+    "lint:fix": "npm run lint -- --fix",
     "start": "webpack-dev-server --config webpack.examples.config.js --content-base ./build/ --hot",
     "build:examples": "npm run clean:build && node tasks/build-examples.js && webpack --config webpack.examples.config.js",
     "build:docs": "jsdoc --package ./package.json --readme ./README.md -c .jsdoc",
