@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
+exports.isVisibleComponent = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.NominatimSearch = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -73,6 +73,10 @@ var _MapUtil = require('./Util/MapUtil.js');
 
 var _MapUtil2 = _interopRequireDefault(_MapUtil);
 
+var _NominatimSearch = require('./Field/NominatimSearch/NominatimSearch.js');
+
+var _NominatimSearch2 = _interopRequireDefault(_NominatimSearch);
+
 var _ObjectUtil = require('./Util/ObjectUtil.js');
 
 var _ObjectUtil2 = _interopRequireDefault(_ObjectUtil);
@@ -110,6 +114,7 @@ exports.CsrfUtil = _CsrfUtil2.default;
 exports.FeatureUtil = _FeatureUtil2.default;
 exports.Logger = _Logger2.default;
 exports.MapUtil = _MapUtil2.default;
+exports.NominatimSearch = _NominatimSearch2.default;
 exports.ObjectUtil = _ObjectUtil2.default;
 exports.StringUtil = _StringUtil2.default;
 exports.UndoUtil = _UndoUtil2.default;
