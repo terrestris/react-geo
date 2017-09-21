@@ -20,4 +20,4 @@ coverage
 
 # when testing in FF, this file sometimes gets stored in the repository root.
 # See https://askubuntu.com/questions/144408/what-is-the-file-c-nppdf32log-debuglog-txt
-C:\\nppdf32Log\\debuglog.txt
+*debuglog.txt
