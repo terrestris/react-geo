@@ -100,12 +100,18 @@ var Panel = exports.Panel = function (_React$Component) {
     _this.toggleCollapse = function () {
       _this.setState({
         collapsed: !_this.state.collapsed
+      }, function () {
+        _this.panel.updateSize({
+          height: _this.state.collapsed ? _this.state.titleBarHeight : _this.state.height,
+          width: _this.state.width
+        });
       });
     };
 
     _this.onResize = function (evt, direction, el) {
       _this.setState({
-        height: el.clientHeight
+        height: el.clientHeight,
+        width: el.clientWidth
       });
     };
 
@@ -138,6 +144,7 @@ var Panel = exports.Panel = function (_React$Component) {
       collapsed: false,
       titleBarHeight: _this.props.title ? props.titleBarHeight : 0,
       height: props.height,
+      width: props.width,
       resizing: false
     };
     return _this;
@@ -391,6 +398,12 @@ Panel.propTypes = {
   height: _propTypes2.default.number,
 
   /**
+   * The width of the panel.
+   * @type {number}
+   */
+  width: _propTypes2.default.number,
+
+  /**
    * The height of the TitleBar.
    * @type {number}
    */
@@ -414,17 +427,21 @@ Panel.defaultProps = {
   resizeOpts: false,
   titleBarHeight: 32,
   height: 100,
+  width: 100,
   compressTooltip: 'collapse',
   closeTooltip: 'close' };
-Panel.showWindow = function showWindow(props) {
+Panel.showWindow = function (props) {
   props = _extends({}, defaultWindowProps, props);
   var _props2 = props,
       i18n = _props2.i18n;
 
+  var windowClassName = 'react-geo-window';
+
+  props.className = props.className ? props.className + ' ' + windowClassName : windowClassName;
 
   var container = document.getElementById(props.containerId);
   var div = document.createElement('div');
-  var id = (0, _lodash.uniqueId)('window-');
+  var id = (0, _lodash.uniqueId)(windowClassName + '-');
 
   div.style.position = 'absolute';
   div.style.left = 0;
