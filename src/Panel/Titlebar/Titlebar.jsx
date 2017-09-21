@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { isEmpty } from 'lodash';
 
 import './Titlebar.less';
 
@@ -97,9 +98,13 @@ export class Titlebar extends React.Component {
         <span className="title">
           {this.props.children}
         </span>
-        <span className="controls">
-          {tools}
-        </span>
+        {
+          !isEmpty(tools) ?
+            <span className="controls">
+              {tools}
+            </span> :
+            null
+        }
       </div>
     );
   }
