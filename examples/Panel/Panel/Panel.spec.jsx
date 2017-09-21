@@ -126,7 +126,7 @@ describe('<Panel />', () => {
 
         expect(win.props.title).to.eql('Drag me');
         expect(win.props.containerId).to.eql('testContainer');
-        expect(win.props.id).to.contain('window-');
+        expect(win.props.id).to.contain('react-geo-window-');
         expect(win.props.collapsible).to.be(true);
         expect(win.props.closable).to.be(true);
         expect(win.props.resizeOpts).to.be(true);
