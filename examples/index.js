@@ -15,6 +15,7 @@ import CsrfUtil from './Util/CsrfUtil.js';
 import FeatureUtil from './Util/FeatureUtil.js';
 import Logger from './Util/Logger.js';
 import MapUtil from './Util/MapUtil.js';
+import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
 import ObjectUtil from './Util/ObjectUtil.js';
 import StringUtil from './Util/StringUtil.js';
 import UndoUtil from './Util/UndoUtil.js';
@@ -39,6 +40,7 @@ export {
   FeatureUtil,
   Logger,
   MapUtil,
+  NominatimSearch,
   ObjectUtil,
   StringUtil,
   UndoUtil,
