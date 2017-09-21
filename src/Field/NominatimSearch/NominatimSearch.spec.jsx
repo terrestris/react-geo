@@ -6,7 +6,6 @@ import OlMap from 'ol/map';
 import OlView from 'ol/view';
 import OlLayerTile from 'ol/layer/tile';
 import OlSourceOsm from 'ol/source/osm';
-import olProj from 'ol/proj';
 
 import TestUtil from '../../Util/TestUtil';
 import Logger from '../../Util/Logger';
@@ -89,41 +88,11 @@ describe('<NominatimSearch />', () => {
   });
 
   describe('#onMenuItemSelected', () => {
-
-    it('zooms to the boundingbox of the selected entry', () => {
-      // SETUP
-      const bbox = ['52.7076346', '52.7476346', '7.7702617', '7.8102617'];
-      const tranformedExtent = [
-        parseFloat(bbox[2]),
-        parseFloat(bbox[0]),
-        parseFloat(bbox[3]),
-        parseFloat(bbox[1])
-      ];
+    it('calls this.props.onSelect with the selected item', () => {
+      //SETUP
       const dataSource = [{
         place_id: '752526',
-        licence: 'Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright',
-        osm_type: 'node',
-        osm_id: '265510725',
-        boundingbox: bbox,
-        lat: '52.7276346',
-        lon: '7.7902617',
-        display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland',
-        class: 'place',
-        type: 'suburb',
-        importance: 0.25,
-        icon: 'http://nominatim.openstreetmap.org/images/mapicons/poi_place_village.p.20.png',
-        address: {
-          suburb: 'Böen',
-          town: 'Löningen',
-          county: 'Landkreis Cloppenburg',
-          state: 'Niedersachsen',
-          country: 'Deutschland',
-          country_code: 'de'
-        },
-        geojson: {
-          type: 'Point',
-          coordinates: [7.7902617, 52.7276346]
-        }
+        display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland'
       }];
       const map = new OlMap({
         layers: [new OlLayerTile({name: 'OSM', source: new OlSourceOsm()})],
@@ -133,16 +102,49 @@ describe('<NominatimSearch />', () => {
           zoom: 4
         })
       });
-      // SETUP END
+      //SETUP END
 
-      const wrapper = TestUtil.mountComponent(NominatimSearch, {map});
-      const inputValue = 'Bonn';
-      const fitSpy = sinon.spy(map.getView(), 'fit');
+      const selectSpy = sinon.spy();
+      const wrapper = TestUtil.mountComponent(NominatimSearch, {
+        onSelect: selectSpy,
+        map
+      });
       wrapper.setState({
-        dataSource: dataSource,
-        searchTerm: inputValue
+        dataSource: dataSource
       });
       wrapper.instance().onMenuItemSelected('752526');
+      expect(selectSpy.calledOnce).to.be.ok();
+      expect(selectSpy.calledWith(dataSource[0], map)).to.be.ok();
+    });
+  });
+
+  describe('#onSelect', () => {
+    it('zooms to the boundingbox of the selected entry', () => {
+      //SETUP
+      const bbox = ['52.7076346', '52.7476346', '7.7702617', '7.8102617'];
+      const tranformedExtent = [
+        parseFloat(bbox[2]),
+        parseFloat(bbox[0]),
+        parseFloat(bbox[3]),
+        parseFloat(bbox[1])
+      ];
+      const item = {
+        place_id: '752526',
+        boundingbox: bbox
+      };
+      const map = new OlMap({
+        layers: [new OlLayerTile({name: 'OSM', source: new OlSourceOsm()})],
+        view: new OlView({
+          projection: 'EPSG:4326',
+          center: [37.40570, 8.81566],
+          zoom: 4
+        })
+      });
+      //SETUP END
+
+      const wrapper = TestUtil.mountComponent(NominatimSearch, {map});
+      const fitSpy = sinon.spy(map.getView(), 'fit');
+      wrapper.props().onSelect(item, map);
       expect(fitSpy.calledOnce).to.be.ok();
       expect(fitSpy.calledWith(tranformedExtent)).to.be.ok();
       fitSpy.restore();
@@ -156,10 +158,10 @@ describe('<NominatimSearch />', () => {
         place_id: '752526',
         display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland'
       };
-      const option = wrapper.instance().renderOption(item);
+      const option = wrapper.props().renderOption(item);
       expect(option.key).to.eql(item.place_id);
       expect(option.props.children).to.eql(item.display_name);
     });
-  })
+  });
 
 });

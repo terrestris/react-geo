@@ -26,37 +26,21 @@ export class NominatimSearch extends React.Component {
 
   static propTypes = {
     className: PropTypes.string,
-    nominatimBaseUrl: PropTypes.string,
-    format: PropTypes.string,
-    viewbox: PropTypes.string,
-    bounded: PropTypes.number,
-    polygon_geojson: PropTypes.number,
-    addressdetails: PropTypes.number,
-    limit: PropTypes.number,
-    countrycodes: PropTypes.string,
-    map: PropTypes.object.isRequired,
-    minChars: PropTypes.number
-  }
-
-  static defaultProps = {
     /**
      * The Nominatim Base URL. See http://wiki.openstreetmap.org/wiki/Nominatim
      * @type {String}
      */
-    nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
-
+    nominatimBaseUrl: PropTypes.string,
     /**
      * Output format.
      * @type {String}
      */
-    format: 'json',
-
+    format: PropTypes.string,
     /**
      * The preferred area to find search results in <left>,<top>,<right>,<bottom>.
      * @type {String}
      */
-    viewbox: '-180,90,180,-90',
-
+    viewbox: PropTypes.string,
     /**
      * Restrict the results to only items contained with the bounding box.
      * Restricting the results to the bounding box also enables searching by
@@ -65,44 +49,111 @@ export class NominatimSearch extends React.Component {
      * the bounding box.
      * @type {Number}
      */
-    bounded: 1,
-
+    bounded: PropTypes.number,
     /**
      * Output geometry of results in geojson format.
      * @type {Number}
      */
-    polygon_geojson: 1,
-
+    polygon_geojson: PropTypes.number,
     /**
      * Include a breakdown of the address into elements.
      * @type {Number}
      */
-    addressdetails: 1,
-
+    addressdetails: PropTypes.number,
     /**
      * Limit the number of returned results.
      * @type {Number}
      */
-    limit: 10,
-
+    limit: PropTypes.number,
     /**
      * Limit search results to a specific country (or a list of countries).
      * <countrycode> should be the ISO 3166-1alpha2 code, e.g. gb for the United
      * Kingdom, de for Germany, etc.
      * @type {String}
      */
-    countrycodes: 'de',
-
+    countrycodes: PropTypes.string,
+    /**
+     * The ol.map where the map will zoom to.
+     *
+     * @type {Object}
+     */
+    map: PropTypes.object.isRequired,
     /**
      * The minimal amount of characters entered in the input to start a search.
      * @type {Number}
      */
-    minChars: 3,
-
+    minChars: PropTypes.number,
+    /**
+     * A render function which gets called with the selected item as it is
+     * returned by nominatim. It must return an `AutoComplete.Option`.
+     *
+     * @type {function}
+     */
+    renderOption: PropTypes.func,
+    /**
+     * An onSelect function which gets called with the selected item as it is
+     * returned by nominatim.
+     * @type {function}
+     */
+    onSelect: PropTypes.func,
     /**
      * The style object passed to the AutoComplete.
      * @type {Object}
      */
+    style: PropTypes.object
+  }
+
+  static defaultProps = {
+    nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
+    format: 'json',
+    viewbox: '-180,90,180,-90',
+    bounded: 1,
+    polygon_geojson: 1,
+    addressdetails: 1,
+    limit: 10,
+    countrycodes: 'de',
+    minChars: 3,
+    /**
+     * Create an AutoComplete.Option from the given data.
+     *
+     * @param {Object} item The tuple as an object.
+     * @return {AutoComplete.Option} The returned option
+     */
+    renderOption: (item) => {
+      return (
+        <Option key={item.place_id}>
+          {item.display_name}
+        </Option>
+      );
+    },
+    /**
+     * The default onSelect method if no onSelect prop is given. It zooms to the
+     * selected item.
+     *
+     * @param {object} selected The selected item as it is returned by nominatim.
+     */
+    onSelect: (selected, olMap) => {
+      if (selected && selected.boundingbox) {
+        const olView = olMap.getView();
+        let extent = [
+          selected.boundingbox[2],
+          selected.boundingbox[0],
+          selected.boundingbox[3],
+          selected.boundingbox[1]
+        ];
+
+        extent = extent.map(function(coord) {
+          return parseFloat(coord);
+        });
+
+        extent = olProj.transformExtent(extent, 'EPSG:4326',
+          olView.getProjection().getCode());
+
+        olView.fit(extent, {
+          duration: 500
+        });
+      }
+    },
     style: {
       width: 200
     }
@@ -198,42 +249,7 @@ export class NominatimSearch extends React.Component {
    */
   onMenuItemSelected(key) {
     const selected = this.state.dataSource.filter(i => i.place_id === key)[0];
-
-    if (selected && selected.boundingbox) {
-      const olMap = this.props.map;
-      const olView = olMap.getView();
-      let extent = [
-        selected.boundingbox[2],
-        selected.boundingbox[0],
-        selected.boundingbox[3],
-        selected.boundingbox[1]
-      ];
-
-      extent = extent.map(function(coord) {
-        return parseFloat(coord);
-      });
-
-      extent = olProj.transformExtent(extent, 'EPSG:4326',
-        olView.getProjection().getCode());
-
-      olView.fit(extent, {
-        duration: 500
-      });
-    }
-  }
-
-  /**
-   * Create an AutoComplete.Option from the given data.
-   *
-   * @param {Object} item The tuple as an object.
-   * @return {AutoComplete.Option} The returned option
-   */
-  renderOption(item) {
-    return (
-      <Option key={item.place_id}>
-        {item.display_name}
-      </Option>
-    );
+    this.props.onSelect(selected, this.props.map);
   }
 
   /**
@@ -251,6 +267,8 @@ export class NominatimSearch extends React.Component {
       limit,
       countrycodes,
       map,
+      onSelect,
+      renderOption,
       ...passThroughProps
     } = this.props;
 
@@ -263,7 +281,7 @@ export class NominatimSearch extends React.Component {
         className={finalClassName}
         allowClear={true}
         placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
-        dataSource={this.state.dataSource.map(this.renderOption)}
+        dataSource={this.state.dataSource.map(renderOption.bind(this))}
         optionLabelProp="display_name"
         onChange={this.onUpdateInput}
         onSelect={this.onMenuItemSelected}
