@@ -124,6 +124,12 @@ export class Panel extends React.Component {
     height: PropTypes.number,
 
     /**
+     * The width of the panel.
+     * @type {number}
+     */
+    width: PropTypes.number,
+
+    /**
      * The height of the TitleBar.
      * @type {number}
      */
@@ -153,6 +159,7 @@ export class Panel extends React.Component {
     resizeOpts: false,
     titleBarHeight: 32,
     height: 100,
+    width: 100,
     compressTooltip: 'collapse',
     closeTooltip: 'close'
   }
@@ -170,6 +177,7 @@ export class Panel extends React.Component {
       collapsed: false,
       titleBarHeight: this.props.title ? props.titleBarHeight : 0,
       height: props.height,
+      width: props.width,
       resizing: false
     };
   }
@@ -180,6 +188,13 @@ export class Panel extends React.Component {
   toggleCollapse = () => {
     this.setState({
       collapsed: !this.state.collapsed
+    }, () => {
+      this.panel.updateSize({
+        height: this.state.collapsed
+          ? this.state.titleBarHeight
+          : this.state.height,
+        width: this.state.width
+      });
     });
   }
 
@@ -192,7 +207,8 @@ export class Panel extends React.Component {
    */
   onResize = (evt, direction, el) => {
     this.setState({
-      height: el.clientHeight
+      height: el.clientHeight,
+      width: el.clientWidth
     });
   }
 
@@ -353,13 +369,21 @@ export class Panel extends React.Component {
  * @return {Promise} A promise that contains the win when resolved.
  *                   "reject" is not expect and so not handled.
  */
-Panel.showWindow = function showWindow(props) {
-  props = {...defaultWindowProps, ...props};
+Panel.showWindow = function(props) {
+  props = {
+    ...defaultWindowProps,
+    ...props
+  };
   let {i18n} = props;
+  let windowClassName = 'react-geo-window';
+
+  props.className = props.className
+    ? `${props.className} ${windowClassName}`
+    : windowClassName;
 
   let container = document.getElementById(props.containerId);
   let div = document.createElement('div');
-  let id = uniqueId('window-');
+  let id = uniqueId(`${windowClassName}-`);
 
   div.style.position = 'absolute';
   div.style.left = 0;
