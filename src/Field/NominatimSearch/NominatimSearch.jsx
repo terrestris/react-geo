@@ -10,9 +10,9 @@ import UrlUtil from '../../Util/UrlUtil.js';
 import olProj from 'ol/proj';
 
 /**
- * The ToggleButton.
+ * The NominatimSearch.
  *
- * @class The NominatimSearch
+ * @class NominatimSearch
  * @extends React.Component
  */
 export class NominatimSearch extends React.Component {
@@ -43,7 +43,7 @@ export class NominatimSearch extends React.Component {
      * The Nominatim Base URL. See http://wiki.openstreetmap.org/wiki/Nominatim
      * @type {String}
      */
-    nominatimBaseUrl: 'http://nominatim.openstreetmap.org/search?',
+    nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
 
     /**
      * Output format.
@@ -166,11 +166,11 @@ export class NominatimSearch extends React.Component {
     fetch(`${this.props.nominatimBaseUrl}${getRequestParams}`)
       .then(response => response.json())
       .then(this.onFetchSuccess.bind(this))
-      .catch(this.onFetchError);
+      .catch(this.onFetchError.bind(this));
   }
 
   /**
-   * This function gets called on success of the nomintim fetch.
+   * This function gets called on success of the nominatim fetch.
    * It sets the response as dataSource.
    *
    * @param {Array<object>} response The found features.

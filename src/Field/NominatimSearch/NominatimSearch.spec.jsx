@@ -82,7 +82,9 @@ describe('<NominatimSearch />', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
       const loggerSpy = sinon.spy(Logger, 'error');
       wrapper.instance().onFetchError('Peter');
+      expect(loggerSpy.calledOnce).to.be.ok();
       expect(loggerSpy.calledWith('Error while requesting Nominatim: Peter')).to.be.ok();
+      loggerSpy.restore();
     });
   });
 
@@ -143,6 +145,7 @@ describe('<NominatimSearch />', () => {
       wrapper.instance().onMenuItemSelected('752526');
       expect(fitSpy.calledOnce).to.be.ok();
       expect(fitSpy.calledWith(tranformedExtent)).to.be.ok();
+      fitSpy.restore();
     });
   });
 
