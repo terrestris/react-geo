@@ -1,7 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
-import SimpleButton from '../Button/SimpleButton/SimpleButton.jsx'; //@react-geo@
-import Toolbar from './Toolbar.jsx'; //@react-geo@
+import {
+  SimpleButton,
+  Toolbar
+} from '../index.js'; //@react-geo@
 
 render(
   <div>

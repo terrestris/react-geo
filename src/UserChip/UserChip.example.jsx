@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import logo from './user.png';
-import UserChip from './UserChip.jsx'; //@react-geo@
+import { UserChip } from '../index.js'; //@react-geo@
 
 render(
   <div>
