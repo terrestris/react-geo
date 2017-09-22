@@ -105,7 +105,6 @@ class SimpleButton extends React.Component {
             name={icon}
             className={fontIcon}
             style={{
-              paddingRight: '5px',
               display: icon ? 'inherit' : 'none'
             }}
           />
