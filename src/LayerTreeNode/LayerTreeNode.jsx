@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Tree
 } from 'antd';
@@ -16,6 +17,7 @@ class LayerTreeNode extends React.Component {
    * @type {Object}
    */
   static propTypes = {
+    inResolutionRange: PropTypes.boolean
   }
 
   /**
@@ -34,12 +36,15 @@ class LayerTreeNode extends React.Component {
    */
   render() {
     const {
+      inResolutionRange,
       ...passThroughProps
     } = this.props;
 
+    const addClassName = (inResolutionRange ? 'within' : 'out-off') + '-range';
+    const finalClassname = `react-geo-layertree-node ${addClassName}`;
     return(
       <TreeNode
-        className="react-geo-layertree-node"
+        className={finalClassname}
         {...passThroughProps}
       />
     );

@@ -94,13 +94,14 @@ class LayerTree extends React.Component {
         layerGroup: this.props.layerGroup
       }, () => {
         this.registerAddRemoveListeners(this.state.layerGroup);
+        this.registerResolutionChangeHandler();
         this.rebuildTreeNodes();
       });
     }
   }
 
   /**
-   * Determines what to do on the initial mount.
+   * Determines what to do when the component is unmounted.
    */
   componentWillUnmount() {
     olObservable.unByKey(this.olListenerKeys);
@@ -155,6 +156,18 @@ class LayerTree extends React.Component {
         this.registerAddRemoveListeners(layer);
       }
     });
+  }
+
+  /**
+   * [registerResolutionChangeHandler description]
+   * @return {[type]} [description]
+   */
+  registerResolutionChangeHandler() {
+    const mapView = this.props.map.getView();
+    const evtKey = mapView.on('change:resolution', () => {
+      this.rebuildTreeNodes();
+    });
+    this.olListenerKeys.push(evtKey); // TODO when and how to we unbind?
   }
 
   /**
@@ -267,16 +280,32 @@ class LayerTree extends React.Component {
         const eventKey = layer.on('change:visible', this.onLayerChangeVisible);
         this.olListenerKeys.push(eventKey);
       }
+
     }
 
     treeNode = <LayerTreeNode
       title={this.getTreeNodeTitle(layer)}
       key={layer.ol_uid}
+      inResolutionRange={this.layerInResolutionRange(layer)}
     >
       {childNodes}
     </LayerTreeNode>;
 
     return treeNode;
+  }
+
+  /**
+   * [layerInResolutionRange description]
+   * @param  {[type]} layer [description]
+   * @return {[type]}       [description]
+   */
+  layerInResolutionRange(layer) {
+    const layerMinRes = Math.max(layer.getMinResolution(), -Infinity);
+    const layerMaxRes = Math.min(layer.getMaxResolution(), Infinity);
+    const mapView = this.props.map.getView();
+    const currentRes = mapView.getResolution();
+    const inResolutionRange = currentRes < layerMaxRes && currentRes >= layerMinRes;
+    return inResolutionRange;
   }
 
   /**
