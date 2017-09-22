@@ -19,7 +19,7 @@ var _Logger = require('../Util/Logger');
 
 var _Logger2 = _interopRequireDefault(_Logger);
 
-var _MapUtil = require('../Util/MapUtil');
+var _MapUtil = require('../Util/MapUtil/MapUtil');
 
 var _MapUtil2 = _interopRequireDefault(_MapUtil);
 

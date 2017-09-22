@@ -27,7 +27,7 @@ var _Logger = require('../../Util/Logger');
 
 var _Logger2 = _interopRequireDefault(_Logger);
 
-var _UrlUtil = require('../../Util/UrlUtil.js');
+var _UrlUtil = require('../../Util/UrlUtil/UrlUtil');
 
 var _UrlUtil2 = _interopRequireDefault(_UrlUtil);
 

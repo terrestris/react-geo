@@ -31,15 +31,15 @@ var _base = require('ol/layer/base');
 
 var _base2 = _interopRequireDefault(_base);
 
-var _FeatureUtil = require('./FeatureUtil');
+var _FeatureUtil = require('../FeatureUtil/FeatureUtil');
 
 var _FeatureUtil2 = _interopRequireDefault(_FeatureUtil);
 
-var _UrlUtil = require('./UrlUtil');
+var _UrlUtil = require('../UrlUtil/UrlUtil');
 
 var _UrlUtil2 = _interopRequireDefault(_UrlUtil);
 
-var _Logger = require('./Logger.js');
+var _Logger = require('../Logger');
 
 var _Logger2 = _interopRequireDefault(_Logger);
 

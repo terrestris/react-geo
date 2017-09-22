@@ -45,6 +45,10 @@ var _LayerTransparencySlider = require('./Slider/LayerTransparencySlider.js');
 
 var _LayerTransparencySlider2 = _interopRequireDefault(_LayerTransparencySlider);
 
+var _NominatimSearch = require('./Field/NominatimSearch/NominatimSearch.js');
+
+var _NominatimSearch2 = _interopRequireDefault(_NominatimSearch);
+
 var _Titlebar = require('./Panel/Titlebar/Titlebar.js');
 
 var _Titlebar2 = _interopRequireDefault(_Titlebar);
@@ -57,43 +61,39 @@ var _UserChip = require('./UserChip/UserChip.js');
 
 var _UserChip2 = _interopRequireDefault(_UserChip);
 
-var _CsrfUtil = require('./Util/CsrfUtil.js');
+var _CsrfUtil = require('./Util/CsrfUtil/CsrfUtil');
 
 var _CsrfUtil2 = _interopRequireDefault(_CsrfUtil);
 
-var _FeatureUtil = require('./Util/FeatureUtil.js');
+var _FeatureUtil = require('./Util/FeatureUtil/FeatureUtil');
 
 var _FeatureUtil2 = _interopRequireDefault(_FeatureUtil);
 
-var _Logger = require('./Util/Logger.js');
+var _Logger = require('./Util/Logger');
 
 var _Logger2 = _interopRequireDefault(_Logger);
 
-var _MapUtil = require('./Util/MapUtil.js');
+var _MapUtil = require('./Util/MapUtil/MapUtil');
 
 var _MapUtil2 = _interopRequireDefault(_MapUtil);
 
-var _NominatimSearch = require('./Field/NominatimSearch/NominatimSearch.js');
-
-var _NominatimSearch2 = _interopRequireDefault(_NominatimSearch);
-
-var _ObjectUtil = require('./Util/ObjectUtil.js');
+var _ObjectUtil = require('./Util/ObjectUtil/ObjectUtil');
 
 var _ObjectUtil2 = _interopRequireDefault(_ObjectUtil);
 
-var _StringUtil = require('./Util/StringUtil.js');
+var _StringUtil = require('./Util/StringUtil/StringUtil');
 
 var _StringUtil2 = _interopRequireDefault(_StringUtil);
 
-var _UndoUtil = require('./Util/UndoUtil.js');
+var _UndoUtil = require('./Util/UndoUtil/UndoUtil');
 
 var _UndoUtil2 = _interopRequireDefault(_UndoUtil);
 
-var _UrlUtil = require('./Util/UrlUtil.js');
+var _UrlUtil = require('./Util/UrlUtil/UrlUtil');
 
 var _UrlUtil2 = _interopRequireDefault(_UrlUtil);
 
-var _VisibleComponent = require('./VisibleComponent/VisibleComponent.js');
+var _VisibleComponent = require('./HigherOrderComponent/VisibleComponent/VisibleComponent.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

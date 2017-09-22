@@ -18,7 +18,7 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Logger = require('../Util/Logger');
+var _Logger = require('../../Util/Logger');
 
 var _Logger2 = _interopRequireDefault(_Logger);
 

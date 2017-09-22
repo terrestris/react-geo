@@ -8,7 +8,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _lodash = require('lodash');
 
-var _Logger = require('./Logger');
+var _Logger = require('../Logger');
 
 var _Logger2 = _interopRequireDefault(_Logger);
 

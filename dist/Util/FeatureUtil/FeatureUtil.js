@@ -10,7 +10,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _lodash = require('lodash');
 
-var _StringUtil = require('./StringUtil');
+var _StringUtil = require('../StringUtil/StringUtil');
 
 var _StringUtil2 = _interopRequireDefault(_StringUtil);
 
