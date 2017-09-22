@@ -2,9 +2,9 @@
 import React from 'react';
 import expect from 'expect.js';
 
-import TestUtil from '../Util/TestUtil';
+import TestUtil from '../../Util/TestUtil';
 
-import { isVisibleComponent } from '../index';
+import { isVisibleComponent } from '../../index';
 
 describe('isVisibleComponent', () => {
   let EnhancedComponent;

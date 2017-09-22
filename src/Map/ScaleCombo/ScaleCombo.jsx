@@ -5,7 +5,7 @@ const Option = Select.Option;
 import { isNumber, isEmpty, isEqual, reverse, clone } from 'lodash';
 
 import Logger from '../../Util/Logger';
-import MapUtils from '../../Util/MapUtil';
+import MapUtil from '../../Util/MapUtil/MapUtil';
 
 /**
  * Class representating a scale combo to choose map scale via a dropdown menu.
@@ -119,7 +119,7 @@ class ScaleCombo extends React.Component {
    *
    */
   pushScaleOption = (resolution, mv) => {
-    let scale = MapUtils.getScaleForResolution(resolution, mv.getProjection().getUnits());
+    let scale = MapUtil.getScaleForResolution(resolution, mv.getProjection().getUnits());
     // Round scale to nearest multiple of 10.
     let roundScale = Math.round(scale / 10) * 10;
     let option = <Option key={roundScale.toString()} value={roundScale.toString()}>1:{roundScale.toLocaleString()}</Option>;

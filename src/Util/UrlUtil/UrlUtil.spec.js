@@ -4,7 +4,7 @@ import URL from 'url-parse';
 
 import {
   UrlUtil
-} from '../index';
+} from '../../index';
 
 describe('UrlUtil', () => {
 
