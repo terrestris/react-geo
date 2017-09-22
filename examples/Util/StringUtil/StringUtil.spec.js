@@ -3,7 +3,7 @@ import expect from 'expect.js';
 
 import {
   StringUtil
-} from '../index';
+} from '../../index';
 
 describe('StringUtil', () => {
 

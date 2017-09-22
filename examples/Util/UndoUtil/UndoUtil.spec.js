@@ -3,7 +3,7 @@ import expect from 'expect.js';
 
 import {
   UndoUtil
-} from '../index';
+} from '../../index';
 
 describe('UndoUtil', () => {
 

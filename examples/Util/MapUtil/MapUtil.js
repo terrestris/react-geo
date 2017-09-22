@@ -1,42 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: Util/MapUtil.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Source: Util/MapUtil.js</h1>
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>import OlMap from 'ol/map';
+import OlMap from 'ol/map';
 import OlProjection from 'ol/proj';
 import OlSourceTileWMS from 'ol/source/tilewms';
 import OlLayerTile from 'ol/layer/tile';
 import OlLayerGroup from 'ol/layer/group';
 import OlLayerBase from 'ol/layer/base';
 
-import FeatureUtil from './FeatureUtil';
-import UrlUtil from './UrlUtil';
+import FeatureUtil from '../FeatureUtil/FeatureUtil';
+import UrlUtil from '../UrlUtil/UrlUtil';
 
-import Logger from './Logger.js';
+import Logger from '../Logger';
 
 /**
  * Helper Class for the ol3 map.
@@ -147,7 +119,7 @@ export class MapUtil {
    * @return {Array} An array of all Layers.
    */
   static getAllLayers(collection, filter = (() => true)) {
-    if (!(collection instanceof OlMap) &amp;&amp; !(collection instanceof OlLayerGroup)) {
+    if (!(collection instanceof OlMap) && !(collection instanceof OlLayerGroup)) {
       Logger.error('Input parameter collection must be from type `ol.Map`' +
         'or `ol.layer.Group`.');
       return [];
@@ -200,8 +172,8 @@ export class MapUtil {
     let layerCandidate;
 
     for (let layer of layers) {
-      if (layer.getSource &amp;&amp;
-        layer.getSource().getParams &amp;&amp;
+      if (layer.getSource &&
+        layer.getSource().getParams &&
         layer.getSource().getParams()['LAYERS'] === name) {
         layerCandidate = layer;
         break;
@@ -274,9 +246,9 @@ export class MapUtil {
     const layers = groupLayer.getLayers().getArray();
     let info = {};
 
-    if (layers.indexOf(layer) &lt; 0) {
+    if (layers.indexOf(layer) < 0) {
       layers.forEach((childLayer) => {
-        if (childLayer instanceof OlLayerGroup &amp;&amp; !info.groupLayer) {
+        if (childLayer instanceof OlLayerGroup && !info.groupLayer) {
           info = MapUtil.getLayerPositionInfo(layer, childLayer);
         }
       });
@@ -302,7 +274,7 @@ export class MapUtil {
     }
 
     if (layer instanceof OlLayerTile
-        &amp;&amp; layer.getSource() instanceof OlSourceTileWMS) {
+        && layer.getSource() instanceof OlSourceTileWMS) {
       const source = layer.getSource();
       const url = source.getUrls() ? source.getUrls()[0] : '';
       const params = {
@@ -327,28 +299,3 @@ export class MapUtil {
 }
 
 export default MapUtil;
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
-based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
-based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 22 2017 10:46:32 GMT+0000 (UTC)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>

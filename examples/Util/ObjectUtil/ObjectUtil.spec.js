@@ -3,7 +3,7 @@ import expect from 'expect.js';
 
 import {
   ObjectUtil,
-} from '../index';
+} from '../../index';
 
 describe('ObjectUtil', () => {
   it('is defined', () => {

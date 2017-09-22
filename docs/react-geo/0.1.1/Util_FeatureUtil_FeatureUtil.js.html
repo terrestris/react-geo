@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Util/ObjectUtil.js</title>
+    <title>JSDoc: Source: Util/FeatureUtil/FeatureUtil.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Util/ObjectUtil.js</h1>
+    <h1 class="page-title">Source: Util/FeatureUtil/FeatureUtil.js</h1>
 
     
 
@@ -26,111 +26,104 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import {
-  isObject,
-  isString,
-  isArray
-} from 'lodash';
-import Logger from './Logger';
+            <pre class="prettyprint source linenums"><code>import { isString } from 'lodash';
+
+import StringUtil from '../StringUtil/StringUtil';
 
 /**
- * This class provides some static methods which might be helpful when working
- * with objects.
+ * Helper Class for the ol features.
  *
- * @class ObjectUtil
+ * @class FeatureUtil
  */
-class ObjectUtil {
+class FeatureUtil {
 
   /**
-   * Method may be used to return a value of a given input object by a
-   * provided query key. The query key can be used in two ways:
-   *   * Single-value: Find the first matching key in the provided object
-   *     (Use with caution as the object/array order may not be as
-   *     expected and/or deterministic!).
-   *   * Backslash ("/") separated value: Find the last (!) matching key
-   *     in the provided object.
+   * Returns the featureType name out of a given feature. It assumes that
+   * the feature has an ID in the following structure FEATURETYPE.FEATUREID.
    *
-   * @param {String} queryKey The key to be searched.
-   * @param {Object} queryObject The object to be searched on
-   *
-   * @return {*} The target value or `undefined` if the given couldn't be
-   *     found, or an object if a path was passed, from which we only could
-   *     find a part, but not the most specific one.
-   *     TODO Harmonize return values
+   * @param {ol.Feature} feature The feature to obtain the featureType
+   *                             name from.
+   * @return {String} The (unqualified) name of the featureType or undefined if
+   *                  the name could not be picked.
    */
-  static getValue(queryKey, queryObject) {
-    var queryMatch;
+  static getFeatureTypeName(feature) {
+    let featureId = feature.getId();
+    let featureIdParts = featureId ? featureId.split('.') : featureId;
 
-    if (!isString(queryKey)) {
-      Logger.error('Missing input parameter queryKey &lt;String>');
-      return undefined;
-    }
-    if (!isObject(queryObject)) {
-      Logger.error('Missing input parameter queryObject &lt;Object>');
-      return undefined;
-    }
+    return Array.isArray(featureIdParts) ? featureIdParts[0] : undefined;
+  }
 
-    // if the queryKey contains backslashes we understand this as the
-    // path in the object-hierarchy and will return the last matching
-    // value
-    if (queryKey.split('/').length > 1) {
-      queryKey.split('/').forEach(function(key) {
-        if (queryObject[key]) {
-          queryObject = queryObject[key];
-        } else {
-          // if the last entry wasn't found return the last match
-          return queryObject;
-        }
-      });
-      return queryObject;
-    }
+  /**
+   * Resolves the given template string with the given feature attributes, e.g.
+   * the template "Size of area is {{AREA_SIZE}} km²" would be to resolved
+   * to "Size of area is 1909 km²" (assuming the feature's attribute AREA_SIZE
+   * really exists).
+   *
+   * @param {ol.Feature} feature The feature to get the attributes from.
+   * @param {String} template The template string to resolve.
+   * @param {String} noValueFoundText The text to apply, if the templated value
+   *                                  could not be found, default is to 'n.v.'.
+   * @return {String} The resolved template string.
+   */
+  static resolveAttributeTemplate(feature, template, noValueFoundText = 'n.v.') {
+    let attributeTemplatePrefix = '\\{\\{';
+    let attributeTemplateSuffix = '\\}\\}';
+    let resolved = '';
 
-    // iterate over the input object and return the first matching
-    // value
-    for (var key in queryObject) {
+    // Find any character between two braces (including the braces in the result)
+    let regExp = new RegExp(attributeTemplatePrefix + '(.*?)' + attributeTemplateSuffix, 'g');
+    let regExpRes = isString(template) ? template.match(regExp) : null;
 
-      // get the current value
-      var value = queryObject[key];
+    // If we have a regex result, it means we found a placeholder in the
+    // template and have to replace the placeholder with its appropriate value.
+    if (regExpRes) {
+      // Iterate over all regex match results and find the proper attribute
+      // for the given placeholder, finally set the desired value to the hover.
+      // field text
+      regExpRes.forEach((res) => {
+        // We count every non matching candidate. If this count is equal to
+        // the objects length, we assume that there is no match at all and
+        // set the output value to the value of "noValueFoundText".
+        let noMatchCnt = 0;
 
-      // if the given key is the queryKey, let's return the
-      // corresponding value
-      if (key === queryKey) {
-        return value;
-      }
+        for (let [key, value] of Object.entries(feature.getProperties())) {
+          // Remove the suffixes and find the matching attribute column.
+          let attributeName = res.slice(2, res.length - 2);
 
-      // TODO MJ: I do not like this too much, see the appropriate test.
-      // I fear we can only reach this if the original key was not a path,
-      // right?
-      //
-      // if the value is an array and the array contains an object as
-      // well, let's call ourself recursively for this object
-      if (isArray(value)) {
-        for (var i = 0; i &lt; value.length; i++) {
-          var val = value[i];
-          if (isObject(val)) {
-            queryMatch = this.getValue(queryKey, val);
-            if (queryMatch) {
-              return queryMatch;
-            }
+          if (attributeName.toLowerCase() === key.toLowerCase()) {
+            template = template.replace(res, value);
+            break;
+          } else {
+            noMatchCnt++;
           }
         }
-      }
 
-      // if the value is an object, let's call ourself recursively
-      if (isObject(value)) {
-        queryMatch = this.getValue(queryKey, value);
-        if (queryMatch) {
-          return queryMatch;
+        // No key match found for this feature (e.g. if key not
+        // present or value is null).
+        if (noMatchCnt === Object.keys(feature.getProperties()).length) {
+          template = template.replace(res, noValueFoundText);
         }
-      }
+      });
     }
 
-    // if we couldn't find any match, return undefined
-    return undefined;
+    resolved = template;
+
+    // Fallback if no feature attribute is found.
+    if (!resolved) {
+      resolved = feature.getId();
+    }
+
+    // Replace any HTTP url with an &lt;a> element.
+    resolved = StringUtil.urlify(resolved);
+
+    // Replace all newline breaks with a html &lt;br> tag.
+    resolved = resolved.replace(/\n/g, '&lt;br>');
+
+    return resolved;
   }
 }
 
-export default ObjectUtil;
+export default FeatureUtil;
 </code></pre>
         </article>
     </section>
@@ -149,7 +142,7 @@ based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#r
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 22 2017 10:46:32 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 22 2017 11:17:31 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>

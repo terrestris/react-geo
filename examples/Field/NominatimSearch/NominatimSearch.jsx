@@ -6,7 +6,7 @@ import {
 const Option = AutoComplete.Option;
 
 import Logger from '../../Util/Logger';
-import UrlUtil from '../../Util/UrlUtil.js';
+import UrlUtil from '../../Util/UrlUtil/UrlUtil';
 import olProj from 'ol/proj';
 
 /**
