@@ -139,7 +139,6 @@ var SimpleButton = function (_React$Component) {
             name: icon,
             className: fontIcon,
             style: {
-              paddingRight: '5px',
               display: icon ? 'inherit' : 'none'
             }
           }),
