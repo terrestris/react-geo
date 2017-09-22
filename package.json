@@ -50,8 +50,9 @@
     "clean:dist": "rimraf ./dist/*",
     "pretest": "npm run lint",
     "test": "npm run clean:test && BABEL_ENV=coverage karma start karma.conf.js --single-run -- --max_old_space_size=4096",
-    "coveralls": "cat coverage/lcov.info | coveralls",
+    "test:phantom": "npm run clean:test && BABEL_ENV=coverage karma start karma.conf.js --single-run --browsers PhantomJS -- --max_old_space_size=4096",
     "test:watch": "karma start karma.conf.js -- --max_old_space_size=4096",
+    "coveralls": "cat coverage/lcov.info | coveralls",
     "lint": "eslint --ext js,html,md example-templates/ examples/ src/",
     "lint:fix": "npm run lint -- --fix",
     "start": "webpack-dev-server --config webpack.examples.config.js --content-base ./build/ --hot",
@@ -59,7 +60,7 @@
     "build:docs": "jsdoc --package ./package.json --readme ./README.md -c .jsdoc",
     "build:js": "webpack --config webpack.development.config.js && webpack -p --config webpack.production.config.js",
     "build:dist": "npm run clean:dist && BABEL_ENV=build babel src --out-dir dist --copy-files --ignore spec.js,example.js,.md",
-    "build": "npm run test -- --browsers PhantomJS && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
+    "build": "npm run test:phantom && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
   },
   "peerDependencies": {
     "react": "15.6.1"
