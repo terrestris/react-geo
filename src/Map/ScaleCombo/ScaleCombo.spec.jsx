@@ -76,6 +76,8 @@ describe('<ScaleCombo />', () => {
       });
       wrapper.instance().getOptionsFromMap();
       expect(wrapper.props().scales).to.be.an('array');
+
+      TestUtil.removeMap(map);
     });
 
     it('creates options array from given map with resolutions and updates scales prop', () => {
@@ -94,6 +96,8 @@ describe('<ScaleCombo />', () => {
       let roundScale = (Math.round(MapUtil.getScaleForResolution(
         testResolutions[testResolutions.length - 1] ,'m'))).toString();
       expect(wrapper.props().scales[0].key).to.be(roundScale);
+
+      TestUtil.removeMap(map);
     });
   });
 

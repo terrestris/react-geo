@@ -51,7 +51,7 @@
     "pretest": "npm run lint",
     "test": "npm run clean:test && BABEL_ENV=coverage karma start karma.conf.js --single-run -- --max_old_space_size=4096",
     "test:phantom": "npm run clean:test && BABEL_ENV=coverage karma start karma.conf.js --single-run --browsers PhantomJS -- --max_old_space_size=4096",
-    "test:watch": "karma start karma.conf.js -- --max_old_space_size=4096",
+    "test:watch": "karma start karma.conf.js --browsers PhantomJS -- --max_old_space_size=4096",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "lint": "eslint --ext js,html,md example-templates/ examples/ src/",
     "lint:fix": "npm run lint -- --fix",
