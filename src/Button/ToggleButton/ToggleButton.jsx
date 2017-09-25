@@ -143,8 +143,8 @@ class ToggleButton extends React.Component {
     } = this.props;
 
     const iconName = this.state.pressed
-      ? this.props.pressedIcon || this.props.icon
-      : this.props.icon;
+      ? pressedIcon || icon
+      : icon;
     const finalClassName = className
       ? `${className} ${this.className}`
       : this.className;
@@ -152,8 +152,8 @@ class ToggleButton extends React.Component {
 
     return (
       <Tooltip
-        title={this.props.tooltip}
-        placement={this.props.tooltipPlacement}
+        title={tooltip}
+        placement={tooltipPlacement}
       >
         <Button
           className={`${finalClassName}${pressedClass}`}
@@ -162,7 +162,7 @@ class ToggleButton extends React.Component {
         >
           <Icon
             name={iconName}
-            className={this.props.fontIcon}
+            className={fontIcon}
           />
         </Button>
       </Tooltip>
