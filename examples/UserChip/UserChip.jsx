@@ -56,9 +56,7 @@ class UserChip extends React.Component {
    * @type {Object}
    */
   static defaultProps = {
-    userName: 'John Doe',
-    imageSrc: null,
-    userMenu: null
+    userName: 'John Doe'
   }
 
   /**
@@ -94,20 +92,33 @@ class UserChip extends React.Component {
    * @return {type} Description
    */
   getUserMenu() {
-
     const className = this.props.className
       ? `${this.props.className} ${this.className}`
       : this.className;
 
-    return <div className={className} style={this.props.style}>
-      <Avatar
-        src={this.props.imageSrc}
-        size="large"
-        className="userimage">
-        {this.props.imageSrc ? '' : this.getInitials()}
-      </Avatar>
-      <span className="username">{this.props.userName}</span>
-    </div>;
+    return (
+      <div
+        className={className}
+        style={this.props.style}
+      >
+        <Avatar
+          src={this.props.imageSrc}
+          size="large"
+          className="userimage"
+        >
+          {
+            this.props.imageSrc ?
+              '' :
+              this.getInitials()
+          }
+        </Avatar>
+        <span
+          className="username"
+        >
+          {this.props.userName}
+        </span>
+      </div>
+    );
   }
 
   /**
@@ -121,7 +132,7 @@ class UserChip extends React.Component {
           overlay={this.props.userMenu}
           trigger={['click']}
           getPopupContainer={() => {
-            return document.getElementsByClassName('userchip')[0];
+            return document.getElementsByClassName(this.className)[0];
           }}
         >
           {this.getUserMenu()}
