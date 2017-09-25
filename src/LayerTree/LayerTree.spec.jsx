@@ -42,6 +42,10 @@ describe('<LayerTree />', () => {
     map.setLayerGroup(layerGroup);
   });
 
+  afterEach(() => {
+    TestUtil.removeMap(map);
+  });
+
   it('is defined', () => {
     expect(LayerTree).not.to.be(undefined);
   });

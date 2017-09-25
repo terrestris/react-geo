@@ -133,6 +133,7 @@ describe('<Panel />', () => {
 
         //TearDown
         win.close();
+        testContainer.parentElement.removeChild(testContainer);
         done();
       });
 

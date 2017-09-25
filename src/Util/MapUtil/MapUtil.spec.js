@@ -332,7 +332,6 @@ describe('MapUtil', () => {
       layerGroup = new OlLayerGroup({
         layers: [layer1, layer2, nestedLayerGroup]
       });
-      map = TestUtil.createMap();
       map.setLayerGroup(layerGroup);
     });
 
@@ -406,7 +405,6 @@ describe('MapUtil', () => {
       layerGroup = new OlLayerGroup({
         layers: [layer1, layer2, nestedLayerGroup]
       });
-      map = TestUtil.createMap();
       map.setLayerGroup(layerGroup);
     });
 
