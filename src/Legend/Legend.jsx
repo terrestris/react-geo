@@ -94,17 +94,25 @@ export class Legend extends React.Component {
    */
   render() {
     let {
-      layer
+      className,
+      layer,
+      extraParams,
+      ...passThroughProps
     } = this.props;
-    const className = this.props.className
-      ? `${this.props.className} ${this.className}`
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
       : this.className;
+
     const alt = layer.get('name')
       ? layer.get('name') + ' legend'
       : 'layer legend';
 
     return (
-      <div className={className}>
+      <div
+        className={finalClassName}
+        {...passThroughProps}
+      >
         <img
           src={this.state.legendUrl}
           alt={alt}
