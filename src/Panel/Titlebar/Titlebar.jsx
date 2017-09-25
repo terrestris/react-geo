@@ -69,7 +69,6 @@ export class Titlebar extends React.Component {
      * @type {String}
      */
     closeTooltip: PropTypes.string
-
   }
 
   /**

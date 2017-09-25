@@ -3,7 +3,10 @@ import React from 'react';
 import expect from 'expect.js';
 import { shallow } from 'enzyme';
 
-import { Titlebar } from '../../index';
+import {
+  Titlebar,
+  SimpleButton
+} from '../../index';
 
 describe('<Titlebar />', () => {
 
@@ -37,10 +40,20 @@ describe('<Titlebar />', () => {
     expect(title.length).to.equal(1);
   });
 
-  it('renders the controls', () => {
+  it('renders the controls (if set)', () => {
     const wrapper = setup();
-    const title = wrapper.find('span.controls');
-    expect(title.length).to.equal(1);
+    expect(wrapper.find('span.controls').length).to.equal(0);
+
+    const wrapperWithTools = setup({
+      tools: [
+        <SimpleButton
+          icon="times"
+          key="close-tool"
+          size="small"
+        />
+      ]
+    });
+    expect(wrapperWithTools.find('span.controls').length).to.equal(1);
   });
 
 });
