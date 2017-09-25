@@ -9,7 +9,7 @@ import OlSourceTileJson from 'ol/source/tilejson';
 import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
 
-import LayerTree from './LayerTree.jsx'; //@react-geo@
+import { LayerTree } from '../index.js'; //@react-geo@
 
 
 //

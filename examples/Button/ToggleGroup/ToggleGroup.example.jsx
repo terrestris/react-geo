@@ -1,7 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
-import ToggleGroup from './ToggleGroup.jsx'; //@react-geo@
-import ToggleButton from '../ToggleButton/ToggleButton.jsx'; //@react-geo@
+import {
+  ToggleGroup,
+  ToggleButton
+} from '../../index.js'; //@react-geo@
 
 render(
   <div>

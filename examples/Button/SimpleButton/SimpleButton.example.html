@@ -28,7 +28,7 @@ for more documentation and examples.</p>
   <pre>
     <code class="javascript">import React from &#x27;react&#x27;;
 import { render } from &#x27;react-dom&#x27;;
-import SimpleButton from &#x27;react-geo&#x27;;
+import { SimpleButton } from &#x27;react-geo&#x27;;
 
 render(
   &lt;div&gt;
@@ -55,6 +55,17 @@ render(
       {/* A SimpleButton with an icon. Just use the font-awesome name.*/}
       &lt;SimpleButton
         icon&#x3D;&quot;bullhorn&quot;
+      /&gt;
+
+    &lt;/div&gt;
+
+    &lt;div className&#x3D;&quot;example-block&quot;&gt;
+      &lt;span&gt;Icon:&lt;/span&gt;
+
+      {/* A round SimpleButton.*/}
+      &lt;SimpleButton
+        icon&#x3D;&quot;bullhorn&quot;
+        shape&#x3D;&quot;circle&quot;
       /&gt;
 
     &lt;/div&gt;
