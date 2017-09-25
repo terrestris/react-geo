@@ -7,7 +7,7 @@ import OlLayerTile from 'ol/layer/tile';
 import OlSourceTileWMS from 'ol/source/tilewms';
 import olProj from 'ol/proj';
 
-import Legend from './Legend.jsx'; //@react-geo@
+import { Legend } from '../index.js'; //@react-geo@
 
 
 //

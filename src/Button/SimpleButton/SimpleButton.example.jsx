@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import SimpleButton from './SimpleButton.jsx'; //@react-geo@
+import { SimpleButton } from '../../index.js'; //@react-geo@
 
 render(
   <div>
@@ -27,6 +27,17 @@ render(
       {/* A SimpleButton with an icon. Just use the font-awesome name.*/}
       <SimpleButton
         icon="bullhorn"
+      />
+
+    </div>
+
+    <div className="example-block">
+      <span>Icon:</span>
+
+      {/* A round SimpleButton.*/}
+      <SimpleButton
+        icon="bullhorn"
+        shape="circle"
       />
 
     </div>
