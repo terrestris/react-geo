@@ -104,23 +104,28 @@ var UserChip = function (_React$Component) {
   }, {
     key: 'getUserMenu',
     value: function getUserMenu() {
-
       var className = this.props.className ? this.props.className + ' ' + this.className : this.className;
 
       return _react2.default.createElement(
         'div',
-        { className: className, style: this.props.style },
+        {
+          className: className,
+          style: this.props.style
+        },
         _react2.default.createElement(
           _avatar2.default,
           {
             src: this.props.imageSrc,
             size: 'large',
-            className: 'userimage' },
+            className: 'userimage'
+          },
           this.props.imageSrc ? '' : this.getInitials()
         ),
         _react2.default.createElement(
           'span',
-          { className: 'username' },
+          {
+            className: 'username'
+          },
           this.props.userName
         )
       );
@@ -133,6 +138,7 @@ var UserChip = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
 
       if (this.props.userMenu && _react2.default.isValidElement(this.props.userMenu)) {
         return _react2.default.createElement(
@@ -141,7 +147,7 @@ var UserChip = function (_React$Component) {
             overlay: this.props.userMenu,
             trigger: ['click'],
             getPopupContainer: function getPopupContainer() {
-              return document.getElementsByClassName('userchip')[0];
+              return document.getElementsByClassName(_this2.className)[0];
             }
           },
           this.getUserMenu()
@@ -186,7 +192,5 @@ UserChip.propTypes = {
    */
   style: _propTypes2.default.object };
 UserChip.defaultProps = {
-  userName: 'John Doe',
-  imageSrc: null,
-  userMenu: null };
+  userName: 'John Doe' };
 exports.default = UserChip;

@@ -15,6 +15,8 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+var _lodash = require('lodash');
+
 require('./Titlebar.less');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -89,11 +91,11 @@ var Titlebar = exports.Titlebar = function (_React$Component) {
           { className: 'title' },
           this.props.children
         ),
-        _react2.default.createElement(
+        !(0, _lodash.isEmpty)(tools) ? _react2.default.createElement(
           'span',
           { className: 'controls' },
           tools
-        )
+        ) : null
       );
     }
   }]);

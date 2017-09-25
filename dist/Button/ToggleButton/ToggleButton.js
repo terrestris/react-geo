@@ -179,15 +179,15 @@ var ToggleButton = function (_React$Component) {
           tooltipPlacement = _props.tooltipPlacement,
           antBtnProps = _objectWithoutProperties(_props, ['className', 'name', 'icon', 'pressedIcon', 'fontIcon', 'pressed', 'onToggle', 'tooltip', 'tooltipPlacement']);
 
-      var iconName = this.state.pressed ? this.props.pressedIcon || this.props.icon : this.props.icon;
+      var iconName = this.state.pressed ? pressedIcon || icon : icon;
       var finalClassName = className ? className + ' ' + this.className : this.className;
       var pressedClass = this.state.pressed ? ' ' + this.pressedClass : '';
 
       return _react2.default.createElement(
         _tooltip2.default,
         {
-          title: this.props.tooltip,
-          placement: this.props.tooltipPlacement
+          title: tooltip,
+          placement: tooltipPlacement
         },
         _react2.default.createElement(
           _button2.default,
@@ -197,7 +197,7 @@ var ToggleButton = function (_React$Component) {
           }, antBtnProps),
           _react2.default.createElement(_reactFa.Icon, {
             name: iconName,
-            className: this.props.fontIcon
+            className: fontIcon
           })
         )
       );
