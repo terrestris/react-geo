@@ -86,6 +86,23 @@ module.exports = function(config) {
     // how many browser should be started simultaneous
     concurrency: Infinity,
 
+    // Timeout for capturing a browser (in ms).
+    // Deafault 60000
+    captureTimeout: 60000,
+
+    // The number of disconnections tolerated.
+    // Default 0
+    browserDisconnectTolerance: 3,
+
+    // How long does Karma wait for a browser to reconnect (in ms).
+    // Default: 2000
+    browserDisconnectTimeout: 2000,
+
+    // How long will Karma wait for a message from a browser before
+    // disconnecting from it (in ms).
+    // Default 10000
+    browserNoActivityTimeout: 30000,
+
     coverageReporter: {
       reporters: [
         {
