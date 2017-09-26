@@ -8,6 +8,9 @@ import OlSourceTileJson from 'ol/source/tilejson';
 import OlFeature from 'ol/feature';
 import OlGeomPoint from 'ol/geom/point';
 import OlLayerGroup from 'ol/layer/group';
+import OlMap from 'ol/map';
+import OlView from 'ol/view';
+
 import sinon from 'sinon';
 
 import TestUtil from '../TestUtil';
@@ -519,6 +522,127 @@ describe('MapUtil', () => {
       expect(legendUrl).to.contain(formatParam);
       expect(legendUrl).to.contain(heightParam);
       expect(legendUrl).to.contain(widthParam);
+    });
+
+  });
+
+  describe('layerInResolutionRange', () => {
+    it('is defined', () => {
+      expect(MapUtil.layerInResolutionRange).not.to.be(undefined);
+    });
+    it('is a function', () => {
+      expect(MapUtil.layerInResolutionRange).to.be.a('function');
+    });
+    it('returns false if not passed a layer', () => {
+      expect(MapUtil.layerInResolutionRange()).to.be(false);
+    });
+    it('returns false if not passed a map', () => {
+      const layer = new OlLayerTile();
+      expect(MapUtil.layerInResolutionRange(layer)).to.be(false);
+    });
+    it('returns false if map does not have a view', () => {
+      const layer = new OlLayerTile();
+      const map = new OlMap({view: null});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+    });
+    it('returns false if map view does not have a resolution', () => {
+      const layer = new OlLayerTile();
+      const view = new OlView();
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+    });
+
+    it('returns true: layer (no limits) & any viewRes', () => {
+      const layer = new OlLayerTile();
+      const view = new OlView({resolution: 42});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+    });
+
+    it('returns true: layer (w/ minResolution) & viewRes > l.minres', () => {
+      const layer = new OlLayerTile({
+        minResolution: 42
+      });
+      const view = new OlView({resolution: 43});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+    });
+
+    it('returns true: layer (w/ minResolution) & viewRes = l.minres', () => {
+      const layer = new OlLayerTile({
+        minResolution: 42
+      });
+      const view = new OlView({resolution: 42});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+    });
+
+    it('returns true: layer (w/ maxResolution) & viewRes < l.maxres', () => {
+      const layer = new OlLayerTile({
+        maxResolution: 42
+      });
+      const view = new OlView({resolution: 41});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+    });
+
+    it('returns false: layer (w/ maxResolution) & viewRes = l.maxres', () => {
+      const layer = new OlLayerTile({
+        maxResolution: 42
+      });
+      const view = new OlView({resolution: 42});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+    });
+
+    it('returns true: layer (w/ min and max) & viewRes  within', () => {
+      const layer = new OlLayerTile({
+        minResolution: 42,
+        maxResolution: 50
+      });
+      const view = new OlView({resolution: 46});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+    });
+
+    it('returns false: layer (w/ min and max) & viewRes outside min', () => {
+      const layer = new OlLayerTile({
+        minResolution: 42,
+        maxResolution: 50
+      });
+      const view = new OlView({resolution: 38});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+    });
+
+    it('returns true: layer (w/ min and max) & viewRes = min', () => {
+      const layer = new OlLayerTile({
+        minResolution: 42,
+        maxResolution: 50
+      });
+      const view = new OlView({resolution: 42});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+    });
+
+    it('returns false: layer (w/ min and max) & viewRes outside max', () => {
+      const layer = new OlLayerTile({
+        minResolution: 42,
+        maxResolution: 50
+      });
+      const view = new OlView({resolution: 54});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+    });
+
+    it('returns false: layer (w/ min and max) & viewRes = max', () => {
+      const layer = new OlLayerTile({
+        minResolution: 42,
+        maxResolution: 50
+      });
+      const view = new OlView({resolution: 50});
+      const map = new OlMap({view: view});
+      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
     });
 
   });

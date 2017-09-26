@@ -82,7 +82,7 @@ describe('<LayerTree />', () => {
       layers: [subLayer]
     });
 
-    expect(wrapper.instance().olListenerKeys).to.have.length(4);
+    expect(wrapper.instance().olListenerKeys).to.have.length(5);
     wrapper.setProps({
       layerGroup: nestedLayerGroup
     });

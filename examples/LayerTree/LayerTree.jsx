@@ -94,13 +94,14 @@ class LayerTree extends React.Component {
         layerGroup: this.props.layerGroup
       }, () => {
         this.registerAddRemoveListeners(this.state.layerGroup);
+        this.registerResolutionChangeHandler();
         this.rebuildTreeNodes();
       });
     }
   }
 
   /**
-   * Determines what to do on the initial mount.
+   * Determines what to do when the component is unmounted.
    */
   componentWillUnmount() {
     olObservable.unByKey(this.olListenerKeys);
@@ -155,6 +156,18 @@ class LayerTree extends React.Component {
         this.registerAddRemoveListeners(layer);
       }
     });
+  }
+
+  /**
+   * Registers an eventhandler on the `ol.View`, which will rebuild the tree
+   * nodes whenever the view's resolution changes.
+   */
+  registerResolutionChangeHandler() {
+    const mapView = this.props.map.getView();
+    const evtKey = mapView.on('change:resolution', () => {
+      this.rebuildTreeNodes();
+    });
+    this.olListenerKeys.push(evtKey); // TODO when and how to we unbind?
   }
 
   /**
@@ -267,11 +280,13 @@ class LayerTree extends React.Component {
         const eventKey = layer.on('change:visible', this.onLayerChangeVisible);
         this.olListenerKeys.push(eventKey);
       }
+
     }
 
     treeNode = <LayerTreeNode
       title={this.getTreeNodeTitle(layer)}
       key={layer.ol_uid}
+      inResolutionRange={MapUtil.layerInResolutionRange(layer, this.props.map)}
     >
       {childNodes}
     </LayerTreeNode>;
