@@ -63,14 +63,14 @@
     "build": "npm run test:phantom && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
   },
   "peerDependencies": {
-    "react": "15.6.1"
+    "ol": "~4.0",
+    "react": "~15.0"
   },
   "dependencies": {
     "antd": "2.13.3",
     "i18next": "9.0.0",
     "lodash": "4.17.4",
     "loglevel": "1.5.0",
-    "ol": "4.3.3",
     "prop-types": "15.6.0",
     "react-dom": "15.6.1",
     "react-fa": "4.2.0",
