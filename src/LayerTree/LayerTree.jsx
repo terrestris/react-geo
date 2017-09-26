@@ -159,8 +159,8 @@ class LayerTree extends React.Component {
   }
 
   /**
-   * [registerResolutionChangeHandler description]
-   * @return {[type]} [description]
+   * Registers an eventhandler on the `ol.View`, which will rebuild the tree
+   * nodes whenever the view's resolution changes.
    */
   registerResolutionChangeHandler() {
     const mapView = this.props.map.getView();
