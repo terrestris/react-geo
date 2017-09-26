@@ -20,6 +20,8 @@ const layerGroup = new OlLayerGroup({
   layers: [
     new OlLayerTile({
       name: 'Food insecurity layer',
+      minResolution: 200,
+      maxResolution: 2000,
       source: new OlSourceTileJson({
         url: 'https://api.tiles.mapbox.com/v3/mapbox.20110804-hoa-foodinsecurity-3month.json?secure',
         crossOrigin: 'anonymous'
@@ -27,6 +29,8 @@ const layerGroup = new OlLayerGroup({
     }),
     new OlLayerTile({
       name: 'World borders layer',
+      minResolution: 2000,
+      maxResolution: 20000,
       source: new OlSourceTileJson({
         url: 'https://api.tiles.mapbox.com/v3/mapbox.world-borders-light.json?secure',
         crossOrigin: 'anonymous'
@@ -45,7 +49,7 @@ const map = new OlMap({
   ],
   view: new OlView({
     center: olProj.fromLonLat([37.40570, 8.81566]),
-    zoom: 4
+    zoom: 6
   })
 });
 
@@ -56,12 +60,10 @@ const map = new OlMap({
 render(
   <div>
     <div id="map" style={{
-      width: '400px',
-      height: '400px',
-      right: '0px',
-      position: 'absolute'
+      height: '400px'
     }} />
 
+    <span>{'Please note that the layers have resolution restrictions, please zoom in and out to see how the trees react to this.'}</span>
     <div className="example-block">
       <span>{'Configured with \'map.getLayerGroup()\':'}</span>
 
