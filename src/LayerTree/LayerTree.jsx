@@ -286,26 +286,12 @@ class LayerTree extends React.Component {
     treeNode = <LayerTreeNode
       title={this.getTreeNodeTitle(layer)}
       key={layer.ol_uid}
-      inResolutionRange={this.layerInResolutionRange(layer)}
+      inResolutionRange={MapUtil.layerInResolutionRange(layer, this.props.map)}
     >
       {childNodes}
     </LayerTreeNode>;
 
     return treeNode;
-  }
-
-  /**
-   * [layerInResolutionRange description]
-   * @param  {[type]} layer [description]
-   * @return {[type]}       [description]
-   */
-  layerInResolutionRange(layer) {
-    const layerMinRes = Math.max(layer.getMinResolution(), -Infinity);
-    const layerMaxRes = Math.min(layer.getMaxResolution(), Infinity);
-    const mapView = this.props.map.getView();
-    const currentRes = mapView.getResolution();
-    const inResolutionRange = currentRes < layerMaxRes && currentRes >= layerMinRes;
-    return inResolutionRange;
   }
 
   /**
