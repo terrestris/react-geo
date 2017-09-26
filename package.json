@@ -121,7 +121,7 @@
     "metalsmith-markdown": "0.2.1",
     "minami": "1.2.3",
     "mocha": "3.5.3",
-    "react-test-renderer": "15.6.1",
+    "react-test-renderer": "15.6.2",
     "rimraf": "2.6.2",
     "sinon": "3.3.0",
     "style-loader": "0.18.2",
