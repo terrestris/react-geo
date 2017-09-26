@@ -20,7 +20,7 @@ describe('<Panel />', () => {
       className: 'podolski',
       fc: 'koeln'
     });
-    const rnd = wrapper.find('Rnd').nodes[0];
+    const rnd = wrapper.find('Rnd').getElements()[0];
     expect(rnd.props.className).to.contain('podolski');
     expect(rnd.props.fc).to.equal('koeln');
   });

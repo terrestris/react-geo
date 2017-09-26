@@ -38,7 +38,7 @@ describe('<SimpleButton />', () => {
     expect(wrapper.find('span.fa-bath').length).to.equal(1);
     expect(wrapper.find('button.ant-btn-circle').length).to.equal(1);
     expect(wrapper.find('button.ant-btn-sm').length).to.equal(1);
-    expect(wrapper.find({disabled: true}).length).to.equal(1);
+    expect(wrapper.find('button', {disabled: true}).length).to.equal(1);
   });
 
   it('warns if no click callback method is given', () => {
@@ -56,9 +56,7 @@ describe('<SimpleButton />', () => {
     const wrapper = TestUtil.mountComponent(SimpleButton);
     const onClick = sinon.spy();
 
-    wrapper.setProps({
-      onClick: onClick
-    });
+    wrapper.setProps({onClick});
 
     wrapper.find('button').simulate('click');
 
