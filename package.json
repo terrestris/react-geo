@@ -50,7 +50,6 @@
     "clean:dist": "rimraf ./dist/*",
     "pretest": "npm run lint",
     "test": "npm run clean:test && BABEL_ENV=coverage karma start karma.conf.js --single-run -- --max_old_space_size=4096",
-    "test:phantom": "npm run clean:test && BABEL_ENV=coverage karma start karma.conf.js --single-run -- --max_old_space_size=4096",
     "test:watch": "karma start karma.conf.js -- --max_old_space_size=4096",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "lint": "eslint --ext js,html,md example-templates/ examples/ src/",
@@ -60,7 +59,7 @@
     "build:docs": "jsdoc --package ./package.json --readme ./README.md -c .jsdoc",
     "build:js": "webpack --config webpack.development.config.js && webpack -p --config webpack.production.config.js",
     "build:dist": "npm run clean:dist && BABEL_ENV=build babel src --out-dir dist --copy-files --ignore spec.js,example.js,.md",
-    "build": "npm run test:phantom && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
+    "build": "npm run test && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
   },
   "peerDependencies": {
     "ol": "~4.0",
@@ -111,7 +110,6 @@
     "karma-firefox-launcher": "1.0.1",
     "karma-mocha": "1.3.0",
     "karma-mocha-reporter": "2.2.4",
-    "karma-phantomjs-launcher": "1.0.4",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "2.0.4",
     "less": "2.7.2",
