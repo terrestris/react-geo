@@ -18,6 +18,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 require('./LayerTreeNode.less');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -65,10 +69,14 @@ var LayerTreeNode = function (_React$Component) {
   _createClass(LayerTreeNode, [{
     key: 'render',
     value: function render() {
-      var passThroughProps = _objectWithoutProperties(this.props, []);
+      var _props = this.props,
+          inResolutionRange = _props.inResolutionRange,
+          passThroughProps = _objectWithoutProperties(_props, ['inResolutionRange']);
 
+      var addClassName = (inResolutionRange ? 'within' : 'out-off') + '-range';
+      var finalClassname = 'react-geo-layertree-node ' + addClassName;
       return _react2.default.createElement(TreeNode, _extends({
-        className: 'react-geo-layertree-node'
+        className: finalClassname
       }, passThroughProps));
     }
   }]);
@@ -80,7 +88,8 @@ var LayerTreeNode = function (_React$Component) {
 // https://github.com/react-component/tree/blob/master/src/TreeNode.jsx#L328
 
 
-LayerTreeNode.propTypes = {};
+LayerTreeNode.propTypes = {
+  inResolutionRange: _propTypes2.default.boolean };
 LayerTreeNode.isTreeNode = 1;
 
 exports.default = LayerTreeNode;

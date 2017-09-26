@@ -275,13 +275,14 @@ var LayerTree = function (_React$Component) {
           layerGroup: this.props.layerGroup
         }, function () {
           _this2.registerAddRemoveListeners(_this2.state.layerGroup);
+          _this2.registerResolutionChangeHandler();
           _this2.rebuildTreeNodes();
         });
       }
     }
 
     /**
-     * Determines what to do on the initial mount.
+     * Determines what to do when the component is unmounted.
      */
 
   }, {
@@ -338,6 +339,23 @@ var LayerTree = function (_React$Component) {
      * @param {ol.layer.Group} groupLayer A ol.layer.Group
      */
 
+  }, {
+    key: 'registerResolutionChangeHandler',
+
+
+    /**
+     * Registers an eventhandler on the `ol.View`, which will rebuild the tree
+     * nodes whenever the view's resolution changes.
+     */
+    value: function registerResolutionChangeHandler() {
+      var _this5 = this;
+
+      var mapView = this.props.map.getView();
+      var evtKey = mapView.on('change:resolution', function () {
+        _this5.rebuildTreeNodes();
+      });
+      this.olListenerKeys.push(evtKey); // TODO when and how to we unbind?
+    }
 
     /**
      * Listens to the collections add event of a collection.
@@ -398,7 +416,7 @@ var LayerTree = function (_React$Component) {
   }, {
     key: 'treeNodeFromLayer',
     value: function treeNodeFromLayer(layer) {
-      var _this5 = this;
+      var _this6 = this;
 
       var childNodes = void 0;
       var treeNode = void 0;
@@ -410,7 +428,7 @@ var LayerTree = function (_React$Component) {
 
         var childLayers = layer.getLayers().getArray();
         childNodes = childLayers.map(function (childLayer) {
-          return _this5.treeNodeFromLayer(childLayer);
+          return _this6.treeNodeFromLayer(childLayer);
         });
       } else {
         if (!this.hasListener(layer, 'change:visible', this.onLayerChangeVisible)) {
@@ -423,7 +441,8 @@ var LayerTree = function (_React$Component) {
         _LayerTreeNode2.default,
         {
           title: this.getTreeNodeTitle(layer),
-          key: layer.ol_uid
+          key: layer.ol_uid,
+          inResolutionRange: _MapUtil2.default.layerInResolutionRange(layer, this.props.map)
         },
         childNodes
       );

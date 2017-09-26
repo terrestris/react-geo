@@ -381,6 +381,38 @@ var MapUtil = exports.MapUtil = function () {
         return;
       }
     }
+
+    /**
+     * Checks whether the resolution of the passed map's view lies inside of the
+     * min- and max-resolution of the passed layer, e.g. whether the layer should
+     * be displayed at the current map view resolution.
+     *
+     * @param {ol.layer.Layer} layer The layer to check.
+     * @param {ol.Map} map The map to get the view resolution for comparison
+     *     from.
+     * @return {Boolean} Whether the resolution of the passed map's view lies
+     *     inside of the min- and max-resolution of the passed layer, e.g. whether
+     *     the layer should be displayed at the current map view resolution. Will
+     *     be `false` when no `layer` or no `map` is passed or if the view of the
+     *     map is falsy or does not have a resolution (yet).
+     */
+
+  }, {
+    key: 'layerInResolutionRange',
+    value: function layerInResolutionRange(layer, map) {
+      var mapView = map && map.getView();
+      var currentRes = mapView && mapView.getResolution();
+      if (!layer || !mapView || !currentRes) {
+        // It is questionable what we should return in this case, I opted for
+        // false, since we cannot sanely determine a correct answer.
+        return false;
+      }
+      var layerMinRes = layer.getMinResolution(); // default: 0 if unset
+      var layerMaxRes = layer.getMaxResolution(); // default: Infinity if unset
+      // minimum resolution is inclusive, maximum resolution exclusive
+      var within = currentRes >= layerMinRes && currentRes < layerMaxRes;
+      return within;
+    }
   }]);
 
   return MapUtil;
