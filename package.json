@@ -63,8 +63,8 @@
     "build": "npm run test:phantom && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
   },
   "peerDependencies": {
-    "ol": "4.3.3",
-    "react": "15.6.1"
+    "ol": "~4.0",
+    "react": "~15.0"
   },
   "dependencies": {
     "antd": "2.13.3",
