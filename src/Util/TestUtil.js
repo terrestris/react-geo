@@ -1,6 +1,6 @@
+import '../../enzyme.conf.js';
 import React from 'react';
 import { mount } from 'enzyme';
-
 import OlView from 'ol/view';
 import OlMap from 'ol/map';
 import OlSourceVector from 'ol/source/vector';

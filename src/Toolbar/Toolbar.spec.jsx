@@ -57,8 +57,7 @@ describe('<Toolbar /> - CSS-class "vertical-toolbar"', () => {
   it('contains three child elements', () => {
     let rootDivChildren = wrapper.find('div.vertical-toolbar').children();
     expect(rootDivChildren).to.be.ok();
-    expect(rootDivChildren.nodes).to.be.an(Array);
-    expect(rootDivChildren.nodes).to.have.length(3);
+    expect(rootDivChildren.getElements().length).to.eql(3);
   });
 });
 
@@ -85,7 +84,6 @@ describe('<Toolbar /> - CSS-class "horizontal-toolbar"', () => {
   it('contains three child elements', () => {
     let rootDivChildren = wrapper.find('div.horizontal-toolbar').children();
     expect(rootDivChildren).to.be.ok();
-    expect(rootDivChildren.nodes).to.be.an(Array);
-    expect(rootDivChildren.nodes).to.have.length(3);
+    expect(rootDivChildren.getElements()).to.have.length(3);
   });
 });

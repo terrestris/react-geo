@@ -48,15 +48,15 @@ describe('<Legend />', () => {
 
     it('takes the legendGraphic from layer.get("legendUrl") if configured', () => {
       const wrapper = TestUtil.mountComponent(Legend, {layer: layer2});
-      const img = wrapper.children('img').node;
-      expect(img.src).to.eql(layer2.get('legendUrl'));
+      const img = wrapper.find('img').getElement();
+      expect(img.props.src).to.eql(layer2.get('legendUrl'));
     });
 
     it('generates getLegendGraphicUrl if no "legendUrl" configured', () => {
       const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
-      const img = wrapper.children('img').node;
+      const img = wrapper.find('img').getElement();
       const legendUrl = MapUtil.getLegendGraphicUrl(layer1);
-      expect(img.src).to.eql(legendUrl);
+      expect(img.props.src).to.eql(legendUrl);
     });
 
     it('generates getLegendGraphicUrl if no "legendUrl" configured (extraParams)', () => {
@@ -69,15 +69,15 @@ describe('<Legend />', () => {
         layer: layer1,
         extraParams: extraParams
       });
-      const img = wrapper.children('img').node;
+      const img = wrapper.find('img').getElement();
       const legendUrl = MapUtil.getLegendGraphicUrl(layer1, extraParams);
-      expect(img.src).to.eql(legendUrl);
+      expect(img.props.src).to.eql(legendUrl);
     });
 
     it('creates an alt attribute corresponding to layername', () => {
       const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
-      const img = wrapper.children('img').node;
-      expect(img.alt).to.eql(`${layer1.get('name')} legend`);
+      const img = wrapper.find('img').getElement();
+      expect(img.props.alt).to.eql(`${layer1.get('name')} legend`);
     });
 
   });
