@@ -53,10 +53,8 @@ describe('<SimpleButton />', () => {
   });
 
   it('calls a given click callback method onClick', () => {
-    const wrapper = TestUtil.mountComponent(SimpleButton);
     const onClick = sinon.spy();
-
-    wrapper.setProps({onClick});
+    const wrapper = TestUtil.mountComponent(SimpleButton, {onClick});
 
     wrapper.find('button').simulate('click');
 

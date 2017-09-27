@@ -1,9 +1,6 @@
+import '../../enzyme.conf.js';
 import React from 'react';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-15';
-
-Enzyme.configure({ adapter: new Adapter() });
-
+import { mount } from 'enzyme';
 import OlView from 'ol/view';
 import OlMap from 'ol/map';
 import OlSourceVector from 'ol/source/vector';
