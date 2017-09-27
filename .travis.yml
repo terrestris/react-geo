@@ -4,7 +4,7 @@ node_js:
 before_install:
 - npm install -g greenkeeper-lockfile@1
 before_script:
-- npm install --no-save ol react
+- npm install --no-save ol@~4 react@~15
 - greenkeeper-lockfile-update
 script:
 - npm run build
