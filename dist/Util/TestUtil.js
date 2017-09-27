@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.TestUtil = undefined;
 
+require('../../enzyme.conf.js');
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
