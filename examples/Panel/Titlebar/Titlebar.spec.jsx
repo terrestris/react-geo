@@ -1,7 +1,7 @@
 /*eslint-env mocha*/
 import React from 'react';
 import expect from 'expect.js';
-import { shallow } from 'enzyme';
+import TestUtil from '../../Util/TestUtil';
 
 import {
   Titlebar,
@@ -10,41 +10,40 @@ import {
 
 describe('<Titlebar />', () => {
 
-  /**
-   * setup StatusBar component
-   *
-   * @return {Component} mounted mock of StatusBar
-   */
-  const setup = (props) => {
-    const wrapper = shallow(<Titlebar parent={document.body} {...props} />);
-    return wrapper;
-  };
-
   it('is defined', () => {
     expect(Titlebar).not.to.be(undefined);
   });
 
   it('can be rendered', () => {
-    const wrapper = setup();
+    const wrapper = TestUtil.mountComponent(Titlebar, {
+      parent: document.body
+    });
     expect(wrapper).not.to.be(undefined);
   });
 
   it('adds a passed className', () => {
-    const wrapper = setup({className: 'podolski'});
-    expect(wrapper.node.props.className).to.contain('podolski');
+    const wrapper = TestUtil.mountComponent(Titlebar, {
+      parent: document.body,
+      className: 'podolski'
+    });
+    expect(wrapper.instance().props.className).to.contain('podolski');
   });
 
   it('renders the title', () => {
-    const wrapper = setup();
+    const wrapper = TestUtil.mountComponent(Titlebar, {
+      children: 'Testtitle'
+    });
     const title = wrapper.find('span.title');
     expect(title.length).to.equal(1);
   });
 
   it('renders the controls (if set)', () => {
-    const wrapper = setup();
+    const wrapper = TestUtil.mountComponent(Titlebar, {
+      children: 'Testtitle'
+    });
     expect(wrapper.find('span.controls').length).to.equal(0);
-
-    const wrapperWithTools = setup({
+    const wrapperWithTools = TestUtil.mountComponent(Titlebar, {
+      children: 'Testtitle',
       tools: [
         <SimpleButton
           icon="times"

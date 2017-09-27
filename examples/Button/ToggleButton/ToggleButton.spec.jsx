@@ -45,7 +45,7 @@ describe('<ToggleButton />', () => {
     expect(wrapper.find('span.fa-bath').length).to.equal(1);
     expect(wrapper.find('button.ant-btn-circle').length).to.equal(1);
     expect(wrapper.find('button.ant-btn-sm').length).to.equal(1);
-    expect(wrapper.find({disabled: true}).length).to.equal(1);
+    expect(wrapper.find('button', {disabled: true}).length).to.equal(1);
   });
 
   it('sets a pressed class if the pressed state becomes truthy', () => {

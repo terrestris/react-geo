@@ -3,7 +3,7 @@ import expect from 'expect.js';
 import testLogo from '../../UserChip/user.png';
 import TestUtil from '../../Util/TestUtil';
 
-import {FloatingMapLogo} from '../../index';
+import { FloatingMapLogo } from '../../index';
 
 describe('<FloatingMapLogo />', () => {
   let wrapper;
@@ -24,13 +24,13 @@ describe('<FloatingMapLogo />', () => {
   });
 
   it('contains img element with predefined class', () => {
-    let imageElement = wrapper.find('img');
-    expect(imageElement.node.className).to.be(wrapper.instance().className);
+    let imageElement = wrapper.find('img').getElement();
+    expect(imageElement.props.className).to.be(wrapper.instance().className);
   });
 
   it('is not positioned absolutely by default', () => {
-    let imageElement = wrapper.find('img');
-    expect(imageElement.node.className).to.be(wrapper.instance().className);
+    let imageElement = wrapper.find('img').getElement();
+    expect(imageElement.props.className).to.be(wrapper.instance().className);
   });
 
   it('passes style prop', () => {
@@ -43,11 +43,11 @@ describe('<FloatingMapLogo />', () => {
       className: 'peter'
     };
     wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
-    let imageElement = wrapper.find('img');
-    expect(imageElement.node.style.backgroundColor).to.be('yellow');
-    expect(imageElement.node.className).to.contain(wrapper.instance().className);
-    expect(imageElement.node.className).to.contain('peter');
-    expect(imageElement.node.style.position).to.be('inherit');
+    let imageElement = wrapper.find('img').getElement();
+    expect(imageElement.props.style.backgroundColor).to.be('yellow');
+    expect(imageElement.props.className).to.contain(wrapper.instance().className);
+    expect(imageElement.props.className).to.contain('peter');
+    expect(imageElement.props.style.position).to.be('inherit');
   });
 
   it('passes position prop', () => {
@@ -59,19 +59,18 @@ describe('<FloatingMapLogo />', () => {
       }
     };
     wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
-    let imageElement = wrapper.find('img');
-    expect(imageElement.node.className).to.be(wrapper.instance().className);
-    expect(imageElement.node.style.position).to.be('absolute');
-    expect(imageElement.node.style.backgroundColor).to.be('yellow');
+    let imageElement = wrapper.find('img').getElement();
+    expect(imageElement.props.className).to.be(wrapper.instance().className);
+    expect(imageElement.props.style.position).to.be('absolute');
+    expect(imageElement.props.style.backgroundColor).to.be('yellow');
   });
 
   it('delegates image height to child img element', () => {
     const targetHeightNumber = 1909;
     const targetHeight = targetHeightNumber+'px';
     wrapper.setProps({imageHeight: targetHeight});
-    let element = wrapper.find('img');
-
-    expect(element.node.height).to.be(targetHeightNumber);
+    let imageElement = wrapper.find('img').getElement();
+    expect(imageElement.props.height).to.be(targetHeight);
   });
 
 });
