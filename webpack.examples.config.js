@@ -51,7 +51,7 @@ commonConfig.module = {
       options: {
         outputPath: 'resources/',
         name: '[hash].[ext]',
-        publicPath: basePath
+        publicPath: '/react-geo/examples/'
       }
     },
     'image-webpack-loader']
@@ -63,7 +63,7 @@ commonConfig.module = {
       mimetype: 'application/font-woff',
       outputPath: 'resources/',
       name: '[hash].[ext]',
-      publicPath: '/react-geo/' + basePath
+      publicPath: '/react-geo/examples/'
     }
   }, {
     test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -71,7 +71,7 @@ commonConfig.module = {
     options: {
       outputPath: 'resources/',
       name: '[hash].[ext]',
-      publicPath: '/react-geo/' + basePath
+      publicPath: '/react-geo/examples/'
     }
   }]
 };
