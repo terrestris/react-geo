@@ -78,7 +78,7 @@ module.exports = function(config) {
       FirefoxHeadless: {
         base: 'Firefox',
         flags: [ '-headless' ],
-      },
+      }
     },
 
     // start these browsers
