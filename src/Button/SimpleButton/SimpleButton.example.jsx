@@ -32,7 +32,7 @@ render(
     </div>
 
     <div className="example-block">
-      <span>Icon:</span>
+      <span>Using shape config:</span>
 
       {/* A round SimpleButton.*/}
       <SimpleButton

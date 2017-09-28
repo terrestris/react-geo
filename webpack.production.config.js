@@ -14,8 +14,7 @@ commonConfig.plugins = [
     compress: {
       warnings: false,
       pure_getters: true,
-      unsafe: true,
-      unsafe_comps: true,
+      unsafe: false,
       screw_ie8: true
     },
     output: {
