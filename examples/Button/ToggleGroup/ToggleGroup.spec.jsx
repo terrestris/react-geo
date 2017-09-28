@@ -22,9 +22,7 @@ describe('<ToggleGroup />', () => {
   });
 
   it('renders it\'s children horizontally or vertically', () => {
-    const wrapper = TestUtil.mountComponent(ToggleGroup);
-
-    wrapper.setProps({
+    const wrapper = TestUtil.mountComponent(ToggleGroup, {
       orientation: 'vertical'
     });
 
