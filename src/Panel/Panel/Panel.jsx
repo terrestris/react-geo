@@ -314,7 +314,7 @@ export class Panel extends React.Component {
             ? this.state.titleBarHeight
             : this.state.height
         }}
-        dragHandlerClassName=".drag-handle"
+        dragHandleClassName=".drag-handle"
         disableDragging={disableDragging}
         enableResizing={enableResizing}
         resizeHandleClasses={{
