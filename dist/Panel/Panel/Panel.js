@@ -268,7 +268,7 @@ var Panel = exports.Panel = function (_React$Component) {
             width: rndOpts.width || 160,
             height: this.state.collapsed ? this.state.titleBarHeight : this.state.height
           },
-          dragHandlerClassName: '.drag-handle',
+          dragHandleClassName: '.drag-handle',
           disableDragging: disableDragging,
           enableResizing: enableResizing,
           resizeHandleClasses: {

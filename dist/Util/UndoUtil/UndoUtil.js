@@ -41,7 +41,7 @@ var UndoUtil = exports.UndoUtil = function () {
               k = _step$value[0],
               v = _step$value[1];
 
-          if (k && v.past && v.past.length > 0) {
+          if (k && v && v.past && v.past.length > 0) {
             return true;
           }
         }
@@ -83,7 +83,7 @@ var UndoUtil = exports.UndoUtil = function () {
               k = _step2$value[0],
               v = _step2$value[1];
 
-          if (k && v.future && v.future.length > 0) {
+          if (k && v && v.future && v.future.length > 0) {
             return true;
           }
         }

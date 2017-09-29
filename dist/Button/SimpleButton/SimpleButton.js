@@ -139,7 +139,7 @@ var SimpleButton = function (_React$Component) {
             name: icon,
             className: fontIcon,
             style: {
-              display: icon ? 'inherit' : 'none'
+              display: icon || fontIcon ? 'inherit' : 'none'
             }
           }),
           antBtnProps.children
