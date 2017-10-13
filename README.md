@@ -5,6 +5,7 @@
 [![dependencies Status](https://david-dm.org/terrestris/react-geo/status.svg)](https://david-dm.org/terrestris/react-geo)
 [![devDependencies Status](https://david-dm.org/terrestris/react-geo/dev-status.svg)](https://david-dm.org/terrestris/react-geo?type=dev)
 [![Greenkeeper badge](https://badges.greenkeeper.io/terrestris/react-geo.svg)](https://greenkeeper.io/)
+[![Known Vulnerabilities](https://snyk.io/test/github/terrestris/react-geo/badge.svg)](https://snyk.io/test/github/terrestris/react-geo)
 [![license: 2-Clause BSD](https://img.shields.io/badge/license-2--Clause%20BSD-brightgreen.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
 A set of geo related modules. To use in combination with [react](https://github.com/facebook/react), [antd](https://github.com/ant-design/ant-design) and [ol](https://github.com/openlayers/openlayers).
