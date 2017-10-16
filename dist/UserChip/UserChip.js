@@ -4,19 +4,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _style3 = require('antd/lib/dropdown/style');
-
 var _dropdown = require('antd/lib/dropdown');
 
 var _dropdown2 = _interopRequireDefault(_dropdown);
-
-var _style4 = require('antd/lib/avatar/style');
 
 var _avatar = require('antd/lib/avatar');
 
 var _avatar2 = _interopRequireDefault(_avatar);
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+require('antd/lib/dropdown/style');
+
+require('antd/lib/avatar/style');
 
 var _react = require('react');
 
