@@ -212,16 +212,16 @@ var LayerTree = function (_React$Component) {
 
       dragCollection.remove(dragLayer);
 
-      var info = _MapUtil2.default.getLayerPositionInfo(dropLayer, _this.props.map);
-      var dropPosition = info.position;
-      var dropCollection = info.groupLayer.getLayers();
+      var dropInfo = _MapUtil2.default.getLayerPositionInfo(dropLayer, _this.props.map);
+      var dropPosition = dropInfo.position;
+      var dropCollection = dropInfo.groupLayer.getLayers();
 
       // drop before node
       if (location === -1) {
-        if (dropPosition === 0) {
-          dropCollection.insertAt(0, dragLayer);
+        if (dropPosition === dropCollection.getLength() - 1) {
+          dropCollection.push(dragLayer);
         } else {
-          dropCollection.insertAt(dropPosition, dragLayer);
+          dropCollection.insertAt(dropPosition + 1, dragLayer);
         }
         // drop on node
       } else if (location === 0) {
@@ -232,7 +232,7 @@ var LayerTree = function (_React$Component) {
         }
         // drop after node
       } else if (location === 1) {
-        dropCollection.insertAt(dropPosition + 1, dragLayer);
+        dropCollection.insertAt(dropPosition, dragLayer);
       }
 
       _this.rebuildTreeNodes();
@@ -330,6 +330,7 @@ var LayerTree = function (_React$Component) {
       var treeNodes = layerArray.map(function (layer) {
         return _this4.treeNodeFromLayer(layer);
       });
+      treeNodes.reverse();
       this.setState({ treeNodes: treeNodes });
     }
 
@@ -425,11 +426,11 @@ var LayerTree = function (_React$Component) {
         if (!layer.getVisible()) {
           _Logger2.default.warn('Your map configuration contains layerGroups that are' + 'invisible. This might lead to buggy behaviour.');
         }
-
         var childLayers = layer.getLayers().getArray();
         childNodes = childLayers.map(function (childLayer) {
           return _this6.treeNodeFromLayer(childLayer);
         });
+        childNodes.reverse();
       } else {
         if (!this.hasListener(layer, 'change:visible', this.onLayerChangeVisible)) {
           var eventKey = layer.on('change:visible', this.onLayerChangeVisible);
