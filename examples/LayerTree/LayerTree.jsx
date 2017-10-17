@@ -136,6 +136,7 @@ class LayerTree extends React.Component {
     const treeNodes = layerArray.map((layer) => {
       return this.treeNodeFromLayer(layer);
     });
+    treeNodes.reverse();
     this.setState({treeNodes});
   }
 
@@ -270,17 +271,16 @@ class LayerTree extends React.Component {
         Logger.warn('Your map configuration contains layerGroups that are' +
         'invisible. This might lead to buggy behaviour.');
       }
-
       const childLayers = layer.getLayers().getArray();
       childNodes = childLayers.map((childLayer) => {
         return this.treeNodeFromLayer(childLayer);
       });
+      childNodes.reverse();
     } else {
       if (!this.hasListener(layer, 'change:visible', this.onLayerChangeVisible)) {
         const eventKey = layer.on('change:visible', this.onLayerChangeVisible);
         this.olListenerKeys.push(eventKey);
       }
-
     }
 
     treeNode = <LayerTreeNode
@@ -388,16 +388,16 @@ class LayerTree extends React.Component {
 
     dragCollection.remove(dragLayer);
 
-    const info = MapUtil.getLayerPositionInfo(dropLayer, this.props.map);
-    const dropPosition = info.position;
-    const dropCollection = info.groupLayer.getLayers();
+    const dropInfo = MapUtil.getLayerPositionInfo(dropLayer, this.props.map);
+    const dropPosition = dropInfo.position;
+    const dropCollection = dropInfo.groupLayer.getLayers();
 
     // drop before node
     if (location === -1) {
-      if (dropPosition === 0) {
-        dropCollection.insertAt(0, dragLayer);
+      if (dropPosition === dropCollection.getLength() - 1) {
+        dropCollection.push(dragLayer);
       } else {
-        dropCollection.insertAt(dropPosition, dragLayer);
+        dropCollection.insertAt(dropPosition + 1, dragLayer);
       }
     // drop on node
     } else if (location === 0) {
@@ -408,7 +408,7 @@ class LayerTree extends React.Component {
       }
     // drop after node
     } else if (location === 1) {
-      dropCollection.insertAt(dropPosition + 1, dragLayer);
+      dropCollection.insertAt(dropPosition, dragLayer);
     }
 
     this.rebuildTreeNodes();
