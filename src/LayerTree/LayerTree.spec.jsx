@@ -134,7 +134,8 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('LayerTreeNode');
       treeNodes.forEach((node, index) => {
-        const layer = layerGroup.getLayers().item(index);
+        const reverseIndex = treeNodes.length - (index+1);
+        const layer = layerGroup.getLayers().item(reverseIndex);
         expect(node.props().title).to.eql(layer.get('name'));
       });
     });
@@ -159,7 +160,8 @@ describe('<LayerTree />', () => {
       const treeNodes = wrapper.find('LayerTreeNode');
 
       treeNodes.forEach((node, index) => {
-        const layer = layerGroup.getLayers().item(index);
+        const reverseIndex = treeNodes.length - (index+1);
+        const layer = layerGroup.getLayers().item(reverseIndex);
         expect(node.find('span.span-1').length).to.equal(1);
         expect(node.find('span.sub-span-1').length).to.equal(1);
         expect(node.find('span.sub-span-1').props().children).to.equal(layer.get('name'));
@@ -176,7 +178,8 @@ describe('<LayerTree />', () => {
       const treeNodes = wrapper.find('LayerTreeNode');
 
       treeNodes.forEach((node, index) => {
-        const layer = layerGroup.getLayers().item(index);
+        const reverseIndex = treeNodes.length - (index+1);
+        const layer = layerGroup.getLayers().item(reverseIndex);
         expect(node.props().eventKey).to.have.eql(layer.ol_uid);
       });
     });
@@ -190,7 +193,8 @@ describe('<LayerTree />', () => {
       const treeNodes = wrapper.find('LayerTreeNode');
 
       treeNodes.forEach((node, index) => {
-        const layer = layerGroup.getLayers().item(index);
+        const reverseIndex = treeNodes.length - (index+1);
+        const layer = layerGroup.getLayers().item(reverseIndex);
         expect(layer.getVisible()).to.eql(node.props().checked);
       });
     });
