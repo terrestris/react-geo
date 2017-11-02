@@ -75,7 +75,7 @@
     "react-fa": "5.0.0",
     "react-i18next": "6.0.6",
     "react-rnd": "7.1.5",
-    "url-parse": "1.1.9"
+    "url-parse": "1.2.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
