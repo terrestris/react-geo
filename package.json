@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "antd": "2.13.7",
-    "i18next": "10.0.3",
+    "i18next": "10.0.4",
     "lodash": "4.17.4",
     "loglevel": "1.5.1",
     "prop-types": "15.6.0",
@@ -93,7 +93,7 @@
     "css-loader": "0.28.7",
     "enzyme-adapter-react-16": "1.0.3",
     "enzyme": "3.1.1",
-    "eslint": "4.9.0",
+    "eslint": "4.10.0",
     "eslint-plugin-html": "4.0.0-alpha.1",
     "eslint-plugin-markdown": "1.0.0-beta.7",
     "eslint-plugin-react": "7.4.0",
