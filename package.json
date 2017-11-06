@@ -1,5 +1,5 @@
 {
-  "name": "react-geo",
+  "name": "@terrestris/react-geo",
   "version": "0.1.1",
   "description": "A set of geo related modules. To use in combination with react, antd and ol.",
   "license": "BSD-2-Clause",
