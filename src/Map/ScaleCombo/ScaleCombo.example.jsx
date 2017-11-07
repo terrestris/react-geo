@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 import {
   MapUtil,
   ScaleCombo
-} from '../../index.js'; //@react-geo@
+} from '../../index.js';
 
 let scaleCombo;
 
