@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import {
   ToggleGroup,
   ToggleButton
-} from '../../index.js'; //@react-geo@
+} from '../../index.js';
 
 render(
   <div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Button } from 'antd';
-import { isVisibleComponent } from '../../index.js'; //@react-geo@
+import { isVisibleComponent } from '../../index.js';
 
 // Enhance (any) Component by wrapping it using isVisibleComponent().
 const VisibleButton = isVisibleComponent(Button);

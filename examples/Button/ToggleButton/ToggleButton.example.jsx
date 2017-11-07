@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { ToggleButton } from '../../index.js'; //@react-geo@
+import { ToggleButton } from '../../index.js';
 
 render(
   <div>

@@ -7,7 +7,7 @@ import OlLayerTile from 'ol/layer/tile';
 import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
 
-import { LayerTransparencySlider } from '../index.js'; //@react-geo@
+import { LayerTransparencySlider } from '../index.js';
 
 //
 // ***************************** SETUP *****************************************
