@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { NominatimSearch } from '../../index.js'; //@react-geo@
+import { NominatimSearch } from '../../index.js';
 
 import OlMap from 'ol/map';
 import OlView from 'ol/view';

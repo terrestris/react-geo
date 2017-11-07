@@ -10,15 +10,15 @@ var destDir = path.join(__dirname, '..', 'build', 'examples');
 var tplDir = path.join(__dirname, '..', 'example-templates');
 
 /**
- * Fixes the import string in the example source to use 'react-geo' instead of
- * the path.
+ * Fixes the import string in the example source to use '@terrestris/react-geo'
+ * instead of the path.
  *
  * @param {String} jsSource The source of the example.
  * @return {String} The fixed path.
  */
 function fixImports(jsSource) {
-  var re = /(import .* from)(.*@react-geo@)/g;
-  return jsSource.replace(re, '$1 \'react-geo\';');
+  var re = /from '(\.\.\/|\.\/)*index\.js'/g;
+  return jsSource.replace(re, 'from \'@terrestris/react-geo\'');
 }
 
 /**

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { SimpleButton } from '../../index.js'; //@react-geo@
+import { SimpleButton } from '../../index.js';
 
 render(
   <div>
