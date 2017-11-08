@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import OlMap from 'ol/map';
 
-import Logger from '../../index.js';
+import { Logger } from '../../index';
 
 /**
  * The HOC factory function.
@@ -83,8 +83,8 @@ export function mappify(WrappedComponent, {
       } = this.context;
 
       if (!map) {
-        Logger.warn(`You trying to mappify a component without any map in the
-          context. Did you implement the MapProvider?`);
+        Logger.warn('You trying to mappify a component without any map in the ' +
+        'context. Did you implement the MapProvider?');
       }
 
       return (
