@@ -15,7 +15,7 @@ export class MapComponent extends React.Component {
    * @type {Object}
    */
   static propTypes = {
-    map: PropTypes.instanceOf(OlMap)
+    map: PropTypes.instanceOf(OlMap).isRequired
   }
 
   /**
