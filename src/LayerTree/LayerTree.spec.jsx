@@ -91,40 +91,39 @@ describe('<LayerTree />', () => {
 
   describe('<LayerTreeNode> creation', () => {
 
-    // it('adds a <LayerTreeNode> for every child', () => {
-    //   const props = {
-    //     layerGroup,
-    //     map
-    //   };
-    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
-    //   const treeNodes = wrapper.find('LayerTreeNode');
-    //   expect(treeNodes).to.have.length(layerGroup.getLayers().getLength());
-    // });
+    it('adds a <LayerTreeNode> for every child', () => {
+      const props = {
+        layerGroup,
+        map
+      };
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
+      const treeNodes = wrapper.find('LayerTreeNode');
+      expect(treeNodes).to.have.length(layerGroup.getLayers().getLength());
+    });
 
-    // // TODO This test could be better if the TreeNodes where iterable, but they
-    // // are not. See comment below.
-    // it('can handle nested `ol.layer.group`s', () => {
-    //   const props = {
-    //     layerGroup,
-    //     map
-    //   };
-    //   const subLayer = new OlLayerTile({
-    //     name: 'subLayer',
-    //     source: new OlSourceTileWMS()
-    //   });
-    //   const nestedLayerGroup = new OlLayerGroup({
-    //     name: 'nestedLayerGroup',
-    //     layers: [subLayer]
-    //   });
-    //   layerGroup.getLayers().push(nestedLayerGroup);
-    //
-    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
-    //   const treeNodes = wrapper.find('LayerTreeNode');
-    //
-    //   // It is not an instanceof TreeNode see: https://github.com/ant-design/ant-design/issues/4688
-    //   const subNode = treeNodes.getElements()[2].props.children[0];
-    //   expect(subNode.props.title).to.eql(subLayer.get('name'));
-    // });
+    // TODO This test could be better if the TreeNodes where iterable, but they
+    // are not. See comment below.
+    it('can handle nested `ol.layer.group`s', () => {
+      const props = {
+        layerGroup,
+        map
+      };
+      const subLayer = new OlLayerTile({
+        name: 'subLayer',
+        source: new OlSourceTileWMS()
+      });
+      const nestedLayerGroup = new OlLayerGroup({
+        name: 'nestedLayerGroup',
+        layers: [subLayer]
+      });
+      layerGroup.getLayers().push(nestedLayerGroup);
+
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
+      const treeNodes = wrapper.find('LayerTreeNode');
+      const groupNode = treeNodes.at(0);
+      const subNode = groupNode.props().children[0];
+      expect(subNode.props.title).to.eql(subLayer.get('name'));
+    });
 
     it('sets the layer name as title per default', () => {
       const props = {
@@ -235,46 +234,46 @@ describe('<LayerTree />', () => {
   });
 
   describe('#onCheck', () => {
+    it('sets the correct visibility to the layer from the checked state', () => {
+      const props = {
+        layerGroup,
+        map
+      };
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
+      const treeNodes = wrapper.find('LayerTreeNode');
 
-    // it('sets the correct visibility to the layer from the checked state', () => {
-    //   const props = {
-    //     layerGroup,
-    //     map
-    //   };
-    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
-    //   const treeNodes = wrapper.find('LayerTreeNode');
-    //
-    //   treeNodes.forEach((node, index) => {
-    //     const layer = layerGroup.getLayers().item(index);
-    //     const checkBox = node.find('.ant-tree-checkbox');
-    //     const wasChecked = node.props().checked;
-    //     const wasVisible = layer.getVisible();
-    //     checkBox.simulate('click');
-    //
-    //     expect(wasVisible).to.eql(!layer.getVisible());
-    //     expect(wasChecked).to.eql(!node.props().checked);
-    //   });
-    // });
+
+      treeNodes.forEach((node, index) => {
+        const reverseIndex = treeNodes.length - (index + 1);
+        const layer = layerGroup.getLayers().item(reverseIndex);
+        const checkBox = node.find('.ant-tree-checkbox');
+        const wasVisible = layer.getVisible();
+        checkBox.simulate('click');
+        expect(wasVisible).to.eql(!layer.getVisible());
+      });
+    });
   });
 
   describe('event handling', () => {
 
-    // it('sets checked state corresponding to layer.setVisible', () => {
-    //   const props = {
-    //     layerGroup,
-    //     map
-    //   };
-    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
-    //   const treeNode = wrapper.childAt(0).node;
-    //
-    //   expect(treeNode.props.checked).to.be(true);
-    //   layer1.setVisible(false);
-    //   wrapper.update();
-    //   expect(treeNode.props.checked).to.be(false);
-    //   layer1.setVisible(true);
-    //   wrapper.update();
-    //   expect(treeNode.props.checked).to.be(true);
-    // });
+    it('sets checked state corresponding to layer.setVisible', () => {
+      const props = {
+        layerGroup,
+        map
+      };
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
+      let treeNode = wrapper.find('LayerTreeNode').at(1);
+
+      expect(treeNode.props().checked).to.be(true);
+      layer1.setVisible(false);
+      wrapper.update();
+      treeNode = wrapper.find('LayerTreeNode').at(1);
+      expect(treeNode.props().checked).to.be(false);
+      layer1.setVisible(true);
+      wrapper.update();
+      treeNode = wrapper.find('LayerTreeNode').at(1);
+      expect(treeNode.props().checked).to.be(true);
+    });
 
     it('triggers tree rebuild on layer add', () => {
       const props = {
