@@ -24,6 +24,10 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _lodash = require('lodash');
 
+var _map = require('ol/map');
+
+var _map2 = _interopRequireDefault(_map);
+
 var _base = require('ol/layer/base');
 
 var _base2 = _interopRequireDefault(_base);
@@ -327,6 +331,9 @@ var LayerTree = function (_React$Component) {
       var _this4 = this;
 
       var layerArray = groupLayer.getLayers().getArray();
+      if (this.props.filterFunction) {
+        layerArray = layerArray.filter(this.props.filterFunction);
+      }
       var treeNodes = layerArray.map(function (layer) {
         return _this4.treeNodeFromLayer(layer);
       });
@@ -427,6 +434,9 @@ var LayerTree = function (_React$Component) {
           _Logger2.default.warn('Your map configuration contains layerGroups that are' + 'invisible. This might lead to buggy behaviour.');
         }
         var childLayers = layer.getLayers().getArray();
+        if (this.props.filterFunction) {
+          childLayers = childLayers.filter(this.props.filterFunction);
+        }
         childNodes = childLayers.map(function (childLayer) {
           return _this6.treeNodeFromLayer(childLayer);
         });
@@ -551,9 +561,9 @@ LayerTree.propTypes = {
    */
   className: _propTypes2.default.string,
 
-  layerGroup: _propTypes2.default.instanceOf(_group2.default),
+  layerGroup: _propTypes2.default.instanceOf(_group2.default).isRequired,
 
-  map: _propTypes2.default.object,
+  map: _propTypes2.default.instanceOf(_map2.default).isRequired,
 
   /**
    * A function that can be used to pass a custom node title. It can return
@@ -561,7 +571,18 @@ LayerTree.propTypes = {
    * the layer instance of the current tree node.
    * @type {Function}
    */
-  nodeTitleRenderer: _propTypes2.default.func };
+  nodeTitleRenderer: _propTypes2.default.func,
+
+  /**
+   * An optional array-filter function that is applied to every layer and
+   * subLayer. Return false to exclude this layer from the layerTree or true
+   * to include it.
+   *
+   * Compare MDN Docs for Array.prototype.filter: https://mdn.io/array/filter
+   *
+   * @type {Function}
+   */
+  filterFunction: _propTypes2.default.func };
 LayerTree.defaultProps = {
   draggable: true,
   checkable: true };
