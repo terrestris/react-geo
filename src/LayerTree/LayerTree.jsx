@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isEqual, isBoolean, isFunction } from 'lodash';
 import { Tree } from 'antd';
+import OlMap from 'ol/map';
 import OlLayerBase from 'ol/layer/base';
 import OlLayerGroup from 'ol/layer/group';
 import olObservable from 'ol/observable';
@@ -47,9 +48,9 @@ class LayerTree extends React.Component {
      */
     className: PropTypes.string,
 
-    layerGroup: PropTypes.instanceOf(OlLayerGroup),
+    layerGroup: PropTypes.instanceOf(OlLayerGroup).isRequired,
 
-    map: PropTypes.object,
+    map: PropTypes.instanceOf(OlMap).isRequired,
 
     /**
      * A function that can be used to pass a custom node title. It can return
@@ -57,7 +58,18 @@ class LayerTree extends React.Component {
      * the layer instance of the current tree node.
      * @type {Function}
      */
-    nodeTitleRenderer: PropTypes.func
+    nodeTitleRenderer: PropTypes.func,
+
+    /**
+     * An optional array-filter function that is applied to every layer and
+     * subLayer. Return false to exclude this layer from the layerTree or true
+     * to include it.
+     *
+     * Compare MDN Docs for Array.prototype.filter: https://mdn.io/array/filter
+     *
+     * @type {Function}
+     */
+    filterFunction: PropTypes.func
   }
 
   /**
@@ -132,7 +144,10 @@ class LayerTree extends React.Component {
    * @param {ol.layer.Group} groupLayer A grouplayer.
    */
   treeNodesFromLayerGroup(groupLayer) {
-    const layerArray = groupLayer.getLayers().getArray();
+    let layerArray = groupLayer.getLayers().getArray();
+    if (this.props.filterFunction) {
+      layerArray = layerArray.filter(this.props.filterFunction);
+    }
     const treeNodes = layerArray.map((layer) => {
       return this.treeNodeFromLayer(layer);
     });
@@ -271,7 +286,10 @@ class LayerTree extends React.Component {
         Logger.warn('Your map configuration contains layerGroups that are' +
         'invisible. This might lead to buggy behaviour.');
       }
-      const childLayers = layer.getLayers().getArray();
+      let childLayers = layer.getLayers().getArray();
+      if (this.props.filterFunction) {
+        childLayers = childLayers.filter(this.props.filterFunction);
+      }
       childNodes = childLayers.map((childLayer) => {
         return this.treeNodeFromLayer(childLayer);
       });

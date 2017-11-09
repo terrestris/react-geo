@@ -81,7 +81,16 @@ render(
         layerGroup={layerGroup}
         map={map}
       />
+    </div>
 
+    <div className="example-block">
+      <span>{'A LayerTree with a filterFunction:'}</span>
+
+      <LayerTree
+        layerGroup={map.getLayerGroup()}
+        map={map}
+        filterFunction={(layer) => layer.get('name') != 'OSM'}
+      />
     </div>
 
   </div>,
