@@ -5,7 +5,7 @@ import OlMap from 'ol/map';
 /**
  * Class representating a map.
  *
- * @class The Map.
+ * @class The MapComponent.
  * @extends React.Component
  */
 export class MapComponent extends React.Component {
@@ -15,6 +15,7 @@ export class MapComponent extends React.Component {
    * @type {Object}
    */
   static propTypes = {
+    children: PropTypes.node,
     map: PropTypes.instanceOf(OlMap).isRequired,
     mapDivId: PropTypes.string
   }
@@ -42,7 +43,7 @@ export class MapComponent extends React.Component {
    * @method componentDidMount
    */
   componentDidMount() {
-    this.props.map.setTarget('map');
+    this.props.map.setTarget(this.props.mapDivId);
   }
 
   /**
@@ -54,6 +55,7 @@ export class MapComponent extends React.Component {
     const {
       map,
       mapDivId,
+      children,
       ...passThroughProps
     } = this.props;
 
@@ -62,7 +64,9 @@ export class MapComponent extends React.Component {
         className="map"
         id={mapDivId}
         {...passThroughProps}
-      />;
+      >
+        {children}
+      </div>;
     }
 
     return (

@@ -50,7 +50,7 @@ export function mappify(WrappedComponent, {
     /**
      * Returns the wrapped instance. Only applicable if withRef is set to true.
      *
-     * @return {Element} The wrappend instance.
+     * @return {Element} The wrapped instance.
      */
     getWrappedInstance = () => {
       if (withRef) {
