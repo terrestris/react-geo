@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.NominatimSearch = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
+exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.NominatimSearch = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -32,6 +32,10 @@ var _Legend2 = _interopRequireDefault(_Legend);
 var _FloatingMapLogo = require('./Map/FloatingMapLogo/FloatingMapLogo.js');
 
 var _FloatingMapLogo2 = _interopRequireDefault(_FloatingMapLogo);
+
+var _MapComponent = require('./Map/MapComponent/MapComponent.js');
+
+var _MapComponent2 = _interopRequireDefault(_MapComponent);
 
 var _ScaleCombo = require('./Map/ScaleCombo/ScaleCombo.js');
 
@@ -93,7 +97,13 @@ var _UrlUtil = require('./Util/UrlUtil/UrlUtil');
 
 var _UrlUtil2 = _interopRequireDefault(_UrlUtil);
 
+var _MapProvider = require('./HigherOrderComponent/MapProvider/MapProvider.js');
+
+var _MapProvider2 = _interopRequireDefault(_MapProvider);
+
 var _VisibleComponent = require('./HigherOrderComponent/VisibleComponent/VisibleComponent.js');
+
+var _MappifiedComponent = require('./HigherOrderComponent/MappifiedComponent/MappifiedComponent.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -119,4 +129,7 @@ exports.ObjectUtil = _ObjectUtil2.default;
 exports.StringUtil = _StringUtil2.default;
 exports.UndoUtil = _UndoUtil2.default;
 exports.UrlUtil = _UrlUtil2.default;
+exports.MapProvider = _MapProvider2.default;
+exports.MapComponent = _MapComponent2.default;
+exports.mappify = _MappifiedComponent.mappify;
 exports.isVisibleComponent = _VisibleComponent.isVisibleComponent;
