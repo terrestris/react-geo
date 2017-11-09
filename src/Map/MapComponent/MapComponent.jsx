@@ -15,7 +15,16 @@ export class MapComponent extends React.Component {
    * @type {Object}
    */
   static propTypes = {
-    map: PropTypes.instanceOf(OlMap).isRequired
+    map: PropTypes.instanceOf(OlMap).isRequired,
+    mapDivId: PropTypes.string
+  }
+
+  /**
+   * The default properties.
+   * @type {Object}
+   */
+  static defaultProps = {
+    mapDivId: 'map'
   }
 
   /**
@@ -44,11 +53,16 @@ export class MapComponent extends React.Component {
 
     const {
       map,
+      mapDivId,
       ...passThroughProps
     } = this.props;
 
     if (map) {
-      mapDiv = <div className="map" id="map" {...passThroughProps} />;
+      mapDiv = <div
+        className="map"
+        id={mapDivId}
+        {...passThroughProps}
+      />;
     }
 
     return (

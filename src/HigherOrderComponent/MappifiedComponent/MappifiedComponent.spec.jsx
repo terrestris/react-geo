@@ -56,6 +56,7 @@ describe('mappify', () => {
       expect(loggerSpy.calledOnce).to.be.ok();
       expect(loggerSpy.calledWith('You trying to mappify a component without any map in the '+
       'context. Did you implement the MapProvider?')).to.be.ok();
+      loggerSpy.restore();
     });
 
     it('passes through all props', () => {

@@ -15,7 +15,7 @@ class MapProvider extends React.Component {
    */
   static propTypes = {
     /**
-     * The children of this group. Typically a set of `ToggleButton`s.
+     * The children of the MapProvider.
      * @type {Object}
      */
     children: PropTypes.node,
@@ -28,7 +28,7 @@ class MapProvider extends React.Component {
      */
     map: PropTypes.oneOfType([
       PropTypes.instanceOf(OlMap),
-      PropTypes.func
+      PropTypes.instanceOf(Promise)
     ])
   }
 
@@ -60,7 +60,7 @@ class MapProvider extends React.Component {
         ready: true
       });
     } else {
-      props.map().then((map) => {
+      props.map.then((map) => {
         this.setState({
           map: map,
           ready: true

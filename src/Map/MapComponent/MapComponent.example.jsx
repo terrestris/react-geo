@@ -17,27 +17,25 @@ import {
  *
  * @return {Promise} Promise that resolves an OlMap.
  */
-const mapPromise = function() {
+const mapPromise = new Promise((resolve) => {
   const layer = new OlLayerTile({
     source: new OlSourceOsm()
   });
 
-  return new Promise((resolve) => {
-    const map = new OlMap({
-      view: new OlView({
-        center: [
-          135.1691495,
-          34.6565482
-        ],
-        projection: 'EPSG:4326',
-        zoom: 16,
-      }),
-      layers: [layer]
-    });
-
-    resolve(map);
+  const map = new OlMap({
+    view: new OlView({
+      center: [
+        135.1691495,
+        34.6565482
+      ],
+      projection: 'EPSG:4326',
+      zoom: 16,
+    }),
+    layers: [layer]
   });
-};
+
+  resolve(map);
+});
 
 const Map = mappify(MapComponent);
 const Search = mappify(NominatimSearch);

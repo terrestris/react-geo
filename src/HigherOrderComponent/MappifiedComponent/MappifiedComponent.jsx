@@ -7,9 +7,7 @@ import { Logger } from '../../index';
 /**
  * The HOC factory function.
  *
- * Wrapped components will be checked against the activeModules array of
- * the state: If the wrapped component (identified by it's name) is included
- * in the state, it will be rendered, if not, it wont.
+ * Wrapped components will receive the map from the context as a prop.
  *
  * @param {Component} WrappedComponent The component to wrap and enhance.
  * @return {Component} The wrapped component.
@@ -21,7 +19,7 @@ export function mappify(WrappedComponent, {
   /**
    * The wrapper class for the given component.
    *
-   * @class The VisibleComponent
+   * @class The MappifiedComponent
    * @extends React.Component
    */
   class MappifiedComponent extends React.Component {
