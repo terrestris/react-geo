@@ -22,14 +22,14 @@ class MapProvider extends React.Component {
 
     /**
      * The map can be either an OlMap or a Promise that resolves with an OlMap
-     * if your map is created asynchronusly.
+     * if your map is created asynchronously.
      *
      * @type {ol.Map|Promise}
      */
     map: PropTypes.oneOfType([
       PropTypes.instanceOf(OlMap),
       PropTypes.instanceOf(Promise)
-    ])
+    ]).isRequired
   }
 
   /**
