@@ -5,6 +5,7 @@ import LayerTree from './LayerTree/LayerTree.jsx';
 import LayerTreeNode from './LayerTreeNode/LayerTreeNode.jsx';
 import Legend from './Legend/Legend.jsx';
 import FloatingMapLogo from './Map/FloatingMapLogo/FloatingMapLogo.jsx';
+import MapComponent from './Map/MapComponent/MapComponent.jsx';
 import ScaleCombo from './Map/ScaleCombo/ScaleCombo.jsx';
 import Panel from './Panel/Panel/Panel.jsx';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
@@ -21,7 +22,10 @@ import ObjectUtil from './Util/ObjectUtil/ObjectUtil';
 import StringUtil from './Util/StringUtil/StringUtil';
 import UndoUtil from './Util/UndoUtil/UndoUtil';
 import UrlUtil from './Util/UrlUtil/UrlUtil';
+
+import MapProvider from './HigherOrderComponent/MapProvider/MapProvider.jsx';
 import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/VisibleComponent.jsx';
+import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent.jsx';
 
 export {
   SimpleButton,
@@ -46,5 +50,8 @@ export {
   StringUtil,
   UndoUtil,
   UrlUtil,
+  MapProvider,
+  MapComponent,
+  mappify,
   isVisibleComponent
 };

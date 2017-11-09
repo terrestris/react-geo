@@ -15,7 +15,7 @@ describe('<Panel />', () => {
     expect(wrapper).not.to.be(undefined);
   });
 
-  it('passed props are added to Rnd', () => {
+  it('passes props to Rnd', () => {
     const wrapper = TestUtil.mountComponent(Panel, {
       className: 'podolski',
       fc: 'koeln'
