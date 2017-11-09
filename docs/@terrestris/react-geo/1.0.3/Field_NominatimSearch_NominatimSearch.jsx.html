@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Field/NominatimSearch/NominatimSearch.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Field/NominatimSearch/NominatimSearch.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import PropTypes from 'prop-types';
+import {
+  AutoComplete,
+} from 'antd';
+const Option = AutoComplete.Option;
+
+import Logger from '../../Util/Logger';
+import UrlUtil from '../../Util/UrlUtil/UrlUtil';
+import olProj from 'ol/proj';
+
+/**
+ * The NominatimSearch.
+ *
+ * @class NominatimSearch
+ * @extends React.Component
+ */
+export class NominatimSearch extends React.Component {
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-nominatimsearch'
+
+  static propTypes = {
+    className: PropTypes.string,
+    /**
+     * The Nominatim Base URL. See http://wiki.openstreetmap.org/wiki/Nominatim
+     * @type {String}
+     */
+    nominatimBaseUrl: PropTypes.string,
+    /**
+     * Output format.
+     * @type {String}
+     */
+    format: PropTypes.string,
+    /**
+     * The preferred area to find search results in &lt;left>,&lt;top>,&lt;right>,&lt;bottom>.
+     * @type {String}
+     */
+    viewbox: PropTypes.string,
+    /**
+     * Restrict the results to only items contained with the bounding box.
+     * Restricting the results to the bounding box also enables searching by
+     * amenity only. For example a search query of just "[pub]" would normally be
+     * rejected but with bounded=1 will result in a list of items matching within
+     * the bounding box.
+     * @type {Number}
+     */
+    bounded: PropTypes.number,
+    /**
+     * Output geometry of results in geojson format.
+     * @type {Number}
+     */
+    polygon_geojson: PropTypes.number,
+    /**
+     * Include a breakdown of the address into elements.
+     * @type {Number}
+     */
+    addressdetails: PropTypes.number,
+    /**
+     * Limit the number of returned results.
+     * @type {Number}
+     */
+    limit: PropTypes.number,
+    /**
+     * Limit search results to a specific country (or a list of countries).
+     * &lt;countrycode> should be the ISO 3166-1alpha2 code, e.g. gb for the United
+     * Kingdom, de for Germany, etc.
+     * @type {String}
+     */
+    countrycodes: PropTypes.string,
+    /**
+     * The ol.map where the map will zoom to.
+     *
+     * @type {Object}
+     */
+    map: PropTypes.object.isRequired,
+    /**
+     * The minimal amount of characters entered in the input to start a search.
+     * @type {Number}
+     */
+    minChars: PropTypes.number,
+    /**
+     * A render function which gets called with the selected item as it is
+     * returned by nominatim. It must return an `AutoComplete.Option`.
+     *
+     * @type {function}
+     */
+    renderOption: PropTypes.func,
+    /**
+     * An onSelect function which gets called with the selected item as it is
+     * returned by nominatim.
+     * @type {function}
+     */
+    onSelect: PropTypes.func,
+    /**
+     * The style object passed to the AutoComplete.
+     * @type {Object}
+     */
+    style: PropTypes.object
+  }
+
+  static defaultProps = {
+    nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
+    format: 'json',
+    viewbox: '-180,90,180,-90',
+    bounded: 1,
+    polygon_geojson: 1,
+    addressdetails: 1,
+    limit: 10,
+    countrycodes: 'de',
+    minChars: 3,
+    /**
+     * Create an AutoComplete.Option from the given data.
+     *
+     * @param {Object} item The tuple as an object.
+     * @return {AutoComplete.Option} The returned option
+     */
+    renderOption: (item) => {
+      return (
+        &lt;Option key={item.place_id}>
+          {item.display_name}
+        &lt;/Option>
+      );
+    },
+    /**
+     * The default onSelect method if no onSelect prop is given. It zooms to the
+     * selected item.
+     *
+     * @param {object} selected The selected item as it is returned by nominatim.
+     */
+    onSelect: (selected, olMap) => {
+      if (selected &amp;&amp; selected.boundingbox) {
+        const olView = olMap.getView();
+        let extent = [
+          selected.boundingbox[2],
+          selected.boundingbox[0],
+          selected.boundingbox[3],
+          selected.boundingbox[1]
+        ];
+
+        extent = extent.map(function(coord) {
+          return parseFloat(coord);
+        });
+
+        extent = olProj.transformExtent(extent, 'EPSG:4326',
+          olView.getProjection().getCode());
+
+        olView.fit(extent, {
+          duration: 500
+        });
+      }
+    },
+    style: {
+      width: 200
+    }
+  }
+
+  /**
+   * Create the NominatimSearch.
+   *
+   * @param {Object} props The initial props.
+   * @constructs NominatimSearch
+   */
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchTerm: '',
+      dataSource: []
+    };
+    this.onUpdateInput = this.onUpdateInput.bind(this);
+    this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
+  }
+
+  /**
+   * Called if the input of the AutoComplete is being updated. It sets the
+   * current inputValue as searchTerm and starts a search if the inputValue has
+   * a length of at least `this.props.minChars` (default 3).
+   *
+   * @param {String|undefined} inputValue The inputValue. Undefined if clear btn
+   *                                      is pressed.
+   */
+  onUpdateInput(inputValue) {
+    this.setState({
+      dataSource: []
+    });
+
+    this.setState({
+      searchTerm: inputValue || ''
+    }, () => {
+      if (this.state.searchTerm.length >= this.props.minChars) {
+        this.doSearch();
+      }
+    });
+  }
+
+  /**
+   * Perform the search.
+   */
+  doSearch() {
+    const baseParams = {
+      format: this.props.format,
+      viewbox: this.props.viewbox,
+      bounded: this.props.bounded,
+      polygon_geojson: this.props.polygon_geojson,
+      addressdetails: this.props.addressdetails,
+      limit: this.props.limit,
+      countrycodes: this.props.countrycodes,
+      q: this.state.searchTerm
+    };
+
+    const getRequestParams = UrlUtil.objectToRequestString(baseParams);
+
+    fetch(`${this.props.nominatimBaseUrl}${getRequestParams}`)
+      .then(response => response.json())
+      .then(this.onFetchSuccess.bind(this))
+      .catch(this.onFetchError.bind(this));
+  }
+
+  /**
+   * This function gets called on success of the nominatim fetch.
+   * It sets the response as dataSource.
+   *
+   * @param {Array&lt;object>} response The found features.
+   */
+  onFetchSuccess(response) {
+    this.setState({
+      dataSource: response
+    });
+  }
+
+  /**
+   * This function gets called when the nomintim fetch returns an error.
+   * It logs the error to the console.
+   *
+   * @param {String} error The errorstring.
+   */
+  onFetchError(error) {
+    Logger.error(`Error while requesting Nominatim: ${error}`);
+  }
+
+  /**
+   * The function describes what to do when an item is selected.
+   *
+   * @param {value} key The key of the selected option.
+   */
+  onMenuItemSelected(key) {
+    const selected = this.state.dataSource.filter(i => i.place_id === key)[0];
+    this.props.onSelect(selected, this.props.map);
+  }
+
+  /**
+   * The render function.
+   */
+  render() {
+    const {
+      className,
+      nominatimBaseUrl,
+      format,
+      viewbox,
+      bounded,
+      polygon_geojson,
+      addressdetails,
+      limit,
+      countrycodes,
+      map,
+      onSelect,
+      renderOption,
+      ...passThroughProps
+    } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
+    return (
+      &lt;AutoComplete
+        className={finalClassName}
+        allowClear={true}
+        placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
+        dataSource={this.state.dataSource.map(renderOption.bind(this))}
+        optionLabelProp="display_name"
+        onChange={this.onUpdateInput}
+        onSelect={this.onMenuItemSelected}
+        {...passThroughProps}
+      />
+    );
+  }
+}
+
+export default NominatimSearch;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapComponent.html">MapComponent</a></li><li><a href="MappifiedComponent.html">MappifiedComponent</a></li><li><a href="MapProvider.html">MapProvider</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
+based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mappify">mappify</a></li><li><a href="global.html#mapPromise">mapPromise</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
+based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 09 2017 10:59:22 GMT+0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
