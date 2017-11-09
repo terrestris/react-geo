@@ -168,6 +168,22 @@ describe('<LayerTree />', () => {
       });
     });
 
+    it('can filter layers if a filterFunction is given', () => {
+      const filterFunction = function(layer) {
+        return layer.get('name') !== 'layer1';
+      };
+      const props = {
+        layerGroup,
+        map,
+        filterFunction
+      };
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
+      const treeNodes = wrapper.find('LayerTreeNode');
+
+      expect(treeNodes.length).to.equal(1);
+      expect(treeNodes.get(0).props.title).to.equal('layer2');
+    });
+
     it('sets the right keys for the layers', () => {
       const props = {
         layerGroup,

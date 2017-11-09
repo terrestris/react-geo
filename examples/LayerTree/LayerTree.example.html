@@ -111,7 +111,16 @@ render(
         layerGroup&#x3D;{layerGroup}
         map&#x3D;{map}
       /&gt;
+    &lt;/div&gt;
 
+    &lt;div className&#x3D;&quot;example-block&quot;&gt;
+      &lt;span&gt;{&#x27;A LayerTree with a filterFunction:&#x27;}&lt;/span&gt;
+
+      &lt;LayerTree
+        layerGroup&#x3D;{map.getLayerGroup()}
+        map&#x3D;{map}
+        filterFunction&#x3D;{(layer) &#x3D;&gt; layer.get(&#x27;name&#x27;) !&#x3D; &#x27;OSM&#x27;}
+      /&gt;
     &lt;/div&gt;
 
   &lt;/div&gt;,
