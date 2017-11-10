@@ -93,7 +93,7 @@
     "css-loader": "0.28.7",
     "enzyme": "3.1.1",
     "enzyme-adapter-react-16": "1.0.4",
-    "eslint": "4.10.0",
+    "eslint": "4.11.0",
     "eslint-plugin-html": "4.0.0-alpha.1",
     "eslint-plugin-markdown": "1.0.0-beta.7",
     "eslint-plugin-react": "7.4.0",
