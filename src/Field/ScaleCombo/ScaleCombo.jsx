@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Select } from 'antd';
 const Option = Select.Option;
 import {
-  isNumber,
   isInteger,
   isEmpty,
   isEqual,
@@ -181,35 +180,12 @@ class ScaleCombo extends React.Component {
    */
   pushScale = (resolution, mv) => {
     let scale = MapUtil.getScaleForResolution(resolution, mv.getProjection().getUnits());
-    const roundScale = this.roundScale(scale);
+    const roundScale = MapUtil.roundScale(scale);
     if (this.state.scales.includes(roundScale) ) {
       return;
     }
     this.state.scales.push(roundScale);
   };
-
-  /**
-   * Rounds a scalenumber in dependency to its size.
-   *
-   * @param  {Number} scale The exact scale
-   * @return {Number} The roundedScale
-   */
-  roundScale = (scale) => {
-    let roundScale;
-    if (scale < 100) {
-      roundScale = Math.round(scale, 10);
-    }
-    if (scale >= 100 && scale < 10000 ) {
-      roundScale = Math.round(scale / 10) * 10;
-    }
-    if (scale >= 10000 && scale < 1000000 ) {
-      roundScale = Math.round(scale / 100) * 100;
-    }
-    if (scale >= 1000000) {
-      roundScale = Math.round(scale / 1000) * 1000;
-    }
-    return roundScale;
-  }
 
   /**
    * @function getOptionsFromMap: Helper function generate {@link Option} scale components
@@ -283,6 +259,7 @@ class ScaleCombo extends React.Component {
     const options = this.state.scales.map((roundScale) => {
       return <Option
         key={roundScale}
+        value={roundScale}
       >
         {`1:${roundScale.toLocaleString()}`}
       </Option>;
