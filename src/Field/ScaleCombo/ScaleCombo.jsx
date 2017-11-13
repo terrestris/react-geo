@@ -4,6 +4,7 @@ import { Select } from 'antd';
 const Option = Select.Option;
 import {
   isNumber,
+  isInteger,
   isEmpty,
   isEqual,
   isFunction,
@@ -249,10 +250,10 @@ class ScaleCombo extends React.Component {
    * @return {Element} Option element for provided zoom level
    */
   determineOptionKeyForZoomLevel = (zoom) => {
-    if (!isNumber(zoom) || (this.state.scales.length - 1 - zoom) < 0) {
+    if (!isInteger(zoom) || (this.state.scales.length - 1 - zoom) < 0) {
       return undefined;
     }
-    return this.state.scales[this.state.scales.length - 1 - zoom].toString();
+    return this.state.scales[this.state.scales.length - 1 - zoom];
   }
 
   /**
