@@ -325,6 +325,30 @@ export class MapUtil {
     return within;
   }
 
+
+  /**
+   * Rounds a scalenumber in dependency to its size.
+   *
+   * @param  {Number} scale The exact scale
+   * @return {Number} The roundedScale
+   */
+  static roundScale = (scale) => {
+    let roundScale;
+    if (scale < 100) {
+      roundScale = Math.round(scale, 10);
+    }
+    if (scale >= 100 && scale < 10000 ) {
+      roundScale = Math.round(scale / 10) * 10;
+    }
+    if (scale >= 10000 && scale < 1000000 ) {
+      roundScale = Math.round(scale / 100) * 100;
+    }
+    if (scale >= 1000000) {
+      roundScale = Math.round(scale / 1000) * 1000;
+    }
+    return roundScale;
+  }
+
 }
 
 export default MapUtil;
