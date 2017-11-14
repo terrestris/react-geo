@@ -49,8 +49,10 @@
     "clean:build": "rimraf ./build/*",
     "clean:dist": "rimraf ./dist/*",
     "pretest": "npm run lint",
-    "test": "jest --coverage",
+    "test": "jest --coverage --no-cache",
     "test:watch": "jest --watchAll",
+    "coveralls": "cat coverage/lcov.info | coveralls",
+    "postinstall": "npm i --no-save ol@4 react@16",
     "lint": "eslint --ext js,html,md example-templates/ examples/ src/",
     "lint:fix": "npm run lint -- --fix",
     "start": "webpack-dev-server --config webpack.examples.config.js --content-base ./build/ --hot",
@@ -59,28 +61,6 @@
     "build:js": "webpack --config webpack.development.config.js && webpack -p --config webpack.production.config.js",
     "build:dist": "npm run clean:dist && BABEL_ENV=build babel src --out-dir dist --copy-files --ignore spec.js,example.js,.md",
     "build": "npm run test && npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "jsx"
-    ],
-    "moduleDirectories": [
-      "node_modules"
-    ],
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/jest/__mocks__/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/jest/__mocks__/styleMock.js"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!ol)"
-    ],
-    "setupFiles": [
-      "<rootDir>/jest/__mocks__/shim.js",
-      "<rootDir>/jest/setup.js"
-    ],
-    "collectCoverage": false,
-    "coverageDirectory": "<rootDir>/coverage"
   },
   "peerDependencies": {
     "ol": "~4.0",
@@ -113,6 +93,7 @@
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
     "canvas-prebuilt": "1.6.5-prerelease.1",
+    "coveralls": "3.0.0",
     "css-loader": "0.28.7",
     "enzyme": "3.1.1",
     "enzyme-adapter-react-16": "1.0.4",
@@ -133,8 +114,6 @@
     "metalsmith-layouts": "1.8.1",
     "metalsmith-markdown": "0.2.1",
     "minami": "1.2.3",
-    "ol": "4.5.0",
-    "react": "16.1.1",
     "react-test-renderer": "16.1.1",
     "regenerator-runtime": "0.11.0",
     "rimraf": "2.6.2",
