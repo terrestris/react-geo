@@ -11,6 +11,7 @@ import MapComponent from './Map/MapComponent/MapComponent.jsx';
 import Panel from './Panel/Panel/Panel.jsx';
 import Titlebar from './Panel/Titlebar/Titlebar.jsx';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
+import FeatureGrid from './Grid/FeatureGrid/FeatureGrid.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
 import UserChip from './UserChip/UserChip.jsx';
 
@@ -31,6 +32,7 @@ export {
   SimpleButton,
   ToggleButton,
   ToggleGroup,
+  FeatureGrid,
   LayerTree,
   LayerTreeNode,
   Legend,
