@@ -77,6 +77,17 @@ describe('CsrfUtil', () => {
       expect(result.get(headerName)).to.be(tokenValue);
     });
 
+    it('getHeaderObject', () => {
+      const result = CsrfUtil.getHeaderObject();
+      const csrfHeaderName = CsrfUtil.getCsrfHeaderName();
+      const csrfValue = CsrfUtil.getCsrfValue();
+
+      const keysInObject = Object.keys(result).length;
+      expect(keysInObject).to.be(1);
+
+      expect(result[csrfHeaderName]).to.be(csrfValue);
+    });
+
     it('getContentFromMetaTagByName', () => {
       let result = CsrfUtil.getContentFromMetaTagByName('manta');
       expect(result).to.be('jurgensohn');
