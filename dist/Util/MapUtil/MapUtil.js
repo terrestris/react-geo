@@ -413,6 +413,14 @@ var MapUtil = exports.MapUtil = function () {
       var within = currentRes >= layerMinRes && currentRes < layerMaxRes;
       return within;
     }
+
+    /**
+     * Rounds a scalenumber in dependency to its size.
+     *
+     * @param  {Number} scale The exact scale
+     * @return {Number} The roundedScale
+     */
+
   }]);
 
   return MapUtil;
@@ -442,6 +450,23 @@ MapUtil.getLayerPositionInfo = function (layer, groupLayerOrMap) {
     info.groupLayer = groupLayer;
   }
   return info;
+};
+
+MapUtil.roundScale = function (scale) {
+  var roundScale = void 0;
+  if (scale < 100) {
+    roundScale = Math.round(scale, 10);
+  }
+  if (scale >= 100 && scale < 10000) {
+    roundScale = Math.round(scale / 10) * 10;
+  }
+  if (scale >= 10000 && scale < 1000000) {
+    roundScale = Math.round(scale / 100) * 100;
+  }
+  if (scale >= 1000000) {
+    roundScale = Math.round(scale / 1000) * 1000;
+  }
+  return roundScale;
 };
 
 exports.default = MapUtil;

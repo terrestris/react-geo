@@ -56,21 +56,34 @@ var ScaleCombo = function (_React$Component) {
   function ScaleCombo(props) {
     _classCallCheck(this, ScaleCombo);
 
+    /**
+     * The default onZoomLevelSelect function sets the resolution of the passed
+     * map according to the selected Scale.
+     *
+     * @param  {Number} selectedScale The selectedScale.
+     */
     var _this = _possibleConstructorReturn(this, (ScaleCombo.__proto__ || Object.getPrototypeOf(ScaleCombo)).call(this, props));
 
     _this.className = 'react-geo-scalecombo';
 
-    _this.pushScaleOption = function (resolution, mv) {
+    _this.zoomListener = function (evt) {
+      var zoom = evt.target.getView().getZoom();
+      var roundZoom = Math.round(zoom);
+      if (!roundZoom) {
+        roundZoom = 0;
+      }
+      _this.setState({
+        zoomLevel: roundZoom
+      });
+    };
+
+    _this.pushScale = function (resolution, mv) {
       var scale = _MapUtil2.default.getScaleForResolution(resolution, mv.getProjection().getUnits());
-      // Round scale to nearest multiple of 10.
-      var roundScale = Math.round(scale / 10) * 10;
-      var option = _react2.default.createElement(
-        Option,
-        { key: roundScale.toString(), value: roundScale.toString() },
-        '1:',
-        roundScale.toLocaleString()
-      );
-      _this.state.scales.push(option);
+      var roundScale = _MapUtil2.default.roundScale(scale);
+      if (_this.state.scales.includes(roundScale)) {
+        return;
+      }
+      _this.state.scales.push(roundScale);
     };
 
     _this.getOptionsFromMap = function () {
@@ -90,44 +103,46 @@ var ScaleCombo = function (_React$Component) {
       if ((0, _lodash.isEmpty)(resolutions)) {
         for (var currentZoomLevel = mv.getMaxZoom(); currentZoomLevel >= mv.getMinZoom(); currentZoomLevel--) {
           var resolution = mv.getResolutionForZoom(currentZoomLevel);
-          _this.pushScaleOption(resolution, mv);
+          _this.pushScale(resolution, mv);
         }
       } else {
         var reversedResolutions = (0, _lodash.reverse)((0, _lodash.clone)(resolutions));
         reversedResolutions.forEach(function (resolution) {
-          _this.pushScaleOption(resolution, mv);
+          _this.pushScale(resolution, mv);
         });
       }
     };
 
-    _this.handleOnKeyDown = function (event) {
-      if (event.key === 'Enter') {
-        _this.props.onZoomLevelSelect(event.target.value);
+    _this.determineOptionKeyForZoomLevel = function (zoom) {
+      if (!(0, _lodash.isInteger)(zoom) || _this.state.scales.length - 1 - zoom < 0) {
+        return undefined;
       }
+      return _this.state.scales[_this.state.scales.length - 1 - zoom];
     };
 
-    _this.getInputElement = function () {
-      return _react2.default.createElement('input', { onKeyDown: _this.handleOnKeyDown });
+    var defaultOnZoomLevelSelect = function defaultOnZoomLevelSelect(selectedScale) {
+      var mapView = _this.props.map.getView();
+      var calculatedResolution = _MapUtil2.default.getResolutionForScale(selectedScale, mapView.getProjection().getUnits());
+      mapView.setResolution(calculatedResolution);
     };
-
-    _this.pushScaleOption = _this.pushScaleOption.bind(_this);
-    _this.getOptionsFromMap = _this.getOptionsFromMap.bind(_this);
-    _this.determineOptionKeyForZoomLevel = _this.determineOptionKeyForZoomLevel.bind(_this);
-    _this.handleOnKeyDown = _this.handleOnKeyDown.bind(_this);
-    _this.getInputElement = _this.getInputElement.bind(_this);
-    _this.componentWillMount = _this.componentWillMount.bind(_this);
 
     _this.state = {
-      zoomLevel: props.zoomLevel,
+      zoomLevel: props.zoomLevel || _this.props.map.getView().getZoom(),
+      onZoomLevelSelect: props.onZoomLevelSelect || defaultOnZoomLevelSelect,
       scales: props.scales
     };
+
+    if (props.syncWithMap) {
+      _this.props.map.on('moveend', _this.zoomListener);
+    }
     return _this;
   }
 
   /**
-   * Called on componentWillReceiveProps lifecycle event.
+   * Set the zoomLevel of the to the ScaleCombo.
    *
-   * @param {Object} newProps The new properties.
+   * @param  {Object} evt The 'moveend' event
+   * @private
    */
 
 
@@ -145,10 +160,31 @@ var ScaleCombo = function (_React$Component) {
 
   _createClass(ScaleCombo, [{
     key: 'componentWillReceiveProps',
+
+
+    /**
+     * Called on componentWillReceiveProps lifecycle event.
+     *
+     * @param {Object} newProps The new properties.
+     */
     value: function componentWillReceiveProps(newProps) {
       if (!(0, _lodash.isEqual)(newProps.zoomLevel, this.props.zoomLevel)) {
         this.setState({
           zoomLevel: newProps.zoomLevel
+        });
+      }
+
+      if (!newProps.syncWithMap !== this.props.syncWithMap) {
+        if (newProps.syncWithMap) {
+          this.props.map.on('moveend', this.zoomListener);
+        } else {
+          this.props.map.un('moveend', this.zoomListener);
+        }
+      }
+
+      if ((0, _lodash.isFunction)(newProps.onZoomLevelSelect) && !(0, _lodash.isEqual)(newProps.onZoomLevelSelect, this.state.onZoomLevelSelect)) {
+        this.setState({
+          onZoomLevelSelect: newProps.onZoomLevelSelect
         });
       }
     }
@@ -168,9 +204,6 @@ var ScaleCombo = function (_React$Component) {
      * based on an existing instance of {@link Ol.Map}
      */
 
-  }, {
-    key: 'determineOptionKeyForZoomLevel',
-
 
     /**
      * Determine option element for provided zoom level out of array of valid options.
@@ -178,26 +211,6 @@ var ScaleCombo = function (_React$Component) {
      * @param {Number} zoom zoom level
      *
      * @return {Element} Option element for provided zoom level
-     */
-    value: function determineOptionKeyForZoomLevel(zoom) {
-      if (!(0, _lodash.isNumber)(zoom) || this.state.scales.length - 1 - zoom < 0) {
-        return undefined;
-      }
-      return this.state.scales[this.state.scales.length - 1 - zoom].key;
-    }
-
-    /**
-     * handleOnKeyDown of input:
-     * trigger setScale (passed by props) after ENTER key pressed
-     *
-     * @param {Event} event KeyBoard event
-     */
-
-
-    /**
-     * Create input element with registered onKeyDown event used in Select
-     *
-     * @return {Element} input of scale chooser
      */
 
   }, {
@@ -223,26 +236,35 @@ var ScaleCombo = function (_React$Component) {
     key: 'render',
     value: function render() {
       var _props = this.props,
-          onZoomLevelSelect = _props.onZoomLevelSelect,
           style = _props.style,
           className = _props.className;
 
 
       var finalClassName = className ? className + ' ' + this.className : this.className;
 
+      var options = this.state.scales.map(function (roundScale) {
+        return _react2.default.createElement(
+          Option,
+          {
+            key: roundScale,
+            value: roundScale
+          },
+          '1:' + roundScale.toLocaleString()
+        );
+      });
+
       return _react2.default.createElement(
         _select2.default,
         {
           showSearch: true,
-          onChange: onZoomLevelSelect,
-          getInputElement: this.getInputElement,
+          onChange: this.state.onZoomLevelSelect,
           filterOption: false,
           value: this.determineOptionKeyForZoomLevel(this.state.zoomLevel),
           size: 'small',
           style: style,
           className: finalClassName
         },
-        this.state.scales
+        options
       );
     }
   }]);
@@ -264,10 +286,12 @@ ScaleCombo.propTypes = {
   zoomLevel: _propTypes2.default.number,
 
   /**
-   * The onZoomLevelSelect function. This function is passed to Select component
+   * The onZoomLevelSelect function. Pass a function if you want something
+   * different than the resolution of the passed map.
+   *
    * @type {Function}
    */
-  onZoomLevelSelect: _propTypes2.default.func.isRequired,
+  onZoomLevelSelect: _propTypes2.default.func,
 
   /**
    * The resolutions.
@@ -291,10 +315,18 @@ ScaleCombo.propTypes = {
    * The map
    * @type {Ol.Map}
    */
-  map: _propTypes2.default.object };
+  map: _propTypes2.default.object.isRequired,
+
+  /**
+   * Set to false to not listen to the map moveend event.
+   *
+   * @type {Boolean} [true]
+   */
+  syncWithMap: _propTypes2.default.bool };
 ScaleCombo.defaultProps = {
   style: {
     width: 100
   },
-  scales: [] };
+  scales: [],
+  syncWithMap: true };
 exports.default = ScaleCombo;

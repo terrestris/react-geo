@@ -17,6 +17,14 @@ var _ToggleGroup = require('./Button/ToggleGroup/ToggleGroup.js');
 
 var _ToggleGroup2 = _interopRequireDefault(_ToggleGroup);
 
+var _NominatimSearch = require('./Field/NominatimSearch/NominatimSearch.js');
+
+var _NominatimSearch2 = _interopRequireDefault(_NominatimSearch);
+
+var _ScaleCombo = require('./Field/ScaleCombo/ScaleCombo.js');
+
+var _ScaleCombo2 = _interopRequireDefault(_ScaleCombo);
+
 var _LayerTree = require('./LayerTree/LayerTree.js');
 
 var _LayerTree2 = _interopRequireDefault(_LayerTree);
@@ -37,25 +45,17 @@ var _MapComponent = require('./Map/MapComponent/MapComponent.js');
 
 var _MapComponent2 = _interopRequireDefault(_MapComponent);
 
-var _ScaleCombo = require('./Map/ScaleCombo/ScaleCombo.js');
-
-var _ScaleCombo2 = _interopRequireDefault(_ScaleCombo);
-
 var _Panel = require('./Panel/Panel/Panel.js');
 
 var _Panel2 = _interopRequireDefault(_Panel);
 
-var _LayerTransparencySlider = require('./Slider/LayerTransparencySlider.js');
-
-var _LayerTransparencySlider2 = _interopRequireDefault(_LayerTransparencySlider);
-
-var _NominatimSearch = require('./Field/NominatimSearch/NominatimSearch.js');
-
-var _NominatimSearch2 = _interopRequireDefault(_NominatimSearch);
-
 var _Titlebar = require('./Panel/Titlebar/Titlebar.js');
 
 var _Titlebar2 = _interopRequireDefault(_Titlebar);
+
+var _LayerTransparencySlider = require('./Slider/LayerTransparencySlider.js');
+
+var _LayerTransparencySlider2 = _interopRequireDefault(_LayerTransparencySlider);
 
 var _Toolbar = require('./Toolbar/Toolbar.js');
 
@@ -72,10 +72,6 @@ var _CsrfUtil2 = _interopRequireDefault(_CsrfUtil);
 var _FeatureUtil = require('./Util/FeatureUtil/FeatureUtil');
 
 var _FeatureUtil2 = _interopRequireDefault(_FeatureUtil);
-
-var _Logger = require('./Util/Logger');
-
-var _Logger2 = _interopRequireDefault(_Logger);
 
 var _MapUtil = require('./Util/MapUtil/MapUtil');
 
@@ -96,6 +92,10 @@ var _UndoUtil2 = _interopRequireDefault(_UndoUtil);
 var _UrlUtil = require('./Util/UrlUtil/UrlUtil');
 
 var _UrlUtil2 = _interopRequireDefault(_UrlUtil);
+
+var _Logger = require('./Util/Logger');
+
+var _Logger2 = _interopRequireDefault(_Logger);
 
 var _MapProvider = require('./HigherOrderComponent/MapProvider/MapProvider.js');
 
