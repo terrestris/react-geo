@@ -83,9 +83,9 @@ describe('CsrfUtil', () => {
       const csrfValue = CsrfUtil.getCsrfValue();
 
       const keysInObject = Object.keys(result).length;
-      expect(keysInObject).to.be(1);
+      expect(keysInObject).toBe(1);
 
-      expect(result[csrfHeaderName]).to.be(csrfValue);
+      expect(result[csrfHeaderName]).toBe(csrfValue);
     });
 
     it('getContentFromMetaTagByName', () => {
