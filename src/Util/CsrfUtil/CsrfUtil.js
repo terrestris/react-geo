@@ -25,8 +25,8 @@ class CsrfUtil {
    * @return {type} Description
    */
   static getContentFromMetaTagByName (name) {
-    let compiledSelector = template('meta[name="<%= metaTagName %>"]');
-    let element = document.querySelector(compiledSelector({ 'metaTagName': name }));
+    const compiledSelector = template('meta[name="<%= metaTagName %>"]');
+    const element = document.querySelector(compiledSelector({ 'metaTagName': name }));
     let content;
     if (element) {
       content = element.content || '';
@@ -51,7 +51,7 @@ class CsrfUtil {
    *     empty string if the meta tag cannot be found.
    */
   static getCsrfValue() {
-    let metaName = '_csrf';
+    const metaName = '_csrf';
     return CsrfUtil.getContentFromMetaTagByName(metaName);
   }
 
@@ -69,7 +69,7 @@ class CsrfUtil {
    *     string if the meta tag cannot be found.
    */
   static getCsrfHeaderName() {
-    let metaName = '_csrf_header';
+    const metaName = '_csrf_header';
     return CsrfUtil.getContentFromMetaTagByName(metaName);
   }
 
@@ -88,7 +88,7 @@ class CsrfUtil {
    *     tag cannot be found.
    */
   static getCsrfParameterName() {
-    let metaName = '_csrf_parameter_name';
+    const metaName = '_csrf_parameter_name';
     return CsrfUtil.getContentFromMetaTagByName(metaName);
   }
 
@@ -108,11 +108,29 @@ class CsrfUtil {
    *     cannot be found.
    */
   static getHeader() {
-    let headerObj = new Headers();
-    let csrfKey = CsrfUtil.getCsrfValue();
-    let csrfHeaderName = CsrfUtil.getCsrfHeaderName();
-    if (csrfKey !== '' && csrfHeaderName !== '') {
-      headerObj.append(csrfHeaderName, csrfKey);
+    const headerObj = new Headers();
+    const csrfValue = CsrfUtil.getCsrfValue();
+    const csrfHeaderName = CsrfUtil.getCsrfHeaderName();
+    if (csrfValue !== '' && csrfHeaderName !== '') {
+      headerObj.append(csrfHeaderName, csrfValue);
+    }
+    return headerObj;
+  }
+
+  /**
+   * Returns a simple object containing CSRF header name as key and CSRF value
+   * as field value
+   *
+   * @return {Object} Simple object containing the CSRF key and
+   *     value or an empty object if any of the required meta fields
+   *     cannot be found.
+   */
+  static getHeaderObject() {
+    const headerObj= {};
+    const csrfValue = CsrfUtil.getCsrfValue();
+    const csrfHeaderName = CsrfUtil.getCsrfHeaderName();
+    if (csrfValue !== '' && csrfHeaderName !== '') {
+      headerObj[csrfHeaderName] = csrfValue;
     }
     return headerObj;
   }
