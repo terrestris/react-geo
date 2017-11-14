@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 
 import {
   UndoUtil
@@ -9,14 +9,14 @@ describe('UndoUtil', () => {
 
   describe('Basics', () => {
     it('is defined', () => {
-      expect(UndoUtil).to.not.be(undefined);
+      expect(UndoUtil).toBeDefined();
     });
   });
 
   describe('Static methods', () => {
     describe('#atLeastOneUndoable', () => {
       it('is defined', () => {
-        expect(UndoUtil.atLeastOneUndoable).to.not.be(undefined);
+        expect(UndoUtil.atLeastOneUndoable).toBeDefined();
       });
       it('checks if at least one state is undoable or not.', () => {
         let state = {
@@ -31,7 +31,7 @@ describe('UndoUtil', () => {
           }
         };
 
-        expect(UndoUtil.atLeastOneUndoable(state)).to.be(false);
+        expect(UndoUtil.atLeastOneUndoable(state)).toBe(false);
 
         state.entry.past.push({
           a: 'past a',
@@ -39,12 +39,12 @@ describe('UndoUtil', () => {
           c: 'past c'
         });
 
-        expect(UndoUtil.atLeastOneUndoable(state)).to.be(true);
+        expect(UndoUtil.atLeastOneUndoable(state)).toBe(true);
       });
     });
     describe('#atLeastOneRedoable', () => {
       it('is defined', () => {
-        expect(UndoUtil.atLeastOneRedoable).to.not.be(undefined);
+        expect(UndoUtil.atLeastOneRedoable).toBeDefined();
       });
       it('checks if at least one state is redoable or not.', () => {
         let state = {
@@ -59,7 +59,7 @@ describe('UndoUtil', () => {
           }
         };
 
-        expect(UndoUtil.atLeastOneRedoable(state)).to.be(false);
+        expect(UndoUtil.atLeastOneRedoable(state)).toBe(false);
 
         state.entry.future.push({
           a: 'past a',
@@ -67,7 +67,7 @@ describe('UndoUtil', () => {
           c: 'past c'
         });
 
-        expect(UndoUtil.atLeastOneRedoable(state)).to.be(true);
+        expect(UndoUtil.atLeastOneRedoable(state)).toBe(true);
       });
     });
   });

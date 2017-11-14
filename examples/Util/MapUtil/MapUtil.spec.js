@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 import OlInteractionDragRotateAndZoom from 'ol/interaction/dragrotateandzoom';
 import OlInteractionDraw from 'ol/interaction/draw';
 import OlLayerTile from 'ol/layer/tile';
@@ -41,12 +41,12 @@ describe('MapUtil', () => {
   });
 
   it('is defined', () => {
-    expect(MapUtil).to.not.be(undefined);
+    expect(MapUtil).toBeDefined();
   });
 
   describe('#getInteractionsByName', () => {
     it('is defined', () => {
-      expect(MapUtil.getInteractionsByName).to.not.be(undefined);
+      expect(MapUtil.getInteractionsByName).toBeDefined();
     });
 
     it('needs to be called with a map instance', () => {
@@ -54,8 +54,8 @@ describe('MapUtil', () => {
 
       let returnedInteractions = MapUtil.getInteractionsByName(null, 'BVB!');
 
-      expect(logSpy).to.have.property('callCount', 1);
-      expect(returnedInteractions).to.have.length(0);
+      expect(logSpy).toHaveProperty('callCount', 1);
+      expect(returnedInteractions).toHaveLength(0);
 
       Logger.debug.restore();
     });
@@ -69,7 +69,7 @@ describe('MapUtil', () => {
       let returnedInteractions = MapUtil.getInteractionsByName(
         map, `${dragInteractionName} NOT AVAILABLE`);
 
-      expect(returnedInteractions).to.have.length(0);
+      expect(returnedInteractions).toHaveLength(0);
     });
 
     it('returns the requested interactions by name', () => {
@@ -81,7 +81,7 @@ describe('MapUtil', () => {
       let returnedInteractions = MapUtil.getInteractionsByName(
         map, dragInteractionName);
 
-      expect(returnedInteractions).to.have.length(1);
+      expect(returnedInteractions).toHaveLength(1);
 
       let anotherDragInteraction = new OlInteractionDragRotateAndZoom();
       anotherDragInteraction.set('name', dragInteractionName);
@@ -90,13 +90,13 @@ describe('MapUtil', () => {
       returnedInteractions = MapUtil.getInteractionsByName(
         map, dragInteractionName);
 
-      expect(returnedInteractions).to.have.length(2);
+      expect(returnedInteractions).toHaveLength(2);
     });
   });
 
   describe('#getInteractionsByClass', () => {
     it('is defined', () => {
-      expect(MapUtil.getInteractionsByClass).to.not.be(undefined);
+      expect(MapUtil.getInteractionsByClass).toBeDefined();
     });
 
     it('needs to be called with a map instance', () => {
@@ -104,8 +104,8 @@ describe('MapUtil', () => {
 
       let returnedInteractions = MapUtil.getInteractionsByClass(null, OlInteractionDragRotateAndZoom);
 
-      expect(logSpy).to.have.property('callCount', 1);
-      expect(returnedInteractions).to.have.length(0);
+      expect(logSpy).toHaveProperty('callCount', 1);
+      expect(returnedInteractions).toHaveLength(0);
 
       Logger.debug.restore();
     });
@@ -117,7 +117,7 @@ describe('MapUtil', () => {
       let returnedInteractions = MapUtil.getInteractionsByClass(
         map, OlInteractionDraw);
 
-      expect(returnedInteractions).to.have.length(0);
+      expect(returnedInteractions).toHaveLength(0);
     });
 
     it('returns the requested interactions by class', () => {
@@ -127,7 +127,7 @@ describe('MapUtil', () => {
       let returnedInteractions = MapUtil.getInteractionsByClass(
         map, OlInteractionDragRotateAndZoom);
 
-      expect(returnedInteractions).to.have.length(1);
+      expect(returnedInteractions).toHaveLength(1);
 
       let anotherDragInteraction = new OlInteractionDragRotateAndZoom();
       map.addInteraction(anotherDragInteraction);
@@ -135,19 +135,19 @@ describe('MapUtil', () => {
       returnedInteractions = MapUtil.getInteractionsByClass(
         map, OlInteractionDragRotateAndZoom);
 
-      expect(returnedInteractions).to.have.length(2);
+      expect(returnedInteractions).toHaveLength(2);
     });
   });
 
   describe('#getResolutionForScale', () => {
     it('is defined', () => {
-      expect(MapUtil.getResolutionForScale).to.not.be(undefined);
+      expect(MapUtil.getResolutionForScale).toBeDefined();
     });
 
     it('returns expected values for valid units', () => {
       const units = ['degrees', 'm', 'ft', 'us-ft'];
       units.forEach( (unit) => {
-        expect(MapUtil.getResolutionForScale(testScale, unit)).to.be(testResolutions[unit]);
+        expect(MapUtil.getResolutionForScale(testScale, unit)).toBe(testResolutions[unit]);
       });
     });
 
@@ -155,13 +155,13 @@ describe('MapUtil', () => {
       const unit = 'm';
       const resolutionToTest = 190919.09;
       const calculateScale = MapUtil.getScaleForResolution(resolutionToTest, unit);
-      expect(MapUtil.getResolutionForScale(calculateScale, unit)).to.be(resolutionToTest);
+      expect(MapUtil.getResolutionForScale(calculateScale, unit)).toBe(resolutionToTest);
     });
   });
 
   describe('#getScaleForResolution', () => {
     it('is defined', () => {
-      expect(MapUtil.getScaleForResolution).to.not.be(undefined);
+      expect(MapUtil.getScaleForResolution).toBeDefined();
     });
 
     it('returns expected values for valid units', () => {
@@ -173,14 +173,14 @@ describe('MapUtil', () => {
       const roundToTwoDecimals = (num) => (Math.round(num * 100) / 100);
 
       units.forEach( (unit) => {
-        expect(roundToTwoDecimals(MapUtil.getScaleForResolution(testResolutions[unit], unit))).to.be(testScale);
+        expect(roundToTwoDecimals(MapUtil.getScaleForResolution(testResolutions[unit], unit))).toBe(testScale);
       });
     });
 
     it('returns inverse of getResolutionForScale', () => {
       const unit = 'm';
       const calculateScale = MapUtil.getResolutionForScale(testScale, unit);
-      expect(MapUtil.getScaleForResolution(calculateScale, unit)).to.be(testScale);
+      expect(MapUtil.getScaleForResolution(calculateScale, unit)).toBe(testScale);
     });
   });
 
@@ -201,15 +201,15 @@ describe('MapUtil', () => {
       map.addLayer(layer);
       let got = MapUtil.getLayerByName(map, layerName);
 
-      expect(got).to.be.a(OlLayerTile);
-      expect(got.get('key')).to.equal('prop');
+      expect(got).toBeInstanceOf(OlLayerTile);
+      expect(got.get('key')).toBe('prop');
     });
 
     it('returns undefined if the layer could not be found', () => {
       let layerName = 'OSM-WMS';
       let got = MapUtil.getLayerByName(map, layerName);
 
-      expect(got).to.be(undefined);
+      expect(got).toBeUndefined();
     });
   });
 
@@ -241,8 +241,8 @@ describe('MapUtil', () => {
       map.addLayer(layer);
       let got = MapUtil.getLayerByFeature(map, feat, [namespace]);
 
-      expect(got).to.be.a(OlLayerTile);
-      expect(got.get('key')).to.equal('prop');
+      expect(got).toBeInstanceOf(OlLayerTile);
+      expect(got.get('key')).toBe('prop');
     });
 
     it('returns undefined if the layer could not be found', () => {
@@ -270,7 +270,7 @@ describe('MapUtil', () => {
       map.addLayer(layer);
       let got = MapUtil.getLayerByFeature(map, feat, [namespace]);
 
-      expect(got).to.be(undefined);
+      expect(got).toBeUndefined();
     });
   });
 
@@ -300,8 +300,8 @@ describe('MapUtil', () => {
       map.setLayerGroup(layerGroup);
       let got = MapUtil.getLayersByGroup(map, layerGroup);
 
-      expect(got).to.be.an(Array);
-      expect(got).to.have.length(8);
+      expect(got).toBeInstanceOf(Array);
+      expect(got).toHaveLength(8);
     });
   });
 
@@ -342,9 +342,9 @@ describe('MapUtil', () => {
       const logSpy = sinon.spy(Logger, 'error');
       const got = MapUtil.getAllLayers();
 
-      expect(got).to.be.an(Array);
-      expect(got).to.have.length(0);
-      expect(logSpy).to.have.property('callCount', 1);
+      expect(got).toBeInstanceOf(Array);
+      expect(got).toHaveLength(0);
+      expect(logSpy).toHaveProperty('callCount', 1);
 
       logSpy.restore();
     });
@@ -352,28 +352,28 @@ describe('MapUtil', () => {
     it('returns a flat list of all layers (map passed)', () => {
       const got = MapUtil.getAllLayers(map);
 
-      expect(got).to.be.an(Array);
-      expect(got).to.have.length(4);
-      expect(got).to.contain(layer1);
-      expect(got).to.contain(layer2);
-      expect(got).to.contain(nestedLayerGroup);
-      expect(got).to.contain(subLayer);
+      expect(got).toBeInstanceOf(Array);
+      expect(got).toHaveLength(4);
+      expect(got).toContain(layer1);
+      expect(got).toContain(layer2);
+      expect(got).toContain(nestedLayerGroup);
+      expect(got).toContain(subLayer);
     });
 
     it('returns a flat list of all layers (layergroup passed)', () => {
       const got = MapUtil.getAllLayers(nestedLayerGroup);
 
-      expect(got).to.be.an(Array);
-      expect(got).to.have.length(1);
-      expect(got).to.contain(subLayer);
+      expect(got).toBeInstanceOf(Array);
+      expect(got).toHaveLength(1);
+      expect(got).toContain(subLayer);
     });
 
     it('can be used with a filter', () => {
       const got = MapUtil.getAllLayers(map, l => l.get('name') === 'layer1');
 
-      expect(got).to.be.an(Array);
-      expect(got).to.have.length(1);
-      expect(got).to.contain(layer1);
+      expect(got).toBeInstanceOf(Array);
+      expect(got).toHaveLength(1);
+      expect(got).toContain(layer1);
     });
 
   });
@@ -414,7 +414,7 @@ describe('MapUtil', () => {
     it('uses the map if second argument is a map', () => {
       const layerPositionInfo = MapUtil.getLayerPositionInfo(layer1, map);
 
-      expect(layerPositionInfo).to.be.eql({
+      expect(layerPositionInfo).toEqual({
         position: 0,
         groupLayer: layerGroup
       });
@@ -423,7 +423,7 @@ describe('MapUtil', () => {
     it('uses the layerGroup if given as second argument', () => {
       const layerPositionInfo = MapUtil.getLayerPositionInfo(subLayer, nestedLayerGroup);
 
-      expect(layerPositionInfo).to.be.eql({
+      expect(layerPositionInfo).toEqual({
         position: 0,
         groupLayer: nestedLayerGroup
       });
@@ -432,7 +432,7 @@ describe('MapUtil', () => {
     it('works iterative', () => {
       const layerPositionInfo = MapUtil.getLayerPositionInfo(subLayer, map);
 
-      expect(layerPositionInfo).to.be.eql({
+      expect(layerPositionInfo).toEqual({
         position: 0,
         groupLayer: nestedLayerGroup
       });
@@ -466,9 +466,9 @@ describe('MapUtil', () => {
     it('logs an error if called without a layer', () => {
       const logSpy = sinon.spy(Logger, 'error');
       const legendUrl = MapUtil.getLegendGraphicUrl();
-      expect(legendUrl).to.be(undefined);
-      expect(logSpy.calledWith('Invalid input parameter for MapUtil.getLegendGraphicUrl.')).to.be.ok();
-      expect(logSpy.calledOnce).to.be.ok();
+      expect(legendUrl).toBeUndefined();
+      expect(logSpy.calledWith('Invalid input parameter for MapUtil.getLegendGraphicUrl.')).toBeTruthy();
+      expect(logSpy.calledOnce).toBeTruthy();
 
       logSpy.restore();
     });
@@ -476,9 +476,9 @@ describe('MapUtil', () => {
     it('logs a warning if called with an unsupported layersource', () => {
       const logSpy = sinon.spy(Logger, 'warn');
       const legendUrl = MapUtil.getLegendGraphicUrl(layer2);
-      expect(legendUrl).to.be(undefined);
-      expect(logSpy.calledWith('Source of "Food insecurity" is currently not supported by MapUtil.getLegendGraphicUrl.')).to.be.ok();
-      expect(logSpy.calledOnce).to.be.ok();
+      expect(legendUrl).toBeUndefined();
+      expect(logSpy.calledWith('Source of "Food insecurity" is currently not supported by MapUtil.getLegendGraphicUrl.')).toBeTruthy();
+      expect(logSpy.calledOnce).toBeTruthy();
       logSpy.restore();
     });
 
@@ -491,12 +491,12 @@ describe('MapUtil', () => {
       const requestParam = 'REQUEST=getLegendGraphic';
       const formatParam = 'FORMAT=image%2Fpng';
 
-      expect(legendUrl).to.contain(url);
-      expect(legendUrl).to.contain(layerParam);
-      expect(legendUrl).to.contain(versionParam);
-      expect(legendUrl).to.contain(serviceParam);
-      expect(legendUrl).to.contain(requestParam);
-      expect(legendUrl).to.contain(formatParam);
+      expect(legendUrl).toContain(url);
+      expect(legendUrl).toContain(layerParam);
+      expect(legendUrl).toContain(versionParam);
+      expect(legendUrl).toContain(serviceParam);
+      expect(legendUrl).toContain(requestParam);
+      expect(legendUrl).toContain(formatParam);
     });
 
     it('accepts extraParams for the request', () => {
@@ -514,49 +514,49 @@ describe('MapUtil', () => {
       const heightParam = 'HEIGHT=10';
       const widthParam = 'WIDTH=10';
 
-      expect(legendUrl).to.contain(url);
-      expect(legendUrl).to.contain(layerParam);
-      expect(legendUrl).to.contain(versionParam);
-      expect(legendUrl).to.contain(serviceParam);
-      expect(legendUrl).to.contain(requestParam);
-      expect(legendUrl).to.contain(formatParam);
-      expect(legendUrl).to.contain(heightParam);
-      expect(legendUrl).to.contain(widthParam);
+      expect(legendUrl).toContain(url);
+      expect(legendUrl).toContain(layerParam);
+      expect(legendUrl).toContain(versionParam);
+      expect(legendUrl).toContain(serviceParam);
+      expect(legendUrl).toContain(requestParam);
+      expect(legendUrl).toContain(formatParam);
+      expect(legendUrl).toContain(heightParam);
+      expect(legendUrl).toContain(widthParam);
     });
 
   });
 
   describe('layerInResolutionRange', () => {
     it('is defined', () => {
-      expect(MapUtil.layerInResolutionRange).not.to.be(undefined);
+      expect(MapUtil.layerInResolutionRange).not.toBeUndefined();
     });
     it('is a function', () => {
-      expect(MapUtil.layerInResolutionRange).to.be.a('function');
+      expect(MapUtil.layerInResolutionRange).toBeInstanceOf(Function);
     });
     it('returns false if not passed a layer', () => {
-      expect(MapUtil.layerInResolutionRange()).to.be(false);
+      expect(MapUtil.layerInResolutionRange()).toBe(false);
     });
     it('returns false if not passed a map', () => {
       const layer = new OlLayerTile();
-      expect(MapUtil.layerInResolutionRange(layer)).to.be(false);
+      expect(MapUtil.layerInResolutionRange(layer)).toBe(false);
     });
     it('returns false if map does not have a view', () => {
       const layer = new OlLayerTile();
       const map = new OlMap({view: null});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(false);
     });
     it('returns false if map view does not have a resolution', () => {
       const layer = new OlLayerTile();
       const view = new OlView();
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(false);
     });
 
     it('returns true: layer (no limits) & any viewRes', () => {
       const layer = new OlLayerTile();
       const view = new OlView({resolution: 42});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(true);
     });
 
     it('returns true: layer (w/ minResolution) & viewRes > l.minres', () => {
@@ -565,7 +565,7 @@ describe('MapUtil', () => {
       });
       const view = new OlView({resolution: 43});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(true);
     });
 
     it('returns true: layer (w/ minResolution) & viewRes = l.minres', () => {
@@ -574,7 +574,7 @@ describe('MapUtil', () => {
       });
       const view = new OlView({resolution: 42});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(true);
     });
 
     it('returns true: layer (w/ maxResolution) & viewRes < l.maxres', () => {
@@ -583,7 +583,7 @@ describe('MapUtil', () => {
       });
       const view = new OlView({resolution: 41});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(true);
     });
 
     it('returns false: layer (w/ maxResolution) & viewRes = l.maxres', () => {
@@ -592,7 +592,7 @@ describe('MapUtil', () => {
       });
       const view = new OlView({resolution: 42});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(false);
     });
 
     it('returns true: layer (w/ min and max) & viewRes  within', () => {
@@ -602,7 +602,7 @@ describe('MapUtil', () => {
       });
       const view = new OlView({resolution: 46});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(true);
     });
 
     it('returns false: layer (w/ min and max) & viewRes outside min', () => {
@@ -612,7 +612,7 @@ describe('MapUtil', () => {
       });
       const view = new OlView({resolution: 38});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(false);
     });
 
     it('returns true: layer (w/ min and max) & viewRes = min', () => {
@@ -622,7 +622,7 @@ describe('MapUtil', () => {
       });
       const view = new OlView({resolution: 42});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(true);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(true);
     });
 
     it('returns false: layer (w/ min and max) & viewRes outside max', () => {
@@ -632,7 +632,7 @@ describe('MapUtil', () => {
       });
       const view = new OlView({resolution: 54});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(false);
     });
 
     it('returns false: layer (w/ min and max) & viewRes = max', () => {
@@ -642,7 +642,7 @@ describe('MapUtil', () => {
       });
       const view = new OlView({resolution: 50});
       const map = new OlMap({view: view});
-      expect(MapUtil.layerInResolutionRange(layer, map)).to.be(false);
+      expect(MapUtil.layerInResolutionRange(layer, map)).toBe(false);
     });
 
   });

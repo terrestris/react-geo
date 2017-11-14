@@ -1,4 +1,3 @@
-import '../../enzyme.conf.js';
 import React from 'react';
 import { mount } from 'enzyme';
 import OlView from 'ol/view';

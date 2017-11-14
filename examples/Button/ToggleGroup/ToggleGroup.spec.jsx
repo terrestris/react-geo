@@ -1,6 +1,6 @@
-/*eslint-env mocha*/
+/*eslint-env jest*/
 import React from 'react';
-import expect from 'expect.js';
+
 import sinon from 'sinon';
 
 import TestUtil from '../../Util/TestUtil';
@@ -13,12 +13,12 @@ import{
 describe('<ToggleGroup />', () => {
 
   it('is defined', () => {
-    expect(ToggleGroup).not.to.be(undefined);
+    expect(ToggleGroup).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
     const wrapper = TestUtil.mountComponent(ToggleGroup);
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('renders it\'s children horizontally or vertically', () => {
@@ -26,13 +26,13 @@ describe('<ToggleGroup />', () => {
       orientation: 'vertical'
     });
 
-    expect(wrapper.find('div.vertical-toggle-group').length).to.equal(1);
+    expect(wrapper.find('div.vertical-toggle-group').length).toBe(1);
 
     wrapper.setProps({
       orientation: 'horizontal'
     });
 
-    expect(wrapper.find('div.horizontal-toggle-group').length).to.equal(1);
+    expect(wrapper.find('div.horizontal-toggle-group').length).toBe(1);
   });
 
   it('renders children when passed in', () => {
@@ -45,7 +45,7 @@ describe('<ToggleGroup />', () => {
     };
     const wrapper = TestUtil.mountComponent(ToggleGroup, props);
 
-    expect(wrapper.find(ToggleButton).length).to.equal(3);
+    expect(wrapper.find(ToggleButton).length).toBe(3);
   });
 
   it('calls the given onChange callback if a children is pressed', () => {
@@ -60,7 +60,7 @@ describe('<ToggleGroup />', () => {
 
     wrapper.find(ToggleButton).simulate('click');
 
-    expect(changeSpy).to.have.property('callCount', 1);
+    expect(changeSpy).toHaveProperty('callCount', 1);
   });
 
   it('sets the selected name on click', () => {
@@ -76,10 +76,10 @@ describe('<ToggleGroup />', () => {
     const wrapper = TestUtil.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).first().simulate('click');
-    expect(wrapper.state().selectedName).to.equal('Shinji');
+    expect(wrapper.state().selectedName).toBe('Shinji');
 
     wrapper.find(ToggleButton).at(2).simulate('click');
-    expect(wrapper.state().selectedName).to.equal('香川 真司');
+    expect(wrapper.state().selectedName).toBe('香川 真司');
   });
 
   it('allows to deselect an already pressed button', () => {
@@ -96,17 +96,17 @@ describe('<ToggleGroup />', () => {
     const wrapper = TestUtil.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).first().simulate('click');
-    expect(wrapper.state().selectedName).to.equal('Shinji');
+    expect(wrapper.state().selectedName).toBe('Shinji');
 
     wrapper.find(ToggleButton).first().simulate('click');
-    expect(wrapper.state().selectedName).to.equal('Shinji');
+    expect(wrapper.state().selectedName).toBe('Shinji');
 
     wrapper.setProps({
       allowDeselect: true
     });
 
     wrapper.find(ToggleButton).first().simulate('click');
-    expect(wrapper.state().selectedName).to.equal(null);
+    expect(wrapper.state().selectedName).toBe(null);
   });
 
 });

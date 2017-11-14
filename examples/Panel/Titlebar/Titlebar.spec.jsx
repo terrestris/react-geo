@@ -1,6 +1,6 @@
-/*eslint-env mocha*/
+/*eslint-env jest*/
 import React from 'react';
-import expect from 'expect.js';
+
 import TestUtil from '../../Util/TestUtil';
 
 import {
@@ -11,14 +11,14 @@ import {
 describe('<Titlebar />', () => {
 
   it('is defined', () => {
-    expect(Titlebar).not.to.be(undefined);
+    expect(Titlebar).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
     const wrapper = TestUtil.mountComponent(Titlebar, {
       parent: document.body
     });
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('adds a passed className', () => {
@@ -26,7 +26,7 @@ describe('<Titlebar />', () => {
       parent: document.body,
       className: 'podolski'
     });
-    expect(wrapper.instance().props.className).to.contain('podolski');
+    expect(wrapper.instance().props.className).toContain('podolski');
   });
 
   it('renders the title', () => {
@@ -34,14 +34,14 @@ describe('<Titlebar />', () => {
       children: 'Testtitle'
     });
     const title = wrapper.find('span.title');
-    expect(title.length).to.equal(1);
+    expect(title.length).toBe(1);
   });
 
   it('renders the controls (if set)', () => {
     const wrapper = TestUtil.mountComponent(Titlebar, {
       children: 'Testtitle'
     });
-    expect(wrapper.find('span.controls').length).to.equal(0);
+    expect(wrapper.find('span.controls').length).toBe(0);
     const wrapperWithTools = TestUtil.mountComponent(Titlebar, {
       children: 'Testtitle',
       tools: [
@@ -52,7 +52,7 @@ describe('<Titlebar />', () => {
         />
       ]
     });
-    expect(wrapperWithTools.find('span.controls').length).to.equal(1);
+    expect(wrapperWithTools.find('span.controls').length).toBe(1);
   });
 
 });

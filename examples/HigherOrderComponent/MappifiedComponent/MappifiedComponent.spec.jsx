@@ -1,6 +1,6 @@
-/*eslint-env mocha*/
+/*eslint-env jest*/
 import React from 'react';
-import expect from 'expect.js';
+
 import sinon from 'sinon';
 
 import TestUtil from '../../Util/TestUtil';
@@ -33,29 +33,29 @@ describe('mappify', () => {
 
   describe('Basics', () => {
     it('is defined', () => {
-      expect(mappify).not.to.be(undefined);
+      expect(mappify).not.toBeUndefined();
     });
 
     it('can be rendered', () => {
       const wrapper = TestUtil.mountComponent(EnhancedComponent, {}, {map});
 
-      expect(wrapper).not.to.be(undefined);
-      expect(wrapper.first().is(EnhancedComponent)).to.be(true);
+      expect(wrapper).not.toBeUndefined();
+      expect(wrapper.first().is(EnhancedComponent)).toBe(true);
     });
 
     it('adds the map from the context as a prop', () => {
       const wrapper = TestUtil.mountComponent(EnhancedComponent, {}, {map});
       const wrappedInstance = wrapper.instance().getWrappedInstance();
 
-      expect(wrappedInstance.props.map).to.eql(map);
+      expect(wrappedInstance.props.map).toBe(map);
     });
 
     it('warns if no map is given in the context', () => {
       const loggerSpy = sinon.spy(Logger, 'warn');
       TestUtil.mountComponent(EnhancedComponent);
-      expect(loggerSpy.calledOnce).to.be.ok();
+      expect(loggerSpy.calledOnce).toBeTruthy();
       expect(loggerSpy.calledWith('You trying to mappify a component without any map in the '+
-      'context. Did you implement the MapProvider?')).to.be.ok();
+      'context. Did you implement the MapProvider?')).toBeTruthy();
       loggerSpy.restore();
     });
 
@@ -72,7 +72,7 @@ describe('mappify', () => {
       const wrapper = TestUtil.mountComponent(EnhancedComponent, props, {map});
       const wrappedInstance = wrapper.instance().getWrappedInstance();
 
-      expect(wrappedInstance.props).to.eql(expectedProps);
+      expect(wrappedInstance.props).toEqual(expectedProps);
     });
 
     it('saves a reference to the wrapped instance if requested', () => {
@@ -82,7 +82,7 @@ describe('mappify', () => {
       const wrapper = TestUtil.mountComponent(EnhancedComponent, props, {map});
       const wrappedInstance = wrapper.instance().getWrappedInstance();
 
-      expect(wrappedInstance).to.be.an(MockComponent);
+      expect(wrappedInstance).toBeInstanceOf(MockComponent);
 
       const EnhancedComponentNoRef = mappify(MockComponent, {
         withRef: false
@@ -91,7 +91,7 @@ describe('mappify', () => {
       const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props, {map});
       const wrappedInstanceNoRef = wrapperNoRef.instance().getWrappedInstance();
 
-      expect(wrappedInstanceNoRef).to.be(undefined);
+      expect(wrappedInstanceNoRef).toBeUndefined();
     });
 
   });

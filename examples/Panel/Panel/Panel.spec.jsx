@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 import TestUtil from '../../Util/TestUtil';
 
 import { Panel } from '../../index';
@@ -7,12 +7,12 @@ import { Panel } from '../../index';
 describe('<Panel />', () => {
 
   it('is defined', () => {
-    expect(Panel).not.to.be(undefined);
+    expect(Panel).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
     const wrapper = TestUtil.mountComponent(Panel);
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('passes props to Rnd', () => {
@@ -21,22 +21,22 @@ describe('<Panel />', () => {
       fc: 'koeln'
     });
     const rnd = wrapper.find('Rnd').getElements()[0];
-    expect(rnd.props.className).to.contain('podolski');
-    expect(rnd.props.fc).to.equal('koeln');
+    expect(rnd.props.className).toContain('podolski');
+    expect(rnd.props.fc).toBe('koeln');
   });
 
   describe('#toggleCollapse', () => {
     const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
-      expect(wrapper.instance().toggleCollapse).not.to.be(undefined);
+      expect(wrapper.instance().toggleCollapse).not.toBeUndefined();
     });
 
     it('inverts the collapsed property on the state', () => {
       const oldState = wrapper.state();
       wrapper.instance().toggleCollapse();
       const newState = wrapper.state();
-      expect(oldState.collapsed).to.be(!newState.collapsed);
+      expect(oldState.collapsed).toBe(!newState.collapsed);
     });
   });
 
@@ -44,12 +44,12 @@ describe('<Panel />', () => {
     const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
-      expect(wrapper.instance().onResize).not.to.be(undefined);
+      expect(wrapper.instance().onResize).not.toBeUndefined();
     });
 
     it('sets resizing on the state to true', () => {
       wrapper.instance().onResize(null, null, {clientHeight: 1337});
-      expect(wrapper.state().height).to.eql(1337);
+      expect(wrapper.state().height).toBe(1337);
     });
   });
 
@@ -57,13 +57,13 @@ describe('<Panel />', () => {
     const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
-      expect(wrapper.instance().onResizeStart).not.to.be(undefined);
+      expect(wrapper.instance().onResizeStart).not.toBeUndefined();
     });
 
     it('sets resizing on the state to true', () => {
       wrapper.instance().onResizeStart();
       const state = wrapper.state();
-      expect(state.resizing).to.be(true);
+      expect(state.resizing).toBe(true);
     });
   });
 
@@ -71,13 +71,13 @@ describe('<Panel />', () => {
     const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
-      expect(wrapper.instance().onResizeStop).not.to.be(undefined);
+      expect(wrapper.instance().onResizeStop).not.toBeUndefined();
     });
 
     it('sets the el size on the state', () => {
       wrapper.instance().onResizeStop();
       const state = wrapper.state();
-      expect(state.resizing).to.be(false);
+      expect(state.resizing).toBe(false);
     });
   });
 
@@ -85,7 +85,7 @@ describe('<Panel />', () => {
     const wrapper = TestUtil.mountComponent(Panel);
 
     it('is defined', () => {
-      expect(wrapper.instance().close).not.to.be(undefined);
+      expect(wrapper.instance().close).not.toBeUndefined();
     });
 
     it('removes the window from the DOM', () => {
@@ -94,11 +94,11 @@ describe('<Panel />', () => {
       document.body.appendChild(node);
 
       const before = document.getElementsByClassName(wrapper.instance().state.id);
-      expect(before).to.have.length(1);
+      expect(before).toHaveLength(1);
       wrapper.instance().close();
 
       const after = document.getElementsByClassName(wrapper.instance().state.id);
-      expect(after).to.be.empty();
+      expect(after).toHaveLength(0);
 
     });
   });
@@ -106,7 +106,7 @@ describe('<Panel />', () => {
   describe('#showWindow', () => {
 
     it('is defined', () => {
-      expect(Panel.showWindow).not.to.be(undefined);
+      expect(Panel.showWindow).not.toBeUndefined();
     });
 
     it('shows a window', (done) => {
@@ -124,12 +124,12 @@ describe('<Panel />', () => {
         title: 'Drag me'
       }).then((win) => {
 
-        expect(win.props.title).to.eql('Drag me');
-        expect(win.props.containerId).to.eql('testContainer');
-        expect(win.props.id).to.contain('react-geo-window-');
-        expect(win.props.collapsible).to.be(true);
-        expect(win.props.closable).to.be(true);
-        expect(win.props.resizeOpts).to.be(true);
+        expect(win.props.title).toBe('Drag me');
+        expect(win.props.containerId).toBe('testContainer');
+        expect(win.props.id).toContain('react-geo-window-');
+        expect(win.props.collapsible).toBe(true);
+        expect(win.props.closable).toBe(true);
+        expect(win.props.resizeOpts).toBe(true);
 
         //TearDown
         win.close();

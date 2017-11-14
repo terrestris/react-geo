@@ -1,7 +1,7 @@
-/*eslint-env mocha*/
+/*eslint-env jest*/
 import React from 'react';
 import sinon from 'sinon';
-import expect from 'expect.js';
+
 import { Select } from 'antd';
 const Option = Select.Option;
 
@@ -15,7 +15,7 @@ import {
 
 describe('<ScaleCombo />', () => {
   it('is defined', () => {
-    expect(ScaleCombo).not.to.be(undefined);
+    expect(ScaleCombo).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
@@ -23,7 +23,7 @@ describe('<ScaleCombo />', () => {
     const wrapper = TestUtil.mountComponent(ScaleCombo, {
       map
     });
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('passes style prop', () => {
@@ -35,7 +35,7 @@ describe('<ScaleCombo />', () => {
       }
     };
     const wrapper = TestUtil.mountComponent(ScaleCombo, props);
-    expect(wrapper.props().style.backgroundColor).to.be('yellow');
+    expect(wrapper.props().style.backgroundColor).toBe('yellow');
 
     TestUtil.removeMap(map);
   });
@@ -46,7 +46,7 @@ describe('<ScaleCombo />', () => {
       const wrapper = TestUtil.mountComponent(ScaleCombo, {
         map
       });
-      expect(wrapper.instance().getOptionsFromMap).not.to.be(undefined);
+      expect(wrapper.instance().getOptionsFromMap).not.toBeUndefined();
     });
 
     it('creates options array from scaled primarily', () => {
@@ -61,7 +61,7 @@ describe('<ScaleCombo />', () => {
         scales: scaleArray
       });
       wrapper.instance().getOptionsFromMap();
-      expect(logSpy).to.have.property('callCount', 1);
+      expect(logSpy).toHaveProperty('callCount', 1);
       Logger.debug.restore();
 
       TestUtil.removeMap(map);
@@ -74,7 +74,7 @@ describe('<ScaleCombo />', () => {
         map: map
       });
       wrapper.instance().getOptionsFromMap();
-      expect(wrapper.props().scales).to.be.an('array');
+      expect(wrapper.props().scales).toBeInstanceOf(Array);
 
       TestUtil.removeMap(map);
     });
@@ -89,13 +89,13 @@ describe('<ScaleCombo />', () => {
         map: map
       });
       wrapper.instance().getOptionsFromMap();
-      expect(wrapper.props().scales).to.be.an('array');
-      expect(wrapper.props().scales).to.have.length(testResolutions.length);
+      expect(wrapper.props().scales).toBeInstanceOf(Array);
+      expect(wrapper.props().scales).toHaveLength(testResolutions.length);
 
       let roundScale = (Math.round(MapUtil.getScaleForResolution(
         testResolutions[testResolutions.length - 1] ,'m')));
 
-      expect(wrapper.props().scales[0]).to.be(roundScale);
+      expect(wrapper.props().scales[0]).toBe(roundScale);
 
       TestUtil.removeMap(map);
     });
@@ -107,7 +107,7 @@ describe('<ScaleCombo />', () => {
       const wrapper = TestUtil.mountComponent(ScaleCombo, {
         map
       });
-      expect(wrapper.instance().determineOptionKeyForZoomLevel).not.to.be(undefined);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel).not.toBeUndefined();
     });
 
     it('returns "undefied" for erronous zoom level or if exceeds number of valid zoom levels ', () => {
@@ -118,11 +118,11 @@ describe('<ScaleCombo />', () => {
         scales: scaleArray
       });
 
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(undefined)).to.be(undefined);
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(null)).to.be(undefined);
-      expect(wrapper.instance().determineOptionKeyForZoomLevel('foo')).to.be(undefined);
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(17.123)).to.be(undefined);
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(scaleArray.length)).to.be(undefined);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(undefined)).toBeUndefined();
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(null)).toBeUndefined();
+      expect(wrapper.instance().determineOptionKeyForZoomLevel('foo')).toBeUndefined();
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(17.123)).toBeUndefined();
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(scaleArray.length)).toBeUndefined();
 
       TestUtil.removeMap(map);
     });
@@ -135,7 +135,7 @@ describe('<ScaleCombo />', () => {
         scales: scaleArray
       });
       const index = 1;
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(index)).to.be(scaleArray[index]);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(index)).toBe(scaleArray[index]);
 
       TestUtil.removeMap(map);
     });
