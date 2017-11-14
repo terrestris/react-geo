@@ -5,6 +5,16 @@
     "react"
   ],
   "env": {
+    "test": {
+      "presets":[
+        ["es2015"],
+        "react",
+        "stage-0"
+      ],
+      "plugins": [
+        "transform-es2015-modules-commonjs"
+      ]
+    },
     "build": {
       "plugins": [
         "babel-plugin-transform-import-extension-jsx-to-js"

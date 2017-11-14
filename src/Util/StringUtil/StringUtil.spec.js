@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 
 import {
   StringUtil
@@ -9,7 +9,7 @@ describe('StringUtil', () => {
 
   describe('Basics', () => {
     it('is defined', () => {
-      expect(StringUtil).to.not.be(undefined);
+      expect(StringUtil).toBeDefined();
     });
   });
 
@@ -19,12 +19,12 @@ describe('StringUtil', () => {
         let url = 'http://www.bvb.de';
         let text = `Visit ${url}`;
         let got = StringUtil.urlify(text);
-        expect(got).to.equal(`Visit <a href="${url}" target="_blank">${url}</a>`);
+        expect(got).toBe(`Visit <a href="${url}" target="_blank">${url}</a>`);
 
         url = 'https://www.bvb.de';
         text = `Visit ${url}`;
         got = StringUtil.urlify(text);
-        expect(got).to.equal(`Visit <a href="${url}" target="_blank">${url}</a>`);
+        expect(got).toBe(`Visit <a href="${url}" target="_blank">${url}</a>`);
       });
     });
   });

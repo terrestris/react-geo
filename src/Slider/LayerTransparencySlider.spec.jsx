@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 
 import TestUtil from '../Util/TestUtil';
 import { LayerTransparencySlider } from '../index';
@@ -12,7 +12,7 @@ describe('<LayerTransparencySlider />', () => {
   });
 
   it('is defined', () => {
-    expect(LayerTransparencySlider).not.to.be(undefined);
+    expect(LayerTransparencySlider).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
@@ -20,7 +20,7 @@ describe('<LayerTransparencySlider />', () => {
       layer: layer
     };
     const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('returns the the transparency of the layer', () => {
@@ -31,7 +31,7 @@ describe('<LayerTransparencySlider />', () => {
 
     const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
     let transparency = wrapper.instance().getLayerTransparency();
-    expect(transparency).to.equal(91);
+    expect(transparency).toBe(91);
   });
 
   it('updates the opacity of the layer by providing a transparency value', () => {
@@ -41,7 +41,7 @@ describe('<LayerTransparencySlider />', () => {
     const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
 
     wrapper.instance().setLayerTransparency(91);
-    expect(layer.getOpacity()).to.equal(0.09);
+    expect(layer.getOpacity()).toBe(0.09);
   });
 
 });

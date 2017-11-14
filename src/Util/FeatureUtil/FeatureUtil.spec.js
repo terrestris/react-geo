@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 import OlFeature from 'ol/feature';
 import OlGeomPoint from 'ol/geom/point';
 
@@ -36,7 +36,7 @@ describe('FeatureUtil', () => {
 
   describe('Basics', () => {
     it('is defined', () => {
-      expect(FeatureUtil).to.not.be(undefined);
+      expect(FeatureUtil).toBeDefined();
     });
   });
 
@@ -44,17 +44,17 @@ describe('FeatureUtil', () => {
     describe('#getFeatureTypeName', () => {
       it('splits the feature ID at the point character and returns the first part', () => {
         let got = FeatureUtil.getFeatureTypeName(feat);
-        expect(got).to.equal(featId.split('.')[0]);
+        expect(got).toBe(featId.split('.')[0]);
 
         feat.setId('BVB');
         got = FeatureUtil.getFeatureTypeName(feat);
-        expect(got).to.equal('BVB');
+        expect(got).toBe('BVB');
       });
 
       it('returns undefined if the ID is not set', () => {
         feat.setId(null);
         let got = FeatureUtil.getFeatureTypeName(feat);
-        expect(got).to.equal(undefined);
+        expect(got).toBe(undefined);
       });
     });
 
@@ -62,59 +62,59 @@ describe('FeatureUtil', () => {
       it('resolves the given template string with the feature attributes', () => {
         let template = '{{name}}';
         let got = FeatureUtil.resolveAttributeTemplate(feat, template);
-        expect(got).to.equal(props.name);
+        expect(got).toBe(props.name);
 
         // It's case insensitive.
         template = '{{NAmE}}';
         got = FeatureUtil.resolveAttributeTemplate(feat, template);
-        expect(got).to.equal(props.name);
+        expect(got).toBe(props.name);
 
         // It resolves static and non-static content.
         template = 'Contact information: {{name}} {{address}} {{city}}';
         got = FeatureUtil.resolveAttributeTemplate(feat, template);
-        expect(got).to.equal(`Contact information: ${props.name} ${props.address} ${props.city}`);
+        expect(got).toBe(`Contact information: ${props.name} ${props.address} ${props.city}`);
 
         // It doesn't harm the template if not attribute placeholder is given.
         template = 'No attribute template';
         got = FeatureUtil.resolveAttributeTemplate(feat, template);
-        expect(got).to.equal(template);
+        expect(got).toBe(template);
       });
 
       it('wraps an URL occurence with an <a> tag', () => {
         let template = '{{homepage}}';
         let got = FeatureUtil.resolveAttributeTemplate(feat, template);
-        expect(got).to.equal(`<a href="${props.homepage}" target="_blank">${props.homepage}</a>`);
+        expect(got).toBe(`<a href="${props.homepage}" target="_blank">${props.homepage}</a>`);
       });
 
       it('resolves it with a placeholder if attribute could not be found', () => {
         let template = '{{notAvailable}}';
         let got = FeatureUtil.resolveAttributeTemplate(feat, template);
-        expect(got).to.equal('n.v.');
+        expect(got).toBe('n.v.');
 
         template = '{{name}} {{notAvailable}}';
         got = FeatureUtil.resolveAttributeTemplate(feat, template);
-        expect(got).to.equal(`${props.name} n.v.`);
+        expect(got).toBe(`${props.name} n.v.`);
 
         // The placeholder is configurable.
         let notFoundPlaceHolder = '【ツ】';
         template = '{{name}} {{notAvailable}}';
         got = FeatureUtil.resolveAttributeTemplate(feat, template, notFoundPlaceHolder);
-        expect(got).to.equal(`${props.name} ${notFoundPlaceHolder}`);
+        expect(got).toBe(`${props.name} ${notFoundPlaceHolder}`);
       });
 
       it('returns the id of the feature if no template is given', () => {
         let template = '';
         let got = FeatureUtil.resolveAttributeTemplate(feat, template);
-        expect(got).to.equal(featId);
+        expect(got).toBe(featId);
 
         got = FeatureUtil.resolveAttributeTemplate(feat);
-        expect(got).to.equal(featId);
+        expect(got).toBe(featId);
       });
 
       it('replaces newline chars with a <br> tag', () => {
         let template = '{{name}} \n {{city}}';
         let got = FeatureUtil.resolveAttributeTemplate(feat, template);
-        expect(got).to.equal(`${props.name} <br> ${props.city}`);
+        expect(got).toBe(`${props.name} <br> ${props.city}`);
       });
     });
 

@@ -1,5 +1,4 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
 import sinon from 'sinon';
 
 import TestUtil from '../../Util/TestUtil';
@@ -9,12 +8,12 @@ import { SimpleButton } from '../../index';
 
 describe('<SimpleButton />', () => {
   it('is defined', () => {
-    expect(SimpleButton).not.to.be(undefined);
+    expect(SimpleButton).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
     const wrapper = TestUtil.mountComponent(SimpleButton);
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('allows to set some props', () => {
@@ -28,17 +27,17 @@ describe('<SimpleButton />', () => {
       disabled: true
     });
 
-    expect(wrapper.props().type).to.equal('secondary');
-    expect(wrapper.props().icon).to.equal('bath');
-    expect(wrapper.props().shape).to.equal('circle');
-    expect(wrapper.props().size).to.equal('small');
-    expect(wrapper.props().disabled).to.equal(true);
+    expect(wrapper.props().type).toBe('secondary');
+    expect(wrapper.props().icon).toBe('bath');
+    expect(wrapper.props().shape).toBe('circle');
+    expect(wrapper.props().size).toBe('small');
+    expect(wrapper.props().disabled).toBe(true);
 
-    expect(wrapper.find('button.ant-btn-secondary').length).to.equal(1);
-    expect(wrapper.find('span.fa-bath').length).to.equal(1);
-    expect(wrapper.find('button.ant-btn-circle').length).to.equal(1);
-    expect(wrapper.find('button.ant-btn-sm').length).to.equal(1);
-    expect(wrapper.find('button', {disabled: true}).length).to.equal(1);
+    expect(wrapper.find('button.ant-btn-secondary').length).toBe(1);
+    expect(wrapper.find('span.fa-bath').length).toBe(1);
+    expect(wrapper.find('button.ant-btn-circle').length).toBe(1);
+    expect(wrapper.find('button.ant-btn-sm').length).toBe(1);
+    expect(wrapper.find('button', {disabled: true}).length).toBe(1);
   });
 
   it('warns if no click callback method is given', () => {
@@ -47,7 +46,7 @@ describe('<SimpleButton />', () => {
 
     wrapper.find('button').simulate('click');
 
-    expect(logSpy).to.have.property('callCount', 1);
+    expect(logSpy).toHaveProperty('callCount', 1);
 
     Logger.debug.restore();
   });
@@ -58,7 +57,7 @@ describe('<SimpleButton />', () => {
 
     wrapper.find('button').simulate('click');
 
-    expect(onClick).to.have.property('callCount', 1);
+    expect(onClick).toHaveProperty('callCount', 1);
   });
 
 });

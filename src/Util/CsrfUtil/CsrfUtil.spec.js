@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 import { template } from 'lodash';
 import sinon from 'sinon';
 
@@ -31,7 +31,7 @@ const specs = [{
 
 describe('CsrfUtil', () => {
   it('is defined', () => {
-    expect(CsrfUtil).not.to.be(undefined);
+    expect(CsrfUtil).not.toBeUndefined();
   });
 
   describe('Static methods', () => {
@@ -56,25 +56,25 @@ describe('CsrfUtil', () => {
 
     it('getCsrfValue', () => {
       let result = CsrfUtil.getCsrfValue();
-      expect(result).to.be(tokenValue);
+      expect(result).toBe(tokenValue);
     });
 
     it('getCsrfHeaderName', () => {
       let result = CsrfUtil.getCsrfHeaderName();
-      expect(result).to.be(headerName);
+      expect(result).toBe(headerName);
     });
 
     it('getCsrfParameterName', () => {
       let result = CsrfUtil.getCsrfParameterName();
-      expect(result).to.be(paramName);
+      expect(result).toBe(paramName);
     });
 
     it('getHeader', () => {
       let result = CsrfUtil.getHeader();
-      expect(result).to.be.a(Headers);
+      expect(result).toBeInstanceOf(Headers);
 
-      expect(result.has(headerName)).to.be(true);
-      expect(result.get(headerName)).to.be(tokenValue);
+      expect(result.has(headerName)).toBe(true);
+      expect(result.get(headerName)).toBe(tokenValue);
     });
 
     it('getHeaderObject', () => {
@@ -90,15 +90,15 @@ describe('CsrfUtil', () => {
 
     it('getContentFromMetaTagByName', () => {
       let result = CsrfUtil.getContentFromMetaTagByName('manta');
-      expect(result).to.be('jurgensohn');
+      expect(result).toBe('jurgensohn');
     });
 
     it('getContentFromMetaTagByName should return warning for unknown meta tag', () => {
       const logSpy = sinon.spy(Logger, 'warn');
 
       let result = CsrfUtil.getContentFromMetaTagByName('balotelli');
-      expect(result).to.be('');
-      expect(logSpy).to.have.property('callCount', 1);
+      expect(result).toBe('');
+      expect(logSpy).toHaveProperty('callCount', 1);
 
       Logger.warn.restore();
     });
@@ -111,7 +111,7 @@ describe('CsrfUtil', () => {
       document.getElementsByTagName('head')[0].appendChild(tagElement);
 
       let result = CsrfUtil.getContentFromMetaTagByName(tagName);
-      expect(result).to.be('');
+      expect(result).toBe('');
     });
   });
 });

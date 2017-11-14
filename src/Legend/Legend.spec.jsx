@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 
 import OlLayerTile from 'ol/layer/tile';
 import OlSourceTileWMS from 'ol/source/tilewms';
@@ -36,12 +36,12 @@ describe('<Legend />', () => {
   });
 
   it('is defined', () => {
-    expect(Legend).not.to.be(undefined);
+    expect(Legend).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
     const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   describe('Legend created with Layer', () => {
@@ -49,14 +49,14 @@ describe('<Legend />', () => {
     it('takes the legendGraphic from layer.get("legendUrl") if configured', () => {
       const wrapper = TestUtil.mountComponent(Legend, {layer: layer2});
       const img = wrapper.find('img').getElement();
-      expect(img.props.src).to.eql(layer2.get('legendUrl'));
+      expect(img.props.src).toBe(layer2.get('legendUrl'));
     });
 
     it('generates getLegendGraphicUrl if no "legendUrl" configured', () => {
       const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
       const img = wrapper.find('img').getElement();
       const legendUrl = MapUtil.getLegendGraphicUrl(layer1);
-      expect(img.props.src).to.eql(legendUrl);
+      expect(img.props.src).toBe(legendUrl);
     });
 
     it('generates getLegendGraphicUrl if no "legendUrl" configured (extraParams)', () => {
@@ -71,13 +71,13 @@ describe('<Legend />', () => {
       });
       const img = wrapper.find('img').getElement();
       const legendUrl = MapUtil.getLegendGraphicUrl(layer1, extraParams);
-      expect(img.props.src).to.eql(legendUrl);
+      expect(img.props.src).toBe(legendUrl);
     });
 
     it('creates an alt attribute corresponding to layername', () => {
       const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
       const img = wrapper.find('img').getElement();
-      expect(img.props.alt).to.eql(`${layer1.get('name')} legend`);
+      expect(img.props.alt).toBe(`${layer1.get('name')} legend`);
     });
 
   });

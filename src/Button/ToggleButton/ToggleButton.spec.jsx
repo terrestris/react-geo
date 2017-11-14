@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 import sinon from 'sinon';
 
 import TestUtil from '../../Util/TestUtil';
@@ -12,12 +12,12 @@ import {
 describe('<ToggleButton />', () => {
 
   it('is defined', () => {
-    expect(ToggleButton).not.to.be(undefined);
+    expect(ToggleButton).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
     const wrapper = TestUtil.mountComponent(ToggleButton);
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('allows to set some props', () => {
@@ -33,19 +33,19 @@ describe('<ToggleButton />', () => {
       pressed: false
     });
 
-    expect(wrapper.props().name).to.equal('Shinji');
-    expect(wrapper.props().type).to.equal('secondary');
-    expect(wrapper.props().icon).to.equal('bath');
-    expect(wrapper.props().shape).to.equal('circle');
-    expect(wrapper.props().size).to.equal('small');
-    expect(wrapper.props().disabled).to.equal(true);
-    expect(wrapper.props().pressed).to.equal(false);
+    expect(wrapper.props().name).toBe('Shinji');
+    expect(wrapper.props().type).toBe('secondary');
+    expect(wrapper.props().icon).toBe('bath');
+    expect(wrapper.props().shape).toBe('circle');
+    expect(wrapper.props().size).toBe('small');
+    expect(wrapper.props().disabled).toBe(true);
+    expect(wrapper.props().pressed).toBe(false);
 
-    expect(wrapper.find('button.ant-btn-secondary').length).to.equal(1);
-    expect(wrapper.find('span.fa-bath').length).to.equal(1);
-    expect(wrapper.find('button.ant-btn-circle').length).to.equal(1);
-    expect(wrapper.find('button.ant-btn-sm').length).to.equal(1);
-    expect(wrapper.find('button', {disabled: true}).length).to.equal(1);
+    expect(wrapper.find('button.ant-btn-secondary').length).toBe(1);
+    expect(wrapper.find('span.fa-bath').length).toBe(1);
+    expect(wrapper.find('button.ant-btn-circle').length).toBe(1);
+    expect(wrapper.find('button.ant-btn-sm').length).toBe(1);
+    expect(wrapper.find('button', {disabled: true}).length).toBe(1);
   });
 
   it('sets a pressed class if the pressed state becomes truthy', () => {
@@ -54,14 +54,13 @@ describe('<ToggleButton />', () => {
     });
     let pressedClass = wrapper.instance().pressedClass;
 
-    expect(pressedClass).to.be.a('string');
-    expect(wrapper.find(`button.${pressedClass}`).length).to.equal(0);
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
 
     wrapper.setProps({
       pressed: true
     });
 
-    expect(wrapper.find(`button.${pressedClass}`).length).to.equal(1);
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
   });
 
   it('warns if no toggle callback method is given', () => {
@@ -74,7 +73,7 @@ describe('<ToggleButton />', () => {
       onToggle: null
     });
 
-    expect(logSpy).to.have.property('callCount', 1);
+    expect(logSpy).toHaveProperty('callCount', 1);
 
     logSpy.restore();
   });
@@ -91,7 +90,7 @@ describe('<ToggleButton />', () => {
       pressed: true
     });
 
-    expect(onToggle).to.have.property('callCount', 1);
+    expect(onToggle).toHaveProperty('callCount', 1);
   });
 
   it('changes the pressed state of the component on click (if standalone button)', () => {
@@ -99,7 +98,7 @@ describe('<ToggleButton />', () => {
 
     wrapper.find('button').simulate('click');
 
-    expect(wrapper.state('pressed')).to.be(true);
+    expect(wrapper.state('pressed')).toBe(true);
   });
 
   it('calls the on change callback (if included in a ToggleGroup)', () => {
@@ -113,7 +112,7 @@ describe('<ToggleButton />', () => {
 
     wrapper.find('button').simulate('click');
 
-    expect(onChangeSpy).to.have.property('callCount', 1);
+    expect(onChangeSpy).toHaveProperty('callCount', 1);
   });
 
 });

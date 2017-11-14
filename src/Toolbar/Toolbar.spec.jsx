@@ -1,6 +1,6 @@
-/*eslint-env mocha*/
+/*eslint-env jest*/
 import React from 'react';
-import expect from 'expect.js';
+
 import TestUtil from '../Util/TestUtil';
 
 import {Toolbar} from '../index';
@@ -19,17 +19,17 @@ describe('<Toolbar />', () => {
   });
 
   it('is defined', () => {
-    expect(Toolbar).not.to.be(undefined);
+    expect(Toolbar).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('contains div having class "horizontal-toolbar" by default', () => {
     let rootDiv = wrapper.find('div.horizontal-toolbar');
-    expect(rootDiv).not.to.be(undefined);
-    expect(rootDiv.length).to.be(1);
+    expect(rootDiv).not.toBeUndefined();
+    expect(rootDiv.length).toBe(1);
   });
 
 });
@@ -45,19 +45,19 @@ describe('<Toolbar /> - CSS-class "vertical-toolbar"', () => {
   });
 
   it('can be rendered', () => {
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('contains div having class "vertical-toolbar"', () => {
     let rootDiv = wrapper.find('div.vertical-toolbar');
-    expect(rootDiv).not.to.be(undefined);
-    expect(rootDiv.length).to.be(1);
+    expect(rootDiv).not.toBeUndefined();
+    expect(rootDiv.length).toBe(1);
   });
 
   it('contains three child elements', () => {
     let rootDivChildren = wrapper.find('div.vertical-toolbar').children();
-    expect(rootDivChildren).to.be.ok();
-    expect(rootDivChildren.getElements().length).to.eql(3);
+    expect(rootDivChildren).toBeTruthy();
+    expect(rootDivChildren.getElements().length).toBe(3);
   });
 });
 
@@ -72,18 +72,18 @@ describe('<Toolbar /> - CSS-class "horizontal-toolbar"', () => {
   });
 
   it('can be rendered', () => {
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('contains div having class "horizontal-toolbar"', () => {
     let rootDiv = wrapper.find('div.horizontal-toolbar');
-    expect(rootDiv).not.to.be(undefined);
-    expect(rootDiv.length).to.be(1);
+    expect(rootDiv).not.toBeUndefined();
+    expect(rootDiv.length).toBe(1);
   });
 
   it('contains three child elements', () => {
     let rootDivChildren = wrapper.find('div.horizontal-toolbar').children();
-    expect(rootDivChildren).to.be.ok();
-    expect(rootDivChildren.getElements()).to.have.length(3);
+    expect(rootDivChildren).toBeTruthy();
+    expect(rootDivChildren.getElements()).toHaveLength(3);
   });
 });

@@ -1,6 +1,6 @@
-/*eslint-env mocha*/
+/*eslint-env jest*/
 // import React from 'react';
-import expect from 'expect.js';
+
 // import { mount } from 'enzyme';
 //
 // import TestUtil from '../../Util/TestUtil';
@@ -28,7 +28,7 @@ describe('MapProvider', () => {
 
   describe('Basics', () => {
     it('is defined', () => {
-      expect(MapProvider).not.to.be(undefined);
+      expect(MapProvider).not.toBeUndefined();
     });
 
     // TODO
@@ -39,8 +39,8 @@ describe('MapProvider', () => {
     //     </MapProvider>
     //   );
     //
-    //   expect(wrapper).not.to.be(undefined);
-    //   expect(wrapper.context().map).to.eql(map);
+    //   expect(wrapper).not.toBeUndefined();
+    //   expect(wrapper.context().map).toBemap);
     // });
 
   });

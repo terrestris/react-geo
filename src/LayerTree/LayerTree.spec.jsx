@@ -1,6 +1,6 @@
-/*eslint-env mocha*/
+/*eslint-env jest*/
 import React from 'react';
-import expect from 'expect.js';
+
 import sinon from 'sinon';
 
 import OlLayerGroup from 'ol/layer/group';
@@ -47,12 +47,12 @@ describe('<LayerTree />', () => {
   });
 
   it('is defined', () => {
-    expect(LayerTree).not.to.be(undefined);
+    expect(LayerTree).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
     const wrapper = TestUtil.mountComponent(LayerTree);
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('unmount removes listeners', () => {
@@ -60,8 +60,8 @@ describe('<LayerTree />', () => {
     const wrapper = TestUtil.mountComponent(LayerTree);
     const olListenerKeys = wrapper.instance().olListenerKeys;
     wrapper.unmount();
-    expect(unByKeySpy.callCount).to.equal(1);
-    expect(unByKeySpy.calledWith(olListenerKeys)).to.be.ok();
+    expect(unByKeySpy.callCount).toBe(1);
+    expect(unByKeySpy.calledWith(olListenerKeys)).toBeTruthy();
 
     unByKeySpy.restore();
   });
@@ -82,11 +82,11 @@ describe('<LayerTree />', () => {
       layers: [subLayer]
     });
 
-    expect(wrapper.instance().olListenerKeys).to.have.length(5);
+    expect(wrapper.instance().olListenerKeys).toHaveLength(5);
     wrapper.setProps({
       layerGroup: nestedLayerGroup
     });
-    expect(wrapper.instance().olListenerKeys).to.have.length(3);
+    expect(wrapper.instance().olListenerKeys).toHaveLength(3);
   });
 
   describe('<LayerTreeNode> creation', () => {
@@ -98,7 +98,7 @@ describe('<LayerTree />', () => {
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('LayerTreeNode');
-      expect(treeNodes).to.have.length(layerGroup.getLayers().getLength());
+      expect(treeNodes).toHaveLength(layerGroup.getLayers().getLength());
     });
 
     // TODO This test could be better if the TreeNodes where iterable, but they
@@ -122,7 +122,7 @@ describe('<LayerTree />', () => {
       const treeNodes = wrapper.find('LayerTreeNode');
       const groupNode = treeNodes.at(0);
       const subNode = groupNode.props().children[0];
-      expect(subNode.props.title).to.eql(subLayer.get('name'));
+      expect(subNode.props.title).toBe(subLayer.get('name'));
     });
 
     it('sets the layer name as title per default', () => {
@@ -135,7 +135,7 @@ describe('<LayerTree />', () => {
       treeNodes.forEach((node, index) => {
         const reverseIndex = treeNodes.length - (index+1);
         const layer = layerGroup.getLayers().item(reverseIndex);
-        expect(node.props().title).to.eql(layer.get('name'));
+        expect(node.props().title).toBe(layer.get('name'));
       });
     });
 
@@ -161,10 +161,10 @@ describe('<LayerTree />', () => {
       treeNodes.forEach((node, index) => {
         const reverseIndex = treeNodes.length - (index+1);
         const layer = layerGroup.getLayers().item(reverseIndex);
-        expect(node.find('span.span-1').length).to.equal(1);
-        expect(node.find('span.sub-span-1').length).to.equal(1);
-        expect(node.find('span.sub-span-1').props().children).to.equal(layer.get('name'));
-        expect(node.find('span.sub-span-2').length).to.equal(1);
+        expect(node.find('span.span-1').length).toBe(1);
+        expect(node.find('span.sub-span-1').length).toBe(1);
+        expect(node.find('span.sub-span-1').props().children).toBe(layer.get('name'));
+        expect(node.find('span.sub-span-2').length).toBe(1);
       });
     });
 
@@ -180,8 +180,8 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('LayerTreeNode');
 
-      expect(treeNodes.length).to.equal(1);
-      expect(treeNodes.get(0).props.title).to.equal('layer2');
+      expect(treeNodes.length).toBe(1);
+      expect(treeNodes.get(0).props.title).toBe('layer2');
     });
 
     it('sets the right keys for the layers', () => {
@@ -195,7 +195,7 @@ describe('<LayerTree />', () => {
       treeNodes.forEach((node, index) => {
         const reverseIndex = treeNodes.length - (index+1);
         const layer = layerGroup.getLayers().item(reverseIndex);
-        expect(node.props().eventKey).to.have.eql(layer.ol_uid);
+        expect(node.props().eventKey).toBe(layer.ol_uid.toString());
       });
     });
 
@@ -210,7 +210,7 @@ describe('<LayerTree />', () => {
       treeNodes.forEach((node, index) => {
         const reverseIndex = treeNodes.length - (index+1);
         const layer = layerGroup.getLayers().item(reverseIndex);
-        expect(layer.getVisible()).to.eql(node.props().checked);
+        expect(layer.getVisible()).toBe(node.props().checked);
       });
     });
 
@@ -227,7 +227,7 @@ describe('<LayerTree />', () => {
         const wrapper = TestUtil.mountComponent(LayerTree, props);
         wrapper.instance().treeNodeFromLayer(layerGroup);
 
-        expect(logSpy).to.have.property('callCount', 1);
+        expect(logSpy).toHaveProperty('callCount', 1);
 
         logSpy.restore();
         layerGroup.setVisible(true);
@@ -243,8 +243,8 @@ describe('<LayerTree />', () => {
         const wrapper = TestUtil.mountComponent(LayerTree, props);
         const treeNode = wrapper.instance().treeNodeFromLayer(layer1);
 
-        expect(treeNode.props.title).to.eql(layer1.get('name'));
-        expect(treeNode.key).to.eql(layer1.ol_uid);
+        expect(treeNode.props.title).toBe(layer1.get('name'));
+        expect(treeNode.key).toBe(layer1.ol_uid.toString());
       });
     });
   });
@@ -265,7 +265,7 @@ describe('<LayerTree />', () => {
         const checkBox = node.find('.ant-tree-checkbox');
         const wasVisible = layer.getVisible();
         checkBox.simulate('click');
-        expect(wasVisible).to.eql(!layer.getVisible());
+        expect(wasVisible).toBe(!layer.getVisible());
       });
     });
   });
@@ -280,15 +280,15 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       let treeNode = wrapper.find('LayerTreeNode').at(1);
 
-      expect(treeNode.props().checked).to.be(true);
+      expect(treeNode.props().checked).toBe(true);
       layer1.setVisible(false);
       wrapper.update();
       treeNode = wrapper.find('LayerTreeNode').at(1);
-      expect(treeNode.props().checked).to.be(false);
+      expect(treeNode.props().checked).toBe(false);
       layer1.setVisible(true);
       wrapper.update();
       treeNode = wrapper.find('LayerTreeNode').at(1);
-      expect(treeNode.props().checked).to.be(true);
+      expect(treeNode.props().checked).toBe(true);
     });
 
     it('triggers tree rebuild on layer add', () => {
@@ -303,7 +303,7 @@ describe('<LayerTree />', () => {
       const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
 
       layerGroup.getLayers().push(layer);
-      expect(rebuildSpy.callCount).to.equal(1);
+      expect(rebuildSpy.callCount).toBe(1);
 
       rebuildSpy.restore();
     });
@@ -324,8 +324,8 @@ describe('<LayerTree />', () => {
       const registerSpy = sinon.spy(wrapper.instance(), 'registerAddRemoveListeners');
 
       layerGroup.getLayers().push(group);
-      expect(rebuildSpy.callCount).to.equal(1);
-      expect(registerSpy.callCount).to.equal(1);
+      expect(rebuildSpy.callCount).toBe(1);
+      expect(registerSpy.callCount).toBe(1);
 
       rebuildSpy.restore();
       registerSpy.restore();
@@ -341,8 +341,8 @@ describe('<LayerTree />', () => {
       const unregisterSpy = sinon.spy(wrapper.instance(), 'unregisterEventsByLayer');
 
       layerGroup.getLayers().remove(layer1);
-      expect(rebuildSpy.callCount).to.equal(1);
-      expect(unregisterSpy.callCount).to.equal(1);
+      expect(rebuildSpy.callCount).toBe(1);
+      expect(unregisterSpy.callCount).toBe(1);
 
       rebuildSpy.restore();
       unregisterSpy.restore();
@@ -370,8 +370,8 @@ describe('<LayerTree />', () => {
       const unregisterSpy = sinon.spy(wrapper.instance(), 'unregisterEventsByLayer');
 
       layerGroup.getLayers().remove(nestedLayerGroup);
-      expect(rebuildSpy.callCount).to.equal(1);
-      expect(unregisterSpy.callCount).to.equal(3);
+      expect(rebuildSpy.callCount).toBe(1);
+      expect(unregisterSpy.callCount).toBe(3);
 
       rebuildSpy.restore();
       unregisterSpy.restore();
@@ -404,8 +404,8 @@ describe('<LayerTree />', () => {
 
         const newOlListenerKey = wrapper.instance().olListenerKeys;
 
-        expect(unByKeySpy.callCount).to.equal(1);
-        expect(newOlListenerKey.length).to.equal(oldOlListenerKey.length - 1);
+        expect(unByKeySpy.callCount).toBe(1);
+        expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 1);
 
         unByKeySpy.restore();
       });
@@ -435,8 +435,8 @@ describe('<LayerTree />', () => {
 
         const newOlListenerKey = wrapper.instance().olListenerKeys;
 
-        expect(unByKeySpy.callCount).to.equal(2);
-        expect(newOlListenerKey.length).to.equal(oldOlListenerKey.length - 2);
+        expect(unByKeySpy.callCount).toBe(2);
+        expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 2);
 
         unByKeySpy.restore();
       });
@@ -456,11 +456,11 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
 
       wrapper.instance().setLayerVisibility();
-      expect(logSpy.callCount).to.equal(1);
+      expect(logSpy.callCount).toBe(1);
       wrapper.instance().setLayerVisibility('peter');
-      expect(logSpy.callCount).to.equal(2);
+      expect(logSpy.callCount).toBe(2);
       wrapper.instance().setLayerVisibility(layer1 , 'peter');
-      expect(logSpy.callCount).to.equal(3);
+      expect(logSpy.callCount).toBe(3);
     });
 
     it('sets the visibility of a single layer', () => {
@@ -472,9 +472,9 @@ describe('<LayerTree />', () => {
       layer1.setVisible(true);
 
       wrapper.instance().setLayerVisibility(layer1, false);
-      expect(layer1.getVisible()).to.be(false);
+      expect(layer1.getVisible()).toBe(false);
       wrapper.instance().setLayerVisibility(layer1, true);
-      expect(layer1.getVisible()).to.be(true);
+      expect(layer1.getVisible()).toBe(true);
     });
 
     it('sets the visibility only for the children when called with a layerGroup', () => {
@@ -487,14 +487,14 @@ describe('<LayerTree />', () => {
       layer2.setVisible(true);
 
       wrapper.instance().setLayerVisibility(layerGroup, false);
-      expect(layerGroup.getVisible()).to.be(true);
-      expect(layer1.getVisible()).to.be(false);
-      expect(layer2.getVisible()).to.be(false);
+      expect(layerGroup.getVisible()).toBe(true);
+      expect(layer1.getVisible()).toBe(false);
+      expect(layer2.getVisible()).toBe(false);
 
       wrapper.instance().setLayerVisibility(layerGroup, true);
-      expect(layerGroup.getVisible()).to.be(true);
-      expect(layer1.getVisible()).to.be(true);
-      expect(layer2.getVisible()).to.be(true);
+      expect(layerGroup.getVisible()).toBe(true);
+      expect(layer1.getVisible()).toBe(true);
+      expect(layer2.getVisible()).toBe(true);
     });
 
   });
