@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Map/ScaleCombo/ScaleCombo.jsx</title>
+    <title>JSDoc: Source: Field/ScaleCombo/ScaleCombo.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Map/ScaleCombo/ScaleCombo.jsx</h1>
+    <h1 class="page-title">Source: Field/ScaleCombo/ScaleCombo.jsx</h1>
 
     
 
@@ -30,7 +30,14 @@
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
 const Option = Select.Option;
-import { isNumber, isEmpty, isEqual, reverse, clone } from 'lodash';
+import {
+  isInteger,
+  isEmpty,
+  isEqual,
+  isFunction,
+  reverse,
+  clone
+} from 'lodash';
 
 import Logger from '../../Util/Logger';
 import MapUtil from '../../Util/MapUtil/MapUtil';
@@ -42,7 +49,6 @@ import MapUtil from '../../Util/MapUtil/MapUtil';
  * @extends React.Component
  */
 class ScaleCombo extends React.Component {
-
 
   /**
    * The className added to this component.
@@ -65,10 +71,12 @@ class ScaleCombo extends React.Component {
     zoomLevel: PropTypes.number,
 
     /**
-     * The onZoomLevelSelect function. This function is passed to Select component
+     * The onZoomLevelSelect function. Pass a function if you want something
+     * different than the resolution of the passed map.
+     *
      * @type {Function}
      */
-    onZoomLevelSelect: PropTypes.func.isRequired,
+    onZoomLevelSelect: PropTypes.func,
 
     /**
      * The resolutions.
@@ -92,7 +100,14 @@ class ScaleCombo extends React.Component {
      * The map
      * @type {Ol.Map}
      */
-    map: PropTypes.object
+    map: PropTypes.object.isRequired,
+
+    /**
+     * Set to false to not listen to the map moveend event.
+     *
+     * @type {Boolean} [true]
+     */
+    syncWithMap: PropTypes.bool
   }
 
   /**
@@ -102,7 +117,8 @@ class ScaleCombo extends React.Component {
     style: {
       width: 100
     },
-    scales: []
+    scales: [],
+    syncWithMap: true
   }
 
   /**
@@ -112,17 +128,46 @@ class ScaleCombo extends React.Component {
   constructor(props) {
     super(props);
 
-    this.pushScaleOption = this.pushScaleOption.bind(this);
-    this.getOptionsFromMap = this.getOptionsFromMap.bind(this);
-    this.determineOptionKeyForZoomLevel = this.determineOptionKeyForZoomLevel.bind(this);
-    this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
-    this.getInputElement = this.getInputElement.bind(this);
-    this.componentWillMount = this.componentWillMount.bind(this);
+    /**
+     * The default onZoomLevelSelect function sets the resolution of the passed
+     * map according to the selected Scale.
+     *
+     * @param  {Number} selectedScale The selectedScale.
+     */
+    const defaultOnZoomLevelSelect = (selectedScale) => {
+      const mapView = this.props.map.getView();
+      const calculatedResolution = MapUtil.getResolutionForScale(
+        selectedScale, mapView.getProjection().getUnits()
+      );
+      mapView.setResolution(calculatedResolution);
+    };
 
     this.state = {
-      zoomLevel: props.zoomLevel,
+      zoomLevel: props.zoomLevel || this.props.map.getView().getZoom(),
+      onZoomLevelSelect: props.onZoomLevelSelect || defaultOnZoomLevelSelect,
       scales: props.scales
     };
+
+    if (props.syncWithMap) {
+      this.props.map.on('moveend', this.zoomListener);
+    }
+  }
+
+  /**
+   * Set the zoomLevel of the to the ScaleCombo.
+   *
+   * @param  {Object} evt The 'moveend' event
+   * @private
+   */
+  zoomListener = (evt) => {
+    const zoom = evt.target.getView().getZoom();
+    let roundZoom = Math.round(zoom);
+    if (!roundZoom) {
+      roundZoom = 0;
+    }
+    this.setState({
+      zoomLevel: roundZoom
+    });
   }
 
   /**
@@ -136,6 +181,21 @@ class ScaleCombo extends React.Component {
         zoomLevel: newProps.zoomLevel
       });
     }
+
+    if (!newProps.syncWithMap !== this.props.syncWithMap) {
+      if (newProps.syncWithMap) {
+        this.props.map.on('moveend', this.zoomListener);
+      } else {
+        this.props.map.un('moveend', this.zoomListener);
+      }
+    }
+
+    if (isFunction(newProps.onZoomLevelSelect)
+      &amp;&amp; !isEqual(newProps.onZoomLevelSelect, this.state.onZoomLevelSelect)) {
+      this.setState({
+        onZoomLevelSelect: newProps.onZoomLevelSelect
+      });
+    }
   }
 
   /**
@@ -146,12 +206,13 @@ class ScaleCombo extends React.Component {
    * @param {Ol.View} mv The map view
    *
    */
-  pushScaleOption = (resolution, mv) => {
+  pushScale = (resolution, mv) => {
     let scale = MapUtil.getScaleForResolution(resolution, mv.getProjection().getUnits());
-    // Round scale to nearest multiple of 10.
-    let roundScale = Math.round(scale / 10) * 10;
-    let option = &lt;Option key={roundScale.toString()} value={roundScale.toString()}>1:{roundScale.toLocaleString()}&lt;/Option>;
-    this.state.scales.push(option);
+    const roundScale = MapUtil.roundScale(scale);
+    if (this.state.scales.includes(roundScale) ) {
+      return;
+    }
+    this.state.scales.push(roundScale);
   };
 
   /**
@@ -175,12 +236,12 @@ class ScaleCombo extends React.Component {
     if (isEmpty(resolutions)) {
       for (let currentZoomLevel = mv.getMaxZoom(); currentZoomLevel >= mv.getMinZoom(); currentZoomLevel--) {
         let resolution = mv.getResolutionForZoom(currentZoomLevel);
-        this.pushScaleOption(resolution, mv);
+        this.pushScale(resolution, mv);
       }
     } else {
       let reversedResolutions = reverse(clone(resolutions));
       reversedResolutions.forEach((resolution) => {
-        this.pushScaleOption(resolution, mv);
+        this.pushScale(resolution, mv);
       });
     }
   };
@@ -192,32 +253,11 @@ class ScaleCombo extends React.Component {
    *
    * @return {Element} Option element for provided zoom level
    */
-  determineOptionKeyForZoomLevel (zoom) {
-    if (!isNumber(zoom) || (this.state.scales.length - 1 - zoom) &lt; 0) {
+  determineOptionKeyForZoomLevel = (zoom) => {
+    if (!isInteger(zoom) || (this.state.scales.length - 1 - zoom) &lt; 0) {
       return undefined;
     }
-    return this.state.scales[this.state.scales.length - 1 - zoom].key;
-  }
-
-  /**
-   * handleOnKeyDown of input:
-   * trigger setScale (passed by props) after ENTER key pressed
-   *
-   * @param {Event} event KeyBoard event
-   */
-  handleOnKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      this.props.onZoomLevelSelect(event.target.value);
-    }
-  }
-
-  /**
-   * Create input element with registered onKeyDown event used in Select
-   *
-   * @return {Element} input of scale chooser
-   */
-  getInputElement = () => {
-    return &lt;input onKeyDown={this.handleOnKeyDown} />;
+    return this.state.scales[this.state.scales.length - 1 - zoom];
   }
 
   /**
@@ -236,7 +276,6 @@ class ScaleCombo extends React.Component {
    */
   render() {
     const {
-      onZoomLevelSelect,
       style,
       className
     } = this.props;
@@ -245,18 +284,26 @@ class ScaleCombo extends React.Component {
       ? `${className} ${this.className}`
       : this.className;
 
+    const options = this.state.scales.map((roundScale) => {
+      return &lt;Option
+        key={roundScale}
+        value={roundScale}
+      >
+        {`1:${roundScale.toLocaleString()}`}
+      &lt;/Option>;
+    });
+
     return (
       &lt;Select
         showSearch
-        onChange={onZoomLevelSelect}
-        getInputElement={this.getInputElement}
+        onChange={this.state.onZoomLevelSelect}
         filterOption={false}
         value={this.determineOptionKeyForZoomLevel(this.state.zoomLevel)}
         size="small"
         style={style}
         className={finalClassName}
       >
-        {this.state.scales}
+        {options}
       &lt;/Select>
     );
   }
@@ -275,13 +322,13 @@ export default ScaleCombo;
 <nav>
     <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapComponent.html">MapComponent</a></li><li><a href="MappifiedComponent.html">MappifiedComponent</a></li><li><a href="MapProvider.html">MapProvider</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#filterFunction">filterFunction</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
 based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mappify">mappify</a></li><li><a href="global.html#mapPromise">mapPromise</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
-based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
+based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#syncWithMap">syncWithMap</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Nov 13 2017 14:20:50 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Nov 14 2017 08:39:45 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>

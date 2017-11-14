@@ -14,63 +14,62 @@ import {
 } from '../../index';
 
 describe('<ScaleCombo />', () => {
-  let wrapper;
-  let map;
-
-  beforeEach(() => {
-    wrapper = TestUtil.mountComponent(ScaleCombo);
-  });
-
-  afterEach(function() {
-    TestUtil.removeMap(map);
-  });
-
   it('is defined', () => {
     expect(ScaleCombo).not.to.be(undefined);
   });
 
   it('can be rendered', () => {
+    const map = TestUtil.createMap();
+    const wrapper = TestUtil.mountComponent(ScaleCombo, {
+      map
+    });
     expect(wrapper).not.to.be(undefined);
   });
 
   it('passes style prop', () => {
+    const map = TestUtil.createMap();
     const props = {
+      map,
       style: {
         'backgroundColor': 'yellow'
       }
     };
     const wrapper = TestUtil.mountComponent(ScaleCombo, props);
     expect(wrapper.props().style.backgroundColor).to.be('yellow');
+
+    TestUtil.removeMap(map);
   });
 
   describe('#getOptionsFromMap', () => {
     it('is defined', () => {
+      const map = TestUtil.createMap();
+      const wrapper = TestUtil.mountComponent(ScaleCombo, {
+        map
+      });
       expect(wrapper.instance().getOptionsFromMap).not.to.be(undefined);
     });
 
-    it('shows warning of map is not set', () => {
-      const logSpy = sinon.spy(Logger, 'warn');
-      wrapper.instance().getOptionsFromMap();
-      expect(logSpy).to.have.property('callCount', 1);
-      Logger.warn.restore();
-    });
-
     it('creates options array from scaled primarily', () => {
+      const map = TestUtil.createMap();
+
       const logSpy = sinon.spy(Logger, 'debug');
       const scaleArray = [
         <Option key={'100'} value={'100'}>1:100</Option>
       ];
-      wrapper = TestUtil.mountComponent(ScaleCombo, {
+      const wrapper = TestUtil.mountComponent(ScaleCombo, {
+        map,
         scales: scaleArray
       });
       wrapper.instance().getOptionsFromMap();
       expect(logSpy).to.have.property('callCount', 1);
       Logger.debug.restore();
+
+      TestUtil.removeMap(map);
     });
 
     it('creates options array from given map without resolutions and updates scales prop', () => {
-      map = TestUtil.createMap();
-      wrapper = TestUtil.mountComponent(ScaleCombo, {
+      const map = TestUtil.createMap();
+      const wrapper = TestUtil.mountComponent(ScaleCombo, {
         scales: [],
         map: map
       });
@@ -82,10 +81,10 @@ describe('<ScaleCombo />', () => {
 
     it('creates options array from given map with resolutions and updates scales prop', () => {
       const testResolutions = [560, 280, 140, 70, 28];
-      map = TestUtil.createMap({
+      const map = TestUtil.createMap({
         resolutions: testResolutions
       });
-      wrapper = TestUtil.mountComponent(ScaleCombo, {
+      const wrapper = TestUtil.mountComponent(ScaleCombo, {
         scales: [],
         map: map
       });
@@ -94,8 +93,9 @@ describe('<ScaleCombo />', () => {
       expect(wrapper.props().scales).to.have.length(testResolutions.length);
 
       let roundScale = (Math.round(MapUtil.getScaleForResolution(
-        testResolutions[testResolutions.length - 1] ,'m'))).toString();
-      expect(wrapper.props().scales[0].key).to.be(roundScale);
+        testResolutions[testResolutions.length - 1] ,'m')));
+
+      expect(wrapper.props().scales[0]).to.be(roundScale);
 
       TestUtil.removeMap(map);
     });
@@ -103,77 +103,43 @@ describe('<ScaleCombo />', () => {
 
   describe('#determineOptionKeyForZoomLevel', () => {
     it('is defined', () => {
+      const map = TestUtil.createMap();
+      const wrapper = TestUtil.mountComponent(ScaleCombo, {
+        map
+      });
       expect(wrapper.instance().determineOptionKeyForZoomLevel).not.to.be(undefined);
     });
 
     it('returns "undefied" for erronous zoom level or if exceeds number of valid zoom levels ', () => {
-      const scaleArray = [
-        <Option key={'100'} value={'100'}>1:100</Option>,
-        <Option key={'200'} value={'200'}>1:100</Option>,
-        <Option key={'300'} value={'300'}>1:100</Option>
-      ];
-      wrapper = TestUtil.mountComponent(ScaleCombo, {
+      const map = TestUtil.createMap();
+      const scaleArray = [100, 200, 300];
+      const wrapper = TestUtil.mountComponent(ScaleCombo, {
+        map,
         scales: scaleArray
       });
 
       expect(wrapper.instance().determineOptionKeyForZoomLevel(undefined)).to.be(undefined);
       expect(wrapper.instance().determineOptionKeyForZoomLevel(null)).to.be(undefined);
       expect(wrapper.instance().determineOptionKeyForZoomLevel('foo')).to.be(undefined);
-
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(17.123)).to.be(undefined);
       expect(wrapper.instance().determineOptionKeyForZoomLevel(scaleArray.length)).to.be(undefined);
+
+      TestUtil.removeMap(map);
     });
 
     it('returns matching key for zoom level', () => {
-      const scaleArray = [
-        <Option key={'100'} value={'100'}>1:100</Option>,
-        <Option key={'200'} value={'200'}>1:100</Option>,
-        <Option key={'300'} value={'300'}>1:100</Option>
-      ];
-      wrapper = TestUtil.mountComponent(ScaleCombo, {
+      const map = TestUtil.createMap();
+      const scaleArray = [100, 200, 300];
+      const wrapper = TestUtil.mountComponent(ScaleCombo, {
+        map,
         scales: scaleArray
       });
-
       const index = 1;
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(index)).to.be(scaleArray[index].key);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(index)).to.be(scaleArray[index]);
+
+      TestUtil.removeMap(map);
     });
 
-  });
-
-  describe('#handleOnKeyDown', () => {
-    it('is defined', () => {
-      expect(wrapper.instance().handleOnKeyDown).not.to.be(undefined);
-    });
-
-    it('calls onZoomLevelSelect if ENTER key is pressed', () => {
-      const onZoomLevelSelect = sinon.spy();
-      wrapper = TestUtil.mountComponent(ScaleCombo, {
-        onZoomLevelSelect: onZoomLevelSelect
-      });
-
-      const eventObj = {
-        key: 'Enter',
-        target: {
-          value: 9
-        }
-      };
-
-      wrapper.instance().handleOnKeyDown(eventObj);
-      expect(onZoomLevelSelect).to.have.property('callCount', 1);
-    });
-
-  });
-
-  describe('#getInputElement', () => {
-    it('is defined', () => {
-      expect(wrapper.instance().getInputElement).not.to.be(undefined);
-    });
-
-    it('returns input element with an reigstered onKeyDown event', () => {
-      let inputElement = wrapper.instance().getInputElement();
-      expect(inputElement.type).to.be('input');
-      expect(inputElement.props.onKeyDown).to.be.ok();
-      expect(inputElement.props.onKeyDown).to.be.a('function');
-    });
   });
 
 });
