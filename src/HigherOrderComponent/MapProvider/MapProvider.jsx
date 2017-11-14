@@ -55,10 +55,10 @@ class MapProvider extends React.Component {
     };
 
     if (props.map instanceof OlMap) {
-      this.setState({
+      this.state = {
         map: props.map,
         ready: true
-      });
+      };
     } else {
       props.map.then((map) => {
         this.setState({
