@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 import sinon from 'sinon';
 
 import OlMap from 'ol/map';
@@ -14,26 +14,26 @@ import {NominatimSearch} from '../../index';
 
 describe('<NominatimSearch />', () => {
   it('is defined', () => {
-    expect(NominatimSearch).not.to.be(undefined);
+    expect(NominatimSearch).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
     const wrapper = TestUtil.mountComponent(NominatimSearch);
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   describe('#onUpdateInput', () => {
     it('resets state.dataSource', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
       wrapper.instance().onUpdateInput();
-      expect(wrapper.state().dataSource).to.eql([]);
+      expect(wrapper.state().dataSource).toEqual([]);
     });
 
     it('sets the inputValue as state.searchTerm', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
       const inputValue = 'a';
       wrapper.instance().onUpdateInput(inputValue);
-      expect(wrapper.state().searchTerm).to.eql(inputValue);
+      expect(wrapper.state().searchTerm).toBe(inputValue);
     });
 
     it('sends a request if input is as long as props.minChars', () => {
@@ -41,8 +41,8 @@ describe('<NominatimSearch />', () => {
       const fetchSpy = sinon.spy(window, 'fetch');
       const inputValue = 'Bonn';
       wrapper.instance().onUpdateInput(inputValue);
-      expect(fetchSpy.calledOnce).to.be.ok();
-      expect(fetchSpy.calledWithMatch(wrapper.props().nominatimBaseUrl)).to.be.ok();
+      expect(fetchSpy.calledOnce).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(wrapper.props().nominatimBaseUrl)).toBeTruthy();
       fetchSpy.restore();
     });
   });
@@ -54,16 +54,16 @@ describe('<NominatimSearch />', () => {
       const inputValue = 'Bonn';
       wrapper.setState({searchTerm: inputValue});
       wrapper.instance().doSearch();
-      expect(fetchSpy.calledOnce).to.be.ok();
-      expect(fetchSpy.calledWithMatch(wrapper.props().nominatimBaseUrl)).to.be.ok();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().format))).to.be.ok();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().viewbox))).to.be.ok();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().bounded))).to.be.ok();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().polygon_geojson))).to.be.ok();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().addressdetails))).to.be.ok();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().limit))).to.be.ok();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().countrycodes))).to.be.ok();
-      expect(fetchSpy.calledWithMatch(inputValue)).to.be.ok();
+      expect(fetchSpy.calledOnce).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(wrapper.props().nominatimBaseUrl)).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().format))).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().viewbox))).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().bounded))).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().polygon_geojson))).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().addressdetails))).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().limit))).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().countrycodes))).toBeTruthy();
+      expect(fetchSpy.calledWithMatch(inputValue)).toBeTruthy();
       fetchSpy.restore();
     });
   });
@@ -72,7 +72,7 @@ describe('<NominatimSearch />', () => {
     it('sets the response as state.dataSource', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
       wrapper.instance().onFetchSuccess(['Peter']);
-      expect(wrapper.state().dataSource).to.eql(['Peter']);
+      expect(wrapper.state().dataSource).toEqual(['Peter']);
     });
   });
 
@@ -81,8 +81,8 @@ describe('<NominatimSearch />', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
       const loggerSpy = sinon.spy(Logger, 'error');
       wrapper.instance().onFetchError('Peter');
-      expect(loggerSpy.calledOnce).to.be.ok();
-      expect(loggerSpy.calledWith('Error while requesting Nominatim: Peter')).to.be.ok();
+      expect(loggerSpy.calledOnce).toBeTruthy();
+      expect(loggerSpy.calledWith('Error while requesting Nominatim: Peter')).toBeTruthy();
       loggerSpy.restore();
     });
   });
@@ -113,8 +113,8 @@ describe('<NominatimSearch />', () => {
         dataSource: dataSource
       });
       wrapper.instance().onMenuItemSelected('752526');
-      expect(selectSpy.calledOnce).to.be.ok();
-      expect(selectSpy.calledWith(dataSource[0], map)).to.be.ok();
+      expect(selectSpy.calledOnce).toBeTruthy();
+      expect(selectSpy.calledWith(dataSource[0], map)).toBeTruthy();
     });
   });
 
@@ -145,8 +145,8 @@ describe('<NominatimSearch />', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch, {map});
       const fitSpy = sinon.spy(map.getView(), 'fit');
       wrapper.props().onSelect(item, map);
-      expect(fitSpy.calledOnce).to.be.ok();
-      expect(fitSpy.calledWith(tranformedExtent)).to.be.ok();
+      expect(fitSpy.calledOnce).toBeTruthy();
+      expect(fitSpy.calledWith(tranformedExtent)).toBeTruthy();
       fitSpy.restore();
     });
   });
@@ -159,8 +159,8 @@ describe('<NominatimSearch />', () => {
         display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland'
       };
       const option = wrapper.props().renderOption(item);
-      expect(option.key).to.eql(item.place_id);
-      expect(option.props.children).to.eql(item.display_name);
+      expect(option.key).toBe(item.place_id);
+      expect(option.props.children).toBe(item.display_name);
     });
   });
 

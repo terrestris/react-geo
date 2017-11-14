@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 import testLogo from '../../UserChip/user.png';
 import TestUtil from '../../Util/TestUtil';
 
@@ -16,21 +16,21 @@ describe('<FloatingMapLogo />', () => {
   });
 
   it('is defined', () => {
-    expect(FloatingMapLogo).not.to.be(undefined);
+    expect(FloatingMapLogo).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('contains img element with predefined class', () => {
     let imageElement = wrapper.find('img').getElement();
-    expect(imageElement.props.className).to.be(wrapper.instance().className);
+    expect(imageElement.props.className).toBe(wrapper.instance().className);
   });
 
   it('is not positioned absolutely by default', () => {
     let imageElement = wrapper.find('img').getElement();
-    expect(imageElement.props.className).to.be(wrapper.instance().className);
+    expect(imageElement.props.className).toBe(wrapper.instance().className);
   });
 
   it('passes style prop', () => {
@@ -44,10 +44,10 @@ describe('<FloatingMapLogo />', () => {
     };
     wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
     let imageElement = wrapper.find('img').getElement();
-    expect(imageElement.props.style.backgroundColor).to.be('yellow');
-    expect(imageElement.props.className).to.contain(wrapper.instance().className);
-    expect(imageElement.props.className).to.contain('peter');
-    expect(imageElement.props.style.position).to.be('inherit');
+    expect(imageElement.props.style.backgroundColor).toBe('yellow');
+    expect(imageElement.props.className).toContain(wrapper.instance().className);
+    expect(imageElement.props.className).toContain('peter');
+    expect(imageElement.props.style.position).toBe('inherit');
   });
 
   it('passes position prop', () => {
@@ -60,9 +60,9 @@ describe('<FloatingMapLogo />', () => {
     };
     wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
     let imageElement = wrapper.find('img').getElement();
-    expect(imageElement.props.className).to.be(wrapper.instance().className);
-    expect(imageElement.props.style.position).to.be('absolute');
-    expect(imageElement.props.style.backgroundColor).to.be('yellow');
+    expect(imageElement.props.className).toBe(wrapper.instance().className);
+    expect(imageElement.props.style.position).toBe('absolute');
+    expect(imageElement.props.style.backgroundColor).toBe('yellow');
   });
 
   it('delegates image height to child img element', () => {
@@ -70,7 +70,7 @@ describe('<FloatingMapLogo />', () => {
     const targetHeight = targetHeightNumber+'px';
     wrapper.setProps({imageHeight: targetHeight});
     let imageElement = wrapper.find('img').getElement();
-    expect(imageElement.props.height).to.be(targetHeight);
+    expect(imageElement.props.height).toBe(targetHeight);
   });
 
 });

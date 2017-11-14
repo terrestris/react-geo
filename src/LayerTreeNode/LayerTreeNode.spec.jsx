@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 
 import {
   LayerTreeNode
@@ -8,7 +8,7 @@ import {
 describe('<LayerTreeNode />', () => {
 
   it('is defined', () => {
-    expect(LayerTreeNode).not.to.be(undefined);
+    expect(LayerTreeNode).not.toBeUndefined();
   });
 
 });

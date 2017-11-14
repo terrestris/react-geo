@@ -1,5 +1,5 @@
-/*eslint-env mocha*/
-import expect from 'expect.js';
+/*eslint-env jest*/
+
 
 import TestUtil from '../../Util/TestUtil';
 
@@ -11,7 +11,7 @@ describe('<MapComponent />', () => {
   let map;
 
   it('is defined', () => {
-    expect(MapComponent).not.to.be(undefined);
+    expect(MapComponent).not.toBeUndefined();
   });
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('<MapComponent />', () => {
 
   it('can be rendered', () => {
     const wrapper = TestUtil.mountComponent(MapComponent, {map});
-    expect(wrapper).not.to.be(undefined);
+    expect(wrapper).not.toBeUndefined();
   });
 
   it('passes props', () => {
@@ -30,8 +30,8 @@ describe('<MapComponent />', () => {
       fc: 'koeln'
     });
     const div = wrapper.find('div').getElements()[0];
-    expect(div.props.className).to.contain('podolski');
-    expect(div.props.fc).to.equal('koeln');
+    expect(div.props.className).toContain('podolski');
+    expect(div.props.fc).toBe('koeln');
   });
 
 });

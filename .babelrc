@@ -5,21 +5,14 @@
     "react"
   ],
   "env": {
+    "test": {
+      "plugins": [
+        "transform-es2015-modules-commonjs"
+      ]
+    },
     "build": {
       "plugins": [
         "babel-plugin-transform-import-extension-jsx-to-js"
-      ]
-    },
-    "coverage": {
-      "plugins": [
-        [
-          "istanbul", {
-            "exclude": [
-              "src/**/*.spec.jsx",
-              "**/TestUtil.js"
-            ]
-          }
-        ]
       ]
     }
   },
