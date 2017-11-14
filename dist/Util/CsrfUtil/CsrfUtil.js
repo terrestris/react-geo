@@ -142,10 +142,31 @@ var CsrfUtil = function () {
     key: 'getHeader',
     value: function getHeader() {
       var headerObj = new Headers();
-      var csrfKey = CsrfUtil.getCsrfValue();
+      var csrfValue = CsrfUtil.getCsrfValue();
       var csrfHeaderName = CsrfUtil.getCsrfHeaderName();
-      if (csrfKey !== '' && csrfHeaderName !== '') {
-        headerObj.append(csrfHeaderName, csrfKey);
+      if (csrfValue !== '' && csrfHeaderName !== '') {
+        headerObj.append(csrfHeaderName, csrfValue);
+      }
+      return headerObj;
+    }
+
+    /**
+     * Returns a simple object containing CSRF header name as key and CSRF value
+     * as field value
+     *
+     * @return {Object} Simple object containing the CSRF key and
+     *     value or an empty object if any of the required meta fields
+     *     cannot be found.
+     */
+
+  }, {
+    key: 'getHeaderObject',
+    value: function getHeaderObject() {
+      var headerObj = {};
+      var csrfValue = CsrfUtil.getCsrfValue();
+      var csrfHeaderName = CsrfUtil.getCsrfHeaderName();
+      if (csrfValue !== '' && csrfHeaderName !== '') {
+        headerObj[csrfHeaderName] = csrfValue;
       }
       return headerObj;
     }
