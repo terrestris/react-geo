@@ -93,4 +93,46 @@ describe('<FeatureGrid />', () => {
       expect(attributeFilter.includes(attributeName)).toBe(true);
     });
   });
+
+  it('applies custom column width for attribute name column', () => {
+    const attributeNameColumnWidthInPercent = 19;
+    const props = {
+      feature: testFeature,
+      attributeNameColumnWidthInPercent
+    };
+    const wrapper = TestUtil.mountComponent(FeatureGrid, props);
+    const state = wrapper.state();
+
+    const columns = state.columns;
+
+    expect(columns).toBeInstanceOf(Array);
+    expect(columns).toHaveLength(2);
+    expect(columns[0].width).toBe(`${attributeNameColumnWidthInPercent}%`);
+    expect(columns[1].width).toBe(`${100 - attributeNameColumnWidthInPercent}%`);
+  });
+
+  it('uses attribute name mapping', () => {
+    const attributeNames = {
+      foo: 'Hallo',
+      bvb: 'Andrej'
+    };
+    const props = {
+      feature: testFeature,
+      attributeNames
+    };
+    const wrapper = TestUtil.mountComponent(FeatureGrid, props);
+    const state = wrapper.state();
+
+    // check dataSource
+    const dataSource = state.dataSource;
+    expect(dataSource).toBeInstanceOf(Array);
+    dataSource.forEach((dataSourceElement) => {
+      const key = dataSourceElement.key;
+      const orignalAttributeName = key.split('_')[1];
+      if (attributeNames[orignalAttributeName]) {
+        const mappedAttributeNameInDataSource = dataSourceElement.attributeName;
+        expect(mappedAttributeNameInDataSource).toBe(attributeNames[orignalAttributeName]);
+      }
+    });
+  });
 });

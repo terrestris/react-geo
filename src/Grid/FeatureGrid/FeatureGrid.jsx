@@ -4,6 +4,7 @@ import {
   Table
 } from 'antd';
 import OlFeature from 'ol/feature';
+import { get } from 'lodash';
 
 import './FeatureGrid.less';
 
@@ -34,6 +35,13 @@ class FeatureGrid extends React.Component {
     attributeNameColumnTitle: PropTypes.string,
 
     /**
+     * Optional value in percent representing the width of the attribute name column
+     * The width of attribute value column wil be calculated depending in this
+     * @type {String}
+     */
+    attributeNameColumnWidthInPercent: PropTypes.number,
+
+    /**
      * Optional title of the attribute value column
      * @type {String}
      */
@@ -46,13 +54,20 @@ class FeatureGrid extends React.Component {
     attributeFilter: PropTypes.arrayOf(PropTypes.string),
 
     /**
+     * Optional object containing a mapping of attribute names in OL feature to custom ones
+     *
+     * @type {Object}
+     */
+    attributeNames: PropTypes.object,
+
+    /**
      * Optional CSS class
      * @type {String}
      */
     className: PropTypes.string,
 
     /**
-    * Feature for which the properties should be shown
+     * Feature for which the properties should be shown
      * @type {OlFeature}
      */
     feature: PropTypes.instanceOf(OlFeature).isRequired
@@ -60,7 +75,8 @@ class FeatureGrid extends React.Component {
 
   static defaultProps = {
     attributeNameColumnTitle: 'Attribute name',
-    attributeValueColumnTitle: 'Attribute value'
+    attributeValueColumnTitle: 'Attribute value',
+    attributeNameColumnWidthInPercent: 50
   }
 
   /**
@@ -83,10 +99,12 @@ class FeatureGrid extends React.Component {
   componentWillMount() {
     const {
       feature,
-      attributeFilter
+      attributeFilter,
+      attributeNames,
+      attributeNameColumnWidthInPercent
     } = this.props;
 
-    this.generateFeatureGrid(feature, attributeFilter);
+    this.generateFeatureGrid(feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent);
   }
 
   /**
@@ -95,15 +113,17 @@ class FeatureGrid extends React.Component {
   *
   * @param {OlFeature} feature feature to display
   * @param {Array} attributeFilter Array of string values to filter the grid rows
+  * @param {Object} attributeNames Object containing mapping of attribute names names in feature to custom ones
+  * @param {Number} attributeNameColumnWidthInPercent Column width (in percent)
   */
-  generateFeatureGrid(feature, attributeFilter) {
+  generateFeatureGrid(feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent) {
     if (!attributeFilter) {
       attributeFilter = feature.getKeys().filter((attrName) => attrName !== 'geometry');
     }
 
     const dataSource = attributeFilter.map((attr) => {
       const rowObj = {
-        attributeName: attr,
+        attributeName: (attributeNames && get(attributeNames, attr)) ? get(attributeNames, attr) : attr,
         attributeValue: feature.get(attr),
         key: `ATTR_${attr}_fid_${feature.ol_uid}`
       };
@@ -114,12 +134,12 @@ class FeatureGrid extends React.Component {
       title: this.props.attributeNameColumnTitle,
       dataIndex: 'attributeName',
       key: 'attributeName',
-      width: '50%'
+      width: `${attributeNameColumnWidthInPercent}%`
     }, {
       title: this.props.attributeValueColumnTitle,
       dataIndex: 'attributeValue',
       key: 'attributeValue',
-      width: '50%'
+      width: `${100 - attributeNameColumnWidthInPercent}%`
     }];
 
     this.setState({
