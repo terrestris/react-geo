@@ -57,10 +57,10 @@ var MapProvider = function (_React$Component) {
     };
 
     if (props.map instanceof _map2.default) {
-      _this.setState({
+      _this.state = {
         map: props.map,
         ready: true
-      });
+      };
     } else {
       props.map.then(function (map) {
         _this.setState({
