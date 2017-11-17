@@ -74,7 +74,7 @@
     "prop-types": "15.6.0",
     "react-dom": "16.1.1",
     "react-fa": "5.0.0",
-    "react-i18next": "6.1.0",
+    "react-i18next": "6.2.0",
     "react-rnd": "7.1.5",
     "url-parse": "1.2.0"
   },
