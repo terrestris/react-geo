@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>FeatureGrid example</title>
+  <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>/*global hljs*/ hljs.initHighlightingOnLoad();</script>
+</head>
+<style>
+body.example {
+  padding: 1.5em;
+}
+.example-block {
+  padding: 2em;
+}
+.example-block > span {
+  margin-right: 10px;
+}
+</style>
+
+<body class="example">
+  <h2>FeatureGrid example</h2>
+  <div id="exampleContainer" class="app"></div>
+  <p>This is a example containing a feature grid</p>
+
+  <pre>
+    <code class="javascript">import React from &#x27;react&#x27;;
+import { render } from &#x27;react-dom&#x27;;
+
+import OlFeature from &#x27;ol/feature&#x27;;
+import OlGeomPoint from &#x27;ol/geom/point&#x27;;
+
+import {
+  FeatureGrid
+} from &#x27;@terrestris/react-geo&#x27;;
+
+//
+// ***************************** SETUP *****************************************
+//
+const feature &#x3D; new OlFeature({
+  geometry: new OlGeomPoint([19.09, 1.09]),
+});
+
+const attributeObject &#x3D; {
+  foo: &#x27;bar&#x27;,
+  foo2: &#x27;bar2&#x27;,
+  foo3: &#x27;bar3&#x27;,
+  foo9: &#x27;bar9&#x27;,
+  name: &#x27;Point&#x27;
+};
+
+feature.setProperties(attributeObject);
+feature.setId(1909);
+
+const attributeNames &#x3D; {
+  foo: &#x27;A&#x27;,
+  foo2: &#x27;nice&#x27;,
+  foo9: &#x27;example&#x27;
+};
+//
+// ***************************** SETUP END *************************************
+//
+
+render(
+  &lt;div className&#x3D;&quot;example-block&quot;&gt;
+    &lt;h2&gt;FeatureGrid without a filter:&lt;/h2&gt;
+    &lt;FeatureGrid
+      feature&#x3D;{feature}
+    /&gt;
+    &lt;br /&gt;
+    &lt;h2&gt;FeatureGrid with filtered attributes (foo and foo9 only):&lt;/h2&gt;
+    &lt;FeatureGrid
+      feature&#x3D;{feature}
+      attributeFilter&#x3D;{[&#x27;foo&#x27;, &#x27;foo9&#x27;]}
+      style&#x3D;{{width: &#x27;50%&#x27;}}
+    /&gt;
+    &lt;br /&gt;
+    &lt;h2&gt;FeatureGrid with different column width (70 % width for column name / 30 % width for column value):&lt;/h2&gt;
+    &lt;FeatureGrid
+      feature&#x3D;{feature}
+      attributeNameColumnWidthInPercent&#x3D;{70}
+      style&#x3D;{{width: &#x27;50%&#x27;}}
+    /&gt;
+    &lt;br /&gt;
+    &lt;h2&gt;FeatureGrid with column name mapping:&lt;/h2&gt;
+    &lt;FeatureGrid
+      feature&#x3D;{feature}
+      attributeFilter&#x3D;{[&#x27;foo&#x27;, &#x27;foo2&#x27;, &#x27;foo9&#x27;, &#x27;name&#x27;]}
+      attributeNames&#x3D;{attributeNames}
+      style&#x3D;{{width: &#x27;50%&#x27;}}
+    /&gt;
+  &lt;/div&gt;,
+  document.getElementById(&#x27;exampleContainer&#x27;)
+);
+</code>
+  </pre>
+  <script src="FeatureGrid.js"></script>
+</body>
+</html>
