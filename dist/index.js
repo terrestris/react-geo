@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.NominatimSearch = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
+exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.NominatimSearch = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -56,6 +56,10 @@ var _Titlebar2 = _interopRequireDefault(_Titlebar);
 var _LayerTransparencySlider = require('./Slider/LayerTransparencySlider.js');
 
 var _LayerTransparencySlider2 = _interopRequireDefault(_LayerTransparencySlider);
+
+var _FeatureGrid = require('./Grid/FeatureGrid/FeatureGrid.js');
+
+var _FeatureGrid2 = _interopRequireDefault(_FeatureGrid);
 
 var _Toolbar = require('./Toolbar/Toolbar.js');
 
@@ -110,6 +114,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.SimpleButton = _SimpleButton2.default;
 exports.ToggleButton = _ToggleButton2.default;
 exports.ToggleGroup = _ToggleGroup2.default;
+exports.FeatureGrid = _FeatureGrid2.default;
 exports.LayerTree = _LayerTree2.default;
 exports.LayerTreeNode = _LayerTreeNode2.default;
 exports.Legend = _Legend2.default;
