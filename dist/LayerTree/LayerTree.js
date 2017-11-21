@@ -274,15 +274,15 @@ var LayerTree = function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      if (this.props.layerGroup) {
-        this.setState({
-          layerGroup: this.props.layerGroup
-        }, function () {
-          _this2.registerAddRemoveListeners(_this2.state.layerGroup);
-          _this2.registerResolutionChangeHandler();
-          _this2.rebuildTreeNodes();
-        });
-      }
+      var layerGroup = this.props.layerGroup ? this.props.layerGroup : this.props.map.getLayerGroup();
+
+      this.setState({
+        layerGroup: layerGroup
+      }, function () {
+        _this2.registerAddRemoveListeners(_this2.state.layerGroup);
+        _this2.registerResolutionChangeHandler();
+        _this2.rebuildTreeNodes();
+      });
     }
 
     /**
@@ -561,7 +561,7 @@ LayerTree.propTypes = {
    */
   className: _propTypes2.default.string,
 
-  layerGroup: _propTypes2.default.instanceOf(_group2.default).isRequired,
+  layerGroup: _propTypes2.default.instanceOf(_group2.default),
 
   map: _propTypes2.default.instanceOf(_map2.default).isRequired,
 
