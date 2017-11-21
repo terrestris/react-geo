@@ -51,13 +51,18 @@ describe('<LayerTree />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(LayerTree);
+    const wrapper = TestUtil.mountComponent(LayerTree, {map});
     expect(wrapper).not.toBeUndefined();
+  });
+
+  it('layergroup taken from map if not provided', () => {
+    const wrapper = TestUtil.mountComponent(LayerTree, {map});
+    expect(wrapper.state('layerGroup')).toBe(map.getLayerGroup());
   });
 
   it('unmount removes listeners', () => {
     const unByKeySpy = sinon.spy(olObservable, 'unByKey');
-    const wrapper = TestUtil.mountComponent(LayerTree);
+    const wrapper = TestUtil.mountComponent(LayerTree, {map});
     const olListenerKeys = wrapper.instance().olListenerKeys;
     wrapper.unmount();
     expect(unByKeySpy.callCount).toBe(1);

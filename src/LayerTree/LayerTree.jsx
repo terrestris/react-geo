@@ -48,7 +48,7 @@ class LayerTree extends React.Component {
      */
     className: PropTypes.string,
 
-    layerGroup: PropTypes.instanceOf(OlLayerGroup).isRequired,
+    layerGroup: PropTypes.instanceOf(OlLayerGroup),
 
     map: PropTypes.instanceOf(OlMap).isRequired,
 
@@ -101,15 +101,17 @@ class LayerTree extends React.Component {
    * Determines what to do on the initial mount.
    */
   componentDidMount() {
-    if (this.props.layerGroup) {
-      this.setState({
-        layerGroup: this.props.layerGroup
-      }, () => {
-        this.registerAddRemoveListeners(this.state.layerGroup);
-        this.registerResolutionChangeHandler();
-        this.rebuildTreeNodes();
-      });
-    }
+    const layerGroup = this.props.layerGroup ?
+      this.props.layerGroup :
+      this.props.map.getLayerGroup();
+
+    this.setState({
+      layerGroup: layerGroup
+    }, () => {
+      this.registerAddRemoveListeners(this.state.layerGroup);
+      this.registerResolutionChangeHandler();
+      this.rebuildTreeNodes();
+    });
   }
 
   /**
