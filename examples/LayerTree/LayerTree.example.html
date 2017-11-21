@@ -95,10 +95,9 @@ render(
 
     &lt;span&gt;{&#x27;Please note that the layers have resolution restrictions, please zoom in and out to see how the trees react to this.&#x27;}&lt;/span&gt;
     &lt;div className&#x3D;&quot;example-block&quot;&gt;
-      &lt;span&gt;{&#x27;Configured with \&#x27;map.getLayerGroup()\&#x27;:&#x27;}&lt;/span&gt;
+      &lt;span&gt;{&#x27;Autoconfigured with topmost LayerGroup of passed map:&#x27;}&lt;/span&gt;
 
       &lt;LayerTree
-        layerGroup&#x3D;{map.getLayerGroup()}
         map&#x3D;{map}
       /&gt;
 
@@ -114,10 +113,9 @@ render(
     &lt;/div&gt;
 
     &lt;div className&#x3D;&quot;example-block&quot;&gt;
-      &lt;span&gt;{&#x27;A LayerTree with a filterFunction:&#x27;}&lt;/span&gt;
+      &lt;span&gt;{&#x27;A LayerTree with a filterFunction (The OSM layer is filtered out):&#x27;}&lt;/span&gt;
 
       &lt;LayerTree
-        layerGroup&#x3D;{map.getLayerGroup()}
         map&#x3D;{map}
         filterFunction&#x3D;{(layer) &#x3D;&gt; layer.get(&#x27;name&#x27;) !&#x3D; &#x27;OSM&#x27;}
       /&gt;
