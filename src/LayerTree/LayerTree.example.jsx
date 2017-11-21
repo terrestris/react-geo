@@ -65,10 +65,9 @@ render(
 
     <span>{'Please note that the layers have resolution restrictions, please zoom in and out to see how the trees react to this.'}</span>
     <div className="example-block">
-      <span>{'Configured with \'map.getLayerGroup()\':'}</span>
+      <span>{'Autoconfigured with topmost LayerGroup of passed map:'}</span>
 
       <LayerTree
-        layerGroup={map.getLayerGroup()}
         map={map}
       />
 
@@ -84,10 +83,9 @@ render(
     </div>
 
     <div className="example-block">
-      <span>{'A LayerTree with a filterFunction:'}</span>
+      <span>{'A LayerTree with a filterFunction (The OSM layer is filtered out):'}</span>
 
       <LayerTree
-        layerGroup={map.getLayerGroup()}
         map={map}
         filterFunction={(layer) => layer.get('name') != 'OSM'}
       />
