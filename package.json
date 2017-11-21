@@ -63,7 +63,7 @@
     "build:dist": "npm run clean:dist && BABEL_ENV=build babel src --out-dir dist --copy-files --ignore spec.js,example.js,.md",
     "build:all": "npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist",
     "build": "npm run test && npm run build:all",
-    "release": "np --no-yarn"
+    "release": "np --no-yarn && git push https://github.com/terrestris/react-geo.git --tags"
   },
   "peerDependencies": {
     "ol": "~4.0",
