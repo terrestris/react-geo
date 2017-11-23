@@ -76,8 +76,21 @@ function augmentExamples(files) {
   }
 }
 
-// var templatesDir = path.join(__dirname, '..', 'config', 'examples');
+/**
+ * Filter files we don't want to be copied.
+ *
+ * @param {Object} files The files.
+ */
+function filter(files) {
+  for (var filename in files) {
+    if (filename.indexOf('.spec.') !== -1) {
+      delete files[filename];
+    }
+  }
+}
+
 new Metalsmith('.')
+  .use(filter)
   .source(srcDir)
   .destination(destDir)
   .clean(true)
