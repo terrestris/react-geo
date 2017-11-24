@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import './CircleMenuItem.less';
 /**
  * The CircleMenuItem.
  *
@@ -9,9 +10,21 @@ import PropTypes from 'prop-types';
  */
 export class CircleMenuItem extends React.Component {
 
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-circlemenuitem';
+
+  /**
+   * Internal reference used to apply the transformation right on the div.
+   * @private
+   */
   _ref = null;
 
   static propTypes = {
+    className: PropTypes.string,
     /**
      * The duration of the animation in milliseconds. Pass 0 to avoid animation.
      * Default is 300.
@@ -20,15 +33,11 @@ export class CircleMenuItem extends React.Component {
      */
     animationDuration: PropTypes.number,
     /**
-     * The index of the current CircleMenuItem.
-     */
-    idx: PropTypes.number,
-    /**
-     * The radius of the CircleMenu.
+     * The radius of the CircleMenu in pixels.
      *
      * @type {Number}
      */
-    radius: PropTypes.number,
+    radius: PropTypes.number.isRequired,
     /**
      * The children of the CircleMenuItem. Should be just one Node.
      *
@@ -36,29 +45,19 @@ export class CircleMenuItem extends React.Component {
      */
     children: PropTypes.node,
     /**
-     * The rotation Angel
+     * The rotation Angle in degree.
      *
      * @type {Number}
      */
-    rotationAngle: PropTypes.number
+    rotationAngle: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
-    animationDuration: 300,
-    visible: false
+    animationDuration: 300
   };
 
   /**
-   * Create the CircleMenuItem.
-   *
-   * @constructs CircleMenuItem
-   */
-  constructor () {
-    super();
-  }
-
-  /**
-   * A react lifecylce method called when the component did mount.
+   * A react lifecycle method called when the component did mount.
    * It calls the applyTransformation method right after updating.
    */
   componentDidMount() {
@@ -66,7 +65,7 @@ export class CircleMenuItem extends React.Component {
   }
 
   /**
-   * A react lifecylce method called when the component did update.
+   * A react lifecycle method called when the component did update.
    * It calls the applyTransformation method right after updating.
    */
   componentDidUpdate() {
@@ -89,11 +88,20 @@ export class CircleMenuItem extends React.Component {
    */
   render() {
     const {
-      animationDuration
+      rotationAngle,
+      radius,
+      animationDuration,
+      className,
+      ...passThroughProps
     } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
 
     return (
       <div
+        className={finalClassName}
         ref={i => this._ref = i}
         style={{
           display: 'block',
@@ -104,6 +112,7 @@ export class CircleMenuItem extends React.Component {
           transform: 'rotate(0deg) translate(0px) rotate(0deg)',
           transition: `transform ${animationDuration}ms`
         }}
+        {...passThroughProps}
       >
         {this.props.children}
       </div>

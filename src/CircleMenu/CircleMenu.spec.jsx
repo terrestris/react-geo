@@ -25,13 +25,6 @@ describe('<CircleMenu />', () => {
     expect(wrapper.find('CircleMenuItem').at(1).props().children).toBe('B');
   });
 
-  // it('applys the Transformation on mount', () => {
-  //   const wrapper = TestUtil.mountComponent(CircleMenu, {
-  //     children: ['A', 'B'],
-  //     position: [0, 0]
-  //   });
-  // });
-
   it('applys the Transformation on update', (done) => {
     const wrapper = TestUtil.mountComponent(CircleMenu, {
       children: ['A', 'B'],
