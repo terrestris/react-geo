@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>CircleMenu example</title>
+  <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>/*global hljs*/ hljs.initHighlightingOnLoad();</script>
+</head>
+<style>
+body.example {
+  padding: 1.5em;
+}
+.example-block {
+  padding: 2em;
+}
+.example-block > span {
+  margin-right: 10px;
+}
+</style>
+
+<body class="example">
+  <h2>CircleMenu example</h2>
+  <div id="exampleContainer" class="app"></div>
+  <p>This demonstrates the usage of the CircleMenu.</p>
+
+  <pre>
+    <code class="javascript">import React from &#x27;react&#x27;;
+import { render } from &#x27;react-dom&#x27;;
+import {
+  CircleMenu,
+  SimpleButton
+} from &#x27;@terrestris/react-geo&#x27;;
+
+let visible &#x3D; false;
+
+/**
+ * The wrapper is needed to reRender the DomTree. Don&#x27;t worry about it.
+ * You probably won&#x27;t need it in your application.
+ */
+const doRender &#x3D; () &#x3D;&gt; {
+  render(
+    &lt;div&gt;
+      &lt;div className&#x3D;&quot;example-block&quot; style&#x3D;{{
+        width: 500,
+        height: 500
+      }}&gt;
+        &lt;span&gt;CircleMenu&lt;/span&gt;
+        &lt;SimpleButton onClick&#x3D;{() &#x3D;&gt; {
+          visible &#x3D; !visible;
+          doRender();
+        }}&gt;
+          Toggle CircleMenu
+        &lt;/SimpleButton&gt;
+        {visible ?
+          &lt;CircleMenu
+            position&#x3D;{[100, 100]}
+            diameter&#x3D;{80}
+            animationDuration&#x3D;{500}
+          &gt;
+            &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
+          &lt;/CircleMenu&gt;
+          : null
+        }
+      &lt;/div&gt;
+    &lt;/div&gt;,
+    // Target
+    document.getElementById(&#x27;exampleContainer&#x27;)
+  );
+};
+
+doRender();
+</code>
+  </pre>
+  <script src="CircleMenu.js"></script>
+</body>
+</html>
