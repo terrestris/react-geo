@@ -49,7 +49,7 @@
     "clean:build": "rimraf ./build/*",
     "clean:dist": "rimraf ./dist/*",
     "pretest": "npm run lint",
-    "test": "jest --coverage --maxWorkers=4",
+    "test": "jest --maxWorkers=4",
     "test:watch": "jest --watchAll",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "prepublishOnly": "npm run build",
@@ -61,7 +61,7 @@
     "build:js": "webpack --config webpack.development.config.js && webpack -p --config webpack.production.config.js",
     "build:dist": "npm run clean:dist && BABEL_ENV=build babel src --out-dir dist --copy-files --ignore spec.js,example.js,.md",
     "build:all": "npm run build:examples && npm run build:docs && npm run build:js && npm run build:dist",
-    "build": "npm run test && npm run build:all",
+    "build": "npm run test -- --coverage && npm run build:all",
     "release": "np --no-yarn && git push https://github.com/terrestris/react-geo.git --tags"
   },
   "peerDependencies": {
