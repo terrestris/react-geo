@@ -52,7 +52,7 @@
     "test": "jest --coverage --maxWorkers=4",
     "test:watch": "jest --watchAll",
     "coveralls": "cat coverage/lcov.info | coveralls",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "lint": "eslint --ext js,html,md example-templates/ examples/ src/",
     "lint:fix": "npm run lint -- --fix",
     "start": "webpack-dev-server --config webpack.examples.config.js --content-base ./build/ --hot",
