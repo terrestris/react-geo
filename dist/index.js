@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.NominatimSearch = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = undefined;
+exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.NominatimSearch = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = undefined;
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -69,6 +69,10 @@ var _UserChip = require('./UserChip/UserChip.js');
 
 var _UserChip2 = _interopRequireDefault(_UserChip);
 
+var _CircleMenu = require('./CircleMenu/CircleMenu.js');
+
+var _CircleMenu2 = _interopRequireDefault(_CircleMenu);
+
 var _CsrfUtil = require('./Util/CsrfUtil/CsrfUtil');
 
 var _CsrfUtil2 = _interopRequireDefault(_CsrfUtil);
@@ -111,6 +115,7 @@ var _MappifiedComponent = require('./HigherOrderComponent/MappifiedComponent/Map
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+exports.CircleMenu = _CircleMenu2.default;
 exports.SimpleButton = _SimpleButton2.default;
 exports.ToggleButton = _ToggleButton2.default;
 exports.ToggleGroup = _ToggleGroup2.default;
