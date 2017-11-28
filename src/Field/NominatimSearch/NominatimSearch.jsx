@@ -258,16 +258,6 @@ export class NominatimSearch extends React.Component {
   render() {
     const {
       className,
-      nominatimBaseUrl,
-      format,
-      viewbox,
-      bounded,
-      polygon_geojson,
-      addressdetails,
-      limit,
-      countrycodes,
-      map,
-      onSelect,
       renderOption,
       ...passThroughProps
     } = this.props;
