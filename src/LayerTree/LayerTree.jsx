@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { isEqual, isBoolean, isFunction } from 'lodash';
+import { isBoolean, isFunction } from 'lodash';
 import { Tree } from 'antd';
 import OlMap from 'ol/map';
 import OlLayerBase from 'ol/layer/base';
@@ -91,7 +91,8 @@ class LayerTree extends React.Component {
     super(props);
 
     this.state = {
-      layerGrop: null,
+      layerGroup: null,
+      layerGroupRevision: null,
       treeNodes: [],
       checkedKeys: []
     };
@@ -105,8 +106,11 @@ class LayerTree extends React.Component {
       this.props.layerGroup :
       this.props.map.getLayerGroup();
 
+    const revision = this.props.layerGroup ? this.props.layerGroup.getRevision() : 0;
+
     this.setState({
-      layerGroup: layerGroup
+      layerGroup: layerGroup,
+      layerGroupRevision: revision
     }, () => {
       this.registerAddRemoveListeners(this.state.layerGroup);
       this.registerResolutionChangeHandler();
@@ -127,14 +131,21 @@ class LayerTree extends React.Component {
    * @param {Object} nextProps The new props.
    */
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.layerGroup, nextProps.layerGroup)) {
+
+    const currentLayerGroup = this.state.layerGroup;
+    const newLayerGroup = nextProps.layerGroup;
+    const layerGroupRevision = this.state.layerGroupRevision;
+
+    if (currentLayerGroup.ol_uid !== newLayerGroup.ol_uid ||
+        layerGroupRevision !== newLayerGroup.getRevision()) {
       olObservable.unByKey(this.olListenerKeys);
       this.olListenerKeys = [];
 
       this.setState({
-        layerGroup: nextProps.layerGroup
+        layerGroup: newLayerGroup,
+        layerGroupRevision: newLayerGroup.getRevision()
       }, () => {
-        this.registerAddRemoveListeners(this.state.layerGroup);
+        this.registerAddRemoveListeners(newLayerGroup);
         this.rebuildTreeNodes();
       });
     }
