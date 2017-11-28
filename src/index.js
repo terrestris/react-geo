@@ -19,6 +19,7 @@ import CircleMenu from './CircleMenu/CircleMenu.jsx';
 import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
 import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
 import MapUtil from './Util/MapUtil/MapUtil';
+import MeasureUtil from './Util/MeasureUtil/MeasureUtil';
 import ObjectUtil from './Util/ObjectUtil/ObjectUtil';
 import StringUtil from './Util/StringUtil/StringUtil';
 import UndoUtil from './Util/UndoUtil/UndoUtil';
@@ -49,6 +50,7 @@ export {
   FeatureUtil,
   Logger,
   MapUtil,
+  MeasureUtil,
   NominatimSearch,
   ObjectUtil,
   StringUtil,

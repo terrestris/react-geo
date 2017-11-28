@@ -10,9 +10,10 @@ import OlStyleStroke from 'ol/style/stroke';
 import OlStyleFill from 'ol/style/fill';
 import OlStyleCircle from 'ol/style/circle';
 import OlInteractionDraw from 'ol/interaction/draw';
-import OlObservableUnByKey from 'ol/observable/unbykey';
+import OlObservable from 'ol/observable';
 
 import ToggleButton from '../../index.js';
+import MeasureUtil from '../../index.js';
 
 /**
  * The MeasureButton.
@@ -36,6 +37,50 @@ class MeasureButton extends React.Component {
    * @private
    */
   _feature = null;
+
+  /**
+   * Overlay to show the measurement.
+   *
+   * @type {ol.Overlay}
+   */
+  _measureTooltip = null;
+
+  /**
+  * Overlay to show the help messages.
+  *
+  * @type {olOverlay}
+  */
+  _helpTooltip = null;
+
+  /**
+  * The help tooltip element.
+  *
+  * @type {Element}
+  */
+  _helpTooltipElement = null;
+
+  /**
+   * The measure tooltip element.
+   *
+   * @type {Element}
+   */
+  _measureTooltipElement = null;
+
+  /**
+   * An array of created overlays we use for the tooltips. Used to eventually
+   * clean up everything we added.
+   *
+   * @type{Array<OlOverlay>}
+   */
+  _createdTooltipOverlays = [];
+
+  /**
+   * An array of created divs we use for the tooltips. Used to eventually
+   * clean up everything we added.
+   *
+   * @type{Array<HTMLDivElement>}
+   */
+  _createdTooltipDivs = [];
 
   /**
    * An object holding keyed `ol.EventsKey` instances returned by the `on`
@@ -68,34 +113,42 @@ class MeasureButton extends React.Component {
      * @type {String}
      */
     className: PropTypes.string,
+
     /**
      *
      */
     map: PropTypes.instanceOf(OlMap),
+
     /**
      *
      */
-    measureType: PropTypes.oneOf(['line', 'polygon', 'angle']),
+    measureType: PropTypes.oneOf(['line', 'polygon', 'angle']).isRequired,
+
     /**
      *
      */
     measureLayerName: PropTypes.string,
+
     /**
      *
      */
     fillColor: PropTypes.string,
+
     /**
      *
      */
     strokeColor: PropTypes.string,
+
     /**
      *
      */
     showMeasureInfoOnClickedPoints: PropTypes.bool,
+
     /**
      *
      */
     multipleDrawing: PropTypes.bool,
+
     /**
      *
      */
@@ -105,10 +158,12 @@ class MeasureButton extends React.Component {
      *
      */
     continuePolygonMsg: PropTypes.string,
+
     /**
      *
      */
     continueLineMsg: PropTypes.string,
+
     /**
      *
      */
@@ -207,10 +262,11 @@ class MeasureButton extends React.Component {
     } = this.props;
 
     const maxPoints = measureType === 'angle' ? 2 : undefined;
+    const drawType = this.getDrawTypeByMeasureType(measureType);
     const drawInteraction = new OlInteractionDraw({
       name: 'react-geo_drawaction',
       source: this.state.measureVectorLayer.getSource(),
-      type: 'MultiLineString',
+      type: drawType,
       maxPoints: maxPoints,
       style: new OlStyleStyle({
         fill: new OlStyleFill({
@@ -240,6 +296,21 @@ class MeasureButton extends React.Component {
   }
 
   /**
+   * Examines the #measureType property of the this button an returns the
+   * type to use for drawing vectors, either `'MultiLineString'` or
+   * `'MultiPolygon'`.
+   *
+   * @return {String} The type to draw.
+   */
+  drawTypeByMeasureType = (measureType) => {
+    var drawType = 'MultiLineString';
+    if (measureType === 'polygon') {
+      drawType = 'MultiPolygon';
+    }
+    return drawType;
+  }
+
+  /**
    *
    */
   drawStart = (evt) => {
@@ -259,10 +330,34 @@ class MeasureButton extends React.Component {
 
     if (!multipleDrawing && source.getFeatures().length > 0) {
       this.cleanUpToolTips();
+      // TODO add methods
       this.createMeasureTooltip();
       this.createHelpTooltip();
       source.clear();
     }
+  }
+
+  /**
+ * Cleans up tooltips when the button is unpressed.
+ */
+  cleanUpToolTips () {
+    const {
+      map
+    } = this.props;
+
+    this._createdTooltipOverlays.forEach((tooltipOverlay) => {
+      map.removeOverlay(tooltipOverlay);
+    });
+
+    this._createdTooltipOverlays = [];
+
+    this._createdTooltipDivs.forEach((tooltipDiv) => {
+      let parent = tooltipDiv && tooltipDiv.parentNode;
+      if (parent) {
+        parent.removeChild(tooltipDiv);
+      }
+    });
+    this._createdTooltipDivs = [];
   }
 
   /**
@@ -277,7 +372,7 @@ class MeasureButton extends React.Component {
     } = this.props;
 
     if (this._eventKeys.click) {
-      OlObservableUnByKey(this._eventKeys.click);
+      OlObservable.unByKey(this._eventKeys.click);
     }
 
     // Fix doubled label for lastPoint of line
@@ -299,6 +394,26 @@ class MeasureButton extends React.Component {
   }
 
   /**
+  *
+  */
+  removeMeasureTooltip = () => {
+    const {
+      map
+    } = this.props;
+
+    if (this._measureTooltipElement && this._measureTooltipElement.parent) {
+      this._measureTooltipElement.parent.removeChild(
+        this._measureTooltipElement
+      );
+    }
+    if (this._measureTooltip) {
+      map.removeOverlay(this._measureTooltip);
+    }
+    this._measureTooltipElement = null;
+    this._measureTooltip = null;
+  }
+
+  /**
    * Handle pointer move by updating and repositioning the dynamic tooltip.
    *
    * @param {ol.MapBrowserEvent} evt The event from the pointermove.
@@ -309,7 +424,8 @@ class MeasureButton extends React.Component {
       continuePolygonMsg,
       continueLineMsg,
       continueAngleMsg,
-      measureType
+      measureType,
+      map
     } = this.props;
 
     if (evt.dragging) {
@@ -329,16 +445,16 @@ class MeasureButton extends React.Component {
       var geom = this._feature.getGeometry();
       measureTooltipCoord = geom.getLastCoordinate();
       if (measureType === 'polygon') {
-        output = me.formatArea(geom);
+        output = MeasureUtil.formatArea(geom, map);
         helpMsg = continuePolygonMsg;
         // attach area at interior point
         measureTooltipCoord = geom.getInteriorPoint().getCoordinates();
       } else if (measureType === 'line') {
-        output = me.formatLength(geom);
+        output = MeasureUtil.formatLength(geom, map);
         helpMsg = continueLineMsg;
         measureTooltipCoord = geom.getLastCoordinate();
       } else if (measureType === 'angle') {
-        output = me.formatAngle(geom);
+        output = MeasureUtil.formatAngle(geom, map);
         helpMsg = continueAngleMsg;
       }
       this._measureTooltipElement.innerHTML = output;
@@ -373,4 +489,3 @@ class MeasureButton extends React.Component {
 }
 
 export default MeasureButton;
-

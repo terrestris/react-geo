@@ -8,16 +8,23 @@ import { OlProjTransform } from 'ol/proj/transform';
  * @class MeasureUtil
  */
 class MeasureUtil {
+
+    /**
+    * How many decimal places will be allowed for the measure tooltips.
+    * @param {Number} decimalPlacesInToolTips.
+    */
+    static decimalPlacesInToolTips = 2;
+
     /**
      * Format length output for the tooltip.
      *
-     * @param {OlGeomMultilinestring} line The drawn line.
-     * @param {OlMap} map An OlMap
-     * @param {Boolean} geodesic Is the measurement geodesic
+     * @param {OlGeomMultiLineString} line The drawn line.
+     * @param {OlMap} map An OlMap.
+     * @param {Boolean} geodesic Is the measurement geodesic (default is true).
      * @return {String} The formatted length of the line.
      */
     static formatLength = (line, map, geodesic = true) => {
-      var decimalHelper = Math.pow(10, 2);
+      var decimalHelper = Math.pow(10, MeasureUtil.decimalPlacesInToolTips);
       var length;
 
       if (geodesic) {
@@ -35,6 +42,7 @@ class MeasureUtil {
       } else {
         length = Math.round(line.getLength() * 100) / 100;
       }
+
       let output;
       if (length > 1000) {
         output = (Math.round(length / 1000 * decimalHelper) /
@@ -52,10 +60,10 @@ class MeasureUtil {
      * @param {OlGeomPolygon} polygon The drawn polygon.
      * @param {OlMap} map An OlMap
      * @param {Boolean} geodesic Is the measurement geodesic
-     * @return {String} The formatted area of the polygon.
+     * @return {String} The formatted area of the polygon
      */
     static formatArea = (polygon, map, geodesic = true) => {
-      const decimalHelper = Math.pow(10, 2);
+      const decimalHelper = Math.pow(10, MeasureUtil.decimalPlacesInToolTips);
       let area;
 
       if (geodesic) {
@@ -180,7 +188,7 @@ class MeasureUtil {
 
       angle = MeasureUtil.makeZeroDegreesAtNorth(angle);
       angle = MeasureUtil.makeClockwise(angle);
-      angle = angle.toFixed(2);
+      angle = angle.toFixed(MeasureUtil.decimalPlacesInToolTips);
 
       return angle + '°';
     }
