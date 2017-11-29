@@ -32,7 +32,7 @@ class CoordinateReferenceSystemCombo extends React.Component {
      * default: http://epsg.io
      * @type {String}
      */
-    epsgIoBaseUrl: PropTypes.string,
+    crsApiUrl: PropTypes.string,
     /**
      * The empty text set if no value is given / provided
      * @type {String}
@@ -56,7 +56,7 @@ class CoordinateReferenceSystemCombo extends React.Component {
 
   static defaultProps = {
     emptyTextPlaceholderText: 'Please select a CRS',
-    epsgIoBaseUrl: 'https://epsg.io/',
+    crsApiUrl: 'https://epsg.io/',
     onSelect: () => {}
   }
 
@@ -79,41 +79,32 @@ class CoordinateReferenceSystemCombo extends React.Component {
    * Fetch CRS definitions from epsg.io for given search string
    *
    * @param {String} searchVal The search string
-   * @param {Function} callback The callback function to be called on success.
    */
-  fetchCrs = (searchVal, callback) => {
-    const { epsgIoBaseUrl } = this.props;
+  fetchCrs = (searchVal) => {
+    const { crsApiUrl } = this.props;
 
     const queryParameters = {
       format: 'json',
       q: searchVal
     };
 
-    fetch(`${epsgIoBaseUrl}?${UrlUtil.objectToRequestString(queryParameters)}`)
-      .then(response => response.json())
-      .then(this.onFetchSuccess.bind(this, callback))
-      .catch(this.onFetchError);
+    return fetch(`${crsApiUrl}?${UrlUtil.objectToRequestString(queryParameters)}`)
+      .then(response => response.json());
   }
 
   /**
    * This function gets called on success of the EPSG.io fetch.
-   * It calls callback function if defined
+   * It simply calls callback function if defined
    *
    * @param {Function} callback The callback function to be called
-   * @param {Object} json The result object of EPSG.io-API, see where
-   *                 https://github.com/klokantech/epsg.io#api-for-results
+   * @param {Object} crsDefinitions Array of CRS definitons used in
+   *                 CoordinateReferenceSystemCombo
    */
-  onFetchSuccess = (callback, json) => {
+  runViaCallback = (callback, crsDefinitions) => {
     if (!callback) {
       return false;
     }
-    const results = json.results;
-    if (results && results.length > 0) {
-      // transform results
-      callback(results.map(obj => ({code: obj.code, value: obj.name, proj4def: obj.proj4, bbox: obj.bbox})));
-    } else {
-      callback([]);
-    }
+    callback(crsDefinitions);
   }
 
   /**
@@ -124,6 +115,22 @@ class CoordinateReferenceSystemCombo extends React.Component {
    */
   onFetchError(error) {
     Logger.error(`Error while requesting in CoordinateReferenceSystemCombo: ${error}`);
+  }
+
+  /**
+   * This function transforms results of EPSG.io
+   *
+   * @param {Object} json The result object of EPSG.io-API, see where
+   *                 https://github.com/klokantech/epsg.io#api-for-results   *
+   * @return {Array} Array of CRS definitons used in CoordinateReferenceSystemCombo
+   */
+  transformResults = (json) => {
+    const results = json.results;
+    if (results && results.length > 0) {
+      return results.map(obj => ({code: obj.code, value: obj.name, proj4def: obj.proj4, bbox: obj.bbox}));
+    } else {
+      return [];
+    }
   }
 
   /**
@@ -146,7 +153,10 @@ class CoordinateReferenceSystemCombo extends React.Component {
     }
 
     if (!predefinedCrsDefinitions) {
-      this.fetchCrs(value, crsDefinitions => this.setState({ crsDefinitions, value })) ;
+      this.fetchCrs(value)
+        .then(this.transformResults)
+        .then(this.runViaCallback.bind(this, crsDefinitions => this.setState({ crsDefinitions, value })))
+        .catch(this.onFetchError);
     } else {
       this.setState({ value });
     }

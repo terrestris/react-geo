@@ -8,9 +8,9 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
   const resultMock = {
     status: 'ok',
+    number_result: 1,
     results: [{
       code: '31466',
-      number_result: 1,
       bbox: [53.81,5.86,49.11,7.5],
       proj4: '+proj=tmerc +lat_0=0 +lon_0=6 +k=1 +x_0=2500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs',
       name: 'DHDN / 3-degree Gauss-Kruger zone 2'
@@ -32,51 +32,52 @@ describe('<CoordinateReferenceSystemCombo />', () => {
   });
 
   describe('#fetchCrs', () => {
-    it('sends a request with searchTerm and calls callback on success', () => {
+    it('sends a request with searchTerm', () => {
       const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
-      const fetchSpy = sinon.spy(window, 'fetch');
       const searchVal = '25832';
       const callback = jest.fn();
-      wrapper.instance().fetchCrs(searchVal, callback);
-      expect(fetchSpy.calledOnce).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(wrapper.props().epsgIoBaseUrl)).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(searchVal)).toBeTruthy();
+      const fetchPromise = wrapper.instance().fetchCrs(searchVal, callback);
+      expect(fetchPromise).toBeInstanceOf(Promise);
     });
   });
 
-  describe('#onFetchSuccess', () => {
+  describe('#runViaCallback', () => {
     const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
 
     it('returns false if callback is undefined', () => {
-      const result = wrapper.instance().onFetchSuccess(undefined, resultMock);
+      const result = wrapper.instance().runViaCallback(undefined, resultMock);
       expect(result).toBe(false);
     });
 
-    it ('calls callback with mapped results if results is not empty', () => {
-      const mockCallback = jest.fn();
-      wrapper.instance().onFetchSuccess(mockCallback, resultMock);
-      expect(mockCallback.mock.calls.length).toBe(1);
-
+    it('calls callback with passed parameters', () => {
+      const testObj = {bla: 'blub'};
       // eslint-disable-next-line
-      const simpleReturnFunction = (mappedVals) => {
-        mappedVals.forEach((obj, idx) => {
-          expect(obj.code).toBe(resultMock.results[idx].code);
-          expect(obj.value).toBe(resultMock.results[idx].name);
-          expect(obj.proj4def).toBe(resultMock.results[idx].proj4);
-          expect(obj.bbox).toBe(resultMock.results[idx].bbox);
-        });
+      const returnFn = (val) => {
+        expect(val).toBe(testObj);
       };
-      wrapper.instance().onFetchSuccess(simpleReturnFunction, resultMock);
+      wrapper.instance().runViaCallback(returnFn, testObj);
+    });
+  });
+
+  describe('#transformResults', () => {
+    const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
+    it('appropriately transforms filled results', () => {
+      const transformedResults = wrapper.instance().transformResults(resultMock);
+      expect(transformedResults).toHaveLength(resultMock.results.length);
+      transformedResults.forEach((crsObj, idx) => {
+        expect(crsObj.code).toBe(resultMock.results[idx].code);
+        expect(crsObj.bbox).toBe(resultMock.results[idx].bbox);
+        expect(crsObj.proj4def).toBe(resultMock.results[idx].proj4);
+        expect(crsObj.value).toBe(resultMock.results[idx].name);
+      });
     });
 
-    it ('calls callback with empty array if results is empty', () => {
-      // eslint-disable-next-line
-      const simpleReturnFunction = (mappedVals) => {
-        expect(mappedVals).toHaveLength(0);
-      };
-      wrapper.instance().onFetchSuccess(simpleReturnFunction, {
+    it('appropriately transforms empty results', () => {
+      const transformedResults = wrapper.instance().transformResults({
+        success: 'ok',
         results: []
       });
+      expect(transformedResults).toHaveLength(0);
     });
   });
 
