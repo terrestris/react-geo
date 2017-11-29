@@ -93,21 +93,6 @@ class CoordinateReferenceSystemCombo extends React.Component {
   }
 
   /**
-   * This function gets called on success of the EPSG.io fetch.
-   * It simply calls callback function if defined
-   *
-   * @param {Function} callback The callback function to be called
-   * @param {Object} crsDefinitions Array of CRS definitons used in
-   *                 CoordinateReferenceSystemCombo
-   */
-  runViaCallback = (callback, crsDefinitions) => {
-    if (!callback) {
-      return false;
-    }
-    callback(crsDefinitions);
-  }
-
-  /**
    * This function gets called when the EPSG.io fetch returns an error.
    * It logs the error to the console.
    *
@@ -155,7 +140,7 @@ class CoordinateReferenceSystemCombo extends React.Component {
     if (!predefinedCrsDefinitions) {
       this.fetchCrs(value)
         .then(this.transformResults)
-        .then(this.runViaCallback.bind(this, crsDefinitions => this.setState({ crsDefinitions, value })))
+        .then(crsDefinitions => this.setState({crsDefinitions}))
         .catch(this.onFetchError);
     } else {
       this.setState({ value });

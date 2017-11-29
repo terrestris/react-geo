@@ -41,24 +41,6 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     });
   });
 
-  describe('#runViaCallback', () => {
-    const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
-
-    it('returns false if callback is undefined', () => {
-      const result = wrapper.instance().runViaCallback(undefined, resultMock);
-      expect(result).toBe(false);
-    });
-
-    it('calls callback with passed parameters', () => {
-      const testObj = {bla: 'blub'};
-      // eslint-disable-next-line
-      const returnFn = (val) => {
-        expect(val).toBe(testObj);
-      };
-      wrapper.instance().runViaCallback(returnFn, testObj);
-    });
-  });
-
   describe('#transformResults', () => {
     const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
     it('appropriately transforms filled results', () => {
