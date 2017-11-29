@@ -26,9 +26,12 @@ describe('<CircleMenu />', () => {
   });
 
   it('applys the Transformation on update', (done) => {
+    jest.useFakeTimers();
+    const animationDuration = 1;
     const wrapper = TestUtil.mountComponent(CircleMenu, {
       children: ['A', 'B'],
-      position: [0, 0]
+      position: [0, 0],
+      animationDuration: animationDuration
     });
     const instance = wrapper.instance();
     const transformationSpy = jest.spyOn(instance, 'applyTransformation');
@@ -40,7 +43,9 @@ describe('<CircleMenu />', () => {
     setTimeout(() => {
       expect(transformationSpy).toHaveBeenCalledTimes(1);
       done();
-    }, 2);
+    }, animationDuration + 10);
+
+    jest.runAllTimers();
 
     transformationSpy.mockReset();
     transformationSpy.mockRestore();
@@ -49,6 +54,7 @@ describe('<CircleMenu />', () => {
 
   describe('applyTransformation', () => {
     it('applys the Transformation to the ref', (done) => {
+      jest.useFakeTimers();
       const diameter = 1337;
       const animationDuration = 1;
       const wrapper = TestUtil.mountComponent(CircleMenu, {
@@ -68,7 +74,9 @@ describe('<CircleMenu />', () => {
         expect(instance._ref.style.width).toBe('1337px');
         expect(instance._ref.style.height).toBe('1337px');
         done();
-      }, animationDuration + 1);
+      }, animationDuration + 10);
+
+      jest.runAllTimers();
     });
   });
 
