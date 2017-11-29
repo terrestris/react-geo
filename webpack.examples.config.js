@@ -6,6 +6,7 @@ commonConfig.entry = {
   'Button/SimpleButton/SimpleButton': './src/Button/SimpleButton/SimpleButton.example.jsx',
   'Button/ToggleButton/ToggleButton': './src/Button/ToggleButton/ToggleButton.example.jsx',
   'Button/ToggleGroup/ToggleGroup': './src/Button/ToggleGroup/ToggleGroup.example.jsx',
+  'Button/MeasureButton/MeasureButton': './src/Button/MeasureButton/MeasureButton.example.jsx',
   'CircleMenu/CircleMenu': './src/CircleMenu/CircleMenu.example.jsx',
   'Field/NominatimSearch/NominatimSearch': './src/Field/NominatimSearch/NominatimSearch.example.jsx',
   'Field/ScaleCombo/ScaleCombo': './src/Field/ScaleCombo/ScaleCombo.example.jsx',
