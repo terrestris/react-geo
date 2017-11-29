@@ -1,5 +1,5 @@
-import { OlSphere } from 'ol/sphere';
-import { OlProjTransform } from 'ol/proj/transform';
+import OlSphere from 'ol/sphere';
+import OlProj from 'ol/proj';
 
 /**
  * This class provides some static methods which might be helpful when working
@@ -10,35 +10,32 @@ import { OlProjTransform } from 'ol/proj/transform';
 class MeasureUtil {
 
     /**
-    * How many decimal places will be allowed for the measure tooltips.
-    * @param {Number} decimalPlacesInToolTips.
-    */
-    static decimalPlacesInToolTips = 2;
-
-    /**
      * Format length output for the tooltip.
      *
      * @param {OlGeomMultiLineString} line The drawn line.
      * @param {OlMap} map An OlMap.
+     * @param {Number} decimalPlacesInToolTips How many decimal places will be
+     *   allowed for the measure tooltips
      * @param {Boolean} geodesic Is the measurement geodesic (default is true).
+     *
      * @return {String} The formatted length of the line.
      */
-    static formatLength = (line, map, geodesic = true) => {
-      var decimalHelper = Math.pow(10, MeasureUtil.decimalPlacesInToolTips);
-      var length;
+    static formatLength = (line, map, decimalPlacesInToolTips, geodesic = true) => {
+      const decimalHelper = Math.pow(10, decimalPlacesInToolTips);
+      let length;
 
       if (geodesic) {
         const wgs84Sphere = new OlSphere(6378137);
         const coordinates = line.getCoordinates();
         length = 0;
         const sourceProj = map.getView().getProjection();
-        coordinates.forEach((coordinate, idx) => {
-          const c1 = OlProjTransform(
-            coordinate, sourceProj, 'EPSG:4326');
-          const c2 = OlProjTransform(
-            coordinates[idx + 1], sourceProj, 'EPSG:4326');
+        for (let i = 0, ii = coordinates.length - 1; i < ii; ++i) {
+          const c1 = OlProj.transform(
+            coordinates[i], sourceProj, 'EPSG:4326');
+          const c2 = OlProj.transform(
+            coordinates[i + 1], sourceProj, 'EPSG:4326');
           length += wgs84Sphere.haversineDistance(c1, c2);
-        });
+        }
       } else {
         length = Math.round(line.getLength() * 100) / 100;
       }
@@ -58,12 +55,15 @@ class MeasureUtil {
      * Format length output for the tooltip.
      *
      * @param {OlGeomPolygon} polygon The drawn polygon.
-     * @param {OlMap} map An OlMap
-     * @param {Boolean} geodesic Is the measurement geodesic
-     * @return {String} The formatted area of the polygon
+     * @param {OlMap} map An OlMap.
+     * @param {Number} decimalPlacesInToolTips How many decimal places will be
+     *   allowed for the measure tooltips.
+     * @param {Boolean} geodesic Is the measurement geodesic.
+     *
+     * @return {String} The formatted area of the polygon.
      */
-    static formatArea = (polygon, map, geodesic = true) => {
-      const decimalHelper = Math.pow(10, MeasureUtil.decimalPlacesInToolTips);
+    static formatArea = (polygon, map, decimalPlacesInToolTips, geodesic = true) => {
+      const decimalHelper = Math.pow(10, decimalPlacesInToolTips);
       let area;
 
       if (geodesic) {
@@ -99,6 +99,7 @@ class MeasureUtil {
      *     x-coordinate being at index `0` and y-coordinate being at index `1`.
      * @param {Array<Number>} end The end coordinates of the line with the
      *     x-coordinate being at index `0` and y-coordinate being at index `1`.
+     *
      * @return {Number} the angle in degreees, ranging from -180° to 180°.
      */
     static angle = (start, end) => {
@@ -122,11 +123,12 @@ class MeasureUtil {
      *     x-coordinate being at index `0` and y-coordinate being at index `1`.
      * @param {Array<Number>} end The end coordinates of the line with the
      *     x-coordinate being at index `0` and y-coordinate being at index `1`.
+     *
      * @return {Number} the angle in degreees, ranging from 0° and 360°.
      */
     static angle360 = (start, end) => {
       // range (-180, 180]
-      let theta = this.angle(start, end);
+      let theta = MeasureUtil.angle(start, end);
       if (theta < 0) {
         // range [0, 360)
         theta = 360 + theta;
@@ -140,6 +142,7 @@ class MeasureUtil {
      * the direction of the angle from counter-clockwise to clockwise.
      *
      * @param {Number} angle360 The input angle obtained counter-clockwise.
+     *
      * @return {Number} The clockwise angle.
      */
     static makeClockwise = (angle360) => {
@@ -152,6 +155,7 @@ class MeasureUtil {
      *
      * @param {Number} angle360 The input angle obtained counter-clockwise, with
      *     0° degrees being in the east.
+     *
      * @return {Number} The adjusted angle, with 0° being in the north.
      */
     static makeZeroDegreesAtNorth = (angle360) => {
@@ -166,16 +170,15 @@ class MeasureUtil {
      * Returns the angle of the passed linestring in degrees, with 'N' being the
      * 0°-line and the angle increases in clockwise direction.
      *
-     * TODO The angle calculation assumes an unrotated view. We should enhance
-     *    this method to (optionally) correct the determined angle by the
-     *    rotation of the map.
-     *
      * @param {ol.geom.LineString} line The linestring to get the
-     *     angle from. As this line is comming from our internal draw
-     *     interaction, we know that it will only consist of two points.
+     *   angle from. As this line is comming from our internal draw
+     *   interaction, we know that it will only consist of two points.
+     * @param {Number} decimalPlacesInToolTips How many decimal places will be
+     *   allowed for the measure tooltips.
+     *
      * @return {String} The formatted angle of the line.
      */
-    static formatAngle = (line) => {
+    static formatAngle = (line, decimalPlacesInToolTips = 2) => {
       let coords = line.getCoordinates();
       const numCoords = coords.length;
       if (numCoords < 2) {
@@ -188,7 +191,7 @@ class MeasureUtil {
 
       angle = MeasureUtil.makeZeroDegreesAtNorth(angle);
       angle = MeasureUtil.makeClockwise(angle);
-      angle = angle.toFixed(MeasureUtil.decimalPlacesInToolTips);
+      angle = angle.toFixed(decimalPlacesInToolTips);
 
       return angle + '°';
     }
