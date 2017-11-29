@@ -94,7 +94,7 @@ render(
       <br />
 
       {/* A CoordinateReferenceSystemCombo having predefinedCrsDefinitions*/}
-      <CoordinateReferenceSystemCombo predefinedCrsDefinitions={predefinedCrsDefinitions} />
+      <CoordinateReferenceSystemCombo predefinedCrsDefinitions={predefinedCrsDefinitions} style={{width: 200}} />
     </div>
 
     <div className="example-block">
@@ -103,7 +103,7 @@ render(
       </span>
       <br />
 
-      <CoordinateReferenceSystemCombo onSelect={setProjection} />
+      <CoordinateReferenceSystemCombo onSelect={setProjection} style={{width: 200}} />
     </div>
   </div>,
 

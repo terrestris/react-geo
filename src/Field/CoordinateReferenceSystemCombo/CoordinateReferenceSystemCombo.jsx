@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {AutoComplete } from 'antd';
+import { AutoComplete } from 'antd';
 const Option = AutoComplete.Option;
-
-import './CoordinateReferenceSystemCombo.less';
 
 import { Logger, UrlUtil } from '../../index.js';
 
 /**
- * Class representating a combo to choose coordinate projection system via a
+ * Class representing a combo to choose coordinate projection system via a
  * dropdown menu and / or autocompletion
  *
  * @class The CoordinateReferenceSystemCombo
@@ -21,7 +19,7 @@ class CoordinateReferenceSystemCombo extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-crs-combo'
+  className = 'react-geo-coordinatereferencesystemcombo'
 
   static propTypes = {
     /**
