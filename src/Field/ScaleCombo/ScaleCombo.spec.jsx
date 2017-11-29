@@ -135,7 +135,7 @@ describe('<ScaleCombo />', () => {
         scales: scaleArray
       });
       const index = 1;
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(index)).toBe(scaleArray[index]);
+      expect(wrapper.instance().determineOptionKeyForZoomLevel(index)).toBe(scaleArray[index].toString());
 
       TestUtil.removeMap(map);
     });
