@@ -74,7 +74,7 @@
     "lodash": "4.17.4",
     "loglevel": "1.6.0",
     "prop-types": "15.6.0",
-    "react-dom": "16.1.1",
+    "react-dom": "16.2.0",
     "react-fa": "5.0.0",
     "react-i18next": "7.0.0",
     "react-rnd": "7.1.5",
