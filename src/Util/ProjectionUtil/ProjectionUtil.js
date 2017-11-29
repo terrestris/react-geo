@@ -9,36 +9,11 @@ import OlProjection from 'ol/proj';
 export class ProjectionUtil {
 
   /**
-   * Returns an object of (custom) proj4 definitions.
-   *
-   * @return {Object} The (custom) proj4 definition strings.
-   */
-  static proj4CrsDefinitions() {
-    return {
-      'EPSG:25832': '+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
-    };
-  }
-
-  /**
-   * FeatureCollections returned by the GeoServer may be associated with
-   * crs identifiers (e.g. "urn:ogc:def:crs:EPSG::25832") that aren't
-   * supported by proj4 and/or ol3 per default. Add appropriate
-   * mappings to allow automatic crs detection by ol3 here.
-   *
-   * @return {Object} The crs mappings.
-   */
-  static proj4CrsMappings() {
-    return {
-      'urn:ogc:def:crs:EPSG::3857': 'EPSG:3857',
-      'urn:ogc:def:crs:EPSG::25832': 'EPSG:25832'
-    };
-  }
-
-  /**
    * Registers custom crs definitions to the application.
+   *
+   * @param {Object} proj4CrsDefinitions The (custom) proj4 definition strings.
    */
-  static initProj4Definitions() {
-    let proj4CrsDefinitions = ProjectionUtil.proj4CrsDefinitions();
+  static initProj4Definitions(proj4CrsDefinitions) {
     for (let [projCode, projDefinition] of Object.entries(proj4CrsDefinitions)) {
       proj4.defs(projCode, projDefinition);
     }
@@ -46,10 +21,15 @@ export class ProjectionUtil {
   }
 
   /**
-   * Registers custom crs mappings to allow automatic crs detection by ol3.
+   * Registers custom crs mappings to allow automatic crs detection. Sometimes
+   * FeatureCollections returned by the GeoServer may be associated with
+   * crs identifiers (e.g. "urn:ogc:def:crs:EPSG::25832") that aren't
+   * supported by proj4 and/or ol per default. Add appropriate
+   * mappings to allow automatic crs detection by ol here.
+   *
+   * @param {Object} proj4CrsMappings The crs mappings.
    */
-  static initProj4DefinitionMappings() {
-    let proj4CrsMappings = ProjectionUtil.proj4CrsMappings();
+  static initProj4DefinitionMappings(proj4CrsMappings) {
     for (let [aliasProjCode, projCode] of Object.entries(proj4CrsMappings)) {
       proj4.defs(aliasProjCode, proj4.defs(projCode));
     }
