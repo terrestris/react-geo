@@ -124,7 +124,7 @@ class MeasureUtil {
      * @param {Array<Number>} end The end coordinates of the line with the
      *     x-coordinate being at index `0` and y-coordinate being at index `1`.
      *
-     * @return {Number} the angle in degreees, ranging from 0° and 360°.
+     * @return {Number} the angle in degrees, ranging from 0° and 360°.
      */
     static angle360 = (start, end) => {
       // range (-180, 180]
