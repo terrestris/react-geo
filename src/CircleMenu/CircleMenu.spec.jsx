@@ -65,9 +65,6 @@ describe('<CircleMenu />', () => {
       });
       const instance = wrapper.instance();
 
-      expect(instance._ref.style.width).toBe('0px');
-      expect(instance._ref.style.height).toBe('0px');
-
       instance.applyTransformation();
 
       setTimeout(() => {
