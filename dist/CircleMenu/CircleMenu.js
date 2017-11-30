@@ -121,7 +121,9 @@ var CircleMenu = exports.CircleMenu = function (_React$Component) {
           diameter = _props.diameter,
           children = _props.children,
           position = _props.position,
-          passThroughProps = _objectWithoutProperties(_props, ['animationDuration', 'className', 'diameter', 'children', 'position']);
+          segmentAngles = _props.segmentAngles,
+          style = _props.style,
+          passThroughProps = _objectWithoutProperties(_props, ['animationDuration', 'className', 'diameter', 'children', 'position', 'segmentAngles', 'style']);
 
       var finalClassName = className ? className + ' ' + this.className : this.className;
 
@@ -132,21 +134,23 @@ var CircleMenu = exports.CircleMenu = function (_React$Component) {
             return _this2._ref = i;
           },
           className: finalClassName,
-          style: {
+          style: _extends({
             transition: 'all ' + animationDuration + 'ms',
-            opacity: 0,
-            width: 0,
-            height: 0,
-            top: position[0],
-            left: position[1]
-          }
+            left: position[0] - diameter / 2,
+            top: position[1] - diameter / 2
+          }, style)
         }, passThroughProps),
         children.map(function (child, idx, children) {
+          var start = segmentAngles[0];
+          var end = segmentAngles[1];
+          var range = end - start;
+          var amount = range > 270 ? children.length : children.length - 1;
+          var rotationAngle = start + range / amount * idx;
           return _react2.default.createElement(
             _CircleMenuItem2.default,
             {
               radius: diameter / 2,
-              rotationAngle: 360 / children.length * idx,
+              rotationAngle: rotationAngle,
               idx: idx,
               animationDuration: _this2.props.animationDuration,
               key: idx
@@ -163,6 +167,7 @@ var CircleMenu = exports.CircleMenu = function (_React$Component) {
 
 CircleMenu.propTypes = {
   className: _propTypes2.default.string,
+  style: _propTypes2.default.object,
   /**
    * The duration of the animation in milliseconds. Pass 0 to avoid animation.
    * Default is 300.
@@ -186,10 +191,15 @@ CircleMenu.propTypes = {
    * An array containing the x and y coordinates of the CircleMenus Center.
    * @type {Number[]}
    */
-  position: _propTypes2.default.arrayOf(_propTypes2.default.number).isRequired
+  position: _propTypes2.default.arrayOf(_propTypes2.default.number).isRequired,
+  /**
+   * Optional Segement of angles where to show the children. Default is [0, 360].
+   */
+  segmentAngles: _propTypes2.default.arrayOf(_propTypes2.default.number)
 };
 CircleMenu.defaultProps = {
   animationDuration: 300,
-  diameter: 100
+  diameter: 100,
+  segmentAngles: [0, 360]
 };
 exports.default = CircleMenu;
