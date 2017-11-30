@@ -101,11 +101,11 @@ const doRender = () => {
         <SimpleButton
           id="segmentButton"
           shape="circle"
-          icon="cross"
+          icon="plus"
           style={{
             position: 'absolute',
-            top: buttonCoords[0]+ 'px',
-            left: buttonCoords[1]+ 'px'
+            top: buttonCoords[0] + 'px',
+            left: buttonCoords[1] + 'px'
           }}
           onClick={() => {
             // TODO replace with evt.target once it is given to the callback
