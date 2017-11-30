@@ -28,6 +28,7 @@ export class CircleMenu extends React.Component {
 
   static propTypes = {
     className: PropTypes.string,
+    style: PropTypes.object,
     /**
      * The duration of the animation in milliseconds. Pass 0 to avoid animation.
      * Default is 300.
@@ -51,12 +52,17 @@ export class CircleMenu extends React.Component {
      * An array containing the x and y coordinates of the CircleMenus Center.
      * @type {Number[]}
      */
-    position: PropTypes.arrayOf(PropTypes.number).isRequired
+    position: PropTypes.arrayOf(PropTypes.number).isRequired,
+    /**
+     * Optional Segement of angles where to show the children. Default is [0, 360].
+     */
+    segmentAngles: PropTypes.arrayOf(PropTypes.number)
   };
 
   static defaultProps = {
     animationDuration: 300,
-    diameter: 100
+    diameter: 100,
+    segmentAngles: [0, 360]
   };
 
   /**
@@ -96,6 +102,8 @@ export class CircleMenu extends React.Component {
       diameter,
       children,
       position,
+      segmentAngles,
+      style,
       ...passThroughProps
     } = this.props;
 
@@ -109,20 +117,23 @@ export class CircleMenu extends React.Component {
         className={finalClassName}
         style={{
           transition: `all ${animationDuration}ms`,
-          opacity: 0,
-          width: 0,
-          height: 0,
-          top: position[0],
-          left: position[1]
+          left: position[0] - (diameter / 2),
+          top: position[1] - (diameter / 2),
+          ...style
         }}
         {...passThroughProps}
       >
         {
           children.map((child, idx, children) => {
+            const start = segmentAngles[0];
+            const end = segmentAngles[1];
+            const range = end-start;
+            const amount = range > 270 ? children.length : children.length - 1;
+            const rotationAngle = start + (range / amount) * idx;
             return (
               <CircleMenuItem
                 radius={diameter / 2}
-                rotationAngle={(360 / children.length) * idx}
+                rotationAngle={rotationAngle}
                 idx={idx}
                 animationDuration={this.props.animationDuration}
                 key={idx}

@@ -29,13 +29,92 @@ body.example {
 
   <pre>
     <code class="javascript">import React from &#x27;react&#x27;;
+import OlSourceOsm from &#x27;ol/source/osm&#x27;;
+import OlSourceVector from &#x27;ol/source/vector&#x27;;
+import OlLayerTile from &#x27;ol/layer/tile&#x27;;
+import OlLayerVector from &#x27;ol/layer/vector&#x27;;
+import OlFeature from &#x27;ol/feature&#x27;;
+import OlGeomPoint from &#x27;ol/geom/point&#x27;;
+import OlView from &#x27;ol/view&#x27;;
+import OlMap from &#x27;ol/map&#x27;;
+import OlStyleStyle from &#x27;ol/style/style&#x27;;
+import OlStyleCircle from &#x27;ol/style/circle&#x27;;
+import OlStyleFill from &#x27;ol/style/fill&#x27;;
 import { render } from &#x27;react-dom&#x27;;
 import {
   CircleMenu,
-  SimpleButton
+  SimpleButton,
+  MapComponent,
+  MapProvider,
+  mappify
 } from &#x27;@terrestris/react-geo&#x27;;
 
-let visible &#x3D; false;
+let visibleButton &#x3D; false;
+let visibleMap &#x3D; false;
+
+/**
+ * Setup
+ */
+const buttonCoords &#x3D; [100, 100];
+let mapMenuCoords;
+
+// Prepare map
+const mapPromise &#x3D; new Promise((resolve) &#x3D;&gt; {
+  const osmLayer &#x3D; new OlLayerTile({
+    source: new OlSourceOsm()
+  });
+  const featureLayer &#x3D; new OlLayerVector({
+    source: new OlSourceVector({
+      features: [new OlFeature({
+        geometry: new OlGeomPoint([
+          135.1691495,
+          34.6565482
+        ])
+      })]
+    }),
+    style: new OlStyleStyle({
+      image: new OlStyleCircle({
+        radius: 10,
+        fill: new OlStyleFill({
+          color: &#x27;#C62148&#x27;
+        })
+      })
+    })
+  });
+
+  const map &#x3D; new OlMap({
+    view: new OlView({
+      center: [
+        135.1691495,
+        34.6565482
+      ],
+      projection: &#x27;EPSG:4326&#x27;,
+      zoom: 16,
+    }),
+    layers: [osmLayer,featureLayer],
+    interactions: []
+  });
+
+  // show menu when feature clicked
+  map.on(&#x27;singleclick&#x27;, (evt) &#x3D;&gt; {
+    const mapEl &#x3D; document.getElementById(&#x27;map&#x27;);
+    const pixel &#x3D; map.getPixelFromCoordinate([135.1691495, 34.6565482]);
+    const evtPixel &#x3D; map.getPixelFromCoordinate(evt.coordinate);
+    if(map.hasFeatureAtPixel(evtPixel)) {
+      visibleMap &#x3D; true;
+      mapMenuCoords &#x3D; [
+        pixel[0] + mapEl.offsetLeft,
+        pixel[1] + mapEl.offsetTop,
+      ];
+    } else {
+      visibleMap &#x3D; false;
+    }
+    doRender();
+  });
+
+  resolve(map);
+});
+const Map &#x3D; mappify(MapComponent);
 
 /**
  * The wrapper is needed to reRender the DomTree. Don&#x27;t worry about it.
@@ -46,25 +125,70 @@ const doRender &#x3D; () &#x3D;&gt; {
     &lt;div&gt;
       &lt;div className&#x3D;&quot;example-block&quot; style&#x3D;{{
         width: 500,
-        height: 500
+        height: 200
       }}&gt;
-        &lt;span&gt;CircleMenu&lt;/span&gt;
-        &lt;SimpleButton onClick&#x3D;{() &#x3D;&gt; {
-          visible &#x3D; !visible;
-          doRender();
-        }}&gt;
-          Toggle CircleMenu
-        &lt;/SimpleButton&gt;
-        {visible ?
+        &lt;div&gt;CircleMenu with segment as submenu:&lt;/div&gt;
+        &lt;SimpleButton
+          id&#x3D;&quot;segmentButton&quot;
+          shape&#x3D;&quot;circle&quot;
+          icon&#x3D;&quot;cross&quot;
+          style&#x3D;{{
+            position: &#x27;absolute&#x27;,
+            top: buttonCoords[0]+ &#x27;px&#x27;,
+            left: buttonCoords[1]+ &#x27;px&#x27;
+          }}
+          onClick&#x3D;{() &#x3D;&gt; {
+            // TODO replace with evt.target once it is given to the callback
+            const button &#x3D; document.getElementById(&#x27;segmentButton&#x27;);
+            visibleButton &#x3D; !visibleButton;
+            if (visibleButton) {
+              button.style.transform &#x3D; &#x27;rotate(45deg)&#x27;;
+            } else {
+              button.style.transform &#x3D; &#x27;rotate(0deg)&#x27;;
+            }
+            doRender();
+          }}
+        /&gt;
+        {visibleButton ?
           &lt;CircleMenu
-            position&#x3D;{[100, 100]}
+            style&#x3D;{{
+              position: &#x27;absolute&#x27;,
+              background: &#x27;none&#x27;,
+              border: &#x27;none&#x27;
+            }}
+            position&#x3D;{[
+              buttonCoords[0] + 14, // buttonX - buttonWidth/2
+              buttonCoords[1] + 14 // buttonY - buttonHeight/2
+            ]}
+            diameter&#x3D;{80}
+            animationDuration&#x3D;{500}
+            segmentAngles&#x3D;{[0, 90]}
+          &gt;
+            &lt;SimpleButton icon&#x3D;&quot;floppy-o&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;trash-o&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;pencil&quot; shape&#x3D;&quot;circle&quot; /&gt;
+          &lt;/CircleMenu&gt;
+          : null
+        }
+      &lt;/div&gt;
+      &lt;div className&#x3D;&quot;example-block&quot;&gt;
+        &lt;span&gt;CircleMenu in a Map (click the red feature)&lt;/span&gt;
+        &lt;MapProvider map&#x3D;{mapPromise}&gt;
+          &lt;Map style&#x3D;{{
+            width: &#x27;512px&#x27;,
+            height: &#x27;512px&#x27;
+          }} /&gt;
+        &lt;/MapProvider&gt;
+        {visibleMap ?
+          &lt;CircleMenu
+            position&#x3D;{mapMenuCoords}
             diameter&#x3D;{80}
             animationDuration&#x3D;{500}
           &gt;
-            &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
-            &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
-            &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
-            &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;pencil&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;line-chart&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;link&quot; shape&#x3D;&quot;circle&quot; /&gt;
+            &lt;SimpleButton icon&#x3D;&quot;thumbs-o-up&quot; shape&#x3D;&quot;circle&quot; /&gt;
             &lt;SimpleButton icon&#x3D;&quot;bullhorn&quot; shape&#x3D;&quot;circle&quot; /&gt;
           &lt;/CircleMenu&gt;
           : null
