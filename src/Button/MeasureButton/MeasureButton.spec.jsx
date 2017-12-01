@@ -60,6 +60,7 @@ describe('<MeasureButton />', () => {
       expect(spy.console.mock.calls.length).toBe(1);
       expect(spy.console.mock.calls[0][0]).toContain('Warning: Failed prop type');
 
+      spy.console.mockReset();
       spy.console.mockRestore();
     });
 
@@ -130,6 +131,7 @@ describe('<MeasureButton />', () => {
   describe('#Static methods', () => {
 
     describe('#onToggle', () => {
+
       it('calls a given toggle callback method if the pressed state changes', () => {
         const onToggle = jest.fn();
 
@@ -697,9 +699,127 @@ describe('<MeasureButton />', () => {
         instance.cleanup();
 
         expect(wrapper.state('measureLayer').getSource().getFeatures().length).toBe(0);
+      });
+    });
 
+    describe('#pointerMoveHandler', () => {
+
+      let wrapper;
+      let instance;
+      let mockEvt;
+
+      beforeEach(() => {
+        wrapper = TestUtil.mountComponent(MeasureButton, {
+          map: map,
+          measureType: 'line'
+        });
+        instance = wrapper.instance();
+        mockEvt = {
+          coordinate: [100, 100]
+        };
+      });
+
+      it ('returns undefined by dragging state', () => {
+        mockEvt.dragging = true;
+        const expectedOutput = instance.pointerMoveHandler(mockEvt);
+        expect(expectedOutput).toBeUndefined();
+      });
+
+      it ('returns undefined if measure and tooltip elements are not set', () => {
+        const expectedOutput = instance.pointerMoveHandler(mockEvt);
+        expect(expectedOutput).toBeUndefined();
+      });
+
+      it ('sets correct help message and tooltip position for line measurements', () => {
+        const mockLineFeat = new OlFeature({
+          geometry: new OlGeomLineString([[0, 0], [0, 100]])
+        });
+        instance._feature = mockLineFeat;
+
+        instance._helpTooltipElement = document.createElement('div');
+        instance._measureTooltipElement = document.createElement('div');
+        instance._helpTooltip = new OlOverlay({
+          element: instance._helpTooltipElement
+        });
+        instance._measureTooltip = new OlOverlay({
+          element: instance._measureTooltipElement
+        });
+
+        instance.pointerMoveHandler(mockEvt);
+
+        expect(instance._measureTooltipElement.innerHTML).toBe('100 m');
+        expect(instance._measureTooltip.getPosition()).toEqual([0, 100]);
+
+        expect(instance._helpTooltipElement.innerHTML).toBe('Click to draw line');
+        expect(instance._helpTooltip.getPosition()).toEqual(mockEvt.coordinate);
+      });
+
+      it ('sets correct help message and tooltip position for area measurements', () => {
+
+        const polyCoords = [
+          [0, 0],
+          [0, 10],
+          [10, 10],
+          [10, 0],
+          [0, 0]
+        ];
+        const mockPolyFeat = new OlFeature({
+          geometry: new OlGeomPolygon([polyCoords])
+        });
+
+        instance._feature = mockPolyFeat;
+
+        wrapper.setProps({
+          measureType: 'polygon'
+        });
+
+        instance._helpTooltipElement = document.createElement('div');
+        instance._measureTooltipElement = document.createElement('div');
+        instance._helpTooltip = new OlOverlay({
+          element: instance._helpTooltipElement
+        });
+        instance._measureTooltip = new OlOverlay({
+          element: instance._measureTooltipElement
+        });
+
+        instance.pointerMoveHandler(mockEvt);
+
+        expect(instance._measureTooltipElement.innerHTML).toBe('100 m<sup>2</sup>');
+        // Interior point as XYM coordinate, where M is the length of the horizontal
+        // intersection that the point belongs to
+        expect(instance._measureTooltip.getPosition()).toEqual([5, 5, 10]);
+
+        expect(instance._helpTooltipElement.innerHTML).toBe('Click to draw area');
+        expect(instance._helpTooltip.getPosition()).toEqual(mockEvt.coordinate);
+      });
+
+      it ('sets correct help message and tooltip position for angle measurements', () => {
+        const mockLineFeat = new OlFeature({
+          geometry: new OlGeomLineString([[0, 0], [0, 100]])
+        });
+        instance._feature = mockLineFeat;
+
+        wrapper.setProps({
+          measureType: 'angle'
+        });
+
+        instance._helpTooltipElement = document.createElement('div');
+        instance._measureTooltipElement = document.createElement('div');
+        instance._helpTooltip = new OlOverlay({
+          element: instance._helpTooltipElement
+        });
+        instance._measureTooltip = new OlOverlay({
+          element: instance._measureTooltipElement
+        });
+
+        instance.pointerMoveHandler(mockEvt);
+
+        expect(instance._measureTooltipElement.innerHTML).toBe('0°');
+        expect(instance._measureTooltip.getPosition()).toEqual([0, 100]);
+
+        expect(instance._helpTooltipElement.innerHTML).toBe('Click to draw angle');
+        expect(instance._helpTooltip.getPosition()).toEqual(mockEvt.coordinate);
       });
     });
   });
-
 });
