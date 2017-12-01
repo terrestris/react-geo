@@ -8,6 +8,7 @@ commonConfig.entry = {
   'Button/ToggleGroup/ToggleGroup': './src/Button/ToggleGroup/ToggleGroup.example.jsx',
   'Button/MeasureButton/MeasureButton': './src/Button/MeasureButton/MeasureButton.example.jsx',
   'CircleMenu/CircleMenu': './src/CircleMenu/CircleMenu.example.jsx',
+  'Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo': './src/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.example.jsx',
   'Field/NominatimSearch/NominatimSearch': './src/Field/NominatimSearch/NominatimSearch.example.jsx',
   'Field/ScaleCombo/ScaleCombo': './src/Field/ScaleCombo/ScaleCombo.example.jsx',
   'Grid/FeatureGrid/FeatureGrid': './src/Grid/FeatureGrid/FeatureGrid.example.jsx',

@@ -2,6 +2,7 @@ import SimpleButton from './Button/SimpleButton/SimpleButton.jsx';
 import ToggleButton from './Button/ToggleButton/ToggleButton.jsx';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup.jsx';
 import MeasureButton from './Button/MeasureButton/MeasureButton.jsx';
+import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.jsx';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
 import ScaleCombo from './Field/ScaleCombo/ScaleCombo.jsx';
 import LayerTree from './LayerTree/LayerTree.jsx';
@@ -22,6 +23,7 @@ import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
 import MapUtil from './Util/MapUtil/MapUtil';
 import MeasureUtil from './Util/MeasureUtil/MeasureUtil';
 import ObjectUtil from './Util/ObjectUtil/ObjectUtil';
+import ProjectionUtil from './Util/ProjectionUtil/ProjectionUtil';
 import StringUtil from './Util/StringUtil/StringUtil';
 import UndoUtil from './Util/UndoUtil/UndoUtil';
 import UrlUtil from './Util/UrlUtil/UrlUtil';
@@ -53,8 +55,10 @@ export {
   Logger,
   MapUtil,
   MeasureUtil,
+  CoordinateReferenceSystemCombo,
   NominatimSearch,
   ObjectUtil,
+  ProjectionUtil,
   StringUtil,
   UndoUtil,
   UrlUtil,
