@@ -282,7 +282,7 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  componentWillMount() {
+  componentDidMount() {
     this.createMeasureLayer();
   }
 
@@ -295,7 +295,7 @@ class MeasureButton extends React.Component {
   onToggle = (pressed) => {
     this.cleanup();
 
-    if (pressed) {
+    if (pressed && this.state.drawInteraction) {
       this.state.drawInteraction.setActive(pressed);
       this._eventKeys.drawstart = this.state.drawInteraction.on(
         'drawstart', this.drawStart, this
@@ -348,6 +348,7 @@ class MeasureButton extends React.Component {
       });
       map.addLayer(measureLayer);
     }
+
     this.setState({measureLayer}, () => {
       this.createDrawInteraction();
     });
@@ -403,11 +404,16 @@ class MeasureButton extends React.Component {
       }
     });
 
-    drawInteraction.setActive(pressed);
-    drawInteraction.on('change:active', this.onDrawInteractionActiveChange, this);
     map.addInteraction(drawInteraction);
+    drawInteraction.on('change:active', this.onDrawInteractionActiveChange, this);
 
-    this.setState({drawInteraction});
+
+    this.setState({drawInteraction}, () => {
+      if (pressed) {
+        this.onDrawInteractionActiveChange();
+      }
+      drawInteraction.setActive(pressed);
+    });
   }
 
   /**
@@ -642,15 +648,20 @@ class MeasureButton extends React.Component {
    * @method
    */
   cleanup = () => {
-    this.state.drawInteraction.setActive(false);
+    if (this.state.drawInteraction) {
+      this.state.drawInteraction.setActive(false);
+    }
 
     Object.keys(this._eventKeys).forEach(key => {
       if (this._eventKeys[key]) {
         OlObservable.unByKey(this._eventKeys[key]);
       }
     });
+
     this.cleanupTooltips();
-    this.state.measureLayer.getSource().clear();
+    if (this.state.measureLayer) {
+      this.state.measureLayer.getSource().clear();
+    }
   }
 
   /**

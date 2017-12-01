@@ -48,6 +48,7 @@ render(
       </MeasureButton>
 
       <MeasureButton
+        pressed={true}
         map={map}
         measureType="line"
         showMeasureInfoOnClickedPoints

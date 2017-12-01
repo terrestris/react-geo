@@ -1,8 +1,5 @@
 /*eslint-env jest*/
-import sinon from 'sinon';
-
 import TestUtil from '../../Util/TestUtil';
-import Logger from '../../Util/Logger';
 
 import { SimpleButton } from '../../index';
 
@@ -40,24 +37,13 @@ describe('<SimpleButton />', () => {
     expect(wrapper.find('button', {disabled: true}).length).toBe(1);
   });
 
-  it('warns if no click callback method is given', () => {
-    const wrapper = TestUtil.mountComponent(SimpleButton);
-    const logSpy = sinon.spy(Logger, 'debug');
-
-    wrapper.find('button').simulate('click');
-
-    expect(logSpy).toHaveProperty('callCount', 1);
-
-    Logger.debug.restore();
-  });
-
   it('calls a given click callback method onClick', () => {
-    const onClick = sinon.spy();
+    const onClick = jest.fn();
     const wrapper = TestUtil.mountComponent(SimpleButton, {onClick});
 
     wrapper.find('button').simulate('click');
 
-    expect(onClick).toHaveProperty('callCount', 1);
+    expect(onClick.mock.calls.length).toBe(1);
   });
 
 });

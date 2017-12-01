@@ -1,8 +1,5 @@
 /*eslint-env jest*/
 
-import TestUtil from '../../Util/TestUtil';
-import Logger from '../../Util/Logger';
-
 import OlLayerVector from 'ol/layer/vector';
 import OlInteractionDraw from 'ol/interaction/draw';
 import OlFeature from 'ol/feature';
@@ -11,6 +8,7 @@ import OlGeomPolygon from 'ol/geom/polygon';
 import OlOverlay from 'ol/overlay';
 import OlObservable from 'ol/observable';
 
+import TestUtil from '../../Util/TestUtil';
 import { MeasureButton, MeasureUtil } from '../../index';
 
 describe('<MeasureButton />', () => {
@@ -107,55 +105,16 @@ describe('<MeasureButton />', () => {
       expect(wrapper.find('button', {pressed: true}).length).toBe(1);
     });
 
-    it('warns if no toggle callback method is given', () => {
-      const logSpy = jest.spyOn(Logger, 'debug');
-      const wrapper = TestUtil.mountComponent(MeasureButton, {
-        map: map,
-        measureType: 'line',
-        onToggle: () => {}
-      });
-
-      wrapper.setProps({
-        onToggle: null
-      });
-
-      expect(logSpy).toHaveBeenCalledTimes(1);
-      expect(logSpy.mock.calls[0][0]).toContain('No onToggle method given');
-
-      logSpy.mockReset();
-      logSpy.mockRestore();
-    });
   });
 
   describe('#Static methods', () => {
 
     describe('#onToggle', () => {
 
-      it('calls a given toggle callback method if the pressed state changes', () => {
-        const onToggle = jest.fn();
-
-        const props = {
-          map: map,
-          measureType: 'line',
-          onToggle: onToggle
-        };
-
-        const wrapper = TestUtil.mountComponent(MeasureButton, props);
-
-        wrapper.setProps({
-          pressed: true
-        });
-
-        expect(onToggle).toHaveBeenCalledTimes(1);
-      });
-
       it('changes drawInteraction and event listener state if the button was toggled', () => {
         const wrapper = TestUtil.mountComponent(MeasureButton, {
           map: map,
-          measureType: 'angle'
-        });
-
-        wrapper.setProps({
+          measureType: 'angle',
           pressed: true
         });
 
