@@ -7,6 +7,9 @@ import OlLayerVector from 'ol/layer/vector';
 import OlInteractionDraw from 'ol/interaction/draw';
 import OlFeature from 'ol/feature';
 import OlGeomLineString from 'ol/geom/linestring';
+import OlGeomPolygon from 'ol/geom/polygon';
+import OlOverlay from 'ol/overlay';
+import OlObservable from 'ol/observable';
 
 import { MeasureButton, MeasureUtil } from '../../index';
 
@@ -19,6 +22,7 @@ describe('<MeasureButton />', () => {
   });
 
   describe('#Basics', () => {
+
     it('is defined', () => {
       expect(MeasureButton).not.toBeUndefined();
     });
@@ -101,7 +105,6 @@ describe('<MeasureButton />', () => {
 
       expect(wrapper.props().measureTooltipCssClasses).toBeInstanceOf(Object);
       expect(wrapper.find('button', {pressed: true}).length).toBe(1);
-
     });
 
     it('warns if no toggle callback method is given', () => {
@@ -166,6 +169,7 @@ describe('<MeasureButton />', () => {
     });
 
     describe('#createMeasureLayer', () => {
+
       it('sets measure layer to state on method call', () => {
         const wrapper = TestUtil.mountComponent(MeasureButton, {
           map: map,
@@ -178,6 +182,7 @@ describe('<MeasureButton />', () => {
     });
 
     describe('#createDrawInteraction', () => {
+
       it('sets drawInteraction to state on method call', () => {
         const wrapper = TestUtil.mountComponent(MeasureButton, {
           map: map,
@@ -192,6 +197,7 @@ describe('<MeasureButton />', () => {
     });
 
     describe('#onDrawInteractionActiveChange', () => {
+
       it('calls create/remove tooltip functions depending on drawInteraction active state', () => {
         const wrapper = TestUtil.mountComponent(MeasureButton, {
           map: map,
@@ -282,9 +288,18 @@ describe('<MeasureButton />', () => {
         instance = wrapper.instance();
       });
 
-      it ('unset click event key', () => {
+      it ('unsets click event key', () => {
+
+        instance._eventKeys.click = jest.fn();
+
+        const unByKeySpy = jest.spyOn(OlObservable, 'unByKey');
+
         instance.drawEnd();
-        expect(instance._eventKeys.click).toBeNull();
+
+        expect(unByKeySpy).toHaveBeenCalledTimes(1);
+
+        unByKeySpy.mockReset();
+        unByKeySpy.mockRestore();
       });
 
       it ('calls removeMeasureTooltip method', () => {
@@ -337,7 +352,6 @@ describe('<MeasureButton />', () => {
       let mockLineFeat;
 
       beforeEach(() => {
-
         wrapper = TestUtil.mountComponent(MeasureButton, {
           map: map,
           measureType: 'line'
@@ -351,7 +365,7 @@ describe('<MeasureButton />', () => {
         });
       });
 
-      it('becomes a feature with valid geometry', () => {
+      it('becomes a lineString feature with valid geometry', () => {
 
         instance._feature = mockLineFeat;
         instance.addMeasureStopTooltip(mockEvt);
@@ -363,7 +377,38 @@ describe('<MeasureButton />', () => {
         expect(value).toBe('100 m');
       });
 
+      it('becomes a polygon feature with valid geometry', () => {
+
+        const polyCoords = [
+          [0, 0],
+          [0, 10],
+          [10, 10],
+          [10, 0],
+          [0, 0]
+        ];
+        const mockPolyFeat = new OlFeature({
+          geometry: new OlGeomPolygon([polyCoords])
+        });
+
+        wrapper.setProps({
+          measureType: 'polygon'
+        });
+
+        instance._feature = mockPolyFeat;
+        instance.addMeasureStopTooltip(mockEvt);
+
+        expect(instance._feature).toBeDefined();
+        expect(instance._feature.getGeometry()).toBeDefined();
+
+        const value = MeasureUtil.formatArea(instance._feature.getGeometry(), map, 2);
+        expect(value).toBe('100 m<sup>2</sup>');
+      });
+
       it('adds a tooltip overlay with correct properties and position to the map', () => {
+
+        wrapper.setProps({
+          measureType: 'line'
+        });
 
         instance._feature = mockLineFeat;
         instance.addMeasureStopTooltip(mockEvt);
@@ -390,7 +435,268 @@ describe('<MeasureButton />', () => {
     });
 
     describe('#createMeasureTooltip', () => {
-      it('', () => {
+
+      let wrapper;
+      let instance;
+
+      beforeEach(() => {
+        wrapper = TestUtil.mountComponent(MeasureButton, {
+          map: map,
+          measureType: 'line'
+        });
+        instance = wrapper.instance();
+      });
+
+      it('returns undefined if measureTooltipElement already set', () => {
+        instance._measureTooltipElement = 'some value';
+        const expectedOutput = instance.createMeasureTooltip();
+        expect(expectedOutput).toBeUndefined();
+      });
+
+      it('adds a tooltip overlay with correct properties', () => {
+
+        instance.createMeasureTooltip();
+
+        const overlays = map.getOverlays();
+        expect(overlays.getArray().length).toBe(1);
+
+        const overlay = overlays.getArray()[0];
+        const offset = overlay.getOffset();
+        const positioning = overlay.getPositioning();
+        const className = overlay.getElement().className;
+
+        expect(offset).toEqual([0, -15]);
+        expect(positioning).toBe('bottom-center');
+        expect(className).toBe('react-geo-measure-tooltip react-geo-measure-tooltip-dynamic');
+      });
+    });
+
+    describe('#createHelpTooltip', () => {
+
+      let wrapper;
+      let instance;
+
+      beforeEach(() => {
+        wrapper = TestUtil.mountComponent(MeasureButton, {
+          map: map,
+          measureType: 'line'
+        });
+        instance = wrapper.instance();
+      });
+
+      it('returns undefined if _helpTooltipElement already set', () => {
+        instance._helpTooltipElement = 'some value';
+        const expectedOutput = instance.createHelpTooltip();
+        expect(expectedOutput).toBeUndefined();
+      });
+
+      it('adds a tooltip overlay with correct properties', () => {
+
+        instance.createHelpTooltip();
+
+        const overlays = map.getOverlays();
+        expect(overlays.getArray().length).toBe(1);
+
+        const overlay = overlays.getArray()[0];
+        const offset = overlay.getOffset();
+        const positioning = overlay.getPositioning();
+        const className = overlay.getElement().className;
+
+        expect(offset).toEqual([15, 0]);
+        expect(positioning).toBe('center-left');
+        expect(className).toBe('react-geo-measure-tooltip');
+      });
+    });
+
+    describe('#removeHelpTooltip', () => {
+
+      let wrapper;
+      let instance;
+
+      beforeEach(() => {
+        wrapper = TestUtil.mountComponent(MeasureButton, {
+          map: map,
+          measureType: 'line'
+        });
+        instance = wrapper.instance();
+      });
+
+      it ('removes help tooltip overlay from the map', () => {
+        instance._helpTooltipElement = document.createElement('div');
+        instance._helpTooltip = new OlOverlay({
+          element: instance._helpTooltipElement
+        });
+        map.addOverlay(instance._helpTooltip);
+
+        let overlayLength = map.getOverlays().getArray().length;
+        expect(overlayLength).toBe(1);
+
+        instance.removeHelpTooltip();
+        overlayLength = map.getOverlays().getArray().length;
+        expect(overlayLength).toBe(0);
+
+      });
+
+      it ('resets help tooltips', () => {
+        instance.removeHelpTooltip();
+
+        expect(instance._helpTooltipElement).toBeNull();
+        expect(instance._helpTooltip).toBeNull();
+      });
+    });
+
+    describe('#removeMeasureTooltip', () => {
+
+      let wrapper;
+      let instance;
+
+      beforeEach(() => {
+        wrapper = TestUtil.mountComponent(MeasureButton, {
+          map: map,
+          measureType: 'line'
+        });
+        instance = wrapper.instance();
+      });
+
+      it ('removes measure tooltip overlay from the map', () => {
+        instance._measureTooltipElement = document.createElement('div');
+        instance._measureTooltip = new OlOverlay({
+          element: instance._measureTooltipElement
+        });
+        map.addOverlay(instance._measureTooltip);
+
+        let overlayLength = map.getOverlays().getArray().length;
+        expect(overlayLength).toBe(1);
+
+        instance.removeMeasureTooltip();
+        overlayLength = map.getOverlays().getArray().length;
+        expect(overlayLength).toBe(0);
+
+      });
+
+      it ('resets measure tooltips', () => {
+        instance.removeMeasureTooltip();
+
+        expect(instance._helpTooltipElement).toBeNull();
+        expect(instance._helpTooltip).toBeNull();
+      });
+    });
+
+    describe('#cleanupTooltips', () => {
+
+      let wrapper;
+      let instance;
+      let tooltipDiv1;
+      let tooltipDiv2;
+      let tooltip1;
+      let tooltip2;
+
+      beforeEach(() => {
+        wrapper = TestUtil.mountComponent(MeasureButton, {
+          map: map,
+          measureType: 'line'
+        });
+        instance = wrapper.instance();
+
+        tooltipDiv1 = document.createElement('div');
+        tooltipDiv2 = document.createElement('div');
+        tooltip1 = new OlOverlay({
+          element: tooltipDiv1
+        });
+        tooltip2 = new OlOverlay({
+          element: tooltipDiv2
+        });
+      });
+
+      it ('removes tooltip overlays from the map', () => {
+        instance._createdTooltipOverlays.push(tooltip1, tooltip2);
+
+        map.addOverlay(tooltip1);
+        map.addOverlay(tooltip2);
+
+        expect(instance._createdTooltipOverlays.length).toBe(2);
+        expect(map.getOverlays().getArray().length).toBe(2);
+
+        instance.cleanupTooltips();
+
+        expect(instance._createdTooltipOverlays.length).toBe(0);
+      });
+
+      it ('removes tooltip divs', () => {
+        instance._createdTooltipDivs.push(tooltipDiv1, tooltipDiv2);
+
+        expect(instance._createdTooltipDivs.length).toBe(2);
+
+        instance.cleanupTooltips();
+
+        expect(instance._createdTooltipDivs.length).toBe(0);
+      });
+    });
+
+    describe('#cleanup', () => {
+
+      let wrapper;
+      let instance;
+
+      beforeEach(() => {
+        wrapper = TestUtil.mountComponent(MeasureButton, {
+          map: map,
+          measureType: 'line'
+        });
+        instance = wrapper.instance();
+      });
+
+      it ('sets draw interaction state to false', () => {
+        instance.createDrawInteraction();
+        wrapper.state('drawInteraction').setActive(true);
+
+        instance.cleanup();
+
+        expect(wrapper.state('drawInteraction').getActive()).not.toBeTruthy();
+      });
+
+      it ('unbinds all event keys', () => {
+
+        instance._eventKeys = {
+          drawstart: jest.fn(),
+          drawend: jest.fn(),
+          pointermove: jest.fn(),
+          click: jest.fn(),
+        };
+
+        const unByKeySpy = jest.spyOn(OlObservable, 'unByKey');
+
+        instance.cleanup();
+
+        expect(unByKeySpy).toHaveBeenCalledTimes(4);
+
+        unByKeySpy.mockReset();
+        unByKeySpy.mockRestore();
+      });
+
+      it ('calls cleanupTooltips method', () => {
+
+        const cleanupSpy = jest.spyOn(instance, 'cleanupTooltips');
+
+        instance.cleanup();
+
+        expect(cleanupSpy).toHaveBeenCalledTimes(1);
+
+        cleanupSpy.mockReset();
+        cleanupSpy.mockRestore();
+      });
+
+      it ('clears measureLayer source', () => {
+        instance.createMeasureLayer();
+
+        const mockFeat = new OlFeature();
+
+        wrapper.state('measureLayer').getSource().addFeature(mockFeat);
+        expect(wrapper.state('measureLayer').getSource().getFeatures().length).toBe(1);
+
+        instance.cleanup();
+
+        expect(wrapper.state('measureLayer').getSource().getFeatures().length).toBe(0);
 
       });
     });
