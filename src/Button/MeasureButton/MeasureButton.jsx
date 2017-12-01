@@ -591,9 +591,6 @@ class MeasureButton extends React.Component {
    * @method
    */
   removeHelpTooltip = () => {
-    if (this._helpTooltipElement && this._helpTooltipElement.parent) {
-      this._helpTooltipElement.parent.removeChild(this._helpTooltipElement);
-    }
     if (this._helpTooltip) {
       this.props.map.removeOverlay(this._helpTooltip);
     }
@@ -607,11 +604,6 @@ class MeasureButton extends React.Component {
    * @method
    */
   removeMeasureTooltip = () => {
-    if (this._measureTooltipElement && this._measureTooltipElement.parent) {
-      this._measureTooltipElement.parent.removeChild(
-        this._measureTooltipElement
-      );
-    }
     if (this._measureTooltip) {
       this.props.map.removeOverlay(this._measureTooltip);
     }
