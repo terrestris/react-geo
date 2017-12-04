@@ -164,6 +164,7 @@ class ToggleButton extends React.Component {
             name={iconName}
             className={fontIcon}
           />
+          {antBtnProps.children}
         </Button>
       </Tooltip>
     );
