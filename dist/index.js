@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ObjectUtil = exports.NominatimSearch = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = undefined;
+exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = undefined;
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -16,6 +16,10 @@ var _ToggleButton2 = _interopRequireDefault(_ToggleButton);
 var _ToggleGroup = require('./Button/ToggleGroup/ToggleGroup.js');
 
 var _ToggleGroup2 = _interopRequireDefault(_ToggleGroup);
+
+var _CoordinateReferenceSystemCombo = require('./Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.js');
+
+var _CoordinateReferenceSystemCombo2 = _interopRequireDefault(_CoordinateReferenceSystemCombo);
 
 var _NominatimSearch = require('./Field/NominatimSearch/NominatimSearch.js');
 
@@ -89,6 +93,10 @@ var _ObjectUtil = require('./Util/ObjectUtil/ObjectUtil');
 
 var _ObjectUtil2 = _interopRequireDefault(_ObjectUtil);
 
+var _ProjectionUtil = require('./Util/ProjectionUtil/ProjectionUtil');
+
+var _ProjectionUtil2 = _interopRequireDefault(_ProjectionUtil);
+
 var _StringUtil = require('./Util/StringUtil/StringUtil');
 
 var _StringUtil2 = _interopRequireDefault(_StringUtil);
@@ -134,8 +142,10 @@ exports.CsrfUtil = _CsrfUtil2.default;
 exports.FeatureUtil = _FeatureUtil2.default;
 exports.Logger = _Logger2.default;
 exports.MapUtil = _MapUtil2.default;
+exports.CoordinateReferenceSystemCombo = _CoordinateReferenceSystemCombo2.default;
 exports.NominatimSearch = _NominatimSearch2.default;
 exports.ObjectUtil = _ObjectUtil2.default;
+exports.ProjectionUtil = _ProjectionUtil2.default;
 exports.StringUtil = _StringUtil2.default;
 exports.UndoUtil = _UndoUtil2.default;
 exports.UrlUtil = _UrlUtil2.default;

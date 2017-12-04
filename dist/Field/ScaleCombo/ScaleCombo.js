@@ -117,7 +117,7 @@ var ScaleCombo = function (_React$Component) {
       if (!(0, _lodash.isInteger)(zoom) || _this.state.scales.length - 1 - zoom < 0) {
         return undefined;
       }
-      return _this.state.scales[_this.state.scales.length - 1 - zoom];
+      return _this.state.scales[_this.state.scales.length - 1 - zoom].toString();
     };
 
     var defaultOnZoomLevelSelect = function defaultOnZoomLevelSelect(selectedScale) {
@@ -247,7 +247,7 @@ var ScaleCombo = function (_React$Component) {
           Option,
           {
             key: roundScale,
-            value: roundScale
+            value: roundScale.toString()
           },
           '1:' + roundScale.toLocaleString()
         );
@@ -320,7 +320,7 @@ ScaleCombo.propTypes = {
   /**
    * Set to false to not listen to the map moveend event.
    *
-   * @type {Boolean} [true]
+   * @type {Boolean}
    */
   syncWithMap: _propTypes2.default.bool };
 ScaleCombo.defaultProps = {

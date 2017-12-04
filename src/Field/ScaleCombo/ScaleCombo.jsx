@@ -77,7 +77,7 @@ class ScaleCombo extends React.Component {
     /**
      * Set to false to not listen to the map moveend event.
      *
-     * @type {Boolean} [true]
+     * @type {Boolean}
      */
     syncWithMap: PropTypes.bool
   }
@@ -229,7 +229,7 @@ class ScaleCombo extends React.Component {
     if (!isInteger(zoom) || (this.state.scales.length - 1 - zoom) < 0) {
       return undefined;
     }
-    return this.state.scales[this.state.scales.length - 1 - zoom];
+    return this.state.scales[this.state.scales.length - 1 - zoom].toString();
   }
 
   /**
@@ -259,7 +259,7 @@ class ScaleCombo extends React.Component {
     const options = this.state.scales.map((roundScale) => {
       return <Option
         key={roundScale}
-        value={roundScale}
+        value={roundScale.toString()}
       >
         {`1:${roundScale.toLocaleString()}`}
       </Option>;

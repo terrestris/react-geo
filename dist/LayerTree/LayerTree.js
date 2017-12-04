@@ -243,7 +243,8 @@ var LayerTree = function (_React$Component) {
     };
 
     _this.state = {
-      layerGrop: null,
+      layerGroup: null,
+      layerGroupRevision: null,
       treeNodes: [],
       checkedKeys: []
     };
@@ -276,8 +277,11 @@ var LayerTree = function (_React$Component) {
 
       var layerGroup = this.props.layerGroup ? this.props.layerGroup : this.props.map.getLayerGroup();
 
+      var revision = this.props.layerGroup ? this.props.layerGroup.getRevision() : 0;
+
       this.setState({
-        layerGroup: layerGroup
+        layerGroup: layerGroup,
+        layerGroupRevision: revision
       }, function () {
         _this2.registerAddRemoveListeners(_this2.state.layerGroup);
         _this2.registerResolutionChangeHandler();
@@ -306,14 +310,19 @@ var LayerTree = function (_React$Component) {
     value: function componentWillReceiveProps(nextProps) {
       var _this3 = this;
 
-      if (!(0, _lodash.isEqual)(this.props.layerGroup, nextProps.layerGroup)) {
+      var currentLayerGroup = this.state.layerGroup;
+      var newLayerGroup = nextProps.layerGroup;
+      var layerGroupRevision = this.state.layerGroupRevision;
+
+      if (currentLayerGroup.ol_uid !== newLayerGroup.ol_uid || layerGroupRevision !== newLayerGroup.getRevision()) {
         _observable2.default.unByKey(this.olListenerKeys);
         this.olListenerKeys = [];
 
         this.setState({
-          layerGroup: nextProps.layerGroup
+          layerGroup: newLayerGroup,
+          layerGroupRevision: newLayerGroup.getRevision()
         }, function () {
-          _this3.registerAddRemoveListeners(_this3.state.layerGroup);
+          _this3.registerAddRemoveListeners(newLayerGroup);
           _this3.rebuildTreeNodes();
         });
       }
