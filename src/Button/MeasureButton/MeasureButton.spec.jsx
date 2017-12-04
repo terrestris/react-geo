@@ -49,7 +49,7 @@ describe('<MeasureButton />', () => {
 
       expect(measureTypeValidValues).toContain(wrapper.props().measureType);
 
-      let spy = {};
+      const spy = {};
       spy.console = jest.spyOn(console, 'error').mockImplementation(() => {});
 
       wrapper.setProps({
@@ -135,7 +135,7 @@ describe('<MeasureButton />', () => {
       it('calls a given toggle callback method if the pressed state changes', () => {
         const onToggle = jest.fn();
 
-        let props = {
+        const props = {
           map: map,
           measureType: 'line',
           onToggle: onToggle

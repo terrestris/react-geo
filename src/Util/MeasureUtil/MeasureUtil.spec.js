@@ -106,7 +106,7 @@ describe('MeasureUtil', () => {
         expect(ends.length).toBe(expectedAngles.length);
 
         ends.forEach((end, index) => {
-          let got = MeasureUtil.angle(start, end);
+          const got = MeasureUtil.angle(start, end);
           expect(got).toBe(expectedAngles[index]);
         });
       });
@@ -142,7 +142,7 @@ describe('MeasureUtil', () => {
         expect(ends.length).toBe(expectedAngles.length);
 
         ends.forEach((end, index) => {
-          let got = MeasureUtil.angle360(start, end);
+          const got = MeasureUtil.angle360(start, end);
           expect(got).toBe(expectedAngles[index]);
         });
       });
@@ -235,7 +235,7 @@ describe('MeasureUtil', () => {
         expect(lines.length).toBe(expectedAngles.length);
 
         lines.forEach((line, index) => {
-          let angle = MeasureUtil.formatAngle(line);
+          const angle = MeasureUtil.formatAngle(line);
           expect(angle).toBe(expectedAngles[index]);
         });
       });

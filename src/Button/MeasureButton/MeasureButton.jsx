@@ -512,12 +512,12 @@ class MeasureButton extends React.Component {
 
     if (!isEmpty(this._feature)) {
       const geom = this._feature.getGeometry();
-      let value = measureType === 'line' ?
+      const value = measureType === 'line' ?
         MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips) :
         MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips);
 
       if (parseInt(value, 10) > 0) {
-        let div = document.createElement('div');
+        const div = document.createElement('div');
         div.className = `${measureTooltipCssClasses.tooltip} ${measureTooltipCssClasses.tooltipStatic}`;
         div.innerHTML = value;
         const tooltip = new OlOverlay({
@@ -628,7 +628,7 @@ class MeasureButton extends React.Component {
     this._createdTooltipOverlays = [];
 
     this._createdTooltipDivs.forEach((tooltipDiv) => {
-      let parent = tooltipDiv && tooltipDiv.parentNode;
+      const parent = tooltipDiv && tooltipDiv.parentNode;
       if (parent) {
         parent.removeChild(tooltipDiv);
       }

@@ -179,7 +179,7 @@ class MeasureUtil {
      * @return {String} The formatted angle of the line.
      */
     static formatAngle = (line, decimalPlacesInToolTips = 2) => {
-      let coords = line.getCoordinates();
+      const coords = line.getCoordinates();
       const numCoords = coords.length;
       if (numCoords < 2) {
         return '';
