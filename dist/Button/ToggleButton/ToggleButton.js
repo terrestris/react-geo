@@ -198,7 +198,8 @@ var ToggleButton = function (_React$Component) {
           _react2.default.createElement(_reactFa.Icon, {
             name: iconName,
             className: fontIcon
-          })
+          }),
+          antBtnProps.children
         )
       );
     }

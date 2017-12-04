@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = undefined;
+exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MeasureUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.MeasureButton = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = undefined;
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -16,6 +16,10 @@ var _ToggleButton2 = _interopRequireDefault(_ToggleButton);
 var _ToggleGroup = require('./Button/ToggleGroup/ToggleGroup.js');
 
 var _ToggleGroup2 = _interopRequireDefault(_ToggleGroup);
+
+var _MeasureButton = require('./Button/MeasureButton/MeasureButton.js');
+
+var _MeasureButton2 = _interopRequireDefault(_MeasureButton);
 
 var _CoordinateReferenceSystemCombo = require('./Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.js');
 
@@ -89,6 +93,10 @@ var _MapUtil = require('./Util/MapUtil/MapUtil');
 
 var _MapUtil2 = _interopRequireDefault(_MapUtil);
 
+var _MeasureUtil = require('./Util/MeasureUtil/MeasureUtil');
+
+var _MeasureUtil2 = _interopRequireDefault(_MeasureUtil);
+
 var _ObjectUtil = require('./Util/ObjectUtil/ObjectUtil');
 
 var _ObjectUtil2 = _interopRequireDefault(_ObjectUtil);
@@ -127,6 +135,7 @@ exports.CircleMenu = _CircleMenu2.default;
 exports.SimpleButton = _SimpleButton2.default;
 exports.ToggleButton = _ToggleButton2.default;
 exports.ToggleGroup = _ToggleGroup2.default;
+exports.MeasureButton = _MeasureButton2.default;
 exports.FeatureGrid = _FeatureGrid2.default;
 exports.LayerTree = _LayerTree2.default;
 exports.LayerTreeNode = _LayerTreeNode2.default;
@@ -142,6 +151,7 @@ exports.CsrfUtil = _CsrfUtil2.default;
 exports.FeatureUtil = _FeatureUtil2.default;
 exports.Logger = _Logger2.default;
 exports.MapUtil = _MapUtil2.default;
+exports.MeasureUtil = _MeasureUtil2.default;
 exports.CoordinateReferenceSystemCombo = _CoordinateReferenceSystemCombo2.default;
 exports.NominatimSearch = _NominatimSearch2.default;
 exports.ObjectUtil = _ObjectUtil2.default;
