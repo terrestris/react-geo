@@ -170,7 +170,7 @@ class MeasureUtil {
      * Returns the angle of the passed linestring in degrees, with 'N' being the
      * 0°-line and the angle increases in clockwise direction.
      *
-     * @param {ol.geom.LineString} line The linestring to get the
+     * @param {OlGeomLineString} line The linestring to get the
      *   angle from. As this line is comming from our internal draw
      *   interaction, we know that it will only consist of two points.
      * @param {Number} decimalPlacesInToolTips How many decimal places will be

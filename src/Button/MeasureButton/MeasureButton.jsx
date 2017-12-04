@@ -48,7 +48,7 @@ class MeasureButton extends React.Component {
   /**
    * Overlay to show the measurement.
    *
-   * @type {ol.Overlay}
+   * @type {olOverlay}
    * @private
    */
   _measureTooltip = null;
@@ -96,9 +96,9 @@ class MeasureButton extends React.Component {
   _createdTooltipDivs = [];
 
   /**
-   * An object holding keyed `ol.EventsKey` instances returned by the `on`
-   * method of `ol.Observable`. These keys are used to unbind temporary
-   * listeners on events of the `ol.interaction.Draw` or `ol.Map`. The keys
+   * An object holding keyed `OlEventsKey` instances returned by the `on`
+   * method of `OlObservable`. These keys are used to unbind temporary
+   * listeners on events of the `OlInteractionDraw` or `OlMap`. The keys
    * are the names of the events on the various objects. The `click` key is
    * not always bound, but only for certain #measureType values.
    *
@@ -430,7 +430,7 @@ class MeasureButton extends React.Component {
    * Sets up listeners whenever the drawing of a measurement sketch is
    * started.
    *
-   * @param {ol.interaction.Draw.Event} evt The event which contains the
+   * @param {OlInteractionDrawEvent} evt The event which contains the
    *   feature we are drawing.
    *
    * @method
@@ -497,7 +497,7 @@ class MeasureButton extends React.Component {
   /**
    * Adds a tooltip on click where a measuring stop occured.
    *
-   * @param {ol.MapBrowserEvent} evt The event which contains the coordinate
+   * @param {OlMapBrowserEvent} evt The event which contains the coordinate
    *   for the tooltip.
    *
    * @method
@@ -535,7 +535,7 @@ class MeasureButton extends React.Component {
   }
 
   /**
-   * Creates a new measure tooltip as `ol.Overlay`.
+   * Creates a new measure tooltip as `OlOverlay`.
    *
    * @method
    */
@@ -561,7 +561,7 @@ class MeasureButton extends React.Component {
   }
 
   /**
-   * Creates a new help tooltip as `ol.Overlay`.
+   * Creates a new help tooltip as `OlOverlay`.
    *
    * @method
    */
