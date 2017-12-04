@@ -49,19 +49,18 @@ describe('<MeasureButton />', () => {
 
       expect(measureTypeValidValues).toContain(wrapper.props().measureType);
 
-      const spy = {};
-      spy.console = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
       wrapper.setProps({
         measureType: 'invalid'
       });
 
-      expect(spy.console).toHaveBeenCalled();
-      expect(spy.console.mock.calls.length).toBe(1);
-      expect(spy.console.mock.calls[0][0]).toContain('Warning: Failed prop type');
+      expect(consoleSpy).toHaveBeenCalled();
+      expect(consoleSpy.mock.calls.length).toBe(1);
+      expect(consoleSpy.mock.calls[0][0]).toContain('Warning: Failed prop type');
 
-      spy.console.mockReset();
-      spy.console.mockRestore();
+      consoleSpy.mockReset();
+      consoleSpy.mockRestore();
     });
 
     it('allows to set some props', () => {
