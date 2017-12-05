@@ -1,9 +1,9 @@
-/* eslint-disable no-console */
 import React from 'react';
 import { render } from 'react-dom';
 import {
   ToggleGroup,
-  ToggleButton
+  ToggleButton,
+  Logger
 } from '../../index.js';
 
 /**
@@ -12,7 +12,7 @@ import {
  * @param {*} evt
  */
 const onChange = (pressed, evt) => {
-  console.log('ToggleGroup changed', pressed, evt);
+  Logger.info('ToggleGroup changed', pressed, evt);
 };
 
 render(
@@ -29,19 +29,19 @@ render(
           name="one"
           icon="frown-o"
           pressedIcon="smile-o"
-          onToggle={(pressed)=>{console.log(`one toggled --> ${pressed}`);}}
+          onToggle={(pressed)=>{Logger.info(`one toggled --> ${pressed}`);}}
         />
         <ToggleButton
           name="two"
           icon="frown-o"
           pressedIcon="smile-o"
-          onToggle={(pressed)=>{console.log(`two toggled --> ${pressed}`);}}
+          onToggle={(pressed)=>{Logger.info(`two toggled --> ${pressed}`);}}
         />
         <ToggleButton
           name="three"
           icon="frown-o"
           pressedIcon="smile-o"
-          onToggle={(pressed)=>{console.log(`three toggled --> ${pressed}`);}}
+          onToggle={(pressed)=>{Logger.info(`three toggled --> ${pressed}`);}}
         />
       </ToggleGroup>
 

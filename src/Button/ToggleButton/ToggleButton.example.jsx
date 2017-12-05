@@ -1,7 +1,9 @@
-/* eslint-disable no-console */
 import React from 'react';
 import { render } from 'react-dom';
-import { ToggleButton } from '../../index.js';
+import {
+  ToggleButton,
+  Logger
+} from '../../index.js';
 
 render(
   <div>
@@ -21,7 +23,7 @@ render(
       {/* A ToggleButton without any configuration*/}
       <ToggleButton
         pressed={true}
-        onToggle={()=>{console.log('I start pressed.')}}
+        onToggle={()=>{Logger.info('I start pressed.')}}
       />
 
     </div>
