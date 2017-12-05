@@ -92,12 +92,14 @@ var ToggleButton = function (_React$Component) {
       pressed: props.pressed
     };
 
+    if (props.pressed) {
+      _this.props.onToggle(_this.state.pressed);
+    }
+
     _this.onClick = _this.onClick.bind(_this);
     return _this;
   }
 
-  // TODO I think we should not call the onToggle Handler here. This needs to be
-  // refactored.
   /**
    * Called if this component receives properties.
    *
@@ -129,30 +131,28 @@ var ToggleButton = function (_React$Component) {
     value: function componentWillReceiveProps(nextProps) {
       var _this2 = this;
 
-      if (nextProps.onToggle || this.state.onToggle) {
-        if (this.props.pressed != nextProps.pressed) {
-          this.setState({
-            pressed: nextProps.pressed
-          }, function () {
-            _this2.props.onToggle(_this2.state.pressed);
-          });
-        }
-      } else {
-        _Logger2.default.debug('No onToggle method given. Please provide it as ' + 'prop to this instance.');
+      if (this.props.pressed != nextProps.pressed) {
+        this.setState({
+          pressed: nextProps.pressed
+        }, function () {
+          _this2.props.onToggle(_this2.state.pressed);
+        });
       }
     }
 
     /**
      * Called on click
+     *
+     * @param {ClickEvent} evt the clickeEvent
      */
 
   }, {
     key: 'onClick',
-    value: function onClick() {
+    value: function onClick(evt) {
       if (this.context.toggleGroup && (0, _lodash.isFunction)(this.context.toggleGroup.onChange)) {
         this.context.toggleGroup.onChange(this.props);
       } else if (this.props.onToggle) {
-        this.props.onToggle(!this.state.pressed);
+        this.props.onToggle(!this.state.pressed, evt);
       }
 
       this.setState({
@@ -179,9 +179,15 @@ var ToggleButton = function (_React$Component) {
           tooltipPlacement = _props.tooltipPlacement,
           antBtnProps = _objectWithoutProperties(_props, ['className', 'name', 'icon', 'pressedIcon', 'fontIcon', 'pressed', 'onToggle', 'tooltip', 'tooltipPlacement']);
 
-      var iconName = this.state.pressed ? pressedIcon || icon : icon;
       var finalClassName = className ? className + ' ' + this.className : this.className;
-      var pressedClass = this.state.pressed ? ' ' + this.pressedClass : '';
+
+      var iconName = icon;
+      var pressedClass = '';
+
+      if (this.state.pressed) {
+        iconName = pressedIcon || icon;
+        pressedClass = ' ' + this.pressedClass + ' ';
+      }
 
       return _react2.default.createElement(
         _tooltip2.default,
@@ -214,7 +220,7 @@ ToggleButton.propTypes = {
   pressedIcon: _propTypes2.default.string,
   fontIcon: _propTypes2.default.string,
   pressed: _propTypes2.default.bool,
-  onToggle: _propTypes2.default.func,
+  onToggle: _propTypes2.default.func.isRequired,
   tooltip: _propTypes2.default.string,
   tooltipPlacement: _propTypes2.default.string,
   className: _propTypes2.default.string

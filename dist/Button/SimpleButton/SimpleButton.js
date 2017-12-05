@@ -72,13 +72,11 @@ var SimpleButton = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (SimpleButton.__proto__ || Object.getPrototypeOf(SimpleButton)).call(this, props));
 
     _this.className = 'react-geo-simplebutton';
-
-    _this.onClick = _this.onClick.bind(_this);
     return _this;
   }
 
   /**
-   * Handles the given click callback.
+   * The render function.
    */
 
 
@@ -96,30 +94,15 @@ var SimpleButton = function (_React$Component) {
 
 
   _createClass(SimpleButton, [{
-    key: 'onClick',
-    value: function onClick() {
-      if (this.props.onClick) {
-        this.props.onClick();
-      } else {
-        _Logger2.default.debug('No onClick method given. Please provide it as ' + 'prop to this instance.');
-      }
-    }
-
-    /**
-     * The render function.
-     */
-
-  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
           className = _props.className,
           icon = _props.icon,
           fontIcon = _props.fontIcon,
-          onClick = _props.onClick,
           tooltip = _props.tooltip,
           tooltipPlacement = _props.tooltipPlacement,
-          antBtnProps = _objectWithoutProperties(_props, ['className', 'icon', 'fontIcon', 'onClick', 'tooltip', 'tooltipPlacement']);
+          antBtnProps = _objectWithoutProperties(_props, ['className', 'icon', 'fontIcon', 'tooltip', 'tooltipPlacement']);
 
       var finalClassName = className ? className + ' ' + this.className : this.className;
 
@@ -132,16 +115,12 @@ var SimpleButton = function (_React$Component) {
         _react2.default.createElement(
           _button2.default,
           _extends({
-            className: finalClassName,
-            onClick: this.onClick
+            className: finalClassName
           }, antBtnProps),
-          _react2.default.createElement(_reactFa.Icon, {
+          icon || fontIcon ? _react2.default.createElement(_reactFa.Icon, {
             name: icon,
-            className: fontIcon,
-            style: {
-              display: icon || fontIcon ? 'inherit' : 'none'
-            }
-          }),
+            className: fontIcon
+          }) : null,
           antBtnProps.children
         )
       );
@@ -152,18 +131,28 @@ var SimpleButton = function (_React$Component) {
 }(_react2.default.Component);
 
 SimpleButton.propTypes = {
+  className: _propTypes2.default.string,
   /**
-   * The className which should be added.
+   * The font awesome icon name.
    * @type {String}
    */
-  className: _propTypes2.default.string,
   icon: _propTypes2.default.string,
+  /**
+   * The classname of an icon of an iconFont. Use either this or icon.
+   * @type {String}
+   */
   fontIcon: _propTypes2.default.string,
-  onClick: _propTypes2.default.func,
+  /**
+   * The tooltip to be shown on hover.
+   * @type {String}
+   */
   tooltip: _propTypes2.default.string,
-  tooltipPlacement: _propTypes2.default.string
+  /**
+   * The position of the tooltip.
+   * @type {String}
+   */
+  tooltipPlacement: _propTypes2.default.oneOf(['top', 'left', 'right', 'bottom', 'topLeft', 'topRight', 'bottomLeft', 'bottomRight', 'leftTop', 'leftBottom', 'rightTop', 'rightBottom'])
 };
 SimpleButton.defaultProps = {
-  type: 'primary',
-  icon: '' };
+  type: 'primary' };
 exports.default = SimpleButton;

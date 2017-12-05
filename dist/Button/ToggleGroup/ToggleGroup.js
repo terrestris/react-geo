@@ -140,7 +140,7 @@ var ToggleGroup = function (_React$Component) {
 
       var childrenWithProps = _react2.default.Children.map(children, function (child) {
         return _react2.default.cloneElement(child, {
-          pressed: _this2.state.selectedName === child.props.name ? true : false
+          pressed: _this2.state.selectedName === child.props.name
         });
       });
 
@@ -203,7 +203,7 @@ ToggleGroup.propTypes = {
   children: _propTypes2.default.node };
 ToggleGroup.defaultProps = {
   orientation: 'vertical',
-  allowDeselect: false };
+  allowDeselect: true };
 ToggleGroup.childContextTypes = {
   toggleGroup: _propTypes2.default.object };
 exports.default = ToggleGroup;

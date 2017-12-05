@@ -162,7 +162,7 @@ var MeasureButton = function (_React$Component) {
     _this.onToggle = function (pressed) {
       _this.cleanup();
 
-      if (pressed) {
+      if (pressed && _this.state.drawInteraction) {
         _this.state.drawInteraction.setActive(pressed);
         _this._eventKeys.drawstart = _this.state.drawInteraction.on('drawstart', _this.drawStart, _this);
         _this._eventKeys.drawend = _this.state.drawInteraction.on('drawend', _this.drawEnd, _this);
@@ -250,11 +250,15 @@ var MeasureButton = function (_React$Component) {
         }
       });
 
-      drawInteraction.setActive(pressed);
-      drawInteraction.on('change:active', _this.onDrawInteractionActiveChange, _this);
       map.addInteraction(drawInteraction);
+      drawInteraction.on('change:active', _this.onDrawInteractionActiveChange, _this);
 
-      _this.setState({ drawInteraction: drawInteraction });
+      _this.setState({ drawInteraction: drawInteraction }, function () {
+        if (pressed) {
+          _this.onDrawInteractionActiveChange();
+        }
+        drawInteraction.setActive(pressed);
+      });
     };
 
     _this.onDrawInteractionActiveChange = function () {
@@ -425,7 +429,9 @@ var MeasureButton = function (_React$Component) {
     };
 
     _this.cleanup = function () {
-      _this.state.drawInteraction.setActive(false);
+      if (_this.state.drawInteraction) {
+        _this.state.drawInteraction.setActive(false);
+      }
 
       Object.keys(_this._eventKeys).forEach(function (key) {
         if (_this._eventKeys[key]) {
@@ -433,7 +439,9 @@ var MeasureButton = function (_React$Component) {
         }
       });
       _this.cleanupTooltips();
-      _this.state.measureLayer.getSource().clear();
+      if (_this.state.measureLayer) {
+        _this.state.measureLayer.getSource().clear();
+      }
     };
 
     _this.pointerMoveHandler = function (evt) {
@@ -555,8 +563,8 @@ var MeasureButton = function (_React$Component) {
 
 
   _createClass(MeasureButton, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
       this.createMeasureLayer();
     }
 
