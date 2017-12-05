@@ -12,7 +12,6 @@ import './ToggleGroup.less';
  */
 class ToggleGroup extends React.Component {
 
-
   /**
    * The className added to this component.
    * @type {String}
@@ -76,7 +75,7 @@ class ToggleGroup extends React.Component {
    */
   static defaultProps = {
     orientation: 'vertical',
-    allowDeselect: false
+    allowDeselect: true
   }
 
   /**
@@ -150,11 +149,11 @@ class ToggleGroup extends React.Component {
       ? 'vertical-toggle-group'
       : 'horizontal-toggle-group';
 
-    const childrenWithProps = React.Children.map(children,
-      (child) => React.cloneElement(child, {
-        pressed: (this.state.selectedName === child.props.name) ? true : false
-      })
-    );
+    const childrenWithProps = React.Children.map(children, (child) => {
+      return React.cloneElement(child, {
+        pressed: this.state.selectedName === child.props.name
+      });
+    });
 
     return (
       <div

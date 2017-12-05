@@ -43,7 +43,7 @@ class ToggleButton extends React.Component {
     pressedIcon: PropTypes.string,
     fontIcon: PropTypes.string,
     pressed: PropTypes.bool,
-    onToggle: PropTypes.func,
+    onToggle: PropTypes.func.isRequired,
     tooltip: PropTypes.string,
     tooltipPlacement: PropTypes.string,
     className: PropTypes.string
@@ -85,39 +85,38 @@ class ToggleButton extends React.Component {
       pressed: props.pressed
     };
 
+    if (props.pressed) {
+      this.props.onToggle(this.state.pressed);
+    }
+
     this.onClick = this.onClick.bind(this);
   }
 
-  // TODO I think we should not call the onToggle Handler here. This needs to be
-  // refactored.
   /**
    * Called if this component receives properties.
    *
    * @param {Object} nextProps The received properties.
    */
   componentWillReceiveProps(nextProps) {
-    if (nextProps.onToggle || this.state.onToggle) {
-      if (this.props.pressed != nextProps.pressed) {
-        this.setState({
-          pressed: nextProps.pressed
-        }, () => {
-          this.props.onToggle(this.state.pressed);
-        });
-      }
-    } else {
-      Logger.debug('No onToggle method given. Please provide it as ' +
-      'prop to this instance.');
+    if (this.props.pressed != nextProps.pressed) {
+      this.setState({
+        pressed: nextProps.pressed
+      }, () => {
+        this.props.onToggle(this.state.pressed);
+      });
     }
   }
 
   /**
    * Called on click
+   *
+   * @param {ClickEvent} evt the clickeEvent
    */
-  onClick() {
+  onClick(evt) {
     if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
       this.context.toggleGroup.onChange(this.props);
     } else if (this.props.onToggle) {
-      this.props.onToggle(!this.state.pressed);
+      this.props.onToggle(!this.state.pressed, evt);
     }
 
     this.setState({
@@ -142,13 +141,17 @@ class ToggleButton extends React.Component {
       ...antBtnProps
     } = this.props;
 
-    const iconName = this.state.pressed
-      ? pressedIcon || icon
-      : icon;
     const finalClassName = className
       ? `${className} ${this.className}`
       : this.className;
-    const pressedClass = this.state.pressed ? ' ' + this.pressedClass : '';
+
+    let iconName = icon;
+    let pressedClass = '';
+
+    if (this.state.pressed) {
+      iconName = pressedIcon || icon;
+      pressedClass = ` ${this.pressedClass} `;
+    }
 
     return (
       <Tooltip

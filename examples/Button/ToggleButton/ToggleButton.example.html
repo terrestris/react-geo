@@ -30,7 +30,10 @@ body.example {
   <pre>
     <code class="javascript">import React from &#x27;react&#x27;;
 import { render } from &#x27;react-dom&#x27;;
-import { ToggleButton } from &#x27;@terrestris/react-geo&#x27;;
+import {
+  ToggleButton,
+  Logger
+} from &#x27;@terrestris/react-geo&#x27;;
 
 render(
   &lt;div&gt;
@@ -38,7 +41,9 @@ render(
       &lt;span&gt;Just a ToggleButton:&lt;/span&gt;
 
       {/* A ToggleButton without any configuration*/}
-      &lt;ToggleButton /&gt;
+      &lt;ToggleButton
+        onToggle&#x3D;{()&#x3D;&gt;{}}
+      /&gt;
 
     &lt;/div&gt;
 
@@ -48,6 +53,7 @@ render(
       {/* A ToggleButton without any configuration*/}
       &lt;ToggleButton
         pressed&#x3D;{true}
+        onToggle&#x3D;{()&#x3D;&gt;{Logger.info(&#x27;I start pressed.&#x27;)}}
       /&gt;
 
     &lt;/div&gt;
@@ -59,6 +65,7 @@ render(
       &lt;ToggleButton
         icon&#x3D;&quot;frown-o&quot;
         pressedIcon&#x3D;&quot;smile-o&quot;
+        onToggle&#x3D;{()&#x3D;&gt;{}}
       /&gt;
 
     &lt;/div&gt;

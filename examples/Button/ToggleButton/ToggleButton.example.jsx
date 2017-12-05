@@ -1,6 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { ToggleButton } from '../../index.js';
+import {
+  ToggleButton,
+  Logger
+} from '../../index.js';
 
 render(
   <div>
@@ -8,7 +11,9 @@ render(
       <span>Just a ToggleButton:</span>
 
       {/* A ToggleButton without any configuration*/}
-      <ToggleButton />
+      <ToggleButton
+        onToggle={()=>{}}
+      />
 
     </div>
 
@@ -18,6 +23,7 @@ render(
       {/* A ToggleButton without any configuration*/}
       <ToggleButton
         pressed={true}
+        onToggle={()=>{Logger.info('I start pressed.')}}
       />
 
     </div>
@@ -29,6 +35,7 @@ render(
       <ToggleButton
         icon="frown-o"
         pressedIcon="smile-o"
+        onToggle={()=>{}}
       />
 
     </div>

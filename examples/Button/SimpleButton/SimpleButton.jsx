@@ -30,16 +30,40 @@ class SimpleButton extends React.Component {
    * @type {Object}
    */
   static propTypes = {
+    className: PropTypes.string,
     /**
-     * The className which should be added.
+     * The font awesome icon name.
      * @type {String}
      */
-    className: PropTypes.string,
     icon: PropTypes.string,
+    /**
+     * The classname of an icon of an iconFont. Use either this or icon.
+     * @type {String}
+     */
     fontIcon: PropTypes.string,
-    onClick: PropTypes.func,
+    /**
+     * The tooltip to be shown on hover.
+     * @type {String}
+     */
     tooltip: PropTypes.string,
-    tooltipPlacement: PropTypes.string
+    /**
+     * The position of the tooltip.
+     * @type {String}
+     */
+    tooltipPlacement: PropTypes.oneOf([
+      'top',
+      'left',
+      'right',
+      'bottom',
+      'topLeft',
+      'topRight',
+      'bottomLeft',
+      'bottomRight',
+      'leftTop',
+      'leftBottom',
+      'rightTop',
+      'rightBottom'
+    ])
   };
 
   /**
@@ -47,8 +71,7 @@ class SimpleButton extends React.Component {
    * @type {Object}
    */
   static defaultProps = {
-    type: 'primary',
-    icon: ''
+    type: 'primary'
   }
 
   /**
@@ -58,19 +81,6 @@ class SimpleButton extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
-  }
-
-  /**
-   * Handles the given click callback.
-   */
-  onClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
-    } else {
-      Logger.debug('No onClick method given. Please provide it as ' +
-          'prop to this instance.');
-    }
   }
 
   /**
@@ -81,7 +91,6 @@ class SimpleButton extends React.Component {
       className,
       icon,
       fontIcon,
-      onClick,
       tooltip,
       tooltipPlacement,
       ...antBtnProps
@@ -98,16 +107,15 @@ class SimpleButton extends React.Component {
       >
         <Button
           className={finalClassName}
-          onClick={this.onClick}
           {...antBtnProps}
         >
-          <Icon
-            name={icon}
-            className={fontIcon}
-            style={{
-              display: icon || fontIcon ? 'inherit' : 'none'
-            }}
-          />
+          {
+            icon || fontIcon ?
+              <Icon
+                name={icon}
+                className={fontIcon}
+              /> :null
+          }
           {antBtnProps.children}
         </Button>
       </Tooltip>

@@ -38,7 +38,8 @@ import OlSourceOsm from &#x27;ol/source/osm&#x27;;
 import olProj from &#x27;ol/proj&#x27;;
 
 import {
-  MeasureButton
+  MeasureButton,
+  ToggleGroup
 } from &#x27;@terrestris/react-geo&#x27;;
 
 //
@@ -70,42 +71,51 @@ render(
 
     &lt;div className&#x3D;&quot;example-block&quot;&gt;
       &lt;span&gt;Measure type:&lt;/span&gt;
-      &lt;MeasureButton
-        map&#x3D;{map}
-        measureType&#x3D;&quot;line&quot;
+      &lt;ToggleGroup
+        selectedName&#x3D;&quot;steps&quot;
       &gt;
+        &lt;MeasureButton
+          name&#x3D;&quot;line&quot;
+          map&#x3D;{map}
+          measureType&#x3D;&quot;line&quot;
+        &gt;
         Distance
-      &lt;/MeasureButton&gt;
+        &lt;/MeasureButton&gt;
 
-      &lt;MeasureButton
-        map&#x3D;{map}
-        measureType&#x3D;&quot;line&quot;
-        showMeasureInfoOnClickedPoints
-      &gt;
+        &lt;MeasureButton
+          name&#x3D;&quot;steps&quot;
+          map&#x3D;{map}
+          measureType&#x3D;&quot;line&quot;
+          showMeasureInfoOnClickedPoints
+        &gt;
         Distance with step labels
-      &lt;/MeasureButton&gt;
+        &lt;/MeasureButton&gt;
 
-      &lt;MeasureButton
-        map&#x3D;{map}
-        measureType&#x3D;&quot;line&quot;
-        multipleDrawing
-      &gt;
+        &lt;MeasureButton
+          name&#x3D;&quot;multi&quot;
+          map&#x3D;{map}
+          measureType&#x3D;&quot;line&quot;
+          multipleDrawing
+        &gt;
         Distance with multiple drawing
-      &lt;/MeasureButton&gt;
+        &lt;/MeasureButton&gt;
 
-      &lt;MeasureButton
-        map&#x3D;{map}
-        measureType&#x3D;&quot;polygon&quot;
-      &gt;
+        &lt;MeasureButton
+          name&#x3D;&quot;poly&quot;
+          map&#x3D;{map}
+          measureType&#x3D;&quot;polygon&quot;
+        &gt;
         Area
-      &lt;/MeasureButton&gt;
+        &lt;/MeasureButton&gt;
 
-      &lt;MeasureButton
-        map&#x3D;{map}
-        measureType&#x3D;&quot;angle&quot;
-      &gt;
+        &lt;MeasureButton
+          name&#x3D;&quot;angle&quot;
+          map&#x3D;{map}
+          measureType&#x3D;&quot;angle&quot;
+        &gt;
         Angle
-      &lt;/MeasureButton&gt;
+        &lt;/MeasureButton&gt;
+      &lt;/ToggleGroup&gt;
 
     &lt;/div&gt;
 
