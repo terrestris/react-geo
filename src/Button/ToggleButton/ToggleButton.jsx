@@ -75,11 +75,6 @@ class ToggleButton extends React.Component {
   constructor(props) {
     super(props);
 
-    if (!props.onToggle) {
-      Logger.debug('No onToggle method given. Please provide it as ' +
-      'prop to this instance.');
-    }
-
     // Instantiate the state.
     this.state = {
       pressed: props.pressed

@@ -77,17 +77,11 @@ var ToggleButton = function (_React$Component) {
   function ToggleButton(props) {
     _classCallCheck(this, ToggleButton);
 
+    // Instantiate the state.
     var _this = _possibleConstructorReturn(this, (ToggleButton.__proto__ || Object.getPrototypeOf(ToggleButton)).call(this, props));
 
     _this.className = 'react-geo-togglebutton';
     _this.pressedClass = 'btn-pressed';
-
-
-    if (!props.onToggle) {
-      _Logger2.default.debug('No onToggle method given. Please provide it as ' + 'prop to this instance.');
-    }
-
-    // Instantiate the state.
     _this.state = {
       pressed: props.pressed
     };

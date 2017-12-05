@@ -193,7 +193,7 @@ describe('MapUtil', () => {
       map.addLayer(layer);
       const got = MapUtil.getLayerByName(map, layerName);
 
-      expect(got).toBeInstanceOf(OlLayerTile);
+      expect(got).toBe(layer);
     });
 
     it('returns undefined if the layer could not be found', () => {
