@@ -5,7 +5,6 @@ import sinon from 'sinon';
 import TestUtil from '../../Util/TestUtil';
 
 import {
-  Logger,
   ToggleButton
 } from '../../index';
 
@@ -63,56 +62,14 @@ describe('<ToggleButton />', () => {
     expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
   });
 
-  it('warns if no toggle callback method is given', () => {
-    const logSpy = sinon.spy(Logger, 'debug');
+  it('changes the pressed state of the component on click (if standalone button)', () => {
     const wrapper = TestUtil.mountComponent(ToggleButton, {
       onToggle: () => {}
     });
 
-    wrapper.setProps({
-      onToggle: null
-    });
-
-    expect(logSpy).toHaveProperty('callCount', 1);
-
-    logSpy.restore();
-  });
-
-  it('calls a given toggle callback method if the pressed state changes', () => {
-    const onToggle = sinon.spy();
-    let props = {
-      onToggle: onToggle
-    };
-
-    const wrapper = TestUtil.mountComponent(ToggleButton, props);
-
-    wrapper.setProps({
-      pressed: true
-    });
-
-    expect(onToggle).toHaveProperty('callCount', 1);
-  });
-
-  it('changes the pressed state of the component on click (if standalone button)', () => {
-    const wrapper = TestUtil.mountComponent(ToggleButton);
-
     wrapper.find('button').simulate('click');
 
     expect(wrapper.state('pressed')).toBe(true);
-  });
-
-  it('calls the on change callback (if included in a ToggleGroup)', () => {
-    const onChangeSpy = sinon.spy();
-    let context = {
-      toggleGroup: {
-        onChange: onChangeSpy
-      }
-    };
-    const wrapper = TestUtil.mountComponent(ToggleButton, null, context);
-
-    wrapper.find('button').simulate('click');
-
-    expect(onChangeSpy).toHaveProperty('callCount', 1);
   });
 
 });

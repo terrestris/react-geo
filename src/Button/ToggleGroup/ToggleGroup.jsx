@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { isFunction } from 'lodash';
 
 import './ToggleGroup.less';
+import {
+  ToggleButton
+} from '../../index';
 
 /**
  * A group for toggle components (e.g. buttons)
@@ -20,54 +23,54 @@ class ToggleGroup extends React.Component {
    */
   className = 'react-geo-togglegroup'
 
+
+  /**
+   * The previously selected button.
+   * @type {String}
+   * @private
+   */
+  _previousProps = null;
+
   /**
    * The properties.
    * @type {Object}
    */
   static propTypes = {
-    /**
-     * The className which should be added.
-     * @type {String}
-     */
     className: PropTypes.string,
-
     /**
      * The name of this group.
      * @type {String}
      */
     name: PropTypes.string,
-
     /**
      * The orientation of the children. Either `vertical` (default)
      * or `horizontal`.
      * @type {String}
      */
     orientation: PropTypes.string,
-
     /**
      * Whether it's allowed to deselect a children or not.
      * @type {Boolean}
      */
     allowDeselect: PropTypes.bool,
-
     /**
      * The value fo the `name` attribute of the children to select/press
      * initially.
      * @type {String}
      */
     selectedName: PropTypes.string,
-
     /**
      * Callback function for onChange.
      * @type {Function}
      */
     onChange: PropTypes.func,
-
     /**
-     * The children of this group. Typically a set of `ToggleButton`s.
+     * The ToggleButtons of this group.
      * @type {Object}
      */
-    children: PropTypes.node
+    children: PropTypes.arrayOf(
+      PropTypes.instanceOf(ToggleButton)
+    )
   }
 
   /**
@@ -76,15 +79,7 @@ class ToggleGroup extends React.Component {
    */
   static defaultProps = {
     orientation: 'vertical',
-    allowDeselect: false
-  }
-
-  /**
-   * The child context types.
-   * @type {Object}
-   */
-  static childContextTypes = {
-    toggleGroup: PropTypes.object
+    allowDeselect: true
   }
 
   /**
@@ -105,44 +100,39 @@ class ToggleGroup extends React.Component {
   }
 
   /**
-   * Returns the context for the children.
-   *
-   * @return {Object} The child context.
-   */
-  getChildContext() {
-    return {
-      toggleGroup: {
-        name: this.props.name,
-        selectedName: this.props.selectedName,
-        onChange: this.onChange
-      }
-    };
-  }
-
-  /**
    * The onChange handler.
    *
    * @param {Object} childProps The properties if the children.
    */
-  onChange = (childProps) => {
+  onToggle = (childProps, pressed, evt) => {
 
-    if (isFunction(this.props.onChange)) {
-      this.props.onChange(childProps);
-    }
-
-    // Allow deselect.
-    if (this.props.allowDeselect && (childProps.name === this.state.selectedName)) {
+    if (pressed) {
+      if (this._previousProps && childProps.name !== this._previousProps.name) {
+        this._previousProps.onToggle(false);
+      }
+      this.setState({selectedName: childProps.name});
+      this._previousProps = childProps;
+    } else if (this.props.allowDeselect && (childProps.name === this.state.selectedName)) {
       this.setState({selectedName: null});
     } else {
-      this.setState({selectedName: childProps.name});
+      // TODO Button should not be unpressable
     }
+
+    if (isFunction(this.props.onChange) && evt) {
+      this.props.onChange(pressed, evt);
+    }
+
+    childProps.onToggle(pressed, evt);
   }
 
   /**
    * The render function.
    */
   render() {
-    const {orientation, children} = this.props;
+    const {
+      orientation,
+      children
+    } = this.props;
     const className = this.props.className
       ? `${this.props.className} ${this.className}`
       : this.className;
@@ -150,11 +140,12 @@ class ToggleGroup extends React.Component {
       ? 'vertical-toggle-group'
       : 'horizontal-toggle-group';
 
-    const childrenWithProps = React.Children.map(children,
-      (child) => React.cloneElement(child, {
-        pressed: (this.state.selectedName === child.props.name) ? true : false
-      })
-    );
+    const childrenWithProps = React.Children.map(children, (child) => {
+      return React.cloneElement(child, {
+        pressed: this.state.selectedName === child.props.name,
+        onToggle: this.onToggle.bind(this, child.props)
+      });
+    });
 
     return (
       <div

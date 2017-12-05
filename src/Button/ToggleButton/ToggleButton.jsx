@@ -5,9 +5,6 @@ import {
   Tooltip
 } from 'antd';
 import { Icon } from 'react-fa';
-import { isFunction } from 'lodash';
-
-import Logger from '../../Util/Logger';
 
 import './ToggleButton.less';
 
@@ -18,7 +15,6 @@ import './ToggleButton.less';
  * @extends React.Component
  */
 class ToggleButton extends React.Component {
-
 
   /**
    * The className added to this component.
@@ -38,15 +34,63 @@ class ToggleButton extends React.Component {
    * @type {Object}
    */
   static propTypes = {
+    className: PropTypes.string,
+    /**
+     * A name to be identified by the togglegroup.
+     * @type {String}
+     */
     name: PropTypes.string,
+    /**
+     * The font awesome icon name.
+     * @type {String}
+     */
     icon: PropTypes.string,
+    /**
+     * The font awesome icon name on pressed state. Use either this or icon.
+     * @type {String}
+     */
     pressedIcon: PropTypes.string,
+    /**
+     * The classname of an icon of an iconFont. Use either this or icon.
+     * @type {String}
+     */
     fontIcon: PropTypes.string,
+    /**
+     * Whether the button should be initially pressed.
+     * @type {bool}
+     */
     pressed: PropTypes.bool,
-    onToggle: PropTypes.func,
+    /**
+     * The onToggle callback.
+     * Be aware that evt can be null if the
+     * Params are: (pressedState {bool}, evt {ClickEvent|null})
+     *
+     * @type {Function}
+     */
+    onToggle: PropTypes.func.isRequired,
+    /**
+     * The tooltip to be shown on hover.
+     * @type {String}
+     */
     tooltip: PropTypes.string,
-    tooltipPlacement: PropTypes.string,
-    className: PropTypes.string
+    /**
+     * The position of the tooltip.
+     * @type {String}
+     */
+    tooltipPlacement: PropTypes.oneOf([
+      'top',
+      'left',
+      'right',
+      'bottom',
+      'topLeft',
+      'topRight',
+      'bottomLeft',
+      'bottomRight',
+      'leftTop',
+      'leftBottom',
+      'rightTop',
+      'rightBottom'
+    ])
   };
 
   /**
@@ -55,7 +99,6 @@ class ToggleButton extends React.Component {
    */
   static defaultProps = {
     type: 'primary',
-    icon: '',
     pressed: false
   }
 
@@ -75,53 +118,38 @@ class ToggleButton extends React.Component {
   constructor(props) {
     super(props);
 
-    if (!props.onToggle) {
-      Logger.debug('No onToggle method given. Please provide it as ' +
-      'prop to this instance.');
-    }
-
-    // Instantiate the state.
     this.state = {
       pressed: props.pressed
     };
 
+    if (this.state.pressed) {
+      this.props.onToggle(this.state.pressed);
+    }
+
     this.onClick = this.onClick.bind(this);
   }
 
-  // TODO I think we should not call the onToggle Handler here. This needs to be
-  // refactored.
   /**
    * Called if this component receives properties.
    *
    * @param {Object} nextProps The received properties.
    */
   componentWillReceiveProps(nextProps) {
-    if (nextProps.onToggle || this.state.onToggle) {
-      if (this.props.pressed != nextProps.pressed) {
-        this.setState({
-          pressed: nextProps.pressed
-        }, () => {
-          this.props.onToggle(this.state.pressed);
-        });
-      }
-    } else {
-      Logger.debug('No onToggle method given. Please provide it as ' +
-      'prop to this instance.');
+    if (this.props.pressed !== nextProps.pressed) {
+      this.setState({
+        pressed: nextProps.pressed,
+      });
     }
   }
 
   /**
    * Called on click
    */
-  onClick() {
-    if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
-      this.context.toggleGroup.onChange(this.props);
-    } else if (this.props.onToggle) {
-      this.props.onToggle(!this.state.pressed);
-    }
-
+  onClick(evt) {
     this.setState({
       pressed: !this.state.pressed
+    }, () => {
+      this.props.onToggle(this.state.pressed, evt);
     });
   }
 
@@ -143,7 +171,7 @@ class ToggleButton extends React.Component {
     } = this.props;
 
     const iconName = this.state.pressed
-      ? pressedIcon || icon
+      ? (pressedIcon || icon)
       : icon;
     const finalClassName = className
       ? `${className} ${this.className}`
@@ -160,10 +188,13 @@ class ToggleButton extends React.Component {
           onClick={this.onClick}
           {...antBtnProps}
         >
-          <Icon
-            name={iconName}
-            className={fontIcon}
-          />
+          {
+            icon || fontIcon ?
+              <Icon
+                name={iconName}
+                className={fontIcon}
+              /> :null
+          }
           {antBtnProps.children}
         </Button>
       </Tooltip>
