@@ -186,8 +186,28 @@ describe('MapUtil', () => {
 
   describe('#getLayerByName', () => {
     it('returns the layer by the given name', () => {
-      let layerName = 'OSM-WMS';
-      let layer = new OlLayerTile({
+      const layerName = 'Peter';
+      const layer = new OlLayerTile({
+        name: layerName
+      });
+      map.addLayer(layer);
+      const got = MapUtil.getLayerByName(map, layerName);
+
+      expect(got).toBeInstanceOf(OlLayerTile);
+    });
+
+    it('returns undefined if the layer could not be found', () => {
+      const layerName = 'OSM-WMS';
+      const got = MapUtil.getLayerByName(map, layerName);
+
+      expect(got).toBeUndefined();
+    });
+  });
+
+  describe('#getLayerByNameParam', () => {
+    it('returns the layer by the given name', () => {
+      const layerName = 'OSM-WMS';
+      const layer = new OlLayerTile({
         visible: false,
         source: new OlSourceTileWMS({
           url: 'http://ows.terrestris.de/osm/service?',
@@ -199,15 +219,15 @@ describe('MapUtil', () => {
       });
       layer.set('key', 'prop');
       map.addLayer(layer);
-      let got = MapUtil.getLayerByName(map, layerName);
+      const got = MapUtil.getLayerByNameParam(map, layerName);
 
       expect(got).toBeInstanceOf(OlLayerTile);
       expect(got.get('key')).toBe('prop');
     });
 
     it('returns undefined if the layer could not be found', () => {
-      let layerName = 'OSM-WMS';
-      let got = MapUtil.getLayerByName(map, layerName);
+      const layerName = 'OSM-WMS';
+      const got = MapUtil.getLayerByNameParam(map, layerName);
 
       expect(got).toBeUndefined();
     });

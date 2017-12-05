@@ -227,6 +227,25 @@ var MapUtil = exports.MapUtil = function () {
      */
     value: function getLayerByName(map, name) {
       var layers = MapUtil.getAllLayers(map);
+      return layers.find(function (layer) {
+        return layer.get('name') === name;
+      });
+    }
+
+    /**
+     * Returns the layer from the provided map by the given name
+     * (parameter LAYERS).
+     *
+     * @param {ol.Map} map The map to use for lookup.
+     * @param {String} name The name to get the layer by.
+     * @return {ol.Layer} The result layer or undefined if the layer could not
+     *                    be found.
+     */
+
+  }, {
+    key: 'getLayerByNameParam',
+    value: function getLayerByNameParam(map, name) {
+      var layers = MapUtil.getAllLayers(map);
       var layerCandidate = void 0;
 
       var _iteratorNormalCompletion = true;
@@ -285,7 +304,7 @@ var MapUtil = exports.MapUtil = function () {
           var namespace = _step2.value;
 
           var qualifiedFeatureTypeName = namespace + ':' + featureTypeName;
-          var layer = MapUtil.getLayerByName(map, qualifiedFeatureTypeName);
+          var layer = MapUtil.getLayerByNameParam(map, qualifiedFeatureTypeName);
           if (layer) {
             layerCandidate = layer;
             break;

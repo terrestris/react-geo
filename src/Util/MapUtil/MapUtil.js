@@ -168,6 +168,22 @@ export class MapUtil {
    *                    be found.
    */
   static getLayerByName(map, name) {
+    const layers = MapUtil.getAllLayers(map);
+    return layers.find((layer) => {
+      return layer.get('name') === name;
+    });
+  }
+
+  /**
+   * Returns the layer from the provided map by the given name
+   * (parameter LAYERS).
+   *
+   * @param {ol.Map} map The map to use for lookup.
+   * @param {String} name The name to get the layer by.
+   * @return {ol.Layer} The result layer or undefined if the layer could not
+   *                    be found.
+   */
+  static getLayerByNameParam(map, name) {
     let layers = MapUtil.getAllLayers(map);
     let layerCandidate;
 
@@ -198,7 +214,7 @@ export class MapUtil {
 
     for (let namespace of namespaces) {
       let qualifiedFeatureTypeName = `${namespace}:${featureTypeName}`;
-      let layer = MapUtil.getLayerByName(map, qualifiedFeatureTypeName);
+      let layer = MapUtil.getLayerByNameParam(map, qualifiedFeatureTypeName);
       if (layer) {
         layerCandidate = layer;
         break;
