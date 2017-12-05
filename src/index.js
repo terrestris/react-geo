@@ -1,3 +1,4 @@
+import AddWmsPanel from './Container/AddWmsPanel/AddWmsPanel.jsx';
 import SimpleButton from './Button/SimpleButton/SimpleButton.jsx';
 import ToggleButton from './Button/ToggleButton/ToggleButton.jsx';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup.jsx';
@@ -34,6 +35,7 @@ import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/Visi
 import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent.jsx';
 
 export {
+  AddWmsPanel,
   CircleMenu,
   SimpleButton,
   ToggleButton,

@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const basePath = '/build/examples/';
 
 commonConfig.entry = {
+  'Container/AddWmsPanel/AddWmsPanel': './src/Container/AddWmsPanel/AddWmsPanel.example.jsx',
   'Button/SimpleButton/SimpleButton': './src/Button/SimpleButton/SimpleButton.example.jsx',
   'Button/ToggleButton/ToggleButton': './src/Button/ToggleButton/ToggleButton.example.jsx',
   'Button/ToggleGroup/ToggleGroup': './src/Button/ToggleGroup/ToggleGroup.example.jsx',

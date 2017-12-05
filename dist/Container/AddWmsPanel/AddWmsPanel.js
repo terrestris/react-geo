@@ -1,0 +1,239 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AddWmsPanel = undefined;
+
+var _checkbox = require('antd/lib/checkbox');
+
+var _checkbox2 = _interopRequireDefault(_checkbox);
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+require('antd/lib/checkbox/style');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _index = require('../../index');
+
+require('./AddWmsPanel.less');
+
+var _AddWmsLayerEntry = require('./AddWmsLayerEntry/AddWmsLayerEntry.js');
+
+var _AddWmsLayerEntry2 = _interopRequireDefault(_AddWmsLayerEntry);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Panel containing a (checkable) list of AddWmsLayerEntry instances.
+ * This class can be used e.g with a result obtained by ol WMS capabilities
+ * parser, in particular objects in `Capability.Layer.Layer`
+ *
+ * @class The AddWmsPanel
+ * @extends React.Component
+ */
+var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
+  _inherits(AddWmsPanel, _React$Component);
+
+  /**
+   * Create an AddWmsPanel.
+   * @constructs AddWmsPanel
+   */
+  function AddWmsPanel(props) {
+    _classCallCheck(this, AddWmsPanel);
+
+    var _this = _possibleConstructorReturn(this, (AddWmsPanel.__proto__ || Object.getPrototypeOf(AddWmsPanel)).call(this, props));
+
+    _this.onSelectedLayersChange = function (selectedWmsLayers) {
+      _this.setState({ selectedWmsLayers: selectedWmsLayers });
+    };
+
+    _this.onAddSelectedLayers = function () {
+      var selectedWmsLayers = _this.state.selectedWmsLayers;
+
+
+      var filteredLayers = _this.props.wmsLayers.filter(function (layer) {
+        return selectedWmsLayers.includes(layer.Title);
+      });
+      _this.props.onLayerAddToMap(filteredLayers);
+    };
+
+    _this.onAddAllLayers = function () {
+      _this.props.onLayerAddToMap(_this.props.wmsLayers);
+    };
+
+    _this.state = {
+      selectedWmsLayers: []
+    };
+    return _this;
+  }
+
+  /**
+   * The defaultProps.
+   * @type {Object}
+   */
+
+
+  /**
+   * The prop types.
+   * @type {Object}
+   */
+
+
+  /**
+   * onSelectedLayersChange - set state for selectedWmsLayers
+   *
+   * @param {Array} selectedWmsLayers titles of selected WMS layers to set
+   * in state
+   */
+
+
+  /**
+   * onAddSelectedLayers - function called if button with key useSelectedBtn is
+   * clicked filters wmsLayers given in props by those in selectedWmsLayers of
+   * state
+   */
+
+
+  /**
+   * onAddAllLayers - pass all wmsLayers of props to onLayerAddToMap function
+   */
+
+
+  _createClass(AddWmsPanel, [{
+    key: 'render',
+
+
+    /**
+     * The render function.
+     */
+    value: function render() {
+      var _props = this.props,
+          wmsLayers = _props.wmsLayers,
+          onCancel = _props.onCancel,
+          titleText = _props.titleText,
+          cancelText = _props.cancelText,
+          addAllLayersText = _props.addAllLayersText,
+          addSelectedLayersText = _props.addSelectedLayersText,
+          passThroughOpts = _objectWithoutProperties(_props, ['wmsLayers', 'onCancel', 'titleText', 'cancelText', 'addAllLayersText', 'addSelectedLayersText']);
+
+      var selectedWmsLayers = this.state.selectedWmsLayers;
+
+
+      return wmsLayers ? _react2.default.createElement(
+        _index.Panel,
+        _extends({
+          title: titleText,
+          bounds: '#main',
+          className: 'add-wms-panel'
+        }, passThroughOpts),
+        _react2.default.createElement(
+          _checkbox2.default.Group,
+          { onChange: this.onSelectedLayersChange },
+          wmsLayers.map(function (layer, idx) {
+            return _react2.default.createElement(_AddWmsLayerEntry2.default, {
+              wmsLayer: layer,
+              key: idx });
+          })
+        ),
+        _react2.default.createElement(_index.Titlebar, { tools: [_react2.default.createElement(
+            _index.SimpleButton,
+            {
+              size: 'small',
+              key: 'useSelectedBtn',
+              disabled: selectedWmsLayers.length === 0,
+              onClick: this.onAddSelectedLayers
+            },
+            addSelectedLayersText
+          ), _react2.default.createElement(
+            _index.SimpleButton,
+            {
+              size: 'small',
+              key: 'useAllBtn',
+              onClick: this.onAddAllLayers
+            },
+            addAllLayersText
+          ), onCancel ? _react2.default.createElement(
+            _index.SimpleButton,
+            {
+              size: 'small',
+              key: 'cancelBtn',
+              onClick: this.props.onCancel
+            },
+            cancelText
+          ) : null] })
+      ) : null;
+    }
+  }]);
+
+  return AddWmsPanel;
+}(_react2.default.Component);
+
+AddWmsPanel.propTypes = {
+  /**
+   * Array containing layers (e.g. `Capability.Layer.Layer` of ol capabilities
+   * parser)
+   * @type {Array} -- required
+   */
+  wmsLayers: _propTypes2.default.arrayOf(_propTypes2.default.object).isRequired,
+
+  /**
+   * Optional function being called when onAddSelectedLayers or onAddAllLayers
+   * is triggered
+   * @type {Function}
+   */
+  onLayerAddToMap: _propTypes2.default.func,
+
+  /**
+   * Optional function that is called if cancel button is clicked
+   * @type {Function}
+   */
+  onCancel: _propTypes2.default.func,
+
+  /**
+   * Optional text to be shown in button to add all layers
+   * @type {String}
+   */
+  addAllLayersText: _propTypes2.default.string,
+
+  /**
+   * Optional text to be shown in button to add selected layers
+   * @type {String}
+   */
+  addSelectedLayersText: _propTypes2.default.string,
+
+  /**
+   * Optional text to be shown in cancel button
+   * @type {String}
+   */
+  cancelText: _propTypes2.default.string,
+
+  /**
+   * Optional text to be shown in panel title
+   * @type {String}
+   */
+  titleText: _propTypes2.default.string };
+AddWmsPanel.defaultProps = {
+  onLayerAddToMap: function onLayerAddToMap() {},
+  addAllLayersText: 'Add all layers',
+  addSelectedLayersText: 'Add selected layers',
+  cancelText: 'Cancel',
+  titleText: 'Add WMS layer' };
+exports.default = AddWmsPanel;

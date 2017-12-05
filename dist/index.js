@@ -3,7 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MeasureUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.MeasureButton = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = undefined;
+exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MeasureUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.MeasureButton = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = exports.AddWmsPanel = undefined;
+
+var _AddWmsPanel = require('./Container/AddWmsPanel/AddWmsPanel.js');
+
+var _AddWmsPanel2 = _interopRequireDefault(_AddWmsPanel);
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -131,6 +135,7 @@ var _MappifiedComponent = require('./HigherOrderComponent/MappifiedComponent/Map
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+exports.AddWmsPanel = _AddWmsPanel2.default;
 exports.CircleMenu = _CircleMenu2.default;
 exports.SimpleButton = _SimpleButton2.default;
 exports.ToggleButton = _ToggleButton2.default;
