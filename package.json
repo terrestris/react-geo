@@ -65,7 +65,7 @@
     "release": "np --no-yarn && git push https://github.com/terrestris/react-geo.git --tags"
   },
   "peerDependencies": {
-    "antd": "~2.13",
+    "antd": "~3.0",
     "ol": "~4.0",
     "react": "~16.0"
   },
