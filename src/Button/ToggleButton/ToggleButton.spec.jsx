@@ -63,21 +63,6 @@ describe('<ToggleButton />', () => {
     expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
   });
 
-  it('warns if no toggle callback method is given', () => {
-    const logSpy = sinon.spy(Logger, 'debug');
-    const wrapper = TestUtil.mountComponent(ToggleButton, {
-      onToggle: () => {}
-    });
-
-    wrapper.setProps({
-      onToggle: null
-    });
-
-    expect(logSpy).toHaveProperty('callCount', 1);
-
-    logSpy.restore();
-  });
-
   it('calls a given toggle callback method if the pressed state changes', () => {
     const onToggle = sinon.spy();
     let props = {

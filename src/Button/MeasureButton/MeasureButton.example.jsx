@@ -8,7 +8,8 @@ import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
 
 import {
-  MeasureButton
+  MeasureButton,
+  ToggleGroup
 } from '../../index.js';
 
 //
@@ -40,42 +41,51 @@ render(
 
     <div className="example-block">
       <span>Measure type:</span>
-      <MeasureButton
-        map={map}
-        measureType="line"
+      <ToggleGroup
+        selectedName="steps"
       >
+        <MeasureButton
+          name="line"
+          map={map}
+          measureType="line"
+        >
         Distance
-      </MeasureButton>
+        </MeasureButton>
 
-      <MeasureButton
-        map={map}
-        measureType="line"
-        showMeasureInfoOnClickedPoints
-      >
+        <MeasureButton
+          name="steps"
+          map={map}
+          measureType="line"
+          showMeasureInfoOnClickedPoints
+        >
         Distance with step labels
-      </MeasureButton>
+        </MeasureButton>
 
-      <MeasureButton
-        map={map}
-        measureType="line"
-        multipleDrawing
-      >
+        <MeasureButton
+          name="multi"
+          map={map}
+          measureType="line"
+          multipleDrawing
+        >
         Distance with multiple drawing
-      </MeasureButton>
+        </MeasureButton>
 
-      <MeasureButton
-        map={map}
-        measureType="polygon"
-      >
+        <MeasureButton
+          name="poly"
+          map={map}
+          measureType="polygon"
+        >
         Area
-      </MeasureButton>
+        </MeasureButton>
 
-      <MeasureButton
-        map={map}
-        measureType="angle"
-      >
+        <MeasureButton
+          name="angle"
+          map={map}
+          measureType="angle"
+        >
         Angle
-      </MeasureButton>
+        </MeasureButton>
+      </ToggleGroup>
 
     </div>
 
