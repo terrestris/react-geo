@@ -107,24 +107,6 @@ describe('<MeasureButton />', () => {
       expect(wrapper.find('button', {pressed: true}).length).toBe(1);
     });
 
-    it('warns if no toggle callback method is given', () => {
-      const logSpy = jest.spyOn(Logger, 'debug');
-      const wrapper = TestUtil.mountComponent(MeasureButton, {
-        map: map,
-        measureType: 'line',
-        onToggle: () => {}
-      });
-
-      wrapper.setProps({
-        onToggle: null
-      });
-
-      expect(logSpy).toHaveBeenCalledTimes(1);
-      expect(logSpy.mock.calls[0][0]).toContain('No onToggle method given');
-
-      logSpy.mockReset();
-      logSpy.mockRestore();
-    });
   });
 
   describe('#Static methods', () => {
