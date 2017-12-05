@@ -19,6 +19,7 @@ import Toolbar from './Toolbar/Toolbar.jsx';
 import UserChip from './UserChip/UserChip.jsx';
 import CircleMenu from './CircleMenu/CircleMenu.jsx';
 
+import CapabilitiesUtil from './Util/CapabilitiesUtil/CapabilitiesUtil';
 import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
 import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
 import MapUtil from './Util/MapUtil/MapUtil';
@@ -52,6 +53,7 @@ export {
   Titlebar,
   Toolbar,
   UserChip,
+  CapabilitiesUtil,
   CsrfUtil,
   FeatureUtil,
   Logger,

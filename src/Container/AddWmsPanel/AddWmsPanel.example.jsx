@@ -62,20 +62,10 @@ const WMS_CAPABILITIES_URL = 'http://ows.terrestris.de/osm/service?SERVICE=WMS&V
  * fetch capabilities document onClick and re-render on success
  */
 const onClick = () => {
-  fetch(WMS_CAPABILITIES_URL)
-    .then((response) => response.text())
-    .then((data) => {
-
-      const wmsCapabilitiesParser = new OlWMSCapabilities();
-      const caps = wmsCapabilitiesParser.read(data);
-      const wmsVersion = get(caps,'version');
-      const wmsAttribution = get(caps,'Service.AccessConstraints');
-      const wmsGetMapConfig = get(caps, 'Capability.Request.GetMap');
-      const wmsGetFeatureInfoConfig = get(caps, 'Capability.Request.GetFeatureInfo');
-
-      return get(caps,'Capability.Layer.Layer').map(layer => Object.assign(layer,  {wmsVersion, wmsAttribution, wmsGetMapConfig, wmsGetFeatureInfoConfig}) );
-    }).then((wmsLayers) => {
-      doRender(wmsLayers);
+  CapabilitiesUtil.parseWmsCapabilities(WMS_CAPABILITIES_URL)
+    .then(CapabilitiesUtil.getLayersFromWmsCapabilties)
+    .then((layers) => {
+      doRender(layers);
     });
 };
 
