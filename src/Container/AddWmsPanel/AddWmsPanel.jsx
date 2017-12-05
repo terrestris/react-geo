@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
+import OlLayerTile from 'ol/layer/tile';
+import OlMap from 'ol/map';
 
-import { Panel, SimpleButton, Titlebar } from '../../index';
+import { Panel, SimpleButton, Titlebar, Logger } from '../../index';
 
 import './AddWmsPanel.less';
 import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry.jsx';
@@ -27,7 +29,13 @@ export class AddWmsPanel extends React.Component {
      * parser)
      * @type {Array} -- required
      */
-    wmsLayers: PropTypes.arrayOf(PropTypes.object).isRequired,
+    wmsLayers: PropTypes.arrayOf(OlLayerTile).isRequired,
+
+    /**
+     * Optional instance of OlMap which is used if onLayerAddToMap is not provided
+     * @type {OlMap}
+     */
+    map: PropTypes.instanceOf(OlMap),
 
     /**
      * Optional function being called when onAddSelectedLayers or onAddAllLayers
@@ -84,7 +92,6 @@ export class AddWmsPanel extends React.Component {
    * @type {Object}
    */
   static defaultProps = {
-    onLayerAddToMap: () => {},
     addAllLayersText: 'Add all layers',
     addSelectedLayersText: 'Add selected layers',
     cancelText: 'Cancel',
@@ -111,17 +118,41 @@ export class AddWmsPanel extends React.Component {
       selectedWmsLayers
     } = this.state;
 
+    const {
+      onLayerAddToMap,
+      map
+    } = this.props;
+
     const filteredLayers = this.props.wmsLayers.filter(
-      layer => selectedWmsLayers.includes(layer.Title)
+      layer => selectedWmsLayers.includes(layer.get('title'))
     );
-    this.props.onLayerAddToMap(filteredLayers);
+
+    if (onLayerAddToMap) {
+      onLayerAddToMap(filteredLayers);
+    } else if (map) {
+      filteredLayers.forEach(layer => map.addLayer(layer));
+    } else {
+      Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
+    }
   }
 
   /**
    * onAddAllLayers - pass all wmsLayers of props to onLayerAddToMap function
    */
   onAddAllLayers = () => {
-    this.props.onLayerAddToMap(this.props.wmsLayers);
+    const {
+      onLayerAddToMap,
+      wmsLayers,
+      map
+    } = this.props;
+
+    if (onLayerAddToMap) {
+      onLayerAddToMap(wmsLayers);
+    } else if (map) {
+      wmsLayers.forEach(layer => map.addLayer(layer));
+    } else {
+      Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
+    }
   }
 
   /**
@@ -143,7 +174,7 @@ export class AddWmsPanel extends React.Component {
     } =  this.state;
 
     return(
-      wmsLayers ?
+      wmsLayers && wmsLayers.length > 0  ?
         <Panel
           title={titleText}
           bounds="#main"
@@ -177,7 +208,7 @@ export class AddWmsPanel extends React.Component {
               <SimpleButton
                 size='small'
                 key="cancelBtn"
-                onClick={this.props.onCancel}
+                onClick={onCancel}
               >
                 {cancelText}
               </SimpleButton> : null

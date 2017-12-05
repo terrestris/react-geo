@@ -23,6 +23,14 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+var _tile = require('ol/layer/tile');
+
+var _tile2 = _interopRequireDefault(_tile);
+
+var _map = require('ol/map');
+
+var _map2 = _interopRequireDefault(_map);
+
 var _index = require('../../index');
 
 require('./AddWmsPanel.less');
@@ -67,16 +75,43 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
 
     _this.onAddSelectedLayers = function () {
       var selectedWmsLayers = _this.state.selectedWmsLayers;
+      var _this$props = _this.props,
+          onLayerAddToMap = _this$props.onLayerAddToMap,
+          map = _this$props.map;
 
 
+      debugger;
       var filteredLayers = _this.props.wmsLayers.filter(function (layer) {
-        return selectedWmsLayers.includes(layer.Title);
+        return selectedWmsLayers.includes(layer.get('title'));
       });
-      _this.props.onLayerAddToMap(filteredLayers);
+      if (onLayerAddToMap) {
+        onLayerAddToMap(filteredLayers);
+      } else if (map) {
+        filteredLayers.forEach(function (layer) {
+          return map.addLayer(layer);
+        });
+      } else {
+        _index.Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
+      }
     };
 
     _this.onAddAllLayers = function () {
-      _this.props.onLayerAddToMap(_this.props.wmsLayers);
+      var _this$props2 = _this.props,
+          onLayerAddToMap = _this$props2.onLayerAddToMap,
+          wmsLayers = _this$props2.wmsLayers,
+          map = _this$props2.map;
+
+
+      debugger;
+      if (onLayerAddToMap) {
+        onLayerAddToMap(wmsLayers);
+      } else if (map) {
+        wmsLayers.forEach(function (layer) {
+          return map.addLayer(layer);
+        });
+      } else {
+        _index.Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
+      }
     };
 
     _this.state = {
@@ -175,7 +210,7 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
             {
               size: 'small',
               key: 'cancelBtn',
-              onClick: this.props.onCancel
+              onClick: onCancel
             },
             cancelText
           ) : null] })
@@ -192,7 +227,13 @@ AddWmsPanel.propTypes = {
    * parser)
    * @type {Array} -- required
    */
-  wmsLayers: _propTypes2.default.arrayOf(_propTypes2.default.object).isRequired,
+  wmsLayers: _propTypes2.default.arrayOf(_tile2.default),
+
+  /**
+   * Optional instance of OlMap which is used if onLayerAddToMap is not provided
+   * @type {OlMap}
+   */
+  map: _propTypes2.default.instanceOf(_map2.default),
 
   /**
    * Optional function being called when onAddSelectedLayers or onAddAllLayers
@@ -231,7 +272,6 @@ AddWmsPanel.propTypes = {
    */
   titleText: _propTypes2.default.string };
 AddWmsPanel.defaultProps = {
-  onLayerAddToMap: function onLayerAddToMap() {},
   addAllLayersText: 'Add all layers',
   addSelectedLayersText: 'Add selected layers',
   cancelText: 'Cancel',

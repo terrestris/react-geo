@@ -27,6 +27,10 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+var _tile = require('ol/layer/tile');
+
+var _tile2 = _interopRequireDefault(_tile);
+
 var _reactFa = require('react-fa');
 
 require('./AddWmsLayerEntry.less');
@@ -94,19 +98,22 @@ var AddWmsLayerEntry = exports.AddWmsLayerEntry = function (_React$Component) {
           queryable = _state.queryable;
 
 
+      var title = wmsLayer.get('title');
+      var abstract = wmsLayer.get('abstract');
+
       var abstractTextSpan = wmsLayer.Abstract ? _react2.default.createElement(
         'span',
         null,
-        wmsLayer.Title + ' - ' + wmsLayer.Abstract + ':'
+        title + ' - ' + abstract + ':'
       ) : _react2.default.createElement(
         'span',
         null,
-        '' + wmsLayer.Title
+        '' + title
       );
 
       return _react2.default.createElement(
         _checkbox2.default,
-        { value: wmsLayer.Title, className: 'add-wms-layer-checkbox-line' },
+        { value: title, className: 'add-wms-layer-checkbox-line' },
         _react2.default.createElement(
           'div',
           { className: 'add-wms-layer-entry' },
@@ -130,12 +137,7 @@ AddWmsLayerEntry.propTypes = {
    * Object containing layer information
    * @type {Object}
    */
-  wmsLayer: _propTypes2.default.shape({
-    wmsAttribution: _propTypes2.default.string,
-    queryable: _propTypes2.default.boolean,
-    Abstract: _propTypes2.default.string,
-    Title: _propTypes2.default.string
-  }).isRequired,
+  wmsLayer: _propTypes2.default.instanceOf(_tile2.default).isRequired,
 
   /**
    * Optional text to be shown in Tooltip for a layer that can be queried

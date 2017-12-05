@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import OlLayerTile from 'ol/layer/tile';
 import { Checkbox, Tooltip } from 'antd';
 import { Icon } from 'react-fa';
 
@@ -23,12 +24,7 @@ export class AddWmsLayerEntry extends React.Component {
      * Object containing layer information
      * @type {Object}
      */
-    wmsLayer: PropTypes.shape({
-      wmsAttribution: PropTypes.string,
-      queryable: PropTypes.boolean,
-      Abstract: PropTypes.string,
-      Title: PropTypes.string
-    }).isRequired,
+    wmsLayer: PropTypes.instanceOf(OlLayerTile).isRequired,
 
     /**
      * Optional text to be shown in Tooltip for a layer that can be queried
@@ -44,10 +40,9 @@ export class AddWmsLayerEntry extends React.Component {
    */
   constructor(props) {
     super(props);
-
     this.state = {
-      copyright: props.wmsLayer.wmsAttribution,
-      queryable: props.wmsLayer.queryable
+      copyright: props.wmsLayer.getSource().getAttributions(),
+      queryable: props.wmsLayer.get('queryable')
     };
   }
 
@@ -73,12 +68,14 @@ export class AddWmsLayerEntry extends React.Component {
       queryable
     } = this.state;
 
-    const abstractTextSpan = wmsLayer.Abstract ?
-      <span>{`${wmsLayer.Title} - ${wmsLayer.Abstract}:`}</span> :
-      <span>{`${wmsLayer.Title}`}</span>;
+    const title = wmsLayer.get('title');
+    const abstract = wmsLayer.get('abstract');
+    const abstractTextSpan = abstract ?
+      <span>{`${title} - ${abstract}:`}</span> :
+      <span>{`${title}`}</span>;
 
     return (
-      <Checkbox value={wmsLayer.Title} className="add-wms-layer-checkbox-line">
+      <Checkbox value={title} className="add-wms-layer-checkbox-line">
         <div className="add-wms-layer-entry">
           {abstractTextSpan}
           { copyright ? <Icon className="add-wms-add-info-icon" name="copyright" /> : null }

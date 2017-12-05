@@ -1,17 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { AddWmsPanel, SimpleButton } from '../../index.js';
+import { AddWmsPanel, SimpleButton, CapabilitiesUtil } from '../../index.js';
 
 import OlMap from 'ol/map';
 import OlView from 'ol/view';
 import OlLayerTile from 'ol/layer/tile';
-import OlLayerImage from 'ol/layer/image';
 import OlSourceOsm from 'ol/source/osm';
-import OlSourceImageWms from 'ol/source/imagewms';
 import OlProjection from 'ol/proj';
-import OlWMSCapabilities from 'ol/format/wmscapabilities';
-
-import { get } from 'lodash';
 
 //
 // ***************************** SETUP *****************************************
@@ -33,27 +28,6 @@ const map = new OlMap({
 //
 // ***************************** SETUP END *************************************
 //
-
-/**
- * function that creates an OpenLayers image layer for each provided item in
- * selectedWmsLayers
- */
-const onLayerAddToMap = (selectedWmsLayers) => {
-  selectedWmsLayers.map((wmsLayerObj) => {
-    const getMapUrl = get(wmsLayerObj,'wmsGetMapConfig.DCPType[0].HTTP.Get.OnlineResource');
-    const tileLayer = new OlLayerImage({
-      opacity: 1,
-      title: get(wmsLayerObj, 'Name'),
-      source: new OlSourceImageWms({
-        url: getMapUrl,
-        params: {
-          'LAYERS': get(wmsLayerObj, 'Name')
-        }
-      })
-    });
-    map.addLayer(tileLayer);
-  });
-};
 
 // Please note: CORS headers must be set on server providing capabilities document. Otherwise proxy needed.
 const WMS_CAPABILITIES_URL = 'http://ows.terrestris.de/osm/service?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities';
@@ -91,8 +65,8 @@ const doRender = (wmsLayers) => {
         </SimpleButton>
         <AddWmsPanel
           key="1"
+          map={map}
           wmsLayers={wmsLayers}
-          onLayerAddToMap={onLayerAddToMap}
           draggable={false}
           t={t => t}
           width={500}
