@@ -45,7 +45,8 @@ class CapabilitiesUtil {
       title: get(layerObj, 'Title'),
       abstract: get(layerObj, 'Abstract'),
       getFeatureInfoUrl: getFeatureInfoUrl,
-      queryable: !!getFeatureInfoUrl,
+      getFeatureInfoFormats: get(wmsGetFeatureInfoConfig, 'Format'),
+      queryable: get(layerObj, 'queryable'),
       source: new OlSourceImageWMS({
         url: getMapUrl,
         attributions: wmsAttribution,
