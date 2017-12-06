@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { message } from 'antd';
 import { AddWmsPanel, SimpleButton, CapabilitiesUtil } from '../../index.js';
 
 import OlMap from 'ol/map';
@@ -30,7 +31,7 @@ const map = new OlMap({
 //
 
 // Please note: CORS headers must be set on server providing capabilities document. Otherwise proxy needed.
-const WMS_CAPABILITIES_URL = 'http://ows.terrestris.de/osm/service?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities';
+const WMS_CAPABILITIES_URL = 'https://ows.terrestris.de/osm/service?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
 
 /**
  * fetch capabilities document onClick and re-render on success
@@ -40,7 +41,8 @@ const onClick = () => {
     .then(CapabilitiesUtil.getLayersFromWmsCapabilties)
     .then((layers) => {
       doRender(layers);
-    });
+    })
+    .catch(() => message.error('Could not parse capabilities document.'));
 };
 
 /**

@@ -130,7 +130,12 @@ export class AddWmsPanel extends React.Component {
     if (onLayerAddToMap) {
       onLayerAddToMap(filteredLayers);
     } else if (map) {
-      filteredLayers.forEach(layer => map.addLayer(layer));
+      filteredLayers.forEach(layer => {
+        // Add layer to map if it is not added yet
+        if (!map.getLayers().getArray().includes(layer) ) {
+          map.addLayer(layer);
+        }
+      });
     } else {
       Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
     }
@@ -149,7 +154,12 @@ export class AddWmsPanel extends React.Component {
     if (onLayerAddToMap) {
       onLayerAddToMap(wmsLayers);
     } else if (map) {
-      wmsLayers.forEach(layer => map.addLayer(layer));
+      wmsLayers.forEach(layer => {
+        // Add layer to map if it is not added yet
+        if (!map.getLayers().getArray().includes(layer) ) {
+          map.addLayer(layer);
+        }
+      });
     } else {
       Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
     }

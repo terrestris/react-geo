@@ -4,7 +4,7 @@ import { CapabilitiesUtil } from '../../index';
 
 const layerTitle =  'OpenStreetMap WMS - by terrestris';
 const capabilitiesObj = {
-  version: '1.1.0',
+  version: '1.3.0',
   Service: {
     Name: 'OGC:WMS',
     Title: 'OpenStreetMap WMS',

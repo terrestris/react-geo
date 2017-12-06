@@ -44,7 +44,7 @@ describe('<AddWmsLayerEntry />', () => {
     testLayer.set('queryable', false);
   });
 
-  it('doesnt add queryable icon if prop wmsLayer has queryable set to false', () => {
+  it('doesn\'t add queryable icon if prop wmsLayer has queryable set to false', () => {
     const wrapper = TestUtil.mountComponent(AddWmsLayerEntry, {
       wmsLayer: testLayer
     });
@@ -64,7 +64,7 @@ describe('<AddWmsLayerEntry />', () => {
     expect(icons.getElement().props.className).toContain('fa-copyright');
   });
 
-  it('doesnt add copyright icon if prop wmsLayer no has filled attribution', () => {
+  it('doesn\'t add copyright icon if prop wmsLayer no has filled attribution', () => {
     const wrapper = TestUtil.mountComponent(AddWmsLayerEntry, {
       wmsLayer: testLayer
     });

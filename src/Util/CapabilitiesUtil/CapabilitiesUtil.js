@@ -43,7 +43,7 @@ class CapabilitiesUtil {
     return layersInCapabilities.map((layerObj) => new OlLayerTile({
       opacity: 1,
       title: get(layerObj, 'Title'),
-      abstract: get(layerObj, 'Attribution'),
+      abstract: get(layerObj, 'Abstract'),
       getFeatureInfoUrl: getFeatureInfoUrl,
       queryable: !!getFeatureInfoUrl,
       source: new OlSourceTileWms({
