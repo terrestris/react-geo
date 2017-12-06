@@ -1,5 +1,5 @@
 /*eslint-env jest*/
-import OlLayerTile from 'ol/layer/tile';
+import OlLayerImage from 'ol/layer/image';
 import { CapabilitiesUtil } from '../../index';
 
 const layerTitle =  'OpenStreetMap WMS - by terrestris';
@@ -145,7 +145,7 @@ describe('CapabilitiesUtil', () => {
         const parsedLayers = CapabilitiesUtil.getLayersFromWmsCapabilties(capabilitiesObj);
         expect(parsedLayers).toHaveLength(1);
         const layer = parsedLayers[0];
-        expect(layer).toBeInstanceOf(OlLayerTile);
+        expect(layer).toBeInstanceOf(OlLayerImage);
         expect(layer.get('title')).toBe(layerTitle);
       });
     });

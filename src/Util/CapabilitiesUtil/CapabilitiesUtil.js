@@ -1,6 +1,6 @@
 import OlWMSCapabilities from 'ol/format/wmscapabilities';
-import OlSourceTileWms from 'ol/source/tilewms';
-import OlLayerTile from 'ol/layer/tile';
+import OlSourceImageWMS from 'ol/source/imagewms';
+import OlLayerImage from 'ol/layer/image';
 
 import { get } from 'lodash';
 
@@ -40,13 +40,13 @@ class CapabilitiesUtil {
     const wmsGetFeatureInfoConfig = get(capabilities, 'Capability.Request.GetFeatureInfo');
     const getMapUrl = get(wmsGetMapConfig,'DCPType[0].HTTP.Get.OnlineResource');
     const getFeatureInfoUrl = get(wmsGetFeatureInfoConfig,'DCPType[0].HTTP.Get.OnlineResource');
-    return layersInCapabilities.map((layerObj) => new OlLayerTile({
+    return layersInCapabilities.map((layerObj) => new OlLayerImage({
       opacity: 1,
       title: get(layerObj, 'Title'),
       abstract: get(layerObj, 'Abstract'),
       getFeatureInfoUrl: getFeatureInfoUrl,
       queryable: !!getFeatureInfoUrl,
-      source: new OlSourceTileWms({
+      source: new OlSourceImageWMS({
         url: getMapUrl,
         attributions: wmsAttribution,
         params: {
