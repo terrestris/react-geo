@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 import OlLayerTile from 'ol/layer/tile';
+import OlLayerImage  from 'ol/layer/image';
 import OlMap from 'ol/map';
 
 import { Panel, SimpleButton, Titlebar, Logger } from '../../index';
@@ -29,7 +30,10 @@ export class AddWmsPanel extends React.Component {
      * parser)
      * @type {Array} -- required
      */
-    wmsLayers: PropTypes.arrayOf(OlLayerTile).isRequired,
+    wmsLayers: PropTypes.arrayOf(PropTypes.oneOfType([
+      PropTypes.instanceOf(OlLayerTile),
+      PropTypes.instanceOf(OlLayerImage)
+    ])).isRequired,
 
     /**
      * Optional instance of OlMap which is used if onLayerAddToMap is not provided

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import OlLayerTile from 'ol/layer/tile';
+import OlLayerImage from 'ol/layer/image';
 import { Checkbox, Tooltip } from 'antd';
 import { Icon } from 'react-fa';
 
@@ -24,7 +25,10 @@ export class AddWmsLayerEntry extends React.Component {
      * Object containing layer information
      * @type {Object}
      */
-    wmsLayer: PropTypes.instanceOf(OlLayerTile).isRequired,
+    wmsLayer: PropTypes.oneOfType([
+      PropTypes.instanceOf(OlLayerTile),
+      PropTypes.instanceOf(OlLayerImage)]
+    ).isRequired,
 
     /**
      * Function returning a span with the textual representation of this layer
