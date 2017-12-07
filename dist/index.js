@@ -3,7 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MeasureUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.MeasureButton = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = undefined;
+exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MeasureUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.CapabilitiesUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.MeasureButton = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = exports.AddWmsPanel = undefined;
+
+var _AddWmsPanel = require('./Container/AddWmsPanel/AddWmsPanel.js');
+
+var _AddWmsPanel2 = _interopRequireDefault(_AddWmsPanel);
 
 var _SimpleButton = require('./Button/SimpleButton/SimpleButton.js');
 
@@ -81,6 +85,10 @@ var _CircleMenu = require('./CircleMenu/CircleMenu.js');
 
 var _CircleMenu2 = _interopRequireDefault(_CircleMenu);
 
+var _CapabilitiesUtil = require('./Util/CapabilitiesUtil/CapabilitiesUtil');
+
+var _CapabilitiesUtil2 = _interopRequireDefault(_CapabilitiesUtil);
+
 var _CsrfUtil = require('./Util/CsrfUtil/CsrfUtil');
 
 var _CsrfUtil2 = _interopRequireDefault(_CsrfUtil);
@@ -131,6 +139,7 @@ var _MappifiedComponent = require('./HigherOrderComponent/MappifiedComponent/Map
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+exports.AddWmsPanel = _AddWmsPanel2.default;
 exports.CircleMenu = _CircleMenu2.default;
 exports.SimpleButton = _SimpleButton2.default;
 exports.ToggleButton = _ToggleButton2.default;
@@ -147,6 +156,7 @@ exports.LayerTransparencySlider = _LayerTransparencySlider2.default;
 exports.Titlebar = _Titlebar2.default;
 exports.Toolbar = _Toolbar2.default;
 exports.UserChip = _UserChip2.default;
+exports.CapabilitiesUtil = _CapabilitiesUtil2.default;
 exports.CsrfUtil = _CsrfUtil2.default;
 exports.FeatureUtil = _FeatureUtil2.default;
 exports.Logger = _Logger2.default;

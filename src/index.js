@@ -1,3 +1,4 @@
+import AddWmsPanel from './Container/AddWmsPanel/AddWmsPanel.jsx';
 import SimpleButton from './Button/SimpleButton/SimpleButton.jsx';
 import ToggleButton from './Button/ToggleButton/ToggleButton.jsx';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup.jsx';
@@ -18,6 +19,7 @@ import Toolbar from './Toolbar/Toolbar.jsx';
 import UserChip from './UserChip/UserChip.jsx';
 import CircleMenu from './CircleMenu/CircleMenu.jsx';
 
+import CapabilitiesUtil from './Util/CapabilitiesUtil/CapabilitiesUtil';
 import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
 import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
 import MapUtil from './Util/MapUtil/MapUtil';
@@ -34,6 +36,7 @@ import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/Visi
 import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent.jsx';
 
 export {
+  AddWmsPanel,
   CircleMenu,
   SimpleButton,
   ToggleButton,
@@ -50,6 +53,7 @@ export {
   Titlebar,
   Toolbar,
   UserChip,
+  CapabilitiesUtil,
   CsrfUtil,
   FeatureUtil,
   Logger,
