@@ -31,6 +31,10 @@ var _tile = require('ol/layer/tile');
 
 var _tile2 = _interopRequireDefault(_tile);
 
+var _image = require('ol/layer/image');
+
+var _image2 = _interopRequireDefault(_image);
+
 var _reactFa = require('react-fa');
 
 require('./AddWmsLayerEntry.less');
@@ -64,8 +68,8 @@ var AddWmsLayerEntry = exports.AddWmsLayerEntry = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (AddWmsLayerEntry.__proto__ || Object.getPrototypeOf(AddWmsLayerEntry)).call(this, props));
 
     _this.state = {
-      copyright: props.wmsLayer.wmsAttribution,
-      queryable: props.wmsLayer.queryable
+      copyright: props.wmsLayer.getSource().getAttributions(),
+      queryable: props.wmsLayer.get('queryable')
     };
     return _this;
   }
@@ -92,6 +96,7 @@ var AddWmsLayerEntry = exports.AddWmsLayerEntry = function (_React$Component) {
     value: function render() {
       var _props = this.props,
           wmsLayer = _props.wmsLayer,
+          layerTextTemplateFn = _props.layerTextTemplateFn,
           layerQueryableText = _props.layerQueryableText;
       var _state = this.state,
           copyright = _state.copyright,
@@ -99,17 +104,7 @@ var AddWmsLayerEntry = exports.AddWmsLayerEntry = function (_React$Component) {
 
 
       var title = wmsLayer.get('title');
-      var abstract = wmsLayer.get('abstract');
-
-      var abstractTextSpan = wmsLayer.Abstract ? _react2.default.createElement(
-        'span',
-        null,
-        title + ' - ' + abstract + ':'
-      ) : _react2.default.createElement(
-        'span',
-        null,
-        '' + title
-      );
+      var layerTextSpan = layerTextTemplateFn(wmsLayer);
 
       return _react2.default.createElement(
         _checkbox2.default,
@@ -117,7 +112,7 @@ var AddWmsLayerEntry = exports.AddWmsLayerEntry = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: 'add-wms-layer-entry' },
-          abstractTextSpan,
+          layerTextSpan,
           copyright ? _react2.default.createElement(_reactFa.Icon, { className: 'add-wms-add-info-icon', name: 'copyright' }) : null,
           queryable ? _react2.default.createElement(
             _tooltip2.default,
@@ -137,7 +132,14 @@ AddWmsLayerEntry.propTypes = {
    * Object containing layer information
    * @type {Object}
    */
-  wmsLayer: _propTypes2.default.instanceOf(_tile2.default).isRequired,
+  wmsLayer: _propTypes2.default.oneOfType([_propTypes2.default.instanceOf(_tile2.default), _propTypes2.default.instanceOf(_image2.default)]).isRequired,
+
+  /**
+   * Function returning a span with the textual representation of this layer
+   * Default: Title of the layer and its abstract (if available)
+   * @type {Function}
+   */
+  layerTextTemplateFn: _propTypes2.default.func,
 
   /**
    * Optional text to be shown in Tooltip for a layer that can be queried
@@ -145,5 +147,19 @@ AddWmsLayerEntry.propTypes = {
    */
   layerQueryableText: _propTypes2.default.string };
 AddWmsLayerEntry.defaultProps = {
-  layerQueryableText: 'Layer is queryable' };
+  layerQueryableText: 'Layer is queryable',
+  layerTextTemplateFn: function layerTextTemplateFn(wmsLayer) {
+    var title = wmsLayer.get('title');
+    var abstract = wmsLayer.get('abstract');
+    var abstractTextSpan = abstract ? _react2.default.createElement(
+      'span',
+      null,
+      title + ' - ' + abstract + ':'
+    ) : _react2.default.createElement(
+      'span',
+      null,
+      '' + title
+    );
+    return abstractTextSpan;
+  } };
 exports.default = AddWmsLayerEntry;

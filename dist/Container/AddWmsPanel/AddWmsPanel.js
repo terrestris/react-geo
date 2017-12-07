@@ -27,6 +27,10 @@ var _tile = require('ol/layer/tile');
 
 var _tile2 = _interopRequireDefault(_tile);
 
+var _image = require('ol/layer/image');
+
+var _image2 = _interopRequireDefault(_image);
+
 var _map = require('ol/map');
 
 var _map2 = _interopRequireDefault(_map);
@@ -80,15 +84,18 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
           map = _this$props.map;
 
 
-      debugger;
       var filteredLayers = _this.props.wmsLayers.filter(function (layer) {
         return selectedWmsLayers.includes(layer.get('title'));
       });
+
       if (onLayerAddToMap) {
         onLayerAddToMap(filteredLayers);
       } else if (map) {
         filteredLayers.forEach(function (layer) {
-          return map.addLayer(layer);
+          // Add layer to map if it is not added yet
+          if (!map.getLayers().getArray().includes(layer)) {
+            map.addLayer(layer);
+          }
         });
       } else {
         _index.Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
@@ -102,12 +109,14 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
           map = _this$props2.map;
 
 
-      debugger;
       if (onLayerAddToMap) {
         onLayerAddToMap(wmsLayers);
       } else if (map) {
         wmsLayers.forEach(function (layer) {
-          return map.addLayer(layer);
+          // Add layer to map if it is not added yet
+          if (!map.getLayers().getArray().includes(layer)) {
+            map.addLayer(layer);
+          }
         });
       } else {
         _index.Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
@@ -172,7 +181,7 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
       var selectedWmsLayers = this.state.selectedWmsLayers;
 
 
-      return wmsLayers ? _react2.default.createElement(
+      return wmsLayers && wmsLayers.length > 0 ? _react2.default.createElement(
         _index.Panel,
         _extends({
           title: titleText,
@@ -227,7 +236,7 @@ AddWmsPanel.propTypes = {
    * parser)
    * @type {Array} -- required
    */
-  wmsLayers: _propTypes2.default.arrayOf(_tile2.default),
+  wmsLayers: _propTypes2.default.arrayOf(_propTypes2.default.oneOfType([_propTypes2.default.instanceOf(_tile2.default), _propTypes2.default.instanceOf(_image2.default)])).isRequired,
 
   /**
    * Optional instance of OlMap which is used if onLayerAddToMap is not provided

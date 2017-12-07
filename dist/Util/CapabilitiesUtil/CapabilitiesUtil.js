@@ -10,13 +10,13 @@ var _wmscapabilities = require('ol/format/wmscapabilities');
 
 var _wmscapabilities2 = _interopRequireDefault(_wmscapabilities);
 
-var _tilewms = require('ol/source/tilewms');
+var _imagewms = require('ol/source/imagewms');
 
-var _tilewms2 = _interopRequireDefault(_tilewms);
+var _imagewms2 = _interopRequireDefault(_imagewms);
 
-var _tile = require('ol/layer/tile');
+var _image = require('ol/layer/image');
 
-var _tile2 = _interopRequireDefault(_tile);
+var _image2 = _interopRequireDefault(_image);
 
 var _lodash = require('lodash');
 
@@ -25,7 +25,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * Helper Class for the ol capabilities
+ * Helper Class to parse capabilities of WMS layers
  *
  * @class CapabilitiesUtil
  */
@@ -71,12 +71,14 @@ var CapabilitiesUtil = function () {
       var getMapUrl = (0, _lodash.get)(wmsGetMapConfig, 'DCPType[0].HTTP.Get.OnlineResource');
       var getFeatureInfoUrl = (0, _lodash.get)(wmsGetFeatureInfoConfig, 'DCPType[0].HTTP.Get.OnlineResource');
       return layersInCapabilities.map(function (layerObj) {
-        return new _tile2.default({
+        return new _image2.default({
           opacity: 1,
           title: (0, _lodash.get)(layerObj, 'Title'),
-          abstract: (0, _lodash.get)(layerObj, 'Attribution'),
+          abstract: (0, _lodash.get)(layerObj, 'Abstract'),
           getFeatureInfoUrl: getFeatureInfoUrl,
-          source: new _tilewms2.default({
+          getFeatureInfoFormats: (0, _lodash.get)(wmsGetFeatureInfoConfig, 'Format'),
+          queryable: (0, _lodash.get)(layerObj, 'queryable'),
+          source: new _imagewms2.default({
             url: getMapUrl,
             attributions: wmsAttribution,
             params: {
