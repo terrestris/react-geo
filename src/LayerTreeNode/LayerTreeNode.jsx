@@ -8,7 +8,7 @@ const TreeNode = Tree.TreeNode;
 import './LayerTreeNode.less';
 
 /**
- *
+ * Class representing a layer tree node
  */
 class LayerTreeNode extends React.Component {
 
@@ -17,7 +17,7 @@ class LayerTreeNode extends React.Component {
    * @type {Object}
    */
   static propTypes = {
-    inResolutionRange: PropTypes.boolean
+    inResolutionRange: PropTypes.bool
   }
 
   /**
