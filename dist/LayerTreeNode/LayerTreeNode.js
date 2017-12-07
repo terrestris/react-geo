@@ -37,7 +37,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var TreeNode = _tree2.default.TreeNode;
 
 /**
- *
+ * Class representing a layer tree node
  */
 var LayerTreeNode = function (_React$Component) {
   _inherits(LayerTreeNode, _React$Component);
@@ -89,7 +89,7 @@ var LayerTreeNode = function (_React$Component) {
 
 
 LayerTreeNode.propTypes = {
-  inResolutionRange: _propTypes2.default.boolean };
+  inResolutionRange: _propTypes2.default.bool };
 LayerTreeNode.isTreeNode = 1;
 
 exports.default = LayerTreeNode;
