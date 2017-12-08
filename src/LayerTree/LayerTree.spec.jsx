@@ -1,8 +1,6 @@
 /*eslint-env jest*/
 import React from 'react';
 
-import sinon from 'sinon';
-
 import OlLayerGroup from 'ol/layer/group';
 import OlLayerTile from 'ol/layer/tile';
 import OlSourceTileWMS from 'ol/source/tilewms';
@@ -61,14 +59,15 @@ describe('<LayerTree />', () => {
   });
 
   it('unmount removes listeners', () => {
-    const unByKeySpy = sinon.spy(olObservable, 'unByKey');
+    const unByKeySpy = jest.spyOn(olObservable, 'unByKey');
     const wrapper = TestUtil.mountComponent(LayerTree, {map});
     const olListenerKeys = wrapper.instance().olListenerKeys;
     wrapper.unmount();
-    expect(unByKeySpy.callCount).toBe(1);
-    expect(unByKeySpy.calledWith(olListenerKeys)).toBeTruthy();
+    expect(unByKeySpy).toHaveBeenCalled();
+    expect(unByKeySpy).toHaveBeenCalledWith(olListenerKeys);
 
-    unByKeySpy.restore();
+    unByKeySpy.mockReset();
+    unByKeySpy.mockRestore();
   });
 
   it('CWR with new layerGroup rebuild listeners and treenodes ', () => {
@@ -228,13 +227,14 @@ describe('<LayerTree />', () => {
         };
         layerGroup.setVisible(false);
 
-        const logSpy = sinon.spy(Logger, 'warn');
+        const logSpy = jest.spyOn(Logger, 'warn');
         const wrapper = TestUtil.mountComponent(LayerTree, props);
         wrapper.instance().treeNodeFromLayer(layerGroup);
 
-        expect(logSpy).toHaveProperty('callCount', 1);
+        expect(logSpy).toHaveBeenCalled();
 
-        logSpy.restore();
+        logSpy.mockReset();
+        logSpy.mockRestore();
         layerGroup.setVisible(true);
       });
 
@@ -305,12 +305,13 @@ describe('<LayerTree />', () => {
         source: new OlSourceTileWMS()
       });
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
+      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
 
       layerGroup.getLayers().push(layer);
-      expect(rebuildSpy.callCount).toBe(1);
+      expect(rebuildSpy).toHaveBeenCalled();
 
-      rebuildSpy.restore();
+      rebuildSpy.mockReset();
+      rebuildSpy.mockRestore();
     });
 
     it('… also registers add/remove events for added groups ', () => {
@@ -325,15 +326,17 @@ describe('<LayerTree />', () => {
         layers: [layer]
       });
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
-      const registerSpy = sinon.spy(wrapper.instance(), 'registerAddRemoveListeners');
+      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
+      const registerSpy = jest.spyOn(wrapper.instance(), 'registerAddRemoveListeners');
 
       layerGroup.getLayers().push(group);
-      expect(rebuildSpy.callCount).toBe(1);
-      expect(registerSpy.callCount).toBe(1);
+      expect(rebuildSpy).toHaveBeenCalled();
+      expect(registerSpy).toHaveBeenCalled();
 
-      rebuildSpy.restore();
-      registerSpy.restore();
+      rebuildSpy.mockReset();
+      rebuildSpy.mockRestore();
+      registerSpy.mockReset();
+      registerSpy.mockRestore();
     });
 
     it('trigger unregisterEventsByLayer and rebuildTreeNodes for removed layers ', () => {
@@ -342,15 +345,17 @@ describe('<LayerTree />', () => {
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
-      const unregisterSpy = sinon.spy(wrapper.instance(), 'unregisterEventsByLayer');
+      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
+      const unregisterSpy = jest.spyOn(wrapper.instance(), 'unregisterEventsByLayer');
 
       layerGroup.getLayers().remove(layer1);
-      expect(rebuildSpy.callCount).toBe(1);
-      expect(unregisterSpy.callCount).toBe(1);
+      expect(rebuildSpy).toHaveBeenCalled();
+      expect(unregisterSpy).toHaveBeenCalled();
 
-      rebuildSpy.restore();
-      unregisterSpy.restore();
+      rebuildSpy.mockReset();
+      rebuildSpy.mockRestore();
+      unregisterSpy.mockReset();
+      unregisterSpy.mockRestore();
     });
 
     it('… unregister recursively for removed groups', () => {
@@ -371,15 +376,17 @@ describe('<LayerTree />', () => {
       layerGroup.getLayers().push(nestedLayerGroup);
 
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = sinon.spy(wrapper.instance(), 'rebuildTreeNodes');
-      const unregisterSpy = sinon.spy(wrapper.instance(), 'unregisterEventsByLayer');
+      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
+      const unregisterSpy = jest.spyOn(wrapper.instance(), 'unregisterEventsByLayer');
 
       layerGroup.getLayers().remove(nestedLayerGroup);
-      expect(rebuildSpy.callCount).toBe(1);
-      expect(unregisterSpy.callCount).toBe(3);
+      expect(rebuildSpy).toHaveBeenCalledTimes(1);
+      expect(unregisterSpy).toHaveBeenCalledTimes(3);
 
-      rebuildSpy.restore();
-      unregisterSpy.restore();
+      rebuildSpy.mockReset();
+      rebuildSpy.mockRestore();
+      unregisterSpy.mockReset();
+      unregisterSpy.mockRestore();
     });
 
     describe('#unregisterEventsByLayer', () => {
@@ -403,16 +410,17 @@ describe('<LayerTree />', () => {
 
         const wrapper = TestUtil.mountComponent(LayerTree, props);
         const oldOlListenerKey = wrapper.instance().olListenerKeys;
-        const unByKeySpy = sinon.spy(olObservable, 'unByKey');
+        const unByKeySpy = jest.spyOn(olObservable, 'unByKey');
 
         wrapper.instance().unregisterEventsByLayer(subLayer1);
 
         const newOlListenerKey = wrapper.instance().olListenerKeys;
 
-        expect(unByKeySpy.callCount).toBe(1);
+        expect(unByKeySpy).toHaveBeenCalled();
         expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 1);
 
-        unByKeySpy.restore();
+        unByKeySpy.mockReset();
+        unByKeySpy.mockRestore();
       });
 
       it('… of children for groups', () => {
@@ -434,16 +442,17 @@ describe('<LayerTree />', () => {
 
         const wrapper = TestUtil.mountComponent(LayerTree, props);
         const oldOlListenerKey = wrapper.instance().olListenerKeys;
-        const unByKeySpy = sinon.spy(olObservable, 'unByKey');
+        const unByKeySpy = jest.spyOn(olObservable, 'unByKey');
 
         wrapper.instance().unregisterEventsByLayer(nestedLayerGroup);
 
         const newOlListenerKey = wrapper.instance().olListenerKeys;
 
-        expect(unByKeySpy.callCount).toBe(2);
+        expect(unByKeySpy).toHaveBeenCalledTimes(2);
         expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 2);
 
-        unByKeySpy.restore();
+        unByKeySpy.mockReset();
+        unByKeySpy.mockRestore();
       });
 
     });
@@ -453,7 +462,7 @@ describe('<LayerTree />', () => {
   describe('#setLayerVisibility', () => {
 
     it('logs an error if called with invalid arguments', () => {
-      const logSpy = sinon.spy(Logger, 'error');
+      const logSpy = jest.spyOn(Logger, 'error');
       const props = {
         layerGroup,
         map
@@ -461,11 +470,18 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
 
       wrapper.instance().setLayerVisibility();
-      expect(logSpy.callCount).toBe(1);
+      expect(logSpy).toHaveBeenCalled();
+      logSpy.mockReset();
+
       wrapper.instance().setLayerVisibility('peter');
-      expect(logSpy.callCount).toBe(2);
+      expect(logSpy).toHaveBeenCalled();
+      logSpy.mockReset();
+
       wrapper.instance().setLayerVisibility(layer1 , 'peter');
-      expect(logSpy.callCount).toBe(3);
+      expect(logSpy).toHaveBeenCalled();
+
+      logSpy.mockReset();
+      logSpy.mockRestore();
     });
 
     it('sets the visibility of a single layer', () => {

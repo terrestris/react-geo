@@ -1,8 +1,6 @@
 /*eslint-env jest*/
 import React from 'react';
 
-import sinon from 'sinon';
-
 import TestUtil from '../../Util/TestUtil';
 
 import{
@@ -49,7 +47,7 @@ describe('<ToggleGroup />', () => {
   });
 
   it('calls the given onChange callback if a children is pressed', () => {
-    let changeSpy = sinon.spy();
+    let changeSpy = jest.fn();
     let props = {
       onChange: changeSpy,
       children: [
@@ -60,11 +58,11 @@ describe('<ToggleGroup />', () => {
 
     wrapper.find(ToggleButton).simulate('click');
 
-    expect(changeSpy).toHaveProperty('callCount', 1);
+    expect(changeSpy).toHaveBeenCalled();
   });
 
   it('sets the selected name on click', () => {
-    let changeSpy = sinon.spy();
+    let changeSpy = jest.fn();
     let props = {
       onChange: changeSpy,
       children: [
@@ -83,7 +81,7 @@ describe('<ToggleGroup />', () => {
   });
 
   it('allows to deselect an already pressed button', () => {
-    let changeSpy = sinon.spy();
+    let changeSpy = jest.fn();
     let props = {
       allowDeselect: false,
       onChange: changeSpy,

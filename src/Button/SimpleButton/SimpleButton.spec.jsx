@@ -1,8 +1,6 @@
 /*eslint-env jest*/
-import sinon from 'sinon';
 
 import TestUtil from '../../Util/TestUtil';
-import Logger from '../../Util/Logger';
 
 import { SimpleButton } from '../../index';
 
@@ -46,7 +44,7 @@ describe('<SimpleButton />', () => {
 
     wrapper.find('button').simulate('click');
 
-    expect(onClick.mock.calls.length).toBe(1);
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
 });

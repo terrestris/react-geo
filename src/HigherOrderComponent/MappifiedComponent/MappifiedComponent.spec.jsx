@@ -1,8 +1,6 @@
 /*eslint-env jest*/
 import React from 'react';
 
-import sinon from 'sinon';
-
 import TestUtil from '../../Util/TestUtil';
 
 import {
@@ -51,12 +49,14 @@ describe('mappify', () => {
     });
 
     it('warns if no map is given in the context', () => {
-      const loggerSpy = sinon.spy(Logger, 'warn');
+      const loggerSpy = jest.spyOn(Logger, 'warn');
       TestUtil.mountComponent(EnhancedComponent);
-      expect(loggerSpy.calledOnce).toBeTruthy();
-      expect(loggerSpy.calledWith('You trying to mappify a component without any map in the '+
-      'context. Did you implement the MapProvider?')).toBeTruthy();
-      loggerSpy.restore();
+      expect(loggerSpy).toHaveBeenCalled();
+      expect(loggerSpy).toHaveBeenCalledWith('You trying to mappify a ' +
+        'component without any map in the context. Did you implement ' +
+        'the MapProvider?');
+      loggerSpy.mockReset();
+      loggerSpy.mockRestore();
     });
 
     it('passes through all props', () => {

@@ -1,5 +1,4 @@
 /*eslint-env jest*/
-import sinon from 'sinon';
 import proj4 from 'proj4';
 import OlProjection from 'ol/proj';
 
@@ -28,15 +27,18 @@ describe('ProjectionUtil', () => {
         expect(ProjectionUtil.initProj4Definitions).not.toBeUndefined();
       });
       it('it registers the given CRS definitions in proj4 and ol', () => {
-        const proj4Spy = sinon.spy(proj4, 'defs');
-        const olSpy = sinon.spy(OlProjection, 'setProj4');
+        const proj4Spy = jest.spyOn(proj4, 'defs');
+        const olSpy = jest.spyOn(OlProjection, 'setProj4');
 
         ProjectionUtil.initProj4Definitions(testCrsDefinition);
-        expect(proj4Spy).toHaveProperty('callCount', 1);
-        expect(olSpy).toHaveProperty('callCount', 1);
+        expect(proj4Spy).toHaveBeenCalled();
+        expect(olSpy).toHaveBeenCalled();
 
-        proj4.defs.restore();
-        OlProjection.setProj4.restore();
+        proj4Spy.mockReset();
+        proj4Spy.mockRestore();
+        olSpy.mockReset();
+        olSpy.mockRestore();
+
       });
     });
 
@@ -45,12 +47,13 @@ describe('ProjectionUtil', () => {
         expect(ProjectionUtil.initProj4DefinitionMappings).not.toBeUndefined();
       });
       it('it registers the given CRS mappings in proj4', () => {
-        const proj4Spy = sinon.spy(proj4, 'defs');
+        const proj4Spy = jest.spyOn(proj4, 'defs');
 
         ProjectionUtil.initProj4DefinitionMappings(testCrsMappings);
-        expect(proj4Spy).toHaveProperty('callCount', 4);
+        expect(proj4Spy).toHaveBeenCalledTimes(4);
 
-        proj4.defs.restore();
+        proj4Spy.mockReset();
+        proj4Spy.mockRestore();
       });
     });
   });

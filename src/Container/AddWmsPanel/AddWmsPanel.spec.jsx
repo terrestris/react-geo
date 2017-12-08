@@ -67,9 +67,8 @@ describe('<AddWmsPanel />', () => {
       onLayerAddToMap: onLayerAddToMapMock
     });
     wrapper.instance().onAddAllLayers();
-    expect(onLayerAddToMapMock.mock.calls.length).toBe(1);
-    const passedFunctionParameter = onLayerAddToMapMock.mock.calls[0][0];
-    expect(passedFunctionParameter).toBe(testWmsLayers);
+    expect(onLayerAddToMapMock).toHaveBeenCalledTimes(1);
+    expect(onLayerAddToMapMock).toHaveBeenCalledWith(testWmsLayers);
   });
 
   it('passes filtered set of wmsLayers to onLayerAddToMap if onAddSelectedLayers is called', () => {
@@ -87,7 +86,7 @@ describe('<AddWmsPanel />', () => {
     }, () => {
       wrapper.instance().onAddSelectedLayers();
 
-      expect(onLayerAddToMapMock.mock.calls.length).toBe(1);
+      expect(onLayerAddToMapMock).toHaveBeenCalledTimes(1);
       const passedFunctionParameter = onLayerAddToMapMock.mock.calls[0][0];
       expect(passedFunctionParameter.length).toBe(selectedWmsLayers.length);
     });

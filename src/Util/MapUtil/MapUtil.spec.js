@@ -11,8 +11,6 @@ import OlLayerGroup from 'ol/layer/group';
 import OlMap from 'ol/map';
 import OlView from 'ol/view';
 
-import sinon from 'sinon';
-
 import TestUtil from '../TestUtil';
 
 import {
@@ -50,14 +48,15 @@ describe('MapUtil', () => {
     });
 
     it('needs to be called with a map instance', () => {
-      const logSpy = sinon.spy(Logger, 'debug');
+      const logSpy = jest.spyOn(Logger, 'debug');
 
       let returnedInteractions = MapUtil.getInteractionsByName(null, 'BVB!');
 
-      expect(logSpy).toHaveProperty('callCount', 1);
+      expect(logSpy).toHaveBeenCalled();
       expect(returnedInteractions).toHaveLength(0);
 
-      Logger.debug.restore();
+      logSpy.mockReset();
+      logSpy.mockRestore();
     });
 
     it('returns an empty array if no interaction candidate is found', () => {
@@ -100,14 +99,15 @@ describe('MapUtil', () => {
     });
 
     it('needs to be called with a map instance', () => {
-      const logSpy = sinon.spy(Logger, 'debug');
+      const logSpy = jest.spyOn(Logger, 'debug');
 
       let returnedInteractions = MapUtil.getInteractionsByClass(null, OlInteractionDragRotateAndZoom);
 
-      expect(logSpy).toHaveProperty('callCount', 1);
+      expect(logSpy).toHaveBeenCalled();
       expect(returnedInteractions).toHaveLength(0);
 
-      Logger.debug.restore();
+      logSpy.mockReset();
+      logSpy.mockRestore();
     });
 
     it('returns an empty array if no interaction candidate is found', () => {
@@ -339,14 +339,15 @@ describe('MapUtil', () => {
     });
 
     it('Logs an error and returns an empty array on invalid argument', () => {
-      const logSpy = sinon.spy(Logger, 'error');
+      const logSpy = jest.spyOn(Logger, 'error');
       const got = MapUtil.getAllLayers();
 
       expect(got).toBeInstanceOf(Array);
       expect(got).toHaveLength(0);
-      expect(logSpy).toHaveProperty('callCount', 1);
+      expect(logSpy).toHaveBeenCalled();
 
-      logSpy.restore();
+      logSpy.mockReset();
+      logSpy.mockRestore();
     });
 
     it('returns a flat list of all layers (map passed)', () => {
@@ -464,22 +465,23 @@ describe('MapUtil', () => {
     });
 
     it('logs an error if called without a layer', () => {
-      const logSpy = sinon.spy(Logger, 'error');
+      const logSpy = jest.spyOn(Logger, 'error');
       const legendUrl = MapUtil.getLegendGraphicUrl();
       expect(legendUrl).toBeUndefined();
-      expect(logSpy.calledWith('Invalid input parameter for MapUtil.getLegendGraphicUrl.')).toBeTruthy();
-      expect(logSpy.calledOnce).toBeTruthy();
+      expect(logSpy).toHaveBeenCalled();
+      expect(logSpy).toHaveBeenCalledWith('Invalid input parameter for MapUtil.getLegendGraphicUrl.');
 
-      logSpy.restore();
+      logSpy.mockReset();
+      logSpy.mockRestore();
     });
 
     it('logs a warning if called with an unsupported layersource', () => {
-      const logSpy = sinon.spy(Logger, 'warn');
+      const logSpy = jest.spyOn(Logger, 'warn');
       const legendUrl = MapUtil.getLegendGraphicUrl(layer2);
       expect(legendUrl).toBeUndefined();
-      expect(logSpy.calledWith('Source of "Food insecurity" is currently not supported by MapUtil.getLegendGraphicUrl.')).toBeTruthy();
-      expect(logSpy.calledOnce).toBeTruthy();
-      logSpy.restore();
+      expect(logSpy).toHaveBeenCalledWith('Source of "Food insecurity" is currently not supported by MapUtil.getLegendGraphicUrl.');
+      logSpy.mockReset();
+      logSpy.mockRestore();
     });
 
     it('returns a getLegendGraphicUrl from a given layer', () => {

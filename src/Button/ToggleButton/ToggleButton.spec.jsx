@@ -1,11 +1,8 @@
 /*eslint-env jest*/
 
-import sinon from 'sinon';
-
 import TestUtil from '../../Util/TestUtil';
 
 import {
-  Logger,
   ToggleButton
 } from '../../index';
 
@@ -64,7 +61,7 @@ describe('<ToggleButton />', () => {
   });
 
   it('calls a given toggle callback method if the pressed state changes', () => {
-    const onToggle = sinon.spy();
+    const onToggle = jest.fn();
     let props = {
       onToggle: onToggle
     };
@@ -75,7 +72,7 @@ describe('<ToggleButton />', () => {
       pressed: true
     });
 
-    expect(onToggle).toHaveProperty('callCount', 1);
+    expect(onToggle).toHaveBeenCalled();
   });
 
   it('changes the pressed state of the component on click (if standalone button)', () => {
@@ -87,7 +84,7 @@ describe('<ToggleButton />', () => {
   });
 
   it('calls the on change callback (if included in a ToggleGroup)', () => {
-    const onChangeSpy = sinon.spy();
+    const onChangeSpy = jest.fn();
     let context = {
       toggleGroup: {
         onChange: onChangeSpy
@@ -97,7 +94,7 @@ describe('<ToggleButton />', () => {
 
     wrapper.find('button').simulate('click');
 
-    expect(onChangeSpy).toHaveProperty('callCount', 1);
+    expect(onChangeSpy).toHaveBeenCalled();
   });
 
 });

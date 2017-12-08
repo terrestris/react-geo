@@ -1,7 +1,5 @@
 /*eslint-env jest*/
 
-import sinon from 'sinon';
-
 import OlMap from 'ol/map';
 import OlView from 'ol/view';
 import OlLayerTile from 'ol/layer/tile';
@@ -38,33 +36,42 @@ describe('<NominatimSearch />', () => {
 
     it('sends a request if input is as long as props.minChars', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
-      const fetchSpy = sinon.spy(window, 'fetch');
+      const fetchSpy = jest.spyOn(window, 'fetch');
       const inputValue = 'Bonn';
       wrapper.instance().onUpdateInput(inputValue);
-      expect(fetchSpy.calledOnce).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(wrapper.props().nominatimBaseUrl)).toBeTruthy();
-      fetchSpy.restore();
+      expect(fetchSpy).toHaveBeenCalled();
+      fetchSpy.mockReset();
+      fetchSpy.mockRestore();
     });
   });
 
   describe('#doSearch', () => {
-    it('sends a request with state.searchTerm', () => {
+    it('sends a request with appropriate parts', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
-      const fetchSpy = sinon.spy(window, 'fetch');
+      const fetchSpy = jest.spyOn(window, 'fetch');
       const inputValue = 'Bonn';
       wrapper.setState({searchTerm: inputValue});
       wrapper.instance().doSearch();
-      expect(fetchSpy.calledOnce).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(wrapper.props().nominatimBaseUrl)).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().format))).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().viewbox))).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().bounded))).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().polygon_geojson))).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().addressdetails))).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().limit))).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(encodeURIComponent(wrapper.props().countrycodes))).toBeTruthy();
-      expect(fetchSpy.calledWithMatch(inputValue)).toBeTruthy();
-      fetchSpy.restore();
+      expect(fetchSpy).toHaveBeenCalled();
+
+      const fetchUrl = fetchSpy.mock.calls[0][0];
+
+      const expectations = [
+        wrapper.props().nominatimBaseUrl,
+        encodeURIComponent(wrapper.props().format),
+        encodeURIComponent(wrapper.props().viewbox),
+        encodeURIComponent(wrapper.props().bounded),
+        encodeURIComponent(wrapper.props().polygon_geojson),
+        encodeURIComponent(wrapper.props().addressdetails),
+        encodeURIComponent(wrapper.props().limit),
+        encodeURIComponent(wrapper.props().countrycodes),
+        encodeURIComponent(inputValue)
+      ];
+      expectations.forEach(expectation => {
+        expect(fetchUrl).toMatch(expectation);
+      });
+      fetchSpy.mockReset();
+      fetchSpy.mockRestore();
     });
   });
 
@@ -79,11 +86,12 @@ describe('<NominatimSearch />', () => {
   describe('#onFetchError', () => {
     it('sets the response as state.dataSource', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
-      const loggerSpy = sinon.spy(Logger, 'error');
+      const loggerSpy = jest.spyOn(Logger, 'error');
       wrapper.instance().onFetchError('Peter');
-      expect(loggerSpy.calledOnce).toBeTruthy();
-      expect(loggerSpy.calledWith('Error while requesting Nominatim: Peter')).toBeTruthy();
-      loggerSpy.restore();
+      expect(loggerSpy).toHaveBeenCalled();
+      expect(loggerSpy).toHaveBeenCalledWith('Error while requesting Nominatim: Peter');
+      loggerSpy.mockReset();
+      loggerSpy.mockRestore();
     });
   });
 
@@ -104,7 +112,7 @@ describe('<NominatimSearch />', () => {
       });
       //SETUP END
 
-      const selectSpy = sinon.spy();
+      const selectSpy = jest.fn();
       const wrapper = TestUtil.mountComponent(NominatimSearch, {
         onSelect: selectSpy,
         map
@@ -113,8 +121,11 @@ describe('<NominatimSearch />', () => {
         dataSource: dataSource
       });
       wrapper.instance().onMenuItemSelected('752526');
-      expect(selectSpy.calledOnce).toBeTruthy();
-      expect(selectSpy.calledWith(dataSource[0], map)).toBeTruthy();
+      expect(selectSpy).toHaveBeenCalled();
+      expect(selectSpy).toHaveBeenCalledWith(dataSource[0], map);
+
+      selectSpy.mockReset();
+      selectSpy.mockRestore();
     });
   });
 
@@ -122,7 +133,7 @@ describe('<NominatimSearch />', () => {
     it('zooms to the boundingbox of the selected entry', () => {
       //SETUP
       const bbox = ['52.7076346', '52.7476346', '7.7702617', '7.8102617'];
-      const tranformedExtent = [
+      const transformedExtent = [
         parseFloat(bbox[2]),
         parseFloat(bbox[0]),
         parseFloat(bbox[3]),
@@ -143,11 +154,12 @@ describe('<NominatimSearch />', () => {
       //SETUP END
 
       const wrapper = TestUtil.mountComponent(NominatimSearch, {map});
-      const fitSpy = sinon.spy(map.getView(), 'fit');
+      const fitSpy = jest.spyOn(map.getView(), 'fit');
       wrapper.props().onSelect(item, map);
-      expect(fitSpy.calledOnce).toBeTruthy();
-      expect(fitSpy.calledWith(tranformedExtent)).toBeTruthy();
-      fitSpy.restore();
+      expect(fitSpy).toHaveBeenCalled();
+      expect(fitSpy).toHaveBeenCalledWith(transformedExtent, expect.any(Object) );
+      fitSpy.mockReset();
+      fitSpy.mockRestore();
     });
   });
 
