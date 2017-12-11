@@ -6,8 +6,6 @@ import {
 } from 'antd';
 import { Icon } from 'react-fa';
 
-import Logger from '../../Util/Logger';
-
 import './SimpleButton.less';
 
 /**
@@ -112,7 +110,7 @@ class SimpleButton extends React.Component {
           {
             icon || fontIcon ?
               <Icon
-                name={icon}
+                name={icon ? icon : ''}
                 className={fontIcon}
               /> :null
           }
