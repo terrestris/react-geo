@@ -30,10 +30,6 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _reactFa = require('react-fa');
 
-var _Logger = require('../../Util/Logger');
-
-var _Logger2 = _interopRequireDefault(_Logger);
-
 require('./SimpleButton.less');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -118,7 +114,7 @@ var SimpleButton = function (_React$Component) {
             className: finalClassName
           }, antBtnProps),
           icon || fontIcon ? _react2.default.createElement(_reactFa.Icon, {
-            name: icon,
+            name: icon ? icon : '',
             className: fontIcon
           }) : null,
           antBtnProps.children
