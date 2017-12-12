@@ -1,7 +1,6 @@
 /*eslint-env jest*/
 
 import { template } from 'lodash';
-import sinon from 'sinon';
 
 import {
   CsrfUtil,
@@ -94,13 +93,14 @@ describe('CsrfUtil', () => {
     });
 
     it('getContentFromMetaTagByName should return warning for unknown meta tag', () => {
-      const logSpy = sinon.spy(Logger, 'warn');
+      const logSpy = jest.spyOn(Logger, 'warn');
 
       let result = CsrfUtil.getContentFromMetaTagByName('balotelli');
       expect(result).toBe('');
-      expect(logSpy).toHaveProperty('callCount', 1);
+      expect(logSpy).toHaveBeenCalled();
 
-      Logger.warn.restore();
+      logSpy.mockReset();
+      logSpy.mockRestore();
     });
 
     it('getContentFromMetaTagByName should return empty content string if content is not present', () => {

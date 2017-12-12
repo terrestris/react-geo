@@ -1,5 +1,4 @@
 /*eslint-env jest*/
-import sinon from 'sinon';
 import TestUtil from '../../Util/TestUtil';
 
 import { CoordinateReferenceSystemCombo, Logger } from '../../index';
@@ -66,11 +65,13 @@ describe('<CoordinateReferenceSystemCombo />', () => {
   describe('#onFetchError', () => {
     it('logs error message', () => {
       const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
-      const loggerSpy = sinon.spy(Logger, 'error');
+      const loggerSpy = jest.spyOn(Logger, 'error');
       wrapper.instance().onFetchError('Peter');
-      expect(loggerSpy.calledOnce).toBeTruthy();
-      expect(loggerSpy.calledWith('Error while requesting in CoordinateReferenceSystemCombo: Peter')).toBeTruthy();
-      loggerSpy.restore();
+      expect(loggerSpy).toHaveBeenCalled();
+      expect(loggerSpy).toHaveBeenCalledWith('Error while requesting in CoordinateReferenceSystemCombo: Peter');
+
+      loggerSpy.mockReset();
+      loggerSpy.mockRestore();
     });
   });
 
@@ -135,7 +136,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
         crsDefinitions: resultMock.results
       }, () => {
         wrapper.instance().onCrsItemSelect('31466');
-        expect(onSelect.mock.calls.length).toBe(1);
+        expect(onSelect).toHaveBeenCalledTimes(1);
       });
     });
 

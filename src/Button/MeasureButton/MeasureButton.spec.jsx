@@ -55,9 +55,10 @@ describe('<MeasureButton />', () => {
         measureType: 'invalid'
       });
 
-      expect(consoleSpy).toHaveBeenCalled();
-      expect(consoleSpy.mock.calls.length).toBe(1);
-      expect(consoleSpy.mock.calls[0][0]).toContain('Warning: Failed prop type');
+      expect(consoleSpy).toHaveBeenCalledTimes(1);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Warning: Failed prop type')
+      );
 
       consoleSpy.mockReset();
       consoleSpy.mockRestore();

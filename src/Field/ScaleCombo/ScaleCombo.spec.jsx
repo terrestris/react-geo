@@ -1,6 +1,5 @@
 /*eslint-env jest*/
 import React from 'react';
-import sinon from 'sinon';
 
 import { Select } from 'antd';
 const Option = Select.Option;
@@ -52,7 +51,7 @@ describe('<ScaleCombo />', () => {
     it('creates options array from scaled primarily', () => {
       const map = TestUtil.createMap();
 
-      const logSpy = sinon.spy(Logger, 'debug');
+      const logSpy = jest.spyOn(Logger, 'debug');
       const scaleArray = [
         <Option key={'100'} value={'100'}>1:100</Option>
       ];
@@ -61,8 +60,9 @@ describe('<ScaleCombo />', () => {
         scales: scaleArray
       });
       wrapper.instance().getOptionsFromMap();
-      expect(logSpy).toHaveProperty('callCount', 1);
-      Logger.debug.restore();
+      expect(logSpy).toHaveBeenCalled();
+      logSpy.mockReset();
+      logSpy.mockRestore();
 
       TestUtil.removeMap(map);
     });
