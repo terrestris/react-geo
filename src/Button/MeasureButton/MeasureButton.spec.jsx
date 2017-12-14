@@ -1,7 +1,5 @@
 /*eslint-env jest*/
-
 import TestUtil from '../../Util/TestUtil';
-import Logger from '../../Util/Logger';
 
 import OlLayerVector from 'ol/layer/vector';
 import OlInteractionDraw from 'ol/interaction/draw';
