@@ -23,7 +23,7 @@ render(
       {/* A ToggleButton without any configuration*/}
       <ToggleButton
         pressed={true}
-        onToggle={()=>{Logger.info('I start pressed.')}}
+        onToggle={()=>{Logger.info('I start pressed.');}}
       />
 
     </div>
