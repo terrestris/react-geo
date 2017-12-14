@@ -32,10 +32,6 @@ var _reactFa = require('react-fa');
 
 var _lodash = require('lodash');
 
-var _Logger = require('../../Util/Logger');
-
-var _Logger2 = _interopRequireDefault(_Logger);
-
 require('./ToggleButton.less');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
