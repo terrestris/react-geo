@@ -100,7 +100,7 @@ new Metalsmith('.')
   .use(collections({
     'Examples': {
       // pattern: ['*.md', '!index.md'],
-      sortBy: 'name'
+      sortBy: 'title'
     }
   }))
   .use(layouts({
