@@ -32,11 +32,7 @@ const map = new OlMap({
 
 render(
   <div>
-    <div id="map" style={{
-      width: '400px',
-      height: '400px',
-      position: 'relative'
-    }} />
+    <div id="map"></div>
 
     <div className="example-block">
       <span>{'Move the slider to change the layer\'s opacity:'}</span>
