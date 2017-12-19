@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MeasureUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.CapabilitiesUtil = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.MeasureButton = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = exports.AddWmsPanel = undefined;
+exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MeasureUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.CapabilitiesUtil = exports.Window = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.MeasureButton = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = exports.AddWmsPanel = undefined;
 
 var _AddWmsPanel = require('./Container/AddWmsPanel/AddWmsPanel.js');
 
@@ -85,6 +85,10 @@ var _CircleMenu = require('./CircleMenu/CircleMenu.js');
 
 var _CircleMenu2 = _interopRequireDefault(_CircleMenu);
 
+var _Window = require('./Window/Window.js');
+
+var _Window2 = _interopRequireDefault(_Window);
+
 var _CapabilitiesUtil = require('./Util/CapabilitiesUtil/CapabilitiesUtil');
 
 var _CapabilitiesUtil2 = _interopRequireDefault(_CapabilitiesUtil);
@@ -156,6 +160,7 @@ exports.LayerTransparencySlider = _LayerTransparencySlider2.default;
 exports.Titlebar = _Titlebar2.default;
 exports.Toolbar = _Toolbar2.default;
 exports.UserChip = _UserChip2.default;
+exports.Window = _Window2.default;
 exports.CapabilitiesUtil = _CapabilitiesUtil2.default;
 exports.CsrfUtil = _CsrfUtil2.default;
 exports.FeatureUtil = _FeatureUtil2.default;

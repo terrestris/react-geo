@@ -13,10 +13,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDom = require('react-dom');
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
 var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
@@ -26,8 +22,6 @@ var _reactRnd = require('react-rnd');
 var _reactRnd2 = _interopRequireDefault(_reactRnd);
 
 var _lodash = require('lodash');
-
-var _reactI18next = require('react-i18next');
 
 var _Titlebar = require('../Titlebar/Titlebar.js');
 
@@ -49,33 +43,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var defaultWindowProps = {
-  draggable: true,
-  closable: true,
-  collapsible: true,
-  resizeOpts: true,
-  width: 400,
-  height: 400
-};
-
 /**
  * The Panel.
- * The panel component can also be used as a window.
- *
- * You can create a window like this:
- *
- * let winPromise = Panel.showWindow({
- *   title: 'Window Title',
- *   children: ['Peter']
- * });
- * winPromise.then(function(win) {
- *   console.log('The window was rendered: ', win);
- * });
  *
  * @class The Panel
  * @extends React.Component
  */
-
 var Panel = exports.Panel = function (_React$Component) {
   _inherits(Panel, _React$Component);
 
@@ -127,17 +100,6 @@ var Panel = exports.Panel = function (_React$Component) {
       });
     };
 
-    _this.close = function () {
-      var div = document.getElementById(_this.state.id);
-      if (div) {
-        _reactDom2.default.unmountComponentAtNode(div);
-      } else {
-        div = document.getElementsByClassName(_this.state.id)[0];
-      }
-
-      div.parentElement.removeChild(div);
-    };
-
     var id = props.id || (0, _lodash.uniqueId)('panel-');
     _this.state = {
       id: id,
@@ -187,12 +149,6 @@ var Panel = exports.Panel = function (_React$Component) {
    */
 
 
-  // TODO We might want to change the behaviour for panels that are no windows.
-  /**
-   * Close the panel and remove it from the dom.
-   */
-
-
   _createClass(Panel, [{
     key: 'render',
 
@@ -209,12 +165,12 @@ var Panel = exports.Panel = function (_React$Component) {
           draggable = _props.draggable,
           resizeOpts = _props.resizeOpts,
           className = _props.className,
-          rndOpts = _objectWithoutProperties(_props, ['closable', 'collapsible', 'draggable', 'resizeOpts', 'className']);
+          onClose = _props.onClose,
+          rndOpts = _objectWithoutProperties(_props, ['closable', 'collapsible', 'draggable', 'resizeOpts', 'className', 'onClose']);
 
       var finalClassName = className ? className + ' ' + this.className : this.className;
 
       var rndClassName = finalClassName + ' ' + this.state.id;
-      var disableDragging = !draggable;
       var enableResizing = resizeOpts === true ? undefined : resizeOpts;
 
       var tools = [];
@@ -231,16 +187,18 @@ var Panel = exports.Panel = function (_React$Component) {
         tools.push(_react2.default.createElement(_SimpleButton2.default, {
           icon: 'times',
           key: 'close-tool',
-          onClick: this.close,
+          onClick: onClose,
           tooltip: this.props.closeTooltip,
           size: 'small'
         }));
       }
 
+      var titleBarClassName = draggable ? 'drag-handle ant-modal-header' : 'ant-modal-header';
+
       var titleBar = this.props.title ? _react2.default.createElement(
         _Titlebar2.default,
         {
-          className: 'drag-handle',
+          className: titleBarClassName,
           closable: closable,
           collapsible: collapsible,
           parent: this,
@@ -269,7 +227,7 @@ var Panel = exports.Panel = function (_React$Component) {
             height: this.state.collapsed ? this.state.titleBarHeight : this.state.height
           },
           dragHandleClassName: '.drag-handle',
-          disableDragging: disableDragging,
+          disableDragging: !draggable,
           enableResizing: enableResizing,
           resizeHandleClasses: {
             bottom: 'resize-handle resize-handle-bottom',
@@ -306,26 +264,6 @@ var Panel = exports.Panel = function (_React$Component) {
   return Panel;
 }(_react2.default.Component);
 
-/**
- * This static method creates a window and adds it to the container with the id
- * props.containerId.
- * e.g.:
- * let winPromise = Panel.showWindow({
- *   title: 'Window Title',
- *   children: ['Peter']
- * });
- * winPromise.then(function(win) {
- *   console.log('The window was rendered: ', win);
- * });
- *
- * @param {Object} props The props added to the window on creation.
- *                       Use 'children' to add child elements to the body of the
- *                       window.
- * @return {Promise} A promise that contains the win when resolved.
- *                   "reject" is not expect and so not handled.
- */
-
-
 Panel.propTypes = {
 
   id: _propTypes2.default.string,
@@ -353,6 +291,13 @@ Panel.propTypes = {
    * @type {string}
    */
   title: _propTypes2.default.string,
+
+  /**
+   * function called on close
+   *
+   * @type {Function}
+   */
+  onClose: _propTypes2.default.func,
 
   /**
    * The enableResizing property is used to set the resizable permission of a
@@ -425,42 +370,10 @@ Panel.defaultProps = {
   collapsible: false,
   closable: false,
   resizeOpts: false,
-  titleBarHeight: 32,
+  titleBarHeight: 37.5,
   height: 100,
   width: 100,
   compressTooltip: 'collapse',
-  closeTooltip: 'close' };
-Panel.showWindow = function (props) {
-  props = _extends({}, defaultWindowProps, props);
-  var _props2 = props,
-      i18n = _props2.i18n;
-
-  var windowClassName = 'react-geo-window';
-
-  props.className = props.className ? props.className + ' ' + windowClassName : windowClassName;
-
-  var container = document.getElementById(props.containerId);
-  var div = document.createElement('div');
-  var id = (0, _lodash.uniqueId)(windowClassName + '-');
-
-  div.style.position = 'absolute';
-  div.style.left = 0;
-  div.style.top = 0;
-  div.id = id;
-  container.appendChild(div);
-
-  props.bounds = '#' + props.containerId;
-  props.id = id;
-
-  return new Promise(function (resolve) {
-    _reactDom2.default.render(i18n ? _react2.default.createElement(
-      _reactI18next.I18nextProvider,
-      { i18n: i18n },
-      _react2.default.createElement(Panel, props)
-    ) : _react2.default.createElement(Panel, props), div, function () {
-      resolve(this);
-    });
-  });
-};
-
+  closeTooltip: 'close',
+  onClose: function onClose() {} };
 exports.default = Panel;
