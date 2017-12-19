@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Window example</title>
+  <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>/*global hljs*/ hljs.initHighlightingOnLoad();</script>
+</head>
+<style>
+body.example {
+  padding: 1.5em;
+}
+.example-block {
+  padding: 2em;
+}
+.example-block > span {
+  margin-right: 10px;
+}
+</style>
+
+<body class="example">
+  <h2>Window example</h2>
+  <div id="exampleContainer" class="app"></div>
+  <p>This example demonstrates the usage of a Window component.</p>
+
+  <pre>
+    <code class="javascript">import React from &#x27;react&#x27;;
+import { render } from &#x27;react-dom&#x27;;
+import {
+  Window,
+  SimpleButton
+} from &#x27;@terrestris/react-geo&#x27;;
+
+let windowOpen &#x3D; false;
+
+/**
+ *
+ */
+const triggerRerenderingWithInvertedVisibility &#x3D; () &#x3D;&gt; {
+  windowOpen &#x3D; !windowOpen;
+  doRender();
+};
+
+/**
+ *
+ */
+const doRender &#x3D; () &#x3D;&gt; {
+  render(
+    &lt;div style&#x3D;{{
+      height: &#x27;100px&#x27;
+    }}&gt;
+
+      &lt;div className&#x3D;&quot;example-block&quot;&gt;
+        &lt;span&gt;Click to open window:&lt;/span&gt;
+        &lt;SimpleButton tooltip&#x3D;&quot;Click me to show/hide a window&quot; onClick&#x3D;{triggerRerenderingWithInvertedVisibility} /&gt;
+
+        {
+          windowOpen ?
+            &lt;Window
+              parentId&#x3D;&quot;exampleContainer&quot;
+              title&#x3D;&quot;This is the window title&quot;
+              onClose&#x3D;{triggerRerenderingWithInvertedVisibility}
+              width&#x3D;{300}
+              height&#x3D;{150}
+            &gt;
+              This is the content of the window.
+            &lt;/Window&gt; :
+            null
+        }
+
+      &lt;/div&gt;
+
+    &lt;/div&gt;,
+    document.getElementById(&#x27;exampleContainer&#x27;)
+  );
+};
+
+doRender();
+</code>
+  </pre>
+  <script src="Window.js"></script>
+</body>
+</html>

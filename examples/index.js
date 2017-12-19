@@ -18,6 +18,7 @@ import FeatureGrid from './Grid/FeatureGrid/FeatureGrid.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
 import UserChip from './UserChip/UserChip.jsx';
 import CircleMenu from './CircleMenu/CircleMenu.jsx';
+import Window from './Window/Window.jsx';
 
 import CapabilitiesUtil from './Util/CapabilitiesUtil/CapabilitiesUtil';
 import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
@@ -53,6 +54,7 @@ export {
   Titlebar,
   Toolbar,
   UserChip,
+  Window,
   CapabilitiesUtil,
   CsrfUtil,
   FeatureUtil,

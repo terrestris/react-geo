@@ -25,13 +25,12 @@ body.example {
 <body class="example">
   <h2>Panel / Window example</h2>
   <div id="exampleContainer" class="app"></div>
-  <p>This example demonstrates the use of Panels and Windows.</p>
+  <p>This example demonstrates the use of Panels</p>
 
   <pre>
     <code class="javascript">import React from &#x27;react&#x27;;
 import { render } from &#x27;react-dom&#x27;;
 import {
-  SimpleButton,
   Panel
 } from &#x27;@terrestris/react-geo&#x27;;
 
@@ -39,21 +38,6 @@ render(
   &lt;div style&#x3D;{{
     height: &#x27;500px&#x27;
   }}&gt;
-    &lt;div className&#x3D;&quot;example-block&quot;&gt;
-      &lt;span&gt;Click to show window:&lt;/span&gt;
-
-      &lt;SimpleButton tooltip&#x3D;&quot;Click me to show a window&quot; onClick&#x3D;{() &#x3D;&gt; {
-        Panel.showWindow({
-          x: 200,
-          y: 200,
-          containerId: &#x27;exampleContainer&#x27;,
-          width: 200,
-          height: 200,
-          title: &#x27;Drag me&#x27;
-        });
-      }} /&gt;
-
-    &lt;/div&gt;
 
     &lt;div className&#x3D;&quot;example-block&quot;&gt;
       &lt;span&gt;Panels:&lt;/span&gt;

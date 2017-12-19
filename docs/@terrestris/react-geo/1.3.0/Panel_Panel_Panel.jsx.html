@@ -27,39 +27,17 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Rnd from 'react-rnd';
 import { uniqueId, isNumber } from 'lodash';
-import { I18nextProvider } from 'react-i18next';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
 
 import './Panel.less';
 
-const defaultWindowProps = {
-  draggable: true,
-  closable: true,
-  collapsible: true,
-  resizeOpts: true,
-  width: 400,
-  height: 400
-};
-
 /**
  * The Panel.
- * The panel component can also be used as a window.
- *
- * You can create a window like this:
- *
- * let winPromise = Panel.showWindow({
- *   title: 'Window Title',
- *   children: ['Peter']
- * });
- * winPromise.then(function(win) {
- *   console.log('The window was rendered: ', win);
- * });
  *
  * @class The Panel
  * @extends React.Component
@@ -104,6 +82,13 @@ export class Panel extends React.Component {
      * @type {string}
      */
     title: PropTypes.string,
+
+    /**
+     * function called on close
+     *
+     * @type {Function}
+     */
+    onClose: PropTypes.func,
 
     /**
      * The enableResizing property is used to set the resizable permission of a
@@ -185,11 +170,12 @@ export class Panel extends React.Component {
     collapsible: false,
     closable: false,
     resizeOpts: false,
-    titleBarHeight: 32,
+    titleBarHeight: 37.5,
     height: 100,
     width: 100,
     compressTooltip: 'collapse',
-    closeTooltip: 'close'
+    closeTooltip: 'close',
+    onClose: () => {}
   }
 
   /**
@@ -258,21 +244,6 @@ export class Panel extends React.Component {
     });
   }
 
-  // TODO We might want to change the behaviour for panels that are no windows.
-  /**
-   * Close the panel and remove it from the dom.
-   */
-  close = () => {
-    let div = document.getElementById(this.state.id);
-    if (div) {
-      ReactDOM.unmountComponentAtNode(div);
-    } else {
-      div = document.getElementsByClassName(this.state.id)[0];
-    }
-
-    div.parentElement.removeChild(div);
-  }
-
   /**
    * The render function.
    */
@@ -283,6 +254,7 @@ export class Panel extends React.Component {
       draggable,
       resizeOpts,
       className,
+      onClose,
       ...rndOpts
     } = this.props;
 
@@ -291,7 +263,6 @@ export class Panel extends React.Component {
       : this.className;
 
     const rndClassName = `${finalClassName} ${this.state.id}`;
-    const disableDragging = !draggable;
     const enableResizing = resizeOpts === true ? undefined : resizeOpts;
 
     let tools = [];
@@ -308,14 +279,18 @@ export class Panel extends React.Component {
       tools.push(&lt;SimpleButton
         icon="times"
         key="close-tool"
-        onClick={this.close}
+        onClick={onClose}
         tooltip={this.props.closeTooltip}
         size="small"
       />);
     }
 
+    const titleBarClassName = draggable ?
+      'drag-handle ant-modal-header':
+      'ant-modal-header';
+
     const titleBar = this.props.title ? &lt;Titlebar
-      className="drag-handle"
+      className={titleBarClassName}
       closable={closable}
       collapsible={collapsible}
       parent={this}
@@ -343,7 +318,7 @@ export class Panel extends React.Component {
             : this.state.height
         }}
         dragHandleClassName=".drag-handle"
-        disableDragging={disableDragging}
+        disableDragging={!draggable}
         enableResizing={enableResizing}
         resizeHandleClasses={{
           bottom: 'resize-handle resize-handle-bottom',
@@ -379,64 +354,6 @@ export class Panel extends React.Component {
   }
 }
 
-/**
- * This static method creates a window and adds it to the container with the id
- * props.containerId.
- * e.g.:
- * let winPromise = Panel.showWindow({
- *   title: 'Window Title',
- *   children: ['Peter']
- * });
- * winPromise.then(function(win) {
- *   console.log('The window was rendered: ', win);
- * });
- *
- * @param {Object} props The props added to the window on creation.
- *                       Use 'children' to add child elements to the body of the
- *                       window.
- * @return {Promise} A promise that contains the win when resolved.
- *                   "reject" is not expect and so not handled.
- */
-Panel.showWindow = function(props) {
-  props = {
-    ...defaultWindowProps,
-    ...props
-  };
-  let {i18n} = props;
-  let windowClassName = 'react-geo-window';
-
-  props.className = props.className
-    ? `${props.className} ${windowClassName}`
-    : windowClassName;
-
-  let container = document.getElementById(props.containerId);
-  let div = document.createElement('div');
-  let id = uniqueId(`${windowClassName}-`);
-
-  div.style.position = 'absolute';
-  div.style.left = 0;
-  div.style.top = 0;
-  div.id = id;
-  container.appendChild(div);
-
-  props.bounds = '#' + props.containerId;
-  props.id = id;
-
-  return new Promise(function(resolve) {
-    ReactDOM.render(
-      i18n
-        ? &lt;I18nextProvider i18n={i18n}>
-          &lt;Panel {...props} />
-        &lt;/I18nextProvider>
-        : &lt;Panel {...props} />,
-      div,
-      function() {
-        resolve(this);
-      }
-    );
-  });
-};
-
 export default Panel;
 </code></pre>
         </article>
@@ -448,15 +365,15 @@ export default Panel;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddWmsLayerEntry.html">AddWmsLayerEntry</a></li><li><a href="AddWmsPanel.html">AddWmsPanel</a></li><li><a href="CapabilitiesUtil.html">CapabilitiesUtil</a></li><li><a href="CircleMenu.html">CircleMenu</a></li><li><a href="CircleMenuItem.html">CircleMenuItem</a></li><li><a href="CoordinateReferenceSystemCombo.html">CoordinateReferenceSystemCombo</a></li><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureGrid.html">FeatureGrid</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapComponent.html">MapComponent</a></li><li><a href="MappifiedComponent.html">MappifiedComponent</a></li><li><a href="MapProvider.html">MapProvider</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="MeasureButton.html">MeasureButton</a></li><li><a href="MeasureUtil.html">MeasureUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ProjectionUtil.html">ProjectionUtil</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addAllLayersText">addAllLayersText</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#addSelectedLayersText">addSelectedLayersText</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#animationDuration">animationDuration</a></li><li><a href="global.html#attributeFilter">attributeFilter</a></li><li><a href="global.html#attributeNameColumnTitle">attributeNameColumnTitle</a></li><li><a href="global.html#attributeNameColumnWidthInPercent">attributeNameColumnWidthInPercent</a></li><li><a href="global.html#attributeNames">attributeNames</a></li><li><a href="global.html#attributeValueColumnTitle">attributeValueColumnTitle</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#buttonCoords">buttonCoords</a></li><li><a href="global.html#cancelText">cancelText</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#clickToDrawText">clickToDrawText</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#continueAngleMsg">continueAngleMsg</a></li><li><a href="global.html#continueLineMsg">continueLineMsg</a></li><li><a href="global.html#continuePolygonMsg">continuePolygonMsg</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#crsApiUrl">crsApiUrl</a></li><li><a href="global.html#decimalPlacesInTooltips">decimalPlacesInTooltips</a></li><li><a href="global.html#diameter">diameter</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#doRender">doRender</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#emptyTextPlaceholderText">emptyTextPlaceholderText</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#feature">feature</a></li><li><a href="global.html#fillColor">fillColor</a></li><li><a href="global.html#filterFunction">filterFunction</a></li><li><a href="global.html#fontIcon">fontIcon</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
-based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#icon">icon</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#layerQueryableText">layerQueryableText</a></li><li><a href="global.html#layerTextTemplateFn">layerTextTemplateFn</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mappify">mappify</a></li><li><a href="global.html#mapPromise">mapPromise</a></li><li><a href="global.html#measureLayerName">measureLayerName</a></li><li><a href="global.html#measureTooltipCssClasses">measureTooltipCssClasses</a></li><li><a href="global.html#measureType">measureType</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#multipleDrawing">multipleDrawing</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onCancel">onCancel</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onClick">onClick</a></li><li><a href="global.html#onLayerAddToMap">onLayerAddToMap</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#position">position</a></li><li><a href="global.html#predefinedCrsDefinitions">predefinedCrsDefinitions</a></li><li><a href="global.html#pressed">pressed</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
-based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#radius">radius</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#rotationAngle">rotationAngle</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#segmentAngles">segmentAngles</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#setProjection">setProjection</a></li><li><a href="global.html#showMeasureInfoOnClickedPoints">showMeasureInfoOnClickedPoints</a></li><li><a href="global.html#strokeColor">strokeColor</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#syncWithMap">syncWithMap</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#titleText">titleText</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#tooltip">tooltip</a></li><li><a href="global.html#tooltipPlacement">tooltipPlacement</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#wmsLayer">wmsLayer</a></li><li><a href="global.html#wmsLayers">wmsLayers</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddWmsLayerEntry.html">AddWmsLayerEntry</a></li><li><a href="AddWmsPanel.html">AddWmsPanel</a></li><li><a href="CapabilitiesUtil.html">CapabilitiesUtil</a></li><li><a href="CircleMenu.html">CircleMenu</a></li><li><a href="CircleMenuItem.html">CircleMenuItem</a></li><li><a href="CoordinateReferenceSystemCombo.html">CoordinateReferenceSystemCombo</a></li><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureGrid.html">FeatureGrid</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapComponent.html">MapComponent</a></li><li><a href="MappifiedComponent.html">MappifiedComponent</a></li><li><a href="MapProvider.html">MapProvider</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="MeasureButton.html">MeasureButton</a></li><li><a href="MeasureUtil.html">MeasureUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ProjectionUtil.html">ProjectionUtil</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li><li><a href="Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addAllLayersText">addAllLayersText</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#addSelectedLayersText">addSelectedLayersText</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#animationDuration">animationDuration</a></li><li><a href="global.html#attributeFilter">attributeFilter</a></li><li><a href="global.html#attributeNameColumnTitle">attributeNameColumnTitle</a></li><li><a href="global.html#attributeNameColumnWidthInPercent">attributeNameColumnWidthInPercent</a></li><li><a href="global.html#attributeNames">attributeNames</a></li><li><a href="global.html#attributeValueColumnTitle">attributeValueColumnTitle</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#buttonCoords">buttonCoords</a></li><li><a href="global.html#cancelText">cancelText</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#clickToDrawText">clickToDrawText</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#continueAngleMsg">continueAngleMsg</a></li><li><a href="global.html#continueLineMsg">continueLineMsg</a></li><li><a href="global.html#continuePolygonMsg">continuePolygonMsg</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#crsApiUrl">crsApiUrl</a></li><li><a href="global.html#decimalPlacesInTooltips">decimalPlacesInTooltips</a></li><li><a href="global.html#diameter">diameter</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#doRender">doRender</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#emptyTextPlaceholderText">emptyTextPlaceholderText</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#feature">feature</a></li><li><a href="global.html#fillColor">fillColor</a></li><li><a href="global.html#filterFunction">filterFunction</a></li><li><a href="global.html#fontIcon">fontIcon</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
+based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#icon">icon</a></li><li><a href="global.html#id">id</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#layerQueryableText">layerQueryableText</a></li><li><a href="global.html#layerTextTemplateFn">layerTextTemplateFn</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mappify">mappify</a></li><li><a href="global.html#mapPromise">mapPromise</a></li><li><a href="global.html#measureLayerName">measureLayerName</a></li><li><a href="global.html#measureTooltipCssClasses">measureTooltipCssClasses</a></li><li><a href="global.html#measureType">measureType</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#multipleDrawing">multipleDrawing</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onCancel">onCancel</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onClick">onClick</a></li><li><a href="global.html#onClose">onClose</a></li><li><a href="global.html#onLayerAddToMap">onLayerAddToMap</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#parentId">parentId</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#position">position</a></li><li><a href="global.html#predefinedCrsDefinitions">predefinedCrsDefinitions</a></li><li><a href="global.html#pressed">pressed</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
+based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#radius">radius</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#rotationAngle">rotationAngle</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#segmentAngles">segmentAngles</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#setProjection">setProjection</a></li><li><a href="global.html#showMeasureInfoOnClickedPoints">showMeasureInfoOnClickedPoints</a></li><li><a href="global.html#strokeColor">strokeColor</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#syncWithMap">syncWithMap</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#titleText">titleText</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#tooltip">tooltip</a></li><li><a href="global.html#tooltipPlacement">tooltipPlacement</a></li><li><a href="global.html#triggerRerenderingWithInvertedVisibility">triggerRerenderingWithInvertedVisibility</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#wmsLayer">wmsLayer</a></li><li><a href="global.html#wmsLayers">wmsLayers</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Dec 18 2017 09:14:33 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Dec 19 2017 08:36:51 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>
