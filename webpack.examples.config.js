@@ -22,6 +22,7 @@ commonConfig.entry = {
   'Slider/LayerTransparencySlider': './src/Slider/LayerTransparencySlider.example.jsx',
   'Toolbar/Toolbar': './src/Toolbar/Toolbar.example.jsx',
   'UserChip/UserChip': './src/UserChip/UserChip.example.jsx',
+  'Window/Window': './src/Window/Window.example.jsx',
   'HigherOrderComponent/VisibleComponent/VisibleComponent': './src/HigherOrderComponent/VisibleComponent/VisibleComponent.example.jsx'
 };
 

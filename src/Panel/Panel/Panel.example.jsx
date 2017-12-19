@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
 import {
-  SimpleButton,
   Panel
 } from '../../index.js';
 
@@ -9,21 +8,6 @@ render(
   <div style={{
     height: '500px'
   }}>
-    <div className="example-block">
-      <span>Click to show window:</span>
-
-      <SimpleButton tooltip="Click me to show a window" onClick={() => {
-        Panel.showWindow({
-          x: 200,
-          y: 200,
-          containerId: 'exampleContainer',
-          width: 200,
-          height: 200,
-          title: 'Drag me'
-        });
-      }} />
-
-    </div>
 
     <div className="example-block">
       <span>Panels:</span>

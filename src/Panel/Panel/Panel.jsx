@@ -1,37 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Rnd from 'react-rnd';
 import { uniqueId, isNumber } from 'lodash';
-import { I18nextProvider } from 'react-i18next';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
 
 import './Panel.less';
 
-const defaultWindowProps = {
-  draggable: true,
-  closable: true,
-  collapsible: true,
-  resizeOpts: true,
-  width: 400,
-  height: 400
-};
-
 /**
  * The Panel.
- * The panel component can also be used as a window.
- *
- * You can create a window like this:
- *
- * let winPromise = Panel.showWindow({
- *   title: 'Window Title',
- *   children: ['Peter']
- * });
- * winPromise.then(function(win) {
- *   console.log('The window was rendered: ', win);
- * });
  *
  * @class The Panel
  * @extends React.Component
@@ -76,6 +54,13 @@ export class Panel extends React.Component {
      * @type {string}
      */
     title: PropTypes.string,
+
+    /**
+     * function called on close
+     *
+     * @type {Function}
+     */
+    onClose: PropTypes.func,
 
     /**
      * The enableResizing property is used to set the resizable permission of a
@@ -157,11 +142,12 @@ export class Panel extends React.Component {
     collapsible: false,
     closable: false,
     resizeOpts: false,
-    titleBarHeight: 32,
+    titleBarHeight: 37.5,
     height: 100,
     width: 100,
     compressTooltip: 'collapse',
-    closeTooltip: 'close'
+    closeTooltip: 'close',
+    onClose: () => {}
   }
 
   /**
@@ -230,21 +216,6 @@ export class Panel extends React.Component {
     });
   }
 
-  // TODO We might want to change the behaviour for panels that are no windows.
-  /**
-   * Close the panel and remove it from the dom.
-   */
-  close = () => {
-    let div = document.getElementById(this.state.id);
-    if (div) {
-      ReactDOM.unmountComponentAtNode(div);
-    } else {
-      div = document.getElementsByClassName(this.state.id)[0];
-    }
-
-    div.parentElement.removeChild(div);
-  }
-
   /**
    * The render function.
    */
@@ -255,6 +226,7 @@ export class Panel extends React.Component {
       draggable,
       resizeOpts,
       className,
+      onClose,
       ...rndOpts
     } = this.props;
 
@@ -263,7 +235,6 @@ export class Panel extends React.Component {
       : this.className;
 
     const rndClassName = `${finalClassName} ${this.state.id}`;
-    const disableDragging = !draggable;
     const enableResizing = resizeOpts === true ? undefined : resizeOpts;
 
     let tools = [];
@@ -280,14 +251,18 @@ export class Panel extends React.Component {
       tools.push(<SimpleButton
         icon="times"
         key="close-tool"
-        onClick={this.close}
+        onClick={onClose}
         tooltip={this.props.closeTooltip}
         size="small"
       />);
     }
 
+    const titleBarClassName = draggable ?
+      'drag-handle ant-modal-header':
+      'ant-modal-header';
+
     const titleBar = this.props.title ? <Titlebar
-      className="drag-handle"
+      className={titleBarClassName}
       closable={closable}
       collapsible={collapsible}
       parent={this}
@@ -315,7 +290,7 @@ export class Panel extends React.Component {
             : this.state.height
         }}
         dragHandleClassName=".drag-handle"
-        disableDragging={disableDragging}
+        disableDragging={!draggable}
         enableResizing={enableResizing}
         resizeHandleClasses={{
           bottom: 'resize-handle resize-handle-bottom',
@@ -350,63 +325,5 @@ export class Panel extends React.Component {
     );
   }
 }
-
-/**
- * This static method creates a window and adds it to the container with the id
- * props.containerId.
- * e.g.:
- * let winPromise = Panel.showWindow({
- *   title: 'Window Title',
- *   children: ['Peter']
- * });
- * winPromise.then(function(win) {
- *   console.log('The window was rendered: ', win);
- * });
- *
- * @param {Object} props The props added to the window on creation.
- *                       Use 'children' to add child elements to the body of the
- *                       window.
- * @return {Promise} A promise that contains the win when resolved.
- *                   "reject" is not expect and so not handled.
- */
-Panel.showWindow = function(props) {
-  props = {
-    ...defaultWindowProps,
-    ...props
-  };
-  let {i18n} = props;
-  let windowClassName = 'react-geo-window';
-
-  props.className = props.className
-    ? `${props.className} ${windowClassName}`
-    : windowClassName;
-
-  let container = document.getElementById(props.containerId);
-  let div = document.createElement('div');
-  let id = uniqueId(`${windowClassName}-`);
-
-  div.style.position = 'absolute';
-  div.style.left = 0;
-  div.style.top = 0;
-  div.id = id;
-  container.appendChild(div);
-
-  props.bounds = '#' + props.containerId;
-  props.id = id;
-
-  return new Promise(function(resolve) {
-    ReactDOM.render(
-      i18n
-        ? <I18nextProvider i18n={i18n}>
-          <Panel {...props} />
-        </I18nextProvider>
-        : <Panel {...props} />,
-      div,
-      function() {
-        resolve(this);
-      }
-    );
-  });
-};
 
 export default Panel;
