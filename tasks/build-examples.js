@@ -1,13 +1,15 @@
-var path = require('path');
+const path = require('path');
 
-var Metalsmith = require('metalsmith');
-var markdown = require('metalsmith-markdown');
-var layouts = require('metalsmith-layouts');
-var collections = require('metalsmith-collections');
+const Metalsmith = require('metalsmith');
+const markdown = require('metalsmith-markdown');
+const layouts = require('metalsmith-layouts');
+const collections = require('metalsmith-collections');
 
-var srcDir = path.join(__dirname, '..', 'src');
-var destDir = path.join(__dirname, '..', 'build', 'examples');
-var tplDir = path.join(__dirname, '..', 'example-templates');
+const srcDir = path.join(__dirname, '..', 'src');
+const destDir = path.join(__dirname, '..', 'build', 'examples');
+const tplDir = path.join(__dirname, '..', 'example-templates');
+
+const commonsFileName = 'commons.js';
 
 /**
  * Fixes the import string in the example source to use '@terrestris/react-geo'
@@ -17,7 +19,7 @@ var tplDir = path.join(__dirname, '..', 'example-templates');
  * @return {String} The fixed path.
  */
 function fixImports(jsSource) {
-  var re = /from '(\.\.\/|\.\/)*index\.js'/g;
+  const re = /from '(\.\.\/|\.\/)*index\.js'/g;
   return jsSource.replace(re, 'from \'@terrestris/react-geo\'');
 }
 
@@ -38,34 +40,32 @@ function getKeyOfFile(files, jsFilename) {
  * @param {Object} files The files.
  */
 function augmentExamples(files) {
-  for (var filename in files) {
-    var file = files[filename];
+  for (let filename in files) {
+    const file = files[filename];
+    const match = filename.match(/([^/^.]*)\.example\.md$/);
 
-    var match = filename.match(/([^/^.]*)\.example\.md$/);
     if (match) {
       if (!file.layout) {
-        throw new Error(filename + ': Missing "layout" in YAML front-matter');
+        throw new Error(`${filename}: Missing "layout" in YAML front-matter`);
       }
-      var id = match[1];
-
-      // add js tag and source
-      var jsFilename = id + '.example.jsx';
-
-      var key = getKeyOfFile(files, jsFilename);
+      const id = match[1];
+      const jsFilename = `${id}.example.jsx`;
+      const key = getKeyOfFile(files, jsFilename);
 
       if (key in files) {
-        var jsSource = files[key].contents.toString();
-        jsSource = fixImports(jsSource);
+        const jsSource = fixImports(files[key].contents.toString());
+        const relativeCommonsFilePath = key.match(/(\/)/g).map(() => '../').join('');
 
         file.js = {
           filename: jsFilename,
-          transpiled: id + '.js',
+          commons: `${relativeCommonsFilePath}${commonsFileName}`,
+          transpiled: `${id}.js`,
           source: jsSource
         };
       }
 
-      // add css tag and source
-      var cssFilename = id + '.example.css';
+      // Add css tag and source.
+      const cssFilename = `${id}.example.css`;
       if (cssFilename in files) {
         file.css = {
           filename: cssFilename,
@@ -82,7 +82,7 @@ function augmentExamples(files) {
  * @param {Object} files The files.
  */
 function filter(files) {
-  for (var filename in files) {
+  for (let filename in files) {
     if (filename.indexOf('.spec.') !== -1) {
       delete files[filename];
     }
