@@ -1,18 +1,13 @@
 const path = require('path');
 
 module.exports = {
-  entry: {
-    reactgeo: [
-      './src/index.js'
-    ]
-  },
+  entry: [
+    './src/index.js'
+  ],
 
   output: {
     path: path.join(__dirname, 'build'),
-    filename: '[name].js',
-    // publicPath: '/build/', // mostly relevant for the webpack-debug server
-    library: 'ReactGeo',
-    libraryTarget: 'umd'
+    filename: '[name].js'
   },
 
   module: {
