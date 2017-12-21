@@ -13,7 +13,15 @@ var _urlParse = require('url-parse');
 
 var _urlParse2 = _interopRequireDefault(_urlParse);
 
+var _queryString = require('query-string');
+
+var _queryString2 = _interopRequireDefault(_queryString);
+
 var _lodash = require('lodash');
+
+var _isURL = require('validator/lib/isURL');
+
+var _isURL2 = _interopRequireDefault(_isURL);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40,7 +48,7 @@ var UrlUtil = exports.UrlUtil = function () {
      * @return {URL} The parsed URL object.
      */
     value: function read(url) {
-      return new _urlParse2.default(url, null, true);
+      return new _urlParse2.default(url, null, _queryString2.default.parse);
     }
 
     /**
@@ -87,6 +95,26 @@ var UrlUtil = exports.UrlUtil = function () {
     }
 
     /**
+     * Returns the value of the given query param of the provided URL. If not
+     * found, undefined will be returned.
+     *
+     * @param {String} url The URL to get the query params from.
+     * @param {String} key The key to get the value from.
+     * @return {String} The query param value.
+     */
+
+  }, {
+    key: 'getQueryParam',
+    value: function getQueryParam(url, key) {
+      var queryParamsObj = UrlUtil.getQueryParams(url);
+      var foundKey = Object.keys(queryParamsObj).find(function (k) {
+        return k.toLowerCase() === key.toLowerCase();
+      });
+
+      return queryParamsObj[foundKey];
+    }
+
+    /**
     * Joins some query parameters (defined by `keys`) of two query objects and
     * returns the joined query parameters.
     *
@@ -119,6 +147,58 @@ var UrlUtil = exports.UrlUtil = function () {
       });
 
       return joined;
+    }
+
+    /**
+     * Checks if a given URL has the provided query parameter present.
+     *
+     * @param {String} url The URL to check.
+     * @param {String} key The query parameter to check.
+     * @return {Boolean} Whether the parameter is present or not.
+     */
+
+  }, {
+    key: 'hasQueryParam',
+    value: function hasQueryParam(url, key) {
+      var queryParamsObj = UrlUtil.getQueryParams(url);
+
+      return !!Object.keys(queryParamsObj).some(function (k) {
+        return k.toLowerCase() === key.toLowerCase();
+      });
+    }
+
+    /**
+     * Creates a valid GetCapabilitiesRequest out of the given URL by checking if
+     * SERVICE, REQUEST and VERSION are set.
+     *
+     * @param {String} url The URL to validate.
+     * @param {String} service The service to set. Default is to 'WMS'.
+     * @param {String} version The version to set. Default is to '1.3.0'.
+     * @return {String} The validated URL.
+     */
+
+  }, {
+    key: 'createValidGetCapabilitiesRequest',
+    value: function createValidGetCapabilitiesRequest(url) {
+      var service = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'WMS';
+      var version = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '1.3.0';
+
+      var baseUrl = UrlUtil.getBasePath(url);
+      var queryParamsObject = UrlUtil.getQueryParams(url);
+
+      if (!UrlUtil.hasQueryParam(url, 'SERVICE')) {
+        queryParamsObject['SERVICE'] = service;
+      }
+
+      if (!UrlUtil.hasQueryParam(url, 'REQUEST')) {
+        queryParamsObject['REQUEST'] = 'GetCapabilities';
+      }
+
+      if (!UrlUtil.hasQueryParam(url, 'VERSION')) {
+        queryParamsObject['VERSION'] = version;
+      }
+
+      return baseUrl + '?' + UrlUtil.objectToRequestString(queryParamsObject);
     }
 
     /**
@@ -205,7 +285,7 @@ var UrlUtil = exports.UrlUtil = function () {
      *
      * @param {Object} object An object containing kvp for the request.
      *                        e.g. {height:400, width:200}
-     * @return {String} The kvps as a requestString. e.g. "height=400&width=200"
+     * @return {String} The kvps as a requestString. e.g. 'height=400&width=200'
      */
 
   }, {
@@ -216,6 +296,34 @@ var UrlUtil = exports.UrlUtil = function () {
       }).join('&');
 
       return requestString;
+    }
+
+    /**
+     * Checks if a given URL is valid. Implementation based on
+     * https://www.npmjs.com/package/validator.
+     *
+     * @param {String} url The URL to validate.
+     * @param {Object} opts The validation `validator` options.
+     * @return {Boolean} Whether the URL is valid or not.
+     */
+
+  }, {
+    key: 'isValid',
+    value: function isValid(url) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        protocols: ['http', 'https', 'ftp'],
+        require_tld: false,
+        require_protocol: true,
+        require_host: true,
+        require_valid_protocol: true,
+        allow_underscores: false,
+        host_whitelist: false,
+        host_blacklist: false,
+        allow_trailing_dot: false,
+        allow_protocol_relative_urls: false
+      };
+
+      return (0, _isURL2.default)(url, opts);
     }
   }]);
 
