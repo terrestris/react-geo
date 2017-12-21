@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line9">line 9</a>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -303,7 +303,7 @@ http://maps.bvb.de?SERVICE=WMS&amp;REQUEST=GetFeatureInfo&amp;LAYERS=Kagawa</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line106">line 106</a>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line164">line 164</a>
     </li></ul></dd>
     
 
@@ -326,6 +326,228 @@ http://maps.bvb.de?SERVICE=WMS&amp;REQUEST=GetFeatureInfo&amp;LAYERS=Kagawa</p>
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createValidGetCapabilitiesRequest"><span class="type-signature">(static) </span>createValidGetCapabilitiesRequest<span class="signature">(url, service, version)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Creates a valid GetCapabilitiesRequest out of the given URL by checking if
+SERVICE, REQUEST and VERSION are set.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The URL to validate.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>service</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    WMS
+                
+                </td>
+            
+
+            <td class="description last"><p>The service to set. Default is to 'WMS'.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>version</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    1.3.0
+                
+                </td>
+            
+
+            <td class="description last"><p>The version to set. Default is to '1.3.0'.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The validated URL.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -438,7 +660,7 @@ http://maps.bvb.de?SERVICE=WMS&amp;REQUEST=GetFeatureInfo&amp;LAYERS=Kagawa</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line37">line 37</a>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line39">line 39</a>
     </li></ul></dd>
     
 
@@ -466,6 +688,187 @@ http://maps.bvb.de?SERVICE=WMS&amp;REQUEST=GetFeatureInfo&amp;LAYERS=Kagawa</p>
         
 <div class="param-desc">
     <p>The base path.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getQueryParam"><span class="type-signature">(static) </span>getQueryParam<span class="signature">(url, key)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Returns the value of the given query param of the provided URL. If not
+found, undefined will be returned.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The URL to get the query params from.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The key to get the value from.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line65">line 65</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The query param value.</p>
 </div>
 
 
@@ -595,7 +998,7 @@ http://maps.bvb.de?SERVICE=WMS&amp;REQUEST=GetFeatureInfo&amp;LAYERS=Kagawa</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line49">line 49</a>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -634,6 +1037,367 @@ http://maps.bvb.de?SERVICE=WMS&amp;REQUEST=GetFeatureInfo&amp;LAYERS=Kagawa</p>
     <dd>
         
 <span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".hasQueryParam"><span class="type-signature">(static) </span>hasQueryParam<span class="signature">(url, key)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Checks if a given URL has the provided query parameter present.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The URL to check.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The query parameter to check.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line111">line 111</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Whether the parameter is present or not.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".isValid"><span class="type-signature">(static) </span>isValid<span class="signature">(url, opts)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Checks if a given URL is valid. Implementation based on
+https://www.npmjs.com/package/validator.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The URL to validate.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The validation <code>validator</code> options.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line221">line 221</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Whether the URL is valid or not.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
 
 
     </dd>
@@ -808,7 +1572,7 @@ var joined = this.joinQueryParams(params1, params2, keys);
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line74">line 74</a>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line91">line 91</a>
     </li></ul></dd>
     
 
@@ -967,7 +1731,7 @@ leading questionmark).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line147">line 147</a>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line205">line 205</a>
     </li></ul></dd>
     
 
@@ -994,7 +1758,7 @@ leading questionmark).</p>
 
         
 <div class="param-desc">
-    <p>The kvps as a requestString. e.g. &quot;height=400&amp;width=200&quot;</p>
+    <p>The kvps as a requestString. e.g. 'height=400&amp;width=200'</p>
 </div>
 
 
@@ -1124,7 +1888,7 @@ leading questionmark).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line17">line 17</a>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -1281,7 +2045,7 @@ leading questionmark).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line27">line 27</a>
+        <a href="Util_UrlUtil_UrlUtil.js.html">Util/UrlUtil/UrlUtil.js</a>, <a href="Util_UrlUtil_UrlUtil.js.html#line29">line 29</a>
     </li></ul></dd>
     
 
@@ -1355,7 +2119,7 @@ based on a resolution and the Ol.View</a></li><li><a href="global.html#radius">r
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Dec 21 2017 10:44:26 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Dec 21 2017 13:08:10 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>
