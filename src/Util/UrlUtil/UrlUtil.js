@@ -1,4 +1,5 @@
 import URL from 'url-parse';
+import QueryString from 'query-string';
 import { clone } from 'lodash';
 import isURL from 'validator/lib/isURL';
 
@@ -16,7 +17,7 @@ export class UrlUtil {
    * @return {URL} The parsed URL object.
    */
   static read(url) {
-    return new URL(url, null, true);
+    return new URL(url, null, QueryString.parse);
   }
 
   /**
