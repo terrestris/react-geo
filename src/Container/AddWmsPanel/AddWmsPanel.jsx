@@ -4,6 +4,7 @@ import { Checkbox } from 'antd';
 import OlLayerTile from 'ol/layer/tile';
 import OlLayerImage  from 'ol/layer/image';
 import OlMap from 'ol/map';
+import { isFunction } from 'lodash';
 
 import { Panel, SimpleButton, Titlebar, Logger } from '../../index';
 
@@ -53,6 +54,12 @@ export class AddWmsPanel extends React.Component {
      * @type {Function}
      */
     onCancel: PropTypes.func,
+
+    /**
+     * Optional function that is called if selection has changed.
+     * @type {Function}
+     */
+    onSelectionChange: PropTypes.func,
 
     /**
      * Optional text to be shown in button to add all layers
@@ -109,6 +116,14 @@ export class AddWmsPanel extends React.Component {
    * in state
    */
   onSelectedLayersChange = (selectedWmsLayers) => {
+    const {
+      onSelectionChange
+    } = this.props;
+
+    if (isFunction(onSelectionChange)) {
+      onSelectionChange(selectedWmsLayers);
+    }
+
     this.setState({selectedWmsLayers});
   }
 
