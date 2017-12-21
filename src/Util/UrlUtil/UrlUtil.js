@@ -117,7 +117,8 @@ export class UrlUtil {
    * Creates a valid GetCapabilitiesRequest out of the given URL by checking if
    * SERVICE, REQUEST and VERSION are set.
    *
-   * @param {String} url The URL to validate. Default is to 'WMS'.
+   * @param {String} url The URL to validate.
+   * @param {String} service The service to set. Default is to 'WMS'.
    * @param {String} version The version to set. Default is to '1.3.0'.
    * @return {String} The validated URL.
    */
