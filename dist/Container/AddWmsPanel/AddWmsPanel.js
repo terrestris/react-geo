@@ -35,6 +35,8 @@ var _map = require('ol/map');
 
 var _map2 = _interopRequireDefault(_map);
 
+var _lodash = require('lodash');
+
 var _index = require('../../index');
 
 require('./AddWmsPanel.less');
@@ -74,6 +76,13 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (AddWmsPanel.__proto__ || Object.getPrototypeOf(AddWmsPanel)).call(this, props));
 
     _this.onSelectedLayersChange = function (selectedWmsLayers) {
+      var onSelectionChange = _this.props.onSelectionChange;
+
+
+      if ((0, _lodash.isFunction)(onSelectionChange)) {
+        onSelectionChange(selectedWmsLayers);
+      }
+
       _this.setState({ selectedWmsLayers: selectedWmsLayers });
     };
 
@@ -256,6 +265,12 @@ AddWmsPanel.propTypes = {
    * @type {Function}
    */
   onCancel: _propTypes2.default.func,
+
+  /**
+   * Optional function that is called if selection has changed.
+   * @type {Function}
+   */
+  onSelectionChange: _propTypes2.default.func,
 
   /**
    * Optional text to be shown in button to add all layers
