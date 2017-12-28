@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -17,7 +17,7 @@ var StringUtil = function () {
   }
 
   _createClass(StringUtil, null, [{
-    key: "urlify",
+    key: 'urlify',
 
 
     /**
@@ -29,7 +29,46 @@ var StringUtil = function () {
     value: function urlify(text) {
       var urlRegex = /(https?:\/\/[^\s]+)/g;
 
-      return text.replace(urlRegex, "<a href=\"$1\" target=\"_blank\">$1</a>");
+      return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+    }
+
+    /**
+     * This coerces the value of a string by casting it to the most plausible
+     * datatype, guessed by the value itself.
+     *
+     * @param {String} string The input string to coerce.
+     * @return {*} The coerced value.
+     */
+
+  }, {
+    key: 'coerce',
+    value: function coerce(string) {
+      if (!(string instanceof String || typeof string === 'string')) {
+        return string;
+      }
+
+      var isFloatRegex = /^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/;
+
+      if (string.toLowerCase() === 'true') {
+        return true;
+      } else if (string.toLowerCase() === 'false') {
+        return false;
+      } else if (isFloatRegex.test(string)) {
+        return parseFloat(string);
+      } else if (string.startsWith('[')) {
+        return JSON.parse(string).map(function (a) {
+          return StringUtil.coerce(a);
+        });
+      } else if (string.startsWith('{')) {
+        var parsedObj = JSON.parse(string);
+        var coercedObj = {};
+        Object.keys(parsedObj).forEach(function (key) {
+          coercedObj[key] = StringUtil.coerce(parsedObj[key]);
+        });
+        return coercedObj;
+      } else {
+        return string;
+      }
     }
   }]);
 
