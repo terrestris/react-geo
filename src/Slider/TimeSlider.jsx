@@ -19,6 +19,12 @@ class TimeSlider extends React.Component {
 
   static propTypes = {
     /**
+     * A class name string to use on surrounding div.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
+    /**
      * Whether to allow range selection.
      * @type {Boolean}
      */
@@ -130,6 +136,7 @@ class TimeSlider extends React.Component {
     return (
       <div>
         <Slider
+          className={this.props.className}
           defaultValue={this.props.defaultValue}
           range={this.props.useRange}
           min={moment(this.props.min).unix()}

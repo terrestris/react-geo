@@ -71,10 +71,6 @@ var TimeSlider = function (_React$Component) {
       }) : (0, _moment2.default)(val).unix();
     };
 
-    _this.updateTimestamps = function () {
-      _this.setState(_this.convertTimestamps());
-    };
-
     _this.formatTimestamp = function (unix) {
       return (0, _moment2.default)(unix * 1000).format('DD.MM. HH:mm');
     };
@@ -86,6 +82,33 @@ var TimeSlider = function (_React$Component) {
     _this.state = _this.convertTimestamps();
     return _this;
   }
+
+  /**
+   * Converts the various input strings to unix timestamps.
+   * @return {Object} the converted values
+   */
+
+
+  /**
+   * Convert a value to unix timestamps.
+   * @param  {Array | String} val the input value(s)
+   * @return {Array | Number}     the converted value(s)
+   */
+
+
+  /**
+   * Formats a timestamp for user display.
+   * @param  {Number} unix unix timestamps
+   * @return {String}      the formatted timestamps
+   */
+
+
+  /**
+   * Called when the value(s) are changed. Converts the value(s) back to ISO
+   * timestrings.
+   * @param  {Array | Number} value the new value
+   */
+
 
   _createClass(TimeSlider, [{
     key: 'render',
@@ -99,6 +122,7 @@ var TimeSlider = function (_React$Component) {
         'div',
         null,
         _react2.default.createElement(_slider2.default, {
+          className: this.props.className,
           defaultValue: this.props.defaultValue,
           range: this.props.useRange,
           min: (0, _moment2.default)(this.props.min).unix(),
@@ -115,11 +139,46 @@ var TimeSlider = function (_React$Component) {
 }(_react2.default.Component);
 
 TimeSlider.propTypes = {
+  /**
+   * A class name string to use on surrounding div.
+   * @type {String}
+   */
+  className: _propTypes2.default.string,
+
+  /**
+   * Whether to allow range selection.
+   * @type {Boolean}
+   */
   useRange: _propTypes2.default.bool,
+
+  /**
+   * The default value(s).
+   * @type {any}
+   */
   defaultValue: _propTypes2.default.any,
+
+  /**
+   * The minimum value.
+   * @type {String}
+   */
   min: _propTypes2.default.string,
+
+  /**
+   * The maximum value.
+   * @type {String}
+   */
   max: _propTypes2.default.string,
+
+  /**
+   * Called when the value changes.
+   * @type {Function}
+   */
   onChange: _propTypes2.default.func,
+
+  /**
+   * The current value(s).
+   * @type {any}
+   */
   value: _propTypes2.default.any
 };
 TimeSlider.defaultProps = {
