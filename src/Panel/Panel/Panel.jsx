@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Rnd from 'react-rnd';
-import { uniqueId, isNumber } from 'lodash';
+import { uniqueId, isNumber, isFunction } from 'lodash';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
@@ -83,7 +83,21 @@ export class Panel extends React.Component {
       PropTypes.object,
       PropTypes.bool
     ]),
-
+    /**
+     * Function called when onResize is triggered by react-rnd
+     * @type {Function}
+     */
+    onResize: PropTypes.func,
+    /**
+     * Function called when onResizeStart is triggered by react-rnd
+     * @type {Function}
+     */
+    onResizeStart: PropTypes.func,
+    /**
+     * Function called when onResizeStop is triggered by react-rnd
+     * @type {Function}
+     */
+    onResizeStop: PropTypes.func,
     /**
      * Whether to allow dragging or not.
      * @type {boolean}
@@ -192,6 +206,10 @@ export class Panel extends React.Component {
    * @param {HTMLElement} el The element which gets resized.
    */
   onResize = (evt, direction, el) => {
+    const { onResize } = this.props;
+    if (isFunction(onResize)) {
+      onResize(arguments);
+    }
     this.setState({
       height: el.clientHeight,
       width: el.clientWidth
@@ -202,6 +220,10 @@ export class Panel extends React.Component {
    * Function called when resizing is started.
    */
   onResizeStart = () => {
+    const { onResizeStart } = this.props;
+    if (isFunction(onResizeStart)) {
+      onResizeStart(arguments);
+    }
     this.setState({
       resizing: true
     });
@@ -211,6 +233,10 @@ export class Panel extends React.Component {
    * Function called when resizing is stopped.
    */
   onResizeStop = () => {
+    const { onResizeStop } = this.props;
+    if (isFunction(onResizeStop)) {
+      onResizeStop(arguments);
+    }
     this.setState({
       resizing: false
     });
