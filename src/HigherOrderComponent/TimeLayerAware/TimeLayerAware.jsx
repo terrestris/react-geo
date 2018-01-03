@@ -1,4 +1,5 @@
 import React from 'react';
+import { isArray } from 'lodash';
 
 /**
  * HOC that updates layers based on the wrapped components time instant or
@@ -14,7 +15,13 @@ export function timeLayerAware(WrappedComponent, layers) {
     timeChanged = newValues => {
       layers.forEach(config => {
         if (config.isWmsTime) {
-          // TODO update the TIME-parameter of config.layer
+          const parms = config.layer.getSource().getParams();
+          if (isArray(newValues)) {
+            parms.time = `${newValues[0]}/${newValues[1]}`;
+          } else {
+            parms.time = `${newValues}`;
+          }
+          config.layer.getSource().updateParams(parms);
         }
         if (config.customHandler) {
           config.customHandler(newValues);
@@ -29,7 +36,8 @@ export function timeLayerAware(WrappedComponent, layers) {
     render = () => {
       return <WrappedComponent
         onChange={this.timeChanged}
-        {...this.props} />;
+        {...this.props}
+      />;
     }
 
   };

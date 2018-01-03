@@ -12,6 +12,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _lodash = require('lodash');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -46,7 +48,13 @@ function timeLayerAware(WrappedComponent, layers) {
       return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = TimeLayerAware.__proto__ || Object.getPrototypeOf(TimeLayerAware)).call.apply(_ref, [this].concat(args))), _this), _this.timeChanged = function (newValues) {
         layers.forEach(function (config) {
           if (config.isWmsTime) {
-            // TODO update the TIME-parameter of config.layer
+            var parms = config.layer.getSource().getParams();
+            if ((0, _lodash.isArray)(newValues)) {
+              parms.time = newValues[0] + '/' + newValues[1];
+            } else {
+              parms.time = '' + newValues;
+            }
+            config.layer.getSource().updateParams(parms);
           }
           if (config.customHandler) {
             config.customHandler(newValues);
