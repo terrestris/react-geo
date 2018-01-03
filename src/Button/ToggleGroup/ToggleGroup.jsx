@@ -104,6 +104,19 @@ class ToggleGroup extends React.Component {
   }
 
   /**
+   * Called if this component receives properties.
+   *
+   * @param {Object} nextProps The received properties.
+   */
+  componentWillReceiveProps = (nextProps) => {
+    if (this.state.selectedName != nextProps.selectedName) {
+      this.setState({
+        selectedName: nextProps.selectedName
+      });
+    }
+  }
+
+  /**
    * Returns the context for the children.
    *
    * @return {Object} The child context.
@@ -112,7 +125,7 @@ class ToggleGroup extends React.Component {
     return {
       toggleGroup: {
         name: this.props.name,
-        selectedName: this.props.selectedName,
+        selectedName: this.state.selectedName,
         onChange: this.onChange
       }
     };

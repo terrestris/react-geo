@@ -83,7 +83,7 @@ var ToggleButton = function (_React$Component) {
     };
 
     if (props.pressed) {
-      _this.props.onToggle(_this.state.pressed);
+      _this.props.onToggle(props.pressed);
     }
 
     _this.onClick = _this.onClick.bind(_this);
@@ -119,13 +119,10 @@ var ToggleButton = function (_React$Component) {
   _createClass(ToggleButton, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      var _this2 = this;
-
       if (this.props.pressed != nextProps.pressed) {
+        this.props.onToggle(nextProps.pressed);
         this.setState({
           pressed: nextProps.pressed
-        }, function () {
-          _this2.props.onToggle(_this2.state.pressed);
         });
       }
     }
