@@ -79,7 +79,7 @@ class ToggleButton extends React.Component {
     };
 
     if (props.pressed) {
-      this.props.onToggle(this.state.pressed);
+      this.props.onToggle(props.pressed);
     }
 
     this.onClick = this.onClick.bind(this);
@@ -92,10 +92,9 @@ class ToggleButton extends React.Component {
    */
   componentWillReceiveProps(nextProps) {
     if (this.props.pressed != nextProps.pressed) {
+      this.props.onToggle(nextProps.pressed);
       this.setState({
         pressed: nextProps.pressed
-      }, () => {
-        this.props.onToggle(this.state.pressed);
       });
     }
   }

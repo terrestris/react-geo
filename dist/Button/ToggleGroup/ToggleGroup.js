@@ -64,6 +64,14 @@ var ToggleGroup = function (_React$Component) {
 
     _this.className = 'react-geo-togglegroup';
 
+    _this.componentWillReceiveProps = function (nextProps) {
+      if (_this.state.selectedName != nextProps.selectedName) {
+        _this.setState({
+          selectedName: nextProps.selectedName
+        });
+      }
+    };
+
     _this.onChange = function (childProps) {
 
       if ((0, _lodash.isFunction)(_this.props.onChange)) {
@@ -85,9 +93,9 @@ var ToggleGroup = function (_React$Component) {
   }
 
   /**
-   * Returns the context for the children.
+   * Called if this component receives properties.
    *
-   * @return {Object} The child context.
+   * @param {Object} nextProps The received properties.
    */
 
 
@@ -105,11 +113,18 @@ var ToggleGroup = function (_React$Component) {
 
   _createClass(ToggleGroup, [{
     key: 'getChildContext',
+
+
+    /**
+     * Returns the context for the children.
+     *
+     * @return {Object} The child context.
+     */
     value: function getChildContext() {
       return {
         toggleGroup: {
           name: this.props.name,
-          selectedName: this.props.selectedName,
+          selectedName: this.state.selectedName,
           onChange: this.onChange
         }
       };
