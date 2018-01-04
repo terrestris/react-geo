@@ -123,7 +123,7 @@ var TimeSlider = function (_React$Component) {
         null,
         _react2.default.createElement(_slider2.default, {
           className: this.props.className,
-          defaultValue: this.props.defaultValue,
+          defaultValue: this.convert(this.props.defaultValue),
           range: this.props.useRange,
           min: (0, _moment2.default)(this.props.min).unix(),
           max: (0, _moment2.default)(this.props.max).unix(),

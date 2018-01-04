@@ -137,7 +137,7 @@ class TimeSlider extends React.Component {
       <div>
         <Slider
           className={this.props.className}
-          defaultValue={this.props.defaultValue}
+          defaultValue={this.convert(this.props.defaultValue)}
           range={this.props.useRange}
           min={moment(this.props.min).unix()}
           max={moment(this.props.max).unix()}
