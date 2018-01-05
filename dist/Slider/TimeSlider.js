@@ -72,7 +72,7 @@ var TimeSlider = function (_React$Component) {
     };
 
     _this.formatTimestamp = function (unix) {
-      return (0, _moment2.default)(unix * 1000).format('DD.MM. HH:mm');
+      return (0, _moment2.default)(unix * 1000).format(_this.props.formatString);
     };
 
     _this.valueUpdated = function (value) {
@@ -153,7 +153,7 @@ TimeSlider.propTypes = {
 
   /**
    * The default value(s).
-   * @type {any}
+   * @type {Array<String> | String}
    */
   defaultValue: _propTypes2.default.any,
 
@@ -177,9 +177,15 @@ TimeSlider.propTypes = {
 
   /**
    * The current value(s).
-   * @type {any}
+   * @type {Array<String> | String}
    */
-  value: _propTypes2.default.any
+  value: _propTypes2.default.any,
+
+  /**
+   * The moment.js compliant format string for the slider tooltip.
+   * @type {String}
+   */
+  formatString: _propTypes2.default.string
 };
 TimeSlider.defaultProps = {
   useRange: false,
@@ -189,5 +195,6 @@ TimeSlider.defaultProps = {
   onChange: function onChange() {
     return undefined;
   },
-  value: (0, _moment2.default)().toISOString() };
+  value: (0, _moment2.default)().toISOString(),
+  formatString: 'DD.MM. HH:mm' };
 exports.default = TimeSlider;
