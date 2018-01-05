@@ -100,6 +100,28 @@ class ObjectUtil {
     // if we couldn't find any match, return undefined
     return undefined;
   }
+
+  /**
+   * Updates the given object at the given path with the value in place.
+   * @param  {String} path   the path, seperated by dots
+   * @param  {Object} object the object to update
+   * @param  {any} value  the value to set
+   */
+  static updateObjectByStringPath(path, object, value) {
+    const parts = path.split('.');
+
+    parts.forEach((part, index) => {
+      if (index === parts.length - 1) {
+        object[part] = value;
+      } else {
+        if (!object[part]) {
+          object[part] = {};
+        }
+        object = object[part];
+      }
+    });
+  }
+
 }
 
 export default ObjectUtil;

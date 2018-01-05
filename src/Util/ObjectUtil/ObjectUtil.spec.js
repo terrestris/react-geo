@@ -115,4 +115,33 @@ describe('ObjectUtil', () => {
     // });
   });
 
+  describe('getValue', () => {
+    const testObject = {
+      prop1: {
+        prop2: {
+          value: 7
+        }
+      }
+    };
+
+    it('is defined', () => {
+      expect(ObjectUtil.updateObjectByStringPath).not.toBeUndefined();
+    });
+
+    it('can add a property add top level', () => {
+      ObjectUtil.updateObjectByStringPath('testprop', testObject, 8);
+      expect(testObject.testprop).toBe(8);
+    });
+
+    it('can update a nested property', () => {
+      ObjectUtil.updateObjectByStringPath('prop1.prop2', testObject, 'yah');
+      expect(testObject.prop1.prop2).toBe('yah');
+    });
+
+    it('can add a missing math', () => {
+      ObjectUtil.updateObjectByStringPath('prop3.prop4', testObject, 'yup');
+      expect(testObject.prop3.prop4).toBe('yup');
+    });
+  });
+
 });

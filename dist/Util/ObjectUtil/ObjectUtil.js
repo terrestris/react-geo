@@ -118,6 +118,30 @@ var ObjectUtil = function () {
       // if we couldn't find any match, return undefined
       return undefined;
     }
+
+    /**
+     * Updates the given object at the given path with the value in place.
+     * @param  {String} path   the path, seperated by dots
+     * @param  {Object} object the object to update
+     * @param  {any} value  the value to set
+     */
+
+  }, {
+    key: 'updateObjectByStringPath',
+    value: function updateObjectByStringPath(path, object, value) {
+      var parts = path.split('.');
+
+      parts.forEach(function (part, index) {
+        if (index === parts.length - 1) {
+          object[part] = value;
+        } else {
+          if (!object[part]) {
+            object[part] = {};
+          }
+          object = object[part];
+        }
+      });
+    }
   }]);
 
   return ObjectUtil;
