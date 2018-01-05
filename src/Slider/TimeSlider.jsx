@@ -32,7 +32,7 @@ class TimeSlider extends React.Component {
 
     /**
      * The default value(s).
-     * @type {any}
+     * @type {Array<String> | String}
      */
     defaultValue: PropTypes.any,
 
@@ -56,9 +56,15 @@ class TimeSlider extends React.Component {
 
     /**
      * The current value(s).
-     * @type {any}
+     * @type {Array<String> | String}
      */
-    value: PropTypes.any
+    value: PropTypes.any,
+
+    /**
+     * The moment.js compliant format string for the slider tooltip.
+     * @type {String}
+     */
+    formatString: PropTypes.string
   }
 
   static defaultProps = {
@@ -67,7 +73,8 @@ class TimeSlider extends React.Component {
     min: moment().subtract(1, 'hour').toISOString(),
     max: moment().toISOString(),
     onChange: () => undefined,
-    value: moment().toISOString()
+    value: moment().toISOString(),
+    formatString: 'DD.MM. HH:mm'
   }
 
   /**
@@ -114,7 +121,7 @@ class TimeSlider extends React.Component {
    * @return {String}      the formatted timestamps
    */
   formatTimestamp = unix => {
-    return moment(unix * 1000).format('DD.MM. HH:mm');
+    return moment(unix * 1000).format(this.props.formatString);
   }
 
   /**
