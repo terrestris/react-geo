@@ -15,6 +15,7 @@ import Panel from './Panel/Panel/Panel.jsx';
 import Titlebar from './Panel/Titlebar/Titlebar.jsx';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid.jsx';
+import TimeSlider from './Slider/TimeSlider.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
 import UserChip from './UserChip/UserChip.jsx';
 import CircleMenu from './CircleMenu/CircleMenu.jsx';
@@ -35,6 +36,7 @@ import Logger from './Util/Logger';
 import MapProvider from './HigherOrderComponent/MapProvider/MapProvider.jsx';
 import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/VisibleComponent.jsx';
 import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent.jsx';
+import timeLayerAware from './HigherOrderComponent/TimeLayerAware/TimeLayerAware.jsx';
 
 export {
   AddWmsPanel,
@@ -66,10 +68,12 @@ export {
   ObjectUtil,
   ProjectionUtil,
   StringUtil,
+  TimeSlider,
   UndoUtil,
   UrlUtil,
   MapProvider,
   MapComponent,
   mappify,
-  isVisibleComponent
+  isVisibleComponent,
+  timeLayerAware
 };

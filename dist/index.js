@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MeasureUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.CapabilitiesUtil = exports.Window = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.MeasureButton = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = exports.AddWmsPanel = undefined;
+exports.timeLayerAware = exports.isVisibleComponent = exports.mappify = exports.MapComponent = exports.MapProvider = exports.UrlUtil = exports.UndoUtil = exports.TimeSlider = exports.StringUtil = exports.ProjectionUtil = exports.ObjectUtil = exports.NominatimSearch = exports.CoordinateReferenceSystemCombo = exports.MeasureUtil = exports.MapUtil = exports.Logger = exports.FeatureUtil = exports.CsrfUtil = exports.CapabilitiesUtil = exports.Window = exports.UserChip = exports.Toolbar = exports.Titlebar = exports.LayerTransparencySlider = exports.Panel = exports.ScaleCombo = exports.FloatingMapLogo = exports.Legend = exports.LayerTreeNode = exports.LayerTree = exports.FeatureGrid = exports.MeasureButton = exports.ToggleGroup = exports.ToggleButton = exports.SimpleButton = exports.CircleMenu = exports.AddWmsPanel = undefined;
 
 var _AddWmsPanel = require('./Container/AddWmsPanel/AddWmsPanel.js');
 
@@ -73,6 +73,10 @@ var _FeatureGrid = require('./Grid/FeatureGrid/FeatureGrid.js');
 
 var _FeatureGrid2 = _interopRequireDefault(_FeatureGrid);
 
+var _TimeSlider = require('./Slider/TimeSlider.js');
+
+var _TimeSlider2 = _interopRequireDefault(_TimeSlider);
+
 var _Toolbar = require('./Toolbar/Toolbar.js');
 
 var _Toolbar2 = _interopRequireDefault(_Toolbar);
@@ -141,6 +145,10 @@ var _VisibleComponent = require('./HigherOrderComponent/VisibleComponent/Visible
 
 var _MappifiedComponent = require('./HigherOrderComponent/MappifiedComponent/MappifiedComponent.js');
 
+var _TimeLayerAware = require('./HigherOrderComponent/TimeLayerAware/TimeLayerAware.js');
+
+var _TimeLayerAware2 = _interopRequireDefault(_TimeLayerAware);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.AddWmsPanel = _AddWmsPanel2.default;
@@ -172,9 +180,11 @@ exports.NominatimSearch = _NominatimSearch2.default;
 exports.ObjectUtil = _ObjectUtil2.default;
 exports.ProjectionUtil = _ProjectionUtil2.default;
 exports.StringUtil = _StringUtil2.default;
+exports.TimeSlider = _TimeSlider2.default;
 exports.UndoUtil = _UndoUtil2.default;
 exports.UrlUtil = _UrlUtil2.default;
 exports.MapProvider = _MapProvider2.default;
 exports.MapComponent = _MapComponent2.default;
 exports.mappify = _MappifiedComponent.mappify;
 exports.isVisibleComponent = _VisibleComponent.isVisibleComponent;
+exports.timeLayerAware = _TimeLayerAware2.default;
