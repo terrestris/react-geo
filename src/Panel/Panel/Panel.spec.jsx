@@ -51,6 +51,16 @@ describe('<Panel />', () => {
       wrapper.instance().onResize(null, null, {clientHeight: 1337});
       expect(wrapper.state().height).toBe(1337);
     });
+
+    it('calls corresponding function "onResize" of props if defined', () => {
+      const onResizeMock = jest.fn();
+      const wrapperWithMockedFunction = TestUtil.mountComponent(Panel,  {
+        onResize: onResizeMock
+      });
+      expect(wrapperWithMockedFunction.instance().onResizeStop).not.toBeUndefined();
+      wrapperWithMockedFunction.instance().onResize(null, null, {clientHeight: 4711});
+      expect(onResizeMock.mock.calls).toHaveLength(1);
+    });
   });
 
   describe('#onResizeStart', () => {
@@ -65,6 +75,16 @@ describe('<Panel />', () => {
       const state = wrapper.state();
       expect(state.resizing).toBe(true);
     });
+
+    it('calls corresponding function "onResizeStart" of props if defined', () => {
+      const onResizeStartMock = jest.fn();
+      const wrapperWithMockedFunction = TestUtil.mountComponent(Panel,  {
+        onResizeStart: onResizeStartMock
+      });
+      expect(wrapperWithMockedFunction.instance().onResizeStart).not.toBeUndefined();
+      wrapperWithMockedFunction.instance().onResizeStart();
+      expect(onResizeStartMock.mock.calls).toHaveLength(1);
+    });
   });
 
   describe('#onResizeStop', () => {
@@ -78,6 +98,16 @@ describe('<Panel />', () => {
       wrapper.instance().onResizeStop();
       const state = wrapper.state();
       expect(state.resizing).toBe(false);
+    });
+
+    it('calls corresponding function "onResizeStop" of props if defined', () => {
+      const onResizeStopMock = jest.fn();
+      const wrapperWithMockedFunction = TestUtil.mountComponent(Panel,  {
+        onResizeStop: onResizeStopMock
+      });
+      expect(wrapperWithMockedFunction.instance().onResizeStop).not.toBeUndefined();
+      wrapperWithMockedFunction.instance().onResizeStop();
+      expect(onResizeStopMock.mock.calls).toHaveLength(1);
     });
   });
 
