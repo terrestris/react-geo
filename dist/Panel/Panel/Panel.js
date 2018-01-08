@@ -64,6 +64,8 @@ var Panel = exports.Panel = function (_React$Component) {
    * @type {Object}
    */
   function Panel(props) {
+    var _arguments = arguments;
+
     _classCallCheck(this, Panel);
 
     var _this = _possibleConstructorReturn(this, (Panel.__proto__ || Object.getPrototypeOf(Panel)).call(this, props));
@@ -82,6 +84,11 @@ var Panel = exports.Panel = function (_React$Component) {
     };
 
     _this.onResize = function (evt, direction, el) {
+      var onResize = _this.props.onResize;
+
+      if ((0, _lodash.isFunction)(onResize)) {
+        onResize(_arguments);
+      }
       _this.setState({
         height: el.clientHeight,
         width: el.clientWidth
@@ -89,12 +96,22 @@ var Panel = exports.Panel = function (_React$Component) {
     };
 
     _this.onResizeStart = function () {
+      var onResizeStart = _this.props.onResizeStart;
+
+      if ((0, _lodash.isFunction)(onResizeStart)) {
+        onResizeStart(_arguments);
+      }
       _this.setState({
         resizing: true
       });
     };
 
     _this.onResizeStop = function () {
+      var onResizeStop = _this.props.onResizeStop;
+
+      if ((0, _lodash.isFunction)(onResizeStop)) {
+        onResizeStop(_arguments);
+      }
       _this.setState({
         resizing: false
       });
@@ -317,7 +334,21 @@ Panel.propTypes = {
    * @type {object}
    */
   resizeOpts: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.bool]),
-
+  /**
+   * Function called when onResize is triggered by react-rnd
+   * @type {Function}
+   */
+  onResize: _propTypes2.default.func,
+  /**
+   * Function called when onResizeStart is triggered by react-rnd
+   * @type {Function}
+   */
+  onResizeStart: _propTypes2.default.func,
+  /**
+   * Function called when onResizeStop is triggered by react-rnd
+   * @type {Function}
+   */
+  onResizeStop: _propTypes2.default.func,
   /**
    * Whether to allow dragging or not.
    * @type {boolean}
