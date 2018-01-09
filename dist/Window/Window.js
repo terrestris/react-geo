@@ -25,6 +25,8 @@ var _lodash = require('lodash');
 
 var _index = require('../index.js');
 
+var _index2 = require('../index');
+
 require('./Window.less');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -71,6 +73,10 @@ var Window = exports.Window = function (_React$Component) {
 
     _this._parent = document.getElementById(parentId);
 
+    if (!_this._parent) {
+      _index2.Logger.warn('No parent element was found! Please ensure that parentId ' + 'parameter was set correctly (default value is `app`)');
+    }
+
     var div = document.createElement('div');
     div.id = id;
     _this._elementDiv = div;
@@ -104,7 +110,9 @@ var Window = exports.Window = function (_React$Component) {
   _createClass(Window, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this._parent.appendChild(this._elementDiv);
+      if (this._parent) {
+        this._parent.appendChild(this._elementDiv);
+      }
     }
 
     /**
@@ -114,7 +122,9 @@ var Window = exports.Window = function (_React$Component) {
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      this._parent.removeChild(this._elementDiv);
+      if (this._parent) {
+        this._parent.removeChild(this._elementDiv);
+      }
     }
 
     /**
