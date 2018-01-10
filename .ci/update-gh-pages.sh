@@ -17,6 +17,8 @@ if [ $TRAVIS_BRANCH != "master" ]; then
     return 0;
 fi
 
+VERSION=`node -pe "require('./package.json').version"`
+
 ORIGINAL_AUTHOR_NAME=$(git show -s --format="%aN" $TRAVIS_COMMIT)
 ORIGINAL_AUTHOR_EMAIL=$(git show -s --format="%ae" $TRAVIS_COMMIT)
 
@@ -45,7 +47,10 @@ cd $GH_PAGES_DIR
 SRC_DIR=$TRAVIS_BUILD_DIR/build
 
 # cleanup existing resources
-rm -Rf ./examples ./docs
+rm -Rf ./examples ./docs ./index.html
+
+# Build the index page
+sed -e "s/__VERSION__/$VERSION/g" $TRAVIS_BUILD_DIR/assets/gh-index.html > index.html
 
 # copy the src dir from previous build folder
 cp -r $SRC_DIR/examples .
