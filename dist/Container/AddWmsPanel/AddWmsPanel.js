@@ -37,7 +37,21 @@ var _map2 = _interopRequireDefault(_map);
 
 var _lodash = require('lodash');
 
-var _index = require('../../index');
+var _Panel = require('../../Panel/Panel/Panel');
+
+var _Panel2 = _interopRequireDefault(_Panel);
+
+var _Titlebar = require('../../Panel/Titlebar/Titlebar');
+
+var _Titlebar2 = _interopRequireDefault(_Titlebar);
+
+var _SimpleButton = require('../../Button/SimpleButton/SimpleButton');
+
+var _SimpleButton2 = _interopRequireDefault(_SimpleButton);
+
+var _Logger = require('../../Util/Logger');
+
+var _Logger2 = _interopRequireDefault(_Logger);
 
 require('./AddWmsPanel.less');
 
@@ -107,7 +121,7 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
           }
         });
       } else {
-        _index.Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
+        _Logger2.default.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
       }
     };
 
@@ -128,7 +142,7 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
           }
         });
       } else {
-        _index.Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
+        _Logger2.default.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
       }
     };
 
@@ -191,7 +205,7 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
 
 
       return wmsLayers && wmsLayers.length > 0 ? _react2.default.createElement(
-        _index.Panel,
+        _Panel2.default,
         _extends({
           title: titleText,
           bounds: '#main',
@@ -206,8 +220,8 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
               key: idx });
           })
         ),
-        _react2.default.createElement(_index.Titlebar, { tools: [_react2.default.createElement(
-            _index.SimpleButton,
+        _react2.default.createElement(_Titlebar2.default, { tools: [_react2.default.createElement(
+            _SimpleButton2.default,
             {
               size: 'small',
               key: 'useSelectedBtn',
@@ -216,7 +230,7 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
             },
             addSelectedLayersText
           ), _react2.default.createElement(
-            _index.SimpleButton,
+            _SimpleButton2.default,
             {
               size: 'small',
               key: 'useAllBtn',
@@ -224,7 +238,7 @@ var AddWmsPanel = exports.AddWmsPanel = function (_React$Component) {
             },
             addAllLayersText
           ), onCancel ? _react2.default.createElement(
-            _index.SimpleButton,
+            _SimpleButton2.default,
             {
               size: 'small',
               key: 'cancelBtn',

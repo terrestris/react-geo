@@ -22,7 +22,13 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _index = require('../../index.js');
+var _UrlUtil = require('../../Util/UrlUtil/UrlUtil');
+
+var _UrlUtil2 = _interopRequireDefault(_UrlUtil);
+
+var _Logger = require('../../Util/Logger');
+
+var _Logger2 = _interopRequireDefault(_Logger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -66,7 +72,7 @@ var CoordinateReferenceSystemCombo = function (_React$Component) {
         q: searchVal
       };
 
-      return fetch(crsApiUrl + '?' + _index.UrlUtil.objectToRequestString(queryParameters)).then(function (response) {
+      return fetch(crsApiUrl + '?' + _UrlUtil2.default.objectToRequestString(queryParameters)).then(function (response) {
         return response.json();
       });
     };
@@ -155,7 +161,7 @@ var CoordinateReferenceSystemCombo = function (_React$Component) {
      * @param {String} error The error string.
      */
     value: function onFetchError(error) {
-      _index.Logger.error('Error while requesting in CoordinateReferenceSystemCombo: ' + error);
+      _Logger2.default.error('Error while requesting in CoordinateReferenceSystemCombo: ' + error);
     }
 
     /**

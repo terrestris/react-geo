@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { uniqueId } from 'lodash';
-import { Panel } from  '../index.js';
 
-import { Logger } from '../index';
+import Panel from  '../Panel/Panel/Panel.jsx';
+import Logger from '../Util/Logger';
 
 import './Window.less';
 

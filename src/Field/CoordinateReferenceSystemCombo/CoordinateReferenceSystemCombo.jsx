@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
 const Option = AutoComplete.Option;
 
-import { Logger, UrlUtil } from '../../index.js';
+import UrlUtil from '../../Util/UrlUtil/UrlUtil';
+import Logger from '../../Util/Logger';
 
 /**
  * Class representing a combo to choose coordinate projection system via a

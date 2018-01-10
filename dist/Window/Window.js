@@ -23,9 +23,9 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _lodash = require('lodash');
 
-var _index = require('../index.js');
+var _Panel = require('../Panel/Panel/Panel');
 
-var _index2 = require('../index');
+var _Logger = require('../Util/Logger');
 
 require('./Window.less');
 
@@ -74,7 +74,7 @@ var Window = exports.Window = function (_React$Component) {
     _this._parent = document.getElementById(parentId);
 
     if (!_this._parent) {
-      _index2.Logger.warn('No parent element was found! Please ensure that parentId ' + 'parameter was set correctly (default value is `app`)');
+      _Logger.Logger.warn('No parent element was found! Please ensure that parentId ' + 'parameter was set correctly (default value is `app`)');
     }
 
     var div = document.createElement('div');
@@ -144,7 +144,7 @@ var Window = exports.Window = function (_React$Component) {
       var rndClassName = finalClassName + ' ' + this.state.id;
 
       return _reactDom2.default.createPortal(_react2.default.createElement(
-        _index.Panel,
+        _Panel.Panel,
         _extends({
           closable: true,
           draggable: true,
