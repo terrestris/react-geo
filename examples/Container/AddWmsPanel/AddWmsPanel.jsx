@@ -6,7 +6,10 @@ import OlLayerImage  from 'ol/layer/image';
 import OlMap from 'ol/map';
 import { isFunction } from 'lodash';
 
-import { Panel, SimpleButton, Titlebar, Logger } from '../../index';
+import Panel from '../../Panel/Panel/Panel.jsx';
+import Titlebar from '../../Panel/Titlebar/Titlebar.jsx';
+import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
+import Logger from '../../Util/Logger';
 
 import './AddWmsPanel.less';
 import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry.jsx';
