@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { uniqueId } from 'lodash';
-import { Panel } from  '../index.js';
+
+import Panel from  '../Panel/Panel/Panel.jsx';
+import Logger from '../Util/Logger';
 
 import './Window.less';
 
@@ -82,6 +84,11 @@ export class Window extends React.Component {
     const { parentId } = this.props;
     this._parent = document.getElementById(parentId);
 
+    if (!this._parent) {
+      Logger.warn('No parent element was found! Please ensure that parentId ' +
+      'parameter was set correctly (default value is `app`)');
+    }
+
     const div = document.createElement('div');
     div.id = id;
     this._elementDiv = div;
@@ -103,14 +110,18 @@ export class Window extends React.Component {
    * is inserted in the DOM tree.
    */
   componentDidMount() {
-    this._parent.appendChild(this._elementDiv);
+    if (this._parent) {
+      this._parent.appendChild(this._elementDiv);
+    }
   }
 
   /**
    * componentWillUnmount - remove child from parent element
    */
   componentWillUnmount() {
-    this._parent.removeChild(this._elementDiv);
+    if (this._parent) {
+      this._parent.removeChild(this._elementDiv);
+    }
   }
 
   /**

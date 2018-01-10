@@ -22,7 +22,9 @@ var _map = require('ol/map');
 
 var _map2 = _interopRequireDefault(_map);
 
-var _index = require('../../index');
+var _Logger = require('../../Util/Logger');
+
+var _Logger2 = _interopRequireDefault(_Logger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -72,7 +74,7 @@ function mappify(WrappedComponent) {
         if (withRef) {
           return _this.wrappedInstance;
         } else {
-          _index.Logger.warn('No wrapped instance referenced, please call the ' + 'mappify with option withRef = true.');
+          _Logger2.default.warn('No wrapped instance referenced, please call the ' + 'mappify with option withRef = true.');
         }
       };
 
@@ -118,7 +120,7 @@ function mappify(WrappedComponent) {
 
 
         if (!map) {
-          _index.Logger.warn('You trying to mappify a component without any map in the ' + 'context. Did you implement the MapProvider?');
+          _Logger2.default.warn('You trying to mappify a component without any map in the ' + 'context. Did you implement the MapProvider?');
         }
 
         return _react2.default.createElement(WrappedComponent, _extends({

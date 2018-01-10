@@ -1,5 +1,5 @@
 /*eslint-env jest*/
-import { Window } from '../index';
+import { Window, Logger } from '../index';
 import TestUtil from '../Util/TestUtil';
 
 describe('<Window />', () => {
@@ -17,6 +17,21 @@ describe('<Window />', () => {
       parentId: testIdToMountIn
     });
     expect(wrapper).not.toBeUndefined();
+  });
+
+  it('warns if no parentId is provided', () => {
+
+    const loggerSpy = jest.spyOn(Logger, 'warn');
+
+    TestUtil.mountComponent(Window, {});
+
+    expect(loggerSpy).toHaveBeenCalled();
+    expect(loggerSpy).toHaveBeenCalledWith('No parent element was found! ' +
+      'Please ensure that parentId parameter was set correctly (default ' +
+      'value is `app`)');
+
+    loggerSpy.mockReset();
+    loggerSpy.mockRestore();
   });
 
   it('is completely removed from parent if component is unmounted', () => {
