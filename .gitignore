@@ -11,6 +11,7 @@ node_modules
 
 # Build & dist folders
 build
+dist
 
 # Docs folder
 docs
