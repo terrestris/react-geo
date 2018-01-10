@@ -37,15 +37,15 @@ var _map2 = _interopRequireDefault(_map);
 
 var _lodash = require('lodash');
 
-var _Panel = require('../../Panel/Panel/Panel');
+var _Panel = require('../../Panel/Panel/Panel.js');
 
 var _Panel2 = _interopRequireDefault(_Panel);
 
-var _Titlebar = require('../../Panel/Titlebar/Titlebar');
+var _Titlebar = require('../../Panel/Titlebar/Titlebar.js');
 
 var _Titlebar2 = _interopRequireDefault(_Titlebar);
 
-var _SimpleButton = require('../../Button/SimpleButton/SimpleButton');
+var _SimpleButton = require('../../Button/SimpleButton/SimpleButton.js');
 
 var _SimpleButton2 = _interopRequireDefault(_SimpleButton);
 
