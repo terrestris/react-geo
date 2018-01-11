@@ -71,7 +71,7 @@
   "dependencies": {
     "i18next": "10.2.2",
     "lodash": "4.17.4",
-    "loglevel": "1.6.0",
+    "loglevel": "1.6.1",
     "moment": "2.20.1",
     "proj4": "2.4.4",
     "prop-types": "15.6.0",
