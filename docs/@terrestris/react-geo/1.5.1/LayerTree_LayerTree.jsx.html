@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: LayerTree/LayerTree.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: LayerTree/LayerTree.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import PropTypes from 'prop-types';
+import { isBoolean, isFunction } from 'lodash';
+import { Tree } from 'antd';
+import OlMap from 'ol/map';
+import OlLayerBase from 'ol/layer/base';
+import OlLayerGroup from 'ol/layer/group';
+import olObservable from 'ol/observable';
+
+import Logger from '../Util/Logger';
+import MapUtil from '../Util/MapUtil/MapUtil';
+import LayerTreeNode from '../LayerTreeNode/LayerTreeNode.jsx';
+
+/**
+ * The LayerTree.
+ *
+ * Note. This component expects that all layerGroups are permanently visibile.
+ *
+ * @class LayerTree
+ * @extends React.Component
+ */
+class LayerTree extends React.Component {
+
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-layertree'
+
+
+  /**
+   *  An array of ol.EventsKey as returned by on() or once().
+   * @type {Array&lt;ol.EventsKey>}
+   * @private
+   */
+  olListenerKeys = []
+
+  /**
+   * The properties.
+   * @type {Object}
+   */
+  static propTypes = {
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
+    layerGroup: PropTypes.instanceOf(OlLayerGroup),
+
+    map: PropTypes.instanceOf(OlMap).isRequired,
+
+    /**
+     * A function that can be used to pass a custom node title. It can return
+     * any renderable element (String, Number, Element etc.) and receives
+     * the layer instance of the current tree node.
+     * @type {Function}
+     */
+    nodeTitleRenderer: PropTypes.func,
+
+    /**
+     * An optional array-filter function that is applied to every layer and
+     * subLayer. Return false to exclude this layer from the layerTree or true
+     * to include it.
+     *
+     * Compare MDN Docs for Array.prototype.filter: https://mdn.io/array/filter
+     *
+     * @type {Function}
+     */
+    filterFunction: PropTypes.func
+  }
+
+  /**
+   * The default properties.
+   *
+   * @type {Object}
+   */
+  static defaultProps = {
+    draggable: true,
+    checkable: true
+  }
+
+  /**
+   * Create the LayerTree.
+   *
+   * @constructs LayerTree
+   */
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      layerGroup: null,
+      layerGroupRevision: null,
+      treeNodes: [],
+      checkedKeys: []
+    };
+  }
+
+  /**
+   * Determines what to do on the initial mount.
+   */
+  componentDidMount() {
+    const layerGroup = this.props.layerGroup ?
+      this.props.layerGroup :
+      this.props.map.getLayerGroup();
+
+    const revision = this.props.layerGroup ? this.props.layerGroup.getRevision() : 0;
+
+    this.setState({
+      layerGroup: layerGroup,
+      layerGroupRevision: revision
+    }, () => {
+      this.registerAddRemoveListeners(this.state.layerGroup);
+      this.registerResolutionChangeHandler();
+      this.rebuildTreeNodes();
+    });
+  }
+
+  /**
+   * Determines what to do when the component is unmounted.
+   */
+  componentWillUnmount() {
+    olObservable.unByKey(this.olListenerKeys);
+  }
+
+  /**
+   * Determines what to do with new props.
+   *
+   * @param {Object} nextProps The new props.
+   */
+  componentWillReceiveProps(nextProps) {
+
+    const currentLayerGroup = this.state.layerGroup;
+    const newLayerGroup = nextProps.layerGroup;
+    const layerGroupRevision = this.state.layerGroupRevision;
+
+    if (currentLayerGroup.ol_uid !== newLayerGroup.ol_uid ||
+        layerGroupRevision !== newLayerGroup.getRevision()) {
+      olObservable.unByKey(this.olListenerKeys);
+      this.olListenerKeys = [];
+
+      this.setState({
+        layerGroup: newLayerGroup,
+        layerGroupRevision: newLayerGroup.getRevision()
+      }, () => {
+        this.registerAddRemoveListeners(newLayerGroup);
+        this.rebuildTreeNodes();
+      });
+    }
+  }
+
+  /**
+   * Creates TreeNodes from a given layergroup and sets the treeNodes in the state.
+   *
+   * @param {ol.layer.Group} groupLayer A grouplayer.
+   */
+  treeNodesFromLayerGroup(groupLayer) {
+    let layerArray = groupLayer.getLayers().getArray();
+    if (this.props.filterFunction) {
+      layerArray = layerArray.filter(this.props.filterFunction);
+    }
+    const treeNodes = layerArray.map((layer) => {
+      return this.treeNodeFromLayer(layer);
+    });
+    treeNodes.reverse();
+    this.setState({treeNodes});
+  }
+
+  /**
+   * Registers the add/remove listeners recursively for all ol.layer.Group.
+   *
+   * @param {ol.layer.Group} groupLayer A ol.layer.Group
+   */
+  registerAddRemoveListeners = (groupLayer) => {
+    const collection = groupLayer.getLayers();
+    const addEvtKey = collection.on('add', this.onCollectionAdd);
+    const removeEvtKey = collection.on('remove', this.onCollectionRemove);
+
+    this.olListenerKeys.push(addEvtKey, removeEvtKey);
+
+    collection.forEach((layer) => {
+      if (layer instanceof OlLayerGroup) {
+        this.registerAddRemoveListeners(layer);
+      }
+    });
+  }
+
+  /**
+   * Registers an eventhandler on the `ol.View`, which will rebuild the tree
+   * nodes whenever the view's resolution changes.
+   */
+  registerResolutionChangeHandler() {
+    const mapView = this.props.map.getView();
+    const evtKey = mapView.on('change:resolution', () => {
+      this.rebuildTreeNodes();
+    });
+    this.olListenerKeys.push(evtKey); // TODO when and how to we unbind?
+  }
+
+  /**
+   * Listens to the collections add event of a collection.
+   * Registers add/remove listeners if element is a collection and rebuilds the
+   * treeNodes.
+   *
+   * @param {ol.Collection.Event} evt The add event.
+   */
+  onCollectionAdd = (evt) => {
+    if (evt.element instanceof OlLayerGroup) {
+      this.registerAddRemoveListeners(evt.element);
+    }
+    this.rebuildTreeNodes();
+  }
+
+  /**
+   * Listens to the collections remove event of a collection.
+   * Unregisters the events of deleted layers and rebuilds the treeNodes.
+   *
+   * @param {ol.Collection.Event} evt The remove event.
+   */
+  onCollectionRemove = (evt) => {
+    this.unregisterEventsByLayer(evt.element);
+    if (evt.element instanceof OlLayerGroup) {
+      evt.element.getLayers().forEach((layer) => {
+        this.unregisterEventsByLayer(layer);
+      });
+    }
+    this.rebuildTreeNodes();
+  }
+
+  /**
+   * Unregisters the Events of a given layer.
+   *
+   * @param {ol.layer.Base} layer An ol.layer.Base.
+   */
+  unregisterEventsByLayer = (layer) => {
+    this.olListenerKeys = this.olListenerKeys.filter((key) => {
+      if (layer instanceof OlLayerGroup) {
+        const layers = layer.getLayers();
+        if (key.target === layers) {
+          if ((key.type === 'add' &amp;&amp; key.listener === this.onCollectionAdd) ||
+          (key.type === 'remove' &amp;&amp; key.listener === this.onCollectionRemove)){
+
+            olObservable.unByKey(key);
+            return false;
+          }
+        }
+      } else if (key.target === layer) {
+        if (key.type === 'change:visible' &amp;&amp; key.listener === this.onLayerChangeVisible) {
+          olObservable.unByKey(key);
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+
+  /**
+   * Rebuilds the treeNodes and its checked states.
+   */
+  rebuildTreeNodes = () => {
+    this.treeNodesFromLayerGroup(this.state.layerGroup);
+    const checkedKeys = this.getVisibleOlUids();
+    this.setState({
+      checkedKeys
+    });
+  }
+
+  /**
+   * Returns the title to render in the LayerTreeNode. If a nodeTitleRenderer
+   * has been passed as prop, it will be called and the (custom) return value
+   * will be rendered. Note: This can be any renderable element collection! If
+   * no function is given (the default) the layer name will be passed.
+   *
+   * @param {ol.layer.Base} layer The layer attached to the tree node.
+   * @return {Element} The title composition to render.
+   */
+  getTreeNodeTitle(layer) {
+    if (isFunction(this.props.nodeTitleRenderer)) {
+      return this.props.nodeTitleRenderer.call(this, layer);
+    } else {
+      return layer.get('name');
+    }
+  }
+
+  /**
+   * Creates a treeNode from a given layer.
+   *
+   * @param {ol.layer.Base} layer The given layer.
+   * @return {LayerTreeNode} The corresponding LayerTreeNode Element.
+   */
+  treeNodeFromLayer(layer) {
+    let childNodes;
+    let treeNode;
+
+    if (layer instanceof OlLayerGroup) {
+      if (!layer.getVisible()) {
+        Logger.warn('Your map configuration contains layerGroups that are' +
+        'invisible. This might lead to buggy behaviour.');
+      }
+      let childLayers = layer.getLayers().getArray();
+      if (this.props.filterFunction) {
+        childLayers = childLayers.filter(this.props.filterFunction);
+      }
+      childNodes = childLayers.map((childLayer) => {
+        return this.treeNodeFromLayer(childLayer);
+      });
+      childNodes.reverse();
+    } else {
+      if (!this.hasListener(layer, 'change:visible', this.onLayerChangeVisible)) {
+        const eventKey = layer.on('change:visible', this.onLayerChangeVisible);
+        this.olListenerKeys.push(eventKey);
+      }
+    }
+
+    treeNode = &lt;LayerTreeNode
+      title={this.getTreeNodeTitle(layer)}
+      key={layer.ol_uid}
+      inResolutionRange={MapUtil.layerInResolutionRange(layer, this.props.map)}
+    >
+      {childNodes}
+    &lt;/LayerTreeNode>;
+
+    return treeNode;
+  }
+
+  /**
+   * Determines if the target has already registered the given listener for the
+   * given eventtype.
+   *
+   * @param {Object} target The event target.
+   * @param {String} type The events type (name).
+   * @param {function} listener The function.
+   * @return {Boolean} True if the listener is allready contained in
+   *                   this.olListenerKeys.
+   */
+  hasListener = (target, type, listener) => {
+    return this.olListenerKeys.some((listenerKey) => {
+      return listenerKey.target === target
+        &amp;&amp; listenerKey.type === type
+        &amp;&amp; listenerKey.listener === listener;
+    });
+  }
+
+  /**
+   * Reacts to the layer change:visible event and calls setCheckedState.
+   *
+   * @param {ol.Object.Event} evt The change:visible event
+   */
+  onLayerChangeVisible = () => {
+    const checkedKeys = this.getVisibleOlUids();
+    this.setState({
+      checkedKeys
+    }, () => {
+      this.rebuildTreeNodes();
+    });
+  }
+
+  /**
+   * Get the flat array of ol_uids from visible non groupLayers.
+   *
+   * @return {Array&lt;String>} The visible ol_uids.
+   */
+  getVisibleOlUids = () => {
+    const layers = MapUtil.getAllLayers(this.state.layerGroup, (layer) => {
+      return !(layer instanceof OlLayerGroup) &amp;&amp; layer.getVisible();
+    });
+    return layers.map(l => l.ol_uid.toString());
+  }
+
+  /**
+   * Sets the visibility of a layer due to its checked state.
+   *
+   * @param {Array&lt;String>} checkedKeys Contains all checkedKeys.
+   * @param {e} checked The ant-tree event object for this event. See ant docs.
+   */
+  onCheck = (checkedKeys, e) => {
+    const {checked} = e;
+    const eventKey = e.node.props.eventKey;
+    const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
+
+    this.setLayerVisibility(layer, checked);
+  }
+
+  /**
+   * Sets the layer visibility. Calls itself recursively for groupLayers.
+   *
+   * @param {ol.layer.Base} layer The layer.
+   * @param {Boolean} visiblity The visiblity.
+   */
+  setLayerVisibility = (layer, visiblity) => {
+    if (!(layer instanceof OlLayerBase) || !isBoolean(visiblity)) {
+      Logger.error('setLayerVisibility called without layer or visiblity.');
+      return;
+    }
+    if (layer instanceof OlLayerGroup) {
+      layer.getLayers().forEach((subLayer) => {
+        this.setLayerVisibility(subLayer, visiblity);
+      });
+    } else {
+      layer.setVisible(visiblity);
+    }
+  }
+
+  /**
+   * The callback method for the drop event. Layers will get reordered in the map
+   * and the tree.
+   *
+   * @param {Object} e The ant-tree event object for this event. See ant docs.
+   */
+  onDrop = (e) => {
+    const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
+    const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
+    const dragCollection = dragInfo.groupLayer.getLayers();
+    const dropLayer = MapUtil.getLayerByOlUid(this.props.map, e.node.props.eventKey);
+    const dropPos = e.node.props.pos.split('-');
+    const location = e.dropPosition - Number(dropPos[dropPos.length - 1]);
+
+    dragCollection.remove(dragLayer);
+
+    const dropInfo = MapUtil.getLayerPositionInfo(dropLayer, this.props.map);
+    const dropPosition = dropInfo.position;
+    const dropCollection = dropInfo.groupLayer.getLayers();
+
+    // drop before node
+    if (location === -1) {
+      if (dropPosition === dropCollection.getLength() - 1) {
+        dropCollection.push(dragLayer);
+      } else {
+        dropCollection.insertAt(dropPosition + 1, dragLayer);
+      }
+    // drop on node
+    } else if (location === 0) {
+      if (dropLayer instanceof OlLayerGroup) {
+        dropLayer.getLayers().push(dragLayer);
+      } else {
+        dropCollection.insertAt(dropPosition + 1, dragLayer);
+      }
+    // drop after node
+    } else if (location === 1) {
+      dropCollection.insertAt(dropPosition, dragLayer);
+    }
+
+    this.rebuildTreeNodes();
+  }
+
+  /**
+   * The render function.
+   */
+  render() {
+    const {
+      className,
+      layerGroup,
+      map,
+      nodeTitleRenderer,
+      ...passThroughProps
+    } = this.props;
+
+    let ddListeners;
+    if (passThroughProps.draggable) {
+      ddListeners = {
+        onDragStart: this.onDragStart,
+        onDragEnter: this.onDragEnter,
+        onDragOver: this.onDragOver,
+        onDragLeave: this.onDragLeave,
+        onDragEnd: this.onDragEnd,
+        onDrop: this.onDrop
+      };
+    }
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
+    return (
+      &lt;Tree
+        className={finalClassName}
+        checkedKeys={this.state.checkedKeys}
+        onCheck={this.onCheck}
+        {...ddListeners}
+        {...passThroughProps}
+      >
+        {this.state.treeNodes}
+      &lt;/Tree>
+    );
+  }
+}
+
+export default LayerTree;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddWmsLayerEntry.html">AddWmsLayerEntry</a></li><li><a href="AddWmsPanel.html">AddWmsPanel</a></li><li><a href="CapabilitiesUtil.html">CapabilitiesUtil</a></li><li><a href="CircleMenu.html">CircleMenu</a></li><li><a href="CircleMenuItem.html">CircleMenuItem</a></li><li><a href="CoordinateReferenceSystemCombo.html">CoordinateReferenceSystemCombo</a></li><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureGrid.html">FeatureGrid</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapComponent.html">MapComponent</a></li><li><a href="MappifiedComponent.html">MappifiedComponent</a></li><li><a href="MapProvider.html">MapProvider</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="MeasureButton.html">MeasureButton</a></li><li><a href="MeasureUtil.html">MeasureUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ProjectionUtil.html">ProjectionUtil</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="TimeSlider.html">TimeSlider</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li><li><a href="Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addAllLayersText">addAllLayersText</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#addSelectedLayersText">addSelectedLayersText</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#animationDuration">animationDuration</a></li><li><a href="global.html#attributeFilter">attributeFilter</a></li><li><a href="global.html#attributeNameColumnTitle">attributeNameColumnTitle</a></li><li><a href="global.html#attributeNameColumnWidthInPercent">attributeNameColumnWidthInPercent</a></li><li><a href="global.html#attributeNames">attributeNames</a></li><li><a href="global.html#attributeValueColumnTitle">attributeValueColumnTitle</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#buttonCoords">buttonCoords</a></li><li><a href="global.html#cancelText">cancelText</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#clickToDrawText">clickToDrawText</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#continueAngleMsg">continueAngleMsg</a></li><li><a href="global.html#continueLineMsg">continueLineMsg</a></li><li><a href="global.html#continuePolygonMsg">continuePolygonMsg</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#crsApiUrl">crsApiUrl</a></li><li><a href="global.html#decimalPlacesInTooltips">decimalPlacesInTooltips</a></li><li><a href="global.html#defaultValue">defaultValue</a></li><li><a href="global.html#diameter">diameter</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#doRender">doRender</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#emptyTextPlaceholderText">emptyTextPlaceholderText</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#feature">feature</a></li><li><a href="global.html#fillColor">fillColor</a></li><li><a href="global.html#filterFunction">filterFunction</a></li><li><a href="global.html#fontIcon">fontIcon</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#formatString">formatString</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
+based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#icon">icon</a></li><li><a href="global.html#id">id</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#layerQueryableText">layerQueryableText</a></li><li><a href="global.html#layerTextTemplateFn">layerTextTemplateFn</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mappify">mappify</a></li><li><a href="global.html#mapPromise">mapPromise</a></li><li><a href="global.html#max">max</a></li><li><a href="global.html#measureLayerName">measureLayerName</a></li><li><a href="global.html#measureTooltipCssClasses">measureTooltipCssClasses</a></li><li><a href="global.html#measureType">measureType</a></li><li><a href="global.html#min">min</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#multipleDrawing">multipleDrawing</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onCancel">onCancel</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onClick">onClick</a></li><li><a href="global.html#onClose">onClose</a></li><li><a href="global.html#onLayerAddToMap">onLayerAddToMap</a></li><li><a href="global.html#onResize">onResize</a></li><li><a href="global.html#onResizeStart">onResizeStart</a></li><li><a href="global.html#onResizeStop">onResizeStop</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onSelectionChange">onSelectionChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#parentId">parentId</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#position">position</a></li><li><a href="global.html#predefinedCrsDefinitions">predefinedCrsDefinitions</a></li><li><a href="global.html#pressed">pressed</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
+based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#radius">radius</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#rotationAngle">rotationAngle</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#segmentAngles">segmentAngles</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#setProjection">setProjection</a></li><li><a href="global.html#showMeasureInfoOnClickedPoints">showMeasureInfoOnClickedPoints</a></li><li><a href="global.html#strokeColor">strokeColor</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#syncWithMap">syncWithMap</a></li><li><a href="global.html#timeLayerAware">timeLayerAware</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#titleText">titleText</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#tooltip">tooltip</a></li><li><a href="global.html#tooltipPlacement">tooltipPlacement</a></li><li><a href="global.html#triggerRerenderingWithInvertedVisibility">triggerRerenderingWithInvertedVisibility</a></li><li><a href="global.html#useRange">useRange</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#value">value</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#wmsLayer">wmsLayer</a></li><li><a href="global.html#wmsLayers">wmsLayers</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jan 15 2018 10:15:15 GMT+0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
