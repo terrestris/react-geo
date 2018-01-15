@@ -25,7 +25,7 @@ let visibleMap = false;
 /**
  * Setup
  */
-const buttonCoords = [100, 100];
+const buttonCoords = [130, 130];
 let mapMenuCoords;
 
 // Prepare map
@@ -130,7 +130,7 @@ const doRender = () => {
               buttonCoords[0] + 14, // buttonX - buttonWidth/2
               buttonCoords[1] + 14 // buttonY - buttonHeight/2
             ]}
-            diameter={80}
+            diameter={100}
             animationDuration={500}
             segmentAngles={[0, 90]}
           >
@@ -145,7 +145,6 @@ const doRender = () => {
         <span>CircleMenu in a Map (click the red feature)</span>
         <MapProvider map={mapPromise}>
           <Map style={{
-            width: '512px',
             height: '512px'
           }} />
         </MapProvider>

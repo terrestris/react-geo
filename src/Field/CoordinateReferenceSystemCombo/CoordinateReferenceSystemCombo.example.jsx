@@ -83,19 +83,7 @@ const predefinedCrsDefinitions = [{
 
 render(
   <div>
-    <div id="map" style={{
-      width: '400px',
-      height: '400px',
-      right: '0px',
-      position: 'absolute'
-    }} />
-    <div className="example-block">
-      <span>A <code>CoordinateReferenceSystemCombo</code> with predefined definitions of four CRS:</span>
-      <br />
-
-      {/* A CoordinateReferenceSystemCombo having predefinedCrsDefinitions*/}
-      <CoordinateReferenceSystemCombo predefinedCrsDefinitions={predefinedCrsDefinitions} style={{width: 200}} />
-    </div>
+    <div id="map"></div>
 
     <div className="example-block">
       <span>A <code>CoordinateReferenceSystemCombo</code> with autocomplete mode where CRS are fetched from <a href="http://epsg.io/">epsg.io/</a>.
@@ -103,8 +91,20 @@ render(
       </span>
       <br />
 
-      <CoordinateReferenceSystemCombo onSelect={setProjection} style={{width: 200}} />
+      <CoordinateReferenceSystemCombo
+        emptyTextPlaceholderText="Type to fetch definitions dynamically"
+        onSelect={setProjection} />
     </div>
+
+    <div className="example-block">
+      <span>A <code>CoordinateReferenceSystemCombo</code> with predefined definitions of four CRS. Selecting an option does not affect the map.</span>
+      <br />
+
+      {/* A CoordinateReferenceSystemCombo having predefinedCrsDefinitions*/}
+      <CoordinateReferenceSystemCombo
+        predefinedCrsDefinitions={predefinedCrsDefinitions} />
+    </div>
+
   </div>,
 
   // Target element

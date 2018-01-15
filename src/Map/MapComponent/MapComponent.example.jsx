@@ -44,7 +44,6 @@ render(
   <MapProvider map={mapPromise}>
     NominatimSearch: <Search />
     <Map style={{
-      width: '512px',
       height: '512px'
     }} />
   </MapProvider>,

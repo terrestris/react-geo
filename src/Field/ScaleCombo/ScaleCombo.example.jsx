@@ -33,22 +33,18 @@ const map = new OlMap({
 
 render(
   <div>
-    <div id="map" style={{
-      width: '400px',
-      height: '400px',
-      right: '0px',
-      position: 'absolute'
-    }} />
-
     <div className="example-block">
-      <span>ScaleCombo:</span>
-
-      <ScaleCombo
-        map={map}
-        style={{'margin': '5px', 'width': '300px'}}
-      />
-
+      <label>ScaleCombo:<br />
+        <ScaleCombo
+          map={map}
+          style={{'margin': '5px', 'width': '300px'}}
+        />
+      </label>
     </div>
+
+    <div id="map" style={{
+      height: '400px'
+    }} />
 
   </div>,
 

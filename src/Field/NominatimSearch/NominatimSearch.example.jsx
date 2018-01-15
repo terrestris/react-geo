@@ -30,20 +30,16 @@ const map = new OlMap({
 
 render(
   <div>
-    <div id="map" style={{
-      width: '400px',
-      height: '400px',
-      right: '0px',
-      position: 'absolute'
-    }} />
-
     <div className="example-block">
-      <span>Just a NominatimSearch:</span>
-
-      {/* A NominatimSearch without any configuration*/}
-      <NominatimSearch map={map} />
-
+      <label>The NominatimSearch<br />
+        <NominatimSearch map={map} style={{
+          width: '80%'
+        }} />
+      </label>
     </div>
+    <div id="map" style={{
+      height: '400px'
+    }} />
   </div>,
 
   // Target

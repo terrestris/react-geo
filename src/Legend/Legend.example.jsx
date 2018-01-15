@@ -65,10 +65,7 @@ const extraParams = {
 render(
   <div>
     <div id="map" style={{
-      width: '400px',
-      height: '400px',
-      right: '0px',
-      position: 'absolute'
+      height: '200px'
     }} />
 
     <div className="example-block">

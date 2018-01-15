@@ -50,15 +50,8 @@ const onClick = () => {
  */
 const doRender = (wmsLayers) => {
   render(
-    <div style={{
-      height: '500px'
-    }}>
-      <div id="map" style={{
-        width: '400px',
-        height: '400px',
-        right: '100px',
-        position: 'absolute'
-      }} />
+    <div>
+      <div id="map" />
       <div className="example-block">
         <SimpleButton
           onClick={onClick}
@@ -69,7 +62,7 @@ const doRender = (wmsLayers) => {
           key="1"
           map={map}
           wmsLayers={wmsLayers}
-          draggable={false}
+          draggable={true}
           t={t => t}
           width={500}
           height={400}
