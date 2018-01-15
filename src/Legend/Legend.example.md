@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: Legend example
 description: This example demonstrates the Legend.
 collection: Examples

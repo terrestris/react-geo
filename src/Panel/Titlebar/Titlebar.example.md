@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: Titlebar example
 description: This example demonstrates the Titlebar.
 collection: Examples

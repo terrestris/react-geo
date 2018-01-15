@@ -1,5 +1,5 @@
 ---
-layout: index.html
+layout: index.hbs
 title: Examples of components in react-geo package
 ---
 

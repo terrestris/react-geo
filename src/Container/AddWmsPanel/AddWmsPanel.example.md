@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: AddWmsPanel example
 description: This example shows the usage of an AddWmsPanel.
 collection: Examples

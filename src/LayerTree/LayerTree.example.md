@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: LayerTree example
 description: This example demonstrates the LayerTree.
 collection: Examples

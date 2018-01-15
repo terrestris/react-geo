@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: ToggleGroup example
 description: This is a example using an ToggleGroup.
 collection: Examples

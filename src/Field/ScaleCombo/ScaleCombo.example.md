@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: ScaleCombo example
 description: This is a example using a scale combo.
 collection: Examples
