@@ -1,0 +1,11 @@
+@import '../style/variables.less';
+
+.react-geo-circlemenu {
+  border: dashed 1px;
+  border-radius: 50%;
+  position: absolute;
+  pointer-events:none;
+  background: -moz-radial-gradient(center, ellipse cover, rgba(0,0,0,0) 0%,  @circle-menu-background-color 100%);
+  background: -webkit-radial-gradient(center, ellipse cover, rgba(0,0,0,0) 0%, @circle-menu-background-color 100%);
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, @circle-menu-background-color 100%);
+}
