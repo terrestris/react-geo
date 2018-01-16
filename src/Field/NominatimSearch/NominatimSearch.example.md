@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: NominatimSearch example
 description: This is an example using a NominatimSearch.
 collection: Examples

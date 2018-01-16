@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: Toolbar example
 description: This is a example using a toolbar having vertically and horizontally aligned child elements.
 collection: Examples

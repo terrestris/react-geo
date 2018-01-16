@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: SimpleButton example
 description: This is a example using an SimpleButton.
 collection: Examples

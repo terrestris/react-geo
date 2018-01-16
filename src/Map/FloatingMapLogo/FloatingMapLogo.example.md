@@ -1,5 +1,5 @@
 ---
-layout: basicMap.html
+layout: basicMap.hbs
 title: FloatingMapLogo example
 description: This is a example using a FloatingMapLogo.
 collection: Examples

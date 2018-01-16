@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: VisibleComponent HOC example
 description: This example shows the usage of the VisibleComponent HOC (High Order Component).
 collection: Examples

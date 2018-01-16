@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: CoordinateReferenceSystemCombo example
 description: This is an example using a CoordinateReferenceSystemCombo.
 collection: Examples

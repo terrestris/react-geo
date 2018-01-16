@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: MapComponent example
 description: This example shows the usage of the MapComponent in combination with the MapProvider.
 collection: Examples

@@ -1,5 +1,5 @@
 ---
-layout: basic.html
+layout: basic.hbs
 title: ToggleButton example
 description: This is a example using an ToggleButton.
 collection: Examples
