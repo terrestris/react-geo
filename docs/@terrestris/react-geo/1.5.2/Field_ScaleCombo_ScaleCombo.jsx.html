@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Field/ScaleCombo/ScaleCombo.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Field/ScaleCombo/ScaleCombo.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import PropTypes from 'prop-types';
+import { Select } from 'antd';
+const Option = Select.Option;
+import {
+  isInteger,
+  isEmpty,
+  isEqual,
+  isFunction,
+  reverse,
+  clone
+} from 'lodash';
+
+import Logger from '../../Util/Logger';
+import MapUtil from '../../Util/MapUtil/MapUtil';
+
+/**
+ * Class representating a scale combo to choose map scale via a dropdown menu.
+ *
+ * @class The ScaleCombo
+ * @extends React.Component
+ */
+class ScaleCombo extends React.Component {
+
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-scalecombo'
+
+  static propTypes = {
+    /**
+     * The className which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
+    /**
+     * The zoomLevel.
+     * @type {Number}
+     */
+    zoomLevel: PropTypes.number,
+
+    /**
+     * The onZoomLevelSelect function. Pass a function if you want something
+     * different than the resolution of the passed map.
+     *
+     * @type {Function}
+     */
+    onZoomLevelSelect: PropTypes.func,
+
+    /**
+     * The resolutions.
+     * @type {Array}
+     */
+    resolutions: PropTypes.arrayOf(PropTypes.number),
+
+    /**
+     * The scales.
+     * @type {Array}
+     */
+    scales: PropTypes.arrayOf(PropTypes.shape),
+
+    /**
+     * The style object
+     * @type {Object}
+     */
+    style: PropTypes.object,
+
+    /**
+     * The map
+     * @type {Ol.Map}
+     */
+    map: PropTypes.object.isRequired,
+
+    /**
+     * Set to false to not listen to the map moveend event.
+     *
+     * @type {Boolean}
+     */
+    syncWithMap: PropTypes.bool
+  }
+
+  /**
+   * The default props
+   */
+  static defaultProps = {
+    style: {
+      width: 100
+    },
+    scales: [],
+    syncWithMap: true
+  }
+
+  /**
+   * Create a map.
+   * @constructs Map
+   */
+  constructor(props) {
+    super(props);
+
+    /**
+     * The default onZoomLevelSelect function sets the resolution of the passed
+     * map according to the selected Scale.
+     *
+     * @param  {Number} selectedScale The selectedScale.
+     */
+    const defaultOnZoomLevelSelect = (selectedScale) => {
+      const mapView = this.props.map.getView();
+      const calculatedResolution = MapUtil.getResolutionForScale(
+        selectedScale, mapView.getProjection().getUnits()
+      );
+      mapView.setResolution(calculatedResolution);
+    };
+
+    this.state = {
+      zoomLevel: props.zoomLevel || this.props.map.getView().getZoom(),
+      onZoomLevelSelect: props.onZoomLevelSelect || defaultOnZoomLevelSelect,
+      scales: props.scales
+    };
+
+    if (props.syncWithMap) {
+      this.props.map.on('moveend', this.zoomListener);
+    }
+  }
+
+  /**
+   * Set the zoomLevel of the to the ScaleCombo.
+   *
+   * @param  {Object} evt The 'moveend' event
+   * @private
+   */
+  zoomListener = (evt) => {
+    const zoom = evt.target.getView().getZoom();
+    let roundZoom = Math.round(zoom);
+    if (!roundZoom) {
+      roundZoom = 0;
+    }
+    this.setState({
+      zoomLevel: roundZoom
+    });
+  }
+
+  /**
+   * Called on componentWillReceiveProps lifecycle event.
+   *
+   * @param {Object} newProps The new properties.
+   */
+  componentWillReceiveProps(newProps) {
+    if (!isEqual(newProps.zoomLevel, this.props.zoomLevel)) {
+      this.setState({
+        zoomLevel: newProps.zoomLevel
+      });
+    }
+
+    if (!newProps.syncWithMap !== this.props.syncWithMap) {
+      if (newProps.syncWithMap) {
+        this.props.map.on('moveend', this.zoomListener);
+      } else {
+        this.props.map.un('moveend', this.zoomListener);
+      }
+    }
+
+    if (isFunction(newProps.onZoomLevelSelect)
+      &amp;&amp; !isEqual(newProps.onZoomLevelSelect, this.state.onZoomLevelSelect)) {
+      this.setState({
+        onZoomLevelSelect: newProps.onZoomLevelSelect
+      });
+    }
+  }
+
+  /**
+   * @function pushScaleOption: Helper function to create a {@link Option} scale component
+   * based on a resolution and the {@link Ol.View}
+   *
+   * @param {Number} resolution map cresolution to generate the option for
+   * @param {Ol.View} mv The map view
+   *
+   */
+  pushScale = (resolution, mv) => {
+    let scale = MapUtil.getScaleForResolution(resolution, mv.getProjection().getUnits());
+    const roundScale = MapUtil.roundScale(scale);
+    if (this.state.scales.includes(roundScale) ) {
+      return;
+    }
+    this.state.scales.push(roundScale);
+  };
+
+  /**
+   * @function getOptionsFromMap: Helper function generate {@link Option} scale components
+   * based on an existing instance of {@link Ol.Map}
+   */
+  getOptionsFromMap = () => {
+    if (!isEmpty(this.state.scales)) {
+      Logger.debug('Array with scales found. Returning');
+      return;
+    }
+    if (!this.props.map) {
+      Logger.warn('Map component not found. Could not initialize options array.');
+      return;
+    }
+
+    let map = this.props.map;
+    let mv = map.getView();
+    // use existing resolutions array if exists
+    let resolutions = mv.getResolutions();
+    if (isEmpty(resolutions)) {
+      for (let currentZoomLevel = mv.getMaxZoom(); currentZoomLevel >= mv.getMinZoom(); currentZoomLevel--) {
+        let resolution = mv.getResolutionForZoom(currentZoomLevel);
+        this.pushScale(resolution, mv);
+      }
+    } else {
+      let reversedResolutions = reverse(clone(resolutions));
+      reversedResolutions.forEach((resolution) => {
+        this.pushScale(resolution, mv);
+      });
+    }
+  };
+
+  /**
+   * Determine option element for provided zoom level out of array of valid options.
+   *
+   * @param {Number} zoom zoom level
+   *
+   * @return {Element} Option element for provided zoom level
+   */
+  determineOptionKeyForZoomLevel = (zoom) => {
+    if (!isInteger(zoom) || (this.state.scales.length - 1 - zoom) &lt; 0) {
+      return undefined;
+    }
+    return this.state.scales[this.state.scales.length - 1 - zoom].toString();
+  }
+
+  /**
+   * componentWillMount - Description
+   *
+   * @return {type} Description
+   */
+  componentWillMount() {
+    if (isEmpty(this.state.scales) &amp;&amp; this.props.map) {
+      this.getOptionsFromMap();
+    }
+  }
+
+  /**
+   * The render function.
+   */
+  render() {
+    const {
+      style,
+      className
+    } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
+    const options = this.state.scales.map((roundScale) => {
+      return &lt;Option
+        key={roundScale}
+        value={roundScale.toString()}
+      >
+        {`1:${roundScale.toLocaleString()}`}
+      &lt;/Option>;
+    });
+
+    return (
+      &lt;Select
+        showSearch
+        onChange={this.state.onZoomLevelSelect}
+        filterOption={false}
+        value={this.determineOptionKeyForZoomLevel(this.state.zoomLevel)}
+        size="small"
+        style={style}
+        className={finalClassName}
+      >
+        {options}
+      &lt;/Select>
+    );
+  }
+}
+
+export default ScaleCombo;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddWmsLayerEntry.html">AddWmsLayerEntry</a></li><li><a href="AddWmsPanel.html">AddWmsPanel</a></li><li><a href="CapabilitiesUtil.html">CapabilitiesUtil</a></li><li><a href="CircleMenu.html">CircleMenu</a></li><li><a href="CircleMenuItem.html">CircleMenuItem</a></li><li><a href="CoordinateReferenceSystemCombo.html">CoordinateReferenceSystemCombo</a></li><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureGrid.html">FeatureGrid</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapComponent.html">MapComponent</a></li><li><a href="MappifiedComponent.html">MappifiedComponent</a></li><li><a href="MapProvider.html">MapProvider</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="MeasureButton.html">MeasureButton</a></li><li><a href="MeasureUtil.html">MeasureUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ProjectionUtil.html">ProjectionUtil</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="TimeSlider.html">TimeSlider</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li><li><a href="Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addAllLayersText">addAllLayersText</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#addSelectedLayersText">addSelectedLayersText</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#animationDuration">animationDuration</a></li><li><a href="global.html#attributeFilter">attributeFilter</a></li><li><a href="global.html#attributeNameColumnTitle">attributeNameColumnTitle</a></li><li><a href="global.html#attributeNameColumnWidthInPercent">attributeNameColumnWidthInPercent</a></li><li><a href="global.html#attributeNames">attributeNames</a></li><li><a href="global.html#attributeValueColumnTitle">attributeValueColumnTitle</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#buttonCoords">buttonCoords</a></li><li><a href="global.html#cancelText">cancelText</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#clickToDrawText">clickToDrawText</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#closeTooltip">closeTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#compressTooltip">compressTooltip</a></li><li><a href="global.html#continueAngleMsg">continueAngleMsg</a></li><li><a href="global.html#continueLineMsg">continueLineMsg</a></li><li><a href="global.html#continuePolygonMsg">continuePolygonMsg</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#crsApiUrl">crsApiUrl</a></li><li><a href="global.html#decimalPlacesInTooltips">decimalPlacesInTooltips</a></li><li><a href="global.html#defaultValue">defaultValue</a></li><li><a href="global.html#diameter">diameter</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#doRender">doRender</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#emptyTextPlaceholderText">emptyTextPlaceholderText</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#feature">feature</a></li><li><a href="global.html#fillColor">fillColor</a></li><li><a href="global.html#filterFunction">filterFunction</a></li><li><a href="global.html#fontIcon">fontIcon</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#formatString">formatString</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
+based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#icon">icon</a></li><li><a href="global.html#id">id</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#layerQueryableText">layerQueryableText</a></li><li><a href="global.html#layerTextTemplateFn">layerTextTemplateFn</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mappify">mappify</a></li><li><a href="global.html#mapPromise">mapPromise</a></li><li><a href="global.html#max">max</a></li><li><a href="global.html#measureLayerName">measureLayerName</a></li><li><a href="global.html#measureTooltipCssClasses">measureTooltipCssClasses</a></li><li><a href="global.html#measureType">measureType</a></li><li><a href="global.html#min">min</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#multipleDrawing">multipleDrawing</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onCancel">onCancel</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onClick">onClick</a></li><li><a href="global.html#onClose">onClose</a></li><li><a href="global.html#onLayerAddToMap">onLayerAddToMap</a></li><li><a href="global.html#onResize">onResize</a></li><li><a href="global.html#onResizeStart">onResizeStart</a></li><li><a href="global.html#onResizeStop">onResizeStop</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onSelectionChange">onSelectionChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parent">parent</a></li><li><a href="global.html#parentId">parentId</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#position">position</a></li><li><a href="global.html#predefinedCrsDefinitions">predefinedCrsDefinitions</a></li><li><a href="global.html#pressed">pressed</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
+based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#radius">radius</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#rotationAngle">rotationAngle</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#segmentAngles">segmentAngles</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#setProjection">setProjection</a></li><li><a href="global.html#showMeasureInfoOnClickedPoints">showMeasureInfoOnClickedPoints</a></li><li><a href="global.html#strokeColor">strokeColor</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#syncWithMap">syncWithMap</a></li><li><a href="global.html#timeLayerAware">timeLayerAware</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#titleText">titleText</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#tooltip">tooltip</a></li><li><a href="global.html#tooltipPlacement">tooltipPlacement</a></li><li><a href="global.html#triggerRerenderingWithInvertedVisibility">triggerRerenderingWithInvertedVisibility</a></li><li><a href="global.html#useRange">useRange</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#value">value</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#wmsLayer">wmsLayer</a></li><li><a href="global.html#wmsLayers">wmsLayers</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 19 2018 14:20:34 GMT+0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
