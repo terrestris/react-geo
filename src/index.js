@@ -1,4 +1,5 @@
 import AddWmsPanel from './Container/AddWmsPanel/AddWmsPanel.jsx';
+import AddWmsLayerEntry from './Container/AddWmsPanel/AddWmsLayerEntry/AddWmsLayerEntry.jsx';
 import SimpleButton from './Button/SimpleButton/SimpleButton.jsx';
 import ToggleButton from './Button/ToggleButton/ToggleButton.jsx';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup.jsx';
@@ -39,6 +40,7 @@ import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComp
 import timeLayerAware from './HigherOrderComponent/TimeLayerAware/TimeLayerAware.jsx';
 
 export {
+  AddWmsLayerEntry,
   AddWmsPanel,
   CircleMenu,
   SimpleButton,
