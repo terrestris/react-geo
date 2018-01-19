@@ -30,9 +30,12 @@ class CapabilitiesUtil {
   /**
    * @static getLayersFromCapabilties - parse {OlLayerTile} from capabilities object
    *
+   * @param {Object} capabilities A capabilities object.
+   * @param {String} nameField Configure the field which should be set as the
+   *                           'name' property in the openlayers layer.
    * @return {OlLayerTile[]} Array of OlLayerTile
    */
-  static getLayersFromWmsCapabilties(capabilities) {
+  static getLayersFromWmsCapabilties(capabilities, nameField = 'Name') {
     const wmsVersion = get(capabilities,'version');
     const wmsAttribution = get(capabilities,'Service.AccessConstraints');
     const layersInCapabilities = get(capabilities,'Capability.Layer.Layer');
@@ -40,9 +43,11 @@ class CapabilitiesUtil {
     const wmsGetFeatureInfoConfig = get(capabilities, 'Capability.Request.GetFeatureInfo');
     const getMapUrl = get(wmsGetMapConfig,'DCPType[0].HTTP.Get.OnlineResource');
     const getFeatureInfoUrl = get(wmsGetFeatureInfoConfig,'DCPType[0].HTTP.Get.OnlineResource');
+
     return layersInCapabilities.map((layerObj) => new OlLayerImage({
       opacity: 1,
       title: get(layerObj, 'Title'),
+      name: get(layerObj, nameField),
       abstract: get(layerObj, 'Abstract'),
       getFeatureInfoUrl: getFeatureInfoUrl,
       getFeatureInfoFormats: get(wmsGetFeatureInfoConfig, 'Format'),
