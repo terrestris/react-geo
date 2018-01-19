@@ -17,7 +17,7 @@ if [ $TRAVIS_BRANCH != "master" ]; then
     return 0;
 fi
 
-VERSION=`node -pe "require('./package.json').version"`
+VERSION=$(node -pe "require('./package.json').version")
 
 ORIGINAL_AUTHOR_NAME=$(git show -s --format="%aN" $TRAVIS_COMMIT)
 ORIGINAL_AUTHOR_EMAIL=$(git show -s --format="%ae" $TRAVIS_COMMIT)
