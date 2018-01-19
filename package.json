@@ -69,7 +69,7 @@
     "react": "~16.0"
   },
   "dependencies": {
-    "i18next": "10.2.2",
+    "i18next": "10.3.0",
     "lodash": "4.17.4",
     "loglevel": "1.6.1",
     "moment": "2.20.1",
