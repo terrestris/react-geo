@@ -4,6 +4,7 @@ import SimpleButton from './Button/SimpleButton/SimpleButton.jsx';
 import ToggleButton from './Button/ToggleButton/ToggleButton.jsx';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup.jsx';
 import MeasureButton from './Button/MeasureButton/MeasureButton.jsx';
+import RedliningButton from './Button/RedliningButton/RedliningButton.jsx';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.jsx';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
 import ScaleCombo from './Field/ScaleCombo/ScaleCombo.jsx';
@@ -47,6 +48,7 @@ export {
   ToggleButton,
   ToggleGroup,
   MeasureButton,
+  RedliningButton,
   FeatureGrid,
   LayerTree,
   LayerTreeNode,
