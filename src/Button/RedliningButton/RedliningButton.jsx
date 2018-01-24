@@ -58,7 +58,7 @@ class RedliningButton extends React.Component {
      *
      * @type {String}
      */
-    drawType: PropTypes.oneOf(['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle']).isRequired,
+    drawType: PropTypes.oneOf(['Point', 'LineString', 'Polygon', 'Circle', 'Rectangle']).isRequired,
 
     /**
      * Name of system vector layer which will be used for redlining features.
@@ -196,9 +196,18 @@ class RedliningButton extends React.Component {
       map
     } = this.props;
 
+    let geometryFunction;
+    let type = drawType;
+
+    if (drawType === 'Rectangle') {
+      geometryFunction = OlInteractionDraw.createBox();
+      type = 'Circle';
+    }
+
     const drawInteraction = new OlInteractionDraw({
       source: this.state.redliningLayer.getSource(),
-      type: drawType,
+      type: type,
+      geometryFunction: geometryFunction,
       style: new OlStyleStyle({
         fill: new OlStyleFill({
           color: fillColor
