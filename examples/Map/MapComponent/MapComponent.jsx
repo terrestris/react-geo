@@ -47,6 +47,14 @@ export class MapComponent extends React.Component {
   }
 
   /**
+   * Invoked immediately after updating occured and also called for the initial
+   * render.
+   */
+  componentDidUpdate() {
+    this.props.map.updateSize();
+  }
+
+  /**
    * The render function.
    */
   render() {
