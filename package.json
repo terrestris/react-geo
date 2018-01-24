@@ -52,6 +52,7 @@
     "test": "jest --maxWorkers=4",
     "test:watch": "jest --watchAll",
     "coveralls": "cat coverage/lcov.info | coveralls",
+    "codacy": "cat coverage/lcov.info | codacy-coverage",
     "prepublishOnly": "npm run build",
     "lint": "eslint --ext js,jsx,html,md example-templates/ examples/ src/",
     "lint:fix": "npm run lint -- --fix",
