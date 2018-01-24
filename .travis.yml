@@ -12,7 +12,7 @@ after_script:
 - greenkeeper-lockfile-upload
 after_success:
 - npm run-script coveralls
-- npm run-script codacy
+- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run-script codacy fi'
 - "./.ci/update-gh-pages.sh > /dev/null 2>&1"
 cache:
   directories:
