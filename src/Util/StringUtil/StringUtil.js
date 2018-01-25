@@ -49,6 +49,51 @@ class StringUtil {
     }
   }
 
+  /**
+   * Returns a string that is wrapped: every ~`width` chars a space is
+   * replaced with the passed `spaceReplacer`.
+   *
+   * See http://stackoverflow.com/questions/14484787/wrap-text-in-javascript
+   *
+   * @param {String} str The string to wrap.
+   * @param {Number} width The width of a line (number of characters).
+   * @param {String} spaceReplacer The string to replace spaces with.
+   * @return {String} The 'wrapped' string.
+   */
+  static stringDivider = (str, width, spaceReplacer)  => {
+
+    let startIndex = 0;
+    let stopIndex = width;
+
+    if (str.length > width) {
+      let p = width;
+      let left;
+      let right;
+      while (p > 0 && (str[p] !== ' ' && str[p] !== '-')) {
+        p--;
+      }
+      if (p > 0) {
+        if (str.substring(p, p + 1) === '-') {
+          left = str.substring(0, p + 1);
+        } else {
+          left = str.substring(0, p);
+        }
+        right = str.substring(p + 1);
+        return left + spaceReplacer + StringUtil.stringDivider(
+          right, width, spaceReplacer);
+      } else {
+        // no whitespace or - found,
+        // splitting hard on the width length
+        left = str.substring(startIndex, stopIndex + 1) + '-';
+        right = str.substring(stopIndex + 1);
+        startIndex = stopIndex;
+        stopIndex += width;
+        return left + spaceReplacer + StringUtil.stringDivider(
+          right, width, spaceReplacer);
+      }
+    }
+    return str;
+  }
 }
 
 export default StringUtil;

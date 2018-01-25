@@ -72,6 +72,33 @@ describe('StringUtil', () => {
         expect(objectGot.e).toBe(true);
       });
     });
+
+    describe('#stringDivider', () => {
+      it ('returns original input string if its length is smaller as provided line width', () => {
+        const inputString = 'MyLengthIs12';
+        const width = 13;
+        const outputString = StringUtil.stringDivider(inputString, width);
+        expect(outputString).toEqual(inputString);
+      });
+
+      it ('splits hard on the width length and wraps the string into given format if its length is greater as provided line width', () => {
+        const inputString = 'MyLengthIsGreaterAs20';
+        const width = 10;
+        const spaceReplacer = '\n';
+        const outputString = StringUtil.stringDivider(inputString, width, spaceReplacer);
+        const expectedString = 'MyLengthIsG-\nreaterAs20';
+        expect(outputString).toBe(expectedString);
+      });
+
+      it ('splits on whitespace and wraps the string into given format if its length is greater as provided line width', () => {
+        const inputString = 'I should be splitted on whitespace';
+        const width = 11;
+        const spaceReplacer = '\n';
+        const outputString = StringUtil.stringDivider(inputString, width, spaceReplacer);
+        const expectedString = 'I should be\nsplitted on\nwhitespace';
+        expect(outputString).toBe(expectedString);
+      });
+    });
   });
 
 });
