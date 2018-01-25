@@ -82,6 +82,14 @@ render(
         Draw rectangle
         </RedliningButton>
 
+        <RedliningButton
+          name="drawText"
+          map={map}
+          drawType="Text"
+        >
+        Draw text label
+        </RedliningButton>
+
       </ToggleGroup>
 
     </div>
