@@ -90,6 +90,14 @@ render(
         Draw text label
         </RedliningButton>
 
+        <RedliningButton
+          name="selectAndModify"
+          map={map}
+          editType="Edit"
+        >
+        Select and modify features
+        </RedliningButton>
+
       </ToggleGroup>
 
     </div>

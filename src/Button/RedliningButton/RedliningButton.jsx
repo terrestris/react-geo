@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import { Modal, Input } from 'antd';
 
-import { isEmpty } from 'lodash';
-
 import OlMap from 'ol/map';
 import OlLayerVector from 'ol/layer/vector';
 import OlSourceVector from 'ol/source/vector';
@@ -15,10 +13,15 @@ import OlStyleFill from 'ol/style/fill';
 import OlStyleCircle from 'ol/style/circle';
 import OlStyleText from 'ol/style/text';
 import OlInteractionDraw from 'ol/interaction/draw';
+import OlInteractionSelect from 'ol/interaction/select';
+import OlInteractionModify from 'ol/interaction/modify';
+import OlInteractionTranslate from 'ol/interaction/translate';
+import OlEventsCondition from 'ol/events/condition';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import MapUtil from '../../Util/MapUtil/MapUtil';
 import StringUtil from '../../Util/StringUtil/StringUtil';
+import Logger from '../../Util/Logger';
 
 import './RedliningButton.less';
 
@@ -79,7 +82,15 @@ class RedliningButton extends React.Component {
      *
      * @type {String}
      */
-    drawType: PropTypes.oneOf(['Point', 'LineString', 'Polygon', 'Circle', 'Rectangle', 'Text']).isRequired,
+    drawType: PropTypes.oneOf(['Point', 'LineString', 'Polygon', 'Circle', 'Rectangle', 'Text']),
+
+    /**
+     * Whether the redlining feature should be deleted, copied or modified.
+     * be drawn.
+     *
+     * @type {String}
+     */
+    editType: PropTypes.oneOf(['Copy', 'Edit', 'Delete', 'DeleteAll']),
 
     /**
      * Name of system vector layer which will be used for redlining features.
@@ -101,6 +112,20 @@ class RedliningButton extends React.Component {
      * @type {String}
      */
     strokeColor: PropTypes.string,
+
+    /**
+     * Fill color of selected redlining feature.
+     *
+     * @type {String}
+     */
+    selectFillColor: PropTypes.string,
+
+    /**
+     * Stroke color of selected redlining feature.
+     *
+     * @type {String}
+     */
+    selectStrokeColor: PropTypes.string,
 
     /**
      * Title for modal used for input of labels for redlining features.
@@ -132,6 +157,8 @@ class RedliningButton extends React.Component {
     redliningLayerName: 'react-geo_redlining',
     fillColor: 'rgba(154, 26, 56, 0.5)',
     strokeColor: 'rgba(154, 26, 56, 0.8)',
+    selectFillColor: 'rgba(240, 240, 90, 0.5)',
+    selectStrokeColor: 'rgba(220, 120, 20, 0.8)',
     modalPromptTitle: 'Label',
     modalPromptOkButtonText: 'Ok',
     modalPromptCancelButtonText: 'Cancel'
@@ -146,9 +173,14 @@ class RedliningButton extends React.Component {
 
     super(props);
 
+    if (!this.props.drawType && !this.props.editType) {
+      Logger.warn('Neither "drawType" nor "editType" was provided. Redlining ' +
+      'button won\'t work properly!');
+    }
+
     this.state = {
       redliningLayer: null,
-      drawInteraction: null,
+      interaction: null,
       showTextPrompt: false,
       textLabel: ''
     };
@@ -166,8 +198,9 @@ class RedliningButton extends React.Component {
 
   /**
    * Called when the redlining button is toggled. If the button state is pressed,
-   * the appropriate draw interaction will be created. Otherwise, by untoggling,
-   * the same previously created interaction will be removed from the map.
+   * the appropriate draw, modify or select interaction will be created.
+   * Otherwise, by untoggling, the same previously created interaction will be
+   * removed from the map.
    *
    * @param {Boolean} pressed Whether the redlining button is pressed or not.
    *
@@ -177,25 +210,31 @@ class RedliningButton extends React.Component {
 
     const {
       map,
-      drawType
+      drawType,
+      editType
     } = this.props;
 
     const {
       redliningLayer,
-      drawInteraction
+      interaction
     } = this.state;
 
     this._redliningFeatures = redliningLayer.getSource().getFeaturesCollection();
 
     if (pressed) {
-      this.createDrawInteraction(pressed);
+      if (drawType) {
+        this.createDrawInteraction(pressed);
+      } else if (editType) {
+        this.createSelectOrModifyInteraction(pressed);
+      }
     } else {
-      map.removeInteraction(drawInteraction);
+      interaction.forEach(i => map.removeInteraction(i));
       if (drawType === 'Text') {
         this._redliningFeatures.un('add', this.handleTextAdding);
+      } else {
+        map.un('pointermove', this.onPointerMove);
       }
     }
-
   }
 
   /**
@@ -237,20 +276,31 @@ class RedliningButton extends React.Component {
 
     const {
       fillColor,
-      strokeColor
+      selectFillColor,
+      strokeColor,
+      selectStrokeColor
     } = this.props;
+
+    const {
+      interaction,
+    } = this.state;
+
+    let useSelectStyle = false;
+    if (interaction && interaction.length > 1 && !feature.get('isLabel')) {
+      useSelectStyle = true;
+    }
 
     switch (feature.getGeometry().getType()) {
       case 'Point': {
-        if (isEmpty(this.state.textLabel)) {
+        if (!feature.get('isLabel')) {
           return new OlStyleStyle({
             image: new OlStyleCircle({
               radius: 7,
               fill: new OlStyleFill({
-                color: fillColor
+                color: !useSelectStyle ? fillColor : selectFillColor
               }),
               stroke: new OlStyleStroke({
-                color: strokeColor
+                color: !useSelectStyle ? strokeColor : selectStrokeColor
               })
             })
           });
@@ -262,10 +312,10 @@ class RedliningButton extends React.Component {
               offsetY: 5,
               font: '12px sans-serif',
               fill: new OlStyleFill({
-                color: fillColor
+                color: !useSelectStyle ? fillColor : selectFillColor
               }),
               stroke: new OlStyleStroke({
-                color: strokeColor
+                color: !useSelectStyle ? strokeColor : selectStrokeColor
               })
             })
           });
@@ -274,7 +324,7 @@ class RedliningButton extends React.Component {
       case 'LineString': {
         return new OlStyleStyle({
           stroke: new OlStyleStroke({
-            color: strokeColor,
+            color: !useSelectStyle ? strokeColor : selectStrokeColor,
             width: 2
           })
         });
@@ -283,10 +333,10 @@ class RedliningButton extends React.Component {
       case 'Circle': {
         return new OlStyleStyle({
           fill: new OlStyleFill({
-            color: fillColor
+            color: !useSelectStyle ? fillColor : selectFillColor
           }),
           stroke: new OlStyleStroke({
-            color: strokeColor,
+            color: !useSelectStyle ? strokeColor : selectStrokeColor,
             width: 2
           })
         });
@@ -299,19 +349,15 @@ class RedliningButton extends React.Component {
 
   /**
    * Creates a correctly configured OL draw interaction depending on given
-   * drawType.
+   * drawType and adds this to the map.
    *
    * @param {Boolean} pressed Whether the redlining button is pressed or not.
    * Will be used to handle active state of the draw interaction.
-   *
-   * @return {OlInteractionDraw} The created OL draw interaction.
    *
    * @method
    */
   createDrawInteraction = (pressed) => {
     const {
-      fillColor,
-      strokeColor,
       drawType,
       map
     } = this.props;
@@ -331,35 +377,78 @@ class RedliningButton extends React.Component {
       source: this.state.redliningLayer.getSource(),
       type: type,
       geometryFunction: geometryFunction,
-      style: new OlStyleStyle({
-        fill: new OlStyleFill({
-          color: fillColor
-        }),
-        stroke: new OlStyleStroke({
-          color: strokeColor,
-          lineDash: [10, 10],
-          width: 2
-        }),
-        image: new OlStyleCircle({
-          radius: 5,
-          stroke: new OlStyleStroke({
-            color: strokeColor
-          }),
-          fill: new OlStyleFill({
-            color: fillColor
-          })
-        })
-      }),
-      freehandCondition: function() {
-        return false;
-      }
+      style: this.getRedliningStyleFunction,
+      freehandCondition: OlEventsCondition.never
     });
 
     map.addInteraction(drawInteraction);
 
-    this.setState({drawInteraction}, () => {
+    this.setState({
+      interaction: [drawInteraction]
+    }, () => {
       drawInteraction.setActive(pressed);
     });
+  }
+
+  /**
+   * Creates a correctly configured OL select and/or modify and/or translate
+   * interaction(s) depending on given editType and adds this/these to the map.
+   *
+   * @method
+   */
+  createSelectOrModifyInteraction = () => {
+    const {
+      editType,
+      map
+    } = this.props;
+
+    const select = new OlInteractionSelect({
+      condition: OlEventsCondition.singleClick,
+      style: this.getRedliningStyleFunction,
+      hitTolerance: 5
+    });
+
+    let interactions = [select];
+
+    if (editType === 'Edit') {
+      const edit = new OlInteractionModify({
+        features: select.getFeatures(),
+        deleteCondition: OlEventsCondition.singleClick,
+        style: this.getRedliningStyleFunction,
+        pixelTolerance: 10
+      });
+
+      edit.on('modifystart', this.onModifyStart);
+
+      const translate = new OlInteractionTranslate({
+        features: select.getFeatures()
+      });
+      interactions.push(edit, translate);
+    }
+
+    interactions.forEach(i => map.addInteraction(i));
+
+    map.on('pointermove', this.onPointerMove);
+
+    this.setState({
+      interaction: interactions
+    });
+  }
+
+  /**
+   * Checks if a labeled feature is being modified. If yes, opens prompt to
+   * input a new label.
+   *
+   * @param {Event} evt 'modifystart' event of OlInteractionModify.
+   */
+  onModifyStart = (evt) => {
+    const feature = evt.features.getArray()[0];
+    if (feature.get('isLabel')) {
+      this._redliningTextFeature = feature;
+      this.setState({
+        showTextPrompt: true
+      });
+    }
   }
 
   /**
@@ -374,6 +463,7 @@ class RedliningButton extends React.Component {
       showTextPrompt: true
     });
     this._redliningTextFeature = evt.element;
+    this._redliningTextFeature.set('isLabel', true);
   }
 
   /**
@@ -402,7 +492,10 @@ class RedliningButton extends React.Component {
       showTextPrompt: false,
       textLabel: ''
     }, () => {
-      this._redliningFeatures.remove(this._redliningTextFeature);
+      if (!(this.state.interaction && this.state.interaction.length > 1)) {
+        this._redliningFeatures.remove(this._redliningTextFeature);
+        this._redliningTextFeature = null;
+      }
     });
   }
 
@@ -440,6 +533,25 @@ class RedliningButton extends React.Component {
     });
   }
 
+  /**
+   * Sets the cursor to `pointer` if the pointer enters a non-oqaque pixel of
+   * a hoverable layer.
+   *
+   * @param {ol.MapEvent} evt The `pointermove` event.
+   */
+  onPointerMove = (evt) => {
+    if (evt.dragging) {
+      return;
+    }
+
+    const { map } = this.props;
+
+    const pixel = map.getEventPixel(evt.originalEvent);
+    const hit = map.hasFeatureAtPixel(pixel);
+
+    map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+  }
+
 
   /**
    * The render function.
@@ -449,9 +561,12 @@ class RedliningButton extends React.Component {
       className,
       map,
       drawType,
+      editType,
       redliningLayerName,
       fillColor,
       strokeColor,
+      selectFillColor,
+      selectStrokeColor,
       modalPromptTitle,
       modalPromptOkButtonText,
       modalPromptCancelButtonText,
