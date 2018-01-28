@@ -113,7 +113,7 @@
     "jest": "22.1.4",
     "jsdoc": "3.5.5",
     "jsdoc-babel": "0.3.0",
-    "jstransformer-handlebars": "1.0.0",
+    "jstransformer-handlebars": "1.1.0",
     "less": "2.7.3",
     "less-loader": "4.0.5",
     "metalsmith": "2.3.0",
