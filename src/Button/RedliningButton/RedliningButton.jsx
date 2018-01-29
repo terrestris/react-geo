@@ -57,6 +57,13 @@ class RedliningButton extends React.Component {
    */
    _redliningTextFeature = null;
 
+   /**
+    * Reference to OL select interaction which will be used in edit mode.
+    * @type {OlInteractionSelect}
+    * @private
+    */
+    _selectInteraction = null;
+
   /**
    * The properties.
    * @type {Object}
@@ -232,6 +239,9 @@ class RedliningButton extends React.Component {
       if (drawType === 'Text') {
         this._redliningFeatures.un('add', this.handleTextAdding);
       } else {
+        if (editType === 'Delete') {
+          this._selectInteraction.un('select', this.onFeatureRemove);
+        }
         map.un('pointermove', this.onPointerMove);
       }
     }
@@ -402,17 +412,21 @@ class RedliningButton extends React.Component {
       map
     } = this.props;
 
-    const select = new OlInteractionSelect({
+    this._selectInteraction = new OlInteractionSelect({
       condition: OlEventsCondition.singleClick,
       style: this.getRedliningStyleFunction,
       hitTolerance: 5
     });
 
-    let interactions = [select];
+    if (editType === 'Delete') {
+      this._selectInteraction.on('select', this.onFeatureRemove);
+    }
+
+    let interactions = [this._selectInteraction];
 
     if (editType === 'Edit') {
       const edit = new OlInteractionModify({
-        features: select.getFeatures(),
+        features: this._selectInteraction.getFeatures(),
         deleteCondition: OlEventsCondition.singleClick,
         style: this.getRedliningStyleFunction,
         pixelTolerance: 10
@@ -421,7 +435,7 @@ class RedliningButton extends React.Component {
       edit.on('modifystart', this.onModifyStart);
 
       const translate = new OlInteractionTranslate({
-        features: select.getFeatures()
+        features: this._selectInteraction.getFeatures()
       });
       interactions.push(edit, translate);
     }
@@ -433,6 +447,19 @@ class RedliningButton extends React.Component {
     this.setState({
       interaction: interactions
     });
+  }
+
+  /**
+   * Listener for `select` event of OL select interaction in `Delete` mode.
+   * Removes selected feature from the vector source and map.
+   *
+   * @param {Event} evt Event containing selected feature to be removed.
+   */
+  onFeatureRemove = evt => {
+    const feat = evt.selected[0];
+    this._selectInteraction.getFeatures().remove(feat);
+    this.state.redliningLayer.getSource().removeFeature(feat);
+    this.props.map.renderSync();
   }
 
   /**
