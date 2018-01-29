@@ -1,5 +1,5 @@
 <!--- Please choose one of the categories. -->
-## BREAKING CHANGE | FEATURE | BUGFIX | DEVSETUP
+## BREAKING CHANGE | FEATURE | BUGFIX | REFACTORING | DEVSETUP
 
 ### Description:
 <!--- Please describe what this PR is about. -->
