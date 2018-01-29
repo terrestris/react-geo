@@ -80,5 +80,27 @@ describe('MapProvider', () => {
         expect(mapFromMock).toBe(map);
       });
     });
+
+    it('Does not render on rejected promise', () => {
+      const errMsg = 'Some message: Humpty';
+      const failingPromise = new Promise((resolve, reject) => {
+        reject(new Error(errMsg));
+      });
+
+      const wrapper = mount(
+        <MapProvider map={failingPromise}> {/* use the failing promise*/}
+          <MappifiedMockComponent />
+        </MapProvider>
+      );
+
+      expect.assertions(3);
+      return failingPromise.catch((err) => {
+        expect(err).toBeInstanceOf(Error);
+        expect(err.message).toBe(errMsg);
+        wrapper.update();
+        const mapFromMock = wrapper.find(MockComponent);
+        expect(mapFromMock.exists()).toBe(false);
+      });
+    });
   });
 });
