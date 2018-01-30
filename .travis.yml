@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- "8"
+- '8'
 before_install:
 - npm install -g greenkeeper-lockfile@1
 before_script:
@@ -12,10 +12,12 @@ after_script:
 - greenkeeper-lockfile-upload
 after_success:
 - npm run-script coveralls
+- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run-script codacy fi'
 - "./.ci/update-gh-pages.sh > /dev/null 2>&1"
 cache:
   directories:
   - node_modules
 env:
   global:
-    secure: FZGVEw1voT8jwTf7y6w1PMgYarxZMuTCupE3o4X5t/RJkC+yo+FRU/DieVDWyhsxF80CfpUou6ivDv2auHPSzNPeLuQGWbRV7FCGcHTpQQ+5CWlaJORmSR5rnBj3WuucbH77MWvKoEzbqca37UB3qzJEpvuNxpLPPO3/YT+OgNEGyq4nnzjUhSPdDRgqZaHQsvB5mQlfb/s19S6KYw5RIdZAtmDN6dgwPTInppXe/rVquHw3XawfFPzj1KhfrXHFQIXhF8hsm5yfvz0Pr3YWeMxi7oKV6tEHeOEE4U+MnszUOMtZyny/3f3+JqUJiT14/XYVSQkUme9WUjiT0xA3FqEg6szoyLJ6Ui5wiiyqqxJPILPFcorH5ZiB5emQ3auhvAeDflmawSDt0SuME42AkUrwoJ+3Pgd8iWojWkrBvURnYvJuNlAkAafqhHNu1tKTKw3AbbQSR0TxRdOKay/t1YGdNZkCz2SjIZKSMdOSapbaaxBzcaQVf+/8XnXL5+V2HVuy6TQde8lihZ+Tt0MAlaBgROBba2VftHQhS6bWcUtnGdXv/eu/PiiOA6/jWNmrXaXk+0U4o+L8YMufKSQ1na0vr/xsumiz/O0wnbrLkAuVfBMXsDKk9fx2HktltjVNMLu8/4o8O6rtm2R/1t3O+EhWnPbPSXeL4H2uXrO1Xks=
+  - secure: FZGVEw1voT8jwTf7y6w1PMgYarxZMuTCupE3o4X5t/RJkC+yo+FRU/DieVDWyhsxF80CfpUou6ivDv2auHPSzNPeLuQGWbRV7FCGcHTpQQ+5CWlaJORmSR5rnBj3WuucbH77MWvKoEzbqca37UB3qzJEpvuNxpLPPO3/YT+OgNEGyq4nnzjUhSPdDRgqZaHQsvB5mQlfb/s19S6KYw5RIdZAtmDN6dgwPTInppXe/rVquHw3XawfFPzj1KhfrXHFQIXhF8hsm5yfvz0Pr3YWeMxi7oKV6tEHeOEE4U+MnszUOMtZyny/3f3+JqUJiT14/XYVSQkUme9WUjiT0xA3FqEg6szoyLJ6Ui5wiiyqqxJPILPFcorH5ZiB5emQ3auhvAeDflmawSDt0SuME42AkUrwoJ+3Pgd8iWojWkrBvURnYvJuNlAkAafqhHNu1tKTKw3AbbQSR0TxRdOKay/t1YGdNZkCz2SjIZKSMdOSapbaaxBzcaQVf+/8XnXL5+V2HVuy6TQde8lihZ+Tt0MAlaBgROBba2VftHQhS6bWcUtnGdXv/eu/PiiOA6/jWNmrXaXk+0U4o+L8YMufKSQ1na0vr/xsumiz/O0wnbrLkAuVfBMXsDKk9fx2HktltjVNMLu8/4o8O6rtm2R/1t3O+EhWnPbPSXeL4H2uXrO1Xks=
+  - secure: R6G2mE5JqizNmRJ3wSe0fyh6GbIw1Xt9eZ8FJ/kXhkX1Xta8Qr0PVN+QTGeCJjsjUSe0OX9DT2u1p18vDAw8Yp0bT1reNRt67yLISPEryH8x+RecvqFLg6GECt0CyBHezOeTvNnTWbECaM7JGsTC+LOCz3co4Wzpe5T0BxtKbrM0CbgONicKCAmPBpf16R7VFJOySzu0RZM1t8ldH/LsLn5X4E8egnQ5zLBCTT+FCLN/5W1k3xwhhPJhNA/RGM9woDTSCuopSxKc8i7Z4e/cX2x79lgCIQ9/gXDHRWu5xT7+LXkeM4/9V1smDNAC6z2bNpmYtyEkn/eJYsSMdElsqoGRux6Vkw/KPfaOXJkJrzWZeJyt4+3hAbWlaVao/cezS9/BtbkP685PG9W8aX0F0dnL2lEqTyXkzPli682Vv9uQifzuI5gryqmc2NS1jm4ED3ZZJWJTZWuwV8ZqFsJzi3InoKud4aXs9lHxA6MF5lEoNLJZoi+aF5R9iw+EEfCdlismAbmWSAspwG+UlQjJBy+LyfU3vrYo0sNTR3D4fVThi9S4ej9r9lGFCoDwXctzn+67iE3ur9jMrGyXQ5enDKxcH9dGlFAe14TWXv7qpXrU8OHsDZrbDmXiOu67jdQbrUaJMQqcOjdzRY6OK8hUMZwN2JBCIbaUCB/UU+vJRmI=
