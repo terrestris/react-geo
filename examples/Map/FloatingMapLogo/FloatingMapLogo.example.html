@@ -7,62 +7,68 @@
   <title>FloatingMapLogo example</title>
   <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-  <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css">
-  <style>
-    #container {
-      height: 256px;
-      width: 512px;
-      position: relative;
-    }
-     #map {
-       height: 256px;
-       width: 512px;
-     }
-     #line {
-      margin-top: 3em;
-     }
-   </style>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  <script src="https://openlayers.org/en/latest/build/ol.js"></script>
   <script>/*global hljs*/ hljs.initHighlightingOnLoad();</script>
 </head>
-<body>
-  <h2 >FloatingMapLogo example</h2>
-  <div id="container">
-    <div id="map"></div>
-    <div id="exampleContainerInMap" class="app"></div>
-  </div>
-  <hr id="line"/>
+<style>
+body.example {
+  padding: 1.5em;
+}
+.example-block {
+  padding: 2em;
+}
+.example-block > span {
+  margin-right: 10px;
+}
+</style>
+
+<body class="example">
+  <h2>FloatingMapLogo example</h2>
+  <div id="exampleContainer" class="app"></div>
   <p>This is a example containing a map component and a floating map logo</p>
 
   <pre>
     <code class="javascript">import React from &#x27;react&#x27;;
 import { render } from &#x27;react-dom&#x27;;
+import OlSourceOsm from &#x27;ol/source/osm&#x27;;
+import OlLayerTile from &#x27;ol/layer/tile&#x27;;
+import OlView from &#x27;ol/view&#x27;;
+import OlMap from &#x27;ol/map&#x27;;
 
 import logo from &#x27;../../UserChip/user.png&#x27;;
 import { FloatingMapLogo } from &#x27;@terrestris/react-geo&#x27;;
 
+const map &#x3D; new OlMap({
+  view: new OlView({
+    center: [801045, 6577113],
+    zoom: 9
+  }),
+  layers: [
+    new OlLayerTile({
+      source: new OlSourceOsm()
+    })
+  ]
+});
+
 render(
-  &lt;FloatingMapLogo imageSrc&#x3D;{logo} /&gt;,
-  document.getElementById(&#x27;exampleContainerInMap&#x27;)
+  &lt;div
+    id&#x3D;&#x27;map&#x27;
+    style&#x3D;{{
+      position: &#x27;relative&#x27;,
+      height: &#x27;200px&#x27;
+    }}
+  &gt;
+    &lt;FloatingMapLogo
+      imageSrc&#x3D;{logo}
+    /&gt;
+  &lt;/div&gt;,
+  document.getElementById(&#x27;exampleContainer&#x27;),
+  () &#x3D;&gt; {
+    map.setTarget(&#x27;map&#x27;);
+  }
 );
 </code>
   </pre>
-  <script type="text/javascript">
-    var map = new ol.Map({
-      target: 'map',
-      layers: [
-        new ol.layer.Tile({
-          source: new ol.source.OSM()
-        })
-      ],
-      view: new ol.View({
-        center: [801045, 6577113],
-        zoom: 9
-      })
-    });
-    __EXAMPLE_MAP__ = map;
-  </script>
   <script src="../../commons.js"></script>
   <script src="FloatingMapLogo.js"></script>
 </body>
