@@ -25,6 +25,7 @@ import Window from './Window/Window.jsx';
 
 import CapabilitiesUtil from './Util/CapabilitiesUtil/CapabilitiesUtil';
 import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
+import DigitizeUtil from './Util/DigitizeUtil/DigitizeUtil';
 import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
 import MapUtil from './Util/MapUtil/MapUtil';
 import MeasureUtil from './Util/MeasureUtil/MeasureUtil';
@@ -63,6 +64,7 @@ export {
   Window,
   CapabilitiesUtil,
   CsrfUtil,
+  DigitizeUtil,
   FeatureUtil,
   Logger,
   MapUtil,

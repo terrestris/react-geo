@@ -21,6 +21,7 @@ import OlEventsCondition from 'ol/events/condition';
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import MapUtil from '../../Util/MapUtil/MapUtil';
 import StringUtil from '../../Util/StringUtil/StringUtil';
+import DigitizeUtil from '../../Util/DigitizeUtil/DigitizeUtil';
 import Logger from '../../Util/Logger';
 
 import './RedliningButton.less';
@@ -214,7 +215,7 @@ class RedliningButton extends React.Component {
    *
    * @method
    */
-  onToggle = (pressed) => {
+  onToggle = pressed => {
 
     const {
       map,
@@ -243,6 +244,9 @@ class RedliningButton extends React.Component {
       } else {
         if (editType === 'Delete') {
           this._selectInteraction.un('select', this.onFeatureRemove);
+        }
+        if (editType === 'Copy') {
+          this._selectInteraction.un('select', this.onFeatureCopy);
         }
         map.un('pointermove', this.onPointerMove);
       }
@@ -284,7 +288,7 @@ class RedliningButton extends React.Component {
    *
    * @method
    */
-  getRedliningStyleFunction = (feature) => {
+  getRedliningStyleFunction = feature => {
 
     const {
       fillColor,
@@ -368,7 +372,7 @@ class RedliningButton extends React.Component {
    *
    * @method
    */
-  createDrawInteraction = (pressed) => {
+  createDrawInteraction = pressed => {
     const {
       drawType,
       map
@@ -422,6 +426,8 @@ class RedliningButton extends React.Component {
 
     if (editType === 'Delete') {
       this._selectInteraction.on('select', this.onFeatureRemove);
+    } else if (editType === 'Copy') {
+      this._selectInteraction.on('select', this.onFeatureCopy);
     }
 
     let interactions = [this._selectInteraction];
@@ -456,6 +462,8 @@ class RedliningButton extends React.Component {
    * Removes selected feature from the vector source and map.
    *
    * @param {Event} evt Event containing selected feature to be removed.
+   *
+   * @method
    */
   onFeatureRemove = evt => {
     const feat = evt.selected[0];
@@ -465,12 +473,40 @@ class RedliningButton extends React.Component {
   }
 
   /**
+   * Listener for `select` event of OL select interaction in `Copy` mode.
+   * Creates a clone of selected feature and calls utility method to move it
+   * beside the original to avoid overlapping.
+   *
+   * @param {Event} evt Event containing selected feature to be copied.
+   *
+   * @method
+   */
+  onFeatureCopy = evt => {
+    const feat = evt.selected[0];
+    const copy = feat.clone();
+    //eslint-disable-next-line
+    const doneFn = finalFeature => {this._redliningFeatures.push(finalFeature)};
+    const style = this.getRedliningStyleFunction(copy);
+
+    DigitizeUtil.moveFeature(
+      this.props.map,
+      copy,
+      500,
+      50,
+      style,
+      doneFn
+    );
+  }
+
+  /**
    * Checks if a labeled feature is being modified. If yes, opens prompt to
    * input a new label.
    *
    * @param {Event} evt 'modifystart' event of OlInteractionModify.
+   *
+   * @method
    */
-  onModifyStart = (evt) => {
+  onModifyStart = evt => {
     const feature = evt.features.getArray()[0];
     if (feature.get('isLabel')) {
       this._redliningTextFeature = feature;
@@ -487,7 +523,7 @@ class RedliningButton extends React.Component {
    *
    * @method
    */
-  handleTextAdding = (evt) => {
+  handleTextAdding = evt => {
     this.setState({
       showLabelPrompt: true
     });
@@ -567,20 +603,20 @@ class RedliningButton extends React.Component {
    * a hoverable layer.
    *
    * @param {ol.MapEvent} evt The `pointermove` event.
+   *
+   * @method
    */
-  onPointerMove = (evt) => {
+  onPointerMove = evt => {
     if (evt.dragging) {
       return;
     }
 
     const { map } = this.props;
-
     const pixel = map.getEventPixel(evt.originalEvent);
     const hit = map.hasFeatureAtPixel(pixel);
 
     map.getTargetElement().style.cursor = hit ? 'pointer' : '';
   }
-
 
   /**
    * The render function.
