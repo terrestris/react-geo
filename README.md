@@ -1,5 +1,6 @@
 # react-geo <img align="left" src="./assets/logo.svg" width="80px" />
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8f3507f12f434b3aa70a897a426882e7)](https://www.codacy.com/app/marcjansen/react-geo?utm_source=github.com&utm_medium=referral&utm_content=terrestris/react-geo&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/terrestris/react-geo.svg?branch=master)](https://travis-ci.org/terrestris/react-geo)
 [![Coverage Status](https://coveralls.io/repos/github/terrestris/react-geo/badge.svg?branch=master)](https://coveralls.io/github/terrestris/react-geo?branch=master)
 [![dependencies Status](https://david-dm.org/terrestris/react-geo/status.svg)](https://david-dm.org/terrestris/react-geo)
