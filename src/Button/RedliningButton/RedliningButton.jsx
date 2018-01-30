@@ -97,7 +97,7 @@ class RedliningButton extends React.Component {
      *
      * @type {String}
      */
-    editType: PropTypes.oneOf(['Copy', 'Edit', 'Delete', 'DeleteAll']),
+    editType: PropTypes.oneOf(['Copy', 'Edit', 'Delete']),
 
     /**
      * Name of system vector layer which will be used for redlining features.
@@ -153,8 +153,9 @@ class RedliningButton extends React.Component {
      *
      * @type {String}
      */
-    modalPromptCancelButtonText: PropTypes.string,
+    modalPromptCancelButtonText: PropTypes.string
   };
+
 
   /**
    * The default properties.
@@ -188,7 +189,7 @@ class RedliningButton extends React.Component {
     this.state = {
       redliningLayer: null,
       interaction: null,
-      showTextPrompt: false,
+      showLabelPrompt: false,
       textLabel: ''
     };
   }
@@ -233,6 +234,7 @@ class RedliningButton extends React.Component {
         this.createDrawInteraction(pressed);
       } else if (editType) {
         this.createSelectOrModifyInteraction(pressed);
+
       }
     } else {
       interaction.forEach(i => map.removeInteraction(i));
@@ -473,13 +475,13 @@ class RedliningButton extends React.Component {
     if (feature.get('isLabel')) {
       this._redliningTextFeature = feature;
       this.setState({
-        showTextPrompt: true
+        showLabelPrompt: true
       });
     }
   }
 
   /**
-   * Changes state for showTextPrompt to make modal for label input visible.
+   * Changes state for showLabelPrompt to make modal for label input visible.
    *
    * @param {Event} evt Click event on adding feature to the redlining layer.
    *
@@ -487,7 +489,7 @@ class RedliningButton extends React.Component {
    */
   handleTextAdding = (evt) => {
     this.setState({
-      showTextPrompt: true
+      showLabelPrompt: true
     });
     this._redliningTextFeature = evt.element;
     this._redliningTextFeature.set('isLabel', true);
@@ -501,7 +503,7 @@ class RedliningButton extends React.Component {
    */
   onModalLabelOk = () => {
     this.setState({
-      showTextPrompt: false
+      showLabelPrompt: false
     }, () => {
       this.setTextOnFeature(this._redliningTextFeature);
     });
@@ -516,7 +518,7 @@ class RedliningButton extends React.Component {
    */
   onModalLabelCancel = () => {
     this.setState({
-      showTextPrompt: false,
+      showLabelPrompt: false,
       textLabel: ''
     }, () => {
       if (!(this.state.interaction && this.state.interaction.length > 1)) {
@@ -610,14 +612,13 @@ class RedliningButton extends React.Component {
         <ToggleButton
           onToggle={this.onToggle}
           className={finalClassName}
-          tooltip={''}
           {...passThroughProps}
         />
         <Modal
           title={modalPromptTitle}
           okText={modalPromptOkButtonText}
           cancelText={modalPromptCancelButtonText}
-          visible={this.state.showTextPrompt}
+          visible={this.state.showLabelPrompt}
           closable={false}
           onOk={this.onModalLabelOk}
           onCancel={this.onModalLabelCancel}
