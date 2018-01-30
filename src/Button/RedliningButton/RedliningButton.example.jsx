@@ -39,8 +39,9 @@ render(
     }} />
 
     <div className="example-block">
-      <span>Select a measure type:</span>
-      <ToggleGroup>
+      <span>Select a redlining type:</span>
+      <ToggleGroup
+        orientation="horizontal">
 
         <RedliningButton
           name="drawPoint"
@@ -96,6 +97,22 @@ render(
           editType="Edit"
         >
         Select and modify features
+        </RedliningButton>
+
+        <RedliningButton
+          name="copyFeature"
+          map={map}
+          editType="Copy"
+        >
+        Copy features
+        </RedliningButton>
+
+        <RedliningButton
+          name="deleteFeature"
+          map={map}
+          editType="Delete"
+        >
+        Delete features
         </RedliningButton>
 
       </ToggleGroup>
