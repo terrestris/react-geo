@@ -1,7 +1,7 @@
 ---
 layout: basic.hbs
 title: MeasureButton example
-description: This is a example showing an MeasureButton.
+description: This is an example showing several measure buttons with different configurations.
 collection: Examples
 ---
 
