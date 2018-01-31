@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Rnd from 'react-rnd';
-import { uniqueId, isNumber, isFunction } from 'lodash';
+import {
+  uniqueId,
+  isNumber,
+  isFunction
+} from 'lodash';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
@@ -118,15 +122,29 @@ export class Panel extends React.Component {
 
     /**
      * The height of the panel.
-     * @type {number}
+     * @type {number|string}
      */
-    height: PropTypes.number,
+    height: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.oneOf([
+        'inherit',
+        'initial',
+        'auto'
+      ])
+    ]),
 
     /**
      * The width of the panel.
-     * @type {number}
+     * @type {number|string}
      */
-    width: PropTypes.number,
+    width: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.oneOf([
+        'inherit',
+        'initial',
+        'auto'
+      ])
+    ]),
 
     /**
      * The height of the TitleBar.
@@ -157,8 +175,8 @@ export class Panel extends React.Component {
     closable: false,
     resizeOpts: false,
     titleBarHeight: 37.5,
-    height: 100,
-    width: 100,
+    height: 'auto',
+    width: 'auto',
     compressTooltip: 'collapse',
     closeTooltip: 'close',
     onClose: () => {}
@@ -183,16 +201,41 @@ export class Panel extends React.Component {
   }
 
   /**
+   * Calculates the height of the Panel and returns a number.
+   *
+   * @return {number}
+   */
+  calculateHeight() {
+    return this.state.collapsed
+      ? this.state.titleBarHeight
+      : this.state.height;
+  }
+
+  /**
+   * Calculates the height of the Panel body and returns a valid css height
+   * expression.
+   *
+   * @return {string}
+   */
+  calculateBodyHeight() {
+    if (this.state.collapsed) {
+      return '0px';
+    } else {
+      return isNumber(this.state.height)
+        ? this.state.height + 'px'
+        : this.state.height;
+    }
+  }
+
+  /**
    * Toggles the collapse state of the panel.
    */
   toggleCollapse = () => {
     this.setState({
       collapsed: !this.state.collapsed
     }, () => {
-      this.panel.updateSize({
-        height: this.state.collapsed
-          ? this.state.titleBarHeight
-          : this.state.height,
+      this.rnd.updateSize({
+        height: this.calculateHeight(),
         width: this.state.width
       });
     });
@@ -306,14 +349,12 @@ export class Panel extends React.Component {
     return (
       <Rnd
         className={rndClassName}
-        ref={(panel) => { this.panel = panel; }}
+        ref={(rnd) => { this.rnd = rnd; }}
         default={{
           x: isNumber(rndOpts.x) ? rndOpts.x : (window.innerWidth / 2) - 160,
           y: isNumber(rndOpts.y) ? rndOpts.y : (window.innerHeight / 2) - 100,
-          width: rndOpts.width || 160,
-          height: this.state.collapsed
-            ? this.state.titleBarHeight
-            : this.state.height
+          width: this.state.width,
+          height: this.calculateHeight()
         }}
         dragHandleClassName=".drag-handle"
         disableDragging={!draggable}
@@ -339,9 +380,7 @@ export class Panel extends React.Component {
           style={{
             cursor: 'default',
             overflow: 'hidden',
-            height: this.state.collapsed
-              ? '0px'
-              : this.state.height - this.state.titleBarHeight,
+            height: this.calculateBodyHeight(),
             transition: this.state.resizing ? '' : 'height 0.25s',
           }}
         >
