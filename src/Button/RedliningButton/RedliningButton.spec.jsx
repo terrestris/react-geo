@@ -14,8 +14,6 @@ import OlCollection from 'ol/collection';
 import OlGeomPoint from 'ol/geom/point';
 import OlGeomLineString from 'ol/geom/linestring';
 import OlGeomPolygon from 'ol/geom/polygon';
-// import OlOverlay from 'ol/overlay';
-// import OlObservable from 'ol/observable';
 
 import RedliningButton from './RedliningButton.jsx';
 import MapUtil from '../../Util/MapUtil/MapUtil';
@@ -112,7 +110,7 @@ describe('<RedliningButton />', () => {
     });
   });
 
-  describe('#Static methods', () => {
+  describe('#Private methods', () => {
 
     describe('#onToggle', () => {
 
@@ -147,7 +145,7 @@ describe('<RedliningButton />', () => {
 
         const mockInteraction = getMockDrawPointInteraction();
 
-        const defaultMapInteractionsLength = map.getInteractions().getArray().length;
+        const defaultMapInteractionsLength = map.getInteractions().getLength();
         map.addInteraction(getMockDrawPointInteraction());
         map.on('pointermove', wrapper.instance().onPointerMove);
 
@@ -155,7 +153,10 @@ describe('<RedliningButton />', () => {
           interaction: [mockInteraction]
         });
 
-        expect(map.getInteractions().getArray().length).toBe(defaultMapInteractionsLength + 1);
+        expect(map.getInteractions().getLength()).toBe(defaultMapInteractionsLength + 1);
+        // Warning: using of private properties such `listeners_` could be
+        // a bit fragile. We should probably find another way to get the
+        // appropriate value.
         expect(map.listeners_.pointermove).toBeDefined();
 
         wrapper.instance().onToggle(false);
@@ -211,7 +212,7 @@ describe('<RedliningButton />', () => {
 
         instance.onToggle(false);
 
-        expect(instance._selectInteraction.listeners_select).toBeUndefined();
+        expect(instance._selectInteraction.listeners_.select).toBeUndefined();
       });
 
       it ('unregisters `select` listener on select interaction if editType is Copy and button was untoggled', () => {
@@ -236,7 +237,7 @@ describe('<RedliningButton />', () => {
 
         instance.onToggle(false);
 
-        expect(instance._selectInteraction.listeners_select).toBeUndefined();
+        expect(instance._selectInteraction.listeners_.select).toBeUndefined();
       });
     });
 
@@ -425,6 +426,96 @@ describe('<RedliningButton />', () => {
         expect(wrapper.instance()._redliningTextFeature).toEqual(mockEvt.element);
         expect(wrapper.instance()._redliningTextFeature.get('isLabel')).toBeTruthy();
         expect(wrapper.state().showLabelPrompt).toBeTruthy();
+      });
+    });
+
+    describe('#onModalLabelOk', () => {
+
+      it('hides prompt for input text', () => {
+        const wrapper = setupWrapper();
+        const feat = new OlFeature(new OlGeomPoint([0, 0]));
+
+        wrapper.setState({
+          showLabelPrompt: true
+        });
+
+        feat.setStyle(new OlStyleStyle({
+          text: new OlStyleText()
+        }));
+        feat.set('isLabel', true);
+
+        wrapper.instance()._redliningTextFeature = feat;
+        wrapper.instance().onModalLabelOk();
+
+        expect(wrapper.state().showLabelPrompt).toBeFalsy();
+      });
+    });
+
+    describe('#onModalLabelCancel', () => {
+
+      it('hides prompt for input text and removes _redliningTextFeature from layer', () => {
+        const wrapper = setupWrapper();
+        const feat = new OlFeature(new OlGeomPoint([0, 0]));
+
+        wrapper.setState({
+          showLabelPrompt: true
+        });
+
+        feat.setStyle(new OlStyleStyle({
+          text: new OlStyleText()
+        }));
+        feat.set('isLabel', true);
+
+        wrapper.instance()._redliningTextFeature = feat;
+        wrapper.instance()._redliningFeatures = new OlCollection();
+        wrapper.instance()._redliningFeatures.push(feat);
+
+        expect(wrapper.instance()._redliningFeatures.getLength()).toBe(1);
+
+        wrapper.instance().onModalLabelCancel();
+
+        expect(wrapper.state().showLabelPrompt).toBeFalsy();
+        expect(wrapper.instance()._redliningFeatures.getLength()).toBe(0);
+        expect(wrapper.instance()._redliningTextFeature).toBeNull();
+      });
+    });
+
+    describe('#setTextOnFeature', () => {
+
+      it('sets label text on feature', () => {
+        const wrapper = setupWrapper();
+        const feat = new OlFeature(new OlGeomPoint([0, 0]));
+
+        const label = 'label';
+
+        wrapper.setState({
+          textLabel: label
+        });
+
+        feat.setStyle(new OlStyleStyle({
+          text: new OlStyleText()
+        }));
+        feat.set('isLabel', true);
+
+        wrapper.instance().setTextOnFeature(feat);
+
+        expect(feat.getStyle().getText().getText()).toBe(label);
+      });
+    });
+
+    describe('#onLabelChange', () => {
+
+      it('sets state value for textLabel', () => {
+        const wrapper = setupWrapper();
+
+        const mockEvt = {
+          target: {
+            value: 'label'
+          }
+        };
+
+        wrapper.instance().onLabelChange(mockEvt);
+        expect(wrapper.state().textLabel).toBe(mockEvt.target.value);
       });
     });
   });
