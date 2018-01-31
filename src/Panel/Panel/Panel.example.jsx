@@ -12,23 +12,24 @@ render(
     <div className="example-block">
       <span>Panels:</span>
 
-
       <Panel
         x={0}
         y={20}
         title="Collapsible"
         collapsible={true}
-      />
+      >
+        Content
+      </Panel>
 
       <Panel
         x={200}
         y={20}
-        closable={true}
         collapsible={true}
-        title="Tooltips"
-        compressTooltip="Einklappen"
-        closeTooltip="Schließen"
-      />
+        title="Tooltip"
+        collapseTooltip="Einklappen"
+      >
+        Content
+      </Panel>
 
       <Panel
         x={400}
@@ -39,7 +40,7 @@ render(
       </Panel>
 
       <Panel
-        x={600}
+        x={700}
         y={20}
         title="Resizable"
         resizeOpts={true}
@@ -48,7 +49,7 @@ render(
       </Panel>
 
       <Panel
-        x={800}
+        x={1000}
         y={20}
         title="Resizeopts"
         resizeOpts={{
@@ -68,7 +69,8 @@ render(
       <Panel
         x={0}
         y={220}
-        title="Custom size"
+        title="Intial size (673 * 134)"
+        resizeOpts={true}
         width={673}
         height={134}
       />

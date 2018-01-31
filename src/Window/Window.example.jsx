@@ -26,16 +26,27 @@ const doRender = () => {
 
       <div className="example-block">
         <span>Click to open window:</span>
-        <SimpleButton tooltip="Click me to show/hide a window" onClick={triggerRerenderingWithInvertedVisibility} />
+        <SimpleButton
+          tooltip="Click me to show/hide a window"
+          onClick={triggerRerenderingWithInvertedVisibility}
+        />
 
         {
           windowOpen ?
             <Window
               parentId="exampleContainer"
               title="This is the window title"
-              onClose={triggerRerenderingWithInvertedVisibility}
               width={300}
               height={150}
+              tools={[
+                <SimpleButton
+                  key="closeButton"
+                  icon="close"
+                  size="small"
+                  tooltip="Close"
+                  onClick={triggerRerenderingWithInvertedVisibility}
+                />
+              ]}
             >
               This is the content of the window.
             </Window> :

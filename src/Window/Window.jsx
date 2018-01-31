@@ -11,7 +11,7 @@ import './Window.less';
 /**
  * Window component that creates a React portal that renders children into a DOM
  * node that exists outside the DOM hierarchy of the parent component. By default,
- * Window Component is draggable and closable
+ * Window Component is draggable.
  *
  * @class Window
  * @extends React.Component
@@ -58,19 +58,15 @@ export class Window extends React.Component {
     * The title text to be shown in the window header.
     * @type {string}
     */
-    title: PropTypes.string,
-    /**
-    * Function to be called if window is closed
-    * @type {Function}
-    */
-    onClose: PropTypes.func
+    title: PropTypes.string
   }
 
   static defaultProps = {
     parentId: 'app',
     title: 'Window',
     resizeOpts: true,
-    onClose: () => {} // default: do nothing
+    collapsible: true,
+    draggable: true
   }
 
   /**
@@ -136,17 +132,11 @@ export class Window extends React.Component {
     const {
       className,
       children,
-      onClose,
-      ...rndOpts
+      ...passThroughProps
     } = this.props;
 
     return ReactDOM.createPortal(
-      <Panel
-        closable
-        draggable
-        onClose={onClose}
-        {...rndOpts}
-      >
+      <Panel {...passThroughProps} >
         {children}
       </Panel>,
       this._elementDiv,

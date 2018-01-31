@@ -15,15 +15,12 @@ describe('<Titlebar />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(Titlebar, {
-      parent: document.body
-    });
+    const wrapper = TestUtil.mountComponent(Titlebar);
     expect(wrapper).not.toBeUndefined();
   });
 
   it('adds a passed className', () => {
     const wrapper = TestUtil.mountComponent(Titlebar, {
-      parent: document.body,
       className: 'podolski'
     });
     expect(wrapper.instance().props.className).toContain('podolski');
