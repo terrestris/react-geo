@@ -1,4 +1,4 @@
-<!--- Please choose one of the categories. -->
+<!--- Please choose one of the categories and choose the corresponding label, too. -->
 ## BREAKING CHANGE | FEATURE | BUGFIX | REFACTORING | DEVSETUP
 
 ### Description:
