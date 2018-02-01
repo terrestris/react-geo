@@ -40,43 +40,10 @@ export class Titlebar extends React.Component {
      */
     dispatch: PropTypes.func,
     /**
-     * The object of the parent container of the titlebar class.
-     * @type {object}
-     */
-    parent: PropTypes.object,
-    /**
-     * Additional elements display besides the collapseButton.
+     * Additional elements to show at the right side of the Titlebar.
      * @type {Array<object>}
      */
-    tools: PropTypes.arrayOf(PropTypes.element),
-    /**
-     * Whether to allow collasping or not.
-     * @type {boolean}
-     */
-    collapsible: PropTypes.bool,
-    /**
-     * Whether to allow closing or not.
-     * @type {boolean}
-     */
-    closable: PropTypes.bool,
-    /**
-     * The tooltip of the compress button.
-     * @type {String}
-     */
-    compressTooltip: PropTypes.string,
-    /**
-     * The tooltip of the close button.
-     * @type {String}
-     */
-    closeTooltip: PropTypes.string
-  }
-
-  /**
-   * The default props
-   */
-  static defaultProps = {
-    compressTooltip: 'compress',
-    closeTooltip: 'close'
+    tools: PropTypes.arrayOf(PropTypes.element)
   }
 
   /**
@@ -85,7 +52,9 @@ export class Titlebar extends React.Component {
   render() {
     const {
       className,
-      tools
+      tools,
+      children,
+      ...passThroughProps
     } = this.props;
 
     const finalClassName = className
@@ -93,9 +62,9 @@ export class Titlebar extends React.Component {
       : this.className;
 
     return (
-      <div className={finalClassName}>
+      <div className={finalClassName} {...passThroughProps} >
         <span className="title">
-          {this.props.children}
+          {children}
         </span>
         {
           !isEmpty(tools) ?
