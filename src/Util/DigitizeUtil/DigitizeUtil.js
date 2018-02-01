@@ -1,4 +1,6 @@
 import OlObservable from 'ol/observable';
+import OlGeomPoint from 'ol/geom/point';
+import OlGeomLineString from 'ol/geom/linestring';
 
 /**
  * This class provides some static methods which might be helpful when working
@@ -14,10 +16,10 @@ class DigitizeUtil {
    * calling a `doneFn`.
    *
    * @param {OlMap} map An OlMap.
-   * @param {ol.Feature} featureToMove The feature to move.
+   * @param {OlFeature} featureToMove The feature to move.
    * @param {Number} duration The duration in ms for the moving to complete.
    * @param {Array<Number>} pixel Delta of pixels to move the feature.
-   * @param {ol.style.Style} style The style to use when moving the feature.
+   * @param {OlStyleStyle} style The style to use when moving the feature.
    * @param {Function} doneFn The function to call when done.
    *
    * @return {String} A listener key from a postcompose event.
@@ -48,9 +50,9 @@ class DigitizeUtil {
          vectorContext.setFillStrokeStyle(
            style.getFill(), style.getStroke());
          vectorContext.setImageStyle(style.getImage());
-         if (geometry instanceof ol.geom.Point) {
+         if (geometry instanceof OlGeomPoint) {
            vectorContext.drawPointGeometry(geometry, null);
-         } else if (geometry instanceof ol.geom.LineString) {
+         } else if (geometry instanceof OlGeomLineString) {
            vectorContext.drawLineStringGeometry(geometry, null);
          } else {
            vectorContext.drawPolygonGeometry(geometry, null);
