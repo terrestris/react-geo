@@ -17,7 +17,7 @@ import OlGeomPolygon from 'ol/geom/polygon';
 
 import DigitizeButton from './DigitizeButton.jsx';
 import MapUtil from '../../Util/MapUtil/MapUtil';
-import DigitizeUtil from '../../Util/DigitizeUtil/DigitizeUtil';
+import AnimateUtil from '../../Util/AnimateUtil/AnimateUtil';
 
 describe('<DigitizeButton />', () => {
 
@@ -376,14 +376,16 @@ describe('<DigitizeButton />', () => {
 
     describe('#onFeatureCopy', () => {
 
-      it ('calls moveFeature method from DigitizeUtil class', () => {
+      it ('calls moveFeature method from AnimateUtil class', () => {
         const wrapper = setupWrapper();
         const feat = new OlFeature(new OlGeomPoint([0, 0]));
         const mockEvt = {
           selected: [feat]
         };
 
-        const moveFeatureSpy = jest.spyOn(DigitizeUtil, 'moveFeature');
+        wrapper.instance()._digitizeFeatures = new OlCollection();
+
+        const moveFeatureSpy = jest.spyOn(AnimateUtil, 'moveFeature');
 
         wrapper.instance().onFeatureCopy(mockEvt);
 

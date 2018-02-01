@@ -21,7 +21,7 @@ import OlEventsCondition from 'ol/events/condition';
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import MapUtil from '../../Util/MapUtil/MapUtil';
 import StringUtil from '../../Util/StringUtil/StringUtil';
-import DigitizeUtil from '../../Util/DigitizeUtil/DigitizeUtil';
+import AnimateUtil from '../../Util/AnimateUtil/AnimateUtil';
 import Logger from '../../Util/Logger';
 
 import './DigitizeButton.less';
@@ -535,17 +535,15 @@ class DigitizeButton extends React.Component {
   onFeatureCopy = evt => {
     const feat = evt.selected[0];
     const copy = feat.clone();
-    //eslint-disable-next-line
-    const doneFn = finalFeature => {this._digitizeFeatures.push(finalFeature);};
     const style = this.getDigitizeStyleFunction(copy);
+    this._digitizeFeatures.push(copy);
 
-    DigitizeUtil.moveFeature(
+    AnimateUtil.moveFeature(
       this.props.map,
       copy,
       500,
       50,
-      style,
-      doneFn
+      style
     );
   }
 
