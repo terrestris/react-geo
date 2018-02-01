@@ -150,7 +150,7 @@ describe('<DigitizeButton />', () => {
         map.on('pointermove', wrapper.instance().onPointerMove);
 
         wrapper.setState({
-          interaction: [mockInteraction]
+          interactions: [mockInteraction]
         });
 
         expect(map.getInteractions().getLength()).toBe(defaultMapInteractionsLength + 1);
@@ -182,7 +182,7 @@ describe('<DigitizeButton />', () => {
         expect(instance._digitizeFeatures.listeners_.add.length).toBe(2);
 
         wrapper.setState({
-          interaction: [mockInteraction]
+          interactions: [mockInteraction]
         });
 
         instance.onToggle(false);
@@ -207,7 +207,7 @@ describe('<DigitizeButton />', () => {
         expect(instance._selectInteraction.listeners_.select.length).toBe(1);
 
         wrapper.setState({
-          interaction: [mockInteraction]
+          interactions: [mockInteraction]
         });
 
         instance.onToggle(false);
@@ -232,7 +232,7 @@ describe('<DigitizeButton />', () => {
         expect(instance._selectInteraction.listeners_.select.length).toBe(1);
 
         wrapper.setState({
-          interaction: [mockInteraction]
+          interactions: [mockInteraction]
         });
 
         instance.onToggle(false);
@@ -298,11 +298,11 @@ describe('<DigitizeButton />', () => {
 
         wrapper.instance().createDrawInteraction(true);
 
-        expect(wrapper.state().interaction.length).toBe(1);
-        expect(wrapper.state().interaction[0].type_).toBe('Circle');
+        expect(wrapper.state().interactions.length).toBe(1);
+        expect(wrapper.state().interactions[0].type_).toBe('Circle');
 
         wrapper.setState({
-          interaction: null
+          interactions: []
         });
         wrapper.setProps({
           drawType: 'Text'
@@ -311,8 +311,8 @@ describe('<DigitizeButton />', () => {
         wrapper.instance()._digitizeFeatures = new OlCollection();
         wrapper.instance().createDrawInteraction(true);
 
-        expect(wrapper.state().interaction.length).toBe(1);
-        expect(wrapper.state().interaction[0].type_).toBe('Point');
+        expect(wrapper.state().interactions.length).toBe(1);
+        expect(wrapper.state().interactions[0].type_).toBe('Point');
       });
     });
 
@@ -333,10 +333,10 @@ describe('<DigitizeButton />', () => {
         expect(wrapper.instance()._selectInteraction).toBeDefined();
         expect(wrapper.instance()._selectInteraction.listeners_.select).toBeDefined();
 
-        expect(wrapper.state().interaction.length).toBe(1);
+        expect(wrapper.state().interactions.length).toBe(1);
 
         wrapper.setState({
-          interaction: null
+          interactions: null
         });
 
         wrapper.setProps({
@@ -345,7 +345,7 @@ describe('<DigitizeButton />', () => {
 
         wrapper.instance().createSelectOrModifyInteraction();
 
-        expect(wrapper.state().interaction.length).toBe(3);
+        expect(wrapper.state().interactions.length).toBe(3);
       });
     });
 

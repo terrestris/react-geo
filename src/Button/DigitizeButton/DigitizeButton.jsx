@@ -189,7 +189,7 @@ class DigitizeButton extends React.Component {
 
     this.state = {
       digitizeLayer: null,
-      interaction: null,
+      interactions: [],
       showLabelPrompt: false,
       textLabel: ''
     };
@@ -225,7 +225,7 @@ class DigitizeButton extends React.Component {
 
     const {
       digitizeLayer,
-      interaction
+      interactions
     } = this.state;
 
     this._digitizeFeatures = digitizeLayer.getSource().getFeaturesCollection();
@@ -235,10 +235,9 @@ class DigitizeButton extends React.Component {
         this.createDrawInteraction(pressed);
       } else if (editType) {
         this.createSelectOrModifyInteraction(pressed);
-
       }
     } else {
-      interaction.forEach(i => map.removeInteraction(i));
+      interactions.forEach(i => map.removeInteraction(i));
       if (drawType === 'Text') {
         this._digitizeFeatures.un('add', this.handleTextAdding);
       } else {
@@ -298,11 +297,11 @@ class DigitizeButton extends React.Component {
     } = this.props;
 
     const {
-      interaction,
+      interactions,
     } = this.state;
 
     let useSelectStyle = false;
-    if (interaction && interaction.length > 1 && !feature.get('isLabel')) {
+    if (interactions && interactions.length > 1 && !feature.get('isLabel')) {
       useSelectStyle = true;
     }
 
@@ -400,7 +399,7 @@ class DigitizeButton extends React.Component {
     map.addInteraction(drawInteraction);
 
     this.setState({
-      interaction: [drawInteraction]
+      interactions: [drawInteraction]
     }, () => {
       drawInteraction.setActive(pressed);
     });
@@ -452,9 +451,7 @@ class DigitizeButton extends React.Component {
 
     map.on('pointermove', this.onPointerMove);
 
-    this.setState({
-      interaction: interactions
-    });
+    this.setState({interactions});
   }
 
   /**
@@ -557,7 +554,7 @@ class DigitizeButton extends React.Component {
       showLabelPrompt: false,
       textLabel: ''
     }, () => {
-      if (!(this.state.interaction && this.state.interaction.length > 1)) {
+      if (!(this.state.interactions.length > 1)) {
         this._digitizeFeatures.remove(this._digitizeTextFeature);
         this._digitizeTextFeature = null;
       }
