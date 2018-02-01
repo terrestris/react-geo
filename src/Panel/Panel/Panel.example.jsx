@@ -15,43 +15,41 @@ render(
       <Panel
         x={0}
         y={20}
-        title="Collapsible"
-        collapsible={true}
+        title="Children"
       >
-        Content
+        <div style={{padding: '5px'}}>
+          Im a div but i can be any node.
+        </div>
       </Panel>
 
       <Panel
-        x={200}
+        x={250}
         y={20}
+        title="Collapsible"
+        collapsible={true}
+      >
+        <div style={{padding: '5px'}}>
+          Content
+        </div>
+      </Panel>
+
+      <Panel
+        x={420}
+        y={20}
+        width={160}
         collapsible={true}
         title="Tooltip"
         collapseTooltip="Einklappen"
       >
-        Content
-      </Panel>
-
-      <Panel
-        x={400}
-        y={20}
-        title="Children"
-      >
-        <div>Im a div but i can be any node.</div>
+        <div style={{padding: '5px'}}>
+          You can set the tooltip for the collapse icon with the prop `collapseTooltip`.
+        </div>
       </Panel>
 
       <Panel
         x={700}
         y={20}
-        title="Resizable"
-        resizeOpts={true}
-      >
-        <img src="http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg" />
-      </Panel>
-
-      <Panel
-        x={1000}
-        y={20}
-        title="Resizeopts"
+        title="resizeopts (right & bottom)"
         resizeOpts={{
           bottom: true,
           bottomLeft: false,
@@ -62,6 +60,15 @@ render(
           topLeft: false,
           topRight: false,
         }}
+      >
+        <img src="http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg" />
+      </Panel>
+
+      <Panel
+        x={1000}
+        y={20}
+        title="resizeopts={true}"
+        resizeOpts={true}
       >
         <img src="http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg" />
       </Panel>
