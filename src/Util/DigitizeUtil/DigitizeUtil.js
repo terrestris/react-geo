@@ -2,7 +2,7 @@ import OlObservable from 'ol/observable';
 
 /**
  * This class provides some static methods which might be helpful when working
- * with redlining functions.
+ * with digitize functions.
  *
  * @class DigitizeUtil
  */

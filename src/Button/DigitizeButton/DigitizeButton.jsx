@@ -24,16 +24,16 @@ import StringUtil from '../../Util/StringUtil/StringUtil';
 import DigitizeUtil from '../../Util/DigitizeUtil/DigitizeUtil';
 import Logger from '../../Util/Logger';
 
-import './RedliningButton.less';
+import './DigitizeButton.less';
 
 /**
- * The RedliningButton.
+ * The DigitizeButton.
  *
- * @class The RedliningButton
+ * @class The DigitizeButton
  * @extends React.Component
  *
  */
-class RedliningButton extends React.Component {
+class DigitizeButton extends React.Component {
 
   /**
    * The className added to this component.
@@ -41,22 +41,22 @@ class RedliningButton extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-redliningbutton';
+  className = 'react-geo-digitizebutton';
 
   /**
-   * Currently existing redlining features as collection.
+   * Currently existing digitize features as collection.
    *
    * @type {OlCollection}
    * @private
    */
-  _redliningFeatures = null;
+  _digitizeFeatures = null;
 
   /**
    * Currently drawn feature which should be represent as label or postit.
    * @type {OlFeature}
    * @private
    */
-   _redliningTextFeature = null;
+   _digitizeTextFeature = null;
 
    /**
     * Reference to OL select interaction which will be used in edit mode.
@@ -93,7 +93,7 @@ class RedliningButton extends React.Component {
     drawType: PropTypes.oneOf(['Point', 'LineString', 'Polygon', 'Circle', 'Rectangle', 'Text']),
 
     /**
-     * Whether the redlining feature should be deleted, copied or modified.
+     * Whether the digitize feature should be deleted, copied or modified.
      * be drawn.
      *
      * @type {String}
@@ -101,42 +101,42 @@ class RedliningButton extends React.Component {
     editType: PropTypes.oneOf(['Copy', 'Edit', 'Delete']),
 
     /**
-     * Name of system vector layer which will be used for redlining features.
+     * Name of system vector layer which will be used for digitize features.
      *
      * @type {String}
      */
-    redliningLayerName: PropTypes.string,
+    digitizeLayerName: PropTypes.string,
 
     /**
-     * Fill color of the redlining feature.
+     * Fill color of the digitize feature.
      *
      * @type {String}
      */
     fillColor: PropTypes.string,
 
     /**
-     * Stroke color of the redlining feature.
+     * Stroke color of the digitize feature.
      *
      * @type {String}
      */
     strokeColor: PropTypes.string,
 
     /**
-     * Fill color of selected redlining feature.
+     * Fill color of selected digitize feature.
      *
      * @type {String}
      */
     selectFillColor: PropTypes.string,
 
     /**
-     * Stroke color of selected redlining feature.
+     * Stroke color of selected digitize feature.
      *
      * @type {String}
      */
     selectStrokeColor: PropTypes.string,
 
     /**
-     * Title for modal used for input of labels for redlining features.
+     * Title for modal used for input of labels for digitize features.
      *
      * @type {String}
      */
@@ -163,7 +163,7 @@ class RedliningButton extends React.Component {
    * @type {Object}
    */
   static defaultProps = {
-    redliningLayerName: 'react-geo_redlining',
+    digitizeLayerName: 'react-geo_digitize',
     fillColor: 'rgba(154, 26, 56, 0.5)',
     strokeColor: 'rgba(154, 26, 56, 0.8)',
     selectFillColor: 'rgba(240, 240, 90, 0.5)',
@@ -174,21 +174,21 @@ class RedliningButton extends React.Component {
   }
 
   /**
-   * Creates the RedliningButton.
+   * Creates the DigitizeButton.
    *
-   * @constructs RedliningButton
+   * @constructs DigitizeButton
    */
   constructor(props) {
 
     super(props);
 
     if (!this.props.drawType && !this.props.editType) {
-      Logger.warn('Neither "drawType" nor "editType" was provided. Redlining ' +
+      Logger.warn('Neither "drawType" nor "editType" was provided. Digitize ' +
       'button won\'t work properly!');
     }
 
     this.state = {
-      redliningLayer: null,
+      digitizeLayer: null,
       interaction: null,
       showLabelPrompt: false,
       textLabel: ''
@@ -196,22 +196,22 @@ class RedliningButton extends React.Component {
   }
 
   /**
-   * `componentWillMount` method of the RedliningButton. Just calls
-   * `createRedliningLayer` method.
+   * `componentWillMount` method of the DigitizeButton. Just calls
+   * `createDigitizeLayer` method.
    *
    * @method
    */
   componentDidMount() {
-    this.createRedliningLayer();
+    this.createDigitizeLayer();
   }
 
   /**
-   * Called when the redlining button is toggled. If the button state is pressed,
+   * Called when the digitize button is toggled. If the button state is pressed,
    * the appropriate draw, modify or select interaction will be created.
    * Otherwise, by untoggling, the same previously created interaction will be
    * removed from the map.
    *
-   * @param {Boolean} pressed Whether the redlining button is pressed or not.
+   * @param {Boolean} pressed Whether the digitize button is pressed or not.
    *
    * @method
    */
@@ -224,11 +224,11 @@ class RedliningButton extends React.Component {
     } = this.props;
 
     const {
-      redliningLayer,
+      digitizeLayer,
       interaction
     } = this.state;
 
-    this._redliningFeatures = redliningLayer.getSource().getFeaturesCollection();
+    this._digitizeFeatures = digitizeLayer.getSource().getFeaturesCollection();
 
     if (pressed) {
       if (drawType) {
@@ -240,7 +240,7 @@ class RedliningButton extends React.Component {
     } else {
       interaction.forEach(i => map.removeInteraction(i));
       if (drawType === 'Text') {
-        this._redliningFeatures.un('add', this.handleTextAdding);
+        this._digitizeFeatures.un('add', this.handleTextAdding);
       } else {
         if (editType === 'Delete') {
           this._selectInteraction.un('select', this.onFeatureRemove);
@@ -254,33 +254,33 @@ class RedliningButton extends React.Component {
   }
 
   /**
-   * Creates redlining vector layer and adds this to the map.
+   * Creates digitize vector layer and adds this to the map.
    *
    * @method
    */
-  createRedliningLayer = () => {
+  createDigitizeLayer = () => {
     const {
-      redliningLayerName,
+      digitizeLayerName,
       map
     } = this.props;
 
-    let redliningLayer = MapUtil.getLayerByName(map, redliningLayerName);
+    let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
 
-    if (!redliningLayer) {
-      redliningLayer = new OlLayerVector({
-        name: redliningLayerName,
+    if (!digitizeLayer) {
+      digitizeLayer = new OlLayerVector({
+        name: digitizeLayerName,
         source: new OlSourceVector({
           features: new OlCollection(),
         }),
-        style: this.getRedliningStyleFunction
+        style: this.getDigitizeStyleFunction
       });
-      map.addLayer(redliningLayer);
+      map.addLayer(digitizeLayer);
     }
-    this.setState({redliningLayer});
+    this.setState({digitizeLayer});
   }
 
   /**
-   * The styling function for the redlining vector layer, which considers
+   * The styling function for the digitize vector layer, which considers
    * different geometry types of drawn features.
    *
    * @param {OlFeature} feature The feature which is being styled.
@@ -288,7 +288,7 @@ class RedliningButton extends React.Component {
    *
    * @method
    */
-  getRedliningStyleFunction = feature => {
+  getDigitizeStyleFunction = feature => {
 
     const {
       fillColor,
@@ -367,7 +367,7 @@ class RedliningButton extends React.Component {
    * Creates a correctly configured OL draw interaction depending on given
    * drawType and adds this to the map.
    *
-   * @param {Boolean} pressed Whether the redlining button is pressed or not.
+   * @param {Boolean} pressed Whether the digitize button is pressed or not.
    * Will be used to handle active state of the draw interaction.
    *
    * @method
@@ -386,14 +386,14 @@ class RedliningButton extends React.Component {
       type = 'Circle';
     } else if (drawType === 'Text') {
       type = 'Point';
-      this._redliningFeatures.on('add', this.handleTextAdding);
+      this._digitizeFeatures.on('add', this.handleTextAdding);
     }
 
     const drawInteraction = new OlInteractionDraw({
-      source: this.state.redliningLayer.getSource(),
+      source: this.state.digitizeLayer.getSource(),
       type: type,
       geometryFunction: geometryFunction,
-      style: this.getRedliningStyleFunction,
+      style: this.getDigitizeStyleFunction,
       freehandCondition: OlEventsCondition.never
     });
 
@@ -420,7 +420,7 @@ class RedliningButton extends React.Component {
 
     this._selectInteraction = new OlInteractionSelect({
       condition: OlEventsCondition.singleClick,
-      style: this.getRedliningStyleFunction,
+      style: this.getDigitizeStyleFunction,
       hitTolerance: 5
     });
 
@@ -436,7 +436,7 @@ class RedliningButton extends React.Component {
       const edit = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
         deleteCondition: OlEventsCondition.singleClick,
-        style: this.getRedliningStyleFunction,
+        style: this.getDigitizeStyleFunction,
         pixelTolerance: 10
       });
 
@@ -468,7 +468,7 @@ class RedliningButton extends React.Component {
   onFeatureRemove = evt => {
     const feat = evt.selected[0];
     this._selectInteraction.getFeatures().remove(feat);
-    this.state.redliningLayer.getSource().removeFeature(feat);
+    this.state.digitizeLayer.getSource().removeFeature(feat);
     this.props.map.renderSync();
   }
 
@@ -485,8 +485,8 @@ class RedliningButton extends React.Component {
     const feat = evt.selected[0];
     const copy = feat.clone();
     //eslint-disable-next-line
-    const doneFn = finalFeature => {this._redliningFeatures.push(finalFeature)};
-    const style = this.getRedliningStyleFunction(copy);
+    const doneFn = finalFeature => {this._digitizeFeatures.push(finalFeature)};
+    const style = this.getDigitizeStyleFunction(copy);
 
     DigitizeUtil.moveFeature(
       this.props.map,
@@ -509,7 +509,7 @@ class RedliningButton extends React.Component {
   onModifyStart = evt => {
     const feature = evt.features.getArray()[0];
     if (feature.get('isLabel')) {
-      this._redliningTextFeature = feature;
+      this._digitizeTextFeature = feature;
       this.setState({
         showLabelPrompt: true
       });
@@ -519,7 +519,7 @@ class RedliningButton extends React.Component {
   /**
    * Changes state for showLabelPrompt to make modal for label input visible.
    *
-   * @param {Event} evt Click event on adding feature to the redlining layer.
+   * @param {Event} evt Click event on adding feature to the digitize layer.
    *
    * @method
    */
@@ -527,8 +527,8 @@ class RedliningButton extends React.Component {
     this.setState({
       showLabelPrompt: true
     });
-    this._redliningTextFeature = evt.element;
-    this._redliningTextFeature.set('isLabel', true);
+    this._digitizeTextFeature = evt.element;
+    this._digitizeTextFeature.set('isLabel', true);
   }
 
   /**
@@ -541,14 +541,14 @@ class RedliningButton extends React.Component {
     this.setState({
       showLabelPrompt: false
     }, () => {
-      this.setTextOnFeature(this._redliningTextFeature);
+      this.setTextOnFeature(this._digitizeTextFeature);
     });
   }
 
   /**
    * Callback function after `Cancel` button of label input modal was clicked.
    * Turns visibility of modal off and removes last drawn feature from the
-   * redlining layer.
+   * digitize layer.
    *
    * @method
    */
@@ -558,8 +558,8 @@ class RedliningButton extends React.Component {
       textLabel: ''
     }, () => {
       if (!(this.state.interaction && this.state.interaction.length > 1)) {
-        this._redliningFeatures.remove(this._redliningTextFeature);
-        this._redliningTextFeature = null;
+        this._digitizeFeatures.remove(this._digitizeTextFeature);
+        this._digitizeTextFeature = null;
       }
     });
   }
@@ -573,7 +573,7 @@ class RedliningButton extends React.Component {
    */
   setTextOnFeature = (feat) => {
     const label = StringUtil.stringDivider(this.state.textLabel, 16, '\n');
-    const style = this.getRedliningStyleFunction(feat).clone();
+    const style = this.getDigitizeStyleFunction(feat).clone();
     style.getText().setText(label);
     feat.setStyle(style);
 
@@ -627,7 +627,7 @@ class RedliningButton extends React.Component {
       map,
       drawType,
       editType,
-      redliningLayerName,
+      digitizeLayerName,
       fillColor,
       strokeColor,
       selectFillColor,
@@ -669,4 +669,4 @@ class RedliningButton extends React.Component {
   }
 }
 
-export default RedliningButton;
+export default DigitizeButton;

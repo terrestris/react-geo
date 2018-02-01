@@ -8,7 +8,7 @@ import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
 
 import {
-  RedliningButton,
+  DigitizeButton,
   ToggleGroup
 } from '../../index.js';
 
@@ -39,81 +39,81 @@ render(
     }} />
 
     <div className="example-block">
-      <span>Select a redlining type:</span>
+      <span>Select a digitize type:</span>
       <ToggleGroup
         orientation="horizontal">
 
-        <RedliningButton
+        <DigitizeButton
           name="drawPoint"
           map={map}
           drawType="Point"
         >
         Draw point
-        </RedliningButton>
+        </DigitizeButton>
 
-        <RedliningButton
+        <DigitizeButton
           name="drawLine"
           map={map}
           drawType="LineString"
         >
         Draw line
-        </RedliningButton>
+        </DigitizeButton>
 
-        <RedliningButton
+        <DigitizeButton
           name="drawPolygon"
           map={map}
           drawType="Polygon"
         >
         Draw polygon
-        </RedliningButton>
+        </DigitizeButton>
 
-        <RedliningButton
+        <DigitizeButton
           name="drawCircle"
           map={map}
           drawType="Circle"
         >
         Draw circle
-        </RedliningButton>
+        </DigitizeButton>
 
-        <RedliningButton
+        <DigitizeButton
           name="drawRectangle"
           map={map}
           drawType="Rectangle"
         >
         Draw rectangle
-        </RedliningButton>
+        </DigitizeButton>
 
-        <RedliningButton
+        <DigitizeButton
           name="drawText"
           map={map}
           drawType="Text"
         >
         Draw text label
-        </RedliningButton>
+        </DigitizeButton>
 
-        <RedliningButton
+        <DigitizeButton
           name="selectAndModify"
           map={map}
           editType="Edit"
         >
         Select and modify features
-        </RedliningButton>
+        </DigitizeButton>
 
-        <RedliningButton
+        <DigitizeButton
           name="copyFeature"
           map={map}
           editType="Copy"
         >
         Copy features
-        </RedliningButton>
+        </DigitizeButton>
 
-        <RedliningButton
+        <DigitizeButton
           name="deleteFeature"
           map={map}
           editType="Delete"
         >
         Delete features
-        </RedliningButton>
+        </DigitizeButton>
 
       </ToggleGroup>
 

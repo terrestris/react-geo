@@ -15,11 +15,11 @@ import OlGeomPoint from 'ol/geom/point';
 import OlGeomLineString from 'ol/geom/linestring';
 import OlGeomPolygon from 'ol/geom/polygon';
 
-import RedliningButton from './RedliningButton.jsx';
+import DigitizeButton from './DigitizeButton.jsx';
 import MapUtil from '../../Util/MapUtil/MapUtil';
 import DigitizeUtil from '../../Util/DigitizeUtil/DigitizeUtil';
 
-describe('<RedliningButton />', () => {
+describe('<DigitizeButton />', () => {
 
   let map;
 
@@ -41,7 +41,7 @@ describe('<RedliningButton />', () => {
       map: map,
       drawType: 'Point'
     };
-    return TestUtil.mountComponent(RedliningButton, defaultProps);
+    return TestUtil.mountComponent(DigitizeButton, defaultProps);
   };
 
   /**
@@ -82,13 +82,13 @@ describe('<RedliningButton />', () => {
   describe('#Basics', () => {
 
     it('is defined', () => {
-      expect(RedliningButton).not.toBeUndefined();
+      expect(DigitizeButton).not.toBeUndefined();
     });
 
     it('can be rendered', () => {
       const wrapper = setupWrapper();
       expect(wrapper).not.toBeUndefined();
-      expect(wrapper.find(RedliningButton).length).toEqual(1);
+      expect(wrapper.find(DigitizeButton).length).toEqual(1);
     });
 
     it('drawType or editType prop must be provided and have valid values', () => {
@@ -164,7 +164,7 @@ describe('<RedliningButton />', () => {
         expect(map.listeners_.pointermove).toBeUndefined();
       });
 
-      it ('unregisters `add` listener on redlining feature collection if drawType is Text and button was untoggled', () => {
+      it ('unregisters `add` listener on digitize feature collection if drawType is Text and button was untoggled', () => {
         const wrapper = setupWrapper();
         wrapper.setProps({
           drawType: 'Text'
@@ -172,14 +172,14 @@ describe('<RedliningButton />', () => {
         const mockInteraction = getMockDrawPointInteraction();
 
         const instance = wrapper.instance();
-        instance.createRedliningLayer();
-        instance._redliningFeatures =
-          wrapper.state().redliningLayer.getSource().getFeaturesCollection();
+        instance.createDigitizeLayer();
+        instance._digitizeFeatures =
+          wrapper.state().digitizeLayer.getSource().getFeaturesCollection();
 
         map.addInteraction(mockInteraction);
-        instance._redliningFeatures.on('add', wrapper.instance().handleTextAdding);
+        instance._digitizeFeatures.on('add', wrapper.instance().handleTextAdding);
 
-        expect(instance._redliningFeatures.listeners_.add.length).toBe(2);
+        expect(instance._digitizeFeatures.listeners_.add.length).toBe(2);
 
         wrapper.setState({
           interaction: [mockInteraction]
@@ -187,7 +187,7 @@ describe('<RedliningButton />', () => {
 
         instance.onToggle(false);
 
-        expect(instance._redliningFeatures.listeners_.add.length).toBe(1);
+        expect(instance._digitizeFeatures.listeners_.add.length).toBe(1);
       });
 
       it ('unregisters `select` listener on select interaction if editType is Delete and button was untoggled', () => {
@@ -241,21 +241,21 @@ describe('<RedliningButton />', () => {
       });
     });
 
-    describe('#createRedliningLayer', () => {
+    describe('#createDigitizeLayer', () => {
 
-      it ('creates a redlining vector layer, adds this to the map and assigns its value to state', () => {
-        let redliningLayer = MapUtil.getLayerByName(map, 'react-geo_redlining');
+      it ('creates a digitize vector layer, adds this to the map and assigns its value to state', () => {
+        let digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
 
-        expect(redliningLayer).toBeUndefined();
+        expect(digitizeLayer).toBeUndefined();
         const wrapper = setupWrapper();
 
-        redliningLayer = MapUtil.getLayerByName(map, 'react-geo_redlining');
-        expect(redliningLayer).toBeDefined();
-        expect(wrapper.state().redliningLayer).toBe(redliningLayer);
+        digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+        expect(digitizeLayer).toBeDefined();
+        expect(wrapper.state().digitizeLayer).toBe(digitizeLayer);
       });
     });
 
-    describe('#getRedliningStyleFunction', () => {
+    describe('#getDigitizeStyleFunction', () => {
 
       it ('returns a valid OlStyleStyle object depending on feature geometry type', () => {
         const wrapper = setupWrapper();
@@ -263,24 +263,24 @@ describe('<RedliningButton />', () => {
         const lineFeature = new OlFeature(new OlGeomLineString([0, 0], [1, 1]));
         const polyFeature = new OlFeature(new OlGeomPolygon([0, 0], [0, 1], [1, 1], [0, 0]));
 
-        const pointStyle = wrapper.instance().getRedliningStyleFunction(pointFeature);
+        const pointStyle = wrapper.instance().getDigitizeStyleFunction(pointFeature);
         expect(pointStyle instanceof OlStyleStyle).toBeTruthy();
         expect(typeof pointStyle).toBe('object');
         expect(pointStyle.getImage() instanceof OlStyleCircle).toBeTruthy();
 
         pointFeature.set('isLabel', true);
 
-        const labelStyle = wrapper.instance().getRedliningStyleFunction(pointFeature);
+        const labelStyle = wrapper.instance().getDigitizeStyleFunction(pointFeature);
         expect(labelStyle instanceof OlStyleStyle).toBeTruthy();
         expect(typeof labelStyle).toBe('object');
         expect(labelStyle.getText() instanceof OlStyleText).toBeTruthy();
 
-        const lineStyle = wrapper.instance().getRedliningStyleFunction(lineFeature);
+        const lineStyle = wrapper.instance().getDigitizeStyleFunction(lineFeature);
         expect(lineStyle instanceof OlStyleStyle).toBeTruthy();
         expect(typeof lineStyle).toBe('object');
         expect(lineStyle.getStroke() instanceof OlStyleStroke).toBeTruthy();
 
-        const polyStyle = wrapper.instance().getRedliningStyleFunction(polyFeature);
+        const polyStyle = wrapper.instance().getDigitizeStyleFunction(polyFeature);
         expect(polyStyle instanceof OlStyleStyle).toBeTruthy();
         expect(typeof polyStyle).toBe('object');
         expect(polyStyle.getStroke() instanceof OlStyleStroke).toBeTruthy();
@@ -308,7 +308,7 @@ describe('<RedliningButton />', () => {
           drawType: 'Text'
         });
 
-        wrapper.instance()._redliningFeatures = new OlCollection();
+        wrapper.instance()._digitizeFeatures = new OlCollection();
         wrapper.instance().createDrawInteraction(true);
 
         expect(wrapper.state().interaction.length).toBe(1);
@@ -358,19 +358,19 @@ describe('<RedliningButton />', () => {
           selected: [feat]
         };
 
-        wrapper.instance().createRedliningLayer();
+        wrapper.instance().createDigitizeLayer();
         wrapper.instance().createSelectOrModifyInteraction();
 
-        wrapper.state().redliningLayer.getSource().addFeature(feat);
+        wrapper.state().digitizeLayer.getSource().addFeature(feat);
         wrapper.instance()._selectInteraction.getFeatures().push(feat);
 
         expect(wrapper.instance()._selectInteraction.getFeatures().getArray().length).toBe(1);
-        expect(wrapper.state().redliningLayer.getSource().getFeaturesCollection().getArray().length).toBe(1);
+        expect(wrapper.state().digitizeLayer.getSource().getFeaturesCollection().getArray().length).toBe(1);
 
         wrapper.instance().onFeatureRemove(mockEvt);
 
         expect(wrapper.instance()._selectInteraction.getFeatures().getArray().length).toBe(0);
-        expect(wrapper.state().redliningLayer.getSource().getFeaturesCollection().getArray().length).toBe(0);
+        expect(wrapper.state().digitizeLayer.getSource().getFeaturesCollection().getArray().length).toBe(0);
       });
     });
 
@@ -407,7 +407,7 @@ describe('<RedliningButton />', () => {
 
         wrapper.instance().onModifyStart(mockEvt);
 
-        expect(wrapper.instance()._redliningTextFeature).toEqual(mockEvt.features.getArray()[0]);
+        expect(wrapper.instance()._digitizeTextFeature).toEqual(mockEvt.features.getArray()[0]);
         expect(wrapper.state().showLabelPrompt).toBeTruthy();
       });
     });
@@ -423,8 +423,8 @@ describe('<RedliningButton />', () => {
 
         wrapper.instance().handleTextAdding(mockEvt);
 
-        expect(wrapper.instance()._redliningTextFeature).toEqual(mockEvt.element);
-        expect(wrapper.instance()._redliningTextFeature.get('isLabel')).toBeTruthy();
+        expect(wrapper.instance()._digitizeTextFeature).toEqual(mockEvt.element);
+        expect(wrapper.instance()._digitizeTextFeature.get('isLabel')).toBeTruthy();
         expect(wrapper.state().showLabelPrompt).toBeTruthy();
       });
     });
@@ -444,7 +444,7 @@ describe('<RedliningButton />', () => {
         }));
         feat.set('isLabel', true);
 
-        wrapper.instance()._redliningTextFeature = feat;
+        wrapper.instance()._digitizeTextFeature = feat;
         wrapper.instance().onModalLabelOk();
 
         expect(wrapper.state().showLabelPrompt).toBeFalsy();
@@ -453,7 +453,7 @@ describe('<RedliningButton />', () => {
 
     describe('#onModalLabelCancel', () => {
 
-      it('hides prompt for input text and removes _redliningTextFeature from layer', () => {
+      it('hides prompt for input text and removes _digitizeTextFeature from layer', () => {
         const wrapper = setupWrapper();
         const feat = new OlFeature(new OlGeomPoint([0, 0]));
 
@@ -466,17 +466,17 @@ describe('<RedliningButton />', () => {
         }));
         feat.set('isLabel', true);
 
-        wrapper.instance()._redliningTextFeature = feat;
-        wrapper.instance()._redliningFeatures = new OlCollection();
-        wrapper.instance()._redliningFeatures.push(feat);
+        wrapper.instance()._digitizeTextFeature = feat;
+        wrapper.instance()._digitizeFeatures = new OlCollection();
+        wrapper.instance()._digitizeFeatures.push(feat);
 
-        expect(wrapper.instance()._redliningFeatures.getLength()).toBe(1);
+        expect(wrapper.instance()._digitizeFeatures.getLength()).toBe(1);
 
         wrapper.instance().onModalLabelCancel();
 
         expect(wrapper.state().showLabelPrompt).toBeFalsy();
-        expect(wrapper.instance()._redliningFeatures.getLength()).toBe(0);
-        expect(wrapper.instance()._redliningTextFeature).toBeNull();
+        expect(wrapper.instance()._digitizeFeatures.getLength()).toBe(0);
+        expect(wrapper.instance()._digitizeTextFeature).toBeNull();
       });
     });
 
