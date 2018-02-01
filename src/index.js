@@ -4,6 +4,7 @@ import SimpleButton from './Button/SimpleButton/SimpleButton.jsx';
 import ToggleButton from './Button/ToggleButton/ToggleButton.jsx';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup.jsx';
 import MeasureButton from './Button/MeasureButton/MeasureButton.jsx';
+import DigitizeButton from './Button/DigitizeButton/DigitizeButton.jsx';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.jsx';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
 import ScaleCombo from './Field/ScaleCombo/ScaleCombo.jsx';
@@ -24,6 +25,7 @@ import Window from './Window/Window.jsx';
 
 import CapabilitiesUtil from './Util/CapabilitiesUtil/CapabilitiesUtil';
 import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
+import AnimateUtil from './Util/AnimateUtil/AnimateUtil';
 import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
 import MapUtil from './Util/MapUtil/MapUtil';
 import MeasureUtil from './Util/MeasureUtil/MeasureUtil';
@@ -47,6 +49,7 @@ export {
   ToggleButton,
   ToggleGroup,
   MeasureButton,
+  DigitizeButton,
   FeatureGrid,
   LayerTree,
   LayerTreeNode,
@@ -61,6 +64,7 @@ export {
   Window,
   CapabilitiesUtil,
   CsrfUtil,
+  AnimateUtil,
   FeatureUtil,
   Logger,
   MapUtil,
