@@ -1,7 +1,7 @@
 ---
 layout: basic.hbs
 title: DigitizeButton example
-description: This is a example showing digitize buttons with different interactions.
+description: This is an example showing digitize buttons with different interactions.
 collection: Examples
 ---
 
