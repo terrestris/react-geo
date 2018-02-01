@@ -14,7 +14,6 @@
   },
   "parser": "babel-eslint",
   "globals": {
-    "ol": false,
     "Promise": false,
     "__EXAMPLE_MAP__": true
   },
