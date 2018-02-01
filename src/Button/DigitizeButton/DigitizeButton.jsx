@@ -536,7 +536,7 @@ class DigitizeButton extends React.Component {
     const feat = evt.selected[0];
     const copy = feat.clone();
     //eslint-disable-next-line
-    const doneFn = finalFeature => {this._digitizeFeatures.push(finalFeature)};
+    const doneFn = finalFeature => {this._digitizeFeatures.push(finalFeature);};
     const style = this.getDigitizeStyleFunction(copy);
 
     DigitizeUtil.moveFeature(
@@ -622,7 +622,7 @@ class DigitizeButton extends React.Component {
    *
    * @method
    */
-  setTextOnFeature = (feat) => {
+  setTextOnFeature = feat => {
     const label = StringUtil.stringDivider(this.state.textLabel, 16, '\n');
     const style = this.getDigitizeStyleFunction(feat).clone();
     style.getText().setText(label);
@@ -631,7 +631,6 @@ class DigitizeButton extends React.Component {
     this.setState({
       textLabel: ''
     });
-
   }
 
   /**
@@ -643,7 +642,7 @@ class DigitizeButton extends React.Component {
    *
    * @method
    */
-  onLabelChange = (evt) => {
+  onLabelChange = evt => {
     this.setState({
       textLabel: evt.target.value
     });
@@ -695,27 +694,31 @@ class DigitizeButton extends React.Component {
       : this.className;
 
     return (
-      <div className="wrapper">
+      <span className="react-geo-digitize-button-wrapper">
         <ToggleButton
           onToggle={this.onToggle}
           className={finalClassName}
           {...passThroughProps}
         />
-        <Modal
-          title={modalPromptTitle}
-          okText={modalPromptOkButtonText}
-          cancelText={modalPromptCancelButtonText}
-          visible={this.state.showLabelPrompt}
-          closable={false}
-          onOk={this.onModalLabelOk}
-          onCancel={this.onModalLabelCancel}
-        >
-          <Input
-            value={this.state.textLabel}
-            onChange={this.onLabelChange}
-          />
-        </Modal>
-      </div>
+        {
+          this.state.showLabelPrompt ?
+            <Modal
+              title={modalPromptTitle}
+              okText={modalPromptOkButtonText}
+              cancelText={modalPromptCancelButtonText}
+              visible={this.state.showLabelPrompt}
+              closable={false}
+              onOk={this.onModalLabelOk}
+              onCancel={this.onModalLabelCancel}
+            >
+              <Input
+                value={this.state.textLabel}
+                onChange={this.onLabelChange}
+              />
+            </Modal>
+            : null
+        }
+      </span>
     );
   }
 }
