@@ -42,45 +42,44 @@ render(
     &lt;div className&#x3D;&quot;example-block&quot;&gt;
       &lt;span&gt;Panels:&lt;/span&gt;
 
-
       &lt;Panel
         x&#x3D;{0}
         y&#x3D;{20}
-        title&#x3D;&quot;Collapsible&quot;
-        collapsible&#x3D;{true}
-      /&gt;
-
-      &lt;Panel
-        x&#x3D;{200}
-        y&#x3D;{20}
-        closable&#x3D;{true}
-        collapsible&#x3D;{true}
-        title&#x3D;&quot;Tooltips&quot;
-        compressTooltip&#x3D;&quot;Einklappen&quot;
-        closeTooltip&#x3D;&quot;Schließen&quot;
-      /&gt;
-
-      &lt;Panel
-        x&#x3D;{400}
-        y&#x3D;{20}
         title&#x3D;&quot;Children&quot;
       &gt;
-        &lt;div&gt;Im a div but i can be any node.&lt;/div&gt;
+        &lt;div style&#x3D;{{padding: &#x27;5px&#x27;}}&gt;
+          Im a div but i can be any node.
+        &lt;/div&gt;
       &lt;/Panel&gt;
 
       &lt;Panel
-        x&#x3D;{600}
+        x&#x3D;{250}
         y&#x3D;{20}
-        title&#x3D;&quot;Resizable&quot;
-        resizeOpts&#x3D;{true}
+        title&#x3D;&quot;Collapsible&quot;
+        collapsible&#x3D;{true}
       &gt;
-        &lt;img src&#x3D;&quot;http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg&quot; /&gt;
+        &lt;div style&#x3D;{{padding: &#x27;5px&#x27;}}&gt;
+          Content
+        &lt;/div&gt;
       &lt;/Panel&gt;
 
       &lt;Panel
-        x&#x3D;{800}
+        x&#x3D;{420}
         y&#x3D;{20}
-        title&#x3D;&quot;Resizeopts&quot;
+        width&#x3D;{160}
+        collapsible&#x3D;{true}
+        title&#x3D;&quot;Tooltip&quot;
+        collapseTooltip&#x3D;&quot;Einklappen&quot;
+      &gt;
+        &lt;div style&#x3D;{{padding: &#x27;5px&#x27;}}&gt;
+          You can set the tooltip for the collapse icon with the prop &#x60;collapseTooltip&#x60;.
+        &lt;/div&gt;
+      &lt;/Panel&gt;
+
+      &lt;Panel
+        x&#x3D;{700}
+        y&#x3D;{20}
+        title&#x3D;&quot;resizeopts (right &amp; bottom)&quot;
         resizeOpts&#x3D;{{
           bottom: true,
           bottomLeft: false,
@@ -96,9 +95,19 @@ render(
       &lt;/Panel&gt;
 
       &lt;Panel
+        x&#x3D;{1000}
+        y&#x3D;{20}
+        title&#x3D;&quot;resizeopts&#x3D;{true}&quot;
+        resizeOpts&#x3D;{true}
+      &gt;
+        &lt;img src&#x3D;&quot;http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg&quot; /&gt;
+      &lt;/Panel&gt;
+
+      &lt;Panel
         x&#x3D;{0}
         y&#x3D;{220}
-        title&#x3D;&quot;Custom size&quot;
+        title&#x3D;&quot;Intial size (673 * 134)&quot;
+        resizeOpts&#x3D;{true}
         width&#x3D;{673}
         height&#x3D;{134}
       /&gt;

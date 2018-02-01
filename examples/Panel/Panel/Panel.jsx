@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Rnd from 'react-rnd';
-import { uniqueId, isNumber, isFunction } from 'lodash';
+import {
+  uniqueId,
+  isNumber,
+  isFunction
+} from 'lodash';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
@@ -54,13 +58,6 @@ export class Panel extends React.Component {
      * @type {string}
      */
     title: PropTypes.string,
-
-    /**
-     * function called on close
-     *
-     * @type {Function}
-     */
-    onClose: PropTypes.func,
 
     /**
      * The enableResizing property is used to set the resizable permission of a
@@ -118,15 +115,29 @@ export class Panel extends React.Component {
 
     /**
      * The height of the panel.
-     * @type {number}
+     * @type {number|string}
      */
-    height: PropTypes.number,
+    height: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.oneOf([
+        'inherit',
+        'initial',
+        'auto'
+      ])
+    ]),
 
     /**
      * The width of the panel.
-     * @type {number}
+     * @type {number|string}
      */
-    width: PropTypes.number,
+    width: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.oneOf([
+        'inherit',
+        'initial',
+        'auto'
+      ])
+    ]),
 
     /**
      * The height of the TitleBar.
@@ -135,16 +146,15 @@ export class Panel extends React.Component {
     titleBarHeight: PropTypes.number,
 
     /**
-     * The tooltip of the compress button.
+     * The tooltip of the collapse button.
      * @type {String}
      */
-    compressTooltip: PropTypes.string,
+    collapseTooltip: PropTypes.string,
 
     /**
-     * The tooltip of the close button.
-     * @type {String}
+     *
      */
-    closeTooltip: PropTypes.string
+    tools: PropTypes.arrayOf(PropTypes.node)
   }
 
   /**
@@ -154,14 +164,12 @@ export class Panel extends React.Component {
   static defaultProps = {
     draggable: false,
     collapsible: false,
-    closable: false,
     resizeOpts: false,
     titleBarHeight: 37.5,
-    height: 100,
-    width: 100,
-    compressTooltip: 'collapse',
-    closeTooltip: 'close',
-    onClose: () => {}
+    tools: [],
+    height: 'auto',
+    width: 'auto',
+    collapseTooltip: 'collapse'
   }
 
   /**
@@ -183,16 +191,41 @@ export class Panel extends React.Component {
   }
 
   /**
+   * Calculates the height of the Panel and returns a number.
+   *
+   * @return {number}
+   */
+  calculateHeight() {
+    return this.state.collapsed
+      ? this.state.titleBarHeight
+      : this.state.height;
+  }
+
+  /**
+   * Calculates the height of the Panel body and returns a valid css height
+   * expression.
+   *
+   * @return {string}
+   */
+  calculateBodyHeight() {
+    if (this.state.collapsed) {
+      return '0px';
+    } else {
+      return isNumber(this.state.height)
+        ? (this.state.height - this.state.titleBarHeight) + 'px'
+        : this.state.height;
+    }
+  }
+
+  /**
    * Toggles the collapse state of the panel.
    */
   toggleCollapse = () => {
     this.setState({
       collapsed: !this.state.collapsed
     }, () => {
-      this.panel.updateSize({
-        height: this.state.collapsed
-          ? this.state.titleBarHeight
-          : this.state.height,
+      this.rnd.updateSize({
+        height: this.calculateHeight(),
         width: this.state.width
       });
     });
@@ -247,14 +280,13 @@ export class Panel extends React.Component {
    */
   render() {
     const {
-      closable,
       collapsible,
+      className,
       draggable,
       resizeOpts,
-      className,
-      onClose,
       ...rndOpts
     } = this.props;
+    let tools = [...this.props.tools];
 
     const finalClassName = className
       ? `${className} ${this.className}`
@@ -263,22 +295,12 @@ export class Panel extends React.Component {
     const rndClassName = `${finalClassName} ${this.state.id}`;
     const enableResizing = resizeOpts === true ? undefined : resizeOpts;
 
-    let tools = [];
     if (collapsible) {
-      tools.push(<SimpleButton
+      tools.unshift(<SimpleButton
         icon="compress"
-        key="compress-tool"
+        key="collapse-tool"
         onClick={this.toggleCollapse}
-        tooltip={this.props.compressTooltip}
-        size="small"
-      />);
-    }
-    if (closable) {
-      tools.push(<SimpleButton
-        icon="times"
-        key="close-tool"
-        onClick={onClose}
-        tooltip={this.props.closeTooltip}
+        tooltip={this.props.collapseTooltip}
         size="small"
       />);
     }
@@ -289,11 +311,6 @@ export class Panel extends React.Component {
 
     const titleBar = this.props.title ? <Titlebar
       className={titleBarClassName}
-      closable={closable}
-      collapsible={collapsible}
-      parent={this}
-      compressTooltip={this.props.compressTooltip}
-      closeTooltip={this.props.closeTooltip}
       tools={tools}
       style={{
         height: this.state.titleBarHeight,
@@ -306,14 +323,12 @@ export class Panel extends React.Component {
     return (
       <Rnd
         className={rndClassName}
-        ref={(panel) => { this.panel = panel; }}
+        ref={rnd => this.rnd = rnd}
         default={{
           x: isNumber(rndOpts.x) ? rndOpts.x : (window.innerWidth / 2) - 160,
           y: isNumber(rndOpts.y) ? rndOpts.y : (window.innerHeight / 2) - 100,
-          width: rndOpts.width || 160,
-          height: this.state.collapsed
-            ? this.state.titleBarHeight
-            : this.state.height
+          width: this.state.width,
+          height: this.calculateHeight()
         }}
         dragHandleClassName=".drag-handle"
         disableDragging={!draggable}
@@ -339,9 +354,7 @@ export class Panel extends React.Component {
           style={{
             cursor: 'default',
             overflow: 'hidden',
-            height: this.state.collapsed
-              ? '0px'
-              : this.state.height - this.state.titleBarHeight,
+            height: this.calculateBodyHeight(),
             transition: this.state.resizing ? '' : 'height 0.25s',
           }}
         >

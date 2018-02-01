@@ -56,16 +56,27 @@ const doRender &#x3D; () &#x3D;&gt; {
 
       &lt;div className&#x3D;&quot;example-block&quot;&gt;
         &lt;span&gt;Click to open window:&lt;/span&gt;
-        &lt;SimpleButton tooltip&#x3D;&quot;Click me to show/hide a window&quot; onClick&#x3D;{triggerRerenderingWithInvertedVisibility} /&gt;
+        &lt;SimpleButton
+          tooltip&#x3D;&quot;Click me to show/hide a window&quot;
+          onClick&#x3D;{triggerRerenderingWithInvertedVisibility}
+        /&gt;
 
         {
           windowOpen ?
             &lt;Window
               parentId&#x3D;&quot;exampleContainer&quot;
               title&#x3D;&quot;This is the window title&quot;
-              onClose&#x3D;{triggerRerenderingWithInvertedVisibility}
               width&#x3D;{300}
               height&#x3D;{150}
+              tools&#x3D;{[
+                &lt;SimpleButton
+                  key&#x3D;&quot;closeButton&quot;
+                  icon&#x3D;&quot;close&quot;
+                  size&#x3D;&quot;small&quot;
+                  tooltip&#x3D;&quot;Close&quot;
+                  onClick&#x3D;{triggerRerenderingWithInvertedVisibility}
+                /&gt;
+              ]}
             &gt;
               This is the content of the window.
             &lt;/Window&gt; :

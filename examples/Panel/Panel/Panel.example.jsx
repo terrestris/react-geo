@@ -12,45 +12,44 @@ render(
     <div className="example-block">
       <span>Panels:</span>
 
-
       <Panel
         x={0}
         y={20}
-        title="Collapsible"
-        collapsible={true}
-      />
-
-      <Panel
-        x={200}
-        y={20}
-        closable={true}
-        collapsible={true}
-        title="Tooltips"
-        compressTooltip="Einklappen"
-        closeTooltip="Schließen"
-      />
-
-      <Panel
-        x={400}
-        y={20}
         title="Children"
       >
-        <div>Im a div but i can be any node.</div>
+        <div style={{padding: '5px'}}>
+          Im a div but i can be any node.
+        </div>
       </Panel>
 
       <Panel
-        x={600}
+        x={250}
         y={20}
-        title="Resizable"
-        resizeOpts={true}
+        title="Collapsible"
+        collapsible={true}
       >
-        <img src="http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg" />
+        <div style={{padding: '5px'}}>
+          Content
+        </div>
       </Panel>
 
       <Panel
-        x={800}
+        x={420}
         y={20}
-        title="Resizeopts"
+        width={160}
+        collapsible={true}
+        title="Tooltip"
+        collapseTooltip="Einklappen"
+      >
+        <div style={{padding: '5px'}}>
+          You can set the tooltip for the collapse icon with the prop `collapseTooltip`.
+        </div>
+      </Panel>
+
+      <Panel
+        x={700}
+        y={20}
+        title="resizeopts (right & bottom)"
         resizeOpts={{
           bottom: true,
           bottomLeft: false,
@@ -66,9 +65,19 @@ render(
       </Panel>
 
       <Panel
+        x={1000}
+        y={20}
+        title="resizeopts={true}"
+        resizeOpts={true}
+      >
+        <img src="http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg" />
+      </Panel>
+
+      <Panel
         x={0}
         y={220}
-        title="Custom size"
+        title="Intial size (673 * 134)"
+        resizeOpts={true}
         width={673}
         height={134}
       />
