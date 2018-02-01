@@ -56,14 +56,68 @@ class DigitizeButton extends React.Component {
    * @type {OlFeature}
    * @private
    */
-   _digitizeTextFeature = null;
+  _digitizeTextFeature = null;
 
-   /**
-    * Reference to OL select interaction which will be used in edit mode.
-    * @type {OlInteractionSelect}
-    * @private
-    */
-    _selectInteraction = null;
+  /**
+   * Reference to OL select interaction which will be used in edit mode.
+   * @type {OlInteractionSelect}
+   * @private
+   */
+  _selectInteraction = null;
+
+  /**
+   * Name of point draw type.
+   * @private
+   */
+  static POINT_DRAW_TYPE = 'Point';
+
+  /**
+   * Name of line string draw type.
+   * @private
+   */
+  static LINESTRING_DRAW_TYPE = 'LineString';
+
+  /**
+   * Name of polygon draw type.
+   * @private
+   */
+  static POLYGON_DRAW_TYPE = 'Polygon';
+
+  /**
+   * Name of circle draw type.
+   * @private
+   */
+  static CIRCLE_DRAW_TYPE = 'Circle';
+
+  /**
+   * Name of rectangle draw type.
+   * @private
+   */
+  static RECTANGLE_DRAW_TYPE = 'Rectangle';
+
+  /**
+   * Name of text draw type.
+   * @private
+   */
+  static TEXT_DRAW_TYPE = 'Text';
+
+  /**
+   * Name of copy edit type.
+   * @private
+   */
+  static COPY_EDIT_TYPE = 'Copy';
+
+  /**
+   * Name of edit edit type.
+   * @private
+   */
+  static EDIT_EDIT_TYPE = 'Edit';
+
+  /**
+   * Name of delete edit type.
+   * @private
+   */
+  static DELETE_EDIT_TYPE = 'Delete';
 
   /**
    * The properties.
@@ -238,13 +292,13 @@ class DigitizeButton extends React.Component {
       }
     } else {
       interactions.forEach(i => map.removeInteraction(i));
-      if (drawType === 'Text') {
+      if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
         this._digitizeFeatures.un('add', this.handleTextAdding);
       } else {
-        if (editType === 'Delete') {
+        if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
           this._selectInteraction.un('select', this.onFeatureRemove);
         }
-        if (editType === 'Copy') {
+        if (editType === DigitizeButton.COPY_EDIT_TYPE) {
           this._selectInteraction.un('select', this.onFeatureCopy);
         }
         map.un('pointermove', this.onPointerMove);
@@ -306,7 +360,7 @@ class DigitizeButton extends React.Component {
     }
 
     switch (feature.getGeometry().getType()) {
-      case 'Point': {
+      case DigitizeButton.POINT_DRAW_TYPE: {
         if (!feature.get('isLabel')) {
           return new OlStyleStyle({
             image: new OlStyleCircle({
@@ -336,7 +390,7 @@ class DigitizeButton extends React.Component {
           });
         }
       }
-      case 'LineString': {
+      case DigitizeButton.LINESTRING_DRAW_TYPE: {
         return new OlStyleStyle({
           stroke: new OlStyleStroke({
             color: !useSelectStyle ? strokeColor : selectStrokeColor,
@@ -344,8 +398,8 @@ class DigitizeButton extends React.Component {
           })
         });
       }
-      case 'Polygon':
-      case 'Circle': {
+      case DigitizeButton.POLYGON_DRAW_TYPE:
+      case DigitizeButton.CIRCLE_DRAW_TYPE: {
         return new OlStyleStyle({
           fill: new OlStyleFill({
             color: !useSelectStyle ? fillColor : selectFillColor
@@ -380,11 +434,11 @@ class DigitizeButton extends React.Component {
     let geometryFunction;
     let type = drawType;
 
-    if (drawType === 'Rectangle') {
+    if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
       geometryFunction = OlInteractionDraw.createBox();
-      type = 'Circle';
-    } else if (drawType === 'Text') {
-      type = 'Point';
+      type = DigitizeButton.CIRCLE_DRAW_TYPE;
+    } else if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
+      type = DigitizeButton.POINT_DRAW_TYPE;
       this._digitizeFeatures.on('add', this.handleTextAdding);
     }
 
@@ -423,15 +477,15 @@ class DigitizeButton extends React.Component {
       hitTolerance: 5
     });
 
-    if (editType === 'Delete') {
+    if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
       this._selectInteraction.on('select', this.onFeatureRemove);
-    } else if (editType === 'Copy') {
+    } else if (editType === DigitizeButton.COPY_EDIT_TYPE) {
       this._selectInteraction.on('select', this.onFeatureCopy);
     }
 
     let interactions = [this._selectInteraction];
 
-    if (editType === 'Edit') {
+    if (editType === DigitizeButton.EDIT_EDIT_TYPE) {
       const edit = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
         deleteCondition: OlEventsCondition.singleClick,
