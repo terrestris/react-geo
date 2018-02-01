@@ -120,6 +120,84 @@ class DigitizeButton extends React.Component {
   static DELETE_EDIT_TYPE = 'Delete';
 
   /**
+   * Default fill color used in style object of drawn features.
+   *
+   * @type {String}
+   */
+  static DEFAULT_FILL_COLOR = 'rgba(154, 26, 56, 0.5)';
+
+  /**
+   * Default stroke color used in style object of drawn features.
+   *
+   * @type {String}
+   */
+  static DEFAULT_STROKE_COLOR = 'rgba(154, 26, 56, 0.8)';
+
+  /**
+   * Default style for digitized points.
+   *
+   * @type {OlStyleStyle}
+   */
+  static DEFAULT_POINT_STYLE = new OlStyleStyle({
+    image: new OlStyleCircle({
+      radius: 7,
+      fill: new OlStyleFill({
+        color: DigitizeButton.DEFAULT_FILL_COLOR
+      }),
+      stroke: new OlStyleStroke({
+        color: DigitizeButton.DEFAULT_STROKE_COLOR
+      })
+    })
+  });
+
+  /**
+   * Default style for digitized lines.
+   *
+   * @type {OlStyleStyle}
+   */
+  static DEFAULT_LINESTRING_STYLE = new OlStyleStyle({
+    stroke: new OlStyleStroke({
+      color: DigitizeButton.DEFAULT_STROKE_COLOR,
+      width: 2
+    })
+  });
+
+  /**
+   * Default style for digitized polygons or circles.
+   *
+   * @type {OlStyleStyle}
+   */
+  static DEFAULT_POLYGON_STYLE = new OlStyleStyle({
+    fill: new OlStyleFill({
+      color: DigitizeButton.DEFAULT_FILL_COLOR
+    }),
+    stroke: new OlStyleStroke({
+      color: DigitizeButton.DEFAULT_STROKE_COLOR,
+      width: 2
+    })
+  });
+
+  /**
+   * Default style for digitized labels.
+   *
+   * @type {OlStyleStyle}
+   */
+  static DEFAULT_TEXT_STYLE = new OlStyleStyle({
+    text: new OlStyleText({
+      text: '',
+      offsetX: 5,
+      offsetY: 5,
+      font: '12px sans-serif',
+      fill: new OlStyleFill({
+        color: DigitizeButton.DEFAULT_FILL_COLOR
+      }),
+      stroke: new OlStyleStroke({
+        color: DigitizeButton.DEFAULT_STROKE_COLOR
+      })
+    })
+  });
+
+  /**
    * The properties.
    * @type {Object}
    */
@@ -162,20 +240,6 @@ class DigitizeButton extends React.Component {
     digitizeLayerName: PropTypes.string,
 
     /**
-     * Fill color of the digitize feature.
-     *
-     * @type {String}
-     */
-    fillColor: PropTypes.string,
-
-    /**
-     * Stroke color of the digitize feature.
-     *
-     * @type {String}
-     */
-    strokeColor: PropTypes.string,
-
-    /**
      * Fill color of selected digitize feature.
      *
      * @type {String}
@@ -208,7 +272,14 @@ class DigitizeButton extends React.Component {
      *
      * @type {String}
      */
-    modalPromptCancelButtonText: PropTypes.string
+    modalPromptCancelButtonText: PropTypes.string,
+
+    /**
+     * Style object for drawn feature.
+     *
+     * @type {OlStyleStyle}
+     */
+    style: PropTypes.instanceOf(OlStyleStyle)
   };
 
 
@@ -218,8 +289,6 @@ class DigitizeButton extends React.Component {
    */
   static defaultProps = {
     digitizeLayerName: 'react-geo_digitize',
-    fillColor: 'rgba(154, 26, 56, 0.5)',
-    strokeColor: 'rgba(154, 26, 56, 0.8)',
     selectFillColor: 'rgba(240, 240, 90, 0.5)',
     selectStrokeColor: 'rgba(220, 120, 20, 0.8)',
     modalPromptTitle: 'Label',
@@ -252,8 +321,6 @@ class DigitizeButton extends React.Component {
   /**
    * `componentWillMount` method of the DigitizeButton. Just calls
    * `createDigitizeLayer` method.
-   *
-   * @method
    */
   componentDidMount() {
     this.createDigitizeLayer();
@@ -266,8 +333,6 @@ class DigitizeButton extends React.Component {
    * removed from the map.
    *
    * @param {Boolean} pressed Whether the digitize button is pressed or not.
-   *
-   * @method
    */
   onToggle = pressed => {
 
@@ -308,8 +373,6 @@ class DigitizeButton extends React.Component {
 
   /**
    * Creates digitize vector layer and adds this to the map.
-   *
-   * @method
    */
   createDigitizeLayer = () => {
     const {
@@ -324,11 +387,11 @@ class DigitizeButton extends React.Component {
         name: digitizeLayerName,
         source: new OlSourceVector({
           features: new OlCollection(),
-        }),
-        style: this.getDigitizeStyleFunction
+        })
       });
       map.addLayer(digitizeLayer);
     }
+    digitizeLayer.setStyle(this.getDigitizeStyleFunction);
     this.setState({digitizeLayer});
   }
 
@@ -338,16 +401,13 @@ class DigitizeButton extends React.Component {
    *
    * @param {OlFeature} feature The feature which is being styled.
    * @return {OlStyleStyle} The style to use.
-   *
-   * @method
    */
   getDigitizeStyleFunction = feature => {
 
     const {
-      fillColor,
       selectFillColor,
-      strokeColor,
-      selectStrokeColor
+      selectStrokeColor,
+      style,
     } = this.props;
 
     const {
@@ -359,56 +419,77 @@ class DigitizeButton extends React.Component {
       useSelectStyle = true;
     }
 
+    let styleObj;
+
     switch (feature.getGeometry().getType()) {
       case DigitizeButton.POINT_DRAW_TYPE: {
         if (!feature.get('isLabel')) {
-          return new OlStyleStyle({
+          styleObj = style ||
+          new OlStyleStyle({
             image: new OlStyleCircle({
               radius: 7,
               fill: new OlStyleFill({
-                color: !useSelectStyle ? fillColor : selectFillColor
+                color: DigitizeButton.DEFAULT_FILL_COLOR
               }),
               stroke: new OlStyleStroke({
-                color: !useSelectStyle ? strokeColor : selectStrokeColor
+                color: DigitizeButton.DEFAULT_STROKE_COLOR
               })
             })
           });
+          if (useSelectStyle) {
+            styleObj.getImage().getFill().setColor(selectFillColor);
+            styleObj.getImage().getStroke().setColor(selectStrokeColor);
+          }
         } else {
-          return new OlStyleStyle({
+          styleObj = style || new OlStyleStyle({
             text: new OlStyleText({
               text: '',
               offsetX: 5,
               offsetY: 5,
               font: '12px sans-serif',
               fill: new OlStyleFill({
-                color: !useSelectStyle ? fillColor : selectFillColor
+                color: DigitizeButton.DEFAULT_FILL_COLOR
               }),
               stroke: new OlStyleStroke({
-                color: !useSelectStyle ? strokeColor : selectStrokeColor
+                color: DigitizeButton.DEFAULT_STROKE_COLOR
               })
             })
           });
+          if (useSelectStyle) {
+            styleObj.getText().getFill().setColor(selectFillColor);
+            styleObj.getText().getStroke().setColor(selectStrokeColor);
+          }
         }
+        return styleObj;
       }
       case DigitizeButton.LINESTRING_DRAW_TYPE: {
-        return new OlStyleStyle({
+        styleObj = style || new OlStyleStyle({
           stroke: new OlStyleStroke({
-            color: !useSelectStyle ? strokeColor : selectStrokeColor,
+            color: DigitizeButton.DEFAULT_STROKE_COLOR,
             width: 2
           })
         });
+        if (useSelectStyle) {
+          styleObj.getStroke().setColor(selectStrokeColor);
+        }
+        return styleObj;
       }
       case DigitizeButton.POLYGON_DRAW_TYPE:
       case DigitizeButton.CIRCLE_DRAW_TYPE: {
-        return new OlStyleStyle({
+        styleObj = style || new OlStyleStyle({
           fill: new OlStyleFill({
-            color: !useSelectStyle ? fillColor : selectFillColor
+            color: DigitizeButton.DEFAULT_FILL_COLOR
           }),
           stroke: new OlStyleStroke({
-            color: !useSelectStyle ? strokeColor : selectStrokeColor,
+            color: DigitizeButton.DEFAULT_STROKE_COLOR,
             width: 2
           })
         });
+        if (useSelectStyle) {
+          styleObj.getStroke().setColor(selectStrokeColor);
+          styleObj.getFill().setColor(selectFillColor);
+        }
+        return styleObj;
       }
       default: {
         break;
@@ -422,8 +503,6 @@ class DigitizeButton extends React.Component {
    *
    * @param {Boolean} pressed Whether the digitize button is pressed or not.
    * Will be used to handle active state of the draw interaction.
-   *
-   * @method
    */
   createDrawInteraction = pressed => {
     const {
@@ -462,8 +541,6 @@ class DigitizeButton extends React.Component {
   /**
    * Creates a correctly configured OL select and/or modify and/or translate
    * interaction(s) depending on given editType and adds this/these to the map.
-   *
-   * @method
    */
   createSelectOrModifyInteraction = () => {
     const {
@@ -513,8 +590,6 @@ class DigitizeButton extends React.Component {
    * Removes selected feature from the vector source and map.
    *
    * @param {Event} evt Event containing selected feature to be removed.
-   *
-   * @method
    */
   onFeatureRemove = evt => {
     const feat = evt.selected[0];
@@ -529,8 +604,6 @@ class DigitizeButton extends React.Component {
    * beside the original to avoid overlapping.
    *
    * @param {Event} evt Event containing selected feature to be copied.
-   *
-   * @method
    */
   onFeatureCopy = evt => {
     const feat = evt.selected[0];
@@ -553,7 +626,6 @@ class DigitizeButton extends React.Component {
    *
    * @param {Event} evt 'modifystart' event of OlInteractionModify.
    *
-   * @method
    */
   onModifyStart = evt => {
     const feature = evt.features.getArray()[0];
@@ -583,8 +655,6 @@ class DigitizeButton extends React.Component {
   /**
    * Callback function after `Ok` button of label input modal was clicked.
    * Turns visibility of modal off and call `setTextOnFeature` method.
-   *
-   * @method
    */
   onModalLabelOk = () => {
     this.setState({
@@ -598,8 +668,6 @@ class DigitizeButton extends React.Component {
    * Callback function after `Cancel` button of label input modal was clicked.
    * Turns visibility of modal off and removes last drawn feature from the
    * digitize layer.
-   *
-   * @method
    */
   onModalLabelCancel = () => {
     this.setState({
@@ -617,8 +685,6 @@ class DigitizeButton extends React.Component {
    * Sets formatted label on feature.
    *
    * @param {OlFeature} feat The point feature to be styled with label.
-   *
-   * @method
    */
   setTextOnFeature = feat => {
     const label = StringUtil.stringDivider(this.state.textLabel, 16, '\n');
@@ -637,8 +703,6 @@ class DigitizeButton extends React.Component {
    *
    * @param {Event} evt Input event containing new text value to be set as
    * textLabel.
-   *
-   * @method
    */
   onLabelChange = evt => {
     this.setState({
@@ -676,8 +740,7 @@ class DigitizeButton extends React.Component {
       drawType,
       editType,
       digitizeLayerName,
-      fillColor,
-      strokeColor,
+      style,
       selectFillColor,
       selectStrokeColor,
       modalPromptTitle,
@@ -685,7 +748,6 @@ class DigitizeButton extends React.Component {
       modalPromptCancelButtonText,
       ...passThroughProps
     } = this.props;
-
 
     const finalClassName = className
       ? `${className} ${this.className}`
