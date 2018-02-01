@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>DigitizeButton example</title>
+  <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>/*global hljs*/ hljs.initHighlightingOnLoad();</script>
+</head>
+<style>
+body.example {
+  padding: 1.5em;
+}
+.example-block {
+  padding: 2em;
+}
+.example-block > span {
+  margin-right: 10px;
+}
+</style>
+
+<body class="example">
+  <h2>DigitizeButton example</h2>
+  <div id="exampleContainer" class="app"></div>
+  <p>This demonstrates the use of DigitizeButton with different interactions.</p>
+
+  <pre>
+    <code class="javascript">import React from &#x27;react&#x27;;
+import { render } from &#x27;react-dom&#x27;;
+
+import OlMap from &#x27;ol/map&#x27;;
+import OlView from &#x27;ol/view&#x27;;
+import OlLayerTile from &#x27;ol/layer/tile&#x27;;
+import OlSourceOsm from &#x27;ol/source/osm&#x27;;
+import olProj from &#x27;ol/proj&#x27;;
+
+import {
+  DigitizeButton,
+  ToggleGroup
+} from &#x27;@terrestris/react-geo&#x27;;
+
+//
+// ***************************** SETUP *****************************************
+//
+const map &#x3D; new OlMap({
+  layers: [
+    new OlLayerTile({
+      name: &#x27;OSM&#x27;,
+      source: new OlSourceOsm()
+    })
+  ],
+  view: new OlView({
+    center: olProj.fromLonLat([37.40570, 8.81566]),
+    zoom: 4
+  })
+});
+
+//
+// ***************************** SETUP END *************************************
+//
+
+render(
+  &lt;div&gt;
+    &lt;div id&#x3D;&quot;map&quot; style&#x3D;{{
+      height: &#x27;400px&#x27;
+    }} /&gt;
+
+    &lt;div className&#x3D;&quot;example-block&quot;&gt;
+      &lt;span&gt;Select a digitize type:&lt;/span&gt;
+      &lt;ToggleGroup
+        orientation&#x3D;&quot;horizontal&quot;&gt;
+
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawPoint&quot;
+          map&#x3D;{map}
+          drawType&#x3D;&quot;Point&quot;
+        &gt;
+        Draw point
+        &lt;/DigitizeButton&gt;
+
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawLine&quot;
+          map&#x3D;{map}
+          drawType&#x3D;&quot;LineString&quot;
+        &gt;
+        Draw line
+        &lt;/DigitizeButton&gt;
+
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawPolygon&quot;
+          map&#x3D;{map}
+          drawType&#x3D;&quot;Polygon&quot;
+        &gt;
+        Draw polygon
+        &lt;/DigitizeButton&gt;
+
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawCircle&quot;
+          map&#x3D;{map}
+          drawType&#x3D;&quot;Circle&quot;
+        &gt;
+        Draw circle
+        &lt;/DigitizeButton&gt;
+
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawRectangle&quot;
+          map&#x3D;{map}
+          drawType&#x3D;&quot;Rectangle&quot;
+        &gt;
+        Draw rectangle
+        &lt;/DigitizeButton&gt;
+
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawText&quot;
+          map&#x3D;{map}
+          drawType&#x3D;&quot;Text&quot;
+        &gt;
+        Draw text label
+        &lt;/DigitizeButton&gt;
+
+        &lt;DigitizeButton
+          name&#x3D;&quot;selectAndModify&quot;
+          map&#x3D;{map}
+          editType&#x3D;&quot;Edit&quot;
+        &gt;
+        Select and modify features
+        &lt;/DigitizeButton&gt;
+
+        &lt;DigitizeButton
+          name&#x3D;&quot;copyFeature&quot;
+          map&#x3D;{map}
+          editType&#x3D;&quot;Copy&quot;
+        &gt;
+        Copy features
+        &lt;/DigitizeButton&gt;
+
+        &lt;DigitizeButton
+          name&#x3D;&quot;deleteFeature&quot;
+          map&#x3D;{map}
+          editType&#x3D;&quot;Delete&quot;
+        &gt;
+        Delete features
+        &lt;/DigitizeButton&gt;
+
+      &lt;/ToggleGroup&gt;
+
+    &lt;/div&gt;
+
+  &lt;/div&gt;,
+
+  // Target
+  document.getElementById(&#x27;exampleContainer&#x27;),
+
+  // Callback
+  () &#x3D;&gt; {
+    map.setTarget(&#x27;map&#x27;);
+  }
+);
+</code>
+  </pre>
+  <script src="../../commons.js"></script>
+  <script src="DigitizeButton.js"></script>
+</body>
+</html>

@@ -28,870 +28,6 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>NominatimSearch<span class="signature">()</span><span class="type-signature"></span></h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-    
-
-    
-    <h4 class="name" id="NominatimSearch"><span class="type-signature"></span>new NominatimSearch<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>The NominatimSearch.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line12">line 12</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    </div>
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li>React.Component</li>
-    </ul>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="doSearch"><span class="type-signature"></span>doSearch<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Perform the search.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line203">line 203</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="onFetchError"><span class="type-signature"></span>onFetchError<span class="signature">(error)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>This function gets called when the nomintim fetch returns an error.
-It logs the error to the console.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>error</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The errorstring.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line241">line 241</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="onFetchSuccess"><span class="type-signature"></span>onFetchSuccess<span class="signature">(response)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>This function gets called on success of the nominatim fetch.
-It sets the response as dataSource.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>response</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The found features.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line229">line 229</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="onMenuItemSelected"><span class="type-signature"></span>onMenuItemSelected<span class="signature">(key)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>The function describes what to do when an item is selected.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#value">value</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The key of the selected option.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line250">line 250</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="onUpdateInput"><span class="type-signature"></span>onUpdateInput<span class="signature">(inputValue)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Called if the input of the AutoComplete is being updated. It sets the
-current inputValue as searchTerm and starts a search if the inputValue has
-a length of at least <code>this.props.minChars</code> (default 3).</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>inputValue</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-|
-
-<span class="param-type">undefined</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The inputValue. Undefined if clear btn
-                                     is pressed.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line186">line 186</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="render"><span class="type-signature"></span>render<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>The render function.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line258">line 258</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
         <h2><span class="attribs"><span class="type-signature"></span></span>NominatimSearch<span class="signature">(props)</span><span class="type-signature"></span></h2>
         
     
@@ -1787,18 +923,882 @@ a length of at least <code>this.props.minChars</code> (default 3).</p>
 
 
 
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>NominatimSearch<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    
+    <h4 class="name" id="NominatimSearch"><span class="type-signature"></span>new NominatimSearch<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>The NominatimSearch.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line12">line 12</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>React.Component</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="doSearch"><span class="type-signature"></span>doSearch<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Perform the search.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line203">line 203</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="onFetchError"><span class="type-signature"></span>onFetchError<span class="signature">(error)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>This function gets called when the nomintim fetch returns an error.
+It logs the error to the console.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The errorstring.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line241">line 241</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="onFetchSuccess"><span class="type-signature"></span>onFetchSuccess<span class="signature">(response)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>This function gets called on success of the nominatim fetch.
+It sets the response as dataSource.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The found features.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line229">line 229</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="onMenuItemSelected"><span class="type-signature"></span>onMenuItemSelected<span class="signature">(key)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>The function describes what to do when an item is selected.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#value">value</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The key of the selected option.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line250">line 250</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="onUpdateInput"><span class="type-signature"></span>onUpdateInput<span class="signature">(inputValue)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Called if the input of the AutoComplete is being updated. It sets the
+current inputValue as searchTerm and starts a search if the inputValue has
+a length of at least <code>this.props.minChars</code> (default 3).</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>inputValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The inputValue. Undefined if clear btn
+                                     is pressed.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line186">line 186</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="render"><span class="type-signature"></span>render<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>The render function.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Field_NominatimSearch_NominatimSearch.jsx.html">Field/NominatimSearch/NominatimSearch.jsx</a>, <a href="Field_NominatimSearch_NominatimSearch.jsx.html#line258">line 258</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddWmsLayerEntry.html">AddWmsLayerEntry</a></li><li><a href="AddWmsPanel.html">AddWmsPanel</a></li><li><a href="CapabilitiesUtil.html">CapabilitiesUtil</a></li><li><a href="CircleMenu.html">CircleMenu</a></li><li><a href="CircleMenuItem.html">CircleMenuItem</a></li><li><a href="CoordinateReferenceSystemCombo.html">CoordinateReferenceSystemCombo</a></li><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="FeatureGrid.html">FeatureGrid</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapComponent.html">MapComponent</a></li><li><a href="MappifiedComponent.html">MappifiedComponent</a></li><li><a href="MapProvider.html">MapProvider</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="MeasureButton.html">MeasureButton</a></li><li><a href="MeasureUtil.html">MeasureUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ProjectionUtil.html">ProjectionUtil</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="TimeSlider.html">TimeSlider</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li><li><a href="Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addAllLayersText">addAllLayersText</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#addSelectedLayersText">addSelectedLayersText</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#animationDuration">animationDuration</a></li><li><a href="global.html#attributeFilter">attributeFilter</a></li><li><a href="global.html#attributeNameColumnTitle">attributeNameColumnTitle</a></li><li><a href="global.html#attributeNameColumnWidthInPercent">attributeNameColumnWidthInPercent</a></li><li><a href="global.html#attributeNames">attributeNames</a></li><li><a href="global.html#attributeValueColumnTitle">attributeValueColumnTitle</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#buttonCoords">buttonCoords</a></li><li><a href="global.html#cancelText">cancelText</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#clickToDrawText">clickToDrawText</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#collapseTooltip">collapseTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#continueAngleMsg">continueAngleMsg</a></li><li><a href="global.html#continueLineMsg">continueLineMsg</a></li><li><a href="global.html#continuePolygonMsg">continuePolygonMsg</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#crsApiUrl">crsApiUrl</a></li><li><a href="global.html#decimalPlacesInTooltips">decimalPlacesInTooltips</a></li><li><a href="global.html#defaultValue">defaultValue</a></li><li><a href="global.html#diameter">diameter</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#doRender">doRender</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#emptyTextPlaceholderText">emptyTextPlaceholderText</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#feature">feature</a></li><li><a href="global.html#fillColor">fillColor</a></li><li><a href="global.html#filterFunction">filterFunction</a></li><li><a href="global.html#fontIcon">fontIcon</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#formatString">formatString</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate Option scale components
-based on an existing instance of Ol.Map</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#icon">icon</a></li><li><a href="global.html#id">id</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#layerQueryableText">layerQueryableText</a></li><li><a href="global.html#layerTextTemplateFn">layerTextTemplateFn</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mappify">mappify</a></li><li><a href="global.html#mapPromise">mapPromise</a></li><li><a href="global.html#max">max</a></li><li><a href="global.html#measureLayerName">measureLayerName</a></li><li><a href="global.html#measureTooltipCssClasses">measureTooltipCssClasses</a></li><li><a href="global.html#measureType">measureType</a></li><li><a href="global.html#min">min</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#multipleDrawing">multipleDrawing</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onCancel">onCancel</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onClick">onClick</a></li><li><a href="global.html#onLayerAddToMap">onLayerAddToMap</a></li><li><a href="global.html#onResize">onResize</a></li><li><a href="global.html#onResizeStart">onResizeStart</a></li><li><a href="global.html#onResizeStop">onResizeStop</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onSelectionChange">onSelectionChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parentId">parentId</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#position">position</a></li><li><a href="global.html#predefinedCrsDefinitions">predefinedCrsDefinitions</a></li><li><a href="global.html#pressed">pressed</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a Option scale component
-based on a resolution and the Ol.View</a></li><li><a href="global.html#radius">radius</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#rotationAngle">rotationAngle</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#segmentAngles">segmentAngles</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#setProjection">setProjection</a></li><li><a href="global.html#showMeasureInfoOnClickedPoints">showMeasureInfoOnClickedPoints</a></li><li><a href="global.html#strokeColor">strokeColor</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#syncWithMap">syncWithMap</a></li><li><a href="global.html#timeLayerAware">timeLayerAware</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#titleText">titleText</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#tooltip">tooltip</a></li><li><a href="global.html#tooltipPlacement">tooltipPlacement</a></li><li><a href="global.html#triggerRerenderingWithInvertedVisibility">triggerRerenderingWithInvertedVisibility</a></li><li><a href="global.html#useRange">useRange</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#value">value</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#wmsLayer">wmsLayer</a></li><li><a href="global.html#wmsLayers">wmsLayers</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddWmsLayerEntry.html">AddWmsLayerEntry</a></li><li><a href="AddWmsPanel.html">AddWmsPanel</a></li><li><a href="AnimateUtil.html">AnimateUtil</a></li><li><a href="CapabilitiesUtil.html">CapabilitiesUtil</a></li><li><a href="CircleMenu.html">CircleMenu</a></li><li><a href="CircleMenuItem.html">CircleMenuItem</a></li><li><a href="CoordinateReferenceSystemCombo.html">CoordinateReferenceSystemCombo</a></li><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="DigitizeButton.html">DigitizeButton</a></li><li><a href="FeatureGrid.html">FeatureGrid</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapComponent.html">MapComponent</a></li><li><a href="MappifiedComponent.html">MappifiedComponent</a></li><li><a href="MapProvider.html">MapProvider</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="MeasureButton.html">MeasureButton</a></li><li><a href="MeasureUtil.html">MeasureUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ProjectionUtil.html">ProjectionUtil</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="TimeSlider.html">TimeSlider</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li><li><a href="Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addAllLayersText">addAllLayersText</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#addSelectedLayersText">addSelectedLayersText</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#animationDuration">animationDuration</a></li><li><a href="global.html#attributeFilter">attributeFilter</a></li><li><a href="global.html#attributeNameColumnTitle">attributeNameColumnTitle</a></li><li><a href="global.html#attributeNameColumnWidthInPercent">attributeNameColumnWidthInPercent</a></li><li><a href="global.html#attributeNames">attributeNames</a></li><li><a href="global.html#attributeValueColumnTitle">attributeValueColumnTitle</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#buttonCoords">buttonCoords</a></li><li><a href="global.html#cancelText">cancelText</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#clickToDrawText">clickToDrawText</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#collapseTooltip">collapseTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#continueAngleMsg">continueAngleMsg</a></li><li><a href="global.html#continueLineMsg">continueLineMsg</a></li><li><a href="global.html#continuePolygonMsg">continuePolygonMsg</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#crsApiUrl">crsApiUrl</a></li><li><a href="global.html#decimalPlacesInTooltips">decimalPlacesInTooltips</a></li><li><a href="global.html#defaultValue">defaultValue</a></li><li><a href="global.html#diameter">diameter</a></li><li><a href="global.html#digitizeLayerName">digitizeLayerName</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#doRender">doRender</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#drawType">drawType</a></li><li><a href="global.html#editType">editType</a></li><li><a href="global.html#emptyTextPlaceholderText">emptyTextPlaceholderText</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#feature">feature</a></li><li><a href="global.html#fillColor">fillColor</a></li><li><a href="global.html#filterFunction">filterFunction</a></li><li><a href="global.html#fontIcon">fontIcon</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#formatString">formatString</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate Option scale components
+based on an existing instance of Ol.Map</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#icon">icon</a></li><li><a href="global.html#id">id</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#layerQueryableText">layerQueryableText</a></li><li><a href="global.html#layerTextTemplateFn">layerTextTemplateFn</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mappify">mappify</a></li><li><a href="global.html#mapPromise">mapPromise</a></li><li><a href="global.html#max">max</a></li><li><a href="global.html#measureLayerName">measureLayerName</a></li><li><a href="global.html#measureTooltipCssClasses">measureTooltipCssClasses</a></li><li><a href="global.html#measureType">measureType</a></li><li><a href="global.html#min">min</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#modalPromptCancelButtonText">modalPromptCancelButtonText</a></li><li><a href="global.html#modalPromptOkButtonText">modalPromptOkButtonText</a></li><li><a href="global.html#modalPromptTitle">modalPromptTitle</a></li><li><a href="global.html#multipleDrawing">multipleDrawing</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onCancel">onCancel</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onClick">onClick</a></li><li><a href="global.html#onLayerAddToMap">onLayerAddToMap</a></li><li><a href="global.html#onResize">onResize</a></li><li><a href="global.html#onResizeStart">onResizeStart</a></li><li><a href="global.html#onResizeStop">onResizeStop</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onSelectionChange">onSelectionChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parentId">parentId</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#position">position</a></li><li><a href="global.html#predefinedCrsDefinitions">predefinedCrsDefinitions</a></li><li><a href="global.html#pressed">pressed</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a Option scale component
+based on a resolution and the Ol.View</a></li><li><a href="global.html#radius">radius</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#rotationAngle">rotationAngle</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#segmentAngles">segmentAngles</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#selectFillColor">selectFillColor</a></li><li><a href="global.html#selectStrokeColor">selectStrokeColor</a></li><li><a href="global.html#setProjection">setProjection</a></li><li><a href="global.html#showMeasureInfoOnClickedPoints">showMeasureInfoOnClickedPoints</a></li><li><a href="global.html#strokeColor">strokeColor</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#syncWithMap">syncWithMap</a></li><li><a href="global.html#timeLayerAware">timeLayerAware</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#titleText">titleText</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#tooltip">tooltip</a></li><li><a href="global.html#tooltipPlacement">tooltipPlacement</a></li><li><a href="global.html#triggerRerenderingWithInvertedVisibility">triggerRerenderingWithInvertedVisibility</a></li><li><a href="global.html#useRange">useRange</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#value">value</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#wmsLayer">wmsLayer</a></li><li><a href="global.html#wmsLayers">wmsLayers</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 01 2018 09:22:48 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 01 2018 13:36:02 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>
