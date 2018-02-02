@@ -134,6 +134,13 @@ class DigitizeButton extends React.Component {
   static DEFAULT_STROKE_COLOR = 'rgba(154, 26, 56, 0.8)';
 
   /**
+   * Hit detection in pixels used for select interaction.
+   *
+   * @type {Number}
+   */
+   static HIT_TOLERANCE = 5;
+
+  /**
    * Default style for digitized points.
    *
    * @type {OlStyleStyle}
@@ -551,7 +558,7 @@ class DigitizeButton extends React.Component {
     this._selectInteraction = new OlInteractionSelect({
       condition: OlEventsCondition.singleClick,
       style: this.getDigitizeStyleFunction,
-      hitTolerance: 5
+      hitTolerance: DigitizeButton.HIT_TOLERANCE
     });
 
     if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
@@ -715,19 +722,29 @@ class DigitizeButton extends React.Component {
    * a hoverable layer.
    *
    * @param {ol.MapEvent} evt The `pointermove` event.
-   *
-   * @method
    */
   onPointerMove = evt => {
     if (evt.dragging) {
       return;
     }
 
-    const { map } = this.props;
+    const {
+      map,
+      digitizeLayerName
+    } = this.props;
+
     const pixel = map.getEventPixel(evt.originalEvent);
-    const hit = map.hasFeatureAtPixel(pixel);
+
+    const hit = map.hasFeatureAtPixel(pixel, {
+      layerFilter: (l) => {
+        return l.get('name') === digitizeLayerName;
+      },
+      hitTolerance: DigitizeButton.HIT_TOLERANCE
+    });
 
     map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+
+
   }
 
   /**
