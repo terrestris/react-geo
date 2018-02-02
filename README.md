@@ -1,4 +1,4 @@
-# react-geo <img align="left" src="./assets/logo.svg" width="80px" />
+# react-geo <a href="https://terrestris.github.io/react-geo/"><img align="left" src="./assets/logo.svg" width="70px" /></a>
 
 [![Build Status](https://travis-ci.org/terrestris/react-geo.svg?branch=master)](https://travis-ci.org/terrestris/react-geo)
 [![Coverage Status](https://coveralls.io/repos/github/terrestris/react-geo/badge.svg?branch=master)](https://coveralls.io/github/terrestris/react-geo?branch=master)
