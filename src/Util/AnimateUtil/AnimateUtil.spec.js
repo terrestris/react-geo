@@ -20,7 +20,7 @@ describe('AnimateUtil', () => {
       it('is defined', () => {
         expect(AnimateUtil.moveFeature).toBeDefined();
       });
-      it('registers postcompose listener on the map', () => {
+      it('moves feature to the new position', () => {
 
         const coords = [0, 0];
         const geom = new OlGeomPoint(coords);
