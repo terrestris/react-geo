@@ -60,7 +60,7 @@ class StringUtil {
    * @param {String} spaceReplacer The string to replace spaces with.
    * @return {String} The 'wrapped' string.
    */
-  static stringDivider = (str, width, spaceReplacer)  => {
+  static stringDivider(str, width, spaceReplacer) {
 
     let startIndex = 0;
     let stopIndex = width;
@@ -93,6 +93,19 @@ class StringUtil {
       }
     }
     return str;
+  }
+
+  /**
+   * Returns the displayed text of an string with html text.
+   *
+   * @param {string} htmlString A string containing html.
+   * @return {string} The stripped Text.
+   */
+  static stripHTMLTags(htmlString) {
+    const div = document.createElement('div');
+    div.innerHTML = htmlString;
+    const text = div.textContent || div.innerText || '';
+    return text;
   }
 }
 
