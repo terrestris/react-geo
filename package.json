@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "i18next": "10.3.0",
-    "lodash": "4.17.4",
+    "lodash": "4.17.5",
     "loglevel": "1.6.1",
     "moment": "2.20.1",
     "proj4": "2.4.4",
