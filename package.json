@@ -75,7 +75,7 @@
     "moment": "2.20.1",
     "proj4": "2.4.4",
     "prop-types": "15.6.0",
-    "query-string": "5.0.1",
+    "query-string": "5.1.0",
     "react-dom": "16.2.0",
     "react-fa": "5.0.0",
     "react-i18next": "7.3.4",
