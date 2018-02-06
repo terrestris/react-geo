@@ -1,68 +1,92 @@
 import React from 'react';
 import { render } from 'react-dom';
+import OlMap from 'ol/map';
+import OlView from 'ol/view';
+import OlLayerTile from 'ol/layer/tile';
+import OlSourceOsm from 'ol/source/osm';
+import OlProj from 'ol/proj';
+import OlFormatGeoJson from 'ol/format/geojson';
 
-import OlFeature from 'ol/feature';
-import OlGeomPoint from 'ol/geom/point';
+import federalStates from '../../../assets/federal-states-ger.json';
 
 import {
   FeatureGrid
 } from '../../index.js';
 
-//
-// ***************************** SETUP *****************************************
-//
-const feature = new OlFeature({
-  geometry: new OlGeomPoint([19.09, 1.09]),
+const map = new OlMap({
+  layers: [
+    new OlLayerTile({
+      name: 'OSM',
+      source: new OlSourceOsm()
+    })
+  ],
+  view: new OlView({
+    center: OlProj.fromLonLat([37.40570, 8.81566]),
+    zoom: 4
+  })
 });
 
-const attributeObject = {
-  foo: 'bar',
-  foo2: 'bar2',
-  foo3: 'bar3',
-  foo9: 'bar9',
-  name: 'Point'
-};
+const format = new OlFormatGeoJson();
+const features = format.readFeatures(federalStates);
 
-feature.setProperties(attributeObject);
-feature.setId(1909);
-
-const attributeNames = {
-  foo: 'A',
-  foo2: 'nice',
-  foo9: 'example'
-};
-//
-// ***************************** SETUP END *************************************
-//
+// eslint-disable-next-line require-jsdoc
+const nameColumnRenderer = val => <a href={`https://en.wikipedia.org/wiki/${val}`}>{val}</a>;
 
 render(
-  <div className="example-block">
-    <h2>FeatureGrid without a filter:</h2>
-    <FeatureGrid
-      feature={feature}
-    />
-    <br />
-    <h2>FeatureGrid with filtered attributes (foo and foo9 only):</h2>
-    <FeatureGrid
-      feature={feature}
-      attributeFilter={['foo', 'foo9']}
-      style={{width: '50%'}}
-    />
-    <br />
-    <h2>FeatureGrid with different column width (70 % width for column name / 30 % width for column value):</h2>
-    <FeatureGrid
-      feature={feature}
-      attributeNameColumnWidthInPercent={70}
-      style={{width: '50%'}}
-    />
-    <br />
-    <h2>FeatureGrid with column name mapping:</h2>
-    <FeatureGrid
-      feature={feature}
-      attributeFilter={['foo', 'foo2', 'foo9', 'name']}
-      attributeNames={attributeNames}
-      style={{width: '50%'}}
+  <div>
+    <div
+      className="example-block"
+    >
+      <FeatureGrid
+        features={features}
+        map={map}
+        zoomToExtent={true}
+        selectableRows={true}
+        attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
+        attributeMapping={{
+          'GEN': 'Name',
+          'SHAPE_LENG': 'Length',
+          'SHAPE_AREA': 'Area'
+        }}
+        columnDefs={{
+          'GEN': {
+            render: nameColumnRenderer,
+            sorter: (a, b) => {
+              const nameA = a.GEN.toUpperCase();
+              const nameB = b.GEN.toUpperCase();
+              if (nameA < nameB) {
+                return -1;
+              }
+              if (nameA > nameB) {
+                return 1;
+              }
+
+              return 0;
+            },
+            defaultSortOrder: 'ascend'
+          },
+          'SHAPE_LENG': {
+            render: val => Math.round(val)
+          },
+          'SHAPE_AREA': {
+            render: val => Math.round(val)
+          }
+        }}
+      />
+    </div>
+    <div
+      id="map"
+      style={{
+        height: '400px'
+      }}
     />
   </div>,
-  document.getElementById('exampleContainer')
+
+  // Target
+  document.getElementById('exampleContainer'),
+
+  // Callback
+  () => {
+    map.setTarget('map');
+  }
 );

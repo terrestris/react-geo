@@ -1,8 +1,8 @@
 ---
 layout: basic.hbs
 title: FeatureGrid example
-description: This is a example using a feature grid.
+description: This example demonstrates the usage of the FeatureGrid.
 collection: Examples
 ---
 
-This is a example containing a feature grid
+This example demonstrates the usage of the FeatureGrid.

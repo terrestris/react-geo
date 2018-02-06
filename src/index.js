@@ -17,6 +17,7 @@ import Panel from './Panel/Panel/Panel.jsx';
 import Titlebar from './Panel/Titlebar/Titlebar.jsx';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid.jsx';
+import PropertyGrid from './Grid/PropertyGrid/PropertyGrid.jsx';
 import TimeSlider from './Slider/TimeSlider.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
 import UserChip from './UserChip/UserChip.jsx';
@@ -50,7 +51,6 @@ export {
   ToggleGroup,
   MeasureButton,
   DigitizeButton,
-  FeatureGrid,
   LayerTree,
   LayerTreeNode,
   Legend,
@@ -58,6 +58,8 @@ export {
   ScaleCombo,
   Panel,
   LayerTransparencySlider,
+  FeatureGrid,
+  PropertyGrid,
   Titlebar,
   Toolbar,
   UserChip,

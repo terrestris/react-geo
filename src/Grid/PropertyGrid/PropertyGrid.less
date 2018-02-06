@@ -1,0 +1,54 @@
+@import '../../style/variables.less';
+
+.react-geo-propertygrid {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .ant-spin-nested-loading {
+    height: 100%;
+
+    .ant-spin-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .ant-table {
+        flex: 1;
+
+        .ant-table-fixed-header .ant-table-header {
+          margin-bottom: inherit !important; // Inline style from antd
+          padding-bottom: inherit !important; // Inline style from antd
+        }
+
+        .ant-table-content {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+
+          .ant-table-header {
+            overflow: inherit;
+          }
+
+          .ant-table-body {
+            overflow: auto;
+          }
+
+          th {
+            text-align: center;
+          }
+
+          tr:nth-child(odd) {
+             background-color: fade(@primary-color, 5%);
+          }
+        }
+      }
+    }
+  }
+
+  .ant-pagination {
+    width: 100%;
+    text-align: center;
+  }
+}
