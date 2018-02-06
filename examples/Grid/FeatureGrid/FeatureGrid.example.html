@@ -25,76 +25,100 @@ body.example {
 <body class="example">
   <h2>FeatureGrid example</h2>
   <div id="exampleContainer" class="app"></div>
-  <p>This is a example containing a feature grid</p>
+  <p>This example demonstrates the usage of the FeatureGrid.</p>
 
   <pre>
     <code class="javascript">import React from &#x27;react&#x27;;
 import { render } from &#x27;react-dom&#x27;;
+import OlMap from &#x27;ol/map&#x27;;
+import OlView from &#x27;ol/view&#x27;;
+import OlLayerTile from &#x27;ol/layer/tile&#x27;;
+import OlSourceOsm from &#x27;ol/source/osm&#x27;;
+import OlProj from &#x27;ol/proj&#x27;;
+import OlFormatGeoJson from &#x27;ol/format/geojson&#x27;;
 
-import OlFeature from &#x27;ol/feature&#x27;;
-import OlGeomPoint from &#x27;ol/geom/point&#x27;;
+import federalStates from &#x27;../../../assets/federal-states-ger.json&#x27;;
 
 import {
   FeatureGrid
 } from &#x27;@terrestris/react-geo&#x27;;
 
-//
-// ***************************** SETUP *****************************************
-//
-const feature &#x3D; new OlFeature({
-  geometry: new OlGeomPoint([19.09, 1.09]),
+const map &#x3D; new OlMap({
+  layers: [
+    new OlLayerTile({
+      name: &#x27;OSM&#x27;,
+      source: new OlSourceOsm()
+    })
+  ],
+  view: new OlView({
+    center: OlProj.fromLonLat([37.40570, 8.81566]),
+    zoom: 4
+  })
 });
 
-const attributeObject &#x3D; {
-  foo: &#x27;bar&#x27;,
-  foo2: &#x27;bar2&#x27;,
-  foo3: &#x27;bar3&#x27;,
-  foo9: &#x27;bar9&#x27;,
-  name: &#x27;Point&#x27;
-};
+const format &#x3D; new OlFormatGeoJson();
+const features &#x3D; format.readFeatures(federalStates);
 
-feature.setProperties(attributeObject);
-feature.setId(1909);
-
-const attributeNames &#x3D; {
-  foo: &#x27;A&#x27;,
-  foo2: &#x27;nice&#x27;,
-  foo9: &#x27;example&#x27;
-};
-//
-// ***************************** SETUP END *************************************
-//
+// eslint-disable-next-line require-jsdoc
+const nameColumnRenderer &#x3D; val &#x3D;&gt; &lt;a href&#x3D;{&#x60;https://en.wikipedia.org/wiki/${val}&#x60;}&gt;{val}&lt;/a&gt;;
 
 render(
-  &lt;div className&#x3D;&quot;example-block&quot;&gt;
-    &lt;h2&gt;FeatureGrid without a filter:&lt;/h2&gt;
-    &lt;FeatureGrid
-      feature&#x3D;{feature}
-    /&gt;
-    &lt;br /&gt;
-    &lt;h2&gt;FeatureGrid with filtered attributes (foo and foo9 only):&lt;/h2&gt;
-    &lt;FeatureGrid
-      feature&#x3D;{feature}
-      attributeFilter&#x3D;{[&#x27;foo&#x27;, &#x27;foo9&#x27;]}
-      style&#x3D;{{width: &#x27;50%&#x27;}}
-    /&gt;
-    &lt;br /&gt;
-    &lt;h2&gt;FeatureGrid with different column width (70 % width for column name / 30 % width for column value):&lt;/h2&gt;
-    &lt;FeatureGrid
-      feature&#x3D;{feature}
-      attributeNameColumnWidthInPercent&#x3D;{70}
-      style&#x3D;{{width: &#x27;50%&#x27;}}
-    /&gt;
-    &lt;br /&gt;
-    &lt;h2&gt;FeatureGrid with column name mapping:&lt;/h2&gt;
-    &lt;FeatureGrid
-      feature&#x3D;{feature}
-      attributeFilter&#x3D;{[&#x27;foo&#x27;, &#x27;foo2&#x27;, &#x27;foo9&#x27;, &#x27;name&#x27;]}
-      attributeNames&#x3D;{attributeNames}
-      style&#x3D;{{width: &#x27;50%&#x27;}}
+  &lt;div&gt;
+    &lt;div
+      className&#x3D;&quot;example-block&quot;
+    &gt;
+      &lt;FeatureGrid
+        features&#x3D;{features}
+        map&#x3D;{map}
+        zoomToExtent&#x3D;{true}
+        selectableRows&#x3D;{true}
+        attributeBlacklist&#x3D;{[&#x27;gml_id&#x27;, &#x27;USE&#x27;, &#x27;RS&#x27;, &#x27;RS_ALT&#x27;]}
+        attributeMapping&#x3D;{{
+          &#x27;GEN&#x27;: &#x27;Name&#x27;,
+          &#x27;SHAPE_LENG&#x27;: &#x27;Length&#x27;,
+          &#x27;SHAPE_AREA&#x27;: &#x27;Area&#x27;
+        }}
+        columnDefs&#x3D;{{
+          &#x27;GEN&#x27;: {
+            render: nameColumnRenderer,
+            sorter: (a, b) &#x3D;&gt; {
+              const nameA &#x3D; a.GEN.toUpperCase();
+              const nameB &#x3D; b.GEN.toUpperCase();
+              if (nameA &lt; nameB) {
+                return -1;
+              }
+              if (nameA &gt; nameB) {
+                return 1;
+              }
+
+              return 0;
+            },
+            defaultSortOrder: &#x27;ascend&#x27;
+          },
+          &#x27;SHAPE_LENG&#x27;: {
+            render: val &#x3D;&gt; Math.round(val)
+          },
+          &#x27;SHAPE_AREA&#x27;: {
+            render: val &#x3D;&gt; Math.round(val)
+          }
+        }}
+      /&gt;
+    &lt;/div&gt;
+    &lt;div
+      id&#x3D;&quot;map&quot;
+      style&#x3D;{{
+        height: &#x27;400px&#x27;
+      }}
     /&gt;
   &lt;/div&gt;,
-  document.getElementById(&#x27;exampleContainer&#x27;)
+
+  // Target
+  document.getElementById(&#x27;exampleContainer&#x27;),
+
+  // Callback
+  () &#x3D;&gt; {
+    map.setTarget(&#x27;map&#x27;);
+  }
 );
 </code>
   </pre>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.example.jsx</title>
+    <title>JSDoc: Source: Grid/PropertyGrid/PropertyGrid.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.example.jsx</h1>
+    <h1 class="page-title">Source: Grid/PropertyGrid/PropertyGrid.jsx</h1>
 
     
 
@@ -27,122 +27,191 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import React from 'react';
-import { render } from 'react-dom';
-import { CoordinateReferenceSystemCombo } from '../../index.js';
+import PropTypes from 'prop-types';
+import {
+  Table
+} from 'antd';
+import OlFeature from 'ol/feature';
+import { get } from 'lodash';
 
-import proj4 from 'proj4';
-import OlMap from 'ol/map';
-import OlView from 'ol/view';
-import OlLayerTile from 'ol/layer/tile';
-import OlSourceOsm from 'ol/source/osm';
-import OlProjection from 'ol/proj';
-import OlExtent from 'ol/extent';
-
-//
-// ***************************** SETUP *****************************************
-//
-const defaultView = new OlView({
-  center: OlProjection.fromLonLat([37.40570, 8.81566]),
-  zoom: 4
-});
-const map = new OlMap({
-  layers: [
-    new OlLayerTile({
-      name: 'OSM',
-      source: new OlSourceOsm()
-    })
-  ],
-  view: defaultView
-});
-
-OlProjection.setProj4(proj4);
+import './PropertyGrid.less';
 
 /**
- * set map projection and perform client-side raster reprojection from
- * OSM (EPSG:3857) to arbitrary projection given in crsObj
+ * Class representing a fature grid showing the attribute values of a simple feature.
  *
- * original code of setProjection can be found here:
- * https://openlayers.org/en/latest/examples/reprojection-by-code.html
+ * @class PropertyGrid
+ * @extends React.Component
  */
-const setProjection = (crsObj) => {
-  const {
-    code, value, proj4def, bbox
-  } = crsObj;
+class PropertyGrid extends React.Component {
 
-  if (code === null || value === null || proj4def === null || bbox === null) {
-    map.setView(defaultView);
-    return;
+  /**
+   * The CSS-className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-propertygrid'
+
+  /**
+   * The prop types.
+   * @type {Object}
+   */
+  static propTypes = {
+    /**
+     * Optional title of the attribute name column
+     * @type {String}
+     */
+    attributeNameColumnTitle: PropTypes.string,
+
+    /**
+     * Optional value in percent representing the width of the attribute name column
+     * The width of attribute value column wil be calculated depending in this
+     * @type {String}
+     */
+    attributeNameColumnWidthInPercent: PropTypes.number,
+
+    /**
+     * Optional title of the attribute value column
+     * @type {String}
+     */
+    attributeValueColumnTitle: PropTypes.string,
+
+    /**
+     * Optional array of attribute names to filter
+     * @type {Array}
+     */
+    attributeFilter: PropTypes.arrayOf(PropTypes.string),
+
+    /**
+     * Optional object containing a mapping of attribute names in OL feature to custom ones
+     *
+     * @type {Object}
+     */
+    attributeNames: PropTypes.object,
+
+    /**
+     * Optional CSS class
+     * @type {String}
+     */
+    className: PropTypes.string,
+
+    /**
+     * Feature for which the properties should be shown
+     * @type {OlFeature}
+     */
+    feature: PropTypes.instanceOf(OlFeature).isRequired
   }
 
-  var newProjCode = 'EPSG:' + code;
-  proj4.defs(newProjCode, proj4def);
-  var newProj = OlProjection.get(newProjCode);
-  var fromLonLat = OlProjection.getTransform('EPSG:4326', newProj);
-
-  // very approximate calculation of projection extent
-  var extent = OlExtent.applyTransform(
-    [bbox[1], bbox[2], bbox[3], bbox[0]], fromLonLat);
-  newProj.setExtent(extent);
-  var newView = new OlView({
-    projection: newProj
-  });
-  map.setView(newView);
-  newView.fit(extent);
-};
-
-
-const predefinedCrsDefinitions = [{
-  code: '25832',
-  value: 'ETRS89 / UTM zone 32N'
-}, {
-  code: '31466',
-  value: 'DHDN / 3-degree Gauss-Kruger zone 2'
-}, {
-  code: '31467',
-  value: 'DHDN / 3-degree Gauss-Kruger zone 3'
-}, {
-  code: '4326',
-  value: 'WGS 84'
-}];
-
-//
-// ***************************** SETUP END *************************************
-//
-
-render(
-  &lt;div>
-    &lt;div id="map">&lt;/div>
-
-    &lt;div className="example-block">
-      &lt;span>A &lt;code>CoordinateReferenceSystemCombo&lt;/code> with autocomplete mode where CRS are fetched from &lt;a href="http://epsg.io/">epsg.io/&lt;/a>.
-        If a CRS is selected (prop &lt;code>onSelect&lt;/code>), the projection is used to perform client-side raster reprojection of OSM layer in map.
-      &lt;/span>
-      &lt;br />
-
-      &lt;CoordinateReferenceSystemCombo
-        emptyTextPlaceholderText="Type to fetch definitions dynamically"
-        onSelect={setProjection} />
-    &lt;/div>
-
-    &lt;div className="example-block">
-      &lt;span>A &lt;code>CoordinateReferenceSystemCombo&lt;/code> with predefined definitions of four CRS. Selecting an option does not affect the map.&lt;/span>
-      &lt;br />
-
-      {/* A CoordinateReferenceSystemCombo having predefinedCrsDefinitions*/}
-      &lt;CoordinateReferenceSystemCombo
-        predefinedCrsDefinitions={predefinedCrsDefinitions} />
-    &lt;/div>
-
-  &lt;/div>,
-
-  // Target element
-  document.getElementById('exampleContainer'),
-
-  // Callback
-  () => {
-    map.setTarget('map');
+  static defaultProps = {
+    attributeNameColumnTitle: 'Attribute name',
+    attributeValueColumnTitle: 'Attribute value',
+    attributeNameColumnWidthInPercent: 50
   }
-);
+
+  /**
+   * The constructor.
+   *
+   * @param {Object} props The initial props.
+   */
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      dataSource: null,
+      columns: []
+    };
+  }
+
+  /**
+   * The componentWillMount function
+   */
+  componentWillMount() {
+    const {
+      feature,
+      attributeFilter,
+      attributeNames,
+      attributeNameColumnWidthInPercent
+    } = this.props;
+
+    this.generatePropertyGrid(feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent);
+  }
+
+  /**
+  * generatePropertyGrid function
+  * Initialize data store and column definitions of table
+  *
+  * @param {OlFeature} feature feature to display
+  * @param {Array} attributeFilter Array of string values to filter the grid rows
+  * @param {Object} attributeNames Object containing mapping of attribute names names in feature to custom ones
+  * @param {Number} attributeNameColumnWidthInPercent Column width (in percent)
+  */
+  generatePropertyGrid(feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent) {
+    if (!attributeFilter) {
+      attributeFilter = feature.getKeys().filter((attrName) => attrName !== 'geometry');
+    }
+
+    const dataSource = attributeFilter.map((attr) => {
+      const rowObj = {
+        attributeName: (attributeNames &amp;&amp; get(attributeNames, attr)) ? get(attributeNames, attr) : attr,
+        attributeValue: feature.get(attr),
+        key: `ATTR_${attr}_fid_${feature.ol_uid}`
+      };
+      return rowObj;
+    });
+
+    const columns = [{
+      title: this.props.attributeNameColumnTitle,
+      dataIndex: 'attributeName',
+      key: 'attributeName',
+      width: `${attributeNameColumnWidthInPercent}%`
+    }, {
+      title: this.props.attributeValueColumnTitle,
+      dataIndex: 'attributeValue',
+      key: 'attributeValue',
+      width: `${100 - attributeNameColumnWidthInPercent}%`
+    }];
+
+    this.setState({
+      dataSource,
+      columns
+    });
+  }
+
+  /**
+   * The render function.
+   *
+   * @return {Element} The element.
+   */
+  render() {
+    const {
+      className,
+      feature,
+      ...passThroughProps
+    } = this.props;
+
+    const {
+      columns,
+      dataSource
+    } = this.state;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
+    return(
+      &lt;Table
+        className={finalClassName}
+        rowKey={record => record.key}
+        dataSource={dataSource}
+        columns={columns}
+        pagination={false}
+        useFixedHeader
+        {...passThroughProps}
+      />
+    );
+  }
+}
+
+export default PropertyGrid;
 </code></pre>
         </article>
     </section>
