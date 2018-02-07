@@ -102,10 +102,13 @@ class StringUtil {
    * @return {string} The stripped Text.
    */
   static stripHTMLTags(htmlString) {
-    const div = document.createElement('div');
-    div.innerHTML = htmlString;
-    const text = div.textContent || div.innerText || '';
-    return text;
+    let stripped;
+    if (DOMParser) {
+      // Inspired by https://stackoverflow.com/a/47140708
+      const doc = (new DOMParser()).parseFromString(htmlString, 'text/html');
+      stripped = doc.body.textContent || '';
+    }
+    return stripped;
   }
 }
 
