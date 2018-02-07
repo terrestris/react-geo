@@ -630,7 +630,7 @@ class DigitizeButton extends React.Component {
    *
    * @param {Event} evt 'add' event of OL select interaction.
    */
-  setSelectionStyle = (evt) => {
+  setSelectionStyle = evt => {
     let feat = evt.element;
     this.setState({
       originalStyle: feat.getStyle()
@@ -649,7 +649,7 @@ class DigitizeButton extends React.Component {
    *
    * @param {Event} evt 'remove' event of OL select interaction.
    */
-  restoreFeatureStyle = (evt) => {
+  restoreFeatureStyle = evt => {
     let feat = evt.element;
     let text;
     if (feat.get('isLabel')) {

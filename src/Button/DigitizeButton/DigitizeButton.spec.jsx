@@ -288,6 +288,23 @@ describe('<DigitizeButton />', () => {
       });
     });
 
+    describe('#getSelectedStyleFunction', () => {
+
+      it ('returns a valid OlStyleStyle object to be used with selected features', () => {
+        const wrapper = setupWrapper();
+
+        wrapper.setProps({
+          selectFillColor: 'red',
+          selectStrokeColor: 'blue'
+        });
+
+        const expectedStyle = wrapper.instance().getSelectedStyleFunction();
+        expect(expectedStyle instanceof OlStyleStyle).toBeTruthy();
+        expect(expectedStyle.getStroke().getColor()).toBe(wrapper.props().selectStrokeColor);
+        expect(expectedStyle.getFill().getColor()).toBe(wrapper.props().selectFillColor);
+      });
+    });
+
     describe('#createDrawInteraction', () => {
 
       it ('creates OL draw interaction depending on provided drawType and sets its value to state', () => {
@@ -346,6 +363,88 @@ describe('<DigitizeButton />', () => {
         wrapper.instance().createSelectOrModifyInteraction();
 
         expect(wrapper.state().interactions.length).toBe(3);
+      });
+    });
+
+    describe('#setSelectionStyle', () => {
+
+      it ('sets state value for originalStyle', () => {
+
+        const wrapper = setupWrapper();
+        const feat = new OlFeature(new OlGeomPoint([0, 0]));
+
+        const style = new OlStyleStyle({
+          fill: new OlStyleFill({
+            color: 'red'
+          }),
+        });
+        feat.setStyle(style);
+
+        const mockEvt = {
+          element: feat
+        };
+
+        wrapper.instance().setSelectionStyle(mockEvt);
+
+        expect(wrapper.state().originalStyle).toEqual(style);
+      });
+
+      it ('calls getSelectedStyleFunction function if labeled feature is selected', () => {
+
+        const wrapper = setupWrapper();
+        const feat = new OlFeature(new OlGeomPoint([0, 0]));
+
+        const style = new OlStyleStyle({
+          text: new OlStyleText(),
+          fill: new OlStyleFill({
+            color: 'red'
+          }),
+        });
+
+        feat.setStyle(style);
+        feat.set('isLabel', true);
+
+        const mockEvt = {
+          element: feat
+        };
+
+        const selSpy = jest.spyOn(wrapper.instance(), 'getSelectedStyleFunction');
+        wrapper.instance().setSelectionStyle(mockEvt);
+
+        expect(selSpy).toHaveBeenCalledTimes(1);
+
+        selSpy.mockReset();
+        selSpy.mockRestore();
+      });
+    });
+
+    describe('#restoreFeatureStyle', () => {
+
+      it ('sets style stored in state on feature', () => {
+        const wrapper = setupWrapper();
+        wrapper.setState({
+          originalStyle: new OlStyleStyle({
+            text: new OlStyleText(),
+            fill: new OlStyleFill({
+              color: 'red'
+            })
+          })
+        });
+        const labelText = 'labelText';
+        const feat = new OlFeature();
+        feat.setStyle(new OlStyleStyle({
+          text: new OlStyleText({
+            text: labelText
+          })
+        }));
+        feat.set('isLabel', true);
+        const mockEvt = {
+          element: feat
+        };
+
+        wrapper.instance().restoreFeatureStyle(mockEvt);
+        expect(feat.getStyle()).toEqual(wrapper.state().originalStyle);
+        expect(feat.getStyle().getText().getText()).toBe(labelText);
       });
     });
 
