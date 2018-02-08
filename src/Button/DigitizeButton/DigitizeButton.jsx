@@ -321,7 +321,8 @@ class DigitizeButton extends React.Component {
       digitizeLayer: null,
       interactions: [],
       showLabelPrompt: false,
-      textLabel: ''
+      textLabel: '',
+      originalStyle: null
     };
   }
 
@@ -367,6 +368,11 @@ class DigitizeButton extends React.Component {
       if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
         this._digitizeFeatures.un('add', this.handleTextAdding);
       } else {
+        if (this._selectInteraction) {
+          this._selectInteraction.getFeatures().clear();
+          this._selectInteraction.getFeatures().un('add', this.setSelectionStyle);
+          this._selectInteraction.getFeatures().un('remove', this.restoreFeatureStyle);
+        }
         if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
           this._selectInteraction.un('select', this.onFeatureRemove);
         }
@@ -412,27 +418,15 @@ class DigitizeButton extends React.Component {
   getDigitizeStyleFunction = feature => {
 
     const {
-      selectFillColor,
-      selectStrokeColor,
       style,
     } = this.props;
-
-    const {
-      interactions,
-    } = this.state;
-
-    let useSelectStyle = false;
-    if (interactions && interactions.length > 1 && !feature.get('isLabel')) {
-      useSelectStyle = true;
-    }
 
     let styleObj;
 
     switch (feature.getGeometry().getType()) {
       case DigitizeButton.POINT_DRAW_TYPE: {
         if (!feature.get('isLabel')) {
-          styleObj = style ||
-          new OlStyleStyle({
+          styleObj = style || new OlStyleStyle({
             image: new OlStyleCircle({
               radius: 7,
               fill: new OlStyleFill({
@@ -443,10 +437,7 @@ class DigitizeButton extends React.Component {
               })
             })
           });
-          if (useSelectStyle) {
-            styleObj.getImage().getFill().setColor(selectFillColor);
-            styleObj.getImage().getStroke().setColor(selectStrokeColor);
-          }
+          feature.setStyle(styleObj);
         } else {
           styleObj = style || new OlStyleStyle({
             text: new OlStyleText({
@@ -462,10 +453,7 @@ class DigitizeButton extends React.Component {
               })
             })
           });
-          if (useSelectStyle) {
-            styleObj.getText().getFill().setColor(selectFillColor);
-            styleObj.getText().getStroke().setColor(selectStrokeColor);
-          }
+          feature.setStyle(styleObj);
         }
         return styleObj;
       }
@@ -476,9 +464,7 @@ class DigitizeButton extends React.Component {
             width: 2
           })
         });
-        if (useSelectStyle) {
-          styleObj.getStroke().setColor(selectStrokeColor);
-        }
+        feature.setStyle(styleObj);
         return styleObj;
       }
       case DigitizeButton.POLYGON_DRAW_TYPE:
@@ -492,16 +478,60 @@ class DigitizeButton extends React.Component {
             width: 2
           })
         });
-        if (useSelectStyle) {
-          styleObj.getStroke().setColor(selectStrokeColor);
-          styleObj.getFill().setColor(selectFillColor);
-        }
+        feature.setStyle(styleObj);
         return styleObj;
       }
       default: {
         break;
       }
     }
+  }
+
+  /**
+   * The OL style for selected digitized features.
+   *
+   * @param {OlFeature} feature The selected feature.
+   * @param {Number} View resolution.
+   * @param {String} text Text for labeled feature (optional).
+   * @return {OlStyleStyle} The style to use.
+   */
+  getSelectedStyleFunction = (feature, res, text) => {
+
+    const {
+      selectFillColor,
+      selectStrokeColor
+    } = this.props;
+
+    return new OlStyleStyle({
+      image: new OlStyleCircle({
+        radius: 7,
+        fill: new OlStyleFill({
+          color: selectFillColor
+        }),
+        stroke: new OlStyleStroke({
+          color: selectStrokeColor
+        })
+      }),
+      text: new OlStyleText({
+        text: text ? text : '',
+        offsetX: 5,
+        offsetY: 5,
+        font: '12px sans-serif',
+        fill: new OlStyleFill({
+          color: selectFillColor
+        }),
+        stroke: new OlStyleStroke({
+          color: selectStrokeColor
+        })
+      }),
+      stroke: new OlStyleStroke({
+        color: selectStrokeColor,
+        width: 2
+      }),
+      fill: new OlStyleFill({
+        color: selectFillColor
+      })
+    });
   }
 
   /**
@@ -557,7 +587,7 @@ class DigitizeButton extends React.Component {
 
     this._selectInteraction = new OlInteractionSelect({
       condition: OlEventsCondition.singleClick,
-      style: this.getDigitizeStyleFunction,
+      style: this.getSelectedStyleFunction,
       hitTolerance: DigitizeButton.HIT_TOLERANCE
     });
 
@@ -570,10 +600,12 @@ class DigitizeButton extends React.Component {
     let interactions = [this._selectInteraction];
 
     if (editType === DigitizeButton.EDIT_EDIT_TYPE) {
+      this._selectInteraction.getFeatures().on('add', this.setSelectionStyle);
+      this._selectInteraction.getFeatures().on('remove', this.restoreFeatureStyle);
       const edit = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
         deleteCondition: OlEventsCondition.singleClick,
-        style: this.getDigitizeStyleFunction,
+        style: this.getSelectedStyleFunction,
         pixelTolerance: 10
       });
 
@@ -590,6 +622,43 @@ class DigitizeButton extends React.Component {
     map.on('pointermove', this.onPointerMove);
 
     this.setState({interactions});
+  }
+
+
+  /**
+   * Sets selection style on feature after it was selected.
+   *
+   * @param {Event} evt 'add' event of OL select interaction.
+   */
+  setSelectionStyle = evt => {
+    let feat = evt.element;
+    this.setState({
+      originalStyle: feat.getStyle()
+    });
+
+    let text;
+    if (feat.get('isLabel')) {
+      text = feat.getStyle().getText().getText();
+    }
+    feat.setStyle(this.getSelectedStyleFunction(feat, null, text));
+  }
+
+
+  /**
+   * Restores default feature style after it was deselected.
+   *
+   * @param {Event} evt 'remove' event of OL select interaction.
+   */
+  restoreFeatureStyle = evt => {
+    let feat = evt.element;
+    let text;
+    if (feat.get('isLabel')) {
+      text = feat.getStyle().getText().getText();
+    }
+    feat.setStyle(this.state.originalStyle);
+    if (feat.get('isLabel')) {
+      feat.getStyle().getText().setText(text);
+    }
   }
 
   /**
@@ -615,7 +684,7 @@ class DigitizeButton extends React.Component {
   onFeatureCopy = evt => {
     const feat = evt.selected[0];
     const copy = feat.clone();
-    const style = this.getDigitizeStyleFunction(copy);
+    copy.setStyle(feat.getStyle());
     this._digitizeFeatures.push(copy);
 
     AnimateUtil.moveFeature(
@@ -623,7 +692,7 @@ class DigitizeButton extends React.Component {
       copy,
       500,
       50,
-      style
+      feat.getStyle()
     );
   }
 
