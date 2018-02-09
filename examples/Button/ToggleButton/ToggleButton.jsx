@@ -91,7 +91,7 @@ class ToggleButton extends React.Component {
    * @param {Object} nextProps The received properties.
    */
   componentWillReceiveProps(nextProps) {
-    if (this.props.pressed != nextProps.pressed) {
+    if (this.state.pressed !== nextProps.pressed) {
       this.props.onToggle(nextProps.pressed);
       this.setState({
         pressed: nextProps.pressed
