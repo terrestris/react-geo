@@ -273,12 +273,13 @@ export class FeatureGrid extends React.Component {
    */
   componentDidMount() {
     const {
-      zoomToExtent,
-      features
+      map,
+      features,
+      zoomToExtent
     } = this.props;
 
-    this.initVectorLayer();
-    this.initMapEventHandlers();
+    this.initVectorLayer(map);
+    this.initMapEventHandlers(map);
 
     if (zoomToExtent) {
       this.zoomToFeatures(features);
@@ -298,6 +299,11 @@ export class FeatureGrid extends React.Component {
       selectableRows
     } = this.props;
 
+    if (!(isEqual(nextProps.map, map))) {
+      this.initVectorLayer(nextProps.map);
+      this.initMapEventHandlers(nextProps.map);
+    }
+
     if (!(isEqual(nextProps.features, features))) {
       if (this._source) {
         this._source.clear();
@@ -311,12 +317,16 @@ export class FeatureGrid extends React.Component {
     }
 
     if (!(isEqual(nextProps.selectableRows, selectableRows))) {
-      if (nextProps.selectableRows) {
+      if (nextProps.selectableRows && map) {
         map.on('singleclick', this.onMapSingleClick);
       } else {
         this.setState({
           selectedRowKeys: []
-        }, () => map.un('singleclick', this.onMapSingleClick));
+        }, () => {
+          if (map) {
+            map.un('singleclick', this.onMapSingleClick);
+          }
+        });
       }
     }
   }
@@ -332,10 +342,11 @@ export class FeatureGrid extends React.Component {
   /**
    * Initialized the vector layer that will be used to draw the input features
    * on and adds it to the map (if any).
+   *
+   * @param {ol.Map} map The map to add the layer to.
    */
-  initVectorLayer = () => {
+  initVectorLayer = map => {
     const {
-      map,
       features,
       featureStyle,
       layerName
@@ -366,10 +377,11 @@ export class FeatureGrid extends React.Component {
    * Adds map event callbacks to highlight and select features in the map (if
    * given) on pointermove and singleclick. Hovered and selected features will
    * be highlighted and selected in the grid as well.
+   *
+   * @param {ol.Map} map The map to register the handlers to.
    */
-  initMapEventHandlers = () => {
+  initMapEventHandlers = map => {
     const {
-      map,
       selectableRows
     } = this.props;
 
@@ -580,7 +592,7 @@ export class FeatureGrid extends React.Component {
   /**
    * Returns the correspondig feature for the given table row key.
    *
-   * @param {String|Number} key The key to get the obtain the feature from.
+   * @param {Number} key The key to get the obtain the feature from.
    * @return {ol.Feature} The feature candidate.
    */
   getFeatureFromRowKey = key => {
