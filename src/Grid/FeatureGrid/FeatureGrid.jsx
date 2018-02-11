@@ -280,6 +280,42 @@ export class FeatureGrid extends React.Component {
   }
 
   /**
+   * Called on lifecycle phase componentWillReceiveProps.
+   *
+   * @param {Object} nextProps The next props.
+   */
+  componentWillReceiveProps(nextProps) {
+    const {
+      map,
+      features,
+      featureStyle,
+      selectableRows
+    } = this.props;
+
+    if (!(isEqual(nextProps.features, features))) {
+      if (this._source) {
+        this._source.clear();
+        this._source.addFeatures(nextProps.features);
+        this._source.forEachFeature(feature => feature.setStyle(featureStyle));
+      }
+
+      if (nextProps.zoomToExtent) {
+        this.zoomToFeatures(nextProps.features);
+      }
+    }
+
+    if (!(isEqual(nextProps.selectableRows, selectableRows))) {
+      if (nextProps.selectableRows) {
+        map.on('singleclick', this.onMapSingleClick);
+      } else {
+        this.setState({
+          selectedRowKeys: []
+        }, () => map.un('singleclick', this.onMapSingleClick));
+      }
+    }
+  }
+
+  /**
    * Called on lifecycle phase componentWillUnmount.
    */
   componentWillUnmount() {
