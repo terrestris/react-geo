@@ -123,6 +123,12 @@ export class FeatureGrid extends React.Component {
     onRowMouseOut: PropTypes.func,
 
     /**
+     * Optional callback function, that will be called if the selection changes.
+     * @type {Function}
+     */
+    onRowSelectionChange: PropTypes.func,
+
+    /**
      * Whether the map should center on the current feature's extent on init or
      * not.
      * @type {Boolean}
@@ -754,12 +760,20 @@ export class FeatureGrid extends React.Component {
   }
 
   /**
-   * Called if the selection changes
+   * Called if the selection changes.
    *
    * @param {Array} selectedRowKeys The list of currently selected row keys.
    */
   onSelectChange = selectedRowKeys => {
+    const {
+      onRowSelectionChange
+    } = this.props;
+
     const selectedFeatures = selectedRowKeys.map(key => this.getFeatureFromRowKey(key));
+
+    if (isFunction(onRowSelectionChange)) {
+      onRowSelectionChange(selectedRowKeys, selectedFeatures);
+    }
 
     this.resetFeatureStyles();
     this.selectFeatures(selectedFeatures);
