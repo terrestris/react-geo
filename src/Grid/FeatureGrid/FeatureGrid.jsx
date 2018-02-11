@@ -138,21 +138,30 @@ export class FeatureGrid extends React.Component {
 
     /**
      * The default style to apply to the features.
-     * @type {ol.Style}
+     * @type {ol.Style|ol.FeatureStyleFunction}
      */
-    featureStyle: PropTypes.instanceOf(OlStyle),
+    featureStyle: PropTypes.oneOfType([
+      PropTypes.instanceOf(OlStyle),
+      PropTypes.func
+    ]),
 
     /**
      * The highlight style to apply to the features.
-     * @type {ol.Style}
+     * @type {ol.Style|ol.FeatureStyleFunction}
      */
-    highlightStyle: PropTypes.instanceOf(OlStyle),
+    highlightStyle: PropTypes.oneOfType([
+      PropTypes.instanceOf(OlStyle),
+      PropTypes.func
+    ]),
 
     /**
      * The select style to apply to the features.
-     * @type {ol.Style}
+     * @type {ol.Style|ol.FeatureStyleFunction}
      */
-    selectStyle: PropTypes.instanceOf(OlStyle),
+    selectStyle: PropTypes.oneOfType([
+      PropTypes.instanceOf(OlStyle),
+      PropTypes.func
+    ]),
 
     /**
      * The name of the vector layer presenting the features in the grid.
