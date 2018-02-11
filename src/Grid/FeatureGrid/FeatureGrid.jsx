@@ -27,11 +27,32 @@ import './FeatureGrid.less';
 export class FeatureGrid extends React.Component {
 
   /**
-   * The className added to this component.
+   * The className added to add to this component.
    * @type {String}
    * @private
    */
-  className = 'react-geo-feature-grid'
+  _className = 'react-geo-feature-grid'
+
+  /**
+   * The className to add to the each table row.
+   * @type {String}
+   * @private
+   */
+  _rowClassName = 'react-geo-feature-grid-row';
+
+  /**
+   * The prefix to use for each table row class.
+   * @type {String}
+   * @private
+   */
+  _rowKeyClassNamePrefix = 'row-key-';
+
+  /**
+   * The hover class name.
+   * @type {String}
+   * @private
+   */
+  _rowHoverClassName = 'row-hover';
 
   /**
    * The source holding the features of the grid.
@@ -52,6 +73,18 @@ export class FeatureGrid extends React.Component {
    * @type {Object}
    */
   static propTypes = {
+    /**
+     * Optional CSS class to add to the table.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
+    /**
+     * Optional CSS class to add to each table row.
+     * @type {String}
+     */
+    rowClassName: PropTypes.string,
+
     /**
      * The features to show in the grid and the map (if set).
      * @type {Array}
@@ -97,7 +130,7 @@ export class FeatureGrid extends React.Component {
     zoomToExtent: PropTypes.bool,
 
     /**
-     * Whether rows should be selectable or not.
+     * Whether rows and features should be selectable or not.
      *
      * @type {Boolean}
      */
@@ -230,6 +263,7 @@ export class FeatureGrid extends React.Component {
     } = this.props;
 
     this.initVectorLayer();
+    this.initMapEventHandlers();
 
     if (zoomToExtent) {
       this.zoomToFeatures(features);
@@ -241,6 +275,7 @@ export class FeatureGrid extends React.Component {
    */
   componentWillUnmount() {
     this.deinitVectorLayer();
+    this.deinitMapEventHandlers();
   }
 
   /**
@@ -276,6 +311,114 @@ export class FeatureGrid extends React.Component {
   }
 
   /**
+   * Adds map event callbacks to highlight and select features in the map (if
+   * given) on pointermove and singleclick. Hovered and selected features will
+   * be highlighted and selected in the grid as well.
+   */
+  initMapEventHandlers = () => {
+    const {
+      map,
+      selectableRows
+    } = this.props;
+
+    if (!(map instanceof OlMap)) {
+      return;
+    }
+
+    map.on('pointermove', this.onMapPointerMove);
+
+    if (selectableRows) {
+      map.on('singleclick', this.onMapSingleClick);
+    }
+  }
+
+  /**
+   * Highlights the feature beneath the cursor on the map and in the grid.
+   *
+   * @param {ol.MapBrowserEvent} olEvt The ol event.
+   */
+  onMapPointerMove = olEvt => {
+    const {
+      map,
+      features,
+      featureStyle,
+      highlightStyle,
+      selectStyle
+    } = this.props;
+
+    const {
+      selectedRowKeys
+    } = this.state;
+
+    const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
+      layerFilter: layerCand => layerCand === this._layer
+    }) || [];
+
+    features.forEach(feature => {
+      const key = features.indexOf(feature);
+      const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
+      const el = document.querySelectorAll(sel)[0];
+      if (el) {
+        el.classList.remove(this._rowHoverClassName);
+      }
+      if (selectedRowKeys.includes(features.indexOf(feature))) {
+        feature.setStyle(selectStyle);
+      } else {
+        feature.setStyle(featureStyle);
+      }
+    });
+
+    selectedFeatures.forEach(feature => {
+      const key = features.indexOf(feature);
+      const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
+      const el = document.querySelectorAll(sel)[0];
+      if (el) {
+        el.classList.add(this._rowHoverClassName);
+      }
+      feature.setStyle(highlightStyle);
+    });
+  }
+
+  /**
+   * Selects the selected feature in the map and in the grid.
+   *
+   * @param {ol.MapBrowserEvent} olEvt The ol event.
+   */
+  onMapSingleClick = olEvt => {
+    const {
+      map,
+      features,
+      featureStyle,
+      selectStyle
+    } = this.props;
+
+    const {
+      selectedRowKeys
+    } = this.state;
+
+    const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
+      layerFilter: layerCand => layerCand === this._layer
+    }) || [];
+
+    let rowKeys = [...selectedRowKeys];
+
+    selectedFeatures.forEach(selectedFeature => {
+      const featId = features.indexOf(selectedFeature);
+      if (rowKeys.includes(featId)) {
+        rowKeys = rowKeys.filter(rowKey => rowKey !== featId);
+        selectedFeature.setStyle(featureStyle);
+      } else {
+        rowKeys.push(featId);
+        selectedFeature.setStyle(selectStyle);
+      }
+    });
+
+    this.setState({
+      selectedRowKeys: rowKeys
+    });
+  }
+
+  /**
    * Removes the vector layer from the given map (if any).
    */
   deinitVectorLayer = () => {
@@ -288,6 +431,26 @@ export class FeatureGrid extends React.Component {
     }
 
     map.removeLayer(this._layer);
+  }
+
+  /**
+   * Unbinds the pointermove and click event handlers from the map (if given).
+   */
+  deinitMapEventHandlers = () => {
+    const {
+      map,
+      selectableRows
+    } = this.props;
+
+    if (!(map instanceof OlMap)) {
+      return;
+    }
+
+    map.un('pointermove', this.onMapPointerMove);
+
+    if (selectableRows) {
+      map.un('singleclick', this.onMapSingleClick);
+    }
   }
 
   /**
@@ -562,6 +725,8 @@ export class FeatureGrid extends React.Component {
    */
   render() {
     const {
+      className,
+      rowClassName,
       features,
       map,
       attributeBlacklist,
@@ -588,8 +753,17 @@ export class FeatureGrid extends React.Component {
       onChange: this.onSelectChange
     };
 
+    const finalClassName = className
+      ? `${className} ${this._className}`
+      : this._className;
+
+    const finalRowClassName = rowClassName
+      ? `${rowClassName} ${this._rowClassName}`
+      : this._rowClassName;
+
     return (
       <Table
+        className={finalClassName}
         columns={this.getColumnDefs()}
         dataSource={this.getTableData()}
         onRow={record => ({
@@ -597,7 +771,9 @@ export class FeatureGrid extends React.Component {
           onMouseOver: () => this.onRowMouseOver(record),
           onMouseOut: () => this.onRowMouseOut(record)
         })}
+        rowClassName={record => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${record.key}`}
         rowSelection={selectableRows ? rowSelection : null}
+        ref={ref => this._ref = ref}
         {...passThroughProps}
       >
         {children}
