@@ -563,7 +563,7 @@ export class FeatureGrid extends React.Component {
         }, {});
 
       data.push({
-        key: feature.getId() || idx,
+        key: idx,
         ...filtered
       });
     });
@@ -582,8 +582,7 @@ export class FeatureGrid extends React.Component {
       features
     } = this.props;
 
-    const feature = features
-      .filter((feature, idx) => (feature.getId() === key) || (idx === key));
+    const feature = features.filter((feature, idx) => idx === key);
 
     return feature[0];
   }
@@ -709,8 +708,7 @@ export class FeatureGrid extends React.Component {
     }
 
     unhighlightFeatures.forEach(feature => {
-      if (selectedRowKeys.includes(feature.getId()) ||
-          selectedRowKeys.includes(features.indexOf(feature))) {
+      if (selectedRowKeys.includes(features.indexOf(feature))) {
         feature.setStyle(selectStyle);
       } else {
         feature.setStyle(featureStyle);
