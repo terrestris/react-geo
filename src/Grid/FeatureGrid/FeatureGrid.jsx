@@ -345,9 +345,10 @@ export class FeatureGrid extends React.Component {
 
     const layer = new OlLayerVector({
       name: layerName,
-      source: source,
-      style: featureStyle
+      source: source
     });
+
+    source.forEachFeature(feature => feature.setStyle(featureStyle));
 
     map.addLayer(layer);
 
