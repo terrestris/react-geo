@@ -5,7 +5,7 @@ import OlLayerTile from 'ol/layer/tile';
 import OlView from 'ol/view';
 import OlMap from 'ol/map';
 
-import logo from '../../UserChip/user.png';
+import logo from '../../../assets/user.png';
 import { FloatingMapLogo } from '../../index.js';
 
 const map = new OlMap({

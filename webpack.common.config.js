@@ -33,8 +33,7 @@ module.exports = {
     }, {
       test: /\.(jpe?g|png|gif|ico)$/i,
       loaders: [
-        'file-loader?name=img/[name].[ext]',
-        'image-webpack-loader'
+        'file-loader?name=img/[name].[ext]'
       ]
     }, {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,

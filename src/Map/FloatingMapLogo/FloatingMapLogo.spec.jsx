@@ -1,6 +1,6 @@
 /*eslint-env jest*/
 
-import testLogo from '../../UserChip/user.png';
+import testLogo from '../../../assets/user.png';
 import TestUtil from '../../Util/TestUtil';
 
 import { FloatingMapLogo } from '../../index';

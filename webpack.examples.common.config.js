@@ -58,14 +58,11 @@ const config = {
     }, {
       test: /\.(jpe?g|png|gif|ico)$/i,
       loaders: [{
-        loader: 'file-loader?name=img/[name].[ext]',
+        loader: 'url-loader',
         options: {
-          outputPath: 'resources/',
-          name: '[hash].[ext]',
-          publicPath: '/react-geo/examples/'
+          limit: 0
         }
-      },
-      'image-webpack-loader'
+      }
       ]
     }, {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,

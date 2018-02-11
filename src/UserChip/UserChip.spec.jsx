@@ -1,6 +1,6 @@
 /*eslint-env jest*/
 
-import testImage from  './user.png';
+import testImage from  '../../assets/user.png';
 import TestUtil from '../Util/TestUtil';
 
 import {UserChip} from '../index';
