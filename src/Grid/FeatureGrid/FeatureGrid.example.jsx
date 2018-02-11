@@ -43,13 +43,9 @@ render(
         zoomToExtent={true}
         selectableRows={true}
         attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
-        attributeMapping={{
-          'GEN': 'Name',
-          'SHAPE_LENG': 'Length',
-          'SHAPE_AREA': 'Area'
-        }}
         columnDefs={{
           'GEN': {
+            title: 'Name',
             render: nameColumnRenderer,
             sorter: (a, b) => {
               const nameA = a.GEN.toUpperCase();
@@ -66,9 +62,11 @@ render(
             defaultSortOrder: 'ascend'
           },
           'SHAPE_LENG': {
+            title: 'Length',
             render: val => Math.round(val)
           },
           'SHAPE_AREA': {
+            title: 'Area',
             render: val => Math.round(val)
           }
         }}

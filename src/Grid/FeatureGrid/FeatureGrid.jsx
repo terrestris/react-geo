@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Table } from 'antd';
 import {
-  Table
-} from 'antd';
-import { isFunction } from 'lodash';
+  isEqual,
+  isFunction
+} from 'lodash';
 import OlStyle from 'ol/style/style';
 import OlStyleFill from 'ol/style/fill';
 import OlStyleCircle from 'ol/style/circle';
@@ -69,12 +70,6 @@ export class FeatureGrid extends React.Component {
      * @type {Array}
      */
     attributeBlacklist: PropTypes.arrayOf(PropTypes.string),
-
-    /**
-     * A map of attribute mappings as {'INPUT': 'LOCALIZED_INPUT'}.
-     * @type {Object}
-     */
-    attributeMapping: PropTypes.object,
 
     /**
      * Optional callback function, that will be called on rowclick.
@@ -153,7 +148,6 @@ export class FeatureGrid extends React.Component {
   static defaultProps = {
     features: [],
     attributeBlacklist: [],
-    attributeMapping: {},
     featureStyle: new OlStyle({
       fill: new OlStyleFill({
         color: 'rgba(255, 255, 255, 0.5)'
@@ -305,7 +299,6 @@ export class FeatureGrid extends React.Component {
   getColumnDefs = () => {
     const {
       attributeBlacklist,
-      attributeMapping,
       features,
       columnDefs
     } = this.props;
@@ -329,7 +322,7 @@ export class FeatureGrid extends React.Component {
       }
 
       columns.push({
-        title: attributeMapping[key] || key,
+        title: key,
         dataIndex: key,
         key: key,
         ...columnDefs[key]
@@ -572,7 +565,6 @@ export class FeatureGrid extends React.Component {
       features,
       map,
       attributeBlacklist,
-      attributeMapping,
       onRowClick,
       onRowMouseOver,
       onRowMouseOut,
