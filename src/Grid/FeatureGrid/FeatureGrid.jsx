@@ -663,9 +663,11 @@ export class FeatureGrid extends React.Component {
     features.forEach(feature => {
       featGeometries.push(feature.getGeometry());
     });
-    const featCollection = new OlGeomGeometryCollection(featGeometries);
 
-    map.getView().fit(featCollection.getExtent());
+    if (featGeometries.length > 0) {
+      const geomCollection = new OlGeomGeometryCollection(featGeometries);
+      map.getView().fit(geomCollection.getExtent());
+    }
   }
 
   /**
