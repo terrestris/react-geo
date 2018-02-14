@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Button/DigitizeButton/DigitizeButton.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Button/DigitizeButton/DigitizeButton.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import PropTypes from 'prop-types';
+
+import { Modal, Input } from 'antd';
+
+import OlMap from 'ol/map';
+import OlLayerVector from 'ol/layer/vector';
+import OlSourceVector from 'ol/source/vector';
+import OlCollection from 'ol/collection';
+import OlStyleStyle from 'ol/style/style';
+import OlStyleStroke from 'ol/style/stroke';
+import OlStyleFill from 'ol/style/fill';
+import OlStyleCircle from 'ol/style/circle';
+import OlStyleText from 'ol/style/text';
+import OlInteractionDraw from 'ol/interaction/draw';
+import OlInteractionSelect from 'ol/interaction/select';
+import OlInteractionModify from 'ol/interaction/modify';
+import OlInteractionTranslate from 'ol/interaction/translate';
+import OlEventsCondition from 'ol/events/condition';
+
+import ToggleButton from '../ToggleButton/ToggleButton.jsx';
+import MapUtil from '../../Util/MapUtil/MapUtil';
+import StringUtil from '../../Util/StringUtil/StringUtil';
+import AnimateUtil from '../../Util/AnimateUtil/AnimateUtil';
+import Logger from '../../Util/Logger';
+
+import './DigitizeButton.less';
+
+/**
+ * The DigitizeButton.
+ *
+ * @class The DigitizeButton
+ * @extends React.Component
+ *
+ */
+class DigitizeButton extends React.Component {
+
+  /**
+   * The className added to this component.
+   *
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-digitizebutton';
+
+  /**
+   * Currently existing digitize features as collection.
+   *
+   * @type {OlCollection}
+   * @private
+   */
+  _digitizeFeatures = null;
+
+  /**
+   * Currently drawn feature which should be represent as label or postit.
+   * @type {OlFeature}
+   * @private
+   */
+  _digitizeTextFeature = null;
+
+  /**
+   * Reference to OL select interaction which will be used in edit mode.
+   * @type {OlInteractionSelect}
+   * @private
+   */
+  _selectInteraction = null;
+
+  /**
+   * Name of point draw type.
+   * @private
+   */
+  static POINT_DRAW_TYPE = 'Point';
+
+  /**
+   * Name of line string draw type.
+   * @private
+   */
+  static LINESTRING_DRAW_TYPE = 'LineString';
+
+  /**
+   * Name of polygon draw type.
+   * @private
+   */
+  static POLYGON_DRAW_TYPE = 'Polygon';
+
+  /**
+   * Name of circle draw type.
+   * @private
+   */
+  static CIRCLE_DRAW_TYPE = 'Circle';
+
+  /**
+   * Name of rectangle draw type.
+   * @private
+   */
+  static RECTANGLE_DRAW_TYPE = 'Rectangle';
+
+  /**
+   * Name of text draw type.
+   * @private
+   */
+  static TEXT_DRAW_TYPE = 'Text';
+
+  /**
+   * Name of copy edit type.
+   * @private
+   */
+  static COPY_EDIT_TYPE = 'Copy';
+
+  /**
+   * Name of edit edit type.
+   * @private
+   */
+  static EDIT_EDIT_TYPE = 'Edit';
+
+  /**
+   * Name of delete edit type.
+   * @private
+   */
+  static DELETE_EDIT_TYPE = 'Delete';
+
+  /**
+   * Default fill color used in style object of drawn features.
+   *
+   * @type {String}
+   */
+  static DEFAULT_FILL_COLOR = 'rgba(154, 26, 56, 0.5)';
+
+  /**
+   * Default stroke color used in style object of drawn features.
+   *
+   * @type {String}
+   */
+  static DEFAULT_STROKE_COLOR = 'rgba(154, 26, 56, 0.8)';
+
+  /**
+   * Hit detection in pixels used for select interaction.
+   *
+   * @type {Number}
+   */
+   static HIT_TOLERANCE = 5;
+
+  /**
+   * Default style for digitized points.
+   *
+   * @type {OlStyleStyle}
+   */
+  static DEFAULT_POINT_STYLE = new OlStyleStyle({
+    image: new OlStyleCircle({
+      radius: 7,
+      fill: new OlStyleFill({
+        color: DigitizeButton.DEFAULT_FILL_COLOR
+      }),
+      stroke: new OlStyleStroke({
+        color: DigitizeButton.DEFAULT_STROKE_COLOR
+      })
+    })
+  });
+
+  /**
+   * Default style for digitized lines.
+   *
+   * @type {OlStyleStyle}
+   */
+  static DEFAULT_LINESTRING_STYLE = new OlStyleStyle({
+    stroke: new OlStyleStroke({
+      color: DigitizeButton.DEFAULT_STROKE_COLOR,
+      width: 2
+    })
+  });
+
+  /**
+   * Default style for digitized polygons or circles.
+   *
+   * @type {OlStyleStyle}
+   */
+  static DEFAULT_POLYGON_STYLE = new OlStyleStyle({
+    fill: new OlStyleFill({
+      color: DigitizeButton.DEFAULT_FILL_COLOR
+    }),
+    stroke: new OlStyleStroke({
+      color: DigitizeButton.DEFAULT_STROKE_COLOR,
+      width: 2
+    })
+  });
+
+  /**
+   * Default style for digitized labels.
+   *
+   * @type {OlStyleStyle}
+   */
+  static DEFAULT_TEXT_STYLE = new OlStyleStyle({
+    text: new OlStyleText({
+      text: '',
+      offsetX: 5,
+      offsetY: 5,
+      font: '12px sans-serif',
+      fill: new OlStyleFill({
+        color: DigitizeButton.DEFAULT_FILL_COLOR
+      }),
+      stroke: new OlStyleStroke({
+        color: DigitizeButton.DEFAULT_STROKE_COLOR
+      })
+    })
+  });
+
+  /**
+   * The properties.
+   * @type {Object}
+   */
+  static propTypes = {
+    /**
+     * The className which should be added.
+     *
+     * @type {String}
+     */
+    className: PropTypes.string,
+
+    /**
+     * Instance of OL map this component is bound to.
+     *
+     * @type {OlMap}
+     */
+    map: PropTypes.instanceOf(OlMap).isRequired,
+
+    /**
+     * Whether the line, point, polygon, circle, rectangle or text shape should
+     * be drawn.
+     *
+     * @type {String}
+     */
+    drawType: PropTypes.oneOf(['Point', 'LineString', 'Polygon', 'Circle', 'Rectangle', 'Text']),
+
+    /**
+     * Whether the digitize feature should be deleted, copied or modified.
+     * be drawn.
+     *
+     * @type {String}
+     */
+    editType: PropTypes.oneOf(['Copy', 'Edit', 'Delete']),
+
+    /**
+     * Name of system vector layer which will be used for digitize features.
+     *
+     * @type {String}
+     */
+    digitizeLayerName: PropTypes.string,
+
+    /**
+     * Fill color of selected digitize feature.
+     *
+     * @type {String}
+     */
+    selectFillColor: PropTypes.string,
+
+    /**
+     * Stroke color of selected digitize feature.
+     *
+     * @type {String}
+     */
+    selectStrokeColor: PropTypes.string,
+
+    /**
+     * Title for modal used for input of labels for digitize features.
+     *
+     * @type {String}
+     */
+    modalPromptTitle: PropTypes.string,
+
+    /**
+     * Text string for `OK` button of the modal.
+     *
+     * @type {String}
+     */
+    modalPromptOkButtonText: PropTypes.string,
+
+    /**
+     * Text string for `Cancel` button of the modal.
+     *
+     * @type {String}
+     */
+    modalPromptCancelButtonText: PropTypes.string,
+
+    /**
+     * Style object for drawn feature.
+     *
+     * @type {OlStyleStyle}
+     */
+    style: PropTypes.instanceOf(OlStyleStyle)
+  };
+
+
+  /**
+   * The default properties.
+   * @type {Object}
+   */
+  static defaultProps = {
+    digitizeLayerName: 'react-geo_digitize',
+    selectFillColor: 'rgba(240, 240, 90, 0.5)',
+    selectStrokeColor: 'rgba(220, 120, 20, 0.8)',
+    modalPromptTitle: 'Label',
+    modalPromptOkButtonText: 'Ok',
+    modalPromptCancelButtonText: 'Cancel'
+  }
+
+  /**
+   * Creates the DigitizeButton.
+   *
+   * @constructs DigitizeButton
+   */
+  constructor(props) {
+
+    super(props);
+
+    if (!this.props.drawType &amp;&amp; !this.props.editType) {
+      Logger.warn('Neither "drawType" nor "editType" was provided. Digitize ' +
+      'button won\'t work properly!');
+    }
+
+    this.state = {
+      digitizeLayer: null,
+      interactions: [],
+      showLabelPrompt: false,
+      textLabel: '',
+      originalStyle: null
+    };
+  }
+
+  /**
+   * `componentWillMount` method of the DigitizeButton. Just calls
+   * `createDigitizeLayer` method.
+   */
+  componentDidMount() {
+    this.createDigitizeLayer();
+  }
+
+  /**
+   * Called when the digitize button is toggled. If the button state is pressed,
+   * the appropriate draw, modify or select interaction will be created.
+   * Otherwise, by untoggling, the same previously created interaction will be
+   * removed from the map.
+   *
+   * @param {Boolean} pressed Whether the digitize button is pressed or not.
+   */
+  onToggle = pressed => {
+
+    const {
+      map,
+      drawType,
+      editType
+    } = this.props;
+
+    const {
+      digitizeLayer,
+      interactions
+    } = this.state;
+
+    this._digitizeFeatures = digitizeLayer.getSource().getFeaturesCollection();
+
+    if (pressed) {
+      if (drawType) {
+        this.createDrawInteraction(pressed);
+      } else if (editType) {
+        this.createSelectOrModifyInteraction(pressed);
+      }
+    } else {
+      interactions.forEach(i => map.removeInteraction(i));
+      if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
+        this._digitizeFeatures.un('add', this.handleTextAdding);
+      } else {
+        if (this._selectInteraction) {
+          this._selectInteraction.getFeatures().clear();
+          this._selectInteraction.getFeatures().un('add', this.setSelectionStyle);
+          this._selectInteraction.getFeatures().un('remove', this.restoreFeatureStyle);
+        }
+        if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
+          this._selectInteraction.un('select', this.onFeatureRemove);
+        }
+        if (editType === DigitizeButton.COPY_EDIT_TYPE) {
+          this._selectInteraction.un('select', this.onFeatureCopy);
+        }
+        map.un('pointermove', this.onPointerMove);
+      }
+    }
+  }
+
+  /**
+   * Creates digitize vector layer and adds this to the map.
+   */
+  createDigitizeLayer = () => {
+    const {
+      digitizeLayerName,
+      map
+    } = this.props;
+
+    let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
+
+    if (!digitizeLayer) {
+      digitizeLayer = new OlLayerVector({
+        name: digitizeLayerName,
+        source: new OlSourceVector({
+          features: new OlCollection(),
+        })
+      });
+      map.addLayer(digitizeLayer);
+    }
+    digitizeLayer.setStyle(this.getDigitizeStyleFunction);
+    this.setState({digitizeLayer});
+  }
+
+  /**
+   * The styling function for the digitize vector layer, which considers
+   * different geometry types of drawn features.
+   *
+   * @param {OlFeature} feature The feature which is being styled.
+   * @return {OlStyleStyle} The style to use.
+   */
+  getDigitizeStyleFunction = feature => {
+
+    const {
+      style,
+    } = this.props;
+
+    let styleObj;
+
+    switch (feature.getGeometry().getType()) {
+      case DigitizeButton.POINT_DRAW_TYPE: {
+        if (!feature.get('isLabel')) {
+          styleObj = style || new OlStyleStyle({
+            image: new OlStyleCircle({
+              radius: 7,
+              fill: new OlStyleFill({
+                color: DigitizeButton.DEFAULT_FILL_COLOR
+              }),
+              stroke: new OlStyleStroke({
+                color: DigitizeButton.DEFAULT_STROKE_COLOR
+              })
+            })
+          });
+          feature.setStyle(styleObj);
+        } else {
+          styleObj = style || new OlStyleStyle({
+            text: new OlStyleText({
+              text: '',
+              offsetX: 5,
+              offsetY: 5,
+              font: '12px sans-serif',
+              fill: new OlStyleFill({
+                color: DigitizeButton.DEFAULT_FILL_COLOR
+              }),
+              stroke: new OlStyleStroke({
+                color: DigitizeButton.DEFAULT_STROKE_COLOR
+              })
+            })
+          });
+          feature.setStyle(styleObj);
+        }
+        return styleObj;
+      }
+      case DigitizeButton.LINESTRING_DRAW_TYPE: {
+        styleObj = style || new OlStyleStyle({
+          stroke: new OlStyleStroke({
+            color: DigitizeButton.DEFAULT_STROKE_COLOR,
+            width: 2
+          })
+        });
+        feature.setStyle(styleObj);
+        return styleObj;
+      }
+      case DigitizeButton.POLYGON_DRAW_TYPE:
+      case DigitizeButton.CIRCLE_DRAW_TYPE: {
+        styleObj = style || new OlStyleStyle({
+          fill: new OlStyleFill({
+            color: DigitizeButton.DEFAULT_FILL_COLOR
+          }),
+          stroke: new OlStyleStroke({
+            color: DigitizeButton.DEFAULT_STROKE_COLOR,
+            width: 2
+          })
+        });
+        feature.setStyle(styleObj);
+        return styleObj;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+
+  /**
+   * The OL style for selected digitized features.
+   *
+   * @param {OlFeature} feature The selected feature.
+   * @param {Number} View resolution.
+   * @param {String} text Text for labeled feature (optional).
+   * @return {OlStyleStyle} The style to use.
+   */
+  getSelectedStyleFunction = (feature, res, text) => {
+
+    const {
+      selectFillColor,
+      selectStrokeColor
+    } = this.props;
+
+    return new OlStyleStyle({
+      image: new OlStyleCircle({
+        radius: 7,
+        fill: new OlStyleFill({
+          color: selectFillColor
+        }),
+        stroke: new OlStyleStroke({
+          color: selectStrokeColor
+        })
+      }),
+      text: new OlStyleText({
+        text: text ? text : '',
+        offsetX: 5,
+        offsetY: 5,
+        font: '12px sans-serif',
+        fill: new OlStyleFill({
+          color: selectFillColor
+        }),
+        stroke: new OlStyleStroke({
+          color: selectStrokeColor
+        })
+      }),
+      stroke: new OlStyleStroke({
+        color: selectStrokeColor,
+        width: 2
+      }),
+      fill: new OlStyleFill({
+        color: selectFillColor
+      })
+    });
+  }
+
+  /**
+   * Creates a correctly configured OL draw interaction depending on given
+   * drawType and adds this to the map.
+   *
+   * @param {Boolean} pressed Whether the digitize button is pressed or not.
+   * Will be used to handle active state of the draw interaction.
+   */
+  createDrawInteraction = pressed => {
+    const {
+      drawType,
+      map
+    } = this.props;
+
+    let geometryFunction;
+    let type = drawType;
+
+    if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
+      geometryFunction = OlInteractionDraw.createBox();
+      type = DigitizeButton.CIRCLE_DRAW_TYPE;
+    } else if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
+      type = DigitizeButton.POINT_DRAW_TYPE;
+      this._digitizeFeatures.on('add', this.handleTextAdding);
+    }
+
+    const drawInteraction = new OlInteractionDraw({
+      source: this.state.digitizeLayer.getSource(),
+      type: type,
+      geometryFunction: geometryFunction,
+      style: this.getDigitizeStyleFunction,
+      freehandCondition: OlEventsCondition.never
+    });
+
+    map.addInteraction(drawInteraction);
+
+    this.setState({
+      interactions: [drawInteraction]
+    }, () => {
+      drawInteraction.setActive(pressed);
+    });
+  }
+
+  /**
+   * Creates a correctly configured OL select and/or modify and/or translate
+   * interaction(s) depending on given editType and adds this/these to the map.
+   */
+  createSelectOrModifyInteraction = () => {
+    const {
+      editType,
+      map
+    } = this.props;
+
+    this._selectInteraction = new OlInteractionSelect({
+      condition: OlEventsCondition.singleClick,
+      style: this.getSelectedStyleFunction,
+      hitTolerance: DigitizeButton.HIT_TOLERANCE
+    });
+
+    if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
+      this._selectInteraction.on('select', this.onFeatureRemove);
+    } else if (editType === DigitizeButton.COPY_EDIT_TYPE) {
+      this._selectInteraction.on('select', this.onFeatureCopy);
+    }
+
+    let interactions = [this._selectInteraction];
+
+    if (editType === DigitizeButton.EDIT_EDIT_TYPE) {
+      this._selectInteraction.getFeatures().on('add', this.setSelectionStyle);
+      this._selectInteraction.getFeatures().on('remove', this.restoreFeatureStyle);
+      const edit = new OlInteractionModify({
+        features: this._selectInteraction.getFeatures(),
+        deleteCondition: OlEventsCondition.singleClick,
+        style: this.getSelectedStyleFunction,
+        pixelTolerance: 10
+      });
+
+      edit.on('modifystart', this.onModifyStart);
+
+      const translate = new OlInteractionTranslate({
+        features: this._selectInteraction.getFeatures()
+      });
+      interactions.push(edit, translate);
+    }
+
+    interactions.forEach(i => map.addInteraction(i));
+
+    map.on('pointermove', this.onPointerMove);
+
+    this.setState({interactions});
+  }
+
+
+  /**
+   * Sets selection style on feature after it was selected.
+   *
+   * @param {Event} evt 'add' event of OL select interaction.
+   */
+  setSelectionStyle = evt => {
+    let feat = evt.element;
+    this.setState({
+      originalStyle: feat.getStyle()
+    });
+
+    let text;
+    if (feat.get('isLabel')) {
+      text = feat.getStyle().getText().getText();
+    }
+    feat.setStyle(this.getSelectedStyleFunction(feat, null, text));
+  }
+
+
+  /**
+   * Restores default feature style after it was deselected.
+   *
+   * @param {Event} evt 'remove' event of OL select interaction.
+   */
+  restoreFeatureStyle = evt => {
+    let feat = evt.element;
+    let text;
+    if (feat.get('isLabel')) {
+      text = feat.getStyle().getText().getText();
+    }
+    feat.setStyle(this.state.originalStyle);
+    if (feat.get('isLabel')) {
+      feat.getStyle().getText().setText(text);
+    }
+  }
+
+  /**
+   * Listener for `select` event of OL select interaction in `Delete` mode.
+   * Removes selected feature from the vector source and map.
+   *
+   * @param {Event} evt Event containing selected feature to be removed.
+   */
+  onFeatureRemove = evt => {
+    const feat = evt.selected[0];
+    this._selectInteraction.getFeatures().remove(feat);
+    this.state.digitizeLayer.getSource().removeFeature(feat);
+    this.props.map.renderSync();
+  }
+
+  /**
+   * Listener for `select` event of OL select interaction in `Copy` mode.
+   * Creates a clone of selected feature and calls utility method to move it
+   * beside the original to avoid overlapping.
+   *
+   * @param {Event} evt Event containing selected feature to be copied.
+   */
+  onFeatureCopy = evt => {
+    const feat = evt.selected[0];
+    const copy = feat.clone();
+    copy.setStyle(feat.getStyle());
+    this._digitizeFeatures.push(copy);
+
+    AnimateUtil.moveFeature(
+      this.props.map,
+      copy,
+      500,
+      50,
+      feat.getStyle()
+    );
+  }
+
+  /**
+   * Checks if a labeled feature is being modified. If yes, opens prompt to
+   * input a new label.
+   *
+   * @param {Event} evt 'modifystart' event of OlInteractionModify.
+   *
+   */
+  onModifyStart = evt => {
+    const feature = evt.features.getArray()[0];
+    if (feature.get('isLabel')) {
+      this._digitizeTextFeature = feature;
+      this.setState({
+        showLabelPrompt: true
+      });
+    }
+  }
+
+  /**
+   * Changes state for showLabelPrompt to make modal for label input visible.
+   *
+   * @param {Event} evt Click event on adding feature to the digitize layer.
+   *
+   * @method
+   */
+  handleTextAdding = evt => {
+    this.setState({
+      showLabelPrompt: true
+    });
+    this._digitizeTextFeature = evt.element;
+    this._digitizeTextFeature.set('isLabel', true);
+  }
+
+  /**
+   * Callback function after `Ok` button of label input modal was clicked.
+   * Turns visibility of modal off and call `setTextOnFeature` method.
+   */
+  onModalLabelOk = () => {
+    this.setState({
+      showLabelPrompt: false
+    }, () => {
+      this.setTextOnFeature(this._digitizeTextFeature);
+    });
+  }
+
+  /**
+   * Callback function after `Cancel` button of label input modal was clicked.
+   * Turns visibility of modal off and removes last drawn feature from the
+   * digitize layer.
+   */
+  onModalLabelCancel = () => {
+    this.setState({
+      showLabelPrompt: false,
+      textLabel: ''
+    }, () => {
+      if (!(this.state.interactions.length > 1)) {
+        this._digitizeFeatures.remove(this._digitizeTextFeature);
+        this._digitizeTextFeature = null;
+      }
+    });
+  }
+
+  /**
+   * Sets formatted label on feature.
+   *
+   * @param {OlFeature} feat The point feature to be styled with label.
+   */
+  setTextOnFeature = feat => {
+    const label = StringUtil.stringDivider(this.state.textLabel, 16, '\n');
+    const style = this.getDigitizeStyleFunction(feat).clone();
+    style.getText().setText(label);
+    feat.setStyle(style);
+
+    this.setState({
+      textLabel: ''
+    });
+  }
+
+  /**
+   * Called if label input field value was changed. Updates state value for
+   * textLabel.
+   *
+   * @param {Event} evt Input event containing new text value to be set as
+   * textLabel.
+   */
+  onLabelChange = evt => {
+    this.setState({
+      textLabel: evt.target.value
+    });
+  }
+
+  /**
+   * Sets the cursor to `pointer` if the pointer enters a non-oqaque pixel of
+   * a hoverable layer.
+   *
+   * @param {ol.MapEvent} evt The `pointermove` event.
+   */
+  onPointerMove = evt => {
+    if (evt.dragging) {
+      return;
+    }
+
+    const {
+      map,
+      digitizeLayerName
+    } = this.props;
+
+    const pixel = map.getEventPixel(evt.originalEvent);
+
+    const hit = map.hasFeatureAtPixel(pixel, {
+      layerFilter: (l) => {
+        return l.get('name') === digitizeLayerName;
+      },
+      hitTolerance: DigitizeButton.HIT_TOLERANCE
+    });
+
+    map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+
+
+  }
+
+  /**
+   * The render function.
+   */
+  render() {
+    const {
+      className,
+      map,
+      drawType,
+      editType,
+      digitizeLayerName,
+      style,
+      selectFillColor,
+      selectStrokeColor,
+      modalPromptTitle,
+      modalPromptOkButtonText,
+      modalPromptCancelButtonText,
+      ...passThroughProps
+    } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
+    return (
+      &lt;span className="react-geo-digitize-button-wrapper">
+        &lt;ToggleButton
+          onToggle={this.onToggle}
+          className={finalClassName}
+          {...passThroughProps}
+        />
+        {
+          this.state.showLabelPrompt ?
+            &lt;Modal
+              title={modalPromptTitle}
+              okText={modalPromptOkButtonText}
+              cancelText={modalPromptCancelButtonText}
+              visible={this.state.showLabelPrompt}
+              closable={false}
+              onOk={this.onModalLabelOk}
+              onCancel={this.onModalLabelCancel}
+            >
+              &lt;Input
+                value={this.state.textLabel}
+                onChange={this.onLabelChange}
+              />
+            &lt;/Modal>
+            : null
+        }
+      &lt;/span>
+    );
+  }
+}
+
+export default DigitizeButton;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddWmsLayerEntry.html">AddWmsLayerEntry</a></li><li><a href="AddWmsPanel.html">AddWmsPanel</a></li><li><a href="AnimateUtil.html">AnimateUtil</a></li><li><a href="CapabilitiesUtil.html">CapabilitiesUtil</a></li><li><a href="CircleMenu.html">CircleMenu</a></li><li><a href="CircleMenuItem.html">CircleMenuItem</a></li><li><a href="CoordinateReferenceSystemCombo.html">CoordinateReferenceSystemCombo</a></li><li><a href="CsrfUtil.html">CsrfUtil</a></li><li><a href="DigitizeButton.html">DigitizeButton</a></li><li><a href="FeatureGrid.html">FeatureGrid</a></li><li><a href="FeatureUtil.html">FeatureUtil</a></li><li><a href="FloatingMapLogo.html">FloatingMapLogo</a></li><li><a href="LayerTransparencySlider.html">LayerTransparencySlider</a></li><li><a href="LayerTree.html">LayerTree</a></li><li><a href="LayerTreeNode.html">LayerTreeNode</a></li><li><a href="Legend.html">Legend</a></li><li><a href="MapComponent.html">MapComponent</a></li><li><a href="MappifiedComponent.html">MappifiedComponent</a></li><li><a href="MapProvider.html">MapProvider</a></li><li><a href="MapUtil.html">MapUtil</a></li><li><a href="MeasureButton.html">MeasureButton</a></li><li><a href="MeasureUtil.html">MeasureUtil</a></li><li><a href="NominatimSearch.html">NominatimSearch</a></li><li><a href="ObjectUtil.html">ObjectUtil</a></li><li><a href="Panel.html">Panel</a></li><li><a href="ProjectionUtil.html">ProjectionUtil</a></li><li><a href="PropertyGrid.html">PropertyGrid</a></li><li><a href="ScaleCombo.html">ScaleCombo</a></li><li><a href="SimpleButton.html">SimpleButton</a></li><li><a href="StringUtil.html">StringUtil</a></li><li><a href="TestUtil.html">TestUtil</a></li><li><a href="TimeSlider.html">TimeSlider</a></li><li><a href="Titlebar.html">Titlebar</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Toolbar.html">Toolbar</a></li><li><a href="UndoUtil.html">UndoUtil</a></li><li><a href="UrlUtil.html">UrlUtil</a></li><li><a href="UserChip.html">UserChip</a></li><li><a href="VisibleComponent.html">VisibleComponent</a></li><li><a href="Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absolutelyPostioned">absolutelyPostioned</a></li><li><a href="global.html#addAllLayersText">addAllLayersText</a></li><li><a href="global.html#addressdetails">addressdetails</a></li><li><a href="global.html#addSelectedLayersText">addSelectedLayersText</a></li><li><a href="global.html#alignment">alignment</a></li><li><a href="global.html#allowDeselect">allowDeselect</a></li><li><a href="global.html#animationDuration">animationDuration</a></li><li><a href="global.html#attributeBlacklist">attributeBlacklist</a></li><li><a href="global.html#attributeFilter">attributeFilter</a></li><li><a href="global.html#attributeMapping">attributeMapping</a></li><li><a href="global.html#attributeNameColumnTitle">attributeNameColumnTitle</a></li><li><a href="global.html#attributeNameColumnWidthInPercent">attributeNameColumnWidthInPercent</a></li><li><a href="global.html#attributeNames">attributeNames</a></li><li><a href="global.html#attributeValueColumnTitle">attributeValueColumnTitle</a></li><li><a href="global.html#bounded">bounded</a></li><li><a href="global.html#buttonCoords">buttonCoords</a></li><li><a href="global.html#cancelText">cancelText</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#className">className</a></li><li><a href="global.html#clickToDrawText">clickToDrawText</a></li><li><a href="global.html#closable">closable</a></li><li><a href="global.html#collapseTooltip">collapseTooltip</a></li><li><a href="global.html#collapsible">collapsible</a></li><li><a href="global.html#columnDefs">columnDefs</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#continueAngleMsg">continueAngleMsg</a></li><li><a href="global.html#continueLineMsg">continueLineMsg</a></li><li><a href="global.html#continuePolygonMsg">continuePolygonMsg</a></li><li><a href="global.html#countrycodes">countrycodes</a></li><li><a href="global.html#crsApiUrl">crsApiUrl</a></li><li><a href="global.html#decimalPlacesInTooltips">decimalPlacesInTooltips</a></li><li><a href="global.html#defaultValue">defaultValue</a></li><li><a href="global.html#diameter">diameter</a></li><li><a href="global.html#digitizeLayerName">digitizeLayerName</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#doRender">doRender</a></li><li><a href="global.html#draggable">draggable</a></li><li><a href="global.html#drawType">drawType</a></li><li><a href="global.html#editType">editType</a></li><li><a href="global.html#emptyTextPlaceholderText">emptyTextPlaceholderText</a></li><li><a href="global.html#extraParams">extraParams</a></li><li><a href="global.html#feature">feature</a></li><li><a href="global.html#features">features</a></li><li><a href="global.html#featureStyle">featureStyle</a></li><li><a href="global.html#fillColor">fillColor</a></li><li><a href="global.html#filterFunction">filterFunction</a></li><li><a href="global.html#fontIcon">fontIcon</a></li><li><a href="global.html#format">format</a></li><li><a href="global.html#formatString">formatString</a></li><li><a href="global.html#getInitials">getInitials</a></li><li><a href="global.html#getOptionsFromMap:Helperfunctiongenerate%257B@linkOption%257Dscalecomponentsbasedonanexistinginstanceof%257B@linkOl.Map%257D">getOptionsFromMap: Helper function generate {@link Option} scale components
+based on an existing instance of {@link Ol.Map}</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#highlightStyle">highlightStyle</a></li><li><a href="global.html#icon">icon</a></li><li><a href="global.html#id">id</a></li><li><a href="global.html#imageHeight">imageHeight</a></li><li><a href="global.html#imageSrc">imageSrc</a></li><li><a href="global.html#isVisibleComponent">isVisibleComponent</a></li><li><a href="global.html#layer">layer</a></li><li><a href="global.html#layerName">layerName</a></li><li><a href="global.html#layerQueryableText">layerQueryableText</a></li><li><a href="global.html#layerTextTemplateFn">layerTextTemplateFn</a></li><li><a href="global.html#limit">limit</a></li><li><a href="global.html#map">map</a></li><li><a href="global.html#mappify">mappify</a></li><li><a href="global.html#mapPromise">mapPromise</a></li><li><a href="global.html#max">max</a></li><li><a href="global.html#measureLayerName">measureLayerName</a></li><li><a href="global.html#measureTooltipCssClasses">measureTooltipCssClasses</a></li><li><a href="global.html#measureType">measureType</a></li><li><a href="global.html#min">min</a></li><li><a href="global.html#minChars">minChars</a></li><li><a href="global.html#modalPromptCancelButtonText">modalPromptCancelButtonText</a></li><li><a href="global.html#modalPromptOkButtonText">modalPromptOkButtonText</a></li><li><a href="global.html#modalPromptTitle">modalPromptTitle</a></li><li><a href="global.html#multipleDrawing">multipleDrawing</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nodeTitleRenderer">nodeTitleRenderer</a></li><li><a href="global.html#nominatimBaseUrl">nominatimBaseUrl</a></li><li><a href="global.html#onCancel">onCancel</a></li><li><a href="global.html#onChange">onChange</a></li><li><a href="global.html#onClick">onClick</a></li><li><a href="global.html#onLayerAddToMap">onLayerAddToMap</a></li><li><a href="global.html#onResize">onResize</a></li><li><a href="global.html#onResizeStart">onResizeStart</a></li><li><a href="global.html#onResizeStop">onResizeStop</a></li><li><a href="global.html#onRowClick">onRowClick</a></li><li><a href="global.html#onRowMouseOut">onRowMouseOut</a></li><li><a href="global.html#onRowMouseOver">onRowMouseOver</a></li><li><a href="global.html#onSelect">onSelect</a></li><li><a href="global.html#onSelectionChange">onSelectionChange</a></li><li><a href="global.html#onZoomLevelSelect">onZoomLevelSelect</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#parentId">parentId</a></li><li><a href="global.html#polygon_geojson">polygon_geojson</a></li><li><a href="global.html#position">position</a></li><li><a href="global.html#predefinedCrsDefinitions">predefinedCrsDefinitions</a></li><li><a href="global.html#pressed">pressed</a></li><li><a href="global.html#pushScaleOption:Helperfunctiontocreatea%257B@linkOption%257Dscalecomponentbasedonaresolutionandthe%257B@linkOl.View%257D">pushScaleOption: Helper function to create a {@link Option} scale component
+based on a resolution and the {@link Ol.View}</a></li><li><a href="global.html#radius">radius</a></li><li><a href="global.html#renderOption">renderOption</a></li><li><a href="global.html#resizeOpts">resizeOpts</a></li><li><a href="global.html#resolutions">resolutions</a></li><li><a href="global.html#rotationAngle">rotationAngle</a></li><li><a href="global.html#scales">scales</a></li><li><a href="global.html#segmentAngles">segmentAngles</a></li><li><a href="global.html#selectableRows">selectableRows</a></li><li><a href="global.html#selectedName">selectedName</a></li><li><a href="global.html#selectFillColor">selectFillColor</a></li><li><a href="global.html#selectStrokeColor">selectStrokeColor</a></li><li><a href="global.html#selectStyle">selectStyle</a></li><li><a href="global.html#setProjection">setProjection</a></li><li><a href="global.html#showMeasureInfoOnClickedPoints">showMeasureInfoOnClickedPoints</a></li><li><a href="global.html#strokeColor">strokeColor</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#syncWithMap">syncWithMap</a></li><li><a href="global.html#timeLayerAware">timeLayerAware</a></li><li><a href="global.html#title">title</a></li><li><a href="global.html#titleBarHeight">titleBarHeight</a></li><li><a href="global.html#titleText">titleText</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#tooltip">tooltip</a></li><li><a href="global.html#tooltipPlacement">tooltipPlacement</a></li><li><a href="global.html#triggerRerenderingWithInvertedVisibility">triggerRerenderingWithInvertedVisibility</a></li><li><a href="global.html#useRange">useRange</a></li><li><a href="global.html#userMenu">userMenu</a></li><li><a href="global.html#userName">userName</a></li><li><a href="global.html#value">value</a></li><li><a href="global.html#viewbox">viewbox</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#wmsLayer">wmsLayer</a></li><li><a href="global.html#wmsLayers">wmsLayers</a></li><li><a href="global.html#zoomLevel">zoomLevel</a></li><li><a href="global.html#zoomToExtent">zoomToExtent</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Feb 14 2018 07:44:27 GMT+0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
