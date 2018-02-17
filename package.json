@@ -91,7 +91,7 @@
     "babel-jest": "22.2.2",
     "babel-loader": "7.1.2",
     "babel-plugin-dynamic-import-node": "1.2.0",
-    "babel-plugin-import": "1.6.3",
+    "babel-plugin-import": "1.6.5",
     "babel-plugin-transform-es2015-modules-commonjs": "6.26.0",
     "babel-plugin-transform-import-extension-jsx-to-js": "0.1.0",
     "babel-polyfill": "6.26.0",
