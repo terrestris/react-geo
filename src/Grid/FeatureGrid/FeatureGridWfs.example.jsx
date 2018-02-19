@@ -200,7 +200,7 @@ class RemoteFeatureGrid extends React.Component {
         map={map}
         loading={loading}
         zoomToExtent={true}
-        selectableRows={true}
+        selectable={true}
         pagination={pagination}
         featureStyle={function(/*resolution*/) {
           return getFeatureStyle(this);

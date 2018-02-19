@@ -41,7 +41,7 @@ render(
         features={features}
         map={map}
         zoomToExtent={true}
-        selectableRows={true}
+        selectable={true}
         attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
         columnDefs={{
           'GEN': {

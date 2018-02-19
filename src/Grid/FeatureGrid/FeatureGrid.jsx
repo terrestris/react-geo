@@ -140,7 +140,7 @@ export class FeatureGrid extends React.Component {
      *
      * @type {Boolean}
      */
-    selectableRows: PropTypes.bool,
+    selectable: PropTypes.bool,
 
     /**
      * The default style to apply to the features.
@@ -296,7 +296,7 @@ export class FeatureGrid extends React.Component {
       map,
       features,
       featureStyle,
-      selectableRows
+      selectable
     } = this.props;
 
     if (!(isEqual(nextProps.map, map))) {
@@ -316,8 +316,8 @@ export class FeatureGrid extends React.Component {
       }
     }
 
-    if (!(isEqual(nextProps.selectableRows, selectableRows))) {
-      if (nextProps.selectableRows && map) {
+    if (!(isEqual(nextProps.selectable, selectable))) {
+      if (nextProps.selectable && map) {
         map.on('singleclick', this.onMapSingleClick);
       } else {
         this.setState({
@@ -382,7 +382,7 @@ export class FeatureGrid extends React.Component {
    */
   initMapEventHandlers = map => {
     const {
-      selectableRows
+      selectable
     } = this.props;
 
     if (!(map instanceof OlMap)) {
@@ -391,7 +391,7 @@ export class FeatureGrid extends React.Component {
 
     map.on('pointermove', this.onMapPointerMove);
 
-    if (selectableRows) {
+    if (selectable) {
       map.on('singleclick', this.onMapSingleClick);
     }
   }
@@ -503,7 +503,7 @@ export class FeatureGrid extends React.Component {
   deinitMapEventHandlers = () => {
     const {
       map,
-      selectableRows
+      selectable
     } = this.props;
 
     if (!(map instanceof OlMap)) {
@@ -512,7 +512,7 @@ export class FeatureGrid extends React.Component {
 
     map.un('pointermove', this.onMapPointerMove);
 
-    if (selectableRows) {
+    if (selectable) {
       map.un('singleclick', this.onMapSingleClick);
     }
   }
@@ -806,7 +806,7 @@ export class FeatureGrid extends React.Component {
       onRowMouseOver,
       onRowMouseOut,
       zoomToExtent,
-      selectableRows,
+      selectable,
       featureStyle,
       highlightStyle,
       selectStyle,
@@ -844,7 +844,7 @@ export class FeatureGrid extends React.Component {
           onMouseOut: () => this.onRowMouseOut(record)
         })}
         rowClassName={record => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${record.key}`}
-        rowSelection={selectableRows ? rowSelection : null}
+        rowSelection={selectable ? rowSelection : null}
         ref={ref => this._ref = ref}
         {...passThroughProps}
       >
