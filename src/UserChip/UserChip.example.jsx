@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import logo from './user.png';
+import logo from '../../assets/user.png';
 import { UserChip } from '../index.js';
 
 render(

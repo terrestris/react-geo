@@ -15,6 +15,7 @@ const config = {
     'Field/NominatimSearch/NominatimSearch': './src/Field/NominatimSearch/NominatimSearch.example.jsx',
     'Field/ScaleCombo/ScaleCombo': './src/Field/ScaleCombo/ScaleCombo.example.jsx',
     'Grid/FeatureGrid/FeatureGrid': './src/Grid/FeatureGrid/FeatureGrid.example.jsx',
+    'Grid/FeatureGrid/FeatureGridWfs': './src/Grid/FeatureGrid/FeatureGridWfs.example.jsx',
     'Grid/PropertyGrid/PropertyGrid': './src/Grid/PropertyGrid/PropertyGrid.example.jsx',
     'Map/FloatingMapLogo/FloatingMapLogo': './src/Map/FloatingMapLogo/FloatingMapLogo.example.jsx',
     'Map/MapComponent/MapComponent': './src/Map/MapComponent/MapComponent.example.jsx',
@@ -57,14 +58,11 @@ const config = {
     }, {
       test: /\.(jpe?g|png|gif|ico)$/i,
       loaders: [{
-        loader: 'file-loader?name=img/[name].[ext]',
+        loader: 'url-loader',
         options: {
-          outputPath: 'resources/',
-          name: '[hash].[ext]',
-          publicPath: '/react-geo/examples/'
+          limit: 0
         }
-      },
-      'image-webpack-loader'
+      }
       ]
     }, {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
