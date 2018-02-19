@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>FeatureGrid WFS example</title>
+  <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>/*global hljs*/ hljs.initHighlightingOnLoad();</script>
+</head>
+<style>
+body.example {
+  padding: 1.5em;
+}
+.example-block {
+  padding: 2em;
+}
+.example-block > span {
+  margin-right: 10px;
+}
+</style>
+
+<body class="example">
+  <h2>FeatureGrid WFS example</h2>
+  <div id="exampleContainer" class="app"></div>
+  <p>This example demonstrates the usage of the FeatureGrid with a remote feature
+source (<code>WFS GetFeature</code>) including remote paging, sorting and filtering.</p>
+<p>Sorting and filtering is enabled for the column <code>name</code>. To sort the current
+features in the table (and so the current features in the map) just press one of
+the sorter icons for sorting ascending (arrow up) or descending (arrow down). To
+filter the features open the filter menu by clicking on the filter icon and enter
+a text to filter the featers by, e.g. <code>Westfalen</code>. To reset the filtering start
+a new search with no input text.</p>
+
+  <pre>
+    <code class="javascript">/* eslint-disable require-jsdoc */
+import React from &#x27;react&#x27;;
+import PropTypes from &#x27;prop-types&#x27;;
+import { render } from &#x27;react-dom&#x27;;
+import OlMap from &#x27;ol/map&#x27;;
+import OlView from &#x27;ol/view&#x27;;
+import OlLayerTile from &#x27;ol/layer/tile&#x27;;
+import OlSourceOsm from &#x27;ol/source/osm&#x27;;
+import OlProj from &#x27;ol/proj&#x27;;
+import OlFormatGeoJson from &#x27;ol/format/geojson&#x27;;
+import OlStyle from &#x27;ol/style/style&#x27;;
+import OlStyleIcon from &#x27;ol/style/icon&#x27;;
+import OlStyleText from &#x27;ol/style/text&#x27;;
+import OlStyleFill from &#x27;ol/style/fill&#x27;;
+import OlStyleStroke from &#x27;ol/style/stroke&#x27;;
+import {
+  Input,
+  message
+} from &#x27;antd&#x27;;
+
+import {
+  FeatureGrid,
+  UrlUtil
+} from &#x27;@terrestris/react-geo&#x27;;
+
+// Credits to Maps Icons Collection https://mapicons.mapsmarker.com.
+import mapMarker from &#x27;../../../assets/bus-map-marker.png&#x27;;
+
+class RemoteFeatureGrid extends React.Component {
+
+  static propTypes &#x3D; {
+    map: PropTypes.instanceOf(OlMap),
+    url: PropTypes.string
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state &#x3D; {
+      loading: false,
+      features: [],
+      pagination: {
+        pageSize: 10,
+        current: 1
+      },
+      sorter: {
+        field: &#x27;name&#x27;,
+        order: &#x27;ascend&#x27;
+      },
+      nameFilterText: &#x27;&#x27;,
+      filterDropdownVisible: false
+    };
+  }
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData &#x3D; () &#x3D;&gt; {
+    const {
+      url
+    } &#x3D; this.props;
+
+    const {
+      pagination,
+      sorter,
+      nameFilterText
+    } &#x3D; this.state;
+
+    const format &#x3D; new OlFormatGeoJson();
+
+    this.setState({
+      loading: true
+    });
+
+    const queryParams &#x3D; {
+      SERVICE: &#x27;WFS&#x27;,
+      VERSION: &#x27;1.1.0&#x27;,
+      REQUEST: &#x27;GetFeature&#x27;,
+      TYPENAME: &#x27;osm:osm-busstops&#x27;,
+      MAXFEATURES: pagination.pageSize,
+      STARTINDEX: (pagination.current - 1) * pagination.pageSize,
+      OUTPUTFORMAT: &#x27;application/json&#x27;,
+      CQL_FILTER: &#x27;BBOX(geometry, 814276,6697003,846762,6727578)&#x27;
+    };
+
+    const sortDir &#x3D; sorter.order &#x3D;&#x3D;&#x3D; &#x27;ascend&#x27; ? &#x27; A&#x27; : &#x27; D&#x27;;
+    if (sorter.field) {
+      queryParams.SORTBY &#x3D; &#x60;${sorter.field}${sortDir}&#x60;;
+    }
+
+    if (nameFilterText) {
+      queryParams.CQL_FILTER +&#x3D; &#x60; AND name like &#x27;%${nameFilterText}%&#x27;&#x60;;
+    }
+
+    const query &#x3D; UrlUtil.objectToRequestString(queryParams);
+
+    fetch(&#x60;${url}?${query}&#x60;)
+      .then(response &#x3D;&gt; response.json())
+      .then(response &#x3D;&gt; {
+        this.setState({
+          loading: false
+        });
+
+        const features &#x3D; format.readFeatures(response);
+
+        if (features.length &#x3D;&#x3D;&#x3D; 0) {
+          message.warning(&#x27;No matches found!&#x27;);
+          this.setState({
+            nameFilterText: &#x27;&#x27;
+          });
+          return;
+        }
+
+        this.setState({
+          features: features,
+          pagination: {
+            ...pagination,
+            total: response.totalFeatures
+          }
+        });
+      })
+      .catch(() &#x3D;&gt; {
+        this.setState({
+          loading: false
+        });
+        message.error(&#x27;Could not fetch data from remote source!&#x27;);
+      });
+  }
+
+  onTableChange &#x3D; (pagination, filters, sorter) &#x3D;&gt; {
+    this.setState({
+      sorter: {
+        ...this.state.sorter,
+        ...sorter
+      },
+      pagination: {
+        ...this.state.pagination,
+        current: pagination.current
+      },
+    }, () &#x3D;&gt; this.fetchData());
+  }
+
+  onNameFilterTextChange &#x3D; evt &#x3D;&gt; {
+    this.setState({
+      nameFilterText: evt.target.value
+    });
+  }
+
+  onNameFilterSearch &#x3D; () &#x3D;&gt; {
+    this.setState({
+      pagination: {
+        ...this.state.pagination,
+        current: 1
+      },
+      filterDropdownVisible: false
+    }, () &#x3D;&gt; this.fetchData());
+  }
+
+  getFeatureStyle &#x3D; (feature, color) &#x3D;&gt; {
+    return new OlStyle({
+      image: new OlStyleIcon(({
+        anchor: [0.5, 1.1],
+        anchorXUnits: &#x27;fraction&#x27;,
+        anchorYUnits: &#x27;fraction&#x27;,
+        src: mapMarker,
+        color: color
+      })),
+      text: new OlStyleText({
+        text: feature.get(&#x27;name&#x27;),
+        fill: new OlStyleFill({
+          color: &#x27;rgb(0, 0, 0)&#x27;
+        }),
+        stroke: new OlStyleStroke({
+          color: &#x27;rgb(255, 255, 255)&#x27;,
+          width: 2
+        })
+      })
+    });
+  }
+
+  render() {
+    const {
+      map
+    } &#x3D; this.props;
+
+    const {
+      loading,
+      features,
+      pagination,
+      nameFilterText,
+      filterDropdownVisible,
+    } &#x3D; this.state;
+
+    const getFeatureStyle &#x3D; this.getFeatureStyle;
+
+    return (
+      &lt;FeatureGrid
+        features&#x3D;{features}
+        map&#x3D;{map}
+        loading&#x3D;{loading}
+        zoomToExtent&#x3D;{true}
+        selectable&#x3D;{true}
+        pagination&#x3D;{pagination}
+        featureStyle&#x3D;{function(/*resolution*/) {
+          return getFeatureStyle(this);
+        }}
+        highlightStyle&#x3D;{function(/*resolution*/) {
+          return getFeatureStyle(this, &#x27;rgb(230, 247, 255)&#x27;);
+        }}
+        selectStyle&#x3D;{function(/*resolution*/) {
+          return getFeatureStyle(this, &#x27;rgb(24, 144, 255)&#x27;);
+        }}
+        onChange&#x3D;{this.onTableChange}
+        columnDefs&#x3D;{{
+          &#x27;name&#x27;: {
+            sorter: true,
+            filterDropdown: (
+              &lt;div style&#x3D;{{
+                padding: &#x27;8px&#x27;,
+                borderRadius: &#x27;6px&#x27;,
+                background: &#x27;#fff&#x27;,
+                boxShadow: &#x27;0 1px 6px rgba(0, 0, 0, .2)&#x27;
+              }}&gt;
+                &lt;Input
+                  ref&#x3D;{el &#x3D;&gt; this.searchInput &#x3D; el}
+                  placeholder&#x3D;&quot;Search name&quot;
+                  value&#x3D;{nameFilterText}
+                  onChange&#x3D;{this.onNameFilterTextChange}
+                  onPressEnter&#x3D;{this.onNameFilterSearch}
+                /&gt;
+              &lt;/div&gt;
+            ),
+            filterDropdownVisible: filterDropdownVisible,
+            onFilterDropdownVisibleChange: visible &#x3D;&gt; {
+              this.setState({
+                filterDropdownVisible: visible
+              }, () &#x3D;&gt; {
+                this.searchInput.focus();
+              });
+            }
+          }
+        }}
+      /&gt;
+    );
+  }
+}
+
+const map &#x3D; new OlMap({
+  layers: [
+    new OlLayerTile({
+      name: &#x27;OSM&#x27;,
+      source: new OlSourceOsm()
+    })
+  ],
+  view: new OlView({
+    center: OlProj.fromLonLat([37.40570, 8.81566]),
+    zoom: 4
+  })
+});
+
+render(
+  &lt;div&gt;
+    &lt;div
+      className&#x3D;&quot;example-block&quot;
+    &gt;
+      &lt;RemoteFeatureGrid
+        map&#x3D;{map}
+        url&#x3D;&#x27;https://ows.terrestris.de/geoserver/osm/wfs&#x27;
+      /&gt;
+    &lt;/div&gt;
+    &lt;div
+      id&#x3D;&quot;map&quot;
+      style&#x3D;{{
+        height: &#x27;400px&#x27;
+      }}
+    /&gt;
+  &lt;/div&gt;,
+
+  // Target
+  document.getElementById(&#x27;exampleContainer&#x27;),
+
+  // Callback
+  () &#x3D;&gt; {
+    map.setTarget(&#x27;map&#x27;);
+  }
+);
+</code>
+  </pre>
+  <script src="../../commons.js"></script>
+  <script src="FeatureGridWfs.js"></script>
+</body>
+</html>

@@ -71,15 +71,11 @@ render(
         features&#x3D;{features}
         map&#x3D;{map}
         zoomToExtent&#x3D;{true}
-        selectableRows&#x3D;{true}
+        selectable&#x3D;{true}
         attributeBlacklist&#x3D;{[&#x27;gml_id&#x27;, &#x27;USE&#x27;, &#x27;RS&#x27;, &#x27;RS_ALT&#x27;]}
-        attributeMapping&#x3D;{{
-          &#x27;GEN&#x27;: &#x27;Name&#x27;,
-          &#x27;SHAPE_LENG&#x27;: &#x27;Length&#x27;,
-          &#x27;SHAPE_AREA&#x27;: &#x27;Area&#x27;
-        }}
         columnDefs&#x3D;{{
           &#x27;GEN&#x27;: {
+            title: &#x27;Name&#x27;,
             render: nameColumnRenderer,
             sorter: (a, b) &#x3D;&gt; {
               const nameA &#x3D; a.GEN.toUpperCase();
@@ -96,9 +92,11 @@ render(
             defaultSortOrder: &#x27;ascend&#x27;
           },
           &#x27;SHAPE_LENG&#x27;: {
+            title: &#x27;Length&#x27;,
             render: val &#x3D;&gt; Math.round(val)
           },
           &#x27;SHAPE_AREA&#x27;: {
+            title: &#x27;Area&#x27;,
             render: val &#x3D;&gt; Math.round(val)
           }
         }}

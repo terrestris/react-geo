@@ -4,6 +4,8 @@ import OlView from 'ol/view';
 import OlMap from 'ol/map';
 import OlSourceVector from 'ol/source/vector';
 import OlLayerVector from 'ol/layer/vector';
+import OlFeature from 'ol/feature';
+import OlGeomPoint from 'ol/geom/point';
 import OlPointerPointerEvent from 'ol/pointer/pointerevent';
 import OlMapBrowserPointerEvent from 'ol/mapbrowserpointerevent';
 
@@ -144,6 +146,28 @@ export class TestUtil {
     return layer;
   }
 
+  /**
+   * Returns a point feature with a random position.
+   * @type {Object}
+   */
+  static generatePointFeature = ((props = {
+    ATTR_1: Math.random() * 100,
+    ATTR_2: 'Borsigplatz 9',
+    ATTR_3: 'Dortmund'
+  }) => {
+    const coords = [
+      Math.floor(Math.random() * 180) - 180,
+      Math.floor(Math.random() * 90) - 90
+    ];
+    const geom = new OlGeomPoint(coords);
+    const feat = new OlFeature({
+      geometry: geom
+    });
+
+    feat.setProperties(props);
+
+    return feat;
+  })
 }
 
 export default TestUtil;
