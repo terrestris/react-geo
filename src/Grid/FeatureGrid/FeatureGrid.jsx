@@ -27,14 +27,14 @@ import './FeatureGrid.less';
 export class FeatureGrid extends React.Component {
 
   /**
-   * The className added to add to this component.
+   * The class name to add to this component.
    * @type {String}
    * @private
    */
   _className = 'react-geo-feature-grid'
 
   /**
-   * The className to add to the each table row.
+   * The class name to add to each table row.
    * @type {String}
    * @private
    */
@@ -592,7 +592,7 @@ export class FeatureGrid extends React.Component {
   /**
    * Returns the correspondig feature for the given table row key.
    *
-   * @param {Number} key The key to get the obtain the feature from.
+   * @param {Number} key The row key to obtain the feature from.
    * @return {ol.Feature} The feature candidate.
    */
   getFeatureFromRowKey = key => {
