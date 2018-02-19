@@ -372,4 +372,39 @@ describe('<FeatureGrid />', () => {
     mapUnSpy.mockRestore();
   });
 
+  it('sets the highlight style to any hovered feature', () => {
+    const getFeaturesAtPixelSpy = jest.spyOn(map, 'getFeaturesAtPixel')
+      .mockImplementation(() => [features[0]]);
+
+    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
+
+    wrapper.instance().onMapPointerMove({
+      pixel: [19, 19]
+    });
+
+    expect(features[0].getStyle()).toEqual(wrapper.prop('highlightStyle'));
+
+    expect(features[1].getStyle()).toEqual(wrapper.prop('featureStyle'));
+    expect(features[2].getStyle()).toEqual(wrapper.prop('featureStyle'));
+
+    getFeaturesAtPixelSpy.mockReset();
+    getFeaturesAtPixelSpy.mockRestore();
+  });
+
+  it('sets the select style to any clicked/selected feature', () => {
+    const getFeaturesAtPixelSpy = jest.spyOn(map, 'getFeaturesAtPixel')
+      .mockImplementation(() => [features[0]]);
+
+    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
+
+    wrapper.instance().onMapSingleClick({
+      pixel: [19, 19]
+    });
+
+    expect(features[0].getStyle()).toEqual(wrapper.prop('selectStyle'));
+
+    getFeaturesAtPixelSpy.mockReset();
+    getFeaturesAtPixelSpy.mockRestore();
+  });
+
 });
