@@ -16,6 +16,8 @@ import OlLayerVector from 'ol/layer/vector';
 import OlGeomGeometry from 'ol/geom/geometry';
 import OlGeomGeometryCollection from 'ol/geom/geometrycollection';
 
+import { MapUtil } from '../../index';
+
 import './FeatureGrid.less';
 
 /**
@@ -353,6 +355,10 @@ export class FeatureGrid extends React.Component {
     } = this.props;
 
     if (!(map instanceof OlMap)) {
+      return;
+    }
+
+    if (MapUtil.getLayerByName(map, layerName)) {
       return;
     }
 

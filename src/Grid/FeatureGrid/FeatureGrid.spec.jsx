@@ -51,6 +51,19 @@ describe('<FeatureGrid />', () => {
     expect(wrapperWithoutMap.instance()._layer).toBeNull();
   });
 
+  it('initializes a vector layer if it\'s not already added to the map only', () => {
+    const wrapper = TestUtil.mountComponent(FeatureGrid, {map});
+
+    wrapper.instance().initVectorLayer(map);
+
+    const layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === wrapper.prop('layerName'));
+
+    expect(layerCand).toHaveLength(1);
+    expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
+    expect(wrapper.instance()._source).toBeInstanceOf(OlSourceVector);
+    expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
+  });
+
   it('sets the given featureStyle to each feature in the given features array', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
 
