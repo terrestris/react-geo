@@ -81,7 +81,7 @@
     "react-i18next": "7.3.5",
     "react-rnd": "7.3.0",
     "url-parse": "1.2.0",
-    "validator": "9.4.0"
+    "validator": "9.4.1"
   },
   "devDependencies": {
     "antd": "3.2.1",
