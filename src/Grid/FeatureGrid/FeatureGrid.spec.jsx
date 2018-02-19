@@ -74,7 +74,7 @@ describe('<FeatureGrid />', () => {
   it('registers a pointermove and singleclick map event handler on mount', () => {
     const mapOnSpy = jest.spyOn(map, 'on');
 
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, selectableRows: true});
+    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, selectable: true});
 
     const onPointerMove = wrapper.instance().onMapPointerMove;
     const onMapSingleClick = wrapper.instance().onMapSingleClick;
@@ -88,7 +88,7 @@ describe('<FeatureGrid />', () => {
   });
 
   it('unregisters a pointermove and singleclick map event handler on unmount', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, selectableRows: true});
+    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, selectable: true});
 
     const mapUnSpy = jest.spyOn(map, 'un');
     const onPointerMove = wrapper.instance().onMapPointerMove;
@@ -338,7 +338,7 @@ describe('<FeatureGrid />', () => {
     const mapOnSpy = jest.spyOn(map, 'on');
 
     wrapper.setProps({
-      selectableRows: true
+      selectable: true
     });
 
     expect(mapOnSpy).toHaveBeenCalled();
@@ -349,7 +349,7 @@ describe('<FeatureGrid />', () => {
     const mapUnSpy = jest.spyOn(map, 'un');
 
     wrapper.setProps({
-      selectableRows: false
+      selectable: false
     });
 
     expect(mapUnSpy).toHaveBeenCalled();
