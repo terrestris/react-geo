@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isFunction } from 'lodash';
 
+import ToggleButton from '../ToggleButton/ToggleButton.jsx';
+
 import './ToggleGroup.less';
 
 /**
@@ -163,6 +165,10 @@ class ToggleGroup extends React.Component {
       : 'horizontal-toggle-group';
 
     const childrenWithProps = React.Children.map(children, (child) => {
+      // Only set pressed state for ToggleButtons
+      if (!(child.type === ToggleButton)) {
+        return child;
+      }
       return React.cloneElement(child, {
         pressed: this.state.selectedName === child.props.name
       });
