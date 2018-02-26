@@ -154,21 +154,21 @@ describe('<FeatureGrid />', () => {
 
     const got = wrapper.instance().getTableData();
 
-    const exp = [{
+    const expRows = [{
       id: 1,
-      key: 0,
       name: 'Shinji Kagawa'
     }, {
       id: 2,
-      key: 1,
       name: 'Marco Reus'
     }, {
       id: 3,
-      key: 2,
       name: 'Roman Weidenfeller'
     }];
 
-    expect(got).toEqual(exp);
+    expRows.forEach((row, idx) => {
+      expect(row.id).toEqual(got[idx].id);
+      expect(row.name).toEqual(got[idx].name);
+    });
   });
 
   it('fits the map to show all given features', () => {
@@ -198,14 +198,13 @@ describe('<FeatureGrid />', () => {
 
   it('unhighlight all given features, but takes selection into account', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-    const selectedFeatureIdx = 0;
+    const selectedFeatureUid = features[0].ol_uid;
 
-    wrapper.setState({selectedRowKeys: [selectedFeatureIdx]});
-
+    wrapper.setState({selectedRowKeys: [selectedFeatureUid]});
     wrapper.instance().unhighlightFeatures(features);
 
-    features.forEach((feature, idx) => {
-      if (idx === selectedFeatureIdx) {
+    features.forEach(feature => {
+      if (feature.ol_uid === selectedFeatureUid) {
         expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
       } else {
         expect(feature.getStyle()).toEqual(wrapper.prop('featureStyle'));
@@ -235,12 +234,12 @@ describe('<FeatureGrid />', () => {
 
   it('sets the appropriate select style to a feature if selection in grid changes', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-    const selectedRowKeys = [0, 1];
+    const selectedRowKeys = [features[0].ol_uid, features[1].ol_uid];
 
     wrapper.instance().onSelectChange(selectedRowKeys);
 
-    features.forEach((feature, idx) => {
-      if (selectedRowKeys.includes(idx)) {
+    features.forEach(feature => {
+      if (selectedRowKeys.includes(feature.ol_uid)) {
         expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
       } else {
         expect(feature.getStyle()).toEqual(wrapper.prop('featureStyle'));
@@ -252,7 +251,7 @@ describe('<FeatureGrid />', () => {
 
   it('returns the feature for a given row key', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-    const rowKey = 1;
+    const rowKey = features[1].ol_uid;
 
     expect(wrapper.instance().getFeatureFromRowKey(rowKey)).toEqual(features[1]);
   });
@@ -261,7 +260,7 @@ describe('<FeatureGrid />', () => {
     const onRowClickSpy = jest.fn();
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features, onRowClick: onRowClickSpy});
     const clickedRow = {
-      key: 0
+      key: features[0].ol_uid
     };
     const zoomToFeaturesSpy = jest.spyOn(wrapper.instance(), 'zoomToFeatures');
 
@@ -281,7 +280,7 @@ describe('<FeatureGrid />', () => {
     const onRowMouseOverSpy = jest.fn();
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features, onRowMouseOver: onRowMouseOverSpy});
     const clickedRow = {
-      key: 0
+      key: features[0].ol_uid
     };
     const highlightFeaturesSpy = jest.spyOn(wrapper.instance(), 'highlightFeatures');
 
@@ -301,7 +300,7 @@ describe('<FeatureGrid />', () => {
     const onRowMouseOutSpy = jest.fn();
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features, onRowMouseOut: onRowMouseOutSpy});
     const clickedRow = {
-      key: 0
+      key: features[0].ol_uid
     };
     const unhighlightFeaturesSpy = jest.spyOn(wrapper.instance(), 'unhighlightFeatures');
 
