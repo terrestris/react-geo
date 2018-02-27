@@ -20,6 +20,7 @@ import FeatureGrid from './Grid/FeatureGrid/FeatureGrid.jsx';
 import PropertyGrid from './Grid/PropertyGrid/PropertyGrid.jsx';
 import TimeSlider from './Slider/TimeSlider.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
+import UploadButton from './Button/UploadButton/UploadButton.jsx';
 import UserChip from './UserChip/UserChip.jsx';
 import CircleMenu from './CircleMenu/CircleMenu.jsx';
 import Window from './Window/Window.jsx';
@@ -62,6 +63,7 @@ export {
   PropertyGrid,
   Titlebar,
   Toolbar,
+  UploadButton,
   UserChip,
   Window,
   CapabilitiesUtil,
