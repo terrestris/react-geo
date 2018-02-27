@@ -188,7 +188,16 @@ export class FeatureGrid extends React.Component {
      * The children to render.
      * @type {Element}
      */
-    children: PropTypes.element
+    children: PropTypes.element,
+
+    /**
+     * A Function that creates the rowkey from the given feature.
+     * Receives the feature as property.
+     * Default is: feature => feature.ol_uid
+     *
+     * @type {Function}
+     */
+    keyFunction: PropTypes.func
   };
 
   /**
@@ -256,7 +265,8 @@ export class FeatureGrid extends React.Component {
       })
     }),
     layerName: 'react-geo-feature-grid-layer',
-    columnDefs: {}
+    columnDefs: {},
+    keyFunction: feature => feature.ol_uid
   }
 
   /**
@@ -425,13 +435,13 @@ export class FeatureGrid extends React.Component {
     }) || [];
 
     features.forEach(feature => {
-      const key = features.indexOf(feature);
+      const key = this.props.keyFunction(feature);
       const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
       const el = document.querySelectorAll(sel)[0];
       if (el) {
         el.classList.remove(this._rowHoverClassName);
       }
-      if (selectedRowKeys.includes(features.indexOf(feature))) {
+      if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
         feature.setStyle(featureStyle);
@@ -439,7 +449,7 @@ export class FeatureGrid extends React.Component {
     });
 
     selectedFeatures.forEach(feature => {
-      const key = features.indexOf(feature);
+      const key = this.props.keyFunction(feature);
       const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
       const el = document.querySelectorAll(sel)[0];
       if (el) {
@@ -457,7 +467,6 @@ export class FeatureGrid extends React.Component {
   onMapSingleClick = olEvt => {
     const {
       map,
-      features,
       featureStyle,
       selectStyle
     } = this.props;
@@ -473,12 +482,12 @@ export class FeatureGrid extends React.Component {
     let rowKeys = [...selectedRowKeys];
 
     selectedFeatures.forEach(selectedFeature => {
-      const featId = features.indexOf(selectedFeature);
-      if (rowKeys.includes(featId)) {
-        rowKeys = rowKeys.filter(rowKey => rowKey !== featId);
+      const key = this.props.keyFunction(selectedFeature);
+      if (rowKeys.includes(key)) {
+        rowKeys = rowKeys.filter(rowKey => rowKey !== key);
         selectedFeature.setStyle(featureStyle);
       } else {
-        rowKeys.push(featId);
+        rowKeys.push(key);
         selectedFeature.setStyle(selectStyle);
       }
     });
@@ -577,7 +586,7 @@ export class FeatureGrid extends React.Component {
 
     let data = [];
 
-    features.forEach((feature, idx)=> {
+    features.forEach(feature => {
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeomGeometry))
@@ -587,7 +596,7 @@ export class FeatureGrid extends React.Component {
         }, {});
 
       data.push({
-        key: idx,
+        key: this.props.keyFunction(feature),
         ...filtered
       });
     });
@@ -603,10 +612,11 @@ export class FeatureGrid extends React.Component {
    */
   getFeatureFromRowKey = key => {
     const {
-      features
+      features,
+      keyFunction
     } = this.props;
 
-    const feature = features.filter((feature, idx) => idx === key);
+    const feature = features.filter(feature => keyFunction(feature) === key);
 
     return feature[0];
   }
@@ -720,7 +730,6 @@ export class FeatureGrid extends React.Component {
   unhighlightFeatures = unhighlightFeatures => {
     const {
       map,
-      features,
       featureStyle,
       selectStyle
     } = this.props;
@@ -734,7 +743,8 @@ export class FeatureGrid extends React.Component {
     }
 
     unhighlightFeatures.forEach(feature => {
-      if (selectedRowKeys.includes(features.indexOf(feature))) {
+      const key = this.props.keyFunction(feature);
+      if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
         feature.setStyle(featureStyle);
