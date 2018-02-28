@@ -307,7 +307,6 @@ export class FeatureGrid extends React.Component {
     const {
       map,
       features,
-      featureStyle,
       selectable
     } = this.props;
 
@@ -320,7 +319,6 @@ export class FeatureGrid extends React.Component {
       if (this._source) {
         this._source.clear();
         this._source.addFeatures(nextProps.features);
-        this._source.forEachFeature(feature => feature.setStyle(featureStyle));
       }
 
       if (nextProps.zoomToExtent) {
@@ -378,10 +376,9 @@ export class FeatureGrid extends React.Component {
 
     const layer = new OlLayerVector({
       name: layerName,
-      source: source
+      source: source,
+      style: featureStyle
     });
-
-    source.forEachFeature(feature => feature.setStyle(featureStyle));
 
     map.addLayer(layer);
 
@@ -421,7 +418,6 @@ export class FeatureGrid extends React.Component {
     const {
       map,
       features,
-      featureStyle,
       highlightStyle,
       selectStyle
     } = this.props;
@@ -444,7 +440,7 @@ export class FeatureGrid extends React.Component {
       if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
-        feature.setStyle(featureStyle);
+        feature.setStyle(null);
       }
     });
 
@@ -467,7 +463,6 @@ export class FeatureGrid extends React.Component {
   onMapSingleClick = olEvt => {
     const {
       map,
-      featureStyle,
       selectStyle
     } = this.props;
 
@@ -485,7 +480,7 @@ export class FeatureGrid extends React.Component {
       const key = this.props.keyFunction(selectedFeature);
       if (rowKeys.includes(key)) {
         rowKeys = rowKeys.filter(rowKey => rowKey !== key);
-        selectedFeature.setStyle(featureStyle);
+        selectedFeature.setStyle(null);
       } else {
         rowKeys.push(key);
         selectedFeature.setStyle(selectStyle);
@@ -730,7 +725,6 @@ export class FeatureGrid extends React.Component {
   unhighlightFeatures = unhighlightFeatures => {
     const {
       map,
-      featureStyle,
       selectStyle
     } = this.props;
 
@@ -747,7 +741,7 @@ export class FeatureGrid extends React.Component {
       if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
-        feature.setStyle(featureStyle);
+        feature.setStyle(null);
       }
     });
   }
@@ -776,15 +770,14 @@ export class FeatureGrid extends React.Component {
   resetFeatureStyles = () => {
     const {
       map,
-      features,
-      featureStyle
+      features
     } = this.props;
 
     if (!(map instanceof OlMap)) {
       return;
     }
 
-    features.forEach(feature => feature.setStyle(featureStyle));
+    features.forEach(feature => feature.setStyle(null));
   }
 
   /**
