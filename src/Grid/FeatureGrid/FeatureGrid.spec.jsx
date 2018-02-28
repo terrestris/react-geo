@@ -64,12 +64,9 @@ describe('<FeatureGrid />', () => {
     expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
   });
 
-  it('sets the given featureStyle to each feature in the given features array', () => {
+  it('sets the given featureStyle to the featurelayer', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-
-    features.forEach(feature => {
-      expect(feature.getStyle()).toEqual(wrapper.prop('featureStyle'));
-    });
+    expect(wrapper.instance()._layer.getStyle()).toEqual(wrapper.prop('featureStyle'));
   });
 
   it('removes the vector layer from the map on unmount', () => {
@@ -207,7 +204,7 @@ describe('<FeatureGrid />', () => {
       if (feature.ol_uid === selectedFeatureUid) {
         expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
       } else {
-        expect(feature.getStyle()).toEqual(wrapper.prop('featureStyle'));
+        expect(feature.getStyle()).toBe(null);
       }
     });
   });
@@ -228,7 +225,7 @@ describe('<FeatureGrid />', () => {
     wrapper.instance().resetFeatureStyles(features);
 
     features.forEach(feature => {
-      expect(feature.getStyle()).toEqual(wrapper.prop('featureStyle'));
+      expect(feature.getStyle()).toBe(null);
     });
   });
 
@@ -242,7 +239,7 @@ describe('<FeatureGrid />', () => {
       if (selectedRowKeys.includes(feature.ol_uid)) {
         expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
       } else {
-        expect(feature.getStyle()).toEqual(wrapper.prop('featureStyle'));
+        expect(feature.getStyle()).toBe(null);
       }
     });
 
@@ -339,9 +336,6 @@ describe('<FeatureGrid />', () => {
     });
 
     expect(wrapper.instance()._source.getFeatures()).toEqual(features);
-    features.forEach(feature => {
-      expect(feature.getStyle()).toEqual(wrapper.prop('featureStyle'));
-    });
     expect(zoomToFeaturesSpy).toHaveBeenCalled();
 
     zoomToFeaturesSpy.mockReset();
@@ -383,8 +377,8 @@ describe('<FeatureGrid />', () => {
 
     expect(features[0].getStyle()).toEqual(wrapper.prop('highlightStyle'));
 
-    expect(features[1].getStyle()).toEqual(wrapper.prop('featureStyle'));
-    expect(features[2].getStyle()).toEqual(wrapper.prop('featureStyle'));
+    expect(features[1].getStyle()).toEqual(null);
+    expect(features[2].getStyle()).toEqual(null);
 
     getFeaturesAtPixelSpy.mockReset();
     getFeaturesAtPixelSpy.mockRestore();
