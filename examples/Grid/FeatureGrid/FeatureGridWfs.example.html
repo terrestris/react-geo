@@ -204,7 +204,7 @@ class RemoteFeatureGrid extends React.Component {
         color: color
       })),
       text: new OlStyleText({
-        text: feature.get(&#x27;name&#x27;),
+        text: feature ? feature.get(&#x27;name&#x27;) : &#x27;&#x27;,
         fill: new OlStyleFill({
           color: &#x27;rgb(0, 0, 0)&#x27;
         }),
