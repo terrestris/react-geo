@@ -8,8 +8,8 @@ import  {
 import './UploadButton.less';
 
 /**
- * Class representating an upload Button. Can be used as Wrapper if children
- * are given. Otherwise a Simplebutton will be rendered (be aware that passing).
+ * Class representating an upload button. Can be used as wrapper if children
+ * are given. Otherwise a Simplebutton will be rendered.
  *
  * To use a text with the UploadButton provide a SimpleButton as children.
  *
@@ -33,18 +33,20 @@ class UploadButton extends React.Component {
     className: PropTypes.string,
 
     /**
-     * The className which should be added.
-     * @type {String}
+     * The children.
+     * @type {Object}
      */
     children: PropTypes.node,
 
     /**
      * The onChange handler for the upload input field.
+     * @type {Function}
      */
     onChange: PropTypes.func,
 
     /**
      * Object of props that should be passed to the input field.
+     * @type {Object}
      */
     inputProps: PropTypes.object
   }
