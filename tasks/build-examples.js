@@ -9,6 +9,7 @@ const srcDir = path.join(__dirname, '..', 'src');
 const destDir = path.join(__dirname, '..', 'build', 'examples');
 const tplDir = path.join(__dirname, '..', 'example-templates');
 
+const vendorsFileName = 'vendors.js';
 const commonsFileName = 'commons.js';
 
 /**
@@ -58,6 +59,7 @@ function augmentExamples(files) {
 
         file.js = {
           filename: jsFilename,
+          vendors: `${relativeCommonsFilePath}${vendorsFileName}`,
           commons: `${relativeCommonsFilePath}${commonsFileName}`,
           transpiled: `${id}.js`,
           source: jsSource

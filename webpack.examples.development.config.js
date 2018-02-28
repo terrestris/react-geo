@@ -4,7 +4,7 @@ const WebpackShellPlugin = require('webpack-shell-plugin');
 const examplesCommonConfig = require('./webpack.examples.common.config.js');
 
 module.exports = merge(examplesCommonConfig, {
-  devtool: 'eval-source-map',
+  mode: 'development',
   devServer: {
     contentBase: './build/examples/',
     inline: true,
@@ -18,5 +18,5 @@ module.exports = merge(examplesCommonConfig, {
       dev: false,
       onBuildStart: ['node ./tasks/build-examples.js']
     })
-  ],
+  ]
 });
