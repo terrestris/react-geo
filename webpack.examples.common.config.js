@@ -37,28 +37,26 @@ const config = {
   },
 
   module: {
-    loaders: [{
+    rules: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'babel-loader'
+      use: 'babel-loader'
     }, {
       test: /\.css$/,
-      loaders: [
+      use: [
         'style-loader',
         'css-loader'
       ]
     }, {
       test: /\.less$/,
-      loaders: [
+      use: [
         'style-loader',
         'css-loader',
-        {
-          loader: 'less-loader'
-        }
+        'less-loader'
       ]
     }, {
       test: /\.(jpe?g|png|gif|ico)$/i,
-      loaders: [{
+      use: [{
         loader: 'url-loader',
         options: {
           limit: 0
@@ -67,31 +65,47 @@ const config = {
       ]
     }, {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'url-loader',
-      options: {
-        limit: 10000,
-        mimetype: 'application/font-woff',
-        outputPath: 'resources/',
-        name: '[hash].[ext]',
-        publicPath: '/react-geo/examples/'
-      }
+      use: [{
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          mimetype: 'application/font-woff',
+          outputPath: 'resources/',
+          name: '[hash].[ext]',
+          publicPath: '/react-geo/examples/'
+        }
+      }]
     }, {
       test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'file-loader',
-      options: {
-        outputPath: 'resources/',
-        name: '[hash].[ext]',
-        publicPath: '/react-geo/examples/'
-      }
+      use: [{
+        loader: 'file-loader',
+        options: {
+          outputPath: 'resources/',
+          name: '[hash].[ext]',
+          publicPath: '/react-geo/examples/'
+        }
+      }]
     }]
   },
 
-  plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'commons',
-      filename: 'commons.js'
-    })
-  ]
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        commons: {
+          name: 'commons',
+          priority: -20,
+          minChunks: 2,
+          reuseExistingChunk: true
+        },
+        vendors: {
+          name: 'vendors',
+          priority: -10,
+          test: /[\\/]node_modules[\\/]/
+        }
+      }
+    }
+  }
 };
 
 module.exports = config;

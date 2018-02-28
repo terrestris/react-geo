@@ -11,36 +11,34 @@ module.exports = {
   },
 
   module: {
-    loaders: [{
+    rules: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'babel-loader'
+      use: 'babel-loader'
     }, {
       test: /\.css$/,
-      loaders: [
+      use: [
         'style-loader',
         'css-loader'
       ]
     }, {
       test: /\.less$/,
-      loaders: [
+      use: [
         'style-loader',
         'css-loader',
-        {
-          loader: 'less-loader'
-        }
+        'less-loader'
       ]
     }, {
       test: /\.(jpe?g|png|gif|ico)$/i,
-      loaders: [
+      use: [
         'file-loader?name=img/[name].[ext]'
       ]
     }, {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+      use: 'url-loader?limit=10000&mimetype=application/font-woff'
     }, {
       test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'file-loader'
+      use: 'file-loader'
     }]
   }
 };
