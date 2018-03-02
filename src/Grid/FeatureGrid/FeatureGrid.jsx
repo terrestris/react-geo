@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Table } from 'antd';
 import {
   isEqual,
-  isFunction
+  isFunction,
+  kebabCase
 } from 'lodash';
 import OlStyle from 'ol/style/style';
 import OlStyleFill from 'ol/style/fill';
@@ -431,7 +432,7 @@ export class FeatureGrid extends React.Component {
     }) || [];
 
     features.forEach(feature => {
-      const key = this.props.keyFunction(feature);
+      const key = kebabCase(this.props.keyFunction(feature));
       const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
       const el = document.querySelectorAll(sel)[0];
       if (el) {
@@ -445,7 +446,7 @@ export class FeatureGrid extends React.Component {
     });
 
     selectedFeatures.forEach(feature => {
-      const key = this.props.keyFunction(feature);
+      const key = kebabCase(this.props.keyFunction(feature));
       const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
       const el = document.querySelectorAll(sel)[0];
       if (el) {
