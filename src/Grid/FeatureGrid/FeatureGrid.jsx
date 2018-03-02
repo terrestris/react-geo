@@ -83,10 +83,14 @@ export class FeatureGrid extends React.Component {
     className: PropTypes.string,
 
     /**
-     * Optional CSS class to add to each table row.
-     * @type {String}
+     * Optional CSS class to add to each table row or a function that
+     * is evaluated for each record
+     * @type {String|Function}
      */
-    rowClassName: PropTypes.string,
+    rowClassName: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.func
+    ]),
 
     /**
      * The features to show in the grid and the map (if set).
@@ -839,9 +843,15 @@ export class FeatureGrid extends React.Component {
       ? `${className} ${this._className}`
       : this._className;
 
-    const finalRowClassName = rowClassName
-      ? `${rowClassName} ${this._rowClassName}`
-      : this._rowClassName;
+    let rowClassNameFn;
+    if (isFunction(rowClassName)) {
+      rowClassNameFn = rowClassName;
+    } else {
+      const finalRowClassName = rowClassName
+        ? `${rowClassName} ${this._rowClassName}`
+        : this._rowClassName;
+      rowClassNameFn = record => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${kebabCase(record.key)}`;
+    }
 
     return (
       <Table
@@ -853,7 +863,7 @@ export class FeatureGrid extends React.Component {
           onMouseOver: () => this.onRowMouseOver(record),
           onMouseOut: () => this.onRowMouseOut(record)
         })}
-        rowClassName={record => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${record.key}`}
+        rowClassName={rowClassNameFn}
         rowSelection={selectable ? rowSelection : null}
         ref={ref => this._ref = ref}
         {...passThroughProps}
