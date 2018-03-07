@@ -66,6 +66,13 @@ export class Legend extends React.Component {
   }
 
   /**
+   * Calls getLegendUrl for dynamic extraParams like scale
+   */
+  componentWillReceiveProps() {
+    this.getLegendUrl();
+  }
+
+  /**
    * Get the corresponding legendGraphic of a layer. If layer is configured with
    * "legendUrl" this will be used. Otherwise a getLegendGraphic requestString
    * will be created by the MapUtil.
