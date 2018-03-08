@@ -560,6 +560,103 @@ describe('GeometryUtil', () => {
       });
     });
 
+    describe('#difference', () => {
+      describe('with ol.Feature as params', () => {
+        it('returns the difference of two instances of ol.geom.Polygon', () => {
+          const poly1 = new OlFeature({
+            geometry: new OlGeomPolygon([[
+              [10, 10],
+              [11, 11],
+              [10, 11],
+              [10, 10]
+            ]])
+          });
+          const poly2 = new OlFeature({
+            geometry: new OlGeomPolygon([[
+              [10.5, 10],
+              [11.5, 11],
+              [10.5, 11],
+              [10.5, 10]
+            ]])
+          });
+          const differenceFeature = GeometryUtil.difference(poly1, poly2, 'EPSG:4326');
+          const differenceCoordinates = [[
+            [10.5, 10.5],
+            [10, 10],
+            [10, 11],
+            [10.5, 11],
+            [10.5, 10.5]
+          ]];
+          expect(differenceFeature instanceof OlFeature).toBe(true);
+          expect(differenceFeature.getGeometry().getCoordinates()).toEqual(differenceCoordinates);
+        });
+        it('returns poly1 if no difference is found', () => {
+          const poly1 = new OlFeature({
+            geometry: new OlGeomPolygon([[
+              [10, 10],
+              [10, 11],
+              [11, 11],
+              [10, 10]
+            ]])
+          });
+          const poly2 = new OlFeature({
+            geometry: new OlGeomPolygon([[
+              [20, 20],
+              [21, 21],
+              [20, 21],
+              [20, 20]
+            ]])
+          });
+          const differenceFeature = GeometryUtil.difference(poly1, poly2, 'EPSG:4326');
+          expect(differenceFeature instanceof OlFeature).toBe(true);
+          expect(differenceFeature.getGeometry().getCoordinates()).toEqual(poly1.getGeometry().getCoordinates());
+        });
+      });
+      describe('with ol.geom.Geometry as params', () => {
+        it('returns the difference of two instances of ol.geom.Polygon', () => {
+          const poly1 = new OlGeomPolygon([[
+            [10, 10],
+            [11, 11],
+            [10, 11],
+            [10, 10]
+          ]]);
+          const poly2 = new OlGeomPolygon([[
+            [10.5, 10],
+            [11.5, 11],
+            [10.5, 11],
+            [10.5, 10]
+          ]]);
+          const differenceGeometry = GeometryUtil.difference(poly1, poly2, 'EPSG:4326');
+          const differenceCoordinates = [[
+            [10.5, 10.5],
+            [10, 10],
+            [10, 11],
+            [10.5, 11],
+            [10.5, 10.5]
+          ]];
+          expect(differenceGeometry instanceof OlGeomGeometry).toBe(true);
+          expect(differenceGeometry.getCoordinates()).toEqual(differenceCoordinates);
+        });
+        it('returns poly1 if no difference is found', () => {
+          const poly1 = new OlGeomPolygon([[
+            [10, 10],
+            [10, 11],
+            [11, 11],
+            [10, 10]
+          ]]);
+          const poly2 = new OlGeomPolygon([[
+            [20, 20],
+            [21, 21],
+            [20, 21],
+            [20, 20]
+          ]]);
+          const differenceGeometry = GeometryUtil.difference(poly1, poly2, 'EPSG:4326');
+          expect(differenceGeometry instanceof OlGeomGeometry).toBe(true);
+          expect(differenceGeometry.getCoordinates()).toEqual(poly1.getCoordinates());
+        });
+      });
+    });
+
     describe('#intersection', () => {
       describe('with ol.Feature as params', () => {
         it('returns the intersection of two instances of ol.geom.Polygon', () => {
@@ -606,9 +703,9 @@ describe('GeometryUtil', () => {
               [20, 20]
             ]])
           });
-          const intersectionGeometry = GeometryUtil.intersection(poly1, poly2, 'EPSG:4326');
-          expect(intersectionGeometry).toBe(null);
-      });
+          const intersectionFeature = GeometryUtil.intersection(poly1, poly2, 'EPSG:4326');
+          expect(intersectionFeature).toBe(null);
+        });
       });
       describe('with ol.geom.Geometry as params', () => {
         it('returns the intersection of two instances of ol.geom.Polygon', () => {

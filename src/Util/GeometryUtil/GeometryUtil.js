@@ -8,6 +8,7 @@ import {
   booleanPointInPolygon,
   buffer,
   centroid,
+  difference,
   getCoords,
   intersect,
   multiLineString,
@@ -174,17 +175,21 @@ class GeometryUtil {
   }
 
   /**
+   * Takes two or more polygons and returns a combined polygon.
    *
-   * @param {ol.geom.Geometry[] | ol.Feature[]} features An array of ol.Feature instances;
+   * @param {ol.geom.Geometry[] | ol.Feature[]} polygons An array of ol.Feature
+   *  or ol.geom.Geomerty instances of type polygon.
    * @param {String} projection A projection as EPSG code.
+   * @returns {ol.geom.Geometry | ol.Feature} A Feature or Geometry with the
+   * combined area of the polygons.
    */
-  static union(geometries, projection = 'EPSG:3857') {
+  static union(polygons, projection = 'EPSG:3857') {
     const geoJsonFormat = new OlFormatGeoJSON({
       dataProjection: 'EPSG:4326',
       featureProjection: projection
     });
     let invalid = false;
-    const geoJsonsFeatures = geometries.map((geometry) => {
+    const geoJsonsFeatures = polygons.map((geometry) => {
       const feature = geometry instanceof OlFeature
         ? geometry
         : new OlFeature({geometry});
@@ -199,7 +204,41 @@ class GeometryUtil {
     }
     const unioned = union(...geoJsonsFeatures);
     const feature = geoJsonFormat.readFeature(unioned);
-    if (geometries[0] instanceof OlFeature) {
+    if (polygons[0] instanceof OlFeature) {
+      return feature;
+    } else {
+      return feature.getGeometry();
+    }
+  }
+
+  /**
+   * Finds the difference between two polygons by clipping the second polygon from the first.
+   *
+   * @param {ol.geom.Geometry | ol.Feature} feature An ol.geom.Geoemtry or ol.Feature
+   * @param {ol.geom.Geometry | ol.Feature} feature An ol.geom.Geoemtry or ol.Feature
+   * @param {String} projection A projection as EPSG code.
+   *
+   * @returns {ol.geom.Geometry | ol.Feature} A Feature or Geometry with the area
+   *  of polygon1 excluding the area of polygon2.
+   */
+  static difference(polygon1, polygon2, projection = 'EPSG:3857') {
+    const geoJsonFormat = new OlFormatGeoJSON({
+      dataProjection: 'EPSG:4326',
+      featureProjection: projection
+    });
+    const feat1 = polygon1 instanceof OlFeature ? polygon1
+      : new OlFeature({
+        geometry: polygon1
+      });
+    const feat2 = polygon2 instanceof OlFeature ? polygon2
+      : new OlFeature({
+        geometry: polygon2
+      });
+    const geojson1 = geoJsonFormat.writeFeatureObject(feat1);
+    const geojson2 = geoJsonFormat.writeFeatureObject(feat2);
+    const intersection = difference(geojson1, geojson2);
+    const feature = geoJsonFormat.readFeature(intersection);
+    if (polygon1 instanceof OlFeature && polygon2 instanceof OlFeature) {
       return feature;
     } else {
       return feature.getGeometry();
