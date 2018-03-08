@@ -69,6 +69,7 @@
     "react": "~16.0"
   },
   "dependencies": {
+    "@turf/turf": "5.1.6",
     "lodash": "4.17.5",
     "loglevel": "1.6.1",
     "moment": "2.21.0",
