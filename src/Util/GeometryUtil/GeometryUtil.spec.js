@@ -559,5 +559,98 @@ describe('GeometryUtil', () => {
         });
       });
     });
+
+    describe('#intersection', () => {
+      describe('with ol.Feature as params', () => {
+        it('returns the intersection of two instances of ol.geom.Polygon', () => {
+          const poly1 = new OlFeature({
+            geometry: new OlGeomPolygon([[
+              [10, 10],
+              [11, 11],
+              [10, 11],
+              [10, 10]
+            ]])
+          });
+          const poly2 = new OlFeature({
+            geometry: new OlGeomPolygon([[
+              [10.5, 10],
+              [11.5, 11],
+              [10.5, 11],
+              [10.5, 10]
+            ]])
+          });
+          const intersectionFeature = GeometryUtil.intersection(poly1, poly2, 'EPSG:4326');
+          const intersectionCoordinates = [[
+            [11, 11],
+            [10.5, 10.5],
+            [10.5, 11],
+            [11, 11]
+          ]];
+          expect(intersectionFeature instanceof OlFeature).toBe(true);
+          expect(intersectionFeature.getGeometry().getCoordinates()).toEqual(intersectionCoordinates);
+        });
+        it('returns null if no intersection is found', () => {
+          const poly1 = new OlFeature({
+            geometry: new OlGeomPolygon([[
+              [10, 10],
+              [11, 11],
+              [10, 11],
+              [10, 10]
+            ]])
+          });
+          const poly2 = new OlFeature({
+            geometry: new OlGeomPolygon([[
+              [20, 20],
+              [21, 21],
+              [20, 21],
+              [20, 20]
+            ]])
+          });
+          const intersectionGeometry = GeometryUtil.intersection(poly1, poly2, 'EPSG:4326');
+          expect(intersectionGeometry).toBe(null);
+      });
+      });
+      describe('with ol.geom.Geometry as params', () => {
+        it('returns the intersection of two instances of ol.geom.Polygon', () => {
+          const poly1 = new OlGeomPolygon([[
+            [10, 10],
+            [11, 11],
+            [10, 11],
+            [10, 10]
+          ]]);
+          const poly2 = new OlGeomPolygon([[
+            [10.5, 10],
+            [11.5, 11],
+            [10.5, 11],
+            [10.5, 10]
+          ]]);
+          const intersectionGeometry = GeometryUtil.intersection(poly1, poly2, 'EPSG:4326');
+          const intersectionCoordinates = [[
+            [11, 11],
+            [10.5, 10.5],
+            [10.5, 11],
+            [11, 11]
+          ]];
+          expect(intersectionGeometry instanceof OlGeomGeometry).toBe(true);
+          expect(intersectionGeometry.getCoordinates()).toEqual(intersectionCoordinates);
+        });
+        it('returns null if no intersection is found', () => {
+          const poly1 = new OlGeomPolygon([[
+            [10, 10],
+            [11, 11],
+            [10, 11],
+            [10, 10]
+          ]]);
+          const poly2 = new OlGeomPolygon([[
+            [20, 20],
+            [21, 21],
+            [20, 21],
+            [20, 20]
+          ]]);
+          const intersectionGeometry = GeometryUtil.intersection(poly1, poly2, 'EPSG:4326');
+          expect(intersectionGeometry).toBe(null);
+        });
+      });
+    });
   });
 });

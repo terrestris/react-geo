@@ -9,6 +9,7 @@ import {
   buffer,
   centroid,
   getCoords,
+  intersect,
   multiLineString,
   polygonize,
   polygonToLine,
@@ -111,7 +112,7 @@ class GeometryUtil {
    * @param {Integer} buffer The buffer to add in meters.
    * @param {String} projection A projection as EPSG code.
    *
-   * @returns {ol.geom.Geometry} The geometry with the added buffer.
+   * @returns {ol.geom.Geometry | ol.Feature} The geometry or feature with the added buffer.
    */
   static addBuffer (geometry, radius = 0, projection = 'EPSG:3857') {
     if (radius === 0) {
@@ -199,6 +200,43 @@ class GeometryUtil {
     const unioned = union(...geoJsonsFeatures);
     const feature = geoJsonFormat.readFeature(unioned);
     if (geometries[0] instanceof OlFeature) {
+      return feature;
+    } else {
+      return feature.getGeometry();
+    }
+  }
+
+  /**
+   * Takes two polygons and finds their intersection.
+   *
+   * @param {ol.geom.Geometry | ol.Feature} feature An ol.geom.Geoemtry or ol.Feature
+   * @param {ol.geom.Geometry | ol.Feature} feature An ol.geom.Geoemtry or ol.Feature
+   * @param {String} projection A projection as EPSG code.
+   *
+   * @returns {ol.geom.Geometry | ol.Feature} A Feature or Geometry with the
+   * shared area of the two polygons or null if the polygons don't intersect.
+   */
+  static intersection(polygon1, polygon2, projection = 'EPSG:3857') {
+    const geoJsonFormat = new OlFormatGeoJSON({
+      dataProjection: 'EPSG:4326',
+      featureProjection: projection
+    });
+    const feat1 = polygon1 instanceof OlFeature ? polygon1
+      : new OlFeature({
+        geometry: polygon1
+      });
+    const feat2 = polygon2 instanceof OlFeature ? polygon2
+      : new OlFeature({
+        geometry: polygon2
+      });
+    const geojson1 = geoJsonFormat.writeFeatureObject(feat1);
+    const geojson2 = geoJsonFormat.writeFeatureObject(feat2);
+    const intersection = intersect(geojson1, geojson2);
+    if (!intersection) {
+      return null;
+    }
+    const feature = geoJsonFormat.readFeature(intersection);
+    if (polygon1 instanceof OlFeature && polygon2 instanceof OlFeature) {
       return feature;
     } else {
       return feature.getGeometry();
