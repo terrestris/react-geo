@@ -411,8 +411,8 @@ describe('GeometryUtil', () => {
           const testLineString = new OlFeature({
             geometry: new OlGeomLineString([ [10, 10], [11, 11] ])
           });
-          const bufferedPolygon = GeometryUtil.addBuffer(testLineString, 200, 'EPSG:4326');
-          expect(bufferedPolygon instanceof OlFeature).toBe(true);
+          const bufferedLineString = GeometryUtil.addBuffer(testLineString, 200, 'EPSG:4326');
+          expect(bufferedLineString instanceof OlFeature).toBe(true);
         });
       });
       describe('with ol.geom.Geomtry as params', () => {
@@ -433,8 +433,8 @@ describe('GeometryUtil', () => {
         });
         it('adds a buffer to an ol.geom.Linestring', () => {
           const testLineString = new OlGeomLineString([ [10, 10], [11, 11] ]);
-          const bufferedPolygon = GeometryUtil.addBuffer(testLineString, 200, 'EPSG:4326');
-          expect(bufferedPolygon instanceof OlGeomPolygon).toBe(true);
+          const bufferedLineString = GeometryUtil.addBuffer(testLineString, 200, 'EPSG:4326');
+          expect(bufferedLineString instanceof OlGeomPolygon).toBe(true);
         });
       });
     });
@@ -543,7 +543,7 @@ describe('GeometryUtil', () => {
             [10.5, 11],
             [10.5, 10]
           ]]);
-          const unionedFeature = GeometryUtil.union([poly1, poly2], 'EPSG:4326');
+          const unionedGeometry = GeometryUtil.union([poly1, poly2], 'EPSG:4326');
           const unionCoordinates = [[
             [10.5, 10.5],
             [10, 10],
@@ -554,8 +554,8 @@ describe('GeometryUtil', () => {
             [10.5, 10],
             [10.5, 10.5]
           ]];
-          expect(unionedFeature instanceof OlGeomGeometry).toBe(true);
-          expect(unionedFeature.getCoordinates()).toEqual(unionCoordinates);
+          expect(unionedGeometry instanceof OlGeomGeometry).toBe(true);
+          expect(unionedGeometry.getCoordinates()).toEqual(unionCoordinates);
         });
       });
     });

@@ -26,6 +26,8 @@ import {
 class GeometryUtil {
 
   /**
+   * Splits a ol.feature with/or ol.geom.Polygon by a ol.feature with/or ol.geom.LineString
+   * into an array of instances of ol.feature with/or ol.geom.Polygon.
    *
    * @param {ol.feature | ol.geom.Polygon} polygon The polygon geometry to split.
    * @param {ol.feature | ol.geom.LineString} lineFeat The line geometry to split the polygon
@@ -35,7 +37,8 @@ class GeometryUtil {
    * @param {Number} tolerance The tolerance (in meters) used to find if a line
    *  vertex is inside the polygon geometry. Default is to 10.
    *
-   * @return {ol.Feature[] | ol.geom.Polygon[]}
+   * @returns {ol.Feature[] | ol.geom.Polygon[]} An array of instances of ol.feature
+   *  with/or ol.geom.Polygon
    */
   static splitByLine(polygon, line, projection = 'EPSG:3857', tolerance = 10) {
     const geoJsonFormat = new OlFormatGeoJSON({
@@ -137,8 +140,10 @@ class GeometryUtil {
   }
 
   /**
+   * Merges multiple geometries into one MultiGeometry.
    *
    * @param {ol.geom.Geometry[]} geometries An array of ol.geom.geometries;
+   * @return {ol.geom.Multipoint|ol.geom.MultiPolygon|ol.geom.MultiLinestring} A Multigeometry.
    */
   static mergeGeometries(geometries) {
     const geomType = geometries[0].getType();
