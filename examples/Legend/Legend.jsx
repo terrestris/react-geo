@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil/MapUtil';
+import { isEqual } from 'lodash';
 
 /**
  * Class representing the Legend.
@@ -62,7 +63,19 @@ export class Legend extends React.Component {
    * Calls getLegendUrl.
    */
   componentWillMount() {
-    this.getLegendUrl();
+    let layer = this.props.layer;
+    let extraParams = this.props.extraParams;
+    this.getLegendUrl(layer, extraParams);
+  }
+
+  /**
+   * Calls getLegendUrl for dynamic extraParams like scale
+   */
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.extraParams &&
+      !(isEqual(this.props.extraParams, nextProps.extraParams))) {
+      this.getLegendUrl(nextProps.layer, nextProps.extraParams);
+    }
   }
 
   /**
@@ -71,13 +84,12 @@ export class Legend extends React.Component {
    * will be created by the MapUtil.
    *
    */
-  getLegendUrl() {
-    const {layer} = this.props;
+  getLegendUrl(layer, extraParams) {
     let legendUrl;
     if (layer.get('legendUrl')) {
       legendUrl = layer.get('legendUrl');
     } else {
-      legendUrl = MapUtil.getLegendGraphicUrl(layer, this.props.extraParams);
+      legendUrl = MapUtil.getLegendGraphicUrl(layer, extraParams);
     }
     this.setState({legendUrl});
   }
