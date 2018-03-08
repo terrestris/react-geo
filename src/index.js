@@ -29,6 +29,7 @@ import CapabilitiesUtil from './Util/CapabilitiesUtil/CapabilitiesUtil';
 import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
 import AnimateUtil from './Util/AnimateUtil/AnimateUtil';
 import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
+import GeometryUtil from './Util/GeometryUtil/GeometryUtil';
 import MapUtil from './Util/MapUtil/MapUtil';
 import MeasureUtil from './Util/MeasureUtil/MeasureUtil';
 import ObjectUtil from './Util/ObjectUtil/ObjectUtil';
@@ -70,6 +71,7 @@ export {
   CsrfUtil,
   AnimateUtil,
   FeatureUtil,
+  GeometryUtil,
   Logger,
   MapUtil,
   MeasureUtil,
