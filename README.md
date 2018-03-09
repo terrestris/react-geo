@@ -26,7 +26,7 @@ Visit https://terrestris.github.io/react-geo/
 ## Installation
 
     npm i @terrestris/react-geo
-    
+
 ### Requirements
 
 react-geo is designed to be used with es6-modules.
@@ -54,7 +54,8 @@ module: {
       {
         loader: 'less-loader',
         options: {
-          modifyVars: CustomAntThemeModifyVars()
+          modifyVars: CustomAntThemeModifyVars(),
+          javascriptEnabled: true // Less version > 3.0.0
         }
       }
     ]
@@ -69,7 +70,7 @@ If you like to develop a react-geo component out of your project make use of [np
 In react-geo:
 
     npm link
-    
+
 In your project:
 
     npm link @terrestris/react-geo

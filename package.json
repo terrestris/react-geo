@@ -112,7 +112,7 @@
     "jsdoc": "3.5.5",
     "jsdoc-babel": "0.4.0",
     "jstransformer-handlebars": "1.1.0",
-    "less": "2.7.3",
+    "less": "3.0.1",
     "less-loader": "4.1.0",
     "metalsmith": "2.3.0",
     "metalsmith-collections": "0.9.0",
