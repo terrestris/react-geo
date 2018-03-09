@@ -107,7 +107,8 @@ class ToggleButton extends React.Component {
   onClick(evt) {
     if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
       this.context.toggleGroup.onChange(this.props);
-    } else if (this.props.onToggle) {
+    }
+    if (this.props.onToggle) {
       this.props.onToggle(!this.state.pressed, evt);
     }
 
