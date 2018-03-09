@@ -52,7 +52,12 @@ const config = {
       use: [
         'style-loader',
         'css-loader',
-        'less-loader'
+        {
+          loader: 'less-loader',
+          options: {
+            javascriptEnabled: true
+          }
+        }
       ]
     }, {
       test: /\.(jpe?g|png|gif|ico)$/i,
