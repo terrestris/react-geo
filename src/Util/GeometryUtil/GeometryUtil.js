@@ -28,6 +28,9 @@ class GeometryUtil {
   /**
    * Splits a ol.feature with/or ol.geom.Polygon by a ol.feature with/or ol.geom.LineString
    * into an array of instances of ol.feature with/or ol.geom.Polygon.
+   * If the target polygon (first param) is of type ol.Feature it will return an
+   * array with ol.Feature. If the target polygon (first param) is of type
+   * ol.geom.Geometry it will return an array with ol.geom.Geometry.
    *
    * @param {ol.feature | ol.geom.Polygon} polygon The polygon geometry to split.
    * @param {ol.feature | ol.geom.LineString} lineFeat The line geometry to split the polygon
@@ -100,9 +103,9 @@ class GeometryUtil {
     // Polygonize the lines.
     const polygonizedUnionGeom = polygonize(filteredUnionGeom);
 
-    // Return as Array of ol.Features.
+    // Return as Array of ol.Feature or ol.geom.Geometry.
     const features = geoJsonFormat.readFeatures(polygonizedUnionGeom);
-    if (polygon instanceof OlFeature && line instanceof OlFeature) {
+    if (polygon instanceof OlFeature) {
       return features;
     } else {
       return features.map(f => f.getGeometry());
@@ -111,10 +114,13 @@ class GeometryUtil {
 
   /**
    * Adds a buffer to a given geometry.
+   * If the target is of type ol.Feature it will return an ol.Feature.
+   * If the target is of type ol.geom.Geometry it will return ol.geom.Geometry.
    *
    * @param {ol.geom.Geometry | ol.Feature} geometry The geometry.
-   * @param {Integer} buffer The buffer to add in meters.
-   * @param {String} projection A projection as EPSG code.
+   * @param {Number} buffer The buffer to add in meters.
+   * @param {String} projection The projection of the input geometry as EPSG code.
+   *  Default is to EPSG:3857.
    *
    * @returns {ol.geom.Geometry | ol.Feature} The geometry or feature with the added buffer.
    */
@@ -143,7 +149,7 @@ class GeometryUtil {
    * Merges multiple geometries into one MultiGeometry.
    *
    * @param {ol.geom.Geometry[]} geometries An array of ol.geom.geometries;
-   * @return {ol.geom.Multipoint|ol.geom.MultiPolygon|ol.geom.MultiLinestring} A Multigeometry.
+   * @returns {ol.geom.Multipoint|ol.geom.MultiPolygon|ol.geom.MultiLinestring} A Multigeometry.
    */
   static mergeGeometries(geometries) {
     const geomType = geometries[0].getType();
@@ -183,8 +189,9 @@ class GeometryUtil {
    * Takes two or more polygons and returns a combined polygon.
    *
    * @param {ol.geom.Geometry[] | ol.Feature[]} polygons An array of ol.Feature
-   *  or ol.geom.Geomerty instances of type polygon.
-   * @param {String} projection A projection as EPSG code.
+   *  or ol.geom.Geometry instances of type polygon.
+   * @param {String} projection The projection of the input polygons as EPSG code.
+   *  Default is to EPSG:3857.
    * @returns {ol.geom.Geometry | ol.Feature} A Feature or Geometry with the
    * combined area of the polygons.
    */
@@ -221,7 +228,8 @@ class GeometryUtil {
    *
    * @param {ol.geom.Geometry | ol.Feature} feature An ol.geom.Geoemtry or ol.Feature
    * @param {ol.geom.Geometry | ol.Feature} feature An ol.geom.Geoemtry or ol.Feature
-   * @param {String} projection A projection as EPSG code.
+   * @param {String} projection The projection of the input polygons as EPSG code.
+   *  Default is to EPSG:3857.
    *
    * @returns {ol.geom.Geometry | ol.Feature} A Feature or Geometry with the area
    *  of polygon1 excluding the area of polygon2.
@@ -252,10 +260,13 @@ class GeometryUtil {
 
   /**
    * Takes two polygons and finds their intersection.
+   * If the polygons are of type ol.Feature it will return an ol.Feature.
+   * If the polygons are of type ol.geom.Geometry it will return an ol.geom.Geometry.
    *
-   * @param {ol.geom.Geometry | ol.Feature} feature An ol.geom.Geoemtry or ol.Feature
-   * @param {ol.geom.Geometry | ol.Feature} feature An ol.geom.Geoemtry or ol.Feature
-   * @param {String} projection A projection as EPSG code.
+   * @param {ol.geom.Geometry | ol.Feature} polygon1 An ol.geom.Geoemtry or ol.Feature
+   * @param {ol.geom.Geometry | ol.Feature} polygon2 An ol.geom.Geoemtry or ol.Feature
+   * @param {String} projection The projection of the input polygons as EPSG code.
+   *  Default is to EPSG:3857.
    *
    * @returns {ol.geom.Geometry | ol.Feature} A Feature or Geometry with the
    * shared area of the two polygons or null if the polygons don't intersect.
