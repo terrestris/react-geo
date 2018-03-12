@@ -269,7 +269,7 @@ class ScaleCombo extends React.Component {
       <Select
         showSearch
         onChange={this.state.onZoomLevelSelect}
-        filterOption={false}
+        filterOption={(input, option) => option.key.startsWith(input)}
         value={this.determineOptionKeyForZoomLevel(this.state.zoomLevel)}
         size="small"
         style={style}
