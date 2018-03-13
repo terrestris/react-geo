@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.jsx</title>
+    <title>JSDoc: Source: Util/GeometryUtil/GeometryUtil.example.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.jsx</h1>
+    <h1 class="page-title">Source: Util/GeometryUtil/GeometryUtil.example.jsx</h1>
 
     
 
@@ -27,230 +27,197 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import React from 'react';
-import PropTypes from 'prop-types';
-import { AutoComplete } from 'antd';
-const Option = AutoComplete.Option;
+import { render } from 'react-dom';
 
-import UrlUtil from '../../Util/UrlUtil/UrlUtil';
-import Logger from '../../Util/Logger';
+import OlMap from 'ol/map';
+import OlView from 'ol/view';
+import OlLayerTile from 'ol/layer/tile';
+import OlSourceOsm from 'ol/source/osm';
+import olProj from 'ol/proj';
+
+import {
+  message
+} from 'antd';
+
+import {
+  DigitizeButton,
+  GeometryUtil,
+  MapUtil,
+  SimpleButton,
+  ToggleGroup
+} from '../../index.js';
+
+
+// ***************************** SETUP *****************************************
+//
+const map = new OlMap({
+  layers: [
+    new OlLayerTile({
+      name: 'OSM',
+      source: new OlSourceOsm()
+    })
+  ],
+  view: new OlView({
+    center: olProj.fromLonLat([37.40570, 8.81566]),
+    zoom: 4
+  })
+});
+
+//
+// ***************************** SETUP END *************************************
+//
 
 /**
- * Class representing a combo to choose coordinate projection system via a
- * dropdown menu and / or autocompletion
  *
- * @class The CoordinateReferenceSystemCombo
- * @extends React.Component
  */
-class CoordinateReferenceSystemCombo extends React.Component {
+const clearDrawFeatures = () => {
+  const drawLayer = MapUtil.getLayerByName(map, 'drawLayer');
+  drawLayer.getSource().clear();
+};
 
-  /**
-   * The className added to this component.
-   * @type {String}
-   * @private
-   */
-  className = 'react-geo-coordinatereferencesystemcombo'
+/**
+ *
+ */
+const clearOperationFeatures = () => {
+  window.setTimeout(() => {
+    const utilLayer = MapUtil.getLayerByName(map, 'utilLayer');
+    utilLayer.getSource().clear();
+  }, 10);
+};
 
-  static propTypes = {
-    /**
-     * The className which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-    /**
-     * The API to query for CRS definitions
-     * default: http://epsg.io
-     * @type {String}
-     */
-    crsApiUrl: PropTypes.string,
-    /**
-     * The empty text set if no value is given / provided
-     * @type {String}
-     */
-    emptyTextPlaceholderText: PropTypes.string,
-    /**
-     * An array of predefined crs definitions habving at least value (name of
-     * CRS) and code (e.g. EPSG-code of CRS) property
-     * @type {Array}
-     */
-    predefinedCrsDefinitions: PropTypes.arrayOf(PropTypes.shape({
-      value: PropTypes.string,
-      code: PropTypes.string
-    })),
-    /**
-     * A function
-     * @type {String}
-     */
-    onSelect: PropTypes.func
-  }
+render(
+  &lt;div>
+    &lt;div id="map" style={{
+      height: '400px'
+    }} />
 
-  static defaultProps = {
-    emptyTextPlaceholderText: 'Please select a CRS',
-    crsApiUrl: 'https://epsg.io/',
-    onSelect: () => {}
-  }
-
-  /**
-   * Create a CRS combo.
-   * @constructs CoordinateReferenceSystemCombo
-   */
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      crsDefinitions: [],
-      value: null
-    };
-
-    this.onCrsItemSelect = this.onCrsItemSelect.bind(this);
-  }
-
-  /**
-   * Fetch CRS definitions from epsg.io for given search string
-   *
-   * @param {String} searchVal The search string
-   */
-  fetchCrs = (searchVal) => {
-    const { crsApiUrl } = this.props;
-
-    const queryParameters = {
-      format: 'json',
-      q: searchVal
-    };
-
-    return fetch(`${crsApiUrl}?${UrlUtil.objectToRequestString(queryParameters)}`)
-      .then(response => response.json());
-  }
-
-  /**
-   * This function gets called when the EPSG.io fetch returns an error.
-   * It logs the error to the console.
-   *
-   * @param {String} error The error string.
-   */
-  onFetchError(error) {
-    Logger.error(`Error while requesting in CoordinateReferenceSystemCombo: ${error}`);
-  }
-
-  /**
-   * This function transforms results of EPSG.io
-   *
-   * @param {Object} json The result object of EPSG.io-API, see where
-   *                 https://github.com/klokantech/epsg.io#api-for-results   *
-   * @return {Array} Array of CRS definitons used in CoordinateReferenceSystemCombo
-   */
-  transformResults = (json) => {
-    const results = json.results;
-    if (results &amp;&amp; results.length > 0) {
-      return results.map(obj => ({code: obj.code, value: obj.name, proj4def: obj.proj4, bbox: obj.bbox}));
-    } else {
-      return [];
-    }
-  }
-
-  /**
-   * This function gets called when the EPSG.io fetch returns an error.
-   * It logs the error to the console.
-   *
-   * @param {String} error The error string.
-   */
-  handleSearch = (value) => {
-    const {
-      predefinedCrsDefinitions
-    } = this.props;
-
-    if (!value || value.length === 0) {
-      this.setState({
-        value,
-        crsDefinitions: []
-      });
-      return;
-    }
-
-    if (!predefinedCrsDefinitions) {
-      this.fetchCrs(value)
-        .then(this.transformResults)
-        .then(crsDefinitions => this.setState({crsDefinitions}))
-        .catch(this.onFetchError);
-    } else {
-      this.setState({ value });
-    }
-  }
-
-  /**
-   * Handles selection of a CRS item in Autocomplete
-   *
-   * @param {type} code EPSG code
-   */
-  onCrsItemSelect = (code) => {
-    const {
-      onSelect,
-      predefinedCrsDefinitions
-    } = this.props;
-
-    const  {
-      crsDefinitions
-    } = this.state;
-
-    const crsObjects = predefinedCrsDefinitions || crsDefinitions;
-
-    const selected = crsObjects.filter(i => i.code === code)[0];
-    this.setState({
-      value: selected
-    });
-    onSelect(selected);
-  }
-
-  /**
-   * Tranforms CRS object returned by EPSG.io to antd  Option component
-   *
-   * @param {type} crsObj Single plain CRS object returned by EPSG.io
-   *
-   * @return {Option} Option component to render
-   */
-  transformCrsObjectsToOptions(crsObject) {
-    return (
-      &lt;Option key={crsObject.code}>
-        {`${crsObject.value} (EPSG:${crsObject.code})`}
-      &lt;/Option>
-    );
-  }
-
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      emptyTextPlaceholderText,
-      onSelect,
-      predefinedCrsDefinitions,
-      ...passThroughOpts
-    } = this.props;
-
-    const {
-      crsDefinitions
-    } = this.state;
-
-    const crsObjects = predefinedCrsDefinitions || crsDefinitions;
-
-    const finalClassName = className ? `${className} ${this.className}` : this.className;
-
-    return (
-      &lt;AutoComplete
-        className={finalClassName}
-        allowClear={true}
-        dataSource={crsObjects.map(this.transformCrsObjectsToOptions)}
-        onSelect={this.onCrsItemSelect}
-        onChange={this.handleSearch}
-        placeholder={emptyTextPlaceholderText}
-        {...passThroughOpts}
+    &lt;div className="example-block">
+      &lt;span>Drawing:&lt;/span>
+      &lt;ToggleGroup
+        orientation="horizontal">
+        &lt;DigitizeButton
+          name="drawPolygon"
+          digitizeLayerName="drawLayer"
+          map={map}
+          drawType="Polygon"
+          onDrawStart={clearDrawFeatures}
+        >
+        Draw polygon
+        &lt;/DigitizeButton>
+        &lt;DigitizeButton
+          name="drawLine"
+          map={map}
+          digitizeLayerName="utilLayer"
+          drawType="LineString"
+          onDrawEnd={(evt) => {
+            const drawLayer = MapUtil.getLayerByName(map, 'drawLayer');
+            const source = drawLayer.getSource();
+            const features = drawLayer.getSource().getFeatures();
+            if (features.length !== 1) {
+              message.warn('Example only supports one feature!!');
+            }
+            const line = evt.feature;
+            const splitFeatures = GeometryUtil.splitByLine(features[0], line);
+            clearDrawFeatures();
+            clearOperationFeatures();
+            source.addFeatures(splitFeatures);
+          }}
+        >
+          Split by Line
+        &lt;/DigitizeButton>
+        &lt;DigitizeButton
+          name="drawLine"
+          map={map}
+          digitizeLayerName="utilLayer"
+          drawType="Polygon"
+          onDrawEnd={(evt) => {
+            const drawLayer = MapUtil.getLayerByName(map, 'drawLayer');
+            const source = drawLayer.getSource();
+            const features = source.getFeatures();
+            if (features.length !== 1) {
+              message.warn('Example only supports one feature!!');
+            }
+            const polygon = evt.feature;
+            const unionFeature = GeometryUtil.union([features[0], polygon]);
+            clearDrawFeatures();
+            clearOperationFeatures();
+            source.addFeature(unionFeature);
+          }}
+        >
+          Union
+        &lt;/DigitizeButton>
+        &lt;DigitizeButton
+          name="drawLine"
+          map={map}
+          digitizeLayerName="utilLayer"
+          drawType="Polygon"
+          onDrawEnd={(evt) => {
+            const drawLayer = MapUtil.getLayerByName(map, 'drawLayer');
+            const source = drawLayer.getSource();
+            const features = source.getFeatures();
+            if (features.length !== 1) {
+              message.warn('Example only supports one feature!!');
+            }
+            const polygon = evt.feature;
+            const intersectionFeature = GeometryUtil.intersection(features[0], polygon);
+            clearDrawFeatures();
+            clearOperationFeatures();
+            source.addFeature(intersectionFeature);
+          }}
+        >
+          Intersection
+        &lt;/DigitizeButton>
+        &lt;DigitizeButton
+          name="drawLine"
+          map={map}
+          digitizeLayerName="utilLayer"
+          drawType="Polygon"
+          onDrawEnd={(evt) => {
+            const drawLayer = MapUtil.getLayerByName(map, 'drawLayer');
+            const source = drawLayer.getSource();
+            const features = source.getFeatures();
+            if (features.length !== 1) {
+              message.warn('Example only supports one feature!!');
+            }
+            const polygon = evt.feature;
+            const differenceFeature = GeometryUtil.difference(features[0], polygon);
+            clearDrawFeatures();
+            clearOperationFeatures();
+            source.addFeature(differenceFeature);
+          }}
+        >
+          Difference
+        &lt;/DigitizeButton>
+      &lt;/ToggleGroup>
+    &lt;/div>
+    &lt;div className="example-block">
+      &lt;SimpleButton
+        onClick={() => {
+          const drawLayer = MapUtil.getLayerByName(map, 'drawLayer');
+          const source = drawLayer.getSource();
+          const features = source.getFeatures();
+          if (features.length !== 1) {
+            message.warn('Example only supports one feature!!');
+          }
+          const bufferedFeature = GeometryUtil.addBuffer(features[0], 100000);
+          clearDrawFeatures();
+          clearOperationFeatures();
+          source.addFeature(bufferedFeature);
+        }}
       >
-      &lt;/AutoComplete>
-    );
-  }
-}
+        Add Buffer (100 km)
+      &lt;/SimpleButton>
+    &lt;/div>
+  &lt;/div>,
 
-export default CoordinateReferenceSystemCombo;
+  // Target
+  document.getElementById('exampleContainer'),
+
+  // Callback
+  () => {
+    map.setTarget('map');
+  }
+);
 </code></pre>
         </article>
     </section>
