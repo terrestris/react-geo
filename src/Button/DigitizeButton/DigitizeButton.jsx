@@ -286,9 +286,22 @@ class DigitizeButton extends React.Component {
      *
      * @type {OlStyleStyle}
      */
-    style: PropTypes.instanceOf(OlStyleStyle)
-  };
+    style: PropTypes.instanceOf(OlStyleStyle),
 
+    /**
+     * Listener function for the 'drawend' event of an ol.interaction.Draw.
+     * See http://openlayers.org/en/latest/apidoc/ol.interaction.Draw.Event.html
+     * for more information.
+     */
+    onDrawEnd: PropTypes.func,
+
+    /**
+     * Listener function for the 'drawstart' event of an ol.interaction.Draw.
+     * See http://openlayers.org/en/latest/apidoc/ol.interaction.Draw.Event.html
+     * for more information.
+     */
+    onDrawStart: PropTypes.func
+  };
 
   /**
    * The default properties.
@@ -544,7 +557,9 @@ class DigitizeButton extends React.Component {
   createDrawInteraction = pressed => {
     const {
       drawType,
-      map
+      map,
+      onDrawEnd,
+      onDrawStart
     } = this.props;
 
     let geometryFunction;
@@ -565,6 +580,14 @@ class DigitizeButton extends React.Component {
       style: this.getDigitizeStyleFunction,
       freehandCondition: OlEventsCondition.never
     });
+
+    if (onDrawEnd) {
+      drawInteraction.on('drawend', onDrawEnd);
+    }
+
+    if (onDrawStart) {
+      drawInteraction.on('drawstart', onDrawStart);
+    }
 
     map.addInteraction(drawInteraction);
 
@@ -832,6 +855,8 @@ class DigitizeButton extends React.Component {
       modalPromptTitle,
       modalPromptOkButtonText,
       modalPromptCancelButtonText,
+      onDrawEnd,
+      onDrawStart,
       ...passThroughProps
     } = this.props;
 
