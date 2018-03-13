@@ -1,12 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Examples of components in react-geo package</title>
+    <title>Examples of components in react-geo package</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="assets/landing_page.css">
 </head>
 <body>
+  <script>
+$(document).ready(function() {
+
+ function checkWidth() {
+    var windowWidth = $(window).width();
+    if (windowWidth <= 767) {
+        $("#gh-link").show();
+
+    } else {
+        $("#gh-link").hide();
+    }
+ }
+ checkWidth();
+
+ $(window).resize(checkWidth);
+});
+</script>
+<div class="collapse navbar-collapse">
+<a href="https://github.com/terrestris/react-geo"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:1000" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+</div>
+
+
+<!-- Navbar -->
+<nav class="navbar navbar-default">
+<div class="container">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+
+
+    </button>
+
+
+    <img style="display: inline; width: 70px;" src="../assets/logo.svg" >
+    <a class="navbar-brand" href="../">react-geo</a>
+  </div>
+  <div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav navbar-center">
+      <li><a href="../docs/@terrestris/react-geo/5.2.0/index.html">Docs</a></li>
+      <li><a href="../examples/examples.html">Examples</a></li>
+      <li id="gh-link"><a href="https://github.com/terrestris/react-geo">Github</a></li>
+    </ul>
+  </div>
+</div>
+</nav>
+
+<!-- First Container -->
+<div class="container-fluid-examples ">
   <h2>Examples of components in react-geo package</h2>
   <p>A list of all examples:</p>
 
@@ -38,5 +93,11 @@
       <li><a href="HigherOrderComponent/VisibleComponent/VisibleComponent.example.html">VisibleComponent HOC example</a><br>This example shows the usage of the VisibleComponent HOC (High Order Component).</li>
       <li><a href="Window/Window.example.html">Window example</a><br>This example demonstrates the usage of a Window component.</li>
   </ul>
+</div>
+
+  <!-- Footer -->
+<footer class="container-fluid-footer bg-4 text-center">
+    <p class="footer-text">Copyright © 2018 terrestris GmbH & Co. KG.</p>
+</footer>
 </body>
 </html>
