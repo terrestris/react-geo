@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>GeometryUtil example</title>
+  <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>/*global hljs*/ hljs.initHighlightingOnLoad();</script>
+</head>
+<style>
+body.example {
+  padding: 1.5em;
+}
+.example-block {
+  padding: 2em;
+}
+.example-block > span {
+  margin-right: 10px;
+}
+</style>
+
+<body class="example">
+  <h2>GeometryUtil example</h2>
+  <div id="exampleContainer" class="app"></div>
+  <p>This demonstrates the GeometryUtil Features.</p>
+
+  <pre>
+    <code class="javascript">import React from &#x27;react&#x27;;
+import { render } from &#x27;react-dom&#x27;;
+
+import OlMap from &#x27;ol/map&#x27;;
+import OlView from &#x27;ol/view&#x27;;
+import OlLayerTile from &#x27;ol/layer/tile&#x27;;
+import OlSourceOsm from &#x27;ol/source/osm&#x27;;
+import olProj from &#x27;ol/proj&#x27;;
+
+import {
+  message
+} from &#x27;antd&#x27;;
+
+import {
+  DigitizeButton,
+  GeometryUtil,
+  MapUtil,
+  SimpleButton,
+  ToggleGroup
+} from &#x27;@terrestris/react-geo&#x27;;
+
+
+// ***************************** SETUP *****************************************
+//
+const map &#x3D; new OlMap({
+  layers: [
+    new OlLayerTile({
+      name: &#x27;OSM&#x27;,
+      source: new OlSourceOsm()
+    })
+  ],
+  view: new OlView({
+    center: olProj.fromLonLat([37.40570, 8.81566]),
+    zoom: 4
+  })
+});
+
+//
+// ***************************** SETUP END *************************************
+//
+
+/**
+ *
+ */
+const clearDrawFeatures &#x3D; () &#x3D;&gt; {
+  const drawLayer &#x3D; MapUtil.getLayerByName(map, &#x27;drawLayer&#x27;);
+  drawLayer.getSource().clear();
+};
+
+/**
+ *
+ */
+const clearOperationFeatures &#x3D; () &#x3D;&gt; {
+  window.setTimeout(() &#x3D;&gt; {
+    const utilLayer &#x3D; MapUtil.getLayerByName(map, &#x27;utilLayer&#x27;);
+    utilLayer.getSource().clear();
+  }, 10);
+};
+
+render(
+  &lt;div&gt;
+    &lt;div id&#x3D;&quot;map&quot; style&#x3D;{{
+      height: &#x27;400px&#x27;
+    }} /&gt;
+
+    &lt;div className&#x3D;&quot;example-block&quot;&gt;
+      &lt;span&gt;Drawing:&lt;/span&gt;
+      &lt;ToggleGroup
+        orientation&#x3D;&quot;horizontal&quot;&gt;
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawPolygon&quot;
+          digitizeLayerName&#x3D;&quot;drawLayer&quot;
+          map&#x3D;{map}
+          drawType&#x3D;&quot;Polygon&quot;
+          onDrawStart&#x3D;{clearDrawFeatures}
+        &gt;
+        Draw polygon
+        &lt;/DigitizeButton&gt;
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawLine&quot;
+          map&#x3D;{map}
+          digitizeLayerName&#x3D;&quot;utilLayer&quot;
+          drawType&#x3D;&quot;LineString&quot;
+          onDrawEnd&#x3D;{(evt) &#x3D;&gt; {
+            const drawLayer &#x3D; MapUtil.getLayerByName(map, &#x27;drawLayer&#x27;);
+            const source &#x3D; drawLayer.getSource();
+            const features &#x3D; drawLayer.getSource().getFeatures();
+            if (features.length !&#x3D;&#x3D; 1) {
+              message.warn(&#x27;Example only supports one feature!!&#x27;);
+            }
+            const line &#x3D; evt.feature;
+            const splitFeatures &#x3D; GeometryUtil.splitByLine(features[0], line);
+            clearDrawFeatures();
+            clearOperationFeatures();
+            source.addFeatures(splitFeatures);
+          }}
+        &gt;
+          Split by Line
+        &lt;/DigitizeButton&gt;
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawLine&quot;
+          map&#x3D;{map}
+          digitizeLayerName&#x3D;&quot;utilLayer&quot;
+          drawType&#x3D;&quot;Polygon&quot;
+          onDrawEnd&#x3D;{(evt) &#x3D;&gt; {
+            const drawLayer &#x3D; MapUtil.getLayerByName(map, &#x27;drawLayer&#x27;);
+            const source &#x3D; drawLayer.getSource();
+            const features &#x3D; source.getFeatures();
+            if (features.length !&#x3D;&#x3D; 1) {
+              message.warn(&#x27;Example only supports one feature!!&#x27;);
+            }
+            const polygon &#x3D; evt.feature;
+            const unionFeature &#x3D; GeometryUtil.union([features[0], polygon]);
+            clearDrawFeatures();
+            clearOperationFeatures();
+            source.addFeature(unionFeature);
+          }}
+        &gt;
+          Union
+        &lt;/DigitizeButton&gt;
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawLine&quot;
+          map&#x3D;{map}
+          digitizeLayerName&#x3D;&quot;utilLayer&quot;
+          drawType&#x3D;&quot;Polygon&quot;
+          onDrawEnd&#x3D;{(evt) &#x3D;&gt; {
+            const drawLayer &#x3D; MapUtil.getLayerByName(map, &#x27;drawLayer&#x27;);
+            const source &#x3D; drawLayer.getSource();
+            const features &#x3D; source.getFeatures();
+            if (features.length !&#x3D;&#x3D; 1) {
+              message.warn(&#x27;Example only supports one feature!!&#x27;);
+            }
+            const polygon &#x3D; evt.feature;
+            const intersectionFeature &#x3D; GeometryUtil.intersection(features[0], polygon);
+            clearDrawFeatures();
+            clearOperationFeatures();
+            source.addFeature(intersectionFeature);
+          }}
+        &gt;
+          Intersection
+        &lt;/DigitizeButton&gt;
+        &lt;DigitizeButton
+          name&#x3D;&quot;drawLine&quot;
+          map&#x3D;{map}
+          digitizeLayerName&#x3D;&quot;utilLayer&quot;
+          drawType&#x3D;&quot;Polygon&quot;
+          onDrawEnd&#x3D;{(evt) &#x3D;&gt; {
+            const drawLayer &#x3D; MapUtil.getLayerByName(map, &#x27;drawLayer&#x27;);
+            const source &#x3D; drawLayer.getSource();
+            const features &#x3D; source.getFeatures();
+            if (features.length !&#x3D;&#x3D; 1) {
+              message.warn(&#x27;Example only supports one feature!!&#x27;);
+            }
+            const polygon &#x3D; evt.feature;
+            const differenceFeature &#x3D; GeometryUtil.difference(features[0], polygon);
+            clearDrawFeatures();
+            clearOperationFeatures();
+            source.addFeature(differenceFeature);
+          }}
+        &gt;
+          Difference
+        &lt;/DigitizeButton&gt;
+      &lt;/ToggleGroup&gt;
+    &lt;/div&gt;
+    &lt;div className&#x3D;&quot;example-block&quot;&gt;
+      &lt;SimpleButton
+        onClick&#x3D;{() &#x3D;&gt; {
+          const drawLayer &#x3D; MapUtil.getLayerByName(map, &#x27;drawLayer&#x27;);
+          const source &#x3D; drawLayer.getSource();
+          const features &#x3D; source.getFeatures();
+          if (features.length !&#x3D;&#x3D; 1) {
+            message.warn(&#x27;Example only supports one feature!!&#x27;);
+          }
+          const bufferedFeature &#x3D; GeometryUtil.addBuffer(features[0], 100000);
+          clearDrawFeatures();
+          clearOperationFeatures();
+          source.addFeature(bufferedFeature);
+        }}
+      &gt;
+        Add Buffer (100 km)
+      &lt;/SimpleButton&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;,
+
+  // Target
+  document.getElementById(&#x27;exampleContainer&#x27;),
+
+  // Callback
+  () &#x3D;&gt; {
+    map.setTarget(&#x27;map&#x27;);
+  }
+);
+</code>
+  </pre>
+  <script src="../../vendors.js"></script>
+  <script src="../../commons.js"></script>
+  <script src="GeometryUtil.js"></script>
+</body>
+</html>
