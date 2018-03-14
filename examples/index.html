@@ -1,103 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Examples of components in react-geo package</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="assets/landing_page.css">
+	<title>Examples of components in react-geo package</title>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1" name="viewport">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<link href="../assets/landing_page.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <script>
-$(document).ready(function() {
+	<script>
+	          $(document).ready(function() {
 
- function checkWidth() {
-    var windowWidth = $(window).width();
-    if (windowWidth <= 767) {
-        $("#gh-link").show();
+	              function checkWidth() {
+	                  var windowWidth = $(window).width();
+	                  if (windowWidth <= 767) {
+	                      $("#gh-link").show();
 
-    } else {
-        $("#gh-link").hide();
-    }
- }
- checkWidth();
+	                  } else {
+	                      $("#gh-link").hide();
+	                  }
+	              }
+	              checkWidth();
 
- $(window).resize(checkWidth);
-});
-</script>
-<div class="collapse navbar-collapse">
-<a href="https://github.com/terrestris/react-geo"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:1000" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
-</div>
+	              $(window).resize(checkWidth);
+	          });
+	</script>
+	<div class="collapse navbar-collapse">
+		<a href="https://github.com/terrestris/react-geo"><img alt="Fork me on GitHub" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" style="position: absolute; top: 0; right: 0; border: 0; z-index:1000"></a>
+	</div><!-- Navbar -->
+	<nav class="navbar navbar-default">
+		<div class="container">
+			<div class="navbar-header">
+				<button class="navbar-toggle" data-target="#myNavbar" data-toggle="collapse" type="button"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button> <img src="../assets/logo.svg" style="width: 70px;"> <a class="navbar-brand" href="../index.html">react-geo</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav navbar-center">
+					<li>
+						<a href="../docs/@terrestris/react-geo/5.5.0/index.html">Docs</a>
+					</li>
+					<li>
+						<a href="../examples/index.html">Examples</a>
+					</li>
+					<li id="gh-link">
+						<a href="https://github.com/terrestris/react-geo">Github</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav><!-- First Container -->
+	<div class="container-fluid example-list">
+		<h2>Examples of components in react-geo package</h2><p>A list of all examples:</p>
 
-
-<!-- Navbar -->
-<nav class="navbar navbar-default">
-<div class="container">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-
-
-    </button>
-
-
-    <img style="display: inline; width: 70px;" src="../assets/logo.svg" >
-    <a class="navbar-brand" href="../">react-geo</a>
-  </div>
-  <div class="collapse navbar-collapse" id="myNavbar">
-    <ul class="nav navbar-nav navbar-center">
-      <li><a href="../docs/@terrestris/react-geo/5.2.0/index.html">Docs</a></li>
-      <li><a href="../examples/examples.html">Examples</a></li>
-      <li id="gh-link"><a href="https://github.com/terrestris/react-geo">Github</a></li>
-    </ul>
-  </div>
-</div>
-</nav>
-
-<!-- First Container -->
-<div class="container-fluid-examples ">
-  <h2>Examples of components in react-geo package</h2>
-  <p>A list of all examples:</p>
-
-  <ul>
-      <li><a href="Container/AddWmsPanel/AddWmsPanel.example.html">AddWmsPanel example</a><br>This example shows the usage of an AddWmsPanel.</li>
-      <li><a href="CircleMenu/CircleMenu.example.html">CircleMenu example</a><br>This is an example showing the CircleMenu</li>
-      <li><a href="Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.example.html">CoordinateReferenceSystemCombo example</a><br>This is an example using a CoordinateReferenceSystemCombo.</li>
-      <li><a href="Button/DigitizeButton/DigitizeButton.example.html">DigitizeButton example</a><br>This is an example showing digitize buttons with different interactions.</li>
-      <li><a href="Grid/FeatureGrid/FeatureGridWfs.example.html">FeatureGrid WFS example</a><br>This example demonstrates the usage of the FeatureGrid to show data from a remote source (WFS GetFeature).</li>
-      <li><a href="Grid/FeatureGrid/FeatureGrid.example.html">FeatureGrid example</a><br>This example demonstrates the usage of the FeatureGrid.</li>
-      <li><a href="Map/FloatingMapLogo/FloatingMapLogo.example.html">FloatingMapLogo example</a><br>This is a example using a FloatingMapLogo.</li>
-      <li><a href="Util/GeometryUtil/GeometryUtil.example.html">GeometryUtil example</a><br>This is an example demonstrating the GeometryUtil Features.</li>
-      <li><a href="Slider/LayerTransparencySlider.example.html">LayerTransparencySlider example</a><br>This example demonstrates the LayerTransparencySlider.</li>
-      <li><a href="LayerTree/LayerTree.example.html">LayerTree example</a><br>This example demonstrates the LayerTree.</li>
-      <li><a href="Legend/Legend.example.html">Legend example</a><br>This example demonstrates the Legend.</li>
-      <li><a href="Map/MapComponent/MapComponent.example.html">MapComponent example</a><br>This example shows the usage of the MapComponent in combination with the MapProvider.</li>
-      <li><a href="Button/MeasureButton/MeasureButton.example.html">MeasureButton example</a><br>This is an example showing several measure buttons with different configurations.</li>
-      <li><a href="Field/NominatimSearch/NominatimSearch.example.html">NominatimSearch example</a><br>This is an example using a NominatimSearch.</li>
-      <li><a href="Panel/Panel/Panel.example.html">Panel / Window example</a><br>This example demonstrates the use of Panels</li>
-      <li><a href="Grid/PropertyGrid/PropertyGrid.example.html">PropertyGrid example</a><br>This is an example using a property grid.</li>
-      <li><a href="Field/ScaleCombo/ScaleCombo.example.html">ScaleCombo example</a><br>This is a example using a scale combo.</li>
-      <li><a href="Button/SimpleButton/SimpleButton.example.html">SimpleButton example</a><br>This is a example using an SimpleButton.</li>
-      <li><a href="Panel/Titlebar/Titlebar.example.html">Titlebar example</a><br>This example demonstrates the Titlebar.</li>
-      <li><a href="Button/ToggleButton/ToggleButton.example.html">ToggleButton example</a><br>This is a example using an ToggleButton.</li>
-      <li><a href="Button/ToggleGroup/ToggleGroup.example.html">ToggleGroup example</a><br>This is a example using an ToggleGroup.</li>
-      <li><a href="Toolbar/Toolbar.example.html">Toolbar example</a><br>This is a example using a toolbar having vertically and horizontally aligned child elements.</li>
-      <li><a href="Button/UploadButton/UploadButton.example.html">UploadButton example</a><br>This is an example using &#x60;UploadButton&#x60;</li>
-      <li><a href="UserChip/UserChip.example.html">UserChip example</a><br>This is a example using an UserChip.</li>
-      <li><a href="HigherOrderComponent/VisibleComponent/VisibleComponent.example.html">VisibleComponent HOC example</a><br>This example shows the usage of the VisibleComponent HOC (High Order Component).</li>
-      <li><a href="Window/Window.example.html">Window example</a><br>This example demonstrates the usage of a Window component.</li>
-  </ul>
-</div>
-
-  <!-- Footer -->
-<footer class="container-fluid-footer bg-4 text-center">
-    <p class="footer-text">Copyright © 2018 terrestris GmbH & Co. KG.</p>
-</footer>
+		<ul>
+			<li style="list-style: none"> </li>
+			<li>
+				<a href="Container/AddWmsPanel/AddWmsPanel.example.html">AddWmsPanel example</a><br>
+				This example shows the usage of an AddWmsPanel.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="CircleMenu/CircleMenu.example.html">CircleMenu example</a><br>
+				This is an example showing the CircleMenu
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.example.html">CoordinateReferenceSystemCombo example</a><br>
+				This is an example using a CoordinateReferenceSystemCombo.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Button/DigitizeButton/DigitizeButton.example.html">DigitizeButton example</a><br>
+				This is an example showing digitize buttons with different interactions.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Grid/FeatureGrid/FeatureGridWfs.example.html">FeatureGrid WFS example</a><br>
+				This example demonstrates the usage of the FeatureGrid to show data from a remote source (WFS GetFeature).
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Grid/FeatureGrid/FeatureGrid.example.html">FeatureGrid example</a><br>
+				This example demonstrates the usage of the FeatureGrid.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Map/FloatingMapLogo/FloatingMapLogo.example.html">FloatingMapLogo example</a><br>
+				This is a example using a FloatingMapLogo.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Util/GeometryUtil/GeometryUtil.example.html">GeometryUtil example</a><br>
+				This is an example demonstrating the GeometryUtil Features.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Slider/LayerTransparencySlider.example.html">LayerTransparencySlider example</a><br>
+				This example demonstrates the LayerTransparencySlider.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="LayerTree/LayerTree.example.html">LayerTree example</a><br>
+				This example demonstrates the LayerTree.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Legend/Legend.example.html">Legend example</a><br>
+				This example demonstrates the Legend.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Map/MapComponent/MapComponent.example.html">MapComponent example</a><br>
+				This example shows the usage of the MapComponent in combination with the MapProvider.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Button/MeasureButton/MeasureButton.example.html">MeasureButton example</a><br>
+				This is an example showing several measure buttons with different configurations.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Field/NominatimSearch/NominatimSearch.example.html">NominatimSearch example</a><br>
+				This is an example using a NominatimSearch.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Panel/Panel/Panel.example.html">Panel / Window example</a><br>
+				This example demonstrates the use of Panels
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Grid/PropertyGrid/PropertyGrid.example.html">PropertyGrid example</a><br>
+				This is an example using a property grid.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Field/ScaleCombo/ScaleCombo.example.html">ScaleCombo example</a><br>
+				This is a example using a scale combo.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Button/SimpleButton/SimpleButton.example.html">SimpleButton example</a><br>
+				This is a example using an SimpleButton.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Panel/Titlebar/Titlebar.example.html">Titlebar example</a><br>
+				This example demonstrates the Titlebar.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Button/ToggleButton/ToggleButton.example.html">ToggleButton example</a><br>
+				This is a example using an ToggleButton.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Button/ToggleGroup/ToggleGroup.example.html">ToggleGroup example</a><br>
+				This is a example using an ToggleGroup.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Toolbar/Toolbar.example.html">Toolbar example</a><br>
+				This is a example using a toolbar having vertically and horizontally aligned child elements.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Button/UploadButton/UploadButton.example.html">UploadButton example</a><br>
+				This is an example using &#x60;UploadButton&#x60;
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="UserChip/UserChip.example.html">UserChip example</a><br>
+				This is a example using an UserChip.
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="HigherOrderComponent/VisibleComponent/VisibleComponent.example.html">VisibleComponent HOC example</a><br>
+				This example shows the usage of the VisibleComponent HOC (High Order Component).
+			</li>
+			<li style="list-style: none"></li>
+			<li>
+				<a href="Window/Window.example.html">Window example</a><br>
+				This example demonstrates the usage of a Window component.
+			</li>
+			<li style="list-style: none"> </li>
+		</ul>
+	</div><!-- Footer -->
+	<footer class="container-fluid-footer bg-4 text-center"></footer>
 </body>
 </html>
