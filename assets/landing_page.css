@@ -1,90 +1,50 @@
-<style>
-    body {
-        font: 20px Open Sans, sans-serif;
-        line-height: 1.5;
-        color: #4d4e53;
-    }
-
-    .margin {
-        margin-bottom: 45px;
-    }
-
-    .bg-1 {
-        background-color: #1abc9c;
-        /* Green */
-        color: #000;
-    }
-
-    .bg-2 {
-        background-color: #474e5d;
-        /* Dark Blue */
-        color: #ffffff;
-    }
-
-    .bg-3 {
-        background-color: #ffffff;
-        /* White */
-        color: #555555;
-    }
-
-    .bg-4 {
-        background-color: #E3E3E3;
-        /* Black Gray */
-        color: #000;
-    }
-
-    .container-fluid {
-        padding-top: 70px;
-        padding-bottom: 170px;
-        ;
-    }
-
-    .container-fluid-footer {
-        padding-top: 20px;
-        padding-bottom: 10px;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-    }
-
-    .navbar {
-        padding-top: 15px;
-        padding-bottom: 20px;
-        border: 0;
-        border-radius: 0;
-        margin-bottom: 0;
-        font-size: 20px;
-    }
-
-    .navbar-nav li a:hover {
-        color: #0095dd !important;
-    }
-
-    .navbar-default {
-        background-color: #E3E3E3;
-    }
-
-    .footer-text {
-        font: 14px Open Sans, sans-serif;
-        line-height: 1.5;
-        color: #4d4e53;
-    }
-
-    #gh-link {
-        display: none;
-    }
-
-    .carousel-inner > .item > img,
-    .carousel-inner > .item > a > img {
-        width: 40%;
-        margin: auto;
-    }
-
-    .carousel-control {
-        background-image: none !important;
-    }
-
-    .item2 {
-        padding-top: 10%;
-    }
-</style>
+.bg-4 {
+	background-color: #E3E3E3;
+}
+.container-fluid {
+	padding-top: 70px;
+	padding-bottom: 100px;
+}
+.container-fluid-footer {
+	padding-top: 20px;
+	padding-bottom: 10px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+.navbar {
+	padding-top: 15px;
+	padding-bottom: 20px;
+	border: 0;
+	border-radius: 0;
+	margin-bottom: 0;
+	font-size: 20px;
+}
+.navbar-nav li a:hover {
+	color: #0095dd !important;
+}
+.navbar-default {
+	background-color: #E3E3E3;
+}
+#gh-link {
+	display: none;
+}
+.carousel-inner>.item>img, .carousel-inner>.item>a>img {
+	width: 40%;
+	margin: auto;
+}
+.carousel-control {
+	background-image: none !important;
+}
+.item2 {
+	padding-top: 15%;
+}
+.img-exp {
+	width: 286px !important;
+	display: inline-block !important;
+	padding: 30px;
+}
+.example-list {
+	font-size: 20px;
+	padding-left: 20%;
+}
