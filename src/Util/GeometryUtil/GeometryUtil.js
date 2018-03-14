@@ -26,12 +26,12 @@ import {
 class GeometryUtil {
 
   /**
-   * The Prefix used to detect multi geometries.
+   * The prefix used to detect multi geometries.
    */
-  static MUTLI_GEOM_PREFIX = 'Multi';
+  static MULTI_GEOM_PREFIX = 'Multi';
 
   /**
-   * Splits a ol.feature with/or ol.geom.Polygon by a ol.feature with/or ol.geom.LineString
+   * Splits an ol.feature with/or ol.geom.Polygon by an ol.feature with/or ol.geom.LineString
    * into an array of instances of ol.feature with/or ol.geom.Polygon.
    * If the target polygon (first param) is of type ol.Feature it will return an
    * array with ol.Feature. If the target polygon (first param) is of type
@@ -171,8 +171,8 @@ class GeometryUtil {
 
     // split all multi-geometries to simple ones if passed geometries are
     // multigeometries
-    if (geomType.startsWith(GeometryUtil.MUTLI_GEOM_PREFIX)) {
-      const multiGeomPartType = geomType.substring(GeometryUtil.MUTLI_GEOM_PREFIX.length);
+    if (geomType.startsWith(GeometryUtil.MULTI_GEOM_PREFIX)) {
+      const multiGeomPartType = geomType.substring(GeometryUtil.MULTI_GEOM_PREFIX.length);
       geometries = GeometryUtil.separateGeometries(geometries);
       geomType = multiGeomPartType;
     }
@@ -200,11 +200,13 @@ class GeometryUtil {
   }
 
   /**
-   * Splits an array of geometries (and multi geometries) or a single MutliGeom
+   * Splits an array of geometries (and multi geometries) or a single MultiGeom
    * into an array of single geometries.
    *
-   * @param {ol.geom.Geometry|ol.geom.Geometry[]} geometries An (array of) ol.geom.geometries;
-   * @returns {ol.geom.Point[]|ol.geom.Polygon[]|ol.geom.Linestring[]} An array of geometries.
+   * Attention: ol.geom.Circle and ol.geom.LinearRing are not supported.
+   *
+   * @param {ol.geom.SimpleGeometry|ol.geom.SimpleGeometry[]} geometries An (array of) ol.geom.geometries;
+   * @returns {ol.geom.Point[]|ol.geom.Polygon[]|ol.geom.LineString[]} An array of geometries.
    */
   static separateGeometries(geometries) {
     const separatedGeometries = [];
@@ -213,8 +215,8 @@ class GeometryUtil {
 
     geometries.forEach(geometry => {
       const geomType = geometry.getType();
-      if (geomType.startsWith(GeometryUtil.MUTLI_GEOM_PREFIX)) {
-        const multiGeomPartType = geomType.substring(GeometryUtil.MUTLI_GEOM_PREFIX.length);
+      if (geomType.startsWith(GeometryUtil.MULTI_GEOM_PREFIX)) {
+        const multiGeomPartType = geomType.substring(GeometryUtil.MULTI_GEOM_PREFIX.length);
         switch (multiGeomPartType) {
           case 'Polygon':
             separatedGeometries.push(...geometry.getPolygons());
