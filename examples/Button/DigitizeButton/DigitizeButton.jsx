@@ -334,8 +334,7 @@ class DigitizeButton extends React.Component {
       digitizeLayer: null,
       interactions: [],
       showLabelPrompt: false,
-      textLabel: '',
-      originalStyle: null
+      textLabel: ''
     };
   }
 
@@ -374,7 +373,7 @@ class DigitizeButton extends React.Component {
       if (drawType) {
         this.createDrawInteraction(pressed);
       } else if (editType) {
-        this.createSelectOrModifyInteraction(pressed);
+        this.createSelectOrModifyInteraction();
       }
     } else {
       interactions.forEach(i => map.removeInteraction(i));
@@ -383,8 +382,6 @@ class DigitizeButton extends React.Component {
       } else {
         if (this._selectInteraction) {
           this._selectInteraction.getFeatures().clear();
-          this._selectInteraction.getFeatures().un('add', this.setSelectionStyle);
-          this._selectInteraction.getFeatures().un('remove', this.restoreFeatureStyle);
         }
         if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
           this._selectInteraction.un('select', this.onFeatureRemove);
@@ -450,11 +447,10 @@ class DigitizeButton extends React.Component {
               })
             })
           });
-          feature.setStyle(styleObj);
         } else {
           styleObj = style || new OlStyleStyle({
             text: new OlStyleText({
-              text: '',
+              text: feature.get('label'),
               offsetX: 5,
               offsetY: 5,
               font: '12px sans-serif',
@@ -466,7 +462,6 @@ class DigitizeButton extends React.Component {
               })
             })
           });
-          feature.setStyle(styleObj);
         }
         return styleObj;
       }
@@ -477,7 +472,6 @@ class DigitizeButton extends React.Component {
             width: 2
           })
         });
-        feature.setStyle(styleObj);
         return styleObj;
       }
       case DigitizeButton.POLYGON_DRAW_TYPE:
@@ -491,7 +485,6 @@ class DigitizeButton extends React.Component {
             width: 2
           })
         });
-        feature.setStyle(styleObj);
         return styleObj;
       }
       default: {
@@ -610,8 +603,8 @@ class DigitizeButton extends React.Component {
 
     this._selectInteraction = new OlInteractionSelect({
       condition: OlEventsCondition.singleClick,
-      style: this.getSelectedStyleFunction,
-      hitTolerance: DigitizeButton.HIT_TOLERANCE
+      hitTolerance: DigitizeButton.HIT_TOLERANCE,
+      style: this.getSelectedStyleFunction
     });
 
     if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
@@ -623,13 +616,10 @@ class DigitizeButton extends React.Component {
     let interactions = [this._selectInteraction];
 
     if (editType === DigitizeButton.EDIT_EDIT_TYPE) {
-      this._selectInteraction.getFeatures().on('add', this.setSelectionStyle);
-      this._selectInteraction.getFeatures().on('remove', this.restoreFeatureStyle);
       const edit = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
         deleteCondition: OlEventsCondition.singleClick,
-        style: this.getSelectedStyleFunction,
-        pixelTolerance: 10
+        style: this.getSelectedStyleFunction
       });
 
       edit.on('modifystart', this.onModifyStart);
@@ -637,6 +627,7 @@ class DigitizeButton extends React.Component {
       const translate = new OlInteractionTranslate({
         features: this._selectInteraction.getFeatures()
       });
+
       interactions.push(edit, translate);
     }
 
@@ -645,43 +636,6 @@ class DigitizeButton extends React.Component {
     map.on('pointermove', this.onPointerMove);
 
     this.setState({interactions});
-  }
-
-
-  /**
-   * Sets selection style on feature after it was selected.
-   *
-   * @param {Event} evt 'add' event of OL select interaction.
-   */
-  setSelectionStyle = evt => {
-    let feat = evt.element;
-    this.setState({
-      originalStyle: feat.getStyle()
-    });
-
-    let text;
-    if (feat.get('isLabel')) {
-      text = feat.getStyle().getText().getText();
-    }
-    feat.setStyle(this.getSelectedStyleFunction(feat, null, text));
-  }
-
-
-  /**
-   * Restores default feature style after it was deselected.
-   *
-   * @param {Event} evt 'remove' event of OL select interaction.
-   */
-  restoreFeatureStyle = evt => {
-    let feat = evt.element;
-    let text;
-    if (feat.get('isLabel')) {
-      text = feat.getStyle().getText().getText();
-    }
-    feat.setStyle(this.state.originalStyle);
-    if (feat.get('isLabel')) {
-      feat.getStyle().getText().setText(text);
-    }
   }
 
   /**
@@ -787,10 +741,7 @@ class DigitizeButton extends React.Component {
    */
   setTextOnFeature = feat => {
     const label = StringUtil.stringDivider(this.state.textLabel, 16, '\n');
-    const style = this.getDigitizeStyleFunction(feat).clone();
-    style.getText().setText(label);
-    feat.setStyle(style);
-
+    feat.set('label', label);
     this.setState({
       textLabel: ''
     });
@@ -835,8 +786,6 @@ class DigitizeButton extends React.Component {
     });
 
     map.getTargetElement().style.cursor = hit ? 'pointer' : '';
-
-
   }
 
   /**
