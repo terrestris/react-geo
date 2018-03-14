@@ -26,6 +26,11 @@ import {
 class GeometryUtil {
 
   /**
+   * The Prefix used to detect multi geometries.
+   */
+  static MUTLI_GEOM_PREFIX = 'Multi';
+
+  /**
    * Splits a ol.feature with/or ol.geom.Polygon by a ol.feature with/or ol.geom.LineString
    * into an array of instances of ol.feature with/or ol.geom.Polygon.
    * If the target polygon (first param) is of type ol.Feature it will return an
@@ -166,26 +171,9 @@ class GeometryUtil {
 
     // split all multi-geometries to simple ones if passed geometries are
     // multigeometries
-    const multiGeomPrefix = 'Multi';
-    if (geomType.startsWith(multiGeomPrefix)) {
-      const multiGeomPartType = geomType.substring(multiGeomPrefix.length);
-      let subGeometries = [];
-      geometries.forEach(geometry => {
-        switch (multiGeomPartType) {
-          case 'Polygon':
-            subGeometries.push(...geometry.getPolygons());
-            break;
-          case 'LineString':
-            subGeometries.push(...geometry.getLineStrings());
-            break;
-          case 'Point':
-            subGeometries.push(...geometry.getPoints());
-            break;
-          default:
-            break;
-        }
-      });
-      geometries = subGeometries;
+    if (geomType.startsWith(GeometryUtil.MUTLI_GEOM_PREFIX)) {
+      const multiGeomPartType = geomType.substring(GeometryUtil.MUTLI_GEOM_PREFIX.length);
+      geometries = GeometryUtil.separateGeometries(geometries);
       geomType = multiGeomPartType;
     }
 
@@ -209,6 +197,42 @@ class GeometryUtil {
     }
     geometries.forEach(geom => append(geom));
     return multiGeom;
+  }
+
+  /**
+   * Splits an array of geometries (and multi geometries) or a single MutliGeom
+   * into an array of single geometries.
+   *
+   * @param {ol.geom.Geometry|ol.geom.Geometry[]} geometries An (array of) ol.geom.geometries;
+   * @returns {ol.geom.Point[]|ol.geom.Polygon[]|ol.geom.Linestring[]} An array of geometries.
+   */
+  static separateGeometries(geometries) {
+    const separatedGeometries = [];
+
+    geometries = Array.isArray(geometries) ? geometries : [geometries];
+
+    geometries.forEach(geometry => {
+      const geomType = geometry.getType();
+      if (geomType.startsWith(GeometryUtil.MUTLI_GEOM_PREFIX)) {
+        const multiGeomPartType = geomType.substring(GeometryUtil.MUTLI_GEOM_PREFIX.length);
+        switch (multiGeomPartType) {
+          case 'Polygon':
+            separatedGeometries.push(...geometry.getPolygons());
+            break;
+          case 'LineString':
+            separatedGeometries.push(...geometry.getLineStrings());
+            break;
+          case 'Point':
+            separatedGeometries.push(...geometry.getPoints());
+            break;
+          default:
+            break;
+        }
+      } else {
+        separatedGeometries.push(geometry);
+      }
+    });
+    return separatedGeometries;
   }
 
   /**
