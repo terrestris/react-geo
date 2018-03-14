@@ -152,7 +152,7 @@ class GeometryUtil {
    * @returns {ol.geom.Multipoint|ol.geom.MultiPolygon|ol.geom.MultiLinestring} A Multigeometry.
    */
   static mergeGeometries(geometries) {
-    const geomType = geometries[0].getType();
+    let geomType = geometries[0].getType();
     let mixedGeometryTypes = false;
     geometries.forEach(geometry => {
       if (geomType !== geometry.getType()) {
@@ -163,6 +163,32 @@ class GeometryUtil {
       // Logger.warn('Can not merge mixed geometries into one multigeometry.');
       return undefined;
     }
+
+    // split all multi-geometries to simple ones if passed geometries are
+    // multigeometries
+    const multiGeomPrefix = 'Multi';
+    if (geomType.startsWith(multiGeomPrefix)) {
+      const multiGeomPartType = geomType.substring(multiGeomPrefix.length);
+      let subGeometries = [];
+      geometries.forEach(geometry => {
+        switch (multiGeomPartType) {
+          case 'Polygon':
+            subGeometries.push(...geometry.getPolygons());
+            break;
+          case 'LineString':
+            subGeometries.push(...geometry.getLineStrings());
+            break;
+          case 'Point':
+            subGeometries.push(...geometry.getPoints());
+            break;
+          default:
+            break;
+        }
+      });
+      geometries = subGeometries;
+      geomType = multiGeomPartType;
+    }
+
     let multiGeom;
     let append;
     switch (geomType) {
