@@ -366,88 +366,6 @@ describe('<DigitizeButton />', () => {
       });
     });
 
-    describe('#setSelectionStyle', () => {
-
-      it ('sets state value for originalStyle', () => {
-
-        const wrapper = setupWrapper();
-        const feat = new OlFeature(new OlGeomPoint([0, 0]));
-
-        const style = new OlStyleStyle({
-          fill: new OlStyleFill({
-            color: 'red'
-          }),
-        });
-        feat.setStyle(style);
-
-        const mockEvt = {
-          element: feat
-        };
-
-        wrapper.instance().setSelectionStyle(mockEvt);
-
-        expect(wrapper.state().originalStyle).toEqual(style);
-      });
-
-      it ('calls getSelectedStyleFunction function if labeled feature is selected', () => {
-
-        const wrapper = setupWrapper();
-        const feat = new OlFeature(new OlGeomPoint([0, 0]));
-
-        const style = new OlStyleStyle({
-          text: new OlStyleText(),
-          fill: new OlStyleFill({
-            color: 'red'
-          }),
-        });
-
-        feat.setStyle(style);
-        feat.set('isLabel', true);
-
-        const mockEvt = {
-          element: feat
-        };
-
-        const selSpy = jest.spyOn(wrapper.instance(), 'getSelectedStyleFunction');
-        wrapper.instance().setSelectionStyle(mockEvt);
-
-        expect(selSpy).toHaveBeenCalledTimes(1);
-
-        selSpy.mockReset();
-        selSpy.mockRestore();
-      });
-    });
-
-    describe('#restoreFeatureStyle', () => {
-
-      it ('sets style stored in state on feature', () => {
-        const wrapper = setupWrapper();
-        wrapper.setState({
-          originalStyle: new OlStyleStyle({
-            text: new OlStyleText(),
-            fill: new OlStyleFill({
-              color: 'red'
-            })
-          })
-        });
-        const labelText = 'labelText';
-        const feat = new OlFeature();
-        feat.setStyle(new OlStyleStyle({
-          text: new OlStyleText({
-            text: labelText
-          })
-        }));
-        feat.set('isLabel', true);
-        const mockEvt = {
-          element: feat
-        };
-
-        wrapper.instance().restoreFeatureStyle(mockEvt);
-        expect(feat.getStyle()).toEqual(wrapper.state().originalStyle);
-        expect(feat.getStyle().getText().getText()).toBe(labelText);
-      });
-    });
-
     describe('#onFeatureRemove',() => {
 
       it ('removes selected feature from the map', () => {
@@ -600,7 +518,7 @@ describe('<DigitizeButton />', () => {
 
         wrapper.instance().setTextOnFeature(feat);
 
-        expect(feat.getStyle().getText().getText()).toBe(label);
+        expect(feat.get('label')).toBe(label);
       });
     });
 
