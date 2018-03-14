@@ -274,9 +274,17 @@ export const bufferedHoleCoords = [
 ];
 
 export const pointCoords2 = [37, 13];
+export const pointCoords3 = [47, 11];
+export const pointCoords4 = [11, 47];
 export const mergedPointCoordinates = [
   [13, 37],
   [37, 13]
+];
+export const mergedPointCoordinates2 = [
+  [13, 37],
+  [37, 13],
+  [47, 11],
+  [11, 47]
 ];
 
 export const boxCoords3 = [[
@@ -326,3 +334,42 @@ export const boxCoords4 = [[
   [0, 0],
   [0, 5]
 ]];
+
+export const expectedMultiPolygon = [
+  [
+    [
+      [10, 40],
+      [40, 40],
+      [40, 10],
+      [10, 10],
+      [10, 40]
+    ]
+  ],
+  [
+    [
+      [15, 35],
+      [35, 35],
+      [35, 15],
+      [15, 15],
+      [15, 35]
+    ]
+  ],
+  [
+    [
+      [0, 20],
+      [20, 20],
+      [20, 0],
+      [0, 0],
+      [0, 20]
+    ]
+  ],
+  [
+    [
+      [0, 5],
+      [5, 5],
+      [5, 0],
+      [0, 0],
+      [0, 5]
+    ]
+  ]
+];

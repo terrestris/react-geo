@@ -42,7 +42,11 @@ import {
   unionedBoxCoordinates,
   differenceBoxCoords,
   intersectionCoords,
-  boxCoords4
+  boxCoords4,
+  pointCoords3,
+  pointCoords4,
+  mergedPointCoordinates2,
+  expectedMultiPolygon
 } from '../../../assets/TestCoords';
 
 describe('GeometryUtil', () => {
@@ -321,6 +325,27 @@ describe('GeometryUtil', () => {
         const mergedLineString = GeometryUtil.mergeGeometries([testLineString1, testLineString2]);
         expect(mergedLineString instanceof OlGeomMultiLineString).toBe(true);
         expect(mergedLineString.getCoordinates()).toEqual(mergedLineStringCoordinates);
+      });
+      it('merges multiple instances of ol.geom.MultiPoint into ol.geom.MultiPoint', () => {
+        const testMultiPoint1 = new OlGeomMultiPoint([pointCoords, pointCoords2]);
+        const testMultiPoint2 = new OlGeomMultiPoint([pointCoords3, pointCoords4]);
+        const mergedMultiPoint = GeometryUtil.mergeGeometries([testMultiPoint1, testMultiPoint2]);
+        expect(mergedMultiPoint instanceof OlGeomMultiPoint).toBe(true);
+        expect(mergedMultiPoint.getCoordinates()).toEqual(mergedPointCoordinates2);
+      });
+      it('merges multiple instances of ol.geom.MultiPolygon into ol.geom.MultiPolygon', () => {
+        const testMultiPolygon1 = new OlGeomMultiPolygon([boxCoords, boxCoords2]);
+        const testMultiPolygon2 = new OlGeomMultiPolygon([boxCoords3, boxCoords4]);
+        const mergedMultiPolygon = GeometryUtil.mergeGeometries([testMultiPolygon1, testMultiPolygon2]);
+        expect(mergedMultiPolygon instanceof OlGeomMultiPolygon).toBe(true);
+        expect(mergedMultiPolygon.getCoordinates()).toEqual(expectedMultiPolygon);
+      });
+      it('merges multiple instances of ol.geom.MultiLineString into ol.geom.MultiLineString', () => {
+        const testMultiLineString1 = new OlGeomMultiLineString([lineStringCoords]);
+        const testMultiLineString2 = new OlGeomMultiLineString([lineStringCoords2]);
+        const mergedMultiLineString = GeometryUtil.mergeGeometries([testMultiLineString1, testMultiLineString2]);
+        expect(mergedMultiLineString instanceof OlGeomMultiLineString).toBe(true);
+        expect(mergedMultiLineString.getCoordinates()).toEqual(mergedLineStringCoordinates);
       });
     });
 
