@@ -52,6 +52,9 @@ rm -Rf ./examples ./docs ./index.html
 # Build the index page
 sed -e "s/__VERSION__/$VERSION/g" $TRAVIS_BUILD_DIR/assets/gh-index.html > index.html
 
+# Update example page
+sed -i -e "s/__VERSION__/$VERSION/g" $TRAVIS_BUILD_DIR/build/examples/index.html
+
 # copy the src dir from previous build folder
 cp -r $SRC_DIR/examples .
 cp -r $SRC_DIR/docs .
