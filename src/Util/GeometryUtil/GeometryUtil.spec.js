@@ -304,6 +304,69 @@ describe('GeometryUtil', () => {
       });
     });
 
+    describe('#separateGeometries', () => {
+      it('can split a single ol.geom.MultiPoint into an array of ol.geom.Points', () => {
+        const testPoint1 = new OlGeomPoint(pointCoords);
+        const testPoint2 = new OlGeomPoint(pointCoords2);
+        const mergedPoint = GeometryUtil.mergeGeometries([testPoint1, testPoint2]);
+        const separatedPoints = GeometryUtil.separateGeometries(mergedPoint);
+        expect(Array.isArray(separatedPoints)).toBe(true);
+        expect(separatedPoints[0].getCoordinates()).toEqual(pointCoords);
+        expect(separatedPoints[1].getCoordinates()).toEqual(pointCoords2);
+      });
+      it('can split a single ol.geom.MultiPolygoin into an array of ol.geom.Polygon', () => {
+        const testPolygon1 = new OlGeomPolygon(boxCoords);
+        const testPolygon2 = new OlGeomPolygon(boxCoords3);
+        const mergedPolygon = GeometryUtil.mergeGeometries([testPolygon1, testPolygon2]);
+        const separatedPolygons = GeometryUtil.separateGeometries(mergedPolygon);
+        expect(Array.isArray(separatedPolygons)).toBe(true);
+        expect(separatedPolygons[0].getCoordinates()).toEqual(boxCoords);
+        expect(separatedPolygons[1].getCoordinates()).toEqual(boxCoords3);
+      });
+      it('can split a single ol.geom.MultiLineString into an array of ol.geom.LineString', () => {
+        const testLineString1 = new OlGeomLineString(lineStringCoords);
+        const testLineString2 = new OlGeomLineString(lineStringCoords2);
+        const mergedLineString = GeometryUtil.mergeGeometries([testLineString1, testLineString2]);
+        const separatedLineStrings = GeometryUtil.separateGeometries(mergedLineString);
+        expect(Array.isArray(separatedLineStrings)).toBe(true);
+        expect(separatedLineStrings[0].getCoordinates()).toEqual(lineStringCoords);
+        expect(separatedLineStrings[1].getCoordinates()).toEqual(lineStringCoords2);
+      });
+      it('can split multiple mixed MultiGeometries into an array of ol.geom.Geomtries', () => {
+        const testPoint1 = new OlGeomPoint(pointCoords);
+        const testPoint2 = new OlGeomPoint(pointCoords2);
+        const mergedPoint = GeometryUtil.mergeGeometries([testPoint1, testPoint2]);
+        const testPolygon1 = new OlGeomPolygon(boxCoords);
+        const testPolygon2 = new OlGeomPolygon(boxCoords3);
+        const mergedPolygon = GeometryUtil.mergeGeometries([testPolygon1, testPolygon2]);
+        const testLineString1 = new OlGeomLineString(lineStringCoords);
+        const testLineString2 = new OlGeomLineString(lineStringCoords2);
+        const mergedLineString = GeometryUtil.mergeGeometries([testLineString1, testLineString2]);
+        const mixedMultiGeoemtries = [mergedPoint, mergedPolygon, mergedLineString];
+        const separatedGeometries = GeometryUtil.separateGeometries(mixedMultiGeoemtries);
+        expect(Array.isArray(separatedGeometries)).toBe(true);
+        expect(separatedGeometries[0].getCoordinates()).toEqual(pointCoords);
+        expect(separatedGeometries[1].getCoordinates()).toEqual(pointCoords2);
+        expect(separatedGeometries[2].getCoordinates()).toEqual(boxCoords);
+        expect(separatedGeometries[3].getCoordinates()).toEqual(boxCoords3);
+        expect(separatedGeometries[4].getCoordinates()).toEqual(lineStringCoords);
+        expect(separatedGeometries[5].getCoordinates()).toEqual(lineStringCoords2);
+      });
+      it('can split multiple mixed MultiGeometries and SingelGeometries into an array of ol.geom.Geomtries', () => {
+        const testPoint1 = new OlGeomPoint(pointCoords);
+        const testPoint2 = new OlGeomPoint(pointCoords2);
+        const mergedPoint = GeometryUtil.mergeGeometries([testPoint1, testPoint2]);
+        const testPolygon1 = new OlGeomPolygon(boxCoords);
+        const testPolygon2 = new OlGeomPolygon(boxCoords3);
+        const mixedMultiGeoemtries = [mergedPoint, testPolygon1, testPolygon2];
+        const separatedGeometries = GeometryUtil.separateGeometries(mixedMultiGeoemtries);
+        expect(Array.isArray(separatedGeometries)).toBe(true);
+        expect(separatedGeometries[0].getCoordinates()).toEqual(pointCoords);
+        expect(separatedGeometries[1].getCoordinates()).toEqual(pointCoords2);
+        expect(separatedGeometries[2].getCoordinates()).toEqual(boxCoords);
+      });
+    });
+
     describe('#mergeGeometries', () => {
       it('merges multiple instances of ol.geom.Point into ol.geom.MultiPoint', () => {
         const testPoint1 = new OlGeomPoint(pointCoords);
