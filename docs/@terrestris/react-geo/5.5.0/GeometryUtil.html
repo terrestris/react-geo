@@ -137,6 +137,72 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="MULTI_GEOM_PREFIX"><span class="type-signature"></span>MULTI_GEOM_PREFIX<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>The prefix used to detect multi geometries.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -300,7 +366,7 @@ If the target is of type ol.geom.Geometry it will return ol.geom.Geometry.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line127">line 127</a>
+        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -513,7 +579,7 @@ If the target is of type ol.geom.Geometry it will return ol.geom.Geometry.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line263">line 263</a>
+        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line289">line 289</a>
     </li></ul></dd>
     
 
@@ -745,7 +811,7 @@ If the polygons are of type ol.geom.Geometry it will return an ol.geom.Geometry.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line300">line 300</a>
+        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line326">line 326</a>
     </li></ul></dd>
     
 
@@ -906,7 +972,7 @@ shared area of the two polygons or null if the polygons don't intersect.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line154">line 154</a>
+        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line159">line 159</a>
     </li></ul></dd>
     
 
@@ -968,6 +1034,174 @@ shared area of the two polygons or null if the polygons don't intersect.</p>
     
 
     
+    <h4 class="name" id=".separateGeometries"><span class="type-signature">(static) </span>separateGeometries<span class="signature">(geometries)</span><span class="type-signature"> &rarr; {Array.&lt;ol.geom.Point>|Array.&lt;ol.geom.Polygon>|Array.&lt;ol.geom.LineString>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Splits an array of geometries (and multi geometries) or a single MultiGeom
+into an array of single geometries.</p>
+<p>Attention: ol.geom.Circle and ol.geom.LinearRing are not supported.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geometries</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.geom.SimpleGeometry</span>
+|
+
+<span class="param-type">Array.&lt;ol.geom.SimpleGeometry></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An (array of) ol.geom.geometries;</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line211">line 211</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An array of geometries.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;ol.geom.Point></span>
+|
+
+<span class="param-type">Array.&lt;ol.geom.Polygon></span>
+|
+
+<span class="param-type">Array.&lt;ol.geom.LineString></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id=".splitByLine"><span class="type-signature">(static) </span>splitByLine<span class="signature">(polygon, lineFeat, projection, tolerance)</span><span class="type-signature"> &rarr; {Array.&lt;ol.Feature>|Array.&lt;ol.geom.Polygon>}</span></h4>
     
 
@@ -976,7 +1210,7 @@ shared area of the two polygons or null if the polygons don't intersect.</p>
 
 
 <div class="description">
-    <p>Splits a ol.feature with/or ol.geom.Polygon by a ol.feature with/or ol.geom.LineString
+    <p>Splits an ol.feature with/or ol.geom.Polygon by an ol.feature with/or ol.geom.LineString
 into an array of instances of ol.feature with/or ol.geom.Polygon.
 If the target polygon (first param) is of type ol.Feature it will return an
 array with ol.Feature. If the target polygon (first param) is of type
@@ -1151,7 +1385,7 @@ ol.geom.Geometry it will return an array with ol.geom.Geometry.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line46">line 46</a>
+        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -1352,7 +1586,7 @@ ol.geom.Geometry it will return an array with ol.geom.Geometry.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line224">line 224</a>
+        <a href="Util_GeometryUtil_GeometryUtil.js.html">Util/GeometryUtil/GeometryUtil.js</a>, <a href="Util_GeometryUtil_GeometryUtil.js.html#line250">line 250</a>
     </li></ul></dd>
     
 
@@ -1430,7 +1664,7 @@ based on a resolution and the Ol.View</a></li><li><a href="global.html#radius">r
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 15 2018 07:52:35 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 15 2018 08:56:37 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>
