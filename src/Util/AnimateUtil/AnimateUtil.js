@@ -47,10 +47,12 @@ class AnimateUtil {
         geometry.translate(deltaX, deltaY);
 
         if (vectorContext.setFillStrokeStyle && vectorContext.setImageStyle &&
-          vectorContext.drawPointGeometry) {
-          vectorContext.setFillStrokeStyle(
-            style.getFill(), style.getStroke());
-          vectorContext.setImageStyle(style.getImage());
+            vectorContext.drawPointGeometry) {
+          if (style) {
+            vectorContext.setFillStrokeStyle(
+              style.getFill(), style.getStroke());
+            vectorContext.setImageStyle(style.getImage());
+          }
           if (geometry instanceof OlGeomPoint) {
             vectorContext.drawPointGeometry(geometry, null);
           } else if (geometry instanceof OlGeomLineString) {
@@ -59,7 +61,9 @@ class AnimateUtil {
             vectorContext.drawPolygonGeometry(geometry, null);
           }
         } else {
-          vectorContext.setStyle(style);
+          if (style) {
+            vectorContext.setStyle(style);
+          }
           vectorContext.drawGeometry(geometry);
         }
 
