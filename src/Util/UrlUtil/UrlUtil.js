@@ -161,8 +161,7 @@ export class UrlUtil {
    * @param {Array} bundleParams An array of query params to bundle, default is
    *                             to ['LAYERS', 'QUERY_LAYERS', 'STYLES'].
    */
-  static bundleOgcRequests(featureInfoUrls, stringify, bundleParams =
-    ['LAYERS', 'QUERY_LAYERS', 'STYLES']) {
+  static bundleOgcRequests(featureInfoUrls, stringify, bundleParams = ['LAYERS', 'QUERY_LAYERS', 'STYLES']) {
     let featureInfoUrlColl = {};
 
     featureInfoUrls.forEach((featureInfoUrl) => {
