@@ -5,8 +5,6 @@ import OlGeomLineString from 'ol/geom/linestring';
 /**
  * This class provides some static methods which might be helpful when working
  * with digitize functions to animate features.
- *
- * @class AnimateUtil
  */
 class AnimateUtil {
 
@@ -22,7 +20,7 @@ class AnimateUtil {
    *
    * @return {String} A listener key from a postcompose event.
    */
-  static moveFeature = (map, featureToMove, duration, pixel, style) => {
+  static moveFeature(map, featureToMove, duration, pixel, style) {
 
     return new Promise(resolve => {
       let listenerKey;
