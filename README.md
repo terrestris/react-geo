@@ -17,7 +17,7 @@ A set of geo related modules. To use in combination with [react](https://github.
 
 ## Feature List
 
-You can find a complete [Feature List](https://github.com/terrestris/react-geo/wiki/Feature-List) in then WiKi.
+You can find a complete [Feature List](https://github.com/terrestris/react-geo/wiki/Feature-List) in the WiKi.
 
 ## Examples and API documentation
 
