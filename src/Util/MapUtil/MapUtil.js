@@ -159,8 +159,7 @@ export class MapUtil {
   }
 
   /**
-   * Returns the layer from the provided map by the given name
-   * (parameter LAYERS).
+   * Returns the layer from the provided map by the given name.
    *
    * @param {ol.Map} map The map to use for lookup.
    * @param {String} name The name to get the layer by.
