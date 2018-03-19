@@ -39,7 +39,7 @@ import UndoUtil from './Util/UndoUtil/UndoUtil';
 import UrlUtil from './Util/UrlUtil/UrlUtil';
 import Logger from './Util/Logger';
 
-import MapProvider from './HigherOrderComponent/MapProvider/MapProvider.jsx';
+import MapProvider from './Provider/MapProvider/MapProvider.jsx';
 import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/VisibleComponent.jsx';
 import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent.jsx';
 import timeLayerAware from './HigherOrderComponent/TimeLayerAware/TimeLayerAware.jsx';
