@@ -93,7 +93,7 @@ class TimeSlider extends React.Component {
    * Converts the various input strings to unix timestamps.
    * @return {Object} the converted values
    */
-  convertTimestamps = () => {
+  convertTimestamps() {
     return {
       min: moment(this.props.min).unix(),
       max: moment(this.props.max).unix(),
@@ -106,7 +106,7 @@ class TimeSlider extends React.Component {
    * @param  {Array | String} val the input value(s)
    * @return {Array | Number}     the converted value(s)
    */
-  convert = val => {
+  convert(val) {
     if (val === undefined) {
       return val;
     }
@@ -120,7 +120,7 @@ class TimeSlider extends React.Component {
    * @param  {Number} unix unix timestamps
    * @return {String}      the formatted timestamps
    */
-  formatTimestamp = unix => {
+  formatTimestamp(unix) {
     return moment(unix * 1000).format(this.props.formatString);
   }
 
@@ -129,7 +129,7 @@ class TimeSlider extends React.Component {
    * timestrings.
    * @param  {Array | Number} value the new value
    */
-  valueUpdated = value => {
+  valueUpdated(value) {
     this.props.onChange(isArray(value) ?
       [moment(value[0] * 1000).toISOString(),
         moment(value[1] * 1000).toISOString()] :
@@ -148,7 +148,7 @@ class TimeSlider extends React.Component {
           range={this.props.useRange}
           min={moment(this.props.min).unix()}
           max={moment(this.props.max).unix()}
-          tipFormatter={this.formatTimestamp}
+          tipFormatter={this.formatTimestamp.bind(this)}
           onChange={this.valueUpdated}
           value={this.convert(this.props.value)}
         />
