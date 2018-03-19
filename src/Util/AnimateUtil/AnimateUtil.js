@@ -22,7 +22,7 @@ class AnimateUtil {
    *
    * @return {String} A listener key from a postcompose event.
    */
-  static moveFeature = (map, featureToMove, duration, pixel, style) => {
+  static moveFeature(map, featureToMove, duration, pixel, style) {
 
     return new Promise(resolve => {
       let listenerKey;
