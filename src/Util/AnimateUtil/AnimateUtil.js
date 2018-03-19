@@ -5,8 +5,6 @@ import OlGeomLineString from 'ol/geom/linestring';
 /**
  * This class provides some static methods which might be helpful when working
  * with digitize functions to animate features.
- *
- * @class AnimateUtil
  */
 class AnimateUtil {
 
