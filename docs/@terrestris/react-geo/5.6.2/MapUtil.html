@@ -202,130 +202,6 @@
 
 
         
-            
-<h4 class="name" id="getLayerPositionInfo"><span class="type-signature"></span>getLayerPositionInfo<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Get information about the LayerPosition in the tree.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_MapUtil_MapUtil.js.html">Util/MapUtil/MapUtil.js</a>, <a href="Util_MapUtil_MapUtil.js.html#line257">line 257</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="roundScale"><span class="type-signature"></span>roundScale<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Rounds a scalenumber in dependency to its size.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Util_MapUtil_MapUtil.js.html">Util/MapUtil/MapUtil.js</a>, <a href="Util_MapUtil_MapUtil.js.html#line350">line 350</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
     
 
     
@@ -1471,6 +1347,212 @@
     
 
     
+    <h4 class="name" id=".getLayerPositionInfo"><span class="type-signature">(static) </span>getLayerPositionInfo<span class="signature">(layer, groupLayerOrMap<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get information about the LayerPosition in the tree.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.layer.Layer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The layer to get the information.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>groupLayerOrMap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.layer.Group</span>
+|
+
+<span class="param-type">ol.Map</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The groupLayer or map
+                                                 containing the layer.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Util_MapUtil_MapUtil.js.html">Util/MapUtil/MapUtil.js</a>, <a href="Util_MapUtil_MapUtil.js.html#line257">line 257</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An object with these keys:
+   {ol.layer.Group} groupLayer The groupLayer containing the layer.
+   {Integer} position The position of the layer in the collection.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id=".getLayersByGroup"><span class="type-signature">(static) </span>getLayersByGroup<span class="signature">(map, layerGroup)</span><span class="type-signature"> &rarr; {Array}</span></h4>
     
 
@@ -2362,6 +2444,163 @@ be displayed at the current map view resolution.</p>
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id=".roundScale"><span class="type-signature">(static) </span>roundScale<span class="signature">(scale)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Rounds a scalenumber in dependency to its size.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>scale</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The exact scale</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Util_MapUtil_MapUtil.js.html">Util/MapUtil/MapUtil.js</a>, <a href="Util_MapUtil_MapUtil.js.html#line350">line 350</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The roundedScale</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -2385,7 +2624,7 @@ based on a resolution and the Ol.View</a></li><li><a href="global.html#radius">r
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 19 2018 14:39:49 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 19 2018 15:36:53 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>

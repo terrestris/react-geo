@@ -350,68 +350,6 @@ given eventtype.</p>
 
         
             
-<h4 class="name" id="onCheck"><span class="type-signature"></span>onCheck<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Sets the visibility of a layer due to its checked state.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line378">line 378</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
 <h4 class="name" id="onCollectionAdd"><span class="type-signature"></span>onCollectionAdd<span class="type-signature"></span></h4>
 
 
@@ -522,69 +460,6 @@ Unregisters the events of deleted layers and rebuilds the treeNodes.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line222">line 222</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="onDrop"><span class="type-signature"></span>onDrop<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>The callback method for the drop event. Layers will get reordered in the map
-and the tree.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line412">line 412</a>
     </li></ul></dd>
     
 
@@ -781,130 +656,6 @@ and the tree.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line262">line 262</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="registerAddRemoveListeners"><span class="type-signature"></span>registerAddRemoveListeners<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Registers the add/remove listeners recursively for all ol.layer.Group.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line176">line 176</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="setLayerVisibility"><span class="type-signature"></span>setLayerVisibility<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Sets the layer visibility. Calls itself recursively for groupLayers.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -1461,6 +1212,435 @@ no function is given (the default) the layer name will be passed.</p>
     
 
     
+    <h4 class="name" id="onCheck"><span class="type-signature"></span>onCheck<span class="signature">(checkedKeys, checked)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sets the visibility of a layer due to its checked state.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>checkedKeys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;String></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Contains all checkedKeys.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>checked</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">e</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The ant-tree event object for this event. See ant docs.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line378">line 378</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="onDrop"><span class="type-signature"></span>onDrop<span class="signature">(e)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>The callback method for the drop event. Layers will get reordered in the map
+and the tree.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The ant-tree event object for this event. See ant docs.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line412">line 412</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="registerAddRemoveListeners"><span class="type-signature"></span>registerAddRemoveListeners<span class="signature">(groupLayer)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Registers the add/remove listeners recursively for all ol.layer.Group.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>groupLayer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.layer.Group</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A ol.layer.Group</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line176">line 176</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="registerResolutionChangeHandler"><span class="type-signature"></span>registerResolutionChangeHandler<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
@@ -1601,6 +1781,164 @@ nodes whenever the view's resolution changes.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line451">line 451</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setLayerVisibility"><span class="type-signature"></span>setLayerVisibility<span class="signature">(layer, visiblity)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sets the layer visibility. Calls itself recursively for groupLayers.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.layer.Base</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The layer.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>visiblity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The visiblity.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -2250,68 +2588,6 @@ given eventtype.</p>
 
         
             
-<h4 class="name" id="onCheck"><span class="type-signature"></span>onCheck<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Sets the visibility of a layer due to its checked state.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line378">line 378</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
 <h4 class="name" id="onCollectionAdd"><span class="type-signature"></span>onCollectionAdd<span class="type-signature"></span></h4>
 
 
@@ -2422,69 +2698,6 @@ Unregisters the events of deleted layers and rebuilds the treeNodes.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line222">line 222</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="onDrop"><span class="type-signature"></span>onDrop<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>The callback method for the drop event. Layers will get reordered in the map
-and the tree.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line412">line 412</a>
     </li></ul></dd>
     
 
@@ -2681,130 +2894,6 @@ and the tree.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line262">line 262</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="registerAddRemoveListeners"><span class="type-signature"></span>registerAddRemoveListeners<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Registers the add/remove listeners recursively for all ol.layer.Group.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line176">line 176</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="setLayerVisibility"><span class="type-signature"></span>setLayerVisibility<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    <p>Sets the layer visibility. Calls itself recursively for groupLayers.</p>
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -3361,6 +3450,435 @@ no function is given (the default) the layer name will be passed.</p>
     
 
     
+    <h4 class="name" id="onCheck"><span class="type-signature"></span>onCheck<span class="signature">(checkedKeys, checked)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sets the visibility of a layer due to its checked state.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>checkedKeys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;String></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Contains all checkedKeys.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>checked</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">e</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The ant-tree event object for this event. See ant docs.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line378">line 378</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="onDrop"><span class="type-signature"></span>onDrop<span class="signature">(e)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>The callback method for the drop event. Layers will get reordered in the map
+and the tree.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The ant-tree event object for this event. See ant docs.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line412">line 412</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="registerAddRemoveListeners"><span class="type-signature"></span>registerAddRemoveListeners<span class="signature">(groupLayer)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Registers the add/remove listeners recursively for all ol.layer.Group.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>groupLayer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.layer.Group</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A ol.layer.Group</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line176">line 176</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="registerResolutionChangeHandler"><span class="type-signature"></span>registerResolutionChangeHandler<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
@@ -3501,6 +4019,164 @@ nodes whenever the view's resolution changes.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line451">line 451</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setLayerVisibility"><span class="type-signature"></span>setLayerVisibility<span class="signature">(layer, visiblity)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sets the layer visibility. Calls itself recursively for groupLayers.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ol.layer.Base</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The layer.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>visiblity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The visiblity.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="LayerTree_LayerTree.jsx.html">LayerTree/LayerTree.jsx</a>, <a href="LayerTree_LayerTree.jsx.html#line392">line 392</a>
     </li></ul></dd>
     
 
@@ -3844,7 +4520,7 @@ based on a resolution and the Ol.View</a></li><li><a href="global.html#radius">r
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 19 2018 14:39:49 GMT+0000 (UTC)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 19 2018 15:36:53 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>

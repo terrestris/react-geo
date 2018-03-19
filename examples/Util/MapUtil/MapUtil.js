@@ -254,7 +254,7 @@ export class MapUtil {
    *    {ol.layer.Group} groupLayer The groupLayer containing the layer.
    *    {Integer} position The position of the layer in the collection.
    */
-  static getLayerPositionInfo = (layer, groupLayerOrMap) => {
+  static getLayerPositionInfo(layer, groupLayerOrMap) {
     const groupLayer = groupLayerOrMap instanceof OlLayerGroup
       ? groupLayerOrMap
       : groupLayerOrMap.getLayerGroup();
@@ -347,7 +347,7 @@ export class MapUtil {
    * @param  {Number} scale The exact scale
    * @return {Number} The roundedScale
    */
-  static roundScale = (scale) => {
+  static roundScale(scale) {
     let roundScale;
     if (scale < 100) {
       roundScale = Math.round(scale, 10);

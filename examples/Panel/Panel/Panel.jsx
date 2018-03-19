@@ -220,7 +220,7 @@ export class Panel extends React.Component {
   /**
    * Toggles the collapse state of the panel.
    */
-  toggleCollapse = () => {
+  toggleCollapse() {
     this.setState({
       collapsed: !this.state.collapsed
     }, () => {
@@ -238,7 +238,7 @@ export class Panel extends React.Component {
    * @param {String} direction A string discribing where the element was grabed.
    * @param {HTMLElement} el The element which gets resized.
    */
-  onResize = (evt, direction, el) => {
+  onResize(evt, direction, el) {
     const { onResize } = this.props;
     if (isFunction(onResize)) {
       onResize(arguments);
@@ -252,7 +252,7 @@ export class Panel extends React.Component {
   /**
    * Function called when resizing is started.
    */
-  onResizeStart = () => {
+  onResizeStart() {
     const { onResizeStart } = this.props;
     if (isFunction(onResizeStart)) {
       onResizeStart(arguments);
@@ -265,7 +265,7 @@ export class Panel extends React.Component {
   /**
    * Function called when resizing is stopped.
    */
-  onResizeStop = () => {
+  onResizeStop() {
     const { onResizeStop } = this.props;
     if (isFunction(onResizeStop)) {
       onResizeStop(arguments);
@@ -299,7 +299,7 @@ export class Panel extends React.Component {
       tools.unshift(<SimpleButton
         icon="compress"
         key="collapse-tool"
-        onClick={this.toggleCollapse}
+        onClick={this.toggleCollapse.bind(this)}
         tooltip={this.props.collapseTooltip}
         size="small"
       />);
@@ -343,9 +343,9 @@ export class Panel extends React.Component {
           topLeft: 'resize-handle resize-handle-top-left',
           topRight: 'resize-handle resize-handle-top-right'
         }}
-        onResize={this.onResize}
-        onResizeStart={this.onResizeStart}
-        onResizeStop={this.onResizeStop}
+        onResize={this.onResize.bind(this)}
+        onResizeStart={this.onResizeStart.bind(this)}
+        onResizeStop={this.onResizeStop.bind(this)}
         {...rndOpts}
       >
         {titleBar}

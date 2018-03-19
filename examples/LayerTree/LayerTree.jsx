@@ -173,7 +173,7 @@ class LayerTree extends React.Component {
    *
    * @param {ol.layer.Group} groupLayer A ol.layer.Group
    */
-  registerAddRemoveListeners = (groupLayer) => {
+  registerAddRemoveListeners(groupLayer) {
     const collection = groupLayer.getLayers();
     const addEvtKey = collection.on('add', this.onCollectionAdd);
     const removeEvtKey = collection.on('remove', this.onCollectionRemove);
@@ -375,7 +375,7 @@ class LayerTree extends React.Component {
    * @param {Array<String>} checkedKeys Contains all checkedKeys.
    * @param {e} checked The ant-tree event object for this event. See ant docs.
    */
-  onCheck = (checkedKeys, e) => {
+  onCheck(checkedKeys, e) {
     const {checked} = e;
     const eventKey = e.node.props.eventKey;
     const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
@@ -389,17 +389,17 @@ class LayerTree extends React.Component {
    * @param {ol.layer.Base} layer The layer.
    * @param {Boolean} visiblity The visiblity.
    */
-  setLayerVisibility = (layer, visiblity) => {
-    if (!(layer instanceof OlLayerBase) || !isBoolean(visiblity)) {
+  setLayerVisibility(layer, visibility) {
+    if (!(layer instanceof OlLayerBase) || !isBoolean(visibility)) {
       Logger.error('setLayerVisibility called without layer or visiblity.');
       return;
     }
     if (layer instanceof OlLayerGroup) {
       layer.getLayers().forEach((subLayer) => {
-        this.setLayerVisibility(subLayer, visiblity);
+        this.setLayerVisibility(subLayer, visibility);
       });
     } else {
-      layer.setVisible(visiblity);
+      layer.setVisible(visibility);
     }
   }
 
@@ -409,7 +409,7 @@ class LayerTree extends React.Component {
    *
    * @param {Object} e The ant-tree event object for this event. See ant docs.
    */
-  onDrop = (e) => {
+  onDrop(e) {
     const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
     const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
     const dragCollection = dragInfo.groupLayer.getLayers();
@@ -460,12 +460,7 @@ class LayerTree extends React.Component {
     let ddListeners;
     if (passThroughProps.draggable) {
       ddListeners = {
-        onDragStart: this.onDragStart,
-        onDragEnter: this.onDragEnter,
-        onDragOver: this.onDragOver,
-        onDragLeave: this.onDragLeave,
-        onDragEnd: this.onDragEnd,
-        onDrop: this.onDrop
+        onDrop: this.onDrop.bind(this)
       };
     }
 
@@ -477,7 +472,7 @@ class LayerTree extends React.Component {
       <Tree
         className={finalClassName}
         checkedKeys={this.state.checkedKeys}
-        onCheck={this.onCheck}
+        onCheck={this.onCheck.bind(this)}
         {...ddListeners}
         {...passThroughProps}
       >
