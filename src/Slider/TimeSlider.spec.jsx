@@ -28,4 +28,68 @@ describe('<TimeSlider />', () => {
     const interval = slider.convert([time, time]);
     expect(interval).toEqual([1500000000, 1500000000]);
   });
+
+  it('#convertTimestamps', () => {
+    const format = 'YYYY-MM-DD hh:mm:ss';
+    const min = moment('2000-01-01 12:00:00', format);
+    const max = moment('2020-01-01 12:00:00', format);
+    const defaultValue = moment('2010-01-01 12:00:00', format);
+    const props = {
+      min, max, defaultValue
+    };
+    const expected = {
+      min: min.unix(),
+      max: max.unix(),
+      defaultValue: defaultValue.unix()
+    };
+    const slider = TestUtil.mountComponent(TimeSlider, props).instance();
+    const got = slider.convertTimestamps();
+    expect(got).toEqual(expected);
+  });
+
+  it('#convert', () => {
+    const format = 'YYYY-MM-DD hh:mm:ss';
+    const val1 = moment('2000-01-01 12:00:00', format);
+    const val2 = moment('2001-01-01 12:00:00', format);
+    const expected1 = val1.unix();
+    const expected2 = [expected1, val2.unix()];
+
+    const slider = TestUtil.mountComponent(TimeSlider, {}).instance();
+    const got1 = slider.convert(val1);
+    const got2 = slider.convert([val1, val2]);
+
+    expect(got1).toEqual(expected1);
+    expect(got2).toEqual(expected2);
+  });
+
+  it('#formatTimestamp', () => {
+    const format = 'YYYY-MM-DD hh:mm:ss';
+    const formatted = '2000-01-01 12:00:00';
+    const val = moment(formatted, format).unix();
+
+    const slider = TestUtil.mountComponent(TimeSlider, {formatString: format}).instance();
+
+    const got = slider.formatTimestamp(val);
+    expect(got).toEqual(formatted);
+  });
+
+  it('#valueUpdated', () => {
+    const format = 'YYYY-MM-DD hh:mm:ss';
+    const val1 = moment('2000-01-01 12:00:00', format);
+    const val2 = moment('2001-01-01 12:00:00', format);
+    const onChange = jest.fn();
+    const expected1 = moment(val1.unix() * 1000).toISOString();
+    const expected2 = [expected1, moment(val2.unix() * 1000).toISOString()];
+
+    const slider = TestUtil.mountComponent(TimeSlider, {onChange}).instance();
+
+    slider.valueUpdated(val1.unix());
+    expect(onChange.mock.calls.length).toBe(1);
+    expect(onChange.mock.calls[0][0]).toEqual(expected1);
+
+    slider.valueUpdated([val1.unix(), val2.unix()]);
+    expect(onChange.mock.calls.length).toBe(2);
+    expect(onChange.mock.calls[1][0]).toEqual(expected2);
+  });
+
 });
