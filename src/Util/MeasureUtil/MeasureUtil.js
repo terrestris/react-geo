@@ -43,7 +43,7 @@ class MeasureUtil {
     let output;
     if (length > 1000) {
       output = (Math.round(length / 1000 * decimalHelper) /
-                decimalHelper) + ' ' + 'km';
+                decimalHelper) + ' km';
     } else {
       output = (Math.round(length * decimalHelper) / decimalHelper) +
                 ' m';
@@ -83,7 +83,7 @@ class MeasureUtil {
                 decimalHelper) + ' km<sup>2</sup>';
     } else {
       output = (Math.round(area * decimalHelper) / decimalHelper) +
-                ' ' + 'm<sup>2</sup>';
+                ' m<sup>2</sup>';
     }
     return output;
   }
@@ -193,7 +193,7 @@ class MeasureUtil {
     angle = MeasureUtil.makeClockwise(angle);
     angle = angle.toFixed(decimalPlacesInToolTips);
 
-    return angle + '°';
+    return `${angle}°`;
   }
 
 }
