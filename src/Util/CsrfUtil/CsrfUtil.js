@@ -14,7 +14,7 @@ import Logger from '../Logger';
  * <meta name="_csrf_parameter_name" content="${_csrf.parameterName}" />
  *
  * @class
- **/
+ */
 class CsrfUtil {
 
   /**
