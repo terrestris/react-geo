@@ -1,0 +1,60 @@
+@import '../../style/variables.less';
+
+button.react-geo-measurebutton {
+  color: #fff;
+  background-color: @primary-color;
+  border-color: darken(@component-background, 10);
+
+  &:focus{
+    background-color: lighten(@primary-color, 10);
+    border-color: lighten(@component-background, 10);
+  }
+
+  &:hover {
+    background-color: lighten(@primary-color, 10);
+    border-color: lighten(@component-background, 10);
+  }
+
+  &:disabled {
+    background-color: @component-background;
+    border-color: darken(@component-background, 10);
+  }
+
+  &.btn-pressed {
+    background-color: darken(@primary-color, 20);
+    border-color: darken(@component-background, 10);
+  }
+}
+
+.react-geo-measure-tooltip {
+  position: relative;
+  background: @measure-dynamic-tooltip-background-color;
+  border-radius: 4px;
+  color: white;
+  padding: 4px 8px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+.react-geo-measure-tooltip-dynamic {
+  opacity: 1;
+  font-weight: bold;
+}
+.react-geo-measure-tooltip-static {
+  background-color: @measure-static-tooltip-background-color;
+  color: black;
+  border: 1px solid white;
+}
+.react-geo-measure-tooltip-dynamic:before,
+.react-geo-measure-tooltip-static:before {
+  border-top: 6px solid @measure-dynamic-tooltip-background-color;
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  margin-left: -7px;
+  left: 50%;
+}
+.react-geo-measure-tooltip-static:before {
+  border-top-color: @measure-static-tooltip-background-color;
+}
