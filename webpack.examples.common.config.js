@@ -29,6 +29,7 @@ const config = {
     'UserChip/UserChip': './src/UserChip/UserChip.example.jsx',
     'Window/Window': './src/Window/Window.example.jsx',
     'HigherOrderComponent/VisibleComponent/VisibleComponent': './src/HigherOrderComponent/VisibleComponent/VisibleComponent.example.jsx',
+    'HigherOrderComponent/DropTargetMap/DropTargetMap': './src/HigherOrderComponent/DropTargetMap/DropTargetMap.example.jsx',
     'Util/GeometryUtil/GeometryUtil': './src/Util/GeometryUtil/GeometryUtil.example.jsx'
   },
 
