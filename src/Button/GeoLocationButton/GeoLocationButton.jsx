@@ -83,7 +83,7 @@ class GeoLocationButton extends React.Component {
      * The openlayers tracking options.
      * @type {Object}
      */
-    trackingOptions: PropTypes.object
+    trackingoptions: PropTypes.object
   };
 
   /**
@@ -95,7 +95,7 @@ class GeoLocationButton extends React.Component {
     onError: () => undefined,
     showMarker: true,
     follow: true,
-    trackingOptions: {
+    trackingoptions: {
       maximumAge: 10000,
       enableHighAccuracy: true,
       timeout: 600000
@@ -188,7 +188,7 @@ class GeoLocationButton extends React.Component {
     // Geolocation Control
     this.geolocationInteraction = new OlGeolocation({
       projection: view.getProjection(),
-      trackingOptions: this.props.trackingOptions
+      trackingOptions: this.props.trackingoptions
     });
     this.geolocationInteraction.setTracking(true);
     if (this.props.showMarker) {
