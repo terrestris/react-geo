@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Toolbar/Toolbar.jsx</title>
+    <title>JSDoc: Source: Button/ZoomInButton/ZoomInButton.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Toolbar/Toolbar.jsx</h1>
+    <h1 class="page-title">Source: Button/ZoomInButton/ZoomInButton.jsx</h1>
 
     
 
@@ -28,31 +28,29 @@
         <article>
             <pre class="prettyprint source linenums"><code>import React from 'react';
 import PropTypes from 'prop-types';
-import './Toolbar.less';
+
+import OlMap from 'ol/map';
+
+import  {
+  SimpleButton
+} from '../../index';
 
 /**
- * A base class representating a toolbar having n children
- * The child components of this toolbar can be aligned in vertical and
- * horizontal (default) way
+ * Class representating a zoom in button.
  *
- * @class The Toolbar
+ * @class The ZoomInButton
  * @extends React.Component
  */
-class Toolbar extends React.Component {
+class ZoomInButton extends React.Component {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = 'react-geo-toolbar'
+  className = 'react-geo-zoominbutton'
 
-  /**
-   * The properties.
-   * @type {Object}
-   */
   static propTypes = {
-
     /**
      * The className which should be added.
      * @type {String}
@@ -60,40 +58,33 @@ class Toolbar extends React.Component {
     className: PropTypes.string,
 
     /**
-     * The children.
-     * @type {Array}
+     * Instance of OL map this component is bound to.
+     *
+     * @type {OlMap}
      */
-    children: PropTypes.node,
-
-    /**
-     * The alignment of the sub components.
-     * @type {String}
-     */
-    alignment: PropTypes.oneOf(['horizontal', 'vertical']),
-
-    /**
-     * An object containing style informations. Applied to Toolbar.
-     * @type {Boolean}
-     */
-    style: PropTypes.object
+    map: PropTypes.instanceOf(OlMap).isRequired,
   }
 
   /**
-   * The default properties.
-   * @type {Object}
+   * Called when the button is clicked.
+   *
+   * @method
    */
-  static defaultProps = {
-    children: [],
-    alignment: 'horizontal'
+  onClick = () => {
+    const map = this.props.map;
+    const view = map.getView();
+    const currentZoom = view.getZoom();
+
+    view.setZoom(currentZoom + 1);
   }
 
   /**
-   * The render function
+   * The render function.
    */
   render() {
     const {
-      style,
-      className
+      className,
+      ...passThroughProps
     } = this.props;
 
     const finalClassName = className
@@ -101,14 +92,16 @@ class Toolbar extends React.Component {
       : this.className;
 
     return (
-      &lt;div className={`${finalClassName} ${this.props.alignment}-toolbar`} style={style}>
-        {this.props.children}
-      &lt;/div>
+      &lt;SimpleButton
+        className={finalClassName}
+        onClick={this.onClick}
+        {...passThroughProps}
+      />
     );
   }
 }
 
-export default Toolbar;
+export default ZoomInButton;
 </code></pre>
         </article>
     </section>
