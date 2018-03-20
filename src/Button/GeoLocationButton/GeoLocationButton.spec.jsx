@@ -54,5 +54,23 @@ describe('<GeoLocationButton />', () => {
       expect(instance.geolocationInteraction).toBeNull();
     });
 
+    it('can use the geolocation interaction', () => {
+      const onChange = jest.fn();
+      const wrapper = TestUtil.mountComponent(GeoLocationButton, {
+        map: map,
+        showMarker: false,
+        onGeolocationChange: onChange
+      });
+      const instance = wrapper.instance();
+      instance.onToggle(true);
+
+      const getPosition = jest.fn();
+      getPosition.mockReturnValue([2, 3]);
+      instance.geolocationInteraction.getPosition = getPosition;
+
+      instance.onGeolocationChange();
+      expect(onChange).toHaveBeenCalledTimes(1);
+    });
+
   });
 });
