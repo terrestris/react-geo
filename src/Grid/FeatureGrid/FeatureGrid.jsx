@@ -22,7 +22,7 @@ import { MapUtil } from '../../index';
 import './FeatureGrid.less';
 
 /**
- * * The FeatureGrid.
+ * The FeatureGrid.
  *
  * @class The FeatureGrid
  * @extends React.Component
