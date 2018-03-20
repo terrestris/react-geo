@@ -1,8 +1,28 @@
----
-layout: basic.hbs
-title: ToggleButton example
-description: This is a example using an ToggleButton.
-collection: Examples
----
-
 This demonstrates the use of ToggleButtons.
+
+A ToggleButton without any configuration:
+
+```jsx
+<ToggleButton
+  onToggle={()=>{}}
+/>
+```
+
+A ToggleButton initially pressed:
+
+```jsx
+<ToggleButton
+  pressed={true}
+  onToggle={()=>{console.info('I start pressed.');}}
+/>
+```
+
+A ToggleButton with an icon and a pressedIcon:
+
+```jsx
+<ToggleButton
+  icon="frown-o"
+  pressedIcon="smile-o"
+  onToggle={()=>{}}
+/>
+```
