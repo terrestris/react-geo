@@ -39,7 +39,7 @@ class MapComponentExample extends React.Component {
       });
 
       const map = new OlMap({
-        target: this.mapDivId,
+        target: null,
         view: new OlView({
           center: [
             135.1691495,
@@ -51,17 +51,27 @@ class MapComponentExample extends React.Component {
         layers: [layer]
       });
 
+      this.map = map;
+
       resolve(map);
     });
+  }
+
+  componentDidMount() {
+    window.setTimeout(() => {
+      this.map.setTarget(this.mapDivId);
+    }, 100);
   }
 
   render() {
     return(
       <MapProvider map={this.mapPromise}>
-        NominatimSearch: <Search />
+        NominatimSearch:
+        <Search />
         <Map
+          id={this.mapDivId}
           style={{
-            height: '512px'
+            height: '400px'
           }}
         />
       </MapProvider>

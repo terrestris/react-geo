@@ -17,18 +17,16 @@ const OlStyleCircle = require('ol/style/circle').default;
 const OlStyleFill = require('ol/style/fill').default;
 const {
   CircleMenu,
-  SimpleButton,
-  MapComponent,
-  MapProvider,
-  mappify
+  SimpleButton
 } = require('../index.js');
-
-const Map = mappify(MapComponent);
 
 class CircleMenuExample extends React.Component {
 
   constructor(props) {
+
     super(props);
+
+    this.mapDivId = `map-${Math.random()}`;
 
     const osmLayer = new OlLayerTile({
       source: new OlSourceOsm()
@@ -70,7 +68,7 @@ class CircleMenuExample extends React.Component {
 
     this.map.on('singleclick', evt => {
       const map = evt.map;
-      const mapEl = document.getElementById('map');
+      const mapEl = document.getElementById(this.mapDivId);
       const pixel = map.getPixelFromCoordinate([135.1691495, 34.6565482]);
       const evtPixel = map.getPixelFromCoordinate(evt.coordinate);
       let visibleMap;
@@ -98,6 +96,10 @@ class CircleMenuExample extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.map.setTarget(this.mapDivId);
+  }
+
   render() {
     const {
       mapMenuCoords,
@@ -106,15 +108,12 @@ class CircleMenuExample extends React.Component {
 
     return (
       <div>
-        <MapProvider
-          map={this.map}
-        >
-          <Map
-            style={{
-              height: '512px'
-            }}
-          />
-        </MapProvider>
+        <div
+          id={this.mapDivId}
+          style={{
+            height: '400px'
+          }}
+        />
         {
           visibleMap ?
             <CircleMenu

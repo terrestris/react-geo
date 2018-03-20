@@ -49,9 +49,7 @@ class DigitizeButtonExample extends React.Component {
 
         <div className="example-block">
           <span>Select a digitize type:</span>
-          <ToggleGroup
-            orientation="horizontal"
-          >
+          <ToggleGroup>
             <DigitizeButton
               name="drawPoint"
               map={this.map}
