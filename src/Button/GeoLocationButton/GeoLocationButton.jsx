@@ -6,8 +6,10 @@ import OlGeolocation from 'ol/geolocation';
 import OlGeomLineString from 'ol/geom/linestring';
 import OlOverlay from 'ol/overlay';
 
-import ToggleButton from '../ToggleButton/ToggleButton.jsx';
-import { MathUtil } from '../../index';
+import {
+  MathUtil,
+  ToggleButton
+} from '../../index';
 
 import './GeoLocationButton.less';
 import mapMarker from '../../../assets/geolocation-marker.png';
@@ -75,7 +77,13 @@ class GeoLocationButton extends React.Component {
      *
      * @type {Boolean}
      */
-    follow: PropTypes.bool
+    follow: PropTypes.bool,
+
+    /**
+     * The openlayers tracking options.
+     * @type {Object}
+     */
+    trackingOptions: PropTypes.object
   };
 
   /**
@@ -86,7 +94,12 @@ class GeoLocationButton extends React.Component {
     onGeolocationChange: () => undefined,
     onError: () => undefined,
     showMarker: true,
-    follow: true
+    follow: true,
+    trackingOptions: {
+      maximumAge: 10000,
+      enableHighAccuracy: true,
+      timeout: 600000
+    }
   }
 
   /**
@@ -175,11 +188,7 @@ class GeoLocationButton extends React.Component {
     // Geolocation Control
     this.geolocationInteraction = new OlGeolocation({
       projection: view.getProjection(),
-      trackingOptions: {
-        maximumAge: 10000,
-        enableHighAccuracy: true,
-        timeout: 600000
-      }
+      trackingOptions: this.props.trackingOptions
     });
     this.geolocationInteraction.setTracking(true);
     if (this.props.showMarker) {
