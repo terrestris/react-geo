@@ -1,4 +1,4 @@
-{
+module.exports = {
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended"
@@ -14,8 +14,7 @@
   },
   "parser": "babel-eslint",
   "globals": {
-    "Promise": false,
-    "__EXAMPLE_MAP__": true
+    "Promise": false
   },
   "rules": {
     "indent": ["error", 2, { "SwitchCase": 1 }],
@@ -44,4 +43,4 @@
     }],
     "space-infix-ops": ["error", {"int32Hint": false}]
   }
-}
+};
