@@ -11,9 +11,8 @@ import {
   ToggleButton
 } from '../../index';
 
-import './GeoLocationButton.less';
-import mapMarker from '../../../assets/geolocation-marker.png';
-import mapMarkerHeading from '../../../assets/geolocation-marker-heading.png';
+import mapMarker from './geolocation-marker.png';
+import mapMarkerHeading from './geolocation-marker-heading.png';
 
 /**
  * The GeoLocationButton.
