@@ -5,6 +5,7 @@ import ToggleButton from './Button/ToggleButton/ToggleButton.jsx';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup.jsx';
 import MeasureButton from './Button/MeasureButton/MeasureButton.jsx';
 import DigitizeButton from './Button/DigitizeButton/DigitizeButton.jsx';
+import ZoomInButton from './Button/ZoomInButton/ZoomInButton.jsx';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.jsx';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
 import ScaleCombo from './Field/ScaleCombo/ScaleCombo.jsx';
@@ -53,6 +54,7 @@ export {
   ToggleGroup,
   MeasureButton,
   DigitizeButton,
+  ZoomInButton,
   LayerTree,
   LayerTreeNode,
   Legend,

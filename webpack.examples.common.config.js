@@ -11,6 +11,7 @@ const config = {
     'Button/MeasureButton/MeasureButton': './src/Button/MeasureButton/MeasureButton.example.jsx',
     'Button/DigitizeButton/DigitizeButton': './src/Button/DigitizeButton/DigitizeButton.example.jsx',
     'Button/UploadButton/UploadButton': './src/Button/UploadButton/UploadButton.example.jsx',
+    'Button/ZoomInButton/ZoomInButton': './src/Button/ZoomInButton/ZoomInButton.example.jsx',
     'CircleMenu/CircleMenu': './src/CircleMenu/CircleMenu.example.jsx',
     'Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo': './src/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.example.jsx',
     'Field/NominatimSearch/NominatimSearch': './src/Field/NominatimSearch/NominatimSearch.example.jsx',
