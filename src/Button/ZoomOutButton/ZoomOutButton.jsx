@@ -8,7 +8,7 @@ import  {
 } from '../../index';
 
 /**
- * Class representating a zoom in button.
+ * Class representing a zoom out button.
  *
  * @class The ZoomOutButton
  * @extends React.Component
