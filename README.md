@@ -23,6 +23,10 @@ You can find a complete [Feature List](https://github.com/terrestris/react-geo/w
 
 Visit https://terrestris.github.io/react-geo/
 
+## Workshop
+
+Visit https://terrestris.github.io/react-geo-ws
+
 ## Installation
 
     npm i @terrestris/react-geo
