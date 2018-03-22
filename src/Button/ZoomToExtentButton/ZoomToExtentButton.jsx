@@ -2,16 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import OlMap from 'ol/map';
-import OlExtent from 'ol/extent';
 import OlSimpleGeometry from 'ol/geom/simplegeometry';
 import {
   SimpleButton
 } from '../../index';
-import { TestUtil } from '../../Util/TestUtil';
-
 
 /**
- * Class representating an zoom to Extent button.
+ * Class representing an zoom to extent button.
  *
  *
  * @class The ZoomToExtentButton
@@ -35,19 +32,33 @@ class ZoomToExtentButton extends React.Component {
 
     /**
      * Instance of OL map this component is bound to.
-     * 
+     * @type {OLMAP}
      */
     map: PropTypes.instanceOf(OlMap).isRequired,
     
     /**
-     * The array extent[minx, miny, maxx, maxy]  (the values must be in the maps coordination system)
-     * or instance of Ol SimpleGeometry that the map should zoom to.
-     * 
+     * The array extent[minx, miny, maxx, maxy]  (the values must be in the maps coordination system) or instance of Ol SimpleGeometry that the map should zoom to.
+     * @type {Array}
      */
     extent: PropTypes.oneOfType([
-      PropTypes.array,//.instanceOf(OlExtent),
+      PropTypes.arrayOf(PropTypes.number),
       PropTypes.instanceOf(OlSimpleGeometry)
-    ]).isRequired
+    ]).isRequired,
+
+    /**
+     * Options for fitting to the given extent.
+     * @type {Object}
+     */
+    fitOptions: PropTypes.object
+    
+  }
+
+  /**
+   * The default properties.
+   * @type {Object}
+   */
+  static defaultProps = {
+    fitOptions: {'constrainResolution': false}
   }
 
   /**
@@ -55,10 +66,13 @@ class ZoomToExtentButton extends React.Component {
    *
    * @method
    */
-  onClick = () => {
-    const{map,extent} = this.props;
+  onClick = (fitProp) => {
+    const{
+      map, 
+      extent 
+    } = this.props;
     const view = map.getView();
-    view.fit(extent,{ constrainResolution: false});
+    view.fit(extent,fitProp);
   }
 
   /**
@@ -67,6 +81,7 @@ class ZoomToExtentButton extends React.Component {
   render() {
     const {
       className,
+      fitOptions,
       ...passThroughProps
     } = this.props;
     const finalClassName = className ?
@@ -78,7 +93,7 @@ class ZoomToExtentButton extends React.Component {
         finalClassName
       }
       onClick = {
-        this.onClick
+        ()=>this.onClick(fitOptions)
       } { ...passThroughProps}
       />
     );

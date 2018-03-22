@@ -8,8 +8,6 @@ import OlExtent from 'ol/extent';
 import OlFeature from 'ol/feature';
 import OlGeomPoint from 'ol/geom/point';
 import OlGeomPolygon from 'ol/geom/polygon';
- import OlProj from 'ol/proj'
-import OlLinearRing from 'ol/geom/linearring'
 import OlPointerPointerEvent from 'ol/pointer/pointerevent';
 import OlMapBrowserPointerEvent from 'ol/mapbrowserpointerevent';
 
@@ -177,35 +175,35 @@ export class TestUtil {
    * Returns a polygon feature with a random position.
    * @type {Object}
    */
-  static generatePolygonGeometry = ((props) => {
+  static generatePolygonGeometry = (() => {
     const polyCoords = [];
     for (let i =0;i<5;i++){
       const coords = [
         Math.floor(Math.random() * 180) - 180,
         Math.floor(Math.random() * 90) - 90
       ];
-      polyCoords.push(coords)
+      polyCoords.push(coords);
     }
-    const extent= OlExtent.boundingExtent(polyCoords)
-    const geom = new OlGeomPolygon.fromExtent(extent) 
-    return geom
+    const extent= OlExtent.boundingExtent(polyCoords);
+    const geom = new OlGeomPolygon.fromExtent(extent); 
+    return geom;
   })
 
   /**
    * Returns a random extent .
    * @type {array}
    */
-  static generateExtent = ((props) => {
+  static generateExtent = (() => {
     const polyCoords = [];
     for (let i =0;i<5;i++){
       const coords = [
         Math.floor(Math.random() * 180) - 180,
         Math.floor(Math.random() * 90) - 90
       ];
-      polyCoords.push(coords)
+      polyCoords.push(coords);
     }
-    const extent= OlExtent.boundingExtent(polyCoords)
-     return extent
+    const extent= OlExtent.boundingExtent(polyCoords);
+    return extent;
   })
 }
 

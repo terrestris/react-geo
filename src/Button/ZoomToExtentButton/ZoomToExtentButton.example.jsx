@@ -40,10 +40,7 @@ render(
     <div className="example-block">
       <span>Zoom to extent button:</span>
       <ZoomToExtentButton map={map} extent={
-        [588947.9928934451,
-        6584461.475575979,
-        1053685.1248673166,
-        6829059.966088544]
+        [588947.9928934451,6584461.475575979,1053685.1248673166,6829059.966088544]
       }>
          Zoom to extent
       </ZoomToExtentButton>
