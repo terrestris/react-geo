@@ -9,6 +9,7 @@ const config = {
     'Button/ToggleButton/ToggleButton': './src/Button/ToggleButton/ToggleButton.example.jsx',
     'Button/ToggleGroup/ToggleGroup': './src/Button/ToggleGroup/ToggleGroup.example.jsx',
     'Button/MeasureButton/MeasureButton': './src/Button/MeasureButton/MeasureButton.example.jsx',
+    'Button/GeoLocationButton/GeoLocationButton': './src/Button/GeoLocationButton/GeoLocationButton.example.jsx',
     'Button/DigitizeButton/DigitizeButton': './src/Button/DigitizeButton/DigitizeButton.example.jsx',
     'Button/UploadButton/UploadButton': './src/Button/UploadButton/UploadButton.example.jsx',
     'Button/ZoomInButton/ZoomInButton': './src/Button/ZoomInButton/ZoomInButton.example.jsx',
