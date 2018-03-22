@@ -12,7 +12,15 @@ import {
  */
 class MultiLayerSlider extends React.Component {
 
+  /**
+   * The className added to this component.
+   * @type {String}
+   * @private
+   */
+  className = 'react-geo-multilayerslider'
+
   static propTypes = {
+    className: PropTypes.string,
 
     /**
      * The layers that should be handled.
@@ -40,8 +48,9 @@ class MultiLayerSlider extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.props.layers.forEach(l => l.setOpacity(0));
-    this.props.layers[0].setOpacity(1);
+    const layers = this.props.layers;
+    layers.forEach(l => l.setOpacity(0));
+    layers[0].setOpacity(1);
   }
 
   /**
@@ -50,20 +59,14 @@ class MultiLayerSlider extends React.Component {
    * @return {String}      the formatted tip value
    */
   formatTip(value) {
-    let layerIdx = this.getLayerIndexForSliderValue(value);
+    const layerIdx = this.getLayerIndexForSliderValue(value);
+    const layers = this.props.layers;
     let tip;
-    if (this.props.layers[layerIdx]) {
-      let opacity = Math.round(this.props.layers[layerIdx].get('opacity') * 100);
-      let l = this.props.layers[layerIdx];
-      let layername = l.get('name') || l.get('title');
-      tip = layername + ' ' + opacity + '%';
-      // if (this.props.layers[layerIdx + 1]) {
-      //   let layerRight = this.props.layers[layerIdx + 1].get('name');
-      //   tip += ' &#10; ';
-      //   tip += layerRight + ' ' + Math.abs(opacity - 100) + '%';
-      // }
-
-      // tip = opacity + ' | ' + Math.abs(opacity - 100);
+    if (layers[layerIdx]) {
+      const opacity = Math.round(layers[layerIdx].get('opacity') * 100);
+      const layer = layers[layerIdx];
+      const layername = layer.get('name') || layer.get('title');
+      tip = `${layername} ${opacity}%`;
     }
     return tip;
   }
@@ -73,18 +76,19 @@ class MultiLayerSlider extends React.Component {
    * @param  {Number} value the new value
    */
   valueUpdated(value) {
-    let layerIdx = this.getLayerIndexForSliderValue(value);
-    let opacity = this.getOpacityForValue(value);
+    const layerIdx = this.getLayerIndexForSliderValue(value);
+    const opacity = this.getOpacityForValue(value);
+    const layers = this.props.layers;
     // set all opacities to 0 first
-    this.props.layers.forEach(l => l.setOpacity(0));
-    if (this.props.layers[layerIdx]) {
-      this.props.layers[layerIdx].setOpacity(1 - opacity);
+    layers.forEach(l => l.setOpacity(0));
+    if (layers[layerIdx]) {
+      layers[layerIdx].setOpacity(1 - opacity);
     }
-    if (this.props.layers[layerIdx - 1] && opacity > 0.5) {
-      this.props.layers[layerIdx - 1].setOpacity(opacity - 0.5);
+    if (layers[layerIdx - 1] && opacity > 0.5) {
+      layers[layerIdx - 1].setOpacity(opacity - 0.5);
     }
-    if (this.props.layers[layerIdx + 1]) {
-      this.props.layers[layerIdx + 1].setOpacity(opacity);
+    if (layers[layerIdx + 1]) {
+      layers[layerIdx + 1].setOpacity(opacity);
     }
   }
 
@@ -94,10 +98,10 @@ class MultiLayerSlider extends React.Component {
    * @return {Number} The opacity
    */
   getOpacityForValue(value) {
-    let length = this.props.layers.length - 1;
-    let ticksPerLayer = Math.round(100 / length);
-    let idx = parseInt(value / ticksPerLayer, 10);
-    let opacity = value / ticksPerLayer - (idx > length ? length : idx);
+    const length = this.props.layers.length - 1;
+    const ticksPerLayer = Math.round(100 / length);
+    const idx = parseInt(value / ticksPerLayer, 10);
+    const opacity = value / ticksPerLayer - (idx > length ? length : idx);
     return opacity > 1 ? 1 : opacity;
   }
 
@@ -107,9 +111,9 @@ class MultiLayerSlider extends React.Component {
    * @return {Number} The layer array index
    */
   getLayerIndexForSliderValue(value) {
-    let length = this.props.layers.length - 1;
-    let ticksPerLayer = Math.round(100 / length);
-    let idx = parseInt(value / ticksPerLayer, 10);
+    const length = this.props.layers.length - 1;
+    const ticksPerLayer = Math.round(100 / length);
+    const idx = parseInt(value / ticksPerLayer, 10);
     return idx > length ? length : idx;
   }
 
@@ -118,11 +122,12 @@ class MultiLayerSlider extends React.Component {
    * @return {Object} The marks object
    */
   getMarks() {
-    let marks = {};
-    let length = this.props.layers.length - 1;
-    this.props.layers.forEach(function(l, i) {
-      let layername = l.get('name') || l.get('title') || 'Layer ' + i + 1;
-      let idx = Math.round(100 / length * i);
+    const marks = {};
+    const layers = this.props.layers;
+    const length = layers.length - 1;
+    layers.forEach(function(l, i) {
+      const layername = l.get('name') || l.get('title') || 'Layer ' + i + 1;
+      const idx = Math.round(100 / length * i);
       marks[idx] = layername;
     });
     return marks;
@@ -132,17 +137,28 @@ class MultiLayerSlider extends React.Component {
    * The render function.
    */
   render() {
+    const {
+      layers,
+      defaultValue,
+      className,
+      ...passThroughProps
+    } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
     return (
-      <div>
-        <Slider
-          marks={this.getMarks()}
-          defaultValue={this.props.defaultValue}
-          min={0}
-          max={100}
-          tipFormatter={this.formatTip.bind(this)}
-          onChange={this.valueUpdated.bind(this)}
-        />
-      </div>
+      <Slider
+        className={finalClassName}
+        marks={this.getMarks()}
+        defaultValue={defaultValue}
+        min={0}
+        max={100}
+        tipFormatter={this.formatTip.bind(this)}
+        onChange={this.valueUpdated.bind(this)}
+        {...passThroughProps}
+      />
     );
   }
 }
