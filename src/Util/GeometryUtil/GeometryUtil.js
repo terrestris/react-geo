@@ -160,7 +160,7 @@ class GeometryUtil {
     let geomType = geometries[0].getType();
     let mixedGeometryTypes = false;
     geometries.forEach(geometry => {
-      if (geomType !== geometry.getType()) {
+      if (geomType.replace('Multi', '') !== geometry.getType().replace('Multi', '')) {
         mixedGeometryTypes = true;
       }
     });
