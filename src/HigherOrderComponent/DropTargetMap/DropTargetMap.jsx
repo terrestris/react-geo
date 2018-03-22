@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import OlFormatGeoJSON from 'ol/format/geojson';
-import OlLayerVector from 'ol/layer/vector';
-import OlSourceVector from 'ol/source/vector';
-import shp from 'shpjs';
+
+import { FileUtil } from '../../index';
 
 /**
  * HOC that adds layers to the map if GeoJSON files or shapefile zip files are
@@ -23,36 +21,6 @@ export function onDropAware(WrappedComponent) {
       map: PropTypes.object
     }
 
-    addGeojsonLayer = json => {
-      const format = new OlFormatGeoJSON();
-      const features = format.readFeatures(json);
-      const layer = new OlLayerVector({
-        source: new OlSourceVector({
-          features: features
-        })
-      });
-
-      this.props.map.addLayer(layer);
-    }
-
-    readGeojsonFile = file => {
-      const reader = new FileReader();
-      reader.readAsText(file);
-      reader.addEventListener('loadend', () => {
-        const content = reader.result;
-        this.addGeojsonLayer(content);
-      });
-    }
-
-    readShpFile = file => {
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(file);
-      reader.addEventListener('loadend', () => {
-        const blob = reader.result;
-        shp(blob).then(this.addGeojsonLayer);
-      });
-    }
-
     onDrop = event => {
       event.preventDefault();
       const files = event.dataTransfer.files;
@@ -60,9 +28,9 @@ export function onDropAware(WrappedComponent) {
         for (let i = 0; i < files.length; ++i) {
           const file = files[i];
           if (file.name.match(/\.zip$/g)) {
-            this.readShpFile(file);
+            FileUtil.addShpLayerFromFile(file, this.props.map);
           } else {
-            this.readGeojsonFile(file);
+            FileUtil.addGeojsonLayerFromFile(file, this.props.map);
           }
         }
       }
