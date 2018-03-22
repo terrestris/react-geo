@@ -6,7 +6,8 @@ import OlSourceVector from 'ol/source/vector';
 import shp from 'shpjs';
 
 /**
- * HOC that adds layers to the map if GeoJSON files are dropped on it.
+ * HOC that adds layers to the map if GeoJSON files or shapefile zip files are
+ * dropped on it.
  * @param  {React.Component} WrappedComponent the map component
  * @return {React.Component} a time layer aware component
  */
