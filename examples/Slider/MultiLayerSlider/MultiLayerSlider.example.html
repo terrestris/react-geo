@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>MultiLayerSlider example</title>
+  <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>/*global hljs*/ hljs.initHighlightingOnLoad();</script>
+</head>
+<style>
+body.example {
+  padding: 1.5em;
+}
+.example-block {
+  padding: 2em;
+}
+.example-block > span {
+  margin-right: 10px;
+}
+</style>
+
+<body class="example">
+  <h2>MultiLayerSlider example</h2>
+  <div id="exampleContainer" class="app"></div>
+  <p>This example shows the usage of the MultiLayerSlider.
+It takes an Array of layers that are already added to the map and makes
+their opacity changeable by a single slider component.</p>
+<p>This way you can slide through a set of layers, which e.g. is useful when using
+layers showing the same area but different content or time.</p>
+
+  <pre>
+    <code class="javascript">import React from &#x27;react&#x27;;
+import { render } from &#x27;react-dom&#x27;;
+import OlSourceTileWMS from &#x27;ol/source/tilewms&#x27;;
+import OlLayerTile from &#x27;ol/layer/tile&#x27;;
+import OlView from &#x27;ol/view&#x27;;
+import OlMap from &#x27;ol/map&#x27;;
+
+import {
+  MultiLayerSlider
+} from &#x27;@terrestris/react-geo&#x27;;
+
+//
+// ***************************** SETUP *****************************************
+//
+const layer1 &#x3D; new OlLayerTile({
+  name: &#x27;Land/Water&#x27;,
+  source: new OlSourceTileWMS({
+    url: &#x27;https://geoserver.mundialis.de/geoserver/wms&#x27;,
+    params: {&#x27;LAYERS&#x27;: &#x27;1_8A1104&#x27;, &#x27;TILED&#x27;: true},
+    serverType: &#x27;geoserver&#x27;
+  })
+});
+const layer2 &#x3D; new OlLayerTile({
+  name: &#x27;True Color Composite&#x27;,
+  source: new OlSourceTileWMS({
+    url: &#x27;https://geoserver.mundialis.de/geoserver/wms&#x27;,
+    params: {&#x27;LAYERS&#x27;: &#x27;1_040302&#x27;, &#x27;TILED&#x27;: true},
+    serverType: &#x27;geoserver&#x27;
+  })
+});
+const layer3 &#x3D; new OlLayerTile({
+  name: &#x27;Color Infrared (vegetation)&#x27;,
+  source: new OlSourceTileWMS({
+    url: &#x27;https://geoserver.mundialis.de/geoserver/wms&#x27;,
+    params: {&#x27;LAYERS&#x27;: &#x27;1_080403&#x27;, &#x27;TILED&#x27;: true},
+    serverType: &#x27;geoserver&#x27;
+  })
+});
+const layer4 &#x3D; new OlLayerTile({
+  name: &#x27;Atmospheric Penetration&#x27;,
+  source: new OlSourceTileWMS({
+    url: &#x27;https://geoserver.mundialis.de/geoserver/wms&#x27;,
+    params: {&#x27;LAYERS&#x27;: &#x27;1_12118A&#x27;, &#x27;TILED&#x27;: true},
+    serverType: &#x27;geoserver&#x27;
+  })
+});
+const layer5 &#x3D; new OlLayerTile({
+  name: &#x27;Vegetation&#x27;,
+  source: new OlSourceTileWMS({
+    url: &#x27;https://geoserver.mundialis.de/geoserver/wms&#x27;,
+    params: {&#x27;LAYERS&#x27;: &#x27;1_118A04&#x27;, &#x27;TILED&#x27;: true},
+    serverType: &#x27;geoserver&#x27;
+  })
+});
+const map &#x3D; new OlMap({
+  layers: [
+    layer1,
+    layer2,
+    layer3,
+    layer4,
+    layer5
+  ],
+  view: new OlView({
+    center: [4100247.903296841, -456383.49866892234],
+    zoom: 13
+  })
+});
+
+//
+// ***************************** SETUP END *************************************
+//
+
+render(
+  &lt;div&gt;
+    &lt;div id&#x3D;&quot;map&quot; style&#x3D;{{height: &#x27;400px&#x27;}}&gt;&lt;/div&gt;
+
+    &lt;div className&#x3D;&quot;example-block&quot;&gt;
+      &lt;span&gt;{&#x27;Move the slider to change the layer\&#x27;s opacity:&#x27;}&lt;/span&gt;
+
+      &lt;MultiLayerSlider
+        layers&#x3D;{[layer1, layer2, layer3, layer4, layer5]}
+      /&gt;
+
+    &lt;/div&gt;
+
+  &lt;/div&gt;,
+
+  // Target
+  document.getElementById(&#x27;exampleContainer&#x27;),
+
+  // Callback
+  () &#x3D;&gt; {
+    map.setTarget(&#x27;map&#x27;);
+  }
+);
+</code>
+  </pre>
+  <script src="../../vendors.js"></script>
+  <script src="../../commons.js"></script>
+  <script src="MultiLayerSlider.js"></script>
+</body>
+</html>

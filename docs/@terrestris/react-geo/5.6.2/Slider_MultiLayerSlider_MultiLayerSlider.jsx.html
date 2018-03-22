@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Util/StringUtil/StringUtil.js</title>
+    <title>JSDoc: Source: Slider/MultiLayerSlider/MultiLayerSlider.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Util/StringUtil/StringUtil.js</h1>
+    <h1 class="page-title">Source: Slider/MultiLayerSlider/MultiLayerSlider.jsx</h1>
 
     
 
@@ -26,121 +26,179 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Helper Class for Strings
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import PropTypes from 'prop-types';
+import OlLayerBase from 'ol/layer/base';
+import {
+  Slider
+} from 'antd';
+
+/**
+ * Slider that changes opacity on a set of layers.
+ *
+ * @class The MultiLayerSlider
+ * @extends React.Component
  */
-class StringUtil {
+class MultiLayerSlider extends React.Component {
 
   /**
-   * Replaces any occurence of a link-like text with &lt;a> tag.
-   *
-   * @param {String} text The string context to replace.
-   * @return {String} The urlified string.
+   * The className added to this component.
+   * @type {String}
+   * @private
    */
-  static urlify(text) {
-    let urlRegex = /(https?:\/\/[^\s]+)/g;
+  className = 'react-geo-multilayerslider';
 
-    return text.replace(urlRegex, `&lt;a href="$1" target="_blank">$1&lt;/a>`);
+  static propTypes = {
+    /**
+     * An additional className which should be added.
+     *
+     * @type {String}
+     */
+    className: PropTypes.string,
+
+    /**
+     * The layers that should be handled. Default is: `[]`.
+     *
+     * @type {Array}
+     */
+    layers: PropTypes.arrayOf(OlLayerBase).isRequired,
+
+    /**
+     * The default value(s). Default is `0`
+     * @type {Array&lt;String> | String}
+     */
+    defaultValue: PropTypes.any
+  }
+
+  static defaultProps = {
+    layers: [],
+    defaultValue: 0
   }
 
   /**
-   * This coerces the value of a string by casting it to the most plausible
-   * datatype, guessed by the value itself.
+   * The constructor.
    *
-   * @param {String} string The input string to coerce.
-   * @return {*} The coerced value.
+   * @constructs MultiLayerSlider
+   * @param {Object} props The properties.
    */
-  static coerce(string) {
-    if (!(string instanceof String || typeof string === 'string')) {
-      return string;
+  constructor(props) {
+    super(props);
+    const layers = this.props.layers;
+    layers.forEach(l => l.setOpacity(0));
+    layers[0].setOpacity(1);
+  }
+
+  /**
+   * Formats the tip for the slider.
+   * @param  {Number} value the slider value
+   * @return {String}      the formatted tip value
+   */
+  formatTip(value) {
+    const layerIdx = this.getLayerIndexForSliderValue(value);
+    const layers = this.props.layers;
+    let tip;
+    if (layers[layerIdx]) {
+      const opacity = Math.round(layers[layerIdx].get('opacity') * 100);
+      const layer = layers[layerIdx];
+      const layername = layer.get('name') || layer.get('title');
+      tip = `${layername} ${opacity}%`;
     }
+    return tip;
+  }
 
-    const isFloatRegex = /^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/;
-
-    if (string.toLowerCase() === 'true') {
-      return true;
-    } else if (string.toLowerCase() === 'false') {
-      return false;
-    } else if (isFloatRegex.test(string)) {
-      return parseFloat(string);
-    } else if (string.startsWith('[')) {
-      return JSON.parse(string).map(a => StringUtil.coerce(a));
-    } else if (string.startsWith('{')) {
-      const parsedObj = JSON.parse(string);
-      let coercedObj = {};
-      Object.keys(parsedObj).forEach(key => {
-        coercedObj[key] = StringUtil.coerce(parsedObj[key]);
-      });
-      return coercedObj;
-    } else {
-      return string;
+  /**
+   * Called when the value of the slider changed.
+   * @param  {Number} value the new value
+   */
+  valueUpdated(value) {
+    const layerIdx = this.getLayerIndexForSliderValue(value);
+    const opacity = this.getOpacityForValue(value);
+    const layers = this.props.layers;
+    // set all opacities to 0 first
+    layers.forEach(l => l.setOpacity(0));
+    if (layers[layerIdx]) {
+      layers[layerIdx].setOpacity(1 - opacity);
+    }
+    if (layers[layerIdx - 1] &amp;&amp; opacity > 0.5) {
+      layers[layerIdx - 1].setOpacity(opacity - 0.5);
+    }
+    if (layers[layerIdx + 1]) {
+      layers[layerIdx + 1].setOpacity(opacity);
     }
   }
 
   /**
-   * Returns a string that is wrapped: every ~`width` chars a space is
-   * replaced with the passed `spaceReplacer`.
-   *
-   * See http://stackoverflow.com/questions/14484787/wrap-text-in-javascript
-   *
-   * @param {String} str The string to wrap.
-   * @param {Number} width The width of a line (number of characters).
-   * @param {String} spaceReplacer The string to replace spaces with.
-   * @return {String} The 'wrapped' string.
+   * Gets the opacity for a given slider value
+   * @param  {Number} value The current slider value
+   * @return {Number} The opacity
    */
-  static stringDivider(str, width, spaceReplacer) {
-
-    let startIndex = 0;
-    let stopIndex = width;
-
-    if (str.length > width) {
-      let p = width;
-      let left;
-      let right;
-      while (p > 0 &amp;&amp; (str[p] !== ' ' &amp;&amp; str[p] !== '-')) {
-        p--;
-      }
-      if (p > 0) {
-        if (str.substring(p, p + 1) === '-') {
-          left = str.substring(0, p + 1);
-        } else {
-          left = str.substring(0, p);
-        }
-        right = str.substring(p + 1);
-        return left + spaceReplacer + StringUtil.stringDivider(
-          right, width, spaceReplacer);
-      } else {
-        // no whitespace or - found,
-        // splitting hard on the width length
-        left = str.substring(startIndex, stopIndex + 1) + '-';
-        right = str.substring(stopIndex + 1);
-        startIndex = stopIndex;
-        stopIndex += width;
-        return left + spaceReplacer + StringUtil.stringDivider(
-          right, width, spaceReplacer);
-      }
-    }
-    return str;
+  getOpacityForValue(value) {
+    const length = this.props.layers.length - 1;
+    const ticksPerLayer = Math.round(100 / length);
+    const idx = parseInt(value / ticksPerLayer, 10);
+    const opacity = value / ticksPerLayer - (idx > length ? length : idx);
+    return opacity > 1 ? 1 : opacity;
   }
 
   /**
-   * Returns the displayed text of an string with html text.
-   *
-   * @param {string} htmlString A string containing html.
-   * @return {string} The stripped Text.
+   * Gets the matching index of the layer array for a given slider value
+   * @param  {Number} value the current slider value
+   * @return {Number} The layer array index
    */
-  static stripHTMLTags(htmlString) {
-    let stripped;
-    if (DOMParser) {
-      // Inspired by https://stackoverflow.com/a/47140708
-      const doc = (new DOMParser()).parseFromString(htmlString, 'text/html');
-      stripped = doc.body.textContent || '';
-    }
-    return stripped;
+  getLayerIndexForSliderValue(value) {
+    const length = this.props.layers.length - 1;
+    const ticksPerLayer = Math.round(100 / length);
+    const idx = parseInt(value / ticksPerLayer, 10);
+    return idx > length ? length : idx;
+  }
+
+  /**
+   * Creates the marks used with the slider based on the layers names.
+   * @return {Object} The marks object
+   */
+  getMarks() {
+    const marks = {};
+    const layers = this.props.layers;
+    const length = layers.length - 1;
+    layers.forEach(function(l, i) {
+      const layername = l.get('name') || l.get('title') || 'Layer ' + i + 1;
+      const idx = Math.round(100 / length * i);
+      marks[idx] = layername;
+    });
+    return marks;
+  }
+
+  /**
+   * The render function.
+   */
+  render() {
+    const {
+      layers,
+      defaultValue,
+      className,
+      ...passThroughProps
+    } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
+    return (
+      &lt;Slider
+        className={finalClassName}
+        marks={this.getMarks.bind(this)}
+        defaultValue={defaultValue}
+        min={0}
+        max={100}
+        tipFormatter={this.formatTip.bind(this)}
+        onChange={this.valueUpdated.bind(this)}
+        {...passThroughProps}
+      />
+    );
   }
 }
 
-export default StringUtil;
+export default MultiLayerSlider;
 </code></pre>
         </article>
     </section>

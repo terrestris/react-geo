@@ -22,6 +22,7 @@ import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid.jsx';
 import PropertyGrid from './Grid/PropertyGrid/PropertyGrid.jsx';
 import TimeSlider from './Slider/TimeSlider.jsx';
+import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
 import UploadButton from './Button/UploadButton/UploadButton.jsx';
 import UserChip from './UserChip/UserChip.jsx';
@@ -89,6 +90,7 @@ export {
   ProjectionUtil,
   StringUtil,
   TimeSlider,
+  MultiLayerSlider,
   UndoUtil,
   UrlUtil,
   MapProvider,
