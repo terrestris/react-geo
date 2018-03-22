@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import OlLayerBase from 'ol/layer/base';
 import {
   Slider
 } from 'antd';
@@ -17,19 +18,25 @@ class MultiLayerSlider extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-multilayerslider'
+  className = 'react-geo-multilayerslider';
 
   static propTypes = {
+    /**
+     * An additional className which should be added.
+     *
+     * @type {String}
+     */
     className: PropTypes.string,
 
     /**
-     * The layers that should be handled.
+     * The layers that should be handled. Default is: `[]`.
+     *
      * @type {Array}
      */
-    layers: PropTypes.array.isRequired,
+    layers: PropTypes.arrayOf(OlLayerBase).isRequired,
 
     /**
-     * The default value(s).
+     * The default value(s). Default is `0`
      * @type {Array<String> | String}
      */
     defaultValue: PropTypes.any
@@ -151,7 +158,7 @@ class MultiLayerSlider extends React.Component {
     return (
       <Slider
         className={finalClassName}
-        marks={this.getMarks()}
+        marks={this.getMarks.bind(this)}
         defaultValue={defaultValue}
         min={0}
         max={100}
