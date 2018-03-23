@@ -7,6 +7,7 @@ import MeasureButton from './Button/MeasureButton/MeasureButton.jsx';
 import GeoLocationButton from './Button/GeoLocationButton/GeoLocationButton.jsx';
 import DigitizeButton from './Button/DigitizeButton/DigitizeButton.jsx';
 import ZoomInButton from './Button/ZoomInButton/ZoomInButton.jsx';
+import ZoomToExtentButton from './Button/ZoomToExtentButton/ZoomToExtentButton.jsx';
 import ZoomOutButton from './Button/ZoomOutButton/ZoomOutButton.jsx';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.jsx';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
@@ -60,6 +61,7 @@ export {
   GeoLocationButton,
   DigitizeButton,
   ZoomInButton,
+  ZoomToExtentButton,
   ZoomOutButton,
   LayerTree,
   LayerTreeNode,
