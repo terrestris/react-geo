@@ -175,36 +175,36 @@ export class TestUtil {
    * Returns a polygon feature with a random position.
    * @type {Object}
    */
-  static generatePolygonGeometry = (() => {
+  static generatePolygonGeometry = (vertices = 4) => {
     const polyCoords = [];
-    for (let i =0;i<5;i++){
+    for (let i = 0; i <= vertices; i++){
       const coords = [
         Math.floor(Math.random() * 180) - 180,
         Math.floor(Math.random() * 90) - 90
       ];
       polyCoords.push(coords);
     }
-    const extent= OlExtent.boundingExtent(polyCoords);
+    const extent = OlExtent.boundingExtent(polyCoords);
     const geom = new OlGeomPolygon.fromExtent(extent); 
     return geom;
-  })
+  }
 
   /**
    * Returns a random extent .
    * @type {array}
    */
-  static generateExtent = (() => {
+  static generateExtent = () => {
     const polyCoords = [];
-    for (let i =0;i<5;i++){
+    for (let i = 0; i < 5; i++){
       const coords = [
         Math.floor(Math.random() * 180) - 180,
         Math.floor(Math.random() * 90) - 90
       ];
       polyCoords.push(coords);
     }
-    const extent= OlExtent.boundingExtent(polyCoords);
+    const extent = OlExtent.boundingExtent(polyCoords);
     return extent;
-  })
+  }
 }
 
 export default TestUtil;

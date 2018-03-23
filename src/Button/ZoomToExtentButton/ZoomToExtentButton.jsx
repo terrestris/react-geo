@@ -32,7 +32,7 @@ class ZoomToExtentButton extends React.Component {
 
     /**
      * Instance of OL map this component is bound to.
-     * @type {OLMAP}
+     * @type {ol.Map}
      */
     map: PropTypes.instanceOf(OlMap).isRequired,
     

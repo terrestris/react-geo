@@ -37,11 +37,11 @@ describe('<ZoomToExtentButton />', () => {
     const newExtent = map.getView().calculateExtent();
     const newSize = OlExtent.getSize(newExtent);
     const mockSize = OlExtent.getSize(mockExtent);
-    const newCenter=OlExtent.getCenter(newExtent);
-    const mockCenter=OlExtent.getCenter(mockExtent);
+    const newCenter = OlExtent.getCenter(newExtent);
+    const mockCenter = OlExtent.getCenter(mockExtent);
     expect(newCenter).toEqual(mockCenter);
-    if (!(mockSize[1] <newSize[1]))     expect(newSize[1]).toEqual(mockSize[1]);
-    if (!(mockSize[0] <newSize[0]))     expect(newSize[0]).toEqual(mockSize[0]);
+    if (!(mockSize[1] < newSize[1]))     expect(newSize[1]).toEqual(mockSize[1]);
+    if (!(mockSize[0] < newSize[0]))     expect(newSize[0]).toEqual(mockSize[0]);
   });
 
   it('zooms to polygon\'s geometry extent when clicked', () => {
@@ -53,10 +53,10 @@ describe('<ZoomToExtentButton />', () => {
     const newExtent = map.getView().calculateExtent();
     const newSize = OlExtent.getSize(newExtent);
     const mockSize = OlExtent.getSize(mockGeometry.getExtent());
-    const newCenter=OlExtent.getCenter(newExtent);
-    const mockCenter=OlExtent.getCenter(mockGeometry.getExtent());
+    const newCenter = OlExtent.getCenter(newExtent);
+    const mockCenter = OlExtent.getCenter(mockGeometry.getExtent());
     expect(newCenter).toEqual(mockCenter);
-    if (!(mockSize[1] <newSize[1]))     expect(newSize[1]).toEqual(mockSize[1]);
-    if (!(mockSize[0] <newSize[0]))     expect(newSize[0]).toEqual(mockSize[0]);
+    if (!(mockSize[1] < newSize[1]))     expect(newSize[1]).toEqual(mockSize[1]);
+    if (!(mockSize[0] < newSize[0]))     expect(newSize[0]).toEqual(mockSize[0]);
   });
 });
