@@ -6,6 +6,7 @@ import OlView from 'ol/view';
 import OlLayerTile from 'ol/layer/tile';
 import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
+import easing from 'ol/easing';
 
 import {
   ZoomToExtentButton
@@ -23,13 +24,15 @@ const map = new OlMap({
   ],
   view: new OlView({
     center: olProj.fromLonLat([37.40570, 8.81566]),
-    zoom: 19
+    zoom: 10
   })
 });
 
 //
 // ***************************** SETUP END *************************************
 //
+
+const extent = [588947.9928934451,6584461.475575979,1053685.1248673166,6829059.966088544];
 
 render(
   <div>
@@ -39,10 +42,23 @@ render(
 
     <div className="example-block">
       <span>Zoom to extent button:</span>
-      <ZoomToExtentButton map={map} extent={
-        [588947.9928934451,6584461.475575979,1053685.1248673166,6829059.966088544]
-      }>
-         Zoom to extent
+      <ZoomToExtentButton map={map} extent={extent}>
+         Zoom to extent (standard, animated)
+      </ZoomToExtentButton>
+      &nbsp;
+      <ZoomToExtentButton map={map} extent={extent} fitOptions={{
+        duration: 0
+      }}
+      >
+        Zoom to extent (no animation)
+      </ZoomToExtentButton>
+      &nbsp;
+      <ZoomToExtentButton map={map} extent={extent} fitOptions={{
+        duration: 3000,
+        easing: easing.inAndOut
+      }}
+      >
+        Zoom to extent (slow animation)
       </ZoomToExtentButton>
     </div>
 

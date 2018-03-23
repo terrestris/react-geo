@@ -28,9 +28,16 @@ describe('<ZoomInButton />', () => {
 
     wrapper.instance().onClick();
 
-    const newZoom = map.getView().getZoom();
+    expect.assertions(1);
+    const promise = new Promise((resolve) => {resolve();});
+    promise.then(() => {
+      const newZoom = map.getView().getZoom();
+      expect(newZoom).toBe(initialZoom + 1);
+    });
 
-    expect(newZoom).toBe(initialZoom + 1);
+    setTimeout(() => {promise.resolve();}, 1200);
+
+    return promise;
   });
 
 });
