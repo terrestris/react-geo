@@ -13,6 +13,7 @@ const config = {
     'Button/DigitizeButton/DigitizeButton': './src/Button/DigitizeButton/DigitizeButton.example.jsx',
     'Button/UploadButton/UploadButton': './src/Button/UploadButton/UploadButton.example.jsx',
     'Button/ZoomInButton/ZoomInButton': './src/Button/ZoomInButton/ZoomInButton.example.jsx',
+    'Button/ZoomToExtentButton/ZoomToExtentButton': './src/Button/ZoomToExtentButton/ZoomToExtentButton.example.jsx',
     'Button/ZoomOutButton/ZoomOutButton': './src/Button/ZoomOutButton/ZoomOutButton.example.jsx',
     'CircleMenu/CircleMenu': './src/CircleMenu/CircleMenu.example.jsx',
     'Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo': './src/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.example.jsx',
