@@ -126,7 +126,7 @@ class CsrfUtil {
    *     cannot be found.
    */
   static getHeaderObject() {
-    const headerObj= {};
+    const headerObj = {};
     const csrfValue = CsrfUtil.getCsrfValue();
     const csrfHeaderName = CsrfUtil.getCsrfHeaderName();
     if (csrfValue !== '' && csrfHeaderName !== '') {
