@@ -38,7 +38,7 @@ class WindowExample extends React.Component {
         {
           this.state.windowIsVisible ?
             <Window
-              parentId="app"
+              parentId="rsg-root"
               title="This is the window title"
               width={300}
               height={150}
