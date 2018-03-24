@@ -110,8 +110,7 @@ const OlStyleText = require('ol/style/text').default;
 const OlStyleFill = require('ol/style/fill').default;
 const OlStyleStroke = require('ol/style/stroke').default;
 const {
-  Input,
-  message
+  Input
 } = require('antd');
 
 const {
@@ -195,7 +194,7 @@ class RemoteFeatureGrid extends React.Component {
         const features = format.readFeatures(response);
 
         if (features.length === 0) {
-          message.warning('No matches found!');
+          alert('No matches found!');
           this.setState({
             nameFilterText: ''
           });
@@ -214,7 +213,7 @@ class RemoteFeatureGrid extends React.Component {
         this.setState({
           loading: false
         });
-        message.error('Could not fetch data!');
+        alert('Could not fetch data!');
       });
   }
 
