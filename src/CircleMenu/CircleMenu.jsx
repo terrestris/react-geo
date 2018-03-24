@@ -127,7 +127,7 @@ export class CircleMenu extends React.Component {
           children.map((child, idx, children) => {
             const start = segmentAngles[0];
             const end = segmentAngles[1];
-            const range = end-start;
+            const range = end - start;
             const amount = range > 270 ? children.length : children.length - 1;
             const rotationAngle = start + (range / amount) * idx;
             return (

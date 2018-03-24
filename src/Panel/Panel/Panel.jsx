@@ -306,7 +306,7 @@ export class Panel extends React.Component {
     }
 
     const titleBarClassName = draggable ?
-      'drag-handle ant-modal-header':
+      'drag-handle ant-modal-header' :
       'ant-modal-header';
 
     const titleBar = this.props.title ? <Titlebar

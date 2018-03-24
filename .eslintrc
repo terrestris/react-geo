@@ -41,6 +41,7 @@
         "ClassDeclaration": true,
         "ArrowFunctionExpression": true
       }
-    }]
+    }],
+    "space-infix-ops": ["error", {"int32Hint": false}]
   }
 }
