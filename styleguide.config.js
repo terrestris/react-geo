@@ -21,6 +21,8 @@ module.exports = {
     return `import { ${name} } from '@terrestris/react-geo';`
   },
   require: [
+    'babel-polyfill',
+    'whatwg-fetch',
     'ol/ol.css'
   ],
   webpackConfig: webpackCommonConf,
