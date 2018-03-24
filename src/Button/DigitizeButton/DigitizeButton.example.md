@@ -8,8 +8,10 @@ const OlLayerTile = require('ol/layer/tile').default;
 const OlSourceOsm = require('ol/source/osm').default;
 const OlProj = require('ol/proj').default;
 
-const ToggleGroup = require('../../index').ToggleGroup;
-const DigitizeButton = require('../../index').DigitizeButton;
+const {
+  ToggleGroup,
+  DigitizeButton
+} = require('../../index');
 
 class DigitizeButtonExample extends React.Component {
 
@@ -47,7 +49,7 @@ class DigitizeButtonExample extends React.Component {
           }}
         />
 
-        <div className="example-block">
+        <div>
           <span>Select a digitize type:</span>
           <ToggleGroup>
             <DigitizeButton
