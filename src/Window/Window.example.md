@@ -30,9 +30,10 @@ class WindowExample extends React.Component {
     return(
       <div>
         <SimpleButton
-          tooltip="Click me to show/hide a window"
           onClick={this.onClick.bind(this)}
-        />
+        >
+          {`Click me to ${this.state.windowIsVisible ? 'hide' : 'show'} a window.`}
+        </SimpleButton>
 
         {
           this.state.windowIsVisible ?
@@ -41,6 +42,10 @@ class WindowExample extends React.Component {
               title="This is the window title"
               width={300}
               height={150}
+              style={{
+                position: 'fixed',
+                boxShadow: '5px 5px 5px 0px #888888'
+              }}
               tools={[
                 <SimpleButton
                   key="closeButton"
