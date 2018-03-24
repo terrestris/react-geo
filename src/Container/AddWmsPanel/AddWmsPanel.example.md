@@ -4,14 +4,17 @@ An `AddWmsPanel` shows a list of the parsed layers and each checked layer (or th
 
 ```jsx
 const React = require('react');
-const { message } = require('antd');
-const { AddWmsPanel, SimpleButton, CapabilitiesUtil } = require('../../index.js');
-
 const OlMap = require('ol/map').default;
 const OlView = require('ol/view').default;
 const OlLayerTile = require('ol/layer/tile').default;
 const OlSourceOsm = require('ol/source/osm').default;
-const OlProjection = require('ol/proj').default;
+const OlProj = require('ol/proj').default;
+
+const {
+  AddWmsPanel,
+  SimpleButton,
+  CapabilitiesUtil
+} = require('../../index.js');
 
 // Please note: CORS headers must be set on server providing capabilities document. Otherwise proxy needed.
 const WMS_CAPABILITIES_URL = 'https://ows.terrestris.de/osm/service?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
@@ -31,7 +34,7 @@ class AddWmsPanelExample extends React.Component {
         })
       ],
       view: new OlView({
-        center: OlProjection.fromLonLat([7.40570, 53.81566]),
+        center: OlProj.fromLonLat([7.40570, 53.81566]),
         zoom: 4
       })
     });
@@ -50,18 +53,16 @@ class AddWmsPanelExample extends React.Component {
       .then(CapabilitiesUtil.getLayersFromWmsCapabilties)
       .then(layers => {
         this.setState({
-          layers
+          layers: layers
         });
       })
-      .catch(() => message.error('Could not parse capabilities document.'));
+      .catch(() => alert('Could not parse capabilities document.'));
   }
 
   render() {
     const {
       layers
     } = this.state;
-
-    console.log(layers)
 
     return(
       <div>
@@ -73,11 +74,15 @@ class AddWmsPanelExample extends React.Component {
         />
         <div>
           <SimpleButton
-            onClick={this.onClick}
+            onClick={this.onClick.bind(this)}
           >
             Fetch capabilities of OWS terrestris
           </SimpleButton>
           <AddWmsPanel
+            style={{
+              position: 'relative',
+              height: '500px'
+            }}
             key="1"
             map={this.map}
             wmsLayers={layers}
