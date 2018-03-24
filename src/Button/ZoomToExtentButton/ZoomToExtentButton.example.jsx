@@ -6,7 +6,6 @@ import OlView from 'ol/view';
 import OlLayerTile from 'ol/layer/tile';
 import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
-import easing from 'ol/easing';
 
 import {
   ZoomToExtentButton
@@ -54,8 +53,7 @@ render(
       </ZoomToExtentButton>
       &nbsp;
       <ZoomToExtentButton map={map} extent={extent} fitOptions={{
-        duration: 3000,
-        easing: easing.inAndOut
+        duration: 3000
       }}
       >
         Zoom to extent (slow animation)
