@@ -91,6 +91,8 @@ class ZoomOutButton extends React.Component {
   render() {
     const {
       className,
+      animate,
+      animateOptions,
       ...passThroughProps
     } = this.props;
 

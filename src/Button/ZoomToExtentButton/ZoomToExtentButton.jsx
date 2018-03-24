@@ -78,18 +78,22 @@ class ZoomToExtentButton extends React.Component {
    *
    * @method
    */
-  onClick = (fitProp = {}) => {
+  onClick() {
     const{
       map, 
-      extent 
+      extent,
+      fitOptions
     } = this.props;
     const view = map.getView();
 
-    if (fitProp.constrainResolution === undefined) {
-      fitProp.constrainResolution = false; // TODO access defaultProps?
-    }
+    const {fitOptions: defaultFitOptions} = ZoomToExtentButton.defaultProps;
 
-    view.fit(extent, fitProp);
+    const finalFitOptions = {
+      ...defaultFitOptions,
+      ...fitOptions
+    };
+
+    view.fit(extent, finalFitOptions);
   }
 
   /**
@@ -106,12 +110,10 @@ class ZoomToExtentButton extends React.Component {
       this.className;
 
     return ( 
-      <SimpleButton className = {
-        finalClassName
-      }
-      onClick = {
-        ()=>this.onClick(fitOptions)
-      } { ...passThroughProps}
+      <SimpleButton
+        className = {finalClassName}
+        onClick = {this.onClick.bind(this)}
+        { ...passThroughProps}
       />
     );
   }
