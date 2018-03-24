@@ -4,10 +4,8 @@ import OlView from 'ol/view';
 import OlMap from 'ol/map';
 import OlSourceVector from 'ol/source/vector';
 import OlLayerVector from 'ol/layer/vector';
-import OlExtent from 'ol/extent';
 import OlFeature from 'ol/feature';
 import OlGeomPoint from 'ol/geom/point';
-import OlGeomPolygon from 'ol/geom/polygon';
 import OlPointerPointerEvent from 'ol/pointer/pointerevent';
 import OlMapBrowserPointerEvent from 'ol/mapbrowserpointerevent';
 
@@ -171,40 +169,6 @@ export class TestUtil {
     return feat;
   })
 
-  /**
-   * Returns a polygon feature with a random position.
-   * @type {Object}
-   */
-  static generatePolygonGeometry = (vertices = 4) => {
-    const polyCoords = [];
-    for (let i = 0; i <= vertices; i++){
-      const coords = [
-        Math.floor(Math.random() * 180) - 180,
-        Math.floor(Math.random() * 90) - 90
-      ];
-      polyCoords.push(coords);
-    }
-    const extent = OlExtent.boundingExtent(polyCoords);
-    const geom = new OlGeomPolygon.fromExtent(extent); 
-    return geom;
-  }
-
-  /**
-   * Returns a random extent .
-   * @type {array}
-   */
-  static generateExtent = () => {
-    const polyCoords = [];
-    for (let i = 0; i < 5; i++){
-      const coords = [
-        Math.floor(Math.random() * 180) - 180,
-        Math.floor(Math.random() * 90) - 90
-      ];
-      polyCoords.push(coords);
-    }
-    const extent = OlExtent.boundingExtent(polyCoords);
-    return extent;
-  }
 }
 
 export default TestUtil;

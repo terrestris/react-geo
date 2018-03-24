@@ -2,6 +2,7 @@
 
 import TestUtil from '../../Util/TestUtil';
 import OlExtent from 'ol/extent';
+import OlGeomPolygon from 'ol/geom/polygon';
 
 import {
   ZoomToExtentButton
@@ -10,13 +11,15 @@ import {
 describe('<ZoomToExtentButton />', () => {
 
   let map;
-  let mockGeometry;
-  let mockExtent;
+  const mockGeometry = new OlGeomPolygon([
+    [[5000, 0], [0, 5000], [5000, 10000], [10000, 5000], [5000, 0]]
+  ]);
+  const mockGeometryCenter = [5000, 5000];
+  const mockExtent = [0, 0, 10000, 10000];
+  const mockExtentCenter = [5000, 5000];
 
   beforeEach(() => {
     map = TestUtil.createMap();
-    mockExtent = TestUtil.generateExtent();
-    mockGeometry = TestUtil.generatePolygonGeometry();
   });
 
   it('is defined', () => {
@@ -24,7 +27,10 @@ describe('<ZoomToExtentButton />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(ZoomToExtentButton);
+    const wrapper = TestUtil.mountComponent(ZoomToExtentButton, {
+      map,
+      extent: mockExtent
+    });
     expect(wrapper).not.toBeUndefined();
   });
 
@@ -34,14 +40,18 @@ describe('<ZoomToExtentButton />', () => {
       extent: mockExtent
     });
     wrapper.instance().onClick();
-    const newExtent = map.getView().calculateExtent();
-    const newSize = OlExtent.getSize(newExtent);
-    const mockSize = OlExtent.getSize(mockExtent);
-    const newCenter = OlExtent.getCenter(newExtent);
-    const mockCenter = OlExtent.getCenter(mockExtent);
-    expect(newCenter).toEqual(mockCenter);
-    if (!(mockSize[1] < newSize[1]))     expect(newSize[1]).toEqual(mockSize[1]);
-    if (!(mockSize[0] < newSize[0]))     expect(newSize[0]).toEqual(mockSize[0]);
+
+    const promise = new Promise(resolve => {
+      setTimeout(resolve, 1200);
+    });
+
+    expect.assertions(2);
+    return promise.then(() => {
+      const newExtent = map.getView().calculateExtent();
+      const newCenter = OlExtent.getCenter(newExtent);
+      expect(newCenter).toEqual(mockExtentCenter);
+      expect(OlExtent.containsExtent(newExtent, mockExtent)).toBe(true);
+    });
   });
 
   it('zooms to polygon\'s geometry extent when clicked', () => {
@@ -49,14 +59,20 @@ describe('<ZoomToExtentButton />', () => {
       map,
       extent: mockGeometry
     });
+
     wrapper.instance().onClick();
-    const newExtent = map.getView().calculateExtent();
-    const newSize = OlExtent.getSize(newExtent);
-    const mockSize = OlExtent.getSize(mockGeometry.getExtent());
-    const newCenter = OlExtent.getCenter(newExtent);
-    const mockCenter = OlExtent.getCenter(mockGeometry.getExtent());
-    expect(newCenter).toEqual(mockCenter);
-    if (!(mockSize[1] < newSize[1]))     expect(newSize[1]).toEqual(mockSize[1]);
-    if (!(mockSize[0] < newSize[0]))     expect(newSize[0]).toEqual(mockSize[0]);
+
+    const promise = new Promise(resolve => {
+      setTimeout(resolve, 1200);
+    });
+
+    expect.assertions(2);
+    return promise.then(() => {
+      const newExtent = map.getView().calculateExtent();
+      const newCenter = OlExtent.getCenter(newExtent);
+      expect(newCenter).toEqual(mockGeometryCenter);
+      expect(OlExtent.containsExtent(newExtent, mockExtent)).toBe(true);
+    });
+
   });
 });

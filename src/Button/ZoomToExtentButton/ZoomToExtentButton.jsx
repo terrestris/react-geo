@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import OlMap from 'ol/map';
 import OlSimpleGeometry from 'ol/geom/simplegeometry';
+import easing from 'ol/easing';
+
 import {
   SimpleButton
 } from '../../index';
@@ -46,10 +48,16 @@ class ZoomToExtentButton extends React.Component {
     ]).isRequired,
 
     /**
-     * Options for fitting to the given extent.
+     * Options for fitting to the given extent. See http://openlayers.org/en/latest/apidoc/ol.View.html#fit
      * @type {Object}
      */
-    fitOptions: PropTypes.object
+    fitOptions: PropTypes.shape({
+      constrainResolution: PropTypes.bool,
+      duration: PropTypes.number,
+      easing: PropTypes.func,
+      padding: PropTypes.arrayOf(PropTypes.number),
+      nearest: PropTypes.bool
+    })
     
   }
 
@@ -58,7 +66,11 @@ class ZoomToExtentButton extends React.Component {
    * @type {Object}
    */
   static defaultProps = {
-    fitOptions: {'constrainResolution': false}
+    fitOptions: {
+      constrainResolution: false,
+      duration: 1000,
+      easing: easing.inAndOut
+    }
   }
 
   /**
@@ -66,13 +78,22 @@ class ZoomToExtentButton extends React.Component {
    *
    * @method
    */
-  onClick = (fitProp) => {
+  onClick() {
     const{
       map, 
-      extent 
+      extent,
+      fitOptions
     } = this.props;
     const view = map.getView();
-    view.fit(extent,fitProp);
+
+    const {fitOptions: defaultFitOptions} = ZoomToExtentButton.defaultProps;
+
+    const finalFitOptions = {
+      ...defaultFitOptions,
+      ...fitOptions
+    };
+
+    view.fit(extent, finalFitOptions);
   }
 
   /**
@@ -89,12 +110,10 @@ class ZoomToExtentButton extends React.Component {
       this.className;
 
     return ( 
-      <SimpleButton className = {
-        finalClassName
-      }
-      onClick = {
-        ()=>this.onClick(fitOptions)
-      } { ...passThroughProps}
+      <SimpleButton
+        className = {finalClassName}
+        onClick = {this.onClick.bind(this)}
+        { ...passThroughProps}
       />
     );
   }

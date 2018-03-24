@@ -17,7 +17,7 @@ describe('<ZoomOutButton />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(ZoomOutButton);
+    const wrapper = TestUtil.mountComponent(ZoomOutButton, {map});
     expect(wrapper).not.toBeUndefined();
   });
 
@@ -28,9 +28,15 @@ describe('<ZoomOutButton />', () => {
 
     wrapper.instance().onClick();
 
-    const newZoom = map.getView().getZoom();
+    const promise = new Promise(resolve => {
+      setTimeout(resolve, 1200);
+    });
 
-    expect(newZoom).toBe(initialZoom - 1);
+    expect.assertions(1);
+    return promise.then(() => {
+      const newZoom = map.getView().getZoom();
+      expect(newZoom).toBe(initialZoom - 1);
+    });
   });
 
 });

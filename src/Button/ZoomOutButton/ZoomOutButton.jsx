@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import OlMap from 'ol/map';
+import easing from 'ol/easing';
 
 import  {
   SimpleButton
@@ -35,6 +36,31 @@ class ZoomOutButton extends React.Component {
      * @type {OlMap}
      */
     map: PropTypes.instanceOf(OlMap).isRequired,
+
+    /**
+     * Whether the zoom out shall be animated. Defaults to `true`.
+     * 
+     * @type {Boolean}
+     */
+    animate: PropTypes.bool,
+
+    /**
+     * The options for the zoom out animation. By default zooming out will take
+     * 1000 milliseconds and an in-and-out easing (which starts slow, speeds up,
+     * and then slows down again) will be used.
+     */
+    animateOptions: PropTypes.shape({
+      duration: PropTypes.number,
+      easing: PropTypes.func
+    })
+  }
+
+  static defaultProps = {
+    animate: true,
+    animateOptions: {
+      duration: 1000,
+      easing: easing.inAndOut
+    }
   }
 
   /**
@@ -42,12 +68,28 @@ class ZoomOutButton extends React.Component {
    *
    * @method
    */
-  onClick = () => {
-    const map = this.props.map;
+  onClick() {
+    const {
+      map,
+      animate,
+      animateOptions: {
+        duration,
+        easing
+      }
+    } = this.props;
     const view = map.getView();
     const currentZoom = view.getZoom();
-
-    view.setZoom(currentZoom - 1);
+    const zoom = currentZoom - 1;
+    if (animate) {
+      const finalOptions = {
+        zoom,
+        duration,
+        easing
+      };
+      view.animate(finalOptions);
+    } else {
+      view.setZoom(zoom);
+    }
   }
 
   /**
@@ -56,6 +98,8 @@ class ZoomOutButton extends React.Component {
   render() {
     const {
       className,
+      animate,
+      animateOptions,
       ...passThroughProps
     } = this.props;
 
@@ -66,7 +110,7 @@ class ZoomOutButton extends React.Component {
     return (
       <SimpleButton
         className={finalClassName}
-        onClick={this.onClick}
+        onClick={this.onClick.bind(this)}
         {...passThroughProps}
       />
     );
