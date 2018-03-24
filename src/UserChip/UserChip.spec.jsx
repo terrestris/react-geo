@@ -31,7 +31,7 @@ describe('<UserChip />', () => {
     const props = {
       imageSrc: testImage
     };
-    const wrapper =TestUtil.mountComponent(UserChip, props);
+    const wrapper = TestUtil.mountComponent(UserChip, props);
     expect(wrapper.find('img').props().src).toContain(testImage);
   });
 

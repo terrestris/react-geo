@@ -59,7 +59,7 @@ describe('MeasureUtil', () => {
           [10, 0],
           [0, 0]
         ];
-        const bigPolyCoords = smallPolyCoords.map(coord => [coord[0]*100, coord[1]*100]);
+        const bigPolyCoords = smallPolyCoords.map(coord => [coord[0] * 100, coord[1] * 100]);
 
         const smallPoly = new OlGeomPolygon([smallPolyCoords]);
         const bigPoly = new OlGeomPolygon([bigPolyCoords]);
