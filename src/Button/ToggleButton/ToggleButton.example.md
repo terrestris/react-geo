@@ -13,7 +13,7 @@ A ToggleButton initially pressed:
 ```jsx
 <ToggleButton
   pressed={true}
-  onToggle={()=>{console.info('I start pressed.');}}
+  onToggle={()=>{}}
 />
 ```
 

@@ -14,19 +14,19 @@ const onChange = (pressed, evt) => {
     name="one"
     icon="frown-o"
     pressedIcon="smile-o"
-    onToggle={(pressed)=>{console.info(`one toggled --> ${pressed}`);}}
+    onToggle={()=>{}}
   />
   <ToggleButton
     name="two"
     icon="frown-o"
     pressedIcon="smile-o"
-    onToggle={(pressed)=>{console.info(`two toggled --> ${pressed}`);}}
+    onToggle={()=>{}}
   />
   <ToggleButton
     name="three"
     icon="frown-o"
     pressedIcon="smile-o"
-    onToggle={(pressed)=>{console.info(`three toggled --> ${pressed}`);}}
+    onToggle={()=>{}}
   />
 </ToggleGroup>
 ```
