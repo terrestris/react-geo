@@ -54,7 +54,7 @@ class ZoomToExtentButton extends React.Component {
     fitOptions: PropTypes.shape({
       constrainResolution: PropTypes.bool,
       duration: PropTypes.number,
-      easing: PropTypes.function,
+      easing: PropTypes.func,
       padding: PropTypes.arrayOf(PropTypes.number),
       nearest: PropTypes.bool
     })

@@ -51,7 +51,7 @@ class ZoomOutButton extends React.Component {
      */
     animateOptions: PropTypes.shape({
       duration: PropTypes.number,
-      easing: PropTypes.function
+      easing: PropTypes.func
     })
   }
 
@@ -69,7 +69,14 @@ class ZoomOutButton extends React.Component {
    * @method
    */
   onClick() {
-    const {map, animate, animateOptions: {duration, easing}} = this.props;
+    const {
+      map,
+      animate,
+      animateOptions: {
+        duration,
+        easing
+      }
+    } = this.props;
     const view = map.getView();
     const currentZoom = view.getZoom();
     const zoom = currentZoom - 1;

@@ -31,7 +31,9 @@ const map = new OlMap({
 // ***************************** SETUP END *************************************
 //
 
-const extent = [588947.9928934451,6584461.475575979,1053685.1248673166,6829059.966088544];
+const extent1 = [588948, 6584461, 1053685, 6829060];
+const extent2 = [608948, 6484461, 1253685, 6629060];
+const extent3 = [628948, 6384461, 1453685, 6429060];
 
 render(
   <div>
@@ -41,18 +43,18 @@ render(
 
     <div className="example-block">
       <span>Zoom to extent button:</span>
-      <ZoomToExtentButton map={map} extent={extent}>
+      <ZoomToExtentButton map={map} extent={extent1}>
          Zoom to extent (standard, animated)
       </ZoomToExtentButton>
       &nbsp;
-      <ZoomToExtentButton map={map} extent={extent} fitOptions={{
+      <ZoomToExtentButton map={map} extent={extent2} fitOptions={{
         duration: 0
       }}
       >
         Zoom to extent (no animation)
       </ZoomToExtentButton>
       &nbsp;
-      <ZoomToExtentButton map={map} extent={extent} fitOptions={{
+      <ZoomToExtentButton map={map} extent={extent3} fitOptions={{
         duration: 3000
       }}
       >
