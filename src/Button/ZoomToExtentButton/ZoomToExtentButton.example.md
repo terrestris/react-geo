@@ -58,7 +58,6 @@ class ZoomToExtentButtonExample extends React.Component {
         >
           Zoom to extent (standard, animated)
         </ZoomToExtentButton>
-        &nbsp;
         <ZoomToExtentButton
           map={this.map}
           extent={this.extent2}
@@ -68,7 +67,6 @@ class ZoomToExtentButtonExample extends React.Component {
         >
           Zoom to extent (no animation)
         </ZoomToExtentButton>
-        &nbsp;
         <ZoomToExtentButton
           map={this.map}
           extent={this.extent3}
