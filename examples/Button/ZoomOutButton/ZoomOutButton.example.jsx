@@ -40,7 +40,15 @@ render(
     <div className="example-block">
       <span>Zoom out button:</span>
       <ZoomOutButton map={map}>
-         Zoom out (-)
+         Zoom out (standard, animated)
+      </ZoomOutButton>
+      &nbsp;
+      <ZoomOutButton map={map} animate={false}>
+         Zoom out (no animation)
+      </ZoomOutButton>
+      &nbsp;
+      <ZoomOutButton map={map} animateOptions={{duration: 1500}}>
+         Zoom out (1.5 seconds animation)
       </ZoomOutButton>
     </div>
 

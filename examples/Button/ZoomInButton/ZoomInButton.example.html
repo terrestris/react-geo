@@ -53,7 +53,7 @@ const map &#x3D; new OlMap({
   ],
   view: new OlView({
     center: olProj.fromLonLat([37.40570, 8.81566]),
-    zoom: 19
+    zoom: 10
   })
 });
 
@@ -70,7 +70,15 @@ render(
     &lt;div className&#x3D;&quot;example-block&quot;&gt;
       &lt;span&gt;Zoom in button:&lt;/span&gt;
       &lt;ZoomInButton map&#x3D;{map}&gt;
-         Zoom in (+)
+         Zoom in (standard, animated)
+      &lt;/ZoomInButton&gt;
+      &amp;nbsp;
+      &lt;ZoomInButton map&#x3D;{map} animate&#x3D;{false}&gt;
+         Zoom in (no animation)
+      &lt;/ZoomInButton&gt;
+      &amp;nbsp;
+      &lt;ZoomInButton map&#x3D;{map} animateOptions&#x3D;{{duration: 1500}}&gt;
+         Zoom in (1.5 seconds animation)
       &lt;/ZoomInButton&gt;
     &lt;/div&gt;
 

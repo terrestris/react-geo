@@ -53,13 +53,17 @@ const map &#x3D; new OlMap({
   ],
   view: new OlView({
     center: olProj.fromLonLat([37.40570, 8.81566]),
-    zoom: 19
+    zoom: 10
   })
 });
 
 //
 // ***************************** SETUP END *************************************
 //
+
+const extent1 &#x3D; [588948, 6584461, 1053685, 6829060];
+const extent2 &#x3D; [608948, 6484461, 1253685, 6629060];
+const extent3 &#x3D; [628948, 6384461, 1453685, 6429060];
 
 render(
   &lt;div&gt;
@@ -69,10 +73,22 @@ render(
 
     &lt;div className&#x3D;&quot;example-block&quot;&gt;
       &lt;span&gt;Zoom to extent button:&lt;/span&gt;
-      &lt;ZoomToExtentButton map&#x3D;{map} extent&#x3D;{
-        [588947.9928934451,6584461.475575979,1053685.1248673166,6829059.966088544]
-      }&gt;
-         Zoom to extent
+      &lt;ZoomToExtentButton map&#x3D;{map} extent&#x3D;{extent1}&gt;
+         Zoom to extent (standard, animated)
+      &lt;/ZoomToExtentButton&gt;
+      &amp;nbsp;
+      &lt;ZoomToExtentButton map&#x3D;{map} extent&#x3D;{extent2} fitOptions&#x3D;{{
+        duration: 0
+      }}
+      &gt;
+        Zoom to extent (no animation)
+      &lt;/ZoomToExtentButton&gt;
+      &amp;nbsp;
+      &lt;ZoomToExtentButton map&#x3D;{map} extent&#x3D;{extent3} fitOptions&#x3D;{{
+        duration: 3000
+      }}
+      &gt;
+        Zoom to extent (slow animation)
       &lt;/ZoomToExtentButton&gt;
     &lt;/div&gt;
 
