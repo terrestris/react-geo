@@ -1,6 +1,5 @@
-node_modules/
-build/
-coverage/
-dist/
+/node_modules
+/build
+/coverage
+/dist
 
-C:\\nppdf32Log\\debuglog.txt
