@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>ZoomInButton example</title>
+  <title>ZoomButton example</title>
   <link rel="stylesheet" href="//openlayers.org/en/latest/css/ol.css" type="text/css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
@@ -23,9 +23,9 @@ body.example {
 </style>
 
 <body class="example">
-  <h2>ZoomInButton example</h2>
+  <h2>ZoomButton example</h2>
   <div id="exampleContainer" class="app"></div>
-  <p>This example demonstrates the use of the <code>ZoomInButton</code>.</p>
+  <p>This example demonstrates some uses of of the <code>ZoomButton</code> to zoom in and out of the map, animated by default.</p>
 
   <pre>
     <code class="javascript">import React from &#x27;react&#x27;;
@@ -38,7 +38,7 @@ import OlSourceOsm from &#x27;ol/source/osm&#x27;;
 import olProj from &#x27;ol/proj&#x27;;
 
 import {
-  ZoomInButton
+  ZoomButton
 } from &#x27;@terrestris/react-geo&#x27;;
 
 //
@@ -68,18 +68,40 @@ render(
     }} /&gt;
 
     &lt;div className&#x3D;&quot;example-block&quot;&gt;
-      &lt;span&gt;Zoom in button:&lt;/span&gt;
-      &lt;ZoomInButton map&#x3D;{map}&gt;
+      &lt;span&gt;Zoom buttons:&lt;/span&gt;
+      &lt;br /&gt;
+      &lt;ZoomButton map&#x3D;{map}&gt;
          Zoom in (standard, animated)
-      &lt;/ZoomInButton&gt;
+      &lt;/ZoomButton&gt;
       &amp;nbsp;
-      &lt;ZoomInButton map&#x3D;{map} animate&#x3D;{false}&gt;
+      &lt;ZoomButton map&#x3D;{map} delta&#x3D;{0.5}&gt;
+         Zoom in (0.5 zoomlevels, animated)
+      &lt;/ZoomButton&gt;
+      &amp;nbsp;
+      &lt;ZoomButton map&#x3D;{map} animate&#x3D;{false}&gt;
          Zoom in (no animation)
-      &lt;/ZoomInButton&gt;
+      &lt;/ZoomButton&gt;
       &amp;nbsp;
-      &lt;ZoomInButton map&#x3D;{map} animateOptions&#x3D;{{duration: 1500}}&gt;
+      &lt;ZoomButton map&#x3D;{map} animateOptions&#x3D;{{duration: 1500}}&gt;
          Zoom in (1.5 seconds animation)
-      &lt;/ZoomInButton&gt;
+      &lt;/ZoomButton&gt;
+      &lt;br /&gt;
+      &lt;br /&gt;
+      &lt;ZoomButton map&#x3D;{map} delta&#x3D;{-1}&gt;
+         Zoom out (standard, animated)
+      &lt;/ZoomButton&gt;
+      &amp;nbsp;
+      &lt;ZoomButton map&#x3D;{map} delta&#x3D;{-2}&gt;
+         Zoom out (2 zoomlevels, animated)
+      &lt;/ZoomButton&gt;
+      &amp;nbsp;
+      &lt;ZoomButton map&#x3D;{map} delta&#x3D;{-1} animate&#x3D;{false}&gt;
+         Zoom out (no animation)
+      &lt;/ZoomButton&gt;
+      &amp;nbsp;
+      &lt;ZoomButton map&#x3D;{map} delta&#x3D;{-1} animateOptions&#x3D;{{duration: 1500}}&gt;
+         Zoom out (1.5 seconds animation)
+      &lt;/ZoomButton&gt;
     &lt;/div&gt;
 
   &lt;/div&gt;,
@@ -96,6 +118,6 @@ render(
   </pre>
   <script src="../../vendors.js"></script>
   <script src="../../commons.js"></script>
-  <script src="ZoomInButton.js"></script>
+  <script src="ZoomButton.js"></script>
 </body>
 </html>

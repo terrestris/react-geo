@@ -9,19 +9,19 @@ import  {
 } from '../../index';
 
 /**
- * Class representing a zoom out button.
+ * Class representating a zoom button.
  *
- * @class The ZoomOutButton
+ * @class The ZoomButton
  * @extends React.Component
  */
-class ZoomOutButton extends React.Component {
+class ZoomButton extends React.Component {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = 'react-geo-zoomoutbutton'
+  className = 'react-geo-zoominbutton'
 
   static propTypes = {
     /**
@@ -38,14 +38,20 @@ class ZoomOutButton extends React.Component {
     map: PropTypes.instanceOf(OlMap).isRequired,
 
     /**
-     * Whether the zoom out shall be animated. Defaults to `true`.
+     * The delta to zoom when clicked. Defaults to positive `1` essentially zooming-in.
+     * Pass negative numbers to zoom out.
+     */
+    delta: PropTypes.number.isRequired,
+
+    /**
+     * Whether the zoom in shall be animated. Defaults to `true`.
      * 
      * @type {Boolean}
      */
     animate: PropTypes.bool,
 
     /**
-     * The options for the zoom out animation. By default zooming out will take
+     * The options for the zoom in animation. By default zooming in will take
      * 1000 milliseconds and an in-and-out easing (which starts slow, speeds up,
      * and then slows down again) will be used.
      */
@@ -56,6 +62,7 @@ class ZoomOutButton extends React.Component {
   }
 
   static defaultProps = {
+    delta: 1,
     animate: true,
     animateOptions: {
       duration: 1000,
@@ -75,11 +82,12 @@ class ZoomOutButton extends React.Component {
       animateOptions: {
         duration,
         easing
-      }
+      },
+      delta
     } = this.props;
     const view = map.getView();
     const currentZoom = view.getZoom();
-    const zoom = currentZoom - 1;
+    const zoom = currentZoom + delta;
     if (animate) {
       const finalOptions = {
         zoom,
@@ -98,6 +106,7 @@ class ZoomOutButton extends React.Component {
   render() {
     const {
       className,
+      delta,
       animate,
       animateOptions,
       ...passThroughProps
@@ -117,4 +126,4 @@ class ZoomOutButton extends React.Component {
   }
 }
 
-export default ZoomOutButton;
+export default ZoomButton;

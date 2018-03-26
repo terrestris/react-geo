@@ -8,7 +8,7 @@ import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
 
 import {
-  ZoomInButton
+  ZoomButton
 } from '../../index.js';
 
 //
@@ -38,18 +38,40 @@ render(
     }} />
 
     <div className="example-block">
-      <span>Zoom in button:</span>
-      <ZoomInButton map={map}>
+      <span>Zoom buttons:</span>
+      <br />
+      <ZoomButton map={map}>
          Zoom in (standard, animated)
-      </ZoomInButton>
+      </ZoomButton>
       &nbsp;
-      <ZoomInButton map={map} animate={false}>
+      <ZoomButton map={map} delta={0.5}>
+         Zoom in (0.5 zoomlevels, animated)
+      </ZoomButton>
+      &nbsp;
+      <ZoomButton map={map} animate={false}>
          Zoom in (no animation)
-      </ZoomInButton>
+      </ZoomButton>
       &nbsp;
-      <ZoomInButton map={map} animateOptions={{duration: 1500}}>
+      <ZoomButton map={map} animateOptions={{duration: 1500}}>
          Zoom in (1.5 seconds animation)
-      </ZoomInButton>
+      </ZoomButton>
+      <br />
+      <br />
+      <ZoomButton map={map} delta={-1}>
+         Zoom out (standard, animated)
+      </ZoomButton>
+      &nbsp;
+      <ZoomButton map={map} delta={-2}>
+         Zoom out (2 zoomlevels, animated)
+      </ZoomButton>
+      &nbsp;
+      <ZoomButton map={map} delta={-1} animate={false}>
+         Zoom out (no animation)
+      </ZoomButton>
+      &nbsp;
+      <ZoomButton map={map} delta={-1} animateOptions={{duration: 1500}}>
+         Zoom out (1.5 seconds animation)
+      </ZoomButton>
     </div>
 
   </div>,
