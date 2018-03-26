@@ -47,17 +47,18 @@ cd $GH_PAGES_DIR
 SRC_DIR=$TRAVIS_BUILD_DIR/build
 
 # Cleanup existing resources.
-rm -Rf ./docs ./index.html
+rm -Rf ./docs/latest ./index.html
 
 # Copy the index page.
 cp $TRAVIS_BUILD_DIR/assets/gh-index.html index.html
 
-if [ -n $TRAVIS_TAG ]; then
-  cp -r $SRC_DIR/styleguide/ $VERSION/docs/
+if [ -n "$TRAVIS_TAG" ]; then
+  mkdir -p docs/v$VERSION
+  cp -r $SRC_DIR/styleguide/. docs/v$VERSION/
 fi
 
 # Copy the src dir from previous build folder.
-cp -r $SRC_DIR/styleguide/ docs/
+cp -r $SRC_DIR/styleguide/ docs/latest/
 
 git add .
 git commit -m "$GH_PAGES_COMMIT_MSG"
