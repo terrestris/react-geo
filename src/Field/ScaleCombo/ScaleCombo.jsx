@@ -94,8 +94,8 @@ class ScaleCombo extends React.Component {
   }
 
   /**
-   * Create a map.
-   * @constructs Map
+   * Create a scale combo.
+   * @constructs ScaleCombo
    */
   constructor(props) {
     super(props);
@@ -233,9 +233,7 @@ class ScaleCombo extends React.Component {
   }
 
   /**
-   * componentWillMount - Description
-   *
-   * @return {type} Description
+   * componentWillMount - lifecycle event.
    */
   componentWillMount() {
     if (isEmpty(this.state.scales) && this.props.map) {

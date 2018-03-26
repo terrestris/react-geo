@@ -67,7 +67,7 @@ describe('<FloatingMapLogo />', () => {
 
   it('delegates image height to child img element', () => {
     const targetHeightNumber = 1909;
-    const targetHeight = targetHeightNumber+'px';
+    const targetHeight = targetHeightNumber + 'px';
     wrapper.setProps({imageHeight: targetHeight});
     let imageElement = wrapper.find('img').getElement();
     expect(imageElement.props.height).toBe(targetHeight);

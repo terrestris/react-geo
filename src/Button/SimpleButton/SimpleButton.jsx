@@ -112,7 +112,7 @@ class SimpleButton extends React.Component {
               <Icon
                 name={icon ? icon : ''}
                 className={fontIcon}
-              /> :null
+              /> : null
           }
           {antBtnProps.children}
         </Button>

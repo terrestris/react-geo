@@ -4,7 +4,10 @@ import SimpleButton from './Button/SimpleButton/SimpleButton.jsx';
 import ToggleButton from './Button/ToggleButton/ToggleButton.jsx';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup.jsx';
 import MeasureButton from './Button/MeasureButton/MeasureButton.jsx';
+import GeoLocationButton from './Button/GeoLocationButton/GeoLocationButton.jsx';
 import DigitizeButton from './Button/DigitizeButton/DigitizeButton.jsx';
+import ZoomButton from './Button/ZoomButton/ZoomButton.jsx';
+import ZoomToExtentButton from './Button/ZoomToExtentButton/ZoomToExtentButton.jsx';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.jsx';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
 import ScaleCombo from './Field/ScaleCombo/ScaleCombo.jsx';
@@ -19,6 +22,7 @@ import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid.jsx';
 import PropertyGrid from './Grid/PropertyGrid/PropertyGrid.jsx';
 import TimeSlider from './Slider/TimeSlider.jsx';
+import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider.jsx';
 import Toolbar from './Toolbar/Toolbar.jsx';
 import UploadButton from './Button/UploadButton/UploadButton.jsx';
 import UserChip from './UserChip/UserChip.jsx';
@@ -32,6 +36,7 @@ import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
 import FileUtil from './Util/FileUtil/FileUtil.jsx';
 import GeometryUtil from './Util/GeometryUtil/GeometryUtil';
 import MapUtil from './Util/MapUtil/MapUtil';
+import MathUtil from './Util/MathUtil/MathUtil';
 import MeasureUtil from './Util/MeasureUtil/MeasureUtil';
 import ObjectUtil from './Util/ObjectUtil/ObjectUtil';
 import ProjectionUtil from './Util/ProjectionUtil/ProjectionUtil';
@@ -54,7 +59,10 @@ export {
   ToggleButton,
   ToggleGroup,
   MeasureButton,
+  GeoLocationButton,
   DigitizeButton,
+  ZoomButton,
+  ZoomToExtentButton,
   LayerTree,
   LayerTreeNode,
   Legend,
@@ -77,6 +85,7 @@ export {
   GeometryUtil,
   Logger,
   MapUtil,
+  MathUtil,
   MeasureUtil,
   CoordinateReferenceSystemCombo,
   NominatimSearch,
@@ -84,6 +93,7 @@ export {
   ProjectionUtil,
   StringUtil,
   TimeSlider,
+  MultiLayerSlider,
   UndoUtil,
   UrlUtil,
   MapProvider,
