@@ -29,14 +29,16 @@ Visit https://terrestris.github.io/react-geo-ws
 
 ## Installation
 
-    npm i @terrestris/react-geo
+```javascript static
+npm i @terrestris/react-geo
+```
 
 ### Requirements
 
 react-geo is designed to be used with es6-modules.
 To use a component just import it like we do it in the [examples](https://terrestris.github.io/react-geo/examples/index.html):
 
-```javascript
+```javascript static
 import {
   CircleMenu,
   SimpleButton,
@@ -48,7 +50,7 @@ import {
 
 The use of [webpack](https://www.npmjs.com/package/webpack) and [babel](https://www.npmjs.com/package/babel-core) is recommended. You need to configure a [less-loader](https://www.npmjs.com/package/less-loader) inside your webpack-config to receive `react-geo` specific styling.
 
-```javascript
+```javascript static
 module: {
   loaders: [{
     test: /\.less$/,
@@ -73,8 +75,12 @@ If you like to develop a react-geo component out of your project make use of [np
 
 In react-geo:
 
-    npm link
+```javascript static
+npm link
+```
 
 In your project:
 
-    npm link @terrestris/react-geo
+```javascript static
+npm link @terrestris/react-geo
+```
