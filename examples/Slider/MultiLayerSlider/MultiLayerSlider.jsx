@@ -158,7 +158,7 @@ class MultiLayerSlider extends React.Component {
     return (
       <Slider
         className={finalClassName}
-        marks={this.getMarks.bind(this)}
+        marks={this.getMarks()}
         defaultValue={defaultValue}
         min={0}
         max={100}
