@@ -4,7 +4,6 @@ the map.
 
 ```jsx
 const React = require('react');
-const { render } = require('react-dom');
 const OlSourceOsm = require('ol/source/osm').default;
 const OlLayerTile = require('ol/layer/tile').default;
 const OlView = require('ol/view').default;
