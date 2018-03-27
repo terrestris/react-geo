@@ -245,6 +245,23 @@ export class MapUtil {
   }
 
   /**
+   * Returns the list of layers matching the given pair of properties.
+   *
+   * @param {ol.Map} map The map to use for lookup.
+   * @param {String} key The property key.
+   * @param {Object} value The property value.
+   *
+   * @return {ol.layer.Base} The list of matching layers.
+   */
+  static getLayersByProperty(map, key, value) {
+    if (!map || !key) {
+      return;
+    }
+    const mapLayers = MapUtil.getAllLayers(map);
+    return mapLayers.filter(l => l.get(key) === value);
+  }
+
+  /**
    * Get information about the LayerPosition in the tree.
    *
    * @param {ol.layer.Layer} layer The layer to get the information.
