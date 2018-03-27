@@ -666,8 +666,47 @@ describe('MapUtil', () => {
       const map = new OlMap({view: view});
       expect(MapUtil.layerInResolutionRange(layer, map)).toBe(false);
     });
-
   });
 
+  describe('#getLayersByProperty', () => {
+    it('is defined', () => {
+      expect(MapUtil.getLayersByProperty).not.toBeUndefined();
+    });
 
+    it('is a function', () => {
+      expect(MapUtil.getLayersByProperty).toBeInstanceOf(Function);
+    });
+
+    it('returns the layer for the given property', () => {
+      const key = 'key';
+      const prop = 'prop';
+      const layer = new OlLayerTile({
+        visible: false
+      });
+      layer.set(key, prop);
+      map.addLayer(layer);
+
+      const got = MapUtil.getLayersByProperty(map, key, prop);
+
+      expect(got).toHaveLength(1);
+      expect(got[0]).toEqual(layer);
+      expect(got[0]).toBeInstanceOf(OlLayerTile);
+      expect(got[0].get('key')).toBe('prop');
+    });
+
+    it('returns undefined if the map is null', () => {
+      const key = 'key';
+      const prop = 'prop';
+      const got = MapUtil.getLayersByProperty(null, key, prop);
+
+      expect(got).toBeUndefined();
+    });
+
+    it('returns undefined if the key is null', () => {
+      const prop = 'prop';
+      const got = MapUtil.getLayersByProperty(map, null, prop);
+
+      expect(got).toBeUndefined();
+    });
+  });
 });
