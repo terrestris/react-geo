@@ -10,14 +10,11 @@ node_modules
 .npm
 
 # Build & dist folders
-build
-dist
-
-# Docs folder
-docs
+/build
+/dist
 
 # Coverage folder
-coverage
+/coverage
 
 # when testing in FF, this file sometimes gets stored in the repository root.
 # See https://askubuntu.com/questions/144408/what-is-the-file-c-nppdf32log-debuglog-txt

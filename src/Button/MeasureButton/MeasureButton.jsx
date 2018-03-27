@@ -214,11 +214,11 @@ class MeasureButton extends React.Component {
     continueAngleMsg: PropTypes.string,
 
     /**
-    * How many decimal places will be allowed for the measure tooltips.
-    * Default is 2.
-    *
-    * @param {Number} decimalPlacesInTooltips.
-    */
+     * How many decimal places will be allowed for the measure tooltips.
+     * Default is 2.
+     *
+     * @type {Number} decimalPlacesInTooltips
+     */
     decimalPlacesInTooltips: PropTypes.number,
 
     /**
@@ -226,14 +226,14 @@ class MeasureButton extends React.Component {
      * Overwrite this object to style the text of the popups / overlays, if you
      * don't want to use default classes.
      *
-     * @param {Object} measureTooltipCssClasses
+     * @type {Object} measureTooltipCssClasses
      */
     measureTooltipCssClasses: PropTypes.object,
 
     /**
      * Whether the measure button is pressed.
      *
-     * @param {Boolean} pressed
+     * @type {Boolean} pressed
      */
     pressed: PropTypes.bool
   };

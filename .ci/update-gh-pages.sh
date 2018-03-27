@@ -2,19 +2,19 @@
 set -ex
 
 if [ "$TRAVIS" != "true" ]; then
-    # Only do something on travis
-    echo "This script is supposed to be run inside the travis environment."
-    return 1;
+  # Only do something on travis.
+  echo "This script is supposed to be run inside the travis environment."
+  return 1;
 fi
 
 if [ $TRAVIS_PULL_REQUEST != "false" ]; then
-    # Dont build anything for PR requests, only for merges
-    return 0;
+  # Dont build anything for PR requests, only for merges.
+  return 0;
 fi
 
 if [ $TRAVIS_BRANCH != "master" ]; then
-    # only update when the target branch is master
-    return 0;
+  # Only update when the target branch is master.
+  return 0;
 fi
 
 VERSION=$(node -pe "require('./package.json').version")
@@ -43,21 +43,26 @@ git clone --branch $GH_PAGES_BRANCH $GH_PAGES_REPO $GH_PAGES_DIR
 
 cd $GH_PAGES_DIR
 
-# the src directory containg the build artifacts
+# The src directory containg the build artifacts.
 SRC_DIR=$TRAVIS_BUILD_DIR/build
 
-# cleanup existing resources
-rm -Rf ./examples ./docs ./index.html
+# Cleanup existing resources.
+rm -Rf ./docs/latest ./index.html
 
-# Build the index page
-sed -e "s/__VERSION__/$VERSION/g" $TRAVIS_BUILD_DIR/assets/gh-index.html > index.html
+# Copy the index page.
+cp $TRAVIS_BUILD_DIR/assets/gh-index.html index.html
 
-# Update example page
-sed -i -e "s/__VERSION__/$VERSION/g" $TRAVIS_BUILD_DIR/build/examples/index.html
+# Copy the logo icon
+mkdir -p $SRC_DIR/styleguide/assets
+cp $TRAVIS_BUILD_DIR/assets/logo.svg $SRC_DIR/styleguide/assets/
 
-# copy the src dir from previous build folder
-cp -r $SRC_DIR/examples .
-cp -r $SRC_DIR/docs .
+if [ -n "$TRAVIS_TAG" ]; then
+  mkdir -p docs/v$VERSION
+  cp -r $SRC_DIR/styleguide/. docs/v$VERSION/
+fi
+
+# Copy the src dir from previous build folder.
+cp -r $SRC_DIR/styleguide/ docs/latest/
 
 git add .
 git commit -m "$GH_PAGES_COMMIT_MSG"
