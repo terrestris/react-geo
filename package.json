@@ -79,6 +79,7 @@
     "query-string": "5.1.1",
     "react-dom": "16.2.0",
     "react-fa": "5.0.0",
+    "shpjs": "3.4.2",
     "react-rnd": "7.4.0",
     "url-parse": "1.2.0",
     "validator": "9.4.1"
