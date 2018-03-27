@@ -251,7 +251,7 @@ export class MapUtil {
    * @param {String} key The property key.
    * @param {Object} value The property value.
    *
-   * @return {ol.layer.Base} The list of matching layers.
+   * @return {ol.layer.Base[]} The array of matching layers.
    */
   static getLayersByProperty(map, key, value) {
     if (!map || !key) {
