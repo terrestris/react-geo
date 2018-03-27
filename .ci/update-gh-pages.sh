@@ -52,6 +52,10 @@ rm -Rf ./docs/latest ./index.html
 # Copy the index page.
 cp $TRAVIS_BUILD_DIR/assets/gh-index.html index.html
 
+# Copy the logo icon
+mkdir -p $SRC_DIR/styleguide/assets
+cp $TRAVIS_BUILD_DIR/assets/logo.svg $SRC_DIR/styleguide/assets/
+
 if [ -n "$TRAVIS_TAG" ]; then
   mkdir -p docs/v$VERSION
   cp -r $SRC_DIR/styleguide/. docs/v$VERSION/
