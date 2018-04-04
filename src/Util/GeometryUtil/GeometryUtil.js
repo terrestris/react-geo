@@ -238,14 +238,14 @@ class GeometryUtil {
   }
 
   /**
-   * Takes two or more polygons and returns a combined polygon.
+   * Takes two or more polygons and returns a combined (Multi-)polygon.
    *
    * @param {ol.geom.Geometry[] | ol.Feature[]} polygons An array of ol.Feature
-   *  or ol.geom.Geometry instances of type polygon.
+   *  or ol.geom.Geometry instances of type (Multi-)polygon.
    * @param {String} projection The projection of the input polygons as EPSG code.
    *  Default is to EPSG:3857.
    * @returns {ol.geom.Geometry | ol.Feature} A Feature or Geometry with the
-   * combined area of the polygons.
+   * combined area of the (Multi-)polygons.
    */
   static union(polygons, projection = 'EPSG:3857') {
     const geoJsonFormat = new OlFormatGeoJSON({
@@ -257,7 +257,7 @@ class GeometryUtil {
       const feature = geometry instanceof OlFeature
         ? geometry
         : new OlFeature({geometry});
-      if (feature.getGeometry().getType() !== 'Polygon') {
+      if (! ['Polygon', 'MultiPolygon'].includes(feature.getGeometry().getType())) {
         invalid = true;
       }
       return geoJsonFormat.writeFeatureObject(feature);
