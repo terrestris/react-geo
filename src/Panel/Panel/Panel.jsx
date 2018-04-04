@@ -25,7 +25,15 @@ export class Panel extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-panel'
+  className = 'react-geo-panel';
+
+   /**
+    * Printed representation of the pressed escape keyboard key.
+    * s. https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
+    * @type {String}
+    * @private
+    */
+   _escapeKeyboardEventKey = 'Escape';
 
   /**
    * The properties.
@@ -95,6 +103,11 @@ export class Panel extends React.Component {
      * @type {Function}
      */
     onResizeStop: PropTypes.func,
+    /**
+     * Callback function on `keydown` keyboard event if `escape` key was pressed.
+     * @type {Function}
+     */
+    onEscape: PropTypes.func,
     /**
      * Whether to allow dragging or not.
      * @type {boolean}
@@ -191,6 +204,17 @@ export class Panel extends React.Component {
   }
 
   /**
+   * The reference callback.
+   *
+   * @param {Element} element The body div DOMElement of the panel.
+   */
+  onBodyRef(element){
+    if (element) {
+      element.focus();
+    }
+  }
+
+  /**
    * Calculates the height of the Panel and returns a number.
    *
    * @return {number}
@@ -276,6 +300,17 @@ export class Panel extends React.Component {
   }
 
   /**
+   * Called on keyboard `keydown` event. Will be only triggered if pressed key
+   * is `escape` key and `onEscape` function is provided via props.
+   * @param {React.KeyboardEvent<HTMLDivElement>} evt `keydown` event.
+   */
+  onKeyDown(evt) {
+    if (evt.key === this._escapeKeyboardEventKey && this.props.onEscape) {
+      this.props.onEscape();
+    }
+  }
+
+  /**
    * The render function.
    */
   render() {
@@ -351,6 +386,9 @@ export class Panel extends React.Component {
         {titleBar}
         <div
           className="body"
+          tabIndex="0"
+          ref={this.onBodyRef}
+          onKeyDown={this.onKeyDown.bind(this)}
           style={{
             cursor: 'default',
             overflow: 'hidden',
