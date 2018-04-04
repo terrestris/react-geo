@@ -425,6 +425,18 @@ describe('GeometryUtil', () => {
           expect(unionedFeature instanceof OlFeature).toBe(true);
           expect(unionedFeature.getGeometry().getCoordinates()).toEqual(unionedBoxCoordinates);
         });
+
+        it('unions multiple instances of ol.geom.MultiPolygon into one ol.geom.MultiPolygon', () => {
+          const multiPoly1 = new OlFeature({
+            geometry: new OlGeomMultiPolygon([boxCoords])
+          });
+          const multiPoly2 = new OlFeature({
+            geometry: new OlGeomMultiPolygon([boxCoords2])
+          });
+          const unionedFeature = GeometryUtil.union([multiPoly1, multiPoly2], 'EPSG:4326');
+          expect(unionedFeature instanceof OlFeature).toBe(true);
+          expect(unionedFeature.getGeometry().getCoordinates()).toEqual(unionedBoxCoordinates);
+        });
       });
       describe('with ol.geom.Geometry as params', () => {
         it('unions multiple instances of ol.geom.Polygon into one ol.geom.MultiPolygon', () => {
