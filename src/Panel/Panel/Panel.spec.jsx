@@ -25,6 +25,64 @@ describe('<Panel />', () => {
     expect(rnd.props.fc).toBe('koeln');
   });
 
+  describe('#onBodyRef', () => {
+
+    const wrapper = TestUtil.mountComponent(Panel);
+    const element = wrapper.find('div.body');
+    const elNode = element.getDOMNode();
+    const focusedElement = document.activeElement;
+
+    it('is defined', () => {
+      expect(wrapper.instance().onBodyRef).not.toBeUndefined();
+    });
+
+    it ('doesn\'t focus element if not provided', () => {
+      wrapper.instance().onBodyRef();
+      expect(element.matchesElement(focusedElement)).toBeFalsy();
+    });
+
+    it ('focuses element if provided', () => {
+      const focusSpy = jest.spyOn(elNode, 'focus');
+      wrapper.instance().onBodyRef(elNode);
+      expect(focusSpy).toHaveBeenCalledTimes(1);
+      expect(elNode).toEqual(focusedElement);
+      focusSpy.mockReset();
+      focusSpy.mockRestore();
+    });
+  });
+
+  describe('#onKeyDown', () => {
+
+    const wrapper = TestUtil.mountComponent(Panel);
+
+    it('is defined', () => {
+      expect(wrapper.instance().onKeyDown).not.toBeUndefined();
+    });
+
+    it('calls onEscape method if provided in props', () => {
+      let mockEvt = {
+        key: 'invalid_key'
+      };
+
+      wrapper.setProps({
+        onEscape: jest.fn()
+      });
+
+      const onEscSpy = jest.spyOn(wrapper.props(), 'onEscape');
+
+      wrapper.instance().onKeyDown(mockEvt);
+      expect(onEscSpy).toHaveBeenCalledTimes(0);
+
+      // call once again with valid key and onEscape function
+      mockEvt.key = 'Escape';
+      wrapper.instance().onKeyDown(mockEvt);
+      expect(onEscSpy).toHaveBeenCalledTimes(1);
+
+      onEscSpy.mockReset();
+      onEscSpy.mockRestore();
+    });
+  });
+
   describe('#toggleCollapse', () => {
     const wrapper = TestUtil.mountComponent(Panel);
 
