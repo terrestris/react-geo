@@ -82,7 +82,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     it('resets state if value is empty', () => {
       wrapper.setState({
         value: value,
-        crsDefinitions: ['test', 'test']
+        crsDefinitions: resultMock.results
       }, () => {
         wrapper.instance().handleSearch(null);
         window.setTimeout(() => {
@@ -96,7 +96,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     it('updates state if value is given', () => {
       wrapper.setState({
         value: value,
-        crsDefinitions: ['test', 'test']
+        crsDefinitions: resultMock.results
       }, () => {
         wrapper.instance().handleSearch(value);
         window.setTimeout(() => {
