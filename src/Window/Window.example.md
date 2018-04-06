@@ -16,13 +16,20 @@ class WindowExample extends React.Component {
     super(props);
 
     this.state = {
-      windowIsVisible: false
+      simpleWinIsVisible: false,
+      escWinIsVisible: false
     };
   }
 
-  onClick() {
+  onClickSimple() {
     this.setState({
-      windowIsVisible: !this.state.windowIsVisible
+      simpleWinIsVisible: !this.state.simpleWinIsVisible
+    });
+  }
+
+  onClickEsc() {
+    this.setState({
+      escWinIsVisible: !this.state.escWinIsVisible
     });
   }
 
@@ -30,13 +37,18 @@ class WindowExample extends React.Component {
     return(
       <div>
         <SimpleButton
-          onClick={this.onClick.bind(this)}
+          onClick={this.onClickSimple.bind(this)}
         >
-          {`Click me to ${this.state.windowIsVisible ? 'hide' : 'show'} a window.`}
+          {`${this.state.simpleWinIsVisible ? 'Hide' : 'Show'} a window`}
+        </SimpleButton>
+        <SimpleButton
+          onClick={this.onClickEsc.bind(this)}
+        >
+          {`${this.state.escWinIsVisible ? 'Hide' : 'Show'} a window with bound 'keydown' listener`}
         </SimpleButton>
 
         {
-          this.state.windowIsVisible ?
+          this.state.simpleWinIsVisible ?
             <Window
               parentId="rsg-root"
               title="This is the window title"
@@ -52,11 +64,37 @@ class WindowExample extends React.Component {
                   icon="close"
                   size="small"
                   tooltip="Close"
-                  onClick={this.onClick.bind(this)}
+                  onClick={this.onClickSimple.bind(this)}
                 />
               ]}
             >
               This is the content of the window.
+            </Window> :
+            null
+        }
+        {
+          this.state.escWinIsVisible ?
+            <Window
+              parentId="rsg-root"
+              title="This is the window title"
+              onEscape={this.onClickEsc.bind(this)}
+              width={300}
+              height={150}
+              style={{
+                position: 'fixed',
+                boxShadow: '5px 5px 5px 0px #888888'
+              }}
+              tools={[
+                <SimpleButton
+                  key="closeButton"
+                  icon="close"
+                  size="small"
+                  tooltip="Close"
+                  onClick={this.onClickEsc.bind(this)}
+                />
+              ]}
+            >
+              Press <b>escape</b> to close me.
             </Window> :
             null
         }
