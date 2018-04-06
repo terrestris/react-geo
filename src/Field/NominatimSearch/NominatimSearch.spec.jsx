@@ -78,8 +78,12 @@ describe('<NominatimSearch />', () => {
   describe('#onFetchSuccess', () => {
     it('sets the response as state.dataSource', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
-      wrapper.instance().onFetchSuccess(['Peter']);
-      expect(wrapper.state().dataSource).toEqual(['Peter']);
+      const response = [{
+        place_id: 123,
+        display_name: 'peter'
+      }];
+      wrapper.instance().onFetchSuccess(response);
+      expect(wrapper.state().dataSource).toEqual(response);
     });
   });
 
