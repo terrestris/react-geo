@@ -18,6 +18,7 @@ import OlGeomPolygon from 'ol/geom/polygon';
 import DigitizeButton from './DigitizeButton.jsx';
 import MapUtil from '../../Util/MapUtil/MapUtil';
 import AnimateUtil from '../../Util/AnimateUtil/AnimateUtil';
+import ToggleButton from '../ToggleButton/ToggleButton';
 
 describe('<DigitizeButton />', () => {
 
@@ -89,6 +90,20 @@ describe('<DigitizeButton />', () => {
       const wrapper = setupWrapper();
       expect(wrapper).not.toBeUndefined();
       expect(wrapper.find(DigitizeButton).length).toEqual(1);
+    });
+
+    it('passes style property to wrapped ToggleButton', () => {
+      const style = {
+        backgroundColor: 'yellow'
+      };
+      const wrapper = setupWrapper();
+      wrapper.setProps({
+        style
+      });
+
+      const toggleButton = wrapper.find(ToggleButton).get(0);
+      expect(toggleButton).toBeDefined();
+      expect(toggleButton.props.style).toEqual(style);
     });
 
     it('drawType or editType prop must be provided and have valid values', () => {
