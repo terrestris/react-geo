@@ -286,7 +286,7 @@ class DigitizeButton extends React.Component {
      *
      * @type {OlStyleStyle}
      */
-    style: PropTypes.instanceOf(OlStyleStyle),
+    drawStyle: PropTypes.instanceOf(OlStyleStyle),
 
     /**
      * Listener function for the 'drawend' event of an ol.interaction.Draw.
@@ -355,7 +355,6 @@ class DigitizeButton extends React.Component {
    * @param {Boolean} pressed Whether the digitize button is pressed or not.
    */
   onToggle = pressed => {
-
     const {
       map,
       drawType,
@@ -426,9 +425,8 @@ class DigitizeButton extends React.Component {
    * @return {OlStyleStyle} The style to use.
    */
   getDigitizeStyleFunction = feature => {
-
     const {
-      style,
+      drawStyle,
     } = this.props;
 
     let styleObj;
@@ -436,7 +434,7 @@ class DigitizeButton extends React.Component {
     switch (feature.getGeometry().getType()) {
       case DigitizeButton.POINT_DRAW_TYPE: {
         if (!feature.get('isLabel')) {
-          styleObj = style || new OlStyleStyle({
+          styleObj = drawStyle || new OlStyleStyle({
             image: new OlStyleCircle({
               radius: 7,
               fill: new OlStyleFill({
@@ -448,7 +446,7 @@ class DigitizeButton extends React.Component {
             })
           });
         } else {
-          styleObj = style || new OlStyleStyle({
+          styleObj = drawStyle || new OlStyleStyle({
             text: new OlStyleText({
               text: feature.get('label'),
               offsetX: 5,
@@ -466,7 +464,7 @@ class DigitizeButton extends React.Component {
         return styleObj;
       }
       case DigitizeButton.LINESTRING_DRAW_TYPE: {
-        styleObj = style || new OlStyleStyle({
+        styleObj = drawStyle || new OlStyleStyle({
           stroke: new OlStyleStroke({
             color: DigitizeButton.DEFAULT_STROKE_COLOR,
             width: 2
@@ -476,7 +474,7 @@ class DigitizeButton extends React.Component {
       }
       case DigitizeButton.POLYGON_DRAW_TYPE:
       case DigitizeButton.CIRCLE_DRAW_TYPE: {
-        styleObj = style || new OlStyleStyle({
+        styleObj = drawStyle || new OlStyleStyle({
           fill: new OlStyleFill({
             color: DigitizeButton.DEFAULT_FILL_COLOR
           }),
@@ -502,7 +500,6 @@ class DigitizeButton extends React.Component {
    * @return {OlStyleStyle} The style to use.
    */
   getSelectedStyleFunction = (feature, res, text) => {
-
     const {
       selectFillColor,
       selectStrokeColor
@@ -798,7 +795,7 @@ class DigitizeButton extends React.Component {
       drawType,
       editType,
       digitizeLayerName,
-      style,
+      drawStyle,
       selectFillColor,
       selectStrokeColor,
       modalPromptTitle,
