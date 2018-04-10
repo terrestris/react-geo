@@ -114,6 +114,7 @@ describe('<WfsSearch />', () => {
 
   describe('default #onSelect', () => {
     it('zooms to the selected feature', () => {
+      expect.assertions(3);
       jest.useFakeTimers();
       //SETUP
       const feature = {

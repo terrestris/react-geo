@@ -39,63 +39,68 @@ export class WfsSearch extends React.Component {
      */
     className: PropTypes.string,
     /**
-     * The base URL.
+     * The base URL. Please make sure that the WFS-Server supports CORS.
      * @type {String}
      */
     baseUrl: PropTypes.string.isRequired,
     /**
-     * The Property which should be shown in the inputfield when a selection was
-     * made.
-     */
-    displayField: PropTypes.string,
-    /**
      * The list of attributes that should be searched through.
+     * @type {String[]}
      */
     searchAttributes: PropTypes.arrayOf(PropTypes.string).isRequired,
     /**
      * The namespace URI used for features.
+     * @type {String}
      */
     featureNS: PropTypes.string,
     /**
      * The prefix for the feature namespace.
+     * @type {String}
      */
     featurePrefix: PropTypes.string,
     /**
      * The feature type names. Required.
+     * @type {String[]}
      */
     featureTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
     /**
      * SRS name. No srsName attribute will be set on geometries when this is not
      * provided.
+     * @type {string}
      */
     srsName: PropTypes.string,
     /**
-     * Ther output format of the response.
+     * The output format of the response.
+     * @type {string}
      */
     outputFormat: PropTypes.string,
     /**
      * Maximum number of features to fetch.
+     * @type {number}
      */
     maxFeatures: PropTypes.number,
     /**
      * Geometry name to use in a BBOX filter.
+     * @type {string}
      */
     geometryName: PropTypes.string,
     /**
      * Optional list of property names to serialize.
+     * @type {String[]}
      */
     propertyNames: PropTypes.arrayOf(PropTypes.string),
     /**
      * Filter condition. See http://openlayers.org/en/latest/apidoc/ol.format.filter.html
      * for more information.
+     * @type {object}
      */
     filter: PropTypes.object,
     /**
-     * The ol.map where the map will zoom to.
+     * The ol.map to interact with on selection.
      *
      * @type {Object}
      */
-    map: PropTypes.instanceOf(OlMap).isRequired,
+    map: PropTypes.instanceOf(OlMap),
     /**
      * The minimal amount of characters entered in the input to start a search.
      * @type {Number}
@@ -105,7 +110,9 @@ export class WfsSearch extends React.Component {
      * A render function which gets called with the selected item as it is
      * returned by the server. It must return an `AutoComplete.Option` with
      * `key={feature.id}`.
-     * The default will display the property `name` if existing or the `id` to.
+     * The default will display the property `name` if existing or the `id` to
+     * and requires an `id` field on the feature. A custom function is required
+     * if your features don't have an `id` field.
      *
      * @type {function}
      */
@@ -121,6 +128,7 @@ export class WfsSearch extends React.Component {
     /**
      * Options which are added to the fetch-POST-request. credentials is set to
      * 'same-origin' as default but can be overwritten.
+     * @type {object}
      */
     additionalFetchOptions: PropTypes.object
   }
@@ -137,7 +145,7 @@ export class WfsSearch extends React.Component {
      * @return {AutoComplete.Option} The AutoComplete.Option that will be
      * rendered for each feature.
      */
-    renderOption: (feature) => {
+    renderOption: feature => {
       return (
         <Option key={feature.id}>
           {feature.properties.name ? feature.properties.name : feature.id}
@@ -149,6 +157,7 @@ export class WfsSearch extends React.Component {
      * selected item.
      *
      * @param {object} feature The selected feature as returned by the server.
+     * @param {ol.map} olMap The openlayers map that was passed via prop.
      */
     onSelect: (feature, olMap) => {
       if (feature) {
@@ -200,7 +209,7 @@ export class WfsSearch extends React.Component {
 
     if (value) {
       this.setState({
-        searchTerm: value || ''
+        searchTerm: value
       }, () => {
         if (this.state.searchTerm.length >= this.props.minChars) {
           this.doSearch();
@@ -293,7 +302,7 @@ export class WfsSearch extends React.Component {
   }
 
   /**
-   * This function gets called when the nomintim fetch returns an error.
+   * This function gets called when the WFS GetFeature fetch request returns an error.
    * It logs the error to the console.
    *
    * @param {String} error The errorstring.
@@ -331,7 +340,6 @@ export class WfsSearch extends React.Component {
       additionalFetchOptions,
       baseUrl,
       className,
-      displayField,
       featureNS,
       featurePrefix,
       featureTypes,
