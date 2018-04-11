@@ -10,6 +10,7 @@ import ZoomButton from './Button/ZoomButton/ZoomButton.jsx';
 import ZoomToExtentButton from './Button/ZoomToExtentButton/ZoomToExtentButton.jsx';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo.jsx';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch.jsx';
+import WfsSearch from './Field/WfsSearch/WfsSearch.jsx';
 import ScaleCombo from './Field/ScaleCombo/ScaleCombo.jsx';
 import LayerTree from './LayerTree/LayerTree.jsx';
 import LayerTreeNode from './LayerTreeNode/LayerTreeNode.jsx';
@@ -89,6 +90,7 @@ export {
   MeasureUtil,
   CoordinateReferenceSystemCombo,
   NominatimSearch,
+  WfsSearch,
   ObjectUtil,
   ProjectionUtil,
   StringUtil,
