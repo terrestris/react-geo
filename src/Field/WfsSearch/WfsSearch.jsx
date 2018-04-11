@@ -130,7 +130,12 @@ export class WfsSearch extends React.Component {
      * 'same-origin' as default but can be overwritten.
      * @type {object}
      */
-    additionalFetchOptions: PropTypes.object
+    additionalFetchOptions: PropTypes.object,
+    /**
+     * Options which are passed to the constructor of the ol.format.WFS.
+     * compare: http://openlayers.org/en/latest/apidoc/ol.format.WFS.html
+     */
+    wfsFormatOptions: PropTypes.object
   }
 
   static defaultProps = {
@@ -233,7 +238,8 @@ export class WfsSearch extends React.Component {
       propertyNames,
       srsName,
       baseUrl,
-      additionalFetchOptions
+      additionalFetchOptions,
+      wfsFormatOptions
     } = this.props;
 
     const options = {
@@ -248,7 +254,7 @@ export class WfsSearch extends React.Component {
       filter: this.createFilter()
     };
 
-    const wfsFormat = new OlFormatWFS();
+    const wfsFormat = new OlFormatWFS(wfsFormatOptions);
     const featureRequest = wfsFormat.writeGetFeature(options);
     this.setState({fetching: true});
 
@@ -354,6 +360,7 @@ export class WfsSearch extends React.Component {
       renderOption,
       searchAttributes,
       srsName,
+      wfsFormatOptions,
       ...passThroughProps
     } = this.props;
 
