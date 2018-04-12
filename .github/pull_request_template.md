@@ -1,8 +1,8 @@
-<!--- Please choose one of the categories and choose the corresponding label, too. -->
-## BREAKING CHANGE | FEATURE | BUGFIX | REFACTORING | DEVSETUP
+<!-- Please choose one of the categories and choose the corresponding label, too. -->
+## BREAKING CHANGE | FEATURE | BUGFIX | REFACTORING | DEVSETUP | DOCUMENTATION
 
 ### Description:
-<!--- Please describe what this PR is about. -->
+<!-- Please describe what this PR is about. -->
 
 <!--- CHECKLIST
 Fixes Issue?
