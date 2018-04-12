@@ -77,14 +77,14 @@ export class FeatureGrid extends React.Component {
    */
   static propTypes = {
     /**
-     * Optional CSS class to add to the table.
+     * An optional CSS class which should be added to the table.
      * @type {String}
      */
     className: PropTypes.string,
 
     /**
-     * Optional CSS class to add to each table row or a function that
-     * is evaluated for each record
+     * An optional CSS class to add to each table row or a function that
+     * is evaluated for each record.
      * @type {String|Function}
      */
     rowClassName: PropTypes.oneOfType([

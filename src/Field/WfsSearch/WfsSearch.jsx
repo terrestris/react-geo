@@ -35,7 +35,8 @@ export class WfsSearch extends React.Component {
 
   static propTypes = {
     /**
-     * A optional className that will be added to the input field.
+     * An optional CSS class which should be added.
+     * @type {String}
      */
     className: PropTypes.string,
     /**

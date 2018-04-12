@@ -25,6 +25,10 @@ export class NominatimSearch extends React.Component {
   className = 'react-geo-nominatimsearch'
 
   static propTypes = {
+    /**
+     * An optional CSS class which should be added.
+     * @type {String}
+     */
     className: PropTypes.string,
     /**
      * The Nominatim Base URL. See http://wiki.openstreetmap.org/wiki/Nominatim
