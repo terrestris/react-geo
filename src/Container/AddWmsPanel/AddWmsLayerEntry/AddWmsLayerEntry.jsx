@@ -8,7 +8,7 @@ import { Icon } from 'react-fa';
 import './AddWmsLayerEntry.less';
 
 /**
- * Class representating a layer parsed from capabilities document.
+ * Class representing a layer parsed from capabilities document.
  * This componment is used in AddWmsPanel
  *
  * @class AddWmsLayerEntry

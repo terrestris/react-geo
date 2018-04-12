@@ -8,7 +8,7 @@ import  {
 import './UploadButton.less';
 
 /**
- * Class representating an upload button. Can be used as wrapper if children
+ * Class representing an upload button. Can be used as wrapper if children
  * are given. Otherwise a Simplebutton will be rendered.
  *
  * To use a text with the UploadButton provide a SimpleButton as children.

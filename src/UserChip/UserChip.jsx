@@ -4,7 +4,7 @@ import { Avatar, Dropdown } from 'antd';
 import './UserChip.less';
 
 /**
- * Class representating the user chip containing an image of the user and his/her
+ * Class representing the user chip containing an image of the user and his/her
  * name
  *
  * @class The UserChip

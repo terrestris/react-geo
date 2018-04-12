@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import OlMap from 'ol/map';
 
 /**
- * Class representating a map.
+ * Class representing a map.
  *
  * @class The MapComponent.
  * @extends React.Component

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './FloatingMapLogo.less';
 
 /**
- * Class representating a floating map logo
+ * Class representing a floating map logo
  *
  * @class The FloatingMapLogo
  * @extends React.Component

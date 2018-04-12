@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Toolbar.less';
 
 /**
- * A base class representating a toolbar having n children
+ * A base class representing a toolbar having n children
  * The child components of this toolbar can be aligned in vertical and
  * horizontal (default) way
  *

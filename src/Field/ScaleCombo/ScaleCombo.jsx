@@ -15,7 +15,7 @@ import Logger from '../../Util/Logger';
 import MapUtil from '../../Util/MapUtil/MapUtil';
 
 /**
- * Class representating a scale combo to choose map scale via a dropdown menu.
+ * Class representing a scale combo to choose map scale via a dropdown menu.
  *
  * @class The ScaleCombo
  * @extends React.Component
