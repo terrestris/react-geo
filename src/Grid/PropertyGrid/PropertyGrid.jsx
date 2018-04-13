@@ -6,6 +6,8 @@ import {
 import OlFeature from 'ol/feature';
 import { get } from 'lodash';
 
+import { CSS_PREFIX } from '../../constants';
+
 import './PropertyGrid.less';
 
 /**
@@ -21,7 +23,7 @@ class PropertyGrid extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-propertygrid'
+  className = `${CSS_PREFIX}propertygrid`
 
   /**
    * The prop types.

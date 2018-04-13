@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { isFunction } from 'lodash';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
+import { CSS_PREFIX } from '../../constants';
 
 import './ToggleGroup.less';
 
@@ -19,7 +20,7 @@ class ToggleGroup extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-togglegroup'
+  className = `${CSS_PREFIX}togglegroup`
 
   /**
    * The properties.

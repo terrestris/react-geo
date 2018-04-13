@@ -8,6 +8,8 @@ import { Icon } from 'react-fa';
 
 import './SimpleButton.less';
 
+import { CSS_PREFIX } from '../../constants';
+
 /**
  * The SimpleButton.
  *
@@ -21,7 +23,7 @@ class SimpleButton extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-simplebutton'
+  className = `${CSS_PREFIX}simplebutton`
 
   /**
    * The properties.

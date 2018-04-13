@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Avatar, Dropdown } from 'antd';
 import './UserChip.less';
 
+import { CSS_PREFIX } from '../constants';
+
 /**
  * Class representating the user chip containing an image of the user and his/her
  * name
@@ -17,7 +19,7 @@ class UserChip extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-userchip'
+  className = `${CSS_PREFIX}userchip`
 
   static propTypes = {
     /**

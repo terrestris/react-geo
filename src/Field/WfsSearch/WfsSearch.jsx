@@ -7,6 +7,7 @@ import {
 const Option = Select.Option;
 
 import Logger from '../../Util/Logger';
+import { CSS_PREFIX } from '../../constants';
 
 import OlMap from 'ol/map';
 import OlFormatFilter from 'ol/format/filter';
@@ -31,7 +32,7 @@ export class WfsSearch extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-wfssearch'
+  className = `${CSS_PREFIX}wfssearch`
 
   static propTypes = {
     /**

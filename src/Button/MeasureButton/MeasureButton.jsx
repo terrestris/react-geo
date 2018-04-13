@@ -18,6 +18,7 @@ import OlOverlay from 'ol/overlay';
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import MeasureUtil from '../../Util/MeasureUtil/MeasureUtil';
 import MapUtil from '../../Util/MapUtil/MapUtil';
+import { CSS_PREFIX } from '../../constants';
 
 import './MeasureButton.less';
 
@@ -35,7 +36,7 @@ class MeasureButton extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-measurebutton';
+  className = `${CSS_PREFIX}measurebutton`;
 
   /**
    * Currently drawn feature.
@@ -228,7 +229,11 @@ class MeasureButton extends React.Component {
      *
      * @type {Object} measureTooltipCssClasses
      */
-    measureTooltipCssClasses: PropTypes.object,
+    measureTooltipCssClasses: PropTypes.shape({
+      tooltip: PropTypes.string,
+      tooltipDynamic: PropTypes.string,
+      tooltipStatic: PropTypes.string
+    }),
 
     /**
      * Whether the measure button is pressed.
@@ -254,9 +259,9 @@ class MeasureButton extends React.Component {
     continueAngleMsg: 'Click to draw angle',
     clickToDrawText: 'Click to measure',
     measureTooltipCssClasses: {
-      tooltip: 'react-geo-measure-tooltip',
-      tooltipDynamic: 'react-geo-measure-tooltip-dynamic',
-      tooltipStatic: 'react-geo-measure-tooltip-static'
+      tooltip: `${CSS_PREFIX}measure-tooltip`,
+      tooltipDynamic: `${CSS_PREFIX}measure-tooltip-dynamic`,
+      tooltipStatic: `${CSS_PREFIX}measure-tooltip-static`
     },
     pressed: false
   }

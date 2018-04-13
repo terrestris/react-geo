@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 
+import { CSS_PREFIX } from '../../constants';
+
 import './Titlebar.less';
 
 /**
@@ -17,7 +19,7 @@ export class Titlebar extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-titlebar'
+  className = `${CSS_PREFIX}titlebar`
 
   /**
    * The properties.

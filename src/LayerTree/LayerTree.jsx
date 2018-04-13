@@ -10,6 +10,7 @@ import olObservable from 'ol/observable';
 import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil/MapUtil';
 import LayerTreeNode from '../LayerTreeNode/LayerTreeNode.jsx';
+import { CSS_PREFIX } from '../constants';
 
 /**
  * The LayerTree.
@@ -27,7 +28,7 @@ class LayerTree extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-layertree'
+  className = `${CSS_PREFIX}layertree`
 
 
   /**

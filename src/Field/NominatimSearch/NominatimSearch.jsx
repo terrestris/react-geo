@@ -9,6 +9,8 @@ import Logger from '../../Util/Logger';
 import UrlUtil from '../../Util/UrlUtil/UrlUtil';
 import olProj from 'ol/proj';
 
+import { CSS_PREFIX } from '../../constants';
+
 /**
  * The NominatimSearch.
  *
@@ -22,7 +24,7 @@ export class NominatimSearch extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-nominatimsearch'
+  className = `${CSS_PREFIX}nominatimsearch`
 
   static propTypes = {
     className: PropTypes.string,

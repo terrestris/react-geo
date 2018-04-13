@@ -7,6 +7,7 @@ import easing from 'ol/easing';
 import  {
   SimpleButton
 } from '../../index';
+import { CSS_PREFIX } from '../../constants';
 
 /**
  * Class representating a zoom button.
@@ -21,7 +22,7 @@ class ZoomButton extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-zoominbutton'
+  className = `${CSS_PREFIX}zoominbutton`
 
   static propTypes = {
     /**

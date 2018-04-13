@@ -23,6 +23,7 @@ import MapUtil from '../../Util/MapUtil/MapUtil';
 import StringUtil from '../../Util/StringUtil/StringUtil';
 import AnimateUtil from '../../Util/AnimateUtil/AnimateUtil';
 import Logger from '../../Util/Logger';
+import { CSS_PREFIX } from '../../constants';
 
 import './DigitizeButton.less';
 
@@ -41,7 +42,7 @@ class DigitizeButton extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-digitizebutton';
+  className = `${CSS_PREFIX}digitizebutton`;
 
   /**
    * Currently existing digitize features as collection.
@@ -810,8 +811,10 @@ class DigitizeButton extends React.Component {
       ? `${className} ${this.className}`
       : this.className;
 
+    const btnWrapperClass = `${CSS_PREFIX}digitize-button-wrapper`;
+
     return (
-      <span className="react-geo-digitize-button-wrapper">
+      <span className={btnWrapperClass}>
         <ToggleButton
           onToggle={this.onToggle}
           className={finalClassName}

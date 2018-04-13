@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './FloatingMapLogo.less';
 
+import { CSS_PREFIX } from '../../constants';
+
 /**
  * Class representating a floating map logo
  *
@@ -15,7 +17,7 @@ class FloatingMapLogo extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-floatingmaplogo'
+  className = `${CSS_PREFIX}floatingmaplogo`
 
   /**
    * The properties.

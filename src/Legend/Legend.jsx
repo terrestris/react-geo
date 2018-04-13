@@ -5,6 +5,8 @@ import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil/MapUtil';
 import { isEqual } from 'lodash';
 
+import { CSS_PREFIX } from '../constants';
+
 /**
  * Class representing the Legend.
  *
@@ -19,7 +21,7 @@ export class Legend extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-legend'
+  className = `${CSS_PREFIX}legend`
 
   /**
    * The properties.

@@ -10,6 +10,7 @@ import {
   MathUtil,
   ToggleButton
 } from '../../index';
+import { CSS_PREFIX } from '../../constants';
 
 import mapMarker from './geolocation-marker.png';
 import mapMarkerHeading from './geolocation-marker-heading.png';
@@ -28,7 +29,7 @@ class GeoLocationButton extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-geolocationbutton';
+  className = `${CSS_PREFIX}geolocationbutton`;
 
   /**
    * The properties.

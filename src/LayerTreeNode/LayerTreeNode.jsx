@@ -7,6 +7,8 @@ const TreeNode = Tree.TreeNode;
 
 import './LayerTreeNode.less';
 
+import { CSS_PREFIX } from '../constants';
+
 /**
  * Class representing a layer tree node
  */
@@ -41,7 +43,7 @@ class LayerTreeNode extends React.Component {
     } = this.props;
 
     const addClassName = (inResolutionRange ? 'within' : 'out-off') + '-range';
-    const finalClassname = `react-geo-layertree-node ${addClassName}`;
+    const finalClassname = `${CSS_PREFIX}layertree-node ${addClassName}`;
     return(
       <TreeNode
         className={finalClassname}

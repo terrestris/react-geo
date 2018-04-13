@@ -9,6 +9,8 @@ import { isFunction } from 'lodash';
 
 import './ToggleButton.less';
 
+import { CSS_PREFIX } from '../../constants';
+
 /**
  * The ToggleButton.
  *
@@ -23,7 +25,7 @@ class ToggleButton extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-togglebutton'
+  className = `${CSS_PREFIX}togglebutton`
 
   /**
    * The class to apply for a toggled/pressed button.
