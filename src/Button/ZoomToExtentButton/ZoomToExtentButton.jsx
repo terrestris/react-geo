@@ -38,7 +38,7 @@ class ZoomToExtentButton extends React.Component {
      * @type {ol.Map}
      */
     map: PropTypes.instanceOf(OlMap).isRequired,
-    
+
     /**
      * The array extent[minx, miny, maxx, maxy]  (the values must be in the maps coordination system) or instance of Ol SimpleGeometry that the map should zoom to.
      * @type {Array}
@@ -59,7 +59,7 @@ class ZoomToExtentButton extends React.Component {
       padding: PropTypes.arrayOf(PropTypes.number),
       nearest: PropTypes.bool
     })
-    
+
   }
 
   /**
@@ -69,8 +69,8 @@ class ZoomToExtentButton extends React.Component {
   static defaultProps = {
     fitOptions: {
       constrainResolution: false,
-      duration: 1000,
-      easing: easing.inAndOut
+      duration: 250,
+      easing: easing.easeOut
     }
   }
 
@@ -81,7 +81,7 @@ class ZoomToExtentButton extends React.Component {
    */
   onClick() {
     const{
-      map, 
+      map,
       extent,
       fitOptions
     } = this.props;
@@ -110,7 +110,7 @@ class ZoomToExtentButton extends React.Component {
       `${className} ${this.className}` :
       this.className;
 
-    return ( 
+    return (
       <SimpleButton
         className = {finalClassName}
         onClick = {this.onClick.bind(this)}
