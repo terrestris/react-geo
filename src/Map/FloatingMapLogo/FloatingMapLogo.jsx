@@ -5,7 +5,7 @@ import './FloatingMapLogo.less';
 import { CSS_PREFIX } from '../../constants';
 
 /**
- * Class representating a floating map logo
+ * Class representing a floating map logo
  *
  * @class The FloatingMapLogo
  * @extends React.Component

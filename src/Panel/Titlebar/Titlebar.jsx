@@ -7,7 +7,7 @@ import { CSS_PREFIX } from '../../constants';
 import './Titlebar.less';
 
 /**
- * Class representating the titlebar. Usually used in a panel.
+ * Class representing the titlebar. Usually used in a panel.
  *
  * @class The TitleBar
  * @extends React.Component

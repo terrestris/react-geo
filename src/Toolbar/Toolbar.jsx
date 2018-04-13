@@ -5,7 +5,7 @@ import './Toolbar.less';
 import { CSS_PREFIX } from '../constants';
 
 /**
- * A base class representating a toolbar having n children
+ * A base class representing a toolbar having n children
  * The child components of this toolbar can be aligned in vertical and
  * horizontal (default) way
  *

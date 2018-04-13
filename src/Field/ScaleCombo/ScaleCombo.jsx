@@ -16,7 +16,7 @@ import MapUtil from '../../Util/MapUtil/MapUtil';
 import { CSS_PREFIX } from '../../constants';
 
 /**
- * Class representating a scale combo to choose map scale via a dropdown menu.
+ * Class representing a scale combo to choose map scale via a dropdown menu.
  *
  * @class The ScaleCombo
  * @extends React.Component
