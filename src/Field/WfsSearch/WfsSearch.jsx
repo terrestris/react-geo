@@ -129,7 +129,8 @@ export class WfsSearch extends React.Component {
     onSelect: PropTypes.func,
     /**
      * Options which are added to the fetch-POST-request. credentials is set to
-     * 'same-origin' as default but can be overwritten.
+     * 'same-origin' as default but can be overwritten. See also
+     * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
      * @type {object}
      */
     additionalFetchOptions: PropTypes.object,

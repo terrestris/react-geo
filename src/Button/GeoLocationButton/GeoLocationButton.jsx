@@ -80,10 +80,15 @@ class GeoLocationButton extends React.Component {
     follow: PropTypes.bool,
 
     /**
-     * The openlayers tracking options.
+     * The openlayers tracking options. See also
+     * https://www.w3.org/TR/geolocation-API/#position_options_interface
      * @type {Object}
      */
-    trackingoptions: PropTypes.object
+    trackingoptions: PropTypes.shape({
+      maximumAge: PropTypes.number,
+      enableHighAccuracy: PropTypes.bool,
+      timeout: PropTypes.number
+    })
   };
 
   /**
