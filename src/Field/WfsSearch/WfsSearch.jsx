@@ -134,8 +134,14 @@ export class WfsSearch extends React.Component {
     /**
      * Options which are passed to the constructor of the ol.format.WFS.
      * compare: http://openlayers.org/en/latest/apidoc/ol.format.WFS.html
+     * @type {object}
      */
-    wfsFormatOptions: PropTypes.object
+    wfsFormatOptions: PropTypes.object,
+    /**
+     * Which prop value of option will render as content of select.
+     * @type {string}
+     */
+    optionLabelProp: PropTypes.string
   }
 
   static defaultProps = {
@@ -143,6 +149,7 @@ export class WfsSearch extends React.Component {
     outputFormat: 'application/json',
     minChars: 3,
     additionalFetchOptions: {},
+    optionLabelProp: 'title',
     /**
      * Create an AutoComplete.Option from the given data.
      *
@@ -151,12 +158,14 @@ export class WfsSearch extends React.Component {
      * rendered for each feature.
      */
     renderOption: feature => {
+      const display = feature.properties.name ? feature.properties.name : feature.id;
       return (
-        <Option key={feature.id}>
-          {feature.properties.name ? feature.properties.name : feature.id}
+        <Option key={feature.id} title={display}>
+          {display}
         </Option>
       );
     },
+
     /**
      * The default onSelect method if no onSelect prop is given. It zooms to the
      * selected item.
@@ -354,6 +363,7 @@ export class WfsSearch extends React.Component {
       map,
       maxFeatures,
       minChars,
+      optionLabelProp,
       outputFormat,
       onSelect,
       propertyNames,
@@ -377,7 +387,7 @@ export class WfsSearch extends React.Component {
         onChange={this.onUpdateInput}
         onSelect={this.onMenuItemSelected}
         notFoundContent={fetching ? <Spin size="small" /> : null}
-        optionLabelProp='children'
+        optionLabelProp={optionLabelProp}
         filterOption={false}
         showArrow={false}
         {...passThroughProps}
