@@ -5,6 +5,8 @@ import {
   Slider
 } from 'antd';
 
+import { CSS_PREFIX } from '../../constants';
+
 /**
  * Slider that changes opacity on a set of layers.
  *
@@ -18,7 +20,7 @@ class MultiLayerSlider extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-multilayerslider';
+  className = `${CSS_PREFIX}multilayerslider`;
 
   static propTypes = {
     /**

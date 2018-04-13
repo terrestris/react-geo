@@ -13,6 +13,7 @@ import {
 
 import Logger from '../../Util/Logger';
 import MapUtil from '../../Util/MapUtil/MapUtil';
+import { CSS_PREFIX } from '../../constants';
 
 /**
  * Class representating a scale combo to choose map scale via a dropdown menu.
@@ -27,7 +28,7 @@ class ScaleCombo extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-scalecombo'
+  className = `${CSS_PREFIX}scalecombo`
 
   static propTypes = {
     /**

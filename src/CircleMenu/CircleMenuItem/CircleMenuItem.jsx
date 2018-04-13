@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { CSS_PREFIX } from '../../constants';
+
 import './CircleMenuItem.less';
+
 /**
  * The CircleMenuItem.
  *
@@ -15,7 +18,7 @@ export class CircleMenuItem extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-circlemenuitem';
+  className = `${CSS_PREFIX}circlemenuitem`;
 
   /**
    * Internal reference used to apply the transformation right on the div.

@@ -9,6 +9,7 @@ import {
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
+import { CSS_PREFIX } from '../../constants';
 
 import './Panel.less';
 
@@ -25,7 +26,7 @@ export class Panel extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-panel';
+  className = `${CSS_PREFIX}panel`;
 
    /**
     * Printed representation of the pressed escape keyboard key.

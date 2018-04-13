@@ -6,6 +6,8 @@ const Option = AutoComplete.Option;
 import UrlUtil from '../../Util/UrlUtil/UrlUtil';
 import Logger from '../../Util/Logger';
 
+import { CSS_PREFIX } from '../../constants';
+
 /**
  * Class representing a combo to choose coordinate projection system via a
  * dropdown menu and / or autocompletion
@@ -20,7 +22,7 @@ class CoordinateReferenceSystemCombo extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-coordinatereferencesystemcombo'
+  className = `${CSS_PREFIX}coordinatereferencesystemcombo`
 
   static propTypes = {
     /**

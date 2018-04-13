@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import  {
   SimpleButton
 } from '../../index';
+import { CSS_PREFIX } from '../../constants';
 
 import './UploadButton.less';
 
@@ -23,7 +24,7 @@ class UploadButton extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-uploadbutton'
+  className = `${CSS_PREFIX}uploadbutton`
 
   static propTypes = {
     /**

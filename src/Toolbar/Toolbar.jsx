@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Toolbar.less';
 
+import { CSS_PREFIX } from '../constants';
+
 /**
  * A base class representating a toolbar having n children
  * The child components of this toolbar can be aligned in vertical and
@@ -17,7 +19,7 @@ class Toolbar extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-toolbar'
+  className = `${CSS_PREFIX}toolbar`
 
   /**
    * The properties.

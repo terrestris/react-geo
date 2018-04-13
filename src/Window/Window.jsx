@@ -5,6 +5,7 @@ import { uniqueId } from 'lodash';
 
 import Panel from  '../Panel/Panel/Panel.jsx';
 import Logger from '../Util/Logger';
+import { CSS_PREFIX } from '../constants';
 
 import './Window.less';
 
@@ -23,7 +24,7 @@ export class Window extends React.Component {
    * @type {String}
    * @private
    */
-  className = 'react-geo-window-portal'
+  className = `${CSS_PREFIX}window-portal`
 
   /**
   * The properties.
