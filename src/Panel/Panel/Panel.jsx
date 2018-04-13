@@ -86,7 +86,16 @@ export class Panel extends React.Component {
      * @type {object}
      */
     resizeOpts: PropTypes.oneOfType([
-      PropTypes.object,
+      PropTypes.shape({
+        top: PropTypes.bool,
+        right: PropTypes.bool,
+        bottom: PropTypes.bool,
+        left: PropTypes.bool,
+        topRight: PropTypes.bool,
+        bottomRight: PropTypes.bool,
+        bottomLeft: PropTypes.bool,
+        topLeft: PropTypes.bool
+      }),
       PropTypes.bool
     ]),
     /**
