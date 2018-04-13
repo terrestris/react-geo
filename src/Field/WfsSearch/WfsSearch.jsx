@@ -44,10 +44,10 @@ export class WfsSearch extends React.Component {
      */
     baseUrl: PropTypes.string.isRequired,
     /**
-     * The list of attributes that should be searched through.
-     * @type {String[]}
+     * An object mapping feature types to an array of attributes that should be searched through.
+     * @type {Object}
      */
-    searchAttributes: PropTypes.arrayOf(PropTypes.string).isRequired,
+    searchAttributes: PropTypes.object.isRequired,
     /**
      * The namespace URI used for features.
      * @type {String}
@@ -233,10 +233,9 @@ export class WfsSearch extends React.Component {
   }
 
   /**
-   * Perform the search.
-   * @private
+   *
    */
-  doSearch() {
+  getCombinedRequests() {
     const {
       featureNS,
       featurePrefix,
@@ -246,33 +245,57 @@ export class WfsSearch extends React.Component {
       outputFormat,
       propertyNames,
       srsName,
-      baseUrl,
-      additionalFetchOptions,
       wfsFormatOptions
     } = this.props;
 
-    const options = {
-      featureNS,
-      featurePrefix,
-      featureTypes,
-      geometryName,
-      maxFeatures,
-      outputFormat,
-      propertyNames,
-      srsName,
-      filter: this.createFilter()
-    };
+    const requests = featureTypes.map(featureType => {
+      const options = {
+        featureNS,
+        featurePrefix,
+        featureTypes: [featureType],
+        geometryName,
+        maxFeatures,
+        outputFormat,
+        propertyNames,
+        srsName,
+        filter: this.createFilter(featureType)
+      };
 
-    const wfsFormat = new OlFormatWFS(wfsFormatOptions);
-    const featureRequest = wfsFormat.writeGetFeature(options);
+      const wfsFormat = new OlFormatWFS(wfsFormatOptions);
+      return wfsFormat.writeGetFeature(options);
+    });
+
+    const request = requests[0];
+
+    requests.forEach(req => {
+      if (req !== request) {
+        const query = req.querySelector('Query');
+        request.append(query);
+      }
+    });
+
+    return request;
+  }
+
+  /**
+   * Perform the search.
+   * @private
+   */
+  doSearch() {
+    const {
+      additionalFetchOptions,
+      baseUrl
+    } = this.props;
+
+    const request = this.getCombinedRequests();
+
     this.setState({fetching: true});
-
     fetch(`${baseUrl}`, {
       method: 'POST',
       credentials: additionalFetchOptions.credentials
         ? additionalFetchOptions.credentials
         : 'same-origin',
-      body: new XMLSerializer().serializeToString(featureRequest),
+      body: new XMLSerializer().serializeToString(request),
       ...additionalFetchOptions
     })
       .then(response => response.json())
@@ -285,7 +308,7 @@ export class WfsSearch extends React.Component {
    * searchTerm.
    * @private
    */
-  createFilter() {
+  createFilter(featureType) {
     const {
       searchTerm
     } = this.state;
@@ -293,9 +316,11 @@ export class WfsSearch extends React.Component {
       searchAttributes
     } = this.props;
 
-    const propertyFilters = searchAttributes.map(attribute =>
+    const attributes = searchAttributes[featureType];
+
+    const propertyFilters = attributes.map(attribute =>
       OlFormatFilter.like(attribute, `*${searchTerm}*`, '*', '.', '!', false));
-    if (searchAttributes.length > 1) {
+    if (attributes.length > 1) {
       return OlFormatFilter.or(...propertyFilters);
     } else {
       return propertyFilters[0];
@@ -310,6 +335,7 @@ export class WfsSearch extends React.Component {
    */
   onFetchSuccess(response) {
     const data = response.features ? response.features : [];
+    data.forEach(feature => feature.searchTerm = this.state.searchTerm);
     this.setState({
       data,
       fetching: false
