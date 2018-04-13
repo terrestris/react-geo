@@ -46,15 +46,15 @@ class ZoomButton extends React.Component {
 
     /**
      * Whether the zoom in shall be animated. Defaults to `true`.
-     * 
+     *
      * @type {Boolean}
      */
     animate: PropTypes.bool,
 
     /**
      * The options for the zoom in animation. By default zooming in will take
-     * 1000 milliseconds and an in-and-out easing (which starts slow, speeds up,
-     * and then slows down again) will be used.
+     * 250 milliseconds and an easing which starts fast and then slows down
+     * will be used.
      */
     animateOptions: PropTypes.shape({
       duration: PropTypes.number,
@@ -66,8 +66,8 @@ class ZoomButton extends React.Component {
     delta: 1,
     animate: true,
     animateOptions: {
-      duration: 1000,
-      easing: easing.inAndOut
+      duration: 250,
+      easing: easing.easeOut
     }
   }
 
@@ -87,6 +87,9 @@ class ZoomButton extends React.Component {
       delta
     } = this.props;
     const view = map.getView();
+    if (!view) { // no view, no zooming
+      return;
+    }
     const currentZoom = view.getZoom();
     const zoom = currentZoom + delta;
     if (animate) {
@@ -95,6 +98,9 @@ class ZoomButton extends React.Component {
         duration,
         easing
       };
+      if (view.getAnimating()) {
+        view.cancelAnimations();
+      }
       view.animate(finalOptions);
     } else {
       view.setZoom(zoom);
