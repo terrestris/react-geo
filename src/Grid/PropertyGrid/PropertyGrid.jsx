@@ -31,6 +31,12 @@ class PropertyGrid extends React.Component {
    */
   static propTypes = {
     /**
+     * An optional CSS class which should be added.
+     * @type {String}
+     */
+    className: PropTypes.string,
+
+    /**
      * Optional title of the attribute name column
      * @type {String}
      */
@@ -61,12 +67,6 @@ class PropertyGrid extends React.Component {
      * @type {Object}
      */
     attributeNames: PropTypes.object,
-
-    /**
-     * Optional CSS class
-     * @type {String}
-     */
-    className: PropTypes.string,
 
     /**
      * Feature for which the properties should be shown

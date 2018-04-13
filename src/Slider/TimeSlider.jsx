@@ -19,7 +19,7 @@ class TimeSlider extends React.Component {
 
   static propTypes = {
     /**
-     * A class name string to use on surrounding div.
+     * An optional CSS class which should be added.
      * @type {String}
      */
     className: PropTypes.string,

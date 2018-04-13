@@ -45,7 +45,7 @@ export class Panel extends React.Component {
     id: PropTypes.string,
 
     /**
-     * Optional additional className that will be added to rnd.
+     * An optional CSS class which should be added.
      * @type {String}
      */
     className: PropTypes.string,

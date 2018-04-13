@@ -24,8 +24,7 @@ class MultiLayerSlider extends React.Component {
 
   static propTypes = {
     /**
-     * An additional className which should be added.
-     *
+     * An optional CSS class which should be added.
      * @type {String}
      */
     className: PropTypes.string,

@@ -27,38 +27,37 @@ export class Window extends React.Component {
   className = `${CSS_PREFIX}window-portal`
 
   /**
-  * The properties.
-  * @type {Object}
-  */
+   * The properties.
+   * @type {Object}
+   */
   static propTypes = {
     /**
-    * id of the component
-    * will be filled automatically if not provided
-    * @type {String}
-    */
+     * id of the component
+     * will be filled automatically if not provided
+     * @type {String}
+     */
     id: PropTypes.string,
     /**
-    * The id of the parent component
-    * default: app
-    *
-    * @type {String}
-    */
+     * The id of the parent component
+     * default: app
+     *
+     * @type {String}
+     */
     parentId: PropTypes.string.isRequired,
     /**
-    * The className which should be added.
-    *
-    * @type {String}
-    */
+     * An optional CSS class which should be added.
+     * @type {String}
+     */
     className: PropTypes.string,
     /**
-    * The children to show in the Window.
-    * @type {node}
-    */
+     * The children to show in the Window.
+     * @type {node}
+     */
     children: PropTypes.node,
     /**
-    * The title text to be shown in the window header.
-    * @type {string}
-    */
+     * The title text to be shown in the window header.
+     * @type {string}
+     */
     title: PropTypes.string
   }
 
