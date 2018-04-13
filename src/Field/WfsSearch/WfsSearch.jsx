@@ -20,7 +20,7 @@ import OlFormatWFS from 'ol/format/wfs';
  *
  * The GetFeature request is created with `ol.format.WFS.writeGetFeature`
  * so most of the WFS specific options work like document in the corresponding
- * API-docs: http://openlayers.org/en/latest/apidoc/ol.format.WFS.html#writeGetFeature
+ * API-docs: https://openlayers.org/en/latest/apidoc/ol.format.WFS.html#writeGetFeature
  *
  * @class WfsSearch
  * @extends React.Component
@@ -92,7 +92,7 @@ export class WfsSearch extends React.Component {
      */
     propertyNames: PropTypes.arrayOf(PropTypes.string),
     /**
-     * Filter condition. See http://openlayers.org/en/latest/apidoc/ol.format.filter.html
+     * Filter condition. See https://openlayers.org/en/latest/apidoc/ol.format.filter.html
      * for more information.
      * @type {object}
      */
@@ -136,7 +136,7 @@ export class WfsSearch extends React.Component {
     additionalFetchOptions: PropTypes.object,
     /**
      * Options which are passed to the constructor of the ol.format.WFS.
-     * compare: http://openlayers.org/en/latest/apidoc/ol.format.WFS.html
+     * compare: https://openlayers.org/en/latest/apidoc/ol.format.WFS.html
      * @type {object}
      */
     wfsFormatOptions: PropTypes.object,

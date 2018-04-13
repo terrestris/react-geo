@@ -53,7 +53,7 @@ class StringUtil {
    * Returns a string that is wrapped: every ~`width` chars a space is
    * replaced with the passed `spaceReplacer`.
    *
-   * See http://stackoverflow.com/questions/14484787/wrap-text-in-javascript
+   * See https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
    *
    * @param {String} str The string to wrap.
    * @param {Number} width The width of a line (number of characters).

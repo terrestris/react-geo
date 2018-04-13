@@ -24,7 +24,7 @@ describe('FeatureUtil', () => {
       name: 'Shinji Kagawa',
       address: 'Borsigplatz 9',
       city: 'Dortmund',
-      homepage: 'http://www.bvb.de/'
+      homepage: 'https://www.bvb.de/'
     };
     feat = new OlFeature({
       geometry: geom

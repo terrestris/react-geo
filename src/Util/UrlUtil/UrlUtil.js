@@ -146,12 +146,12 @@ export class UrlUtil {
    * This joins/bundles a given set of (typically WMS GetFeatureInfo) requests
    * by the base URL. E.g. it merges the following two requests:
    *
-   * http://maps.bvb.de?SERVICE=WMS&REQUEST=GetFeatureInfo&LAYERS=Shinji
-   * http://maps.bvb.de?SERVICE=WMS&REQUEST=GetFeatureInfo&LAYERS=Kagawa
+   * https://maps.bvb.de?SERVICE=WMS&REQUEST=GetFeatureInfo&LAYERS=Shinji
+   * https://maps.bvb.de?SERVICE=WMS&REQUEST=GetFeatureInfo&LAYERS=Kagawa
    *
    * to
    *
-   * http://maps.bvb.de?SERVICE=WMS&REQUEST=GetFeatureInfo&LAYERS=Shinji,Kagawa
+   * https://maps.bvb.de?SERVICE=WMS&REQUEST=GetFeatureInfo&LAYERS=Shinji,Kagawa
    *
    * @param {Array} featureInfoUrls An array of requests to bundle.
    * @param {Boolean} stringify Whether to stringify the output or not. If set

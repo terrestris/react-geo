@@ -60,7 +60,7 @@ This example demonstrates the use of Panels
     topRight: false,
   }}
 >
-  <img src="http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg" />
+  <img src="https://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg" />
 </Panel>
 ```
 
@@ -72,7 +72,7 @@ This example demonstrates the use of Panels
   title="resizeopts={true}"
   resizeOpts={true}
 >
-  <img src="http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg" />
+  <img src="https://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg" />
 </Panel>
 ```
 

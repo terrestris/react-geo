@@ -291,14 +291,14 @@ class DigitizeButton extends React.Component {
 
     /**
      * Listener function for the 'drawend' event of an ol.interaction.Draw.
-     * See http://openlayers.org/en/latest/apidoc/ol.interaction.Draw.Event.html
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Draw.Event.html
      * for more information.
      */
     onDrawEnd: PropTypes.func,
 
     /**
      * Listener function for the 'drawstart' event of an ol.interaction.Draw.
-     * See http://openlayers.org/en/latest/apidoc/ol.interaction.Draw.Event.html
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Draw.Event.html
      * for more information.
      */
     onDrawStart: PropTypes.func

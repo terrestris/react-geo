@@ -93,7 +93,7 @@ class MeasureUtil {
    * -180° and 180°, with 0° being in the east. The angle will increase
    * counter-clockwise.
    *
-   * Inspired by http://stackoverflow.com/a/31136507
+   * Inspired by https://stackoverflow.com/a/31136507
    *
    * @param {Array<Number>} start The start coordinates of the line with the
    *     x-coordinate being at index `0` and y-coordinate being at index `1`.
@@ -117,7 +117,7 @@ class MeasureUtil {
    * 0° and 360°, with 0° being in the east. The angle will increase
    * counter-clockwise.
    *
-   * Inspired by http://stackoverflow.com/a/31136507
+   * Inspired by https://stackoverflow.com/a/31136507
    *
    * @param {Array<Number>} start The start coordinates of the line with the
    *     x-coordinate being at index `0` and y-coordinate being at index `1`.
