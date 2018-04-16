@@ -49,7 +49,7 @@ class ZoomToExtentButton extends React.Component {
     ]).isRequired,
 
     /**
-     * Options for fitting to the given extent. See http://openlayers.org/en/latest/apidoc/ol.View.html#fit
+     * Options for fitting to the given extent. See https://openlayers.org/en/latest/apidoc/ol.View.html#fit
      * @type {Object}
      */
     fitOptions: PropTypes.shape({

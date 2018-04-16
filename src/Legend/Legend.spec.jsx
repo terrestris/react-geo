@@ -26,7 +26,7 @@ describe('<Legend />', () => {
       })
     });
     layer2 = new OlLayerTile({
-      legendUrl: 'http://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg',
+      legendUrl: 'https://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg',
       name: 'Food insecurity',
       source: new OlSourceTileJson({
         url: 'https://api.tiles.mapbox.com/v3/mapbox.20110804-hoa-foodinsecurity-3month.json?secure',

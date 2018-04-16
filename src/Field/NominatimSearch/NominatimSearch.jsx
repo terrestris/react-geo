@@ -33,7 +33,7 @@ export class NominatimSearch extends React.Component {
      */
     className: PropTypes.string,
     /**
-     * The Nominatim Base URL. See http://wiki.openstreetmap.org/wiki/Nominatim
+     * The Nominatim Base URL. See https://wiki.openstreetmap.org/wiki/Nominatim
      * @type {String}
      */
     nominatimBaseUrl: PropTypes.string,

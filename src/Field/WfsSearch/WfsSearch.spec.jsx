@@ -38,7 +38,7 @@ describe('<WfsSearch />', () => {
       // expect.assertions(1);
       const wrapper = TestUtil.mountComponent(WfsSearch, {
         placeholder: 'Type a countryname in its own language…',
-        baseUrl: 'http://ows.terrestris.de/geoserver/osm/wfs',
+        baseUrl: 'https://ows.terrestris.de/geoserver/osm/wfs',
         featureTypes: ['osm:osm-country-borders'],
         searchAttributes: ['name']
       });

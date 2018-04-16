@@ -32,7 +32,7 @@ class CoordinateReferenceSystemCombo extends React.Component {
     className: PropTypes.string,
     /**
      * The API to query for CRS definitions
-     * default: http://epsg.io
+     * default: https://epsg.io
      * @type {String}
      */
     crsApiUrl: PropTypes.string,

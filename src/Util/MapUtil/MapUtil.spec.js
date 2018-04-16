@@ -210,7 +210,7 @@ describe('MapUtil', () => {
       const layer = new OlLayerTile({
         visible: false,
         source: new OlSourceTileWMS({
-          url: 'http://ows.terrestris.de/osm/service?',
+          url: 'https://ows.terrestris.de/osm/service?',
           params: {
             'LAYERS': layerName,
             'TILED': true
@@ -250,7 +250,7 @@ describe('MapUtil', () => {
       let layer = new OlLayerTile({
         visible: false,
         source: new OlSourceTileWMS({
-          url: 'http://ows.terrestris.de/osm/service?',
+          url: 'https://ows.terrestris.de/osm/service?',
           params: {
             'LAYERS': qualifiedLayerName,
             'TILED': true
@@ -280,7 +280,7 @@ describe('MapUtil', () => {
       let layer = new OlLayerTile({
         visible: false,
         source: new OlSourceTileWMS({
-          url: 'http://ows.terrestris.de/osm/service?',
+          url: 'https://ows.terrestris.de/osm/service?',
           params: {
             'LAYERS': qualifiedLayerName,
             'TILED': true

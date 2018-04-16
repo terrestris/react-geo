@@ -100,7 +100,7 @@ class CoordinateReferenceSystemComboExample extends React.Component {
         <div className="example-block">
           <span>
             A <code>CoordinateReferenceSystemCombo</code> with autocomplete mode
-            where CRS are fetched from <a href="http://epsg.io/">epsg.io/</a>.
+            where CRS are fetched from <a href="https://epsg.io/">epsg.io/</a>.
             If a CRS is selected (prop <code>onSelect</code>), the projection is
             used to perform client-side raster reprojection of OSM layer in map.
           </span>

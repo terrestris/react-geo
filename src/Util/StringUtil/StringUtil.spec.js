@@ -102,7 +102,7 @@ describe('StringUtil', () => {
 
     describe('#stripHTMLTags', () => {
       it ('returns the text content of an html string', () => {
-        const htmlString = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> <br>';
+        const htmlString = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> <br>';
         const got = '© OpenStreetMap contributors ';
         const result = StringUtil.stripHTMLTags(htmlString);
         expect(result).toBe(got);
