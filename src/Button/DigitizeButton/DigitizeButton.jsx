@@ -550,12 +550,20 @@ class DigitizeButton extends React.Component {
       drawType,
       map,
       onDrawEnd,
-      onDrawStart
+      onDrawStart,
+      digitizeLayerName
     } = this.props;
 
     let geometryFunction;
     let type = drawType;
+    let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
 
+    // this checks to see if the digitizeLayer is in the map 
+    // and if not adds it from the state to the map
+    if (!digitizeLayer) {
+      map.addLayer(this.state.digitizeLayer);
+    } 
+    
     if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
       geometryFunction = OlInteractionDraw.createBox();
       type = DigitizeButton.CIRCLE_DRAW_TYPE;
