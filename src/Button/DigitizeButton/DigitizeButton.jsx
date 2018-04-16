@@ -560,8 +560,8 @@ class DigitizeButton extends React.Component {
     let type = drawType;
     let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
 
-    // this checks to see if the digitizeLayer  is in the map 
-    //and if not adds it from the state to the map
+    // this checks to see if the digitizeLayer is in the map 
+    // and if not adds it from the state to the map
     if (!digitizeLayer) {
       map.addLayer(this.state.digitizeLayer);
     } 
