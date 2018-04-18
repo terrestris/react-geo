@@ -67,7 +67,9 @@
   "peerDependencies": {
     "antd": "~3.0",
     "ol": "~4.0",
-    "react": "~16.0"
+    "react": "~16.0",
+    "ag-grid": "17.1.1",
+    "ag-grid-react": "17.1.0"
   },
   "dependencies": {
     "@turf/turf": "5.1.6",
@@ -85,6 +87,8 @@
     "validator": "9.4.1"
   },
   "devDependencies": {
+    "ag-grid": "17.1.1",
+    "ag-grid-react": "17.1.0",
     "antd": "3.3.3",
     "babel-cli": "6.26.0",
     "babel-core": "6.26.0",
@@ -115,6 +119,7 @@
     "np": "2.20.1",
     "ol": "4.6.5",
     "react": "16.3.2",
+    "react-dom-factories": "1.0.2",
     "react-styleguidist": "7.0.8",
     "react-test-renderer": "16.3.2",
     "regenerator-runtime": "0.11.1",
