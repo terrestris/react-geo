@@ -941,27 +941,20 @@ export class AgFeatureGrid extends React.Component {
       ...passThroughProps
     } = this.props;
 
-    // const {
-    //   selectedRowKeys
-    // } = this.state;
-
-    // const rowSelection = {
-    //   selectedRowKeys,
-    //   onChange: this.onSelectChange
-    // };
-
     const finalClassName = className
       ? `${className} ${this._className} ${theme}`
       : `${this._className} ${theme}`;
 
+    // TODO: Not sure, if this is still needed. One may want to get a specific
+    // row by using getRowFromFeatureId instead.
     let rowClassNameFn;
     if (isFunction(rowClassName)) {
-      rowClassNameFn = record => `${this._rowClassName} ${rowClassName(record)}`;
+      rowClassNameFn = node => `${this._rowClassName} ${rowClassName(node.data.key)}`;
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`
         : this._rowClassName;
-      rowClassNameFn = record => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${kebabCase(record.key)}`;
+      rowClassNameFn = node => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${kebabCase(node.data.key)}`;
     }
 
     return (
@@ -983,8 +976,7 @@ export class AgFeatureGrid extends React.Component {
           onCellMouseOver={this.onRowMouseOver.bind(this)}
           onCellMouseOut={this.onRowMouseOut.bind(this)}
           ref={ref => this._ref = ref}
-
-          rowClassName={rowClassNameFn}
+          getRowClass={rowClassNameFn}
           {...passThroughProps}
         >
           {children}
