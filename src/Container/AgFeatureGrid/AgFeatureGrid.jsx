@@ -513,10 +513,6 @@ export class AgFeatureGrid extends React.Component {
       selectStyle
     } = this.props;
 
-    const {
-      grid
-    } = this.state;
-
     const selectedRowKeys = this.getSelectedRowKeys();
 
     const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
@@ -817,10 +813,6 @@ export class AgFeatureGrid extends React.Component {
       map,
       selectStyle
     } = this.props;
-
-    const {
-      grid
-    } = this.state;
 
     if (!(map instanceof OlMap)) {
       return;
