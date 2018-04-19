@@ -44,7 +44,7 @@ export class AgFeatureGrid extends React.Component {
    * @type {String}
    * @private
    */
-  _rowClassName = 'react-geo-feature-grid-row';
+  _rowClassName = `${CSS_PREFIX}ag-feature-grid-row`;
 
   /**
    * The prefix to use for each table row class.
