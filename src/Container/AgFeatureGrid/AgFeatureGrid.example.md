@@ -55,19 +55,15 @@ class AgFeatureGridExample extends React.Component {
           columnDefs={{
             'GEN': {
               headerName: 'Name',
-              render: nameColumnRenderer,
               checkboxSelection: true
             },
             'SHAPE_LENG': {
-              headerName: 'Length',
-              render: val => Math.round(val)
+              headerName: 'Length'
             },
             'SHAPE_AREA': {
-              headerName: 'Area',
-              render: val => Math.round(val)
+              headerName: 'Area'
             }
           }}
-
           zoomToExtent={true}
           selectable={true}
         />
