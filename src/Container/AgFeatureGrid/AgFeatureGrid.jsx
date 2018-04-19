@@ -611,6 +611,7 @@ export class AgFeatureGrid extends React.Component {
       columns.push({
         headerName: '',
         checkboxSelection: true,
+        headerCheckboxSelection: true,
         width: 28,
         pinned: 'left',
         lockPosition: true,
