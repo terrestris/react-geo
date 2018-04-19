@@ -48,36 +48,28 @@ class AgFeatureGridExample extends React.Component {
         <AgFeatureGrid
           features={features}
           map={this.map}
-          zoomToExtent={true}
-          selectable={true}
+          enableSorting={true}
+          enableFilter={true}
+          enableColResize={true}
           attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
           columnDefs={{
             'GEN': {
-              title: 'Name',
+              headerName: 'Name',
               render: nameColumnRenderer,
-              sorter: (a, b) => {
-                const nameA = a.GEN.toUpperCase();
-                const nameB = b.GEN.toUpperCase();
-                if (nameA < nameB) {
-                  return -1;
-                }
-                if (nameA > nameB) {
-                  return 1;
-                }
-
-                return 0;
-              },
-              defaultSortOrder: 'ascend'
+              checkboxSelection: true
             },
             'SHAPE_LENG': {
-              title: 'Length',
+              headerName: 'Length',
               render: val => Math.round(val)
             },
             'SHAPE_AREA': {
-              title: 'Area',
+              headerName: 'Area',
               render: val => Math.round(val)
             }
           }}
+
+          zoomToExtent={true}
+          selectable={true}
         />
         <div
           id={this.mapDivId}
