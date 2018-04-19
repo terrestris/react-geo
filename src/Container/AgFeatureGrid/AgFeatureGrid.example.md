@@ -14,7 +14,8 @@ const federalStates = require('../../../assets/federal-states-ger.json');
 const format = new OlFormatGeoJson();
 const features = format.readFeatures(federalStates);
 
-const nameColumnRenderer = val => <a href={`https://en.wikipedia.org/wiki/${val}`}>{val}</a>;
+// TODO Add support for aggrid
+// const nameColumnRenderer = val => <a href={`https://en.wikipedia.org/wiki/${val}`}>{val}</a>;
 
 class AgFeatureGridExample extends React.Component {
 
@@ -55,19 +56,15 @@ class AgFeatureGridExample extends React.Component {
           columnDefs={{
             'GEN': {
               headerName: 'Name',
-              render: nameColumnRenderer,
               checkboxSelection: true
             },
             'SHAPE_LENG': {
-              headerName: 'Length',
-              render: val => Math.round(val)
+              headerName: 'Length'
             },
             'SHAPE_AREA': {
-              headerName: 'Area',
-              render: val => Math.round(val)
+              headerName: 'Area'
             }
           }}
-
           zoomToExtent={true}
           selectable={true}
         />

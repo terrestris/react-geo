@@ -44,7 +44,7 @@ export class AgFeatureGrid extends React.Component {
    * @type {String}
    * @private
    */
-  _rowClassName = 'react-geo-feature-grid-row';
+  _rowClassName = `${CSS_PREFIX}ag-feature-grid-row`;
 
   /**
    * The prefix to use for each table row class.
@@ -84,6 +84,20 @@ export class AgFeatureGrid extends React.Component {
      * @type {String}
      */
     className: PropTypes.string,
+
+    /**
+     * The height of the grid.
+     *
+     * @type {Number}
+     */
+    height: PropTypes.number,
+
+    /**
+     * The width of the grid.
+     *
+     * @type {Number}
+     */
+    width: PropTypes.number,
 
     /**
      * The theme to use for the grid. See
@@ -153,7 +167,9 @@ export class AgFeatureGrid extends React.Component {
     zoomToExtent: PropTypes.bool,
 
     /**
-     * Whether rows and features should be selectable or not.
+     * Whether features should be selectable via a map click or not. If you want
+     * to enable/disable a checkbox, please set checkboxSelection on a column
+     * in columnDefs.
      *
      * @type {Boolean}
      */
@@ -221,6 +237,7 @@ export class AgFeatureGrid extends React.Component {
    */
   static defaultProps = {
     theme: 'ag-theme-balham',
+    height: 250,
     features: [],
     attributeBlacklist: [],
     featureStyle: new OlStyle({
@@ -346,13 +363,9 @@ export class AgFeatureGrid extends React.Component {
       if (nextProps.selectable && map) {
         map.on('singleclick', this.onMapSingleClick);
       } else {
-        this.setState({
-          selectedRowKeys: []
-        }, () => {
-          if (map) {
-            map.un('singleclick', this.onMapSingleClick);
-          }
-        });
+        if (map) {
+          map.un('singleclick', this.onMapSingleClick);
+        }
       }
     }
   }
@@ -442,9 +455,7 @@ export class AgFeatureGrid extends React.Component {
       grid
     } = this.state;
 
-    // TODO Move to own method
-    const selectedRows = grid.api.getSelectedRows();
-    const selectedRowKeys = selectedRows.map(row => row.key);
+    const selectedRowKeys = this.getSelectedRowKeys();
 
     const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
       layerFilter: layerCand => layerCand === this._layer
@@ -502,13 +513,7 @@ export class AgFeatureGrid extends React.Component {
       selectStyle
     } = this.props;
 
-    const {
-      grid
-    } = this.state;
-
-    // TODO Move to own method
-    const selectedRows = grid.api.getSelectedRows();
-    const selectedRowKeys = selectedRows.map(row => row.key);
+    const selectedRowKeys = this.getSelectedRowKeys();
 
     const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
       layerFilter: layerCand => layerCand === this._layer
@@ -517,22 +522,19 @@ export class AgFeatureGrid extends React.Component {
     selectedFeatures.forEach(selectedFeature => {
       const key = this.props.keyFunction(selectedFeature);
       if (selectedRowKeys.includes(key)) {
-        // rowKeys = rowKeys.filter(rowKey => rowKey !== key);
         selectedFeature.setStyle(null);
-        grid.api.forEachNode(node => {
-          if (node.data.key === selectedFeature.ol_uid) {
-            node.setSelected(false);
-          }
-        });
+
+        const node = this.getRowFromFeatureId(selectedFeature.ol_uid);
+        if (node) {
+          node.setSelected(false);
+        }
       } else {
-        // rowKeys.push(key);
         selectedFeature.setStyle(selectStyle);
-        // TODO move to method getRowFromFeature
-        grid.api.forEachNode(node => {
-          if (node.data.key === selectedFeature.ol_uid) {
-            node.setSelected(true);
-          }
-        });
+
+        const node = this.getRowFromFeatureId(selectedFeature.ol_uid);
+        if (node) {
+          node.setSelected(true);
+        }
       }
     });
   }
@@ -661,6 +663,43 @@ export class AgFeatureGrid extends React.Component {
   }
 
   /**
+   * Returns the correspondig rowNode for the given feature id.
+   *
+   * @param {Number} id The feature's unique id to obtain the row from.
+   * @return {Object} The row candidate.
+   */
+  getRowFromFeatureId = id => {
+    const {
+      grid
+    } = this.state;
+
+    let rowNode;
+
+    grid.api.forEachNode(node => {
+      if (node.data.key === id) {
+        rowNode = node;
+      }
+    });
+
+    return rowNode;
+  }
+
+  /**
+   * Returns the currently selected row keys.
+   *
+   * @return {Number[]} An array with the selected row keys.
+   */
+  getSelectedRowKeys = () => {
+    const {
+      grid
+    } = this.state;
+
+    const selectedRows = grid.api.getSelectedRows();
+
+    return selectedRows.map(row => row.key);
+  }
+
+  /**
    * Called on row click and zooms the the corresponding feature's extent.
    *
    * @param {Object} row The clicked row.
@@ -775,17 +814,11 @@ export class AgFeatureGrid extends React.Component {
       selectStyle
     } = this.props;
 
-    const {
-      grid
-    } = this.state;
-
     if (!(map instanceof OlMap)) {
       return;
     }
 
-    // TODO Move to own method
-    const selectedRows = grid.api.getSelectedRows();
-    const selectedRowKeys = selectedRows.map(row => row.key);
+    const selectedRowKeys = this.getSelectedRowKeys();
 
     unhighlightFeatures.forEach(feature => {
       const key = this.props.keyFunction(feature);
@@ -879,6 +912,8 @@ export class AgFeatureGrid extends React.Component {
   render() {
     const {
       className,
+      height,
+      width,
       theme,
       rowClassName,
       features,
@@ -898,34 +933,28 @@ export class AgFeatureGrid extends React.Component {
       ...passThroughProps
     } = this.props;
 
-    // const {
-    //   selectedRowKeys
-    // } = this.state;
-
-    // const rowSelection = {
-    //   selectedRowKeys,
-    //   onChange: this.onSelectChange
-    // };
-
     const finalClassName = className
       ? `${className} ${this._className} ${theme}`
       : `${this._className} ${theme}`;
 
+    // TODO: Not sure, if this is still needed. One may want to get a specific
+    // row by using getRowFromFeatureId instead.
     let rowClassNameFn;
     if (isFunction(rowClassName)) {
-      rowClassNameFn = record => `${this._rowClassName} ${rowClassName(record)}`;
+      rowClassNameFn = node => `${this._rowClassName} ${rowClassName(node.data.key)}`;
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`
         : this._rowClassName;
-      rowClassNameFn = record => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${kebabCase(record.key)}`;
+      rowClassNameFn = node => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${kebabCase(node.data.key)}`;
     }
 
     return (
       <div
         className={finalClassName}
         style={{
-          height: '250px'
+          height: height,
+          width: width
         }}
       >
         <AgGridReact
@@ -939,8 +968,7 @@ export class AgFeatureGrid extends React.Component {
           onCellMouseOver={this.onRowMouseOver.bind(this)}
           onCellMouseOut={this.onRowMouseOut.bind(this)}
           ref={ref => this._ref = ref}
-
-          rowClassName={rowClassNameFn}
+          getRowClass={rowClassNameFn}
           {...passThroughProps}
         >
           {children}
