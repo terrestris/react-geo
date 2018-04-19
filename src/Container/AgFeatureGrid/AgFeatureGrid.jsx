@@ -167,7 +167,9 @@ export class AgFeatureGrid extends React.Component {
     zoomToExtent: PropTypes.bool,
 
     /**
-     * Whether rows and features should be selectable or not.
+     * Whether features should be selectable via a map click or not. If you want
+     * to enable/disable a checkbox, please set checkboxSelection on a column
+     * in columnDefs.
      *
      * @type {Boolean}
      */
