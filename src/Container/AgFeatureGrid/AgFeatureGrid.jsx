@@ -88,16 +88,16 @@ export class AgFeatureGrid extends React.Component {
     /**
      * The height of the grid.
      *
-     * @type {Number}
+     * @type {Number|String}
      */
-    height: PropTypes.number,
+    height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 
     /**
      * The width of the grid.
      *
-     * @type {Number}
+     * @type {Number|String}
      */
-    width: PropTypes.number,
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 
     /**
      * The theme to use for the grid. See
@@ -479,10 +479,12 @@ export class AgFeatureGrid extends React.Component {
         }
       });
 
-      const el = rc.getBodyRowElement();
+      if (rc) {
+        const el = rc.getBodyRowElement();
 
-      if (el) {
-        el.classList.remove(this._rowHoverClassName);
+        if (el) {
+          el.classList.remove(this._rowHoverClassName);
+        }
       }
       if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
@@ -499,10 +501,12 @@ export class AgFeatureGrid extends React.Component {
         }
       });
 
-      const el = rc.getBodyRowElement();
+      if (rc) {
+        const el = rc.getBodyRowElement();
 
-      if (el) {
-        el.classList.add(this._rowHoverClassName);
+        if (el) {
+          el.classList.add(this._rowHoverClassName);
+        }
       }
       feature.setStyle(highlightStyle);
     });
