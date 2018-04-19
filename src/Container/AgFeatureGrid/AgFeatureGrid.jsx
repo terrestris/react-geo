@@ -228,7 +228,13 @@ export class AgFeatureGrid extends React.Component {
      *
      * @type {Function}
      */
-    keyFunction: PropTypes.func
+    keyFunction: PropTypes.func,
+
+    /**
+     * A Function that is called once the grid is ready.
+     * @type {Function}
+     */
+    onGridIsReady: PropTypes.func
   };
 
   /**
@@ -584,7 +590,8 @@ export class AgFeatureGrid extends React.Component {
     const {
       attributeBlacklist,
       features,
-      columnDefs
+      columnDefs,
+      selectable
     } = this.props;
 
     let columns = [];
@@ -595,6 +602,21 @@ export class AgFeatureGrid extends React.Component {
     }
 
     const props = feature.getProperties();
+
+    if (selectable) {
+      columns.push({
+        headerName: '',
+        checkboxSelection: true,
+        width: 28,
+        pinned: 'left',
+        lockPosition: true,
+        suppressMenu: true,
+        suppressSorting: true,
+        suppressFilter: true,
+        suppressResize: true,
+        suppressMovable: true
+      });
+    }
 
     Object.keys(props).forEach(key => {
       if (attributeBlacklist.includes(key)) {
@@ -895,6 +917,10 @@ export class AgFeatureGrid extends React.Component {
     this.setState({
       grid
     }, this.onVisiblityChange);
+
+    if (this.props.onGridIsReady) {
+      this.props.onGridIsReady(grid);
+    }
   }
 
   /**
