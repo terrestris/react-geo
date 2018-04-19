@@ -16,9 +16,6 @@ const format = new OlFormatGeoJson();
 const features = format.readFeatures(federalStates);
 
 class NameColumnRenderer extends React.Component {
-  static propTypes = {
-    value: PropTypes.any
-  }
   render() {
     const {
       value
@@ -27,10 +24,11 @@ class NameColumnRenderer extends React.Component {
   }
 }
 
+NameColumnRenderer.propTypes = {
+  value: PropTypes.any
+};
+
 class MathRoundRenderer extends React.Component {
-  static propTypes = {
-    value: PropTypes.any
-  }
   render() {
     const {
       value
@@ -38,6 +36,10 @@ class MathRoundRenderer extends React.Component {
     return Math.round(value);
   }
 }
+
+MathRoundRenderer.propTypes = {
+  value: PropTypes.any
+};
 
 class AgFeatureGridExample extends React.Component {
 
