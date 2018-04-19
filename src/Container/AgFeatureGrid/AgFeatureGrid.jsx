@@ -86,6 +86,20 @@ export class AgFeatureGrid extends React.Component {
     className: PropTypes.string,
 
     /**
+     * The height of the grid.
+     *
+     * @type {Number}
+     */
+    height: PropTypes.number,
+
+    /**
+     * The width of the grid.
+     *
+     * @type {Number}
+     */
+    width: PropTypes.number,
+
+    /**
      * The theme to use for the grid. See
      * https://www.ag-grid.com/javascript-grid-styling/ for available options.
      * Note: CSS must be loaded to use the theme!
@@ -221,6 +235,7 @@ export class AgFeatureGrid extends React.Component {
    */
   static defaultProps = {
     theme: 'ag-theme-balham',
+    height: 250,
     features: [],
     attributeBlacklist: [],
     featureStyle: new OlStyle({
@@ -879,6 +894,8 @@ export class AgFeatureGrid extends React.Component {
   render() {
     const {
       className,
+      height,
+      width,
       theme,
       rowClassName,
       features,
@@ -925,7 +942,8 @@ export class AgFeatureGrid extends React.Component {
       <div
         className={finalClassName}
         style={{
-          height: '250px'
+          height: height,
+          width: width
         }}
       >
         <AgGridReact
