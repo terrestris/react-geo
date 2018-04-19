@@ -363,13 +363,9 @@ export class AgFeatureGrid extends React.Component {
       if (nextProps.selectable && map) {
         map.on('singleclick', this.onMapSingleClick);
       } else {
-        this.setState({
-          selectedRowKeys: []
-        }, () => {
-          if (map) {
-            map.un('singleclick', this.onMapSingleClick);
-          }
-        });
+        if (map) {
+          map.un('singleclick', this.onMapSingleClick);
+        }
       }
     }
   }
