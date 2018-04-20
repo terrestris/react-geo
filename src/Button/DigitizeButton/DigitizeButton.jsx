@@ -25,8 +25,6 @@ import AnimateUtil from '../../Util/AnimateUtil/AnimateUtil';
 import Logger from '../../Util/Logger';
 import { CSS_PREFIX } from '../../constants';
 
-import './DigitizeButton.less';
-
 /**
  * The DigitizeButton.
  *
@@ -556,14 +554,13 @@ class DigitizeButton extends React.Component {
 
     let geometryFunction;
     let type = drawType;
-    let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
 
-    // this checks to see if the digitizeLayer is in the map 
-    // and if not adds it from the state to the map
+    // check whether the digitizeLayer is in map and set it from state if not
+    let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
     if (!digitizeLayer) {
       map.addLayer(this.state.digitizeLayer);
-    } 
-    
+    }
+
     if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
       geometryFunction = OlInteractionDraw.createBox();
       type = DigitizeButton.CIRCLE_DRAW_TYPE;
