@@ -1,31 +1,5 @@
 @import '../../style/variables.less';
 
-button.react-geo-measurebutton {
-  color: #fff;
-  background-color: @primary-color;
-  border-color: darken(@component-background, 10);
-
-  &:focus{
-    background-color: lighten(@primary-color, 10);
-    border-color: lighten(@component-background, 10);
-  }
-
-  &:hover {
-    background-color: lighten(@primary-color, 10);
-    border-color: lighten(@component-background, 10);
-  }
-
-  &:disabled {
-    background-color: @component-background;
-    border-color: darken(@component-background, 10);
-  }
-
-  &.btn-pressed {
-    background-color: darken(@primary-color, 20);
-    border-color: darken(@component-background, 10);
-  }
-}
-
 .react-geo-measure-tooltip {
   position: relative;
   background: @measure-dynamic-tooltip-background-color;
