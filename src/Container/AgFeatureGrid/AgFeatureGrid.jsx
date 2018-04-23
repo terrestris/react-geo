@@ -20,7 +20,6 @@ import OlGeomGeometryCollection from 'ol/geom/geometrycollection';
 import { MapUtil } from '../../index';
 import { CSS_PREFIX } from '../../constants';
 
-import './AgFeatureGrid.less';
 import 'ag-grid/dist/styles/ag-grid.css';
 import 'ag-grid/dist/styles/ag-theme-balham.css';
 
