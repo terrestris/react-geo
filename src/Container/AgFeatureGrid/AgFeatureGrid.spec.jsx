@@ -190,22 +190,6 @@ describe('<AgFeatureGrid />', () => {
     });
   });
 
-  // it('unhighlight all given features, but takes selection into account', () => {
-  //   const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
-  //   const selectedFeatureUid = features[0].ol_uid;
-  //
-  //   wrapper.setState({selectedRowKeys: [selectedFeatureUid]});
-  //   wrapper.instance().unhighlightFeatures(features);
-  //
-  //   features.forEach(feature => {
-  //     if (feature.ol_uid === selectedFeatureUid) {
-  //       expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
-  //     } else {
-  //       expect(feature.getStyle()).toBe(null);
-  //     }
-  //   });
-  // });
-
   it('selects all given features', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
 
@@ -225,23 +209,6 @@ describe('<AgFeatureGrid />', () => {
       expect(feature.getStyle()).toBe(null);
     });
   });
-
-  // it('sets the appropriate select style to a feature if selection in grid changes', () => {
-  //   const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
-  //   const selectedRowKeys = [features[0].ol_uid, features[1].ol_uid];
-  //
-  //   wrapper.instance().onSelectionChanged(selectedRowKeys);
-  //
-  //   features.forEach(feature => {
-  //     if (selectedRowKeys.includes(feature.ol_uid)) {
-  //       expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
-  //     } else {
-  //       expect(feature.getStyle()).toBe(null);
-  //     }
-  //   });
-  //
-  //   expect(wrapper.state('selectedRowKeys')).toEqual(selectedRowKeys);
-  // });
 
   it('returns the feature for a given row key', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
@@ -294,28 +261,6 @@ describe('<AgFeatureGrid />', () => {
     highlightFeaturesSpy.mockRestore();
   });
 
-  // it('unhighlights the feature on row mouse out', () => {
-  //   const onRowMouseOutSpy = jest.fn();
-  //   const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features, onRowMouseOut: onRowMouseOutSpy});
-  //   const clickedRow = {
-  //     data: {
-  //       key: features[0].ol_uid
-  //     }
-  //   };
-  //   const unhighlightFeaturesSpy = jest.spyOn(wrapper.instance(), 'unhighlightFeatures');
-  //
-  //   wrapper.instance().onRowMouseOut(clickedRow);
-  //
-  //   expect(onRowMouseOutSpy).toHaveBeenCalled();
-  //   expect(unhighlightFeaturesSpy).toHaveBeenCalled();
-  //
-  //   onRowMouseOutSpy.mockReset();
-  //   onRowMouseOutSpy.mockRestore();
-  //
-  //   unhighlightFeaturesSpy.mockReset();
-  //   unhighlightFeaturesSpy.mockRestore();
-  // });
-
   it('handles the change of props', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid);
 
@@ -366,47 +311,5 @@ describe('<AgFeatureGrid />', () => {
     mapUnSpy.mockReset();
     mapUnSpy.mockRestore();
   });
-
-  // it('sets the highlight style to any hovered feature', () => {
-  //   const getFeaturesAtPixelSpy = jest.spyOn(map, 'getFeaturesAtPixel')
-  //     .mockImplementation(() => [features[0]]);
-  //
-  //   const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
-  //
-  //   wrapper.instance().onMapPointerMove({
-  //     pixel: [19, 19]
-  //   });
-  //
-  //   expect(features[0].getStyle()).toEqual(wrapper.prop('highlightStyle'));
-  //
-  //   expect(features[1].getStyle()).toEqual(null);
-  //   expect(features[2].getStyle()).toEqual(null);
-  //
-  //   getFeaturesAtPixelSpy.mockReset();
-  //   getFeaturesAtPixelSpy.mockRestore();
-  // });
-
-  // it('sets the select style to any clicked/selected feature', () => {
-  //   const getFeaturesAtPixelSpy = jest.spyOn(map, 'getFeaturesAtPixel')
-  //     .mockImplementation(() => [features[0]]);
-  //   /**
-  //    * [onGridReady description]
-  //    * @return {[type]} [description]
-  //    */
-  //   const onGridReady = () => {
-  //     window.console.log('huhu');
-  //   };
-  //
-  //   const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features, onGridReady});
-  //
-  //   wrapper.instance().onMapSingleClick({
-  //     pixel: [19, 19]
-  //   });
-  //
-  //   expect(features[0].getStyle()).toEqual(wrapper.prop('selectStyle'));
-  //
-  //   getFeaturesAtPixelSpy.mockReset();
-  //   getFeaturesAtPixelSpy.mockRestore();
-  // });
 
 });
