@@ -671,7 +671,7 @@ export class AgFeatureGrid extends React.Component {
         }, {});
 
       data.push({
-        key: feature.ol_uid, //this.props.keyFunction(feature),
+        key: this.props.keyFunction(feature),
         ...filtered
       });
     });
