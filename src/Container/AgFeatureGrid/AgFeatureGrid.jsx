@@ -476,7 +476,7 @@ export class AgFeatureGrid extends React.Component {
 
       let rc;
       rowRenderer.forEachRowComp((idx, rowComp) => {
-        if (rowComp.getRowNode().data.key === feature.ol_uid) {
+        if (rowComp.getRowNode().data.key === key) {
           rc = rowComp;
         }
       });
@@ -496,9 +496,10 @@ export class AgFeatureGrid extends React.Component {
     });
 
     selectedFeatures.forEach(feature => {
+      const key = this.props.keyFunction(feature);
       let rc;
       rowRenderer.forEachRowComp((idx, rowComp) => {
-        if (rowComp.getRowNode().data.key === feature.ol_uid) {
+        if (rowComp.getRowNode().data.key === key) {
           rc = rowComp;
         }
       });
@@ -536,14 +537,14 @@ export class AgFeatureGrid extends React.Component {
       if (selectedRowKeys.includes(key)) {
         selectedFeature.setStyle(null);
 
-        const node = this.getRowFromFeatureId(selectedFeature.ol_uid);
+        const node = this.getRowFromFeatureId(key);
         if (node) {
           node.setSelected(false);
         }
       } else {
         selectedFeature.setStyle(selectStyle);
 
-        const node = this.getRowFromFeatureId(selectedFeature.ol_uid);
+        const node = this.getRowFromFeatureId(key);
         if (node) {
           node.setSelected(true);
         }
