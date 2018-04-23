@@ -537,14 +537,14 @@ export class AgFeatureGrid extends React.Component {
       if (selectedRowKeys.includes(key)) {
         selectedFeature.setStyle(null);
 
-        const node = this.getRowFromFeatureId(key);
+        const node = this.getRowFromFeatureKey(key);
         if (node) {
           node.setSelected(false);
         }
       } else {
         selectedFeature.setStyle(selectStyle);
 
-        const node = this.getRowFromFeatureId(key);
+        const node = this.getRowFromFeatureKey(key);
         if (node) {
           node.setSelected(true);
         }
@@ -702,10 +702,10 @@ export class AgFeatureGrid extends React.Component {
   /**
    * Returns the correspondig rowNode for the given feature id.
    *
-   * @param {Number} id The feature's unique id to obtain the row from.
+   * @param {Number} key The feature's key to obtain the row from.
    * @return {Object} The row candidate.
    */
-  getRowFromFeatureId = id => {
+  getRowFromFeatureKey = key => {
     const {
       grid
     } = this.state;
@@ -713,7 +713,7 @@ export class AgFeatureGrid extends React.Component {
     let rowNode;
 
     grid.api.forEachNode(node => {
-      if (node.data.key === id) {
+      if (node.data.key === key) {
         rowNode = node;
       }
     });
@@ -979,7 +979,7 @@ export class AgFeatureGrid extends React.Component {
       : `${this._className} ${theme}`;
 
     // TODO: Not sure, if this is still needed. One may want to get a specific
-    // row by using getRowFromFeatureId instead.
+    // row by using getRowFromFeatureKey instead.
     let rowClassNameFn;
     if (isFunction(rowClassName)) {
       rowClassNameFn = node => `${this._rowClassName} ${rowClassName(node.data.key)}`;
