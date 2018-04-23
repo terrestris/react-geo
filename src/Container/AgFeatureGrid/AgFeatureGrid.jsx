@@ -623,6 +623,8 @@ export class AgFeatureGrid extends React.Component {
       });
     }
 
+    let index = -1;
+
     Object.keys(props).forEach(key => {
       if (attributeBlacklist.includes(key)) {
         return;
@@ -632,11 +634,16 @@ export class AgFeatureGrid extends React.Component {
         return;
       }
 
-      columns.push({
+      if (columnDefs[key].index !== undefined) {
+        index = columnDefs[key].index;
+      } else {
+        ++index;
+      }
+      columns[index] = {
         headerName: key,
         field: key,
         ...columnDefs[key]
-      });
+      };
     });
 
     return columns;
