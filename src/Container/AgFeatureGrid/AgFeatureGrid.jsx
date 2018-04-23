@@ -751,9 +751,9 @@ export class AgFeatureGrid extends React.Component {
 
     if (isFunction(onRowClick)) {
       onRowClick(row, feature);
+    } else {
+      this.zoomToFeatures([feature]);
     }
-
-    this.zoomToFeatures([feature]);
   }
 
   /**
