@@ -634,7 +634,7 @@ export class AgFeatureGrid extends React.Component {
         return;
       }
 
-      if (columnDefs[key].index !== undefined) {
+      if (columnDefs[key] && columnDefs[key].index !== undefined) {
         index = columnDefs[key].index;
       } else {
         ++index;
