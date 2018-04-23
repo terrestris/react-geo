@@ -210,7 +210,9 @@ export class AgFeatureGrid extends React.Component {
 
     /**
      * Custom column definitions to apply to the given column (mapping via key).
-     * See https://ant.design/components/table/#Column.
+     * See https://ant.design/components/table/#Column. You can either specify
+     * an index property on every column definition to get an exact order, or
+     * get a somewhat random order by not specifying an index property at all.
      * @type {Object}
      */
     columnDefs: PropTypes.object,
