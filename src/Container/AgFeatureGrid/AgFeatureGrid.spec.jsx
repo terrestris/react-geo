@@ -230,7 +230,7 @@ describe('<AgFeatureGrid />', () => {
     wrapper.instance().onRowClick(clickedRow);
 
     expect(onRowClickSpy).toHaveBeenCalled();
-    expect(zoomToFeaturesSpy).toHaveBeenCalled();
+    expect(zoomToFeaturesSpy).not.toHaveBeenCalled();
 
     onRowClickSpy.mockReset();
     onRowClickSpy.mockRestore();
