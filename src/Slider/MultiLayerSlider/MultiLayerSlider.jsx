@@ -34,7 +34,7 @@ class MultiLayerSlider extends React.Component {
      *
      * @type {Array}
      */
-    layers: PropTypes.arrayOf(OlLayerBase).isRequired,
+    layers: PropTypes.arrayOf(PropTypes.instanceOf(OlLayerBase)).isRequired,
 
     /**
      * The default value(s). Default is `0`
