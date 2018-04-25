@@ -21,7 +21,7 @@ import Panel from './Panel/Panel/Panel.jsx';
 import Titlebar from './Panel/Titlebar/Titlebar.jsx';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider.jsx';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid.jsx';
-import AgFeatureGrid from './Container/AgFeatureGrid/AgFeatureGrid.jsx';
+import AgFeatureGrid from './Grid/AgFeatureGrid/AgFeatureGrid.jsx';
 import PropertyGrid from './Grid/PropertyGrid/PropertyGrid.jsx';
 import TimeSlider from './Slider/TimeSlider.jsx';
 import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider.jsx';
