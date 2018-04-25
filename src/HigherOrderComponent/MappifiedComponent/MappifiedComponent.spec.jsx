@@ -35,14 +35,14 @@ describe('mappify', () => {
     });
 
     it('can be rendered', () => {
-      const wrapper = TestUtil.mountComponent(EnhancedComponent, {}, {map});
+      const wrapper = TestUtil.mountComponent(EnhancedComponent, {}, {context: {map}});
 
       expect(wrapper).not.toBeUndefined();
       expect(wrapper.first().is(EnhancedComponent)).toBe(true);
     });
 
     it('adds the map from the context as a prop', () => {
-      const wrapper = TestUtil.mountComponent(EnhancedComponent, {}, {map});
+      const wrapper = TestUtil.mountComponent(EnhancedComponent, {}, {context: {map}});
       const wrappedInstance = wrapper.instance().getWrappedInstance();
 
       expect(wrappedInstance.props.map).toBe(map);
@@ -69,7 +69,7 @@ describe('mappify', () => {
         name: 'Podolski',
         map: map
       };
-      const wrapper = TestUtil.mountComponent(EnhancedComponent, props, {map});
+      const wrapper = TestUtil.mountComponent(EnhancedComponent, props, {context: {map}});
       const wrappedInstance = wrapper.instance().getWrappedInstance();
 
       expect(wrappedInstance.props).toEqual(expectedProps);
@@ -79,7 +79,7 @@ describe('mappify', () => {
       const props = {
         name: 'Podolski'
       };
-      const wrapper = TestUtil.mountComponent(EnhancedComponent, props, {map});
+      const wrapper = TestUtil.mountComponent(EnhancedComponent, props, {context: {map}});
       const wrappedInstance = wrapper.instance().getWrappedInstance();
 
       expect(wrappedInstance).toBeInstanceOf(MockComponent);
@@ -88,7 +88,7 @@ describe('mappify', () => {
         withRef: false
       });
 
-      const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props, {map});
+      const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props, {context: {map}});
       const wrappedInstanceNoRef = wrapperNoRef.instance().getWrappedInstance();
 
       expect(wrappedInstanceNoRef).toBeUndefined();
