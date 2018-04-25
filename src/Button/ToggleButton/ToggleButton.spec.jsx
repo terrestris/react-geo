@@ -86,8 +86,10 @@ describe('<ToggleButton />', () => {
   it('calls the on change callback (if included in a ToggleGroup)', () => {
     const onChangeSpy = jest.fn();
     let context = {
-      toggleGroup: {
-        onChange: onChangeSpy
+      context: {
+        toggleGroup: {
+          onChange: onChangeSpy
+        }
       }
     };
     const wrapper = TestUtil.mountComponent(ToggleButton, null, context);

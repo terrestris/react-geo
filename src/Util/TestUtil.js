@@ -25,10 +25,10 @@ export class TestUtil {
    *
    * @param {Component} Component The Component to render.
    * @param {Object} props The props to be used.
-   * @param {Object} context The context to be set.
+   * @param {Object} options The options to be set.
    */
-  static mountComponent = (Component, props, context) => {
-    const wrapper = mount(<Component {...props} />, {context});
+  static mountComponent = (Component, props, options) => {
+    const wrapper = mount(<Component {...props} />, options);
     return wrapper;
   };
 
