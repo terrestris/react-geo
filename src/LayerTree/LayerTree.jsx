@@ -80,7 +80,8 @@ class LayerTree extends React.Component {
    */
   static defaultProps = {
     draggable: true,
-    checkable: true
+    checkable: true,
+    filterFunction: () => true
   }
 
   /**
@@ -158,10 +159,8 @@ class LayerTree extends React.Component {
    * @param {ol.layer.Group} groupLayer A grouplayer.
    */
   treeNodesFromLayerGroup(groupLayer) {
-    let layerArray = groupLayer.getLayers().getArray();
-    if (this.props.filterFunction) {
-      layerArray = layerArray.filter(this.props.filterFunction);
-    }
+    let layerArray = groupLayer.getLayers().getArray()
+      .filter(this.props.filterFunction);
     const treeNodes = layerArray.map((layer) => {
       return this.treeNodeFromLayer(layer);
     });
@@ -300,10 +299,8 @@ class LayerTree extends React.Component {
         Logger.warn('Your map configuration contains layerGroups that are' +
         'invisible. This might lead to buggy behaviour.');
       }
-      let childLayers = layer.getLayers().getArray();
-      if (this.props.filterFunction) {
-        childLayers = childLayers.filter(this.props.filterFunction);
-      }
+      let childLayers = layer.getLayers().getArray()
+        .filter(this.props.filterFunction);
       childNodes = childLayers.map((childLayer) => {
         return this.treeNodeFromLayer(childLayer);
       });
@@ -317,7 +314,7 @@ class LayerTree extends React.Component {
 
     treeNode = <LayerTreeNode
       title={this.getTreeNodeTitle(layer)}
-      key={layer.ol_uid}
+      key={layer.ol_uid.toString()}
       inResolutionRange={MapUtil.layerInResolutionRange(layer, this.props.map)}
     >
       {childNodes}
@@ -366,7 +363,7 @@ class LayerTree extends React.Component {
   getVisibleOlUids = () => {
     const layers = MapUtil.getAllLayers(this.state.layerGroup, (layer) => {
       return !(layer instanceof OlLayerGroup) && layer.getVisible();
-    });
+    }).filter(this.props.filterFunction);
     return layers.map(l => l.ol_uid.toString());
   }
 
