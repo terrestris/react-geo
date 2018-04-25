@@ -73,7 +73,7 @@
   },
   "dependencies": {
     "@turf/turf": "5.1.6",
-    "lodash": "4.17.5",
+    "lodash": "4.17.9",
     "loglevel": "1.6.1",
     "moment": "2.22.1",
     "proj4": "2.4.4",
