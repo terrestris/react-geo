@@ -67,12 +67,12 @@
   "peerDependencies": {
     "antd": "~3.0",
     "ol": "~4.0",
-    "react": "~16.0",
-    "ag-grid": "~17",
-    "ag-grid-react": "~17"
+    "react": "~16.0"
   },
   "dependencies": {
     "@turf/turf": "5.1.6",
+    "ag-grid": "17.1.1",
+    "ag-grid-react": "17.1.0",
     "lodash": "4.17.9",
     "loglevel": "1.6.1",
     "moment": "2.22.1",
@@ -87,8 +87,6 @@
     "validator": "9.4.1"
   },
   "devDependencies": {
-    "ag-grid": "17.1.1",
-    "ag-grid-react": "17.1.0",
     "antd": "3.4.3",
     "babel-cli": "6.26.0",
     "babel-core": "6.26.0",
