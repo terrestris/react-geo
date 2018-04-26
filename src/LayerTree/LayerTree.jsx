@@ -8,7 +8,7 @@ import { Tree } from 'antd';
 import OlMap from 'ol/Map';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
-import OlCollection from 'ol/collection';
+import OlCollection from 'ol/Collection';
 import { unByKey } from 'ol/Observable';
 
 import Logger from '@terrestris/base-util/src/Logger';
