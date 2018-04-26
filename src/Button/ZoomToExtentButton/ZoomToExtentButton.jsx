@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import OlMap from 'ol/Map';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
-import easing from 'ol/easing';
+import { easeOut } from 'ol/easing';
 
 import {
   SimpleButton
@@ -70,7 +70,7 @@ class ZoomToExtentButton extends React.Component {
     fitOptions: {
       constrainResolution: false,
       duration: 250,
-      easing: easing.easeOut
+      easing: easeOut
     }
   }
 

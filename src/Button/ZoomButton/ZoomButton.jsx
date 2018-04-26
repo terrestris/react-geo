@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import OlMap from 'ol/Map';
-import easing from 'ol/easing';
+import { easeOut } from 'ol/easing';
 
 import  {
   SimpleButton
@@ -67,7 +67,6 @@ class ZoomButton extends React.Component {
     animate: true,
     animateOptions: {
       duration: 250,
-      easing: easing.easeOut
     }
   }
 
