@@ -7,7 +7,7 @@ import OlFeature from 'ol/Feature';
 import OlGeomLineString from 'ol/geom/LineString';
 import OlGeomPolygon from 'ol/geom/Polygon';
 import OlOverlay from 'ol/Overlay';
-import OlObservable from 'ol/Observable';
+import * as OlObservable from 'ol/Observable';
 
 import { MeasureButton } from '../../index';
 import MeasureUtil from '@terrestris/ol-util/src/MeasureUtil/MeasureUtil';
