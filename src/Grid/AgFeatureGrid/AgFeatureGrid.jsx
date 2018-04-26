@@ -17,6 +17,7 @@ import OlGeomGeometry from 'ol/geom/Geometry';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+
 import { CSS_PREFIX } from '../../constants';
 
 import isArray from 'lodash/isArray.js';

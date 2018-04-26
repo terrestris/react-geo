@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import OlMap from 'ol/Map';
 import OlGeolocation from 'ol/Geolocation';
 import OlGeomLineString from 'ol/geom/LineString';
-import OlOverlay from 'ol/Overlay';
 import OlFeature from 'ol/feature';
 import OlGeomPoint from 'ol/geom/point';
 import OlLayerVector from 'ol/layer/vector';
@@ -16,6 +15,7 @@ import { ToggleButton } from '../../index';
 
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
 import MathUtil from '@terrestris/base-util/src/MathUtil/MathUtil';
+
 import { CSS_PREFIX } from '../../constants';
 
 import mapMarker from './geolocation-marker.png';

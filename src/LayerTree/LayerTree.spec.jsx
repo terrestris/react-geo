@@ -4,8 +4,8 @@ import React from 'react';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-import OlCollection from 'ol/collection';
 import * as OlObservable from 'ol/Observable';
+import OlCollection from 'ol/Collection';
 
 import TestUtil from '../Util/TestUtil';
 
