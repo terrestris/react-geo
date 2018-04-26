@@ -1,5 +1,4 @@
-import OlSphere from 'ol/sphere';
-import OlProj from 'ol/proj';
+import { getLength, getArea } from 'ol/sphere';
 
 /**
  * This class provides some static methods which might be helpful when working
@@ -16,29 +15,14 @@ class MeasureUtil {
    * @param {OlMap} map An OlMap.
    * @param {Number} decimalPlacesInToolTips How many decimal places will be
    *   allowed for the measure tooltips
-   * @param {Boolean} geodesic Is the measurement geodesic (default is true).
    *
    * @return {String} The formatted length of the line.
    */
-  static formatLength(line, map, decimalPlacesInToolTips, geodesic = true) {
-    const decimalHelper = Math.pow(10, decimalPlacesInToolTips);
-    let length;
+  static formatLength(line, map, decimalPlacesInToolTips) {
 
-    if (geodesic) {
-      const wgs84Sphere = new OlSphere(6378137);
-      const coordinates = line.getCoordinates();
-      length = 0;
-      const sourceProj = map.getView().getProjection();
-      for (let i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-        const c1 = OlProj.transform(
-          coordinates[i], sourceProj, 'EPSG:4326');
-        const c2 = OlProj.transform(
-          coordinates[i + 1], sourceProj, 'EPSG:4326');
-        length += wgs84Sphere.haversineDistance(c1, c2);
-      }
-    } else {
-      length = Math.round(line.getLength() * 100) / 100;
-    }
+    const decimalHelper = Math.pow(10, decimalPlacesInToolTips);
+    const sourceProj = map.getView().getProjection();
+    const length = getLength(line, sourceProj);
 
     let output;
     if (length > 1000) {
@@ -58,24 +42,14 @@ class MeasureUtil {
    * @param {OlMap} map An OlMap.
    * @param {Number} decimalPlacesInToolTips How many decimal places will be
    *   allowed for the measure tooltips.
-   * @param {Boolean} geodesic Is the measurement geodesic.
    *
    * @return {String} The formatted area of the polygon.
    */
-  static formatArea(polygon, map, decimalPlacesInToolTips, geodesic = true) {
-    const decimalHelper = Math.pow(10, decimalPlacesInToolTips);
-    let area;
+  static formatArea(polygon, map, decimalPlacesInToolTips) {
 
-    if (geodesic) {
-      const wgs84Sphere = new OlSphere(6378137);
-      const sourceProj = map.getView().getProjection();
-      const geom = (polygon.clone().transform(
-        sourceProj, 'EPSG:4326'));
-      const coordinates = geom.getLinearRing(0).getCoordinates();
-      area = Math.abs(wgs84Sphere.geodesicArea(coordinates));
-    } else {
-      area = polygon.getArea();
-    }
+    const decimalHelper = Math.pow(10, decimalPlacesInToolTips);
+    const sourceProj = map.getView().getProjection();
+    const area = getArea(polygon, sourceProj);
 
     let output;
     if (area > 10000) {
