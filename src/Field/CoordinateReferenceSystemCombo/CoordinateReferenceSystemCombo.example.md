@@ -3,15 +3,15 @@ This demonstrates the usage of the CoordinateReferenceSystemCombo.
 ```jsx
 const React = require('react');
 const proj4 = require('proj4').default;
+const register = require('ol/proj/proj4').register;
 const OlMap = require('ol/Map').default;
 const OlView = require('ol/View').default;
 const OlLayerTile = require('ol/layer/Tile').default;
 const OlSourceOsm = require('ol/source/OSM').default;
-//const OlProjection = require('ol/proj').default;
 const fromLonLat = require('ol/proj').fromLonLat;
 const getTransform = require('ol/proj').getTransform;
 const get = require('ol/proj').get;
-const OlExtent = require('ol/extent').default;
+const applyTransform = require('ol/extent').applyTransform;
 
 const predefinedCrsDefinitions = [{
   code: '25832',
@@ -48,7 +48,7 @@ class CoordinateReferenceSystemComboExample extends React.Component {
       })
     });
 
-  //  OlProjection.setProj4(proj4);
+    register(proj4);
   }
 
   componentDidMount() {
@@ -74,16 +74,17 @@ class CoordinateReferenceSystemComboExample extends React.Component {
       return;
     }
 
-    var newProjCode = 'EPSG:' + code;
+    const newProjCode = 'EPSG:' + code;
     proj4.defs(newProjCode, proj4def);
-    var newProj = get(newProjCode);
-    var fromLonLat = getTransform('EPSG:4326', newProj);
+    register(proj4);
+    const newProj = get(newProjCode);
+    const fromLonLat = getTransform('EPSG:4326', newProj);
 
     // very approximate calculation of projection extent
-    var extent = OlExtent.applyTransform(
+    const extent = applyTransform(
       [bbox[1], bbox[2], bbox[3], bbox[0]], fromLonLat);
     newProj.setExtent(extent);
-    var newView = new OlView({
+    const newView = new OlView({
       projection: newProj
     });
     this.map.setView(newView);
