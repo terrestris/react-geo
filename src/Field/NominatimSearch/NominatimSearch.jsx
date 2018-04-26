@@ -5,6 +5,7 @@ const Option = AutoComplete.Option;
 
 import Logger from '@terrestris/base-util/src/Logger';
 import UrlUtil from '@terrestris/base-util/src/UrlUtil/UrlUtil';
+
 import { transformExtent } from 'ol/proj';
 
 import { CSS_PREFIX } from '../../constants';
