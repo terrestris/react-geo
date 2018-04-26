@@ -14,7 +14,7 @@ import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
 import OlStyleText from 'ol/style/Text';
-import OlInteractionDraw from 'ol/interaction/Draw';
+import OlInteractionDraw, { createBox } from 'ol/interaction/Draw';
 import OlInteractionSelect from 'ol/interaction/Select';
 import OlInteractionModify from 'ol/interaction/Modify';
 import OlInteractionTranslate from 'ol/interaction/Translate';
@@ -688,7 +688,7 @@ class DigitizeButton extends React.Component {
     }
 
     if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
-      geometryFunction = OlInteractionDraw.createBox();
+      geometryFunction = createBox();
       type = DigitizeButton.CIRCLE_DRAW_TYPE;
     } else if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
       type = DigitizeButton.POINT_DRAW_TYPE;
