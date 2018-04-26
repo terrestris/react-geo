@@ -294,11 +294,11 @@ class RemoteFeatureGrid extends React.Component {
         featureStyle={function(feature) {
           return getFeatureStyle(feature);
         }}
-        highlightStyle={function(/*resolution*/) {
-          return getFeatureStyle(this, 'rgb(230, 247, 255)');
+        highlightStyle={function(feature) {
+          return getFeatureStyle(feature, 'rgb(230, 247, 255)');
         }}
-        selectStyle={function(/*resolution*/) {
-          return getFeatureStyle(this, 'rgb(24, 144, 255)');
+        selectStyle={function(feature) {
+          return getFeatureStyle(feature, 'rgb(24, 144, 255)');
         }}
         onChange={this.onTableChange.bind(this)}
         columnDefs={{
