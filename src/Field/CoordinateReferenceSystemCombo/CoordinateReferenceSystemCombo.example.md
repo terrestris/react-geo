@@ -78,6 +78,7 @@ class CoordinateReferenceSystemComboExample extends React.Component {
 
     const newProjCode = 'EPSG:' + code;
     proj4.defs(newProjCode, proj4def);
+
     register(proj4);
     const newProj = get(newProjCode);
     const fromLonLat = getTransform('EPSG:4326', newProj);
