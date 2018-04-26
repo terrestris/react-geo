@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 
 import isEmpty from 'lodash/isEmpty.js';
 
-import OlMap from 'ol/map';
-import OlLayerVector from 'ol/layer/vector';
-import OlSourceVector from 'ol/source/vector';
-import OlCollection from 'ol/collection';
+import OlMap from 'ol/Map';
+import OlLayerVector from 'ol/layer/Vector';
+import OlSourceVector from 'ol/source/Vector';
+import OlCollection from 'ol/Collection';
 import OlMultiPolygon from 'ol/geom/multipolygon';
-import OlMultiLinestring from 'ol/geom/multilinestring';
-import OlStyleStyle from 'ol/style/style';
-import OlStyleStroke from 'ol/style/stroke';
-import OlStyleFill from 'ol/style/fill';
-import OlStyleCircle from 'ol/style/circle';
-import OlInteractionDraw from 'ol/interaction/draw';
-import OlObservable from 'ol/observable';
-import OlOverlay from 'ol/overlay';
+import OlStyleStyle from 'ol/style/Style';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleCircle from 'ol/style/Circle';
+import OlInteractionDraw from 'ol/interaction/Draw';
+import OlObservable from 'ol/Observable';
+import OlOverlay from 'ol/Overlay';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import MeasureUtil from '@terrestris/ol-util/src/MeasureUtil/MeasureUtil';

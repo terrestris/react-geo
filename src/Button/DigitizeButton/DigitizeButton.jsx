@@ -5,19 +5,19 @@ import { Modal, Input } from 'antd';
 
 import isFunction from 'lodash/isFunction.js';
 
-import OlMap from 'ol/map';
-import OlLayerVector from 'ol/layer/vector';
-import OlSourceVector from 'ol/source/vector';
-import OlCollection from 'ol/collection';
-import OlStyleStyle from 'ol/style/style';
-import OlStyleStroke from 'ol/style/stroke';
-import OlStyleFill from 'ol/style/fill';
-import OlStyleCircle from 'ol/style/circle';
-import OlStyleText from 'ol/style/text';
-import OlInteractionDraw from 'ol/interaction/draw';
-import OlInteractionSelect from 'ol/interaction/select';
-import OlInteractionModify from 'ol/interaction/modify';
-import OlInteractionTranslate from 'ol/interaction/translate';
+import OlMap from 'ol/Map';
+import OlLayerVector from 'ol/layer/Vector';
+import OlSourceVector from 'ol/source/Vector';
+import OlCollection from 'ol/Collection';
+import OlStyleStyle from 'ol/style/Style';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleText from 'ol/style/Text';
+import OlInteractionDraw from 'ol/interaction/Draw';
+import OlInteractionSelect from 'ol/interaction/Select';
+import OlInteractionModify from 'ol/interaction/Modify';
+import OlInteractionTranslate from 'ol/interaction/Translate';
 import OlEventsCondition from 'ol/events/condition';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';

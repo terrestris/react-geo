@@ -1,11 +1,11 @@
 /*eslint-env jest*/
 import React from 'react';
 
-import OlLayerGroup from 'ol/layer/group';
-import OlLayerTile from 'ol/layer/tile';
-import OlSourceTileWMS from 'ol/source/tilewms';
-import olObservable from 'ol/observable';
+import OlLayerGroup from 'ol/layer/Group';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlCollection from 'ol/collection';
+import olObservable from 'ol/Observable';
 
 import TestUtil from '../Util/TestUtil';
 

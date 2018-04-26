@@ -4,11 +4,12 @@ import isBoolean from 'lodash/isBoolean.js';
 import isFunction from 'lodash/isFunction.js';
 import isEqual from 'lodash/isEqual.js';
 import { Tree } from 'antd';
-import OlMap from 'ol/map';
-import OlLayerBase from 'ol/layer/base';
-import OlLayerGroup from 'ol/layer/group';
+
+import OlMap from 'ol/Map';
+import OlLayerBase from 'ol/layer/Base';
+import OlLayerGroup from 'ol/layer/Group';
 import OlCollection from 'ol/collection';
-import olObservable from 'ol/observable';
+import olObservable from 'ol/Observable';
 
 import Logger from '@terrestris/base-util/src/Logger';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';

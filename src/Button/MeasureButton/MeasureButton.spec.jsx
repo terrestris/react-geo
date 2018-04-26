@@ -1,13 +1,13 @@
 /*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
-import OlLayerVector from 'ol/layer/vector';
-import OlInteractionDraw from 'ol/interaction/draw';
-import OlFeature from 'ol/feature';
-import OlGeomLineString from 'ol/geom/linestring';
+import OlLayerVector from 'ol/layer/Vector';
+import OlInteractionDraw from 'ol/interaction/Draw';
+import OlFeature from 'ol/Feature';
+import OlGeomLineString from 'ol/geom/LineString';
 import OlGeomPolygon from 'ol/geom/polygon';
-import OlOverlay from 'ol/overlay';
-import OlObservable from 'ol/observable';
+import OlOverlay from 'ol/Overlay';
+import OlObservable from 'ol/Observable';
 
 import { MeasureButton } from '../../index';
 import MeasureUtil from '@terrestris/ol-util/src/MeasureUtil/MeasureUtil';

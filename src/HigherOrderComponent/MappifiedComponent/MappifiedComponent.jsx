@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import OlMap from 'ol/map';
+import OlMap from 'ol/Map';
 
 import Logger from '@terrestris/base-util/src/Logger';
 

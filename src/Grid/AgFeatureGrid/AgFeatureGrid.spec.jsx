@@ -1,7 +1,7 @@
 /*eslint-env jest*/
-import OlSourceVector from 'ol/source/vector';
-import OlLayerVector from 'ol/layer/vector';
-import OlGeomGeometryCollection from 'ol/geom/geometrycollection';
+import OlSourceVector from 'ol/source/Vector';
+import OlLayerVector from 'ol/layer/Vector';
+import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 
 import differenceWith from 'lodash/differenceWith.js';
 

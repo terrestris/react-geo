@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
-import OlLayerTile from 'ol/layer/tile';
-import OlLayerImage  from 'ol/layer/image';
-import OlMap from 'ol/map';
+import OlLayerTile from 'ol/layer/Tile';
+import OlLayerImage  from 'ol/layer/Image';
+import OlMap from 'ol/Map';
 import isFunction from 'lodash/isFunction.js';
 
 import Panel from '../../Panel/Panel/Panel.jsx';

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import OlMap from 'ol/map';
-import OlSimpleGeometry from 'ol/geom/simplegeometry';
+import OlMap from 'ol/Map';
+import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 import easing from 'ol/easing';
 
 import {

@@ -2,12 +2,12 @@ This example demonstrates the LayerTree.
 
 ```jsx
 const React = require('react');
-const OlMap  = require('ol/map').default;
-const OlView  = require('ol/view').default;
-const OlLayerGroup  = require('ol/layer/group').default;
-const OlLayerTile  = require('ol/layer/tile').default;
-const OlSourceTileJson  = require('ol/source/tilejson').default;
-const OlSourceOsm  = require('ol/source/osm').default;
+const OlMap  = require('ol/Map').default;
+const OlView  = require('ol/View').default;
+const OlLayerGroup  = require('ol/layer/Group').default;
+const OlLayerTile  = require('ol/layer/Tile').default;
+const OlSourceTileJson  = require('ol/source/TileJSON').default;
+const OlSourceOsm  = require('ol/source/OSM').default;
 const OlProj  = require('ol/proj').default;
 
 class LayerTreeExample extends React.Component {
