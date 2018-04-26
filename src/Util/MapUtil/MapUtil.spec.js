@@ -1,6 +1,6 @@
 /*eslint-env jest*/
 
-import OlInteractionDragRotateAndZoom from 'ol/interaction/dragrotateandzoom';
+import OlInteractionDragRotateAndZoom from 'ol/interaction/DragRotateAndZoom';
 import OlInteractionDraw from 'ol/interaction/Draw';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
