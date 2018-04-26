@@ -9,7 +9,7 @@ import OlMap from 'ol/Map';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlCollection from 'ol/collection';
-import olObservable from 'ol/Observable';
+import { unByKey } from 'ol/Observable';
 
 import Logger from '@terrestris/base-util/src/Logger';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
@@ -161,7 +161,7 @@ class LayerTree extends React.Component {
 
     if (layerGroup && prevState.layerGroup) {
       if (!isEqual(prevState.layerGroup.ol_uid, layerGroup.ol_uid)) {
-        olObservable.unByKey(this.olListenerKeys);
+        unByKey(this.olListenerKeys);
         this.olListenerKeys = [];
 
         this.registerAddRemoveListeners(layerGroup);
@@ -178,7 +178,7 @@ class LayerTree extends React.Component {
    * Determines what to do when the component is unmounted.
    */
   componentWillUnmount() {
-    olObservable.unByKey(this.olListenerKeys);
+    unByKey(this.olListenerKeys);
   }
 
   /**
@@ -289,13 +289,13 @@ class LayerTree extends React.Component {
           (key.type === 'remove' && key.listener === this.onCollectionRemove) ||
           (key.type === 'change:layers' && key.listener === this.onChangeLayers)) {
 
-            olObservable.unByKey(key);
+            unByKey(key);
             return false;
           }
         }
       } else if (key.target === layer) {
         if (key.type === 'change:visible' && key.listener === this.onLayerChangeVisible) {
-          olObservable.unByKey(key);
+          unByKey(key);
           return false;
         }
       }
