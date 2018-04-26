@@ -1,7 +1,7 @@
 /*eslint-env jest*/
-import OlGeomPoint from 'ol/geom/point';
-import OlFeature from 'ol/feature';
-import OlStyleStyle from 'ol/style/style';
+import OlGeomPoint from 'ol/geom/Point';
+import OlFeature from 'ol/Feature';
+import OlStyleStyle from 'ol/style/Style';
 
 import AnimateUtil from '../AnimateUtil/AnimateUtil';
 import TestUtil from '../TestUtil';

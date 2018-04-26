@@ -1,5 +1,5 @@
 /*eslint-env jest*/
-import OlLayerImage from 'ol/layer/image';
+import OlLayerImage from 'ol/layer/Image';
 import { CapabilitiesUtil } from '../../index';
 
 const layerTitle =  'OpenStreetMap WMS - by terrestris';

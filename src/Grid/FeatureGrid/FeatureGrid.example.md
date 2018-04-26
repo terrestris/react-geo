@@ -2,12 +2,12 @@ This example demonstrates the usage of the FeatureGrid:
 
 ```jsx
 const React = require('react');
-const OlMap = require('ol/map').default;
-const OlView = require('ol/view').default;
-const OlLayerTile = require('ol/layer/tile').default;
-const OlSourceOsm = require('ol/source/osm').default;
+const OlMap = require('ol/Map').default;
+const OlView = require('ol/View').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlSourceOsm = require('ol/source/OSM').default;
 const OlProj = require('ol/proj').default;
-const OlFormatGeoJson = require('ol/format/geojson').default;
+const OlFormatGeoJson = require('ol/format/GeoJSON').default;
 
 const federalStates = require('../../../assets/federal-states-ger.json');
 
@@ -98,17 +98,17 @@ An example with a remote feature source.
 ```jsx
 const React = require('react');
 const PropTypes = require('prop-types');
-const OlMap = require('ol/map').default;
-const OlView = require('ol/view').default;
-const OlLayerTile = require('ol/layer/tile').default;
-const OlSourceOsm = require('ol/source/osm').default;
+const OlMap = require('ol/Map').default;
+const OlView = require('ol/View').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlSourceOsm = require('ol/source/OSM').default;
 const OlProj = require('ol/proj').default;
-const OlFormatGeoJson = require('ol/format/geojson').default;
-const OlStyle = require('ol/style/style').default;
-const OlStyleIcon = require('ol/style/icon').default;
-const OlStyleText = require('ol/style/text').default;
-const OlStyleFill = require('ol/style/fill').default;
-const OlStyleStroke = require('ol/style/stroke').default;
+const OlFormatGeoJson = require('ol/format/GeoJSON').default;
+const OlStyle = require('ol/style/Style').default;
+const OlStyleIcon = require('ol/style/Icon').default;
+const OlStyleText = require('ol/style/Text').default;
+const OlStyleFill = require('ol/style/Fill').default;
+const OlStyleStroke = require('ol/style/Stroke').default;
 const {
   Input
 } = require('antd');

@@ -9,10 +9,10 @@ const Option = Select.Option;
 import Logger from '../../Util/Logger';
 import { CSS_PREFIX } from '../../constants';
 
-import OlMap from 'ol/map';
+import OlMap from 'ol/Map';
 import OlFormatFilter from 'ol/format/filter';
-import OlFormatGeoJSON from 'ol/format/geojson';
-import OlFormatWFS from 'ol/format/wfs';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlFormatWFS from 'ol/format/WFS';
 
 /**
  * The WfsSearch field.

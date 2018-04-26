@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 
 import TestUtil from '../../Util/TestUtil';
-import OlMap from 'ol/map';
+import OlMap from 'ol/Map';
 
 import { ZoomButton } from '../../index';
 

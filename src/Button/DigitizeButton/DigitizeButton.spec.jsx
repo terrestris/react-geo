@@ -1,18 +1,18 @@
 /*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
-import OlSourceVector from 'ol/source/vector';
-import OlInteractionDraw from 'ol/interaction/draw';
-import OlInteractionSelect from 'ol/interaction/select';
-import OlStyleStyle from 'ol/style/style';
-import OlStyleStroke from 'ol/style/stroke';
-import OlStyleFill from 'ol/style/fill';
-import OlStyleCircle from 'ol/style/circle';
-import OlStyleText from 'ol/style/text';
-import OlFeature from 'ol/feature';
-import OlCollection from 'ol/collection';
-import OlGeomPoint from 'ol/geom/point';
-import OlGeomLineString from 'ol/geom/linestring';
+import OlSourceVector from 'ol/source/Vector';
+import OlInteractionDraw from 'ol/interaction/Draw';
+import OlInteractionSelect from 'ol/interaction/Select';
+import OlStyleStyle from 'ol/style/Style';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleText from 'ol/style/Text';
+import OlFeature from 'ol/Feature';
+import OlCollection from 'ol/Collection';
+import OlGeomPoint from 'ol/geom/Point';
+import OlGeomLineString from 'ol/geom/LineString';
 import OlGeomPolygon from 'ol/geom/polygon';
 
 import DigitizeButton from './DigitizeButton.jsx';

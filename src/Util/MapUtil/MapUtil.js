@@ -1,9 +1,9 @@
-import OlMap from 'ol/map';
+import OlMap from 'ol/Map';
 import OlProjection from 'ol/proj';
-import OlSourceTileWMS from 'ol/source/tilewms';
-import OlLayerTile from 'ol/layer/tile';
-import OlLayerGroup from 'ol/layer/group';
-import OlLayerBase from 'ol/layer/base';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlLayerTile from 'ol/layer/Tile';
+import OlLayerGroup from 'ol/layer/Group';
+import OlLayerBase from 'ol/layer/Base';
 
 import FeatureUtil from '../FeatureUtil/FeatureUtil';
 import UrlUtil from '../UrlUtil/UrlUtil';

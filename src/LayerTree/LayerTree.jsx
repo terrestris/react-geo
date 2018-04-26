@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isBoolean, isFunction } from 'lodash';
 import { Tree } from 'antd';
-import OlMap from 'ol/map';
-import OlLayerBase from 'ol/layer/base';
-import OlLayerGroup from 'ol/layer/group';
-import olObservable from 'ol/observable';
+import OlMap from 'ol/Map';
+import OlLayerBase from 'ol/layer/Base';
+import OlLayerGroup from 'ol/layer/Group';
+import olObservable from 'ol/Observable';
 
 import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil/MapUtil';

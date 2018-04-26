@@ -1,15 +1,15 @@
 /*eslint-env jest*/
 
 import OlInteractionDragRotateAndZoom from 'ol/interaction/dragrotateandzoom';
-import OlInteractionDraw from 'ol/interaction/draw';
-import OlLayerTile from 'ol/layer/tile';
-import OlSourceTileWMS from 'ol/source/tilewms';
-import OlSourceTileJson from 'ol/source/tilejson';
-import OlFeature from 'ol/feature';
-import OlGeomPoint from 'ol/geom/point';
-import OlLayerGroup from 'ol/layer/group';
-import OlMap from 'ol/map';
-import OlView from 'ol/view';
+import OlInteractionDraw from 'ol/interaction/Draw';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlSourceTileJson from 'ol/source/TileJSON';
+import OlFeature from 'ol/Feature';
+import OlGeomPoint from 'ol/geom/Point';
+import OlLayerGroup from 'ol/layer/Group';
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
 
 import TestUtil from '../TestUtil';
 

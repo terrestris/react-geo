@@ -2,10 +2,10 @@ This demonstrates the use of MeasureButton with different measure types.
 
 ```jsx
 const React = require('react');
-const OlMap = require('ol/map').default;
-const OlView = require('ol/view').default;
-const OlLayerTile = require('ol/layer/tile').default;
-const OlSourceOsm = require('ol/source/osm').default;
+const OlMap = require('ol/Map').default;
+const OlView = require('ol/View').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlSourceOsm = require('ol/source/OSM').default;
 const OlProj = require('ol/proj').default;
 
 const {

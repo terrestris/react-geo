@@ -3,10 +3,10 @@ This demonstrates the usage of the CoordinateReferenceSystemCombo.
 ```jsx
 const React = require('react');
 const proj4 = require('proj4').default;
-const OlMap = require('ol/map').default;
-const OlView = require('ol/view').default;
-const OlLayerTile = require('ol/layer/tile').default;
-const OlSourceOsm = require('ol/source/osm').default;
+const OlMap = require('ol/Map').default;
+const OlView = require('ol/View').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlSourceOsm = require('ol/source/OSM').default;
 const OlProjection = require('ol/proj').default;
 const OlExtent = require('ol/extent').default;
 

@@ -1,6 +1,6 @@
-import OlFormatGeoJSON from 'ol/format/geojson';
-import OlLayerVector from 'ol/layer/vector';
-import OlSourceVector from 'ol/source/vector';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlLayerVector from 'ol/layer/Vector';
+import OlSourceVector from 'ol/source/Vector';
 import shp from 'shpjs';
 
 /**

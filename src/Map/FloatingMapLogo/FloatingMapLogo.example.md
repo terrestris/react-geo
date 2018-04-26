@@ -2,10 +2,10 @@ This is a example containing a map component and a floating map logo
 
 ```jsx
 const React = require('react');
-const OlSourceOsm = require('ol/source/osm').default;
-const OlLayerTile = require('ol/layer/tile').default;
-const OlView = require('ol/view').default;
-const OlMap = require('ol/map').default;
+const OlSourceOsm = require('ol/source/OSM').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlView = require('ol/View').default;
+const OlMap = require('ol/Map').default;
 
 const logo = require('../../../assets/user.png');
 

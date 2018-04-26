@@ -1,13 +1,13 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import OlView from 'ol/view';
-import OlMap from 'ol/map';
-import OlSourceVector from 'ol/source/vector';
-import OlLayerVector from 'ol/layer/vector';
-import OlFeature from 'ol/feature';
-import OlGeomPoint from 'ol/geom/point';
+import OlView from 'ol/View';
+import OlMap from 'ol/Map';
+import OlSourceVector from 'ol/source/Vector';
+import OlLayerVector from 'ol/layer/Vector';
+import OlFeature from 'ol/Feature';
+import OlGeomPoint from 'ol/geom/Point';
 import OlPointerPointerEvent from 'ol/pointer/pointerevent';
-import OlMapBrowserPointerEvent from 'ol/mapbrowserpointerevent';
+import OlMapBrowserPointerEvent from 'ol/Mapbrowserpointerevent';
 
 /**
  * A set of some useful static helper methods.
@@ -109,7 +109,7 @@ export class TestUtil {
 
   /**
    * Simulates a browser pointer event on the map viewport.
-   * Origin: https://github.com/openlayers/openlayers/blob/master/test/spec/ol/interaction/draw.test.js#L67
+   * Origin: https://github.com/openlayers/openlayers/blob/master/test/spec/ol/interaction/Draw.test.js#L67
    *
    * @param {ol.Map} map The map to use.
    * @param {string} type Event type.

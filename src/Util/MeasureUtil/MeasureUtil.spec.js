@@ -1,6 +1,6 @@
 /*eslint-env jest*/
 
-import OlGeomLineString from 'ol/geom/linestring';
+import OlGeomLineString from 'ol/geom/LineString';
 import OlGeomPolygon from 'ol/geom/polygon';
 
 import {

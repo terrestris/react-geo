@@ -1,14 +1,14 @@
 /*eslint-env jest*/
 
-import OlFormatGeoJSON from 'ol/format/geojson';
-import OlFeature from 'ol/feature';
-import OlGeomGeometry from 'ol/geom/geometry';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlFeature from 'ol/Feature';
+import OlGeomGeometry from 'ol/geom/Geometry';
 import OlGeomPolygon from 'ol/geom/polygon';
-import OlGeomMultiPolygon from 'ol/geom/multipolygon';
-import OlGeomPoint from 'ol/geom/point';
-import OlGeomMultiPoint from 'ol/geom/multipoint';
-import OlGeomLineString from 'ol/geom/linestring';
-import OlGeomMultiLineString from 'ol/geom/multilinestring';
+import OlGeomMultiPolygon from 'ol/geom/MultiPolygon';
+import OlGeomPoint from 'ol/geom/Point';
+import OlGeomMultiPoint from 'ol/geom/MultiPoint';
+import OlGeomLineString from 'ol/geom/LineString';
+import OlGeomMultiLineString from 'ol/geom/MultiLineString';
 
 import {
   GeometryUtil,
