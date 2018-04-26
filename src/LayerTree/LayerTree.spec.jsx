@@ -5,7 +5,7 @@ import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlCollection from 'ol/collection';
-import olObservable from 'ol/Observable';
+import * as OlObservable from 'ol/Observable';
 
 import TestUtil from '../Util/TestUtil';
 
@@ -59,15 +59,12 @@ describe('<LayerTree />', () => {
   });
 
   it('unmount removes listeners', () => {
-    const unByKeySpy = jest.spyOn(olObservable, 'unByKey');
+    OlObservable.unByKey = jest.fn();
     const wrapper = TestUtil.mountComponent(LayerTree, {map});
     const olListenerKeys = wrapper.instance().olListenerKeys;
     wrapper.unmount();
-    expect(unByKeySpy).toHaveBeenCalled();
-    expect(unByKeySpy).toHaveBeenCalledWith(olListenerKeys);
-
-    unByKeySpy.mockReset();
-    unByKeySpy.mockRestore();
+    expect(OlObservable.unByKey).toHaveBeenCalled();
+    expect(OlObservable.unByKey).toHaveBeenCalledWith(olListenerKeys);
   });
 
   it('CWR with new layerGroup rebuild listeners and treenodes ', () => {
@@ -456,17 +453,14 @@ describe('<LayerTree />', () => {
 
         const wrapper = TestUtil.mountComponent(LayerTree, props);
         const oldOlListenerKey = wrapper.instance().olListenerKeys;
-        const unByKeySpy = jest.spyOn(olObservable, 'unByKey');
+        OlObservable.unByKey = jest.fn();
 
         wrapper.instance().unregisterEventsByLayer(subLayer1);
 
         const newOlListenerKey = wrapper.instance().olListenerKeys;
 
-        expect(unByKeySpy).toHaveBeenCalled();
+        expect(OlObservable.unByKey).toHaveBeenCalled();
         expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 1);
-
-        unByKeySpy.mockReset();
-        unByKeySpy.mockRestore();
       });
 
       it('… of children for groups', () => {
@@ -488,17 +482,14 @@ describe('<LayerTree />', () => {
 
         const wrapper = TestUtil.mountComponent(LayerTree, props);
         const oldOlListenerKey = wrapper.instance().olListenerKeys;
-        const unByKeySpy = jest.spyOn(olObservable, 'unByKey');
+        OlObservable.unByKey = jest.fn();
 
         wrapper.instance().unregisterEventsByLayer(nestedLayerGroup);
 
         const newOlListenerKey = wrapper.instance().olListenerKeys;
 
-        expect(unByKeySpy).toHaveBeenCalledTimes(2);
+        expect(OlObservable.unByKey).toHaveBeenCalledTimes(2);
         expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 2);
-
-        unByKeySpy.mockReset();
-        unByKeySpy.mockRestore();
       });
 
     });

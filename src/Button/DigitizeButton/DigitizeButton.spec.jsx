@@ -13,7 +13,7 @@ import OlFeature from 'ol/Feature';
 import OlCollection from 'ol/Collection';
 import OlGeomPoint from 'ol/geom/Point';
 import OlGeomLineString from 'ol/geom/LineString';
-import OlGeomPolygon from 'ol/geom/polygon';
+import OlGeomPolygon from 'ol/geom/Polygon';
 
 import DigitizeButton from './DigitizeButton.jsx';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
