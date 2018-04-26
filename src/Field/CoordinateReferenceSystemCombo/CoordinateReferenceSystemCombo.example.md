@@ -7,7 +7,10 @@ const OlMap = require('ol/Map').default;
 const OlView = require('ol/View').default;
 const OlLayerTile = require('ol/layer/Tile').default;
 const OlSourceOsm = require('ol/source/OSM').default;
-const OlProjection = require('ol/proj').default;
+//const OlProjection = require('ol/proj').default;
+const fromLonLat = require('ol/proj').fromLonLat;
+const getTransform = require('ol/proj').getTransform;
+const get = require('ol/proj').get;
 const OlExtent = require('ol/extent').default;
 
 const predefinedCrsDefinitions = [{
@@ -40,12 +43,12 @@ class CoordinateReferenceSystemComboExample extends React.Component {
         })
       ],
       view: new OlView({
-        center: OlProjection.fromLonLat([37.40570, 8.81566]),
+        center: fromLonLat([37.40570, 8.81566]),
         zoom: 4
       })
     });
 
-    OlProjection.setProj4(proj4);
+  //  OlProjection.setProj4(proj4);
   }
 
   componentDidMount() {
@@ -73,8 +76,8 @@ class CoordinateReferenceSystemComboExample extends React.Component {
 
     var newProjCode = 'EPSG:' + code;
     proj4.defs(newProjCode, proj4def);
-    var newProj = OlProjection.get(newProjCode);
-    var fromLonLat = OlProjection.getTransform('EPSG:4326', newProj);
+    var newProj = get(newProjCode);
+    var fromLonLat = getTransform('EPSG:4326', newProj);
 
     // very approximate calculation of projection extent
     var extent = OlExtent.applyTransform(

@@ -8,7 +8,7 @@ const OlMap = require('ol/Map').default;
 const OlView = require('ol/View').default;
 const OlLayerTile = require('ol/layer/Tile').default;
 const OlSourceOsm = require('ol/source/OSM').default;
-const OlProj = require('ol/proj').default;
+const fromLonLat = require('ol/proj').fromLonLat;
 
 const {
   AddWmsPanel,
@@ -34,7 +34,7 @@ class AddWmsPanelExample extends React.Component {
         })
       ],
       view: new OlView({
-        center: OlProj.fromLonLat([7.40570, 53.81566]),
+        center: fromLonLat([7.40570, 53.81566]),
         zoom: 4
       })
     });

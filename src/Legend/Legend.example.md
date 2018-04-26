@@ -6,7 +6,7 @@ const OlMap  = require('ol/Map').default;
 const OlView  = require('ol/View').default;
 const OlLayerTile  = require('ol/layer/Tile').default;
 const OlSourceTileWMS  = require('ol/source/TileWMS').default;
-const olProj  = require('ol/proj').default;
+const fromLonLat = require('ol/proj').fromLonLat;
 
 class LegendExample extends React.Component {
 
@@ -56,7 +56,7 @@ class LegendExample extends React.Component {
         this.places
       ],
       view: new OlView({
-        center: olProj.fromLonLat([-98.583333, 39.833333]),
+        center: fromLonLat([-98.583333, 39.833333]),
         zoom: 4
       })
     });

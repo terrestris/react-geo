@@ -6,7 +6,7 @@ const OlMap = require('ol/Map').default;
 const OlView = require('ol/View').default;
 const OlLayerTile = require('ol/layer/Tile').default;
 const OlSourceOsm = require('ol/source/OSM').default;
-const OlProj = require('ol/proj').default;
+const fromLonLat = require('ol/proj').fromLonLat;
 
 class LayerTransparencySliderExample extends React.Component {
 
@@ -26,7 +26,7 @@ class LayerTransparencySliderExample extends React.Component {
         this.layer
       ],
       view: new OlView({
-        center: OlProj.fromLonLat([37.40570, 8.81566]),
+        center: fromLonLat([37.40570, 8.81566]),
         zoom: 4
       })
     });
