@@ -5,7 +5,7 @@ import { Tree } from 'antd';
 import OlMap from 'ol/Map';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
-import olObservable from 'ol/Observable';
+import { unByKey } from 'ol/Observable';
 
 import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil/MapUtil';
@@ -124,7 +124,7 @@ class LayerTree extends React.Component {
    * Determines what to do when the component is unmounted.
    */
   componentWillUnmount() {
-    olObservable.unByKey(this.olListenerKeys);
+    unByKey(this.olListenerKeys);
   }
 
   /**
@@ -140,7 +140,7 @@ class LayerTree extends React.Component {
 
     if (currentLayerGroup.ol_uid !== newLayerGroup.ol_uid ||
         layerGroupRevision !== newLayerGroup.getRevision()) {
-      olObservable.unByKey(this.olListenerKeys);
+      unByKey(this.olListenerKeys);
       this.olListenerKeys = [];
 
       this.setState({
@@ -242,13 +242,13 @@ class LayerTree extends React.Component {
           if ((key.type === 'add' && key.listener === this.onCollectionAdd) ||
           (key.type === 'remove' && key.listener === this.onCollectionRemove)){
 
-            olObservable.unByKey(key);
+            unByKey(key);
             return false;
           }
         }
       } else if (key.target === layer) {
         if (key.type === 'change:visible' && key.listener === this.onLayerChangeVisible) {
-          olObservable.unByKey(key);
+          unByKey(key);
           return false;
         }
       }

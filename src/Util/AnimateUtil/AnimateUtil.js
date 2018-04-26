@@ -1,4 +1,4 @@
-import OlObservable from 'ol/Observable';
+import { unByKey } from 'ol/Observable';
 import OlGeomPoint from 'ol/geom/Point';
 import OlGeomLineString from 'ol/geom/LineString';
 
@@ -68,7 +68,7 @@ class AnimateUtil {
         }
 
         if (elapsed > duration || actualFrames >= expectedFrames) {
-          OlObservable.unByKey(listenerKey);
+          unByKey(listenerKey);
           resolve(featureToMove);
         }
         // tell OL3 to continue postcompose animation
