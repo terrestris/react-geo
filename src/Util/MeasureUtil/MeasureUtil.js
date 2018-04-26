@@ -21,8 +21,10 @@ class MeasureUtil {
   static formatLength(line, map, decimalPlacesInToolTips) {
 
     const decimalHelper = Math.pow(10, decimalPlacesInToolTips);
-    const sourceProj = map.getView().getProjection();
-    const length = getLength(line, sourceProj);
+    const opts = {
+      projection: map.getView().getProjection().getCode()
+    };
+    const length = getLength(line, opts);
 
     let output;
     if (length > 1000) {
@@ -48,8 +50,10 @@ class MeasureUtil {
   static formatArea(polygon, map, decimalPlacesInToolTips) {
 
     const decimalHelper = Math.pow(10, decimalPlacesInToolTips);
-    const sourceProj = map.getView().getProjection();
-    const area = getArea(polygon, sourceProj);
+    const opts = {
+      projection: map.getView().getProjection().getCode()
+    };
+    const area = getArea(polygon, opts);
 
     let output;
     if (area > 10000) {

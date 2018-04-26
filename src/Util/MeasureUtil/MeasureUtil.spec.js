@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 
 import OlGeomLineString from 'ol/geom/LineString';
-import OlGeomPolygon from 'ol/geom/polygon';
+import OlGeomPolygon from 'ol/geom/Polygon';
 
 import {
   MeasureUtil,
@@ -35,11 +35,11 @@ describe('MeasureUtil', () => {
 
         map = TestUtil.createMap();
 
-        const expectedShortLength = MeasureUtil.formatLength(shortLine, map, 2);
-        const expectedLongLength = MeasureUtil.formatLength(longLine, map, 2);
+        const expectedShortLength = MeasureUtil.formatLength(shortLine, map, 0);
+        const expectedLongLength = MeasureUtil.formatLength(longLine, map, 0);
 
         expect(expectedShortLength).toBe('100 m');
-        expect(expectedLongLength).toBe('100.55 km');
+        expect(expectedLongLength).toBe('100 km');
 
         TestUtil.removeMap(map);
       });
@@ -66,8 +66,8 @@ describe('MeasureUtil', () => {
 
         map = TestUtil.createMap();
 
-        const expectedSmallArea = MeasureUtil.formatArea(smallPoly, map, 2);
-        const expectedBigArea = MeasureUtil.formatArea(bigPoly, map, 2);
+        const expectedSmallArea = MeasureUtil.formatArea(smallPoly, map, 0);
+        const expectedBigArea = MeasureUtil.formatArea(bigPoly, map, 0);
 
         expect(expectedSmallArea).toBe('100 m<sup>2</sup>');
         expect(expectedBigArea).toBe('1 km<sup>2</sup>');
