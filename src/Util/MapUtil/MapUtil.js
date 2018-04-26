@@ -1,9 +1,9 @@
 import OlMap from 'ol/Map';
-import OlProjection from 'ol/proj';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerBase from 'ol/layer/Base';
+import { METERS_PER_UNIT } from 'ol/proj/Units';
 
 import FeatureUtil from '../FeatureUtil/FeatureUtil';
 import UrlUtil from '../UrlUtil/UrlUtil';
@@ -84,7 +84,7 @@ export class MapUtil {
    */
   static getResolutionForScale (scale, units) {
     let dpi = 25.4 / 0.28;
-    let mpu = OlProjection.METERS_PER_UNIT[units];
+    let mpu = METERS_PER_UNIT[units];
     let inchesPerMeter = 39.37;
 
     return parseFloat(scale) / (mpu * inchesPerMeter * dpi);
@@ -101,7 +101,7 @@ export class MapUtil {
    */
   static getScaleForResolution (resolution, units) {
     var dpi = 25.4 / 0.28;
-    var mpu = OlProjection.METERS_PER_UNIT[units];
+    var mpu = METERS_PER_UNIT[units];
     var inchesPerMeter = 39.37;
 
     return parseFloat(resolution) * mpu * inchesPerMeter * dpi;
