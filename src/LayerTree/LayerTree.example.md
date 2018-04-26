@@ -8,7 +8,7 @@ const OlLayerGroup  = require('ol/layer/Group').default;
 const OlLayerTile  = require('ol/layer/Tile').default;
 const OlSourceTileJson  = require('ol/source/TileJSON').default;
 const OlSourceOsm  = require('ol/source/OSM').default;
-const OlProj  = require('ol/proj').default;
+const fromLonLat = require('ol/proj').fromLonLat;
 
 class LayerTreeExample extends React.Component {
 
@@ -51,7 +51,7 @@ class LayerTreeExample extends React.Component {
         this.layerGroup
       ],
       view: new OlView({
-        center: OlProj.fromLonLat([37.40570, 8.81566]),
+        center: fromLonLat([37.40570, 8.81566]),
         zoom: 4
       })
     });
