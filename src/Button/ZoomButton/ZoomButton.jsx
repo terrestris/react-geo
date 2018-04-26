@@ -67,6 +67,7 @@ class ZoomButton extends React.Component {
     animate: true,
     animateOptions: {
       duration: 250,
+      easing: easeOut
     }
   }
 
