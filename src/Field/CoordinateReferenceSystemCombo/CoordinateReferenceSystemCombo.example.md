@@ -5,7 +5,6 @@ const React = require('react');
 const proj4 = require('proj4').default;
 
 const register = require('ol/proj/proj4').register;
-
 const OlMap = require('ol/Map').default;
 const OlView = require('ol/View').default;
 const OlLayerTile = require('ol/layer/Tile').default;
@@ -78,7 +77,10 @@ class CoordinateReferenceSystemComboExample extends React.Component {
 
     const newProjCode = 'EPSG:' + code;
     proj4.defs(newProjCode, proj4def);
+<<<<<<< HEAD
 
+=======
+>>>>>>> use named imports for ol/extent class and make use of register() function of ol/proj/proj4
     register(proj4);
     const newProj = get(newProjCode);
     const fromLonLat = getTransform('EPSG:4326', newProj);
