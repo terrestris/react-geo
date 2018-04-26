@@ -5,7 +5,7 @@ const Option = AutoComplete.Option;
 
 import Logger from '@terrestris/base-util/src/Logger';
 import UrlUtil from '@terrestris/base-util/src/UrlUtil/UrlUtil';
-import olProj from 'ol/proj';
+import { transformExtent } from 'ol/proj';
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -150,7 +150,7 @@ export class NominatimSearch extends React.Component {
           return parseFloat(coord);
         });
 
-        extent = olProj.transformExtent(extent, 'EPSG:4326',
+        extent = transformExtent(extent, 'EPSG:4326',
           olView.getProjection().getCode());
 
         olView.fit(extent, {
