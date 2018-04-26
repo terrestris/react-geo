@@ -18,7 +18,7 @@ import OlInteractionDraw, { createBox } from 'ol/interaction/Draw';
 import OlInteractionSelect from 'ol/interaction/Select';
 import OlInteractionModify from 'ol/interaction/Modify';
 import OlInteractionTranslate from 'ol/interaction/Translate';
-import OlEventsCondition from 'ol/events/condition';
+import { never, singleClick } from 'ol/events/condition';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
@@ -700,7 +700,7 @@ class DigitizeButton extends React.Component {
       type: type,
       geometryFunction: geometryFunction,
       style: this.getDigitizeStyleFunction,
-      freehandCondition: OlEventsCondition.never,
+      freehandCondition: never,
       ...drawInteractionConfig
     });
 
@@ -735,7 +735,7 @@ class DigitizeButton extends React.Component {
     } = this.props;
 
     this._selectInteraction = new OlInteractionSelect({
-      condition: OlEventsCondition.singleClick,
+      condition: singleClick,
       hitTolerance: DigitizeButton.HIT_TOLERANCE,
       style: this.getSelectedStyleFunction,
       ...selectInteractionConfig
@@ -752,7 +752,7 @@ class DigitizeButton extends React.Component {
     if (editType === DigitizeButton.EDIT_EDIT_TYPE) {
       const edit = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
-        deleteCondition: OlEventsCondition.singleClick,
+        deleteCondition: singleClick,
         style: this.getSelectedStyleFunction,
         ...modifyInteractionConfig
       });
