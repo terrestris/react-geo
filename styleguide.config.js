@@ -5,6 +5,9 @@ const webpackCommonConf = require('./webpack.common.config.js');
 module.exports = {
   title: 'react-geo',
   styleguideDir: './build/styleguide',
+  template: {
+    favicon: 'https://terrestris.github.io/react-geo/assets/favicon.ico'
+  },
   ignore: [
     '**/__tests__/**',
     '**/*.test.{js,jsx,ts,tsx}',
