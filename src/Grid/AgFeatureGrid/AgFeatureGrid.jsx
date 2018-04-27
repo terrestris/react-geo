@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import {
+  differenceWith,
   isEqual,
   isFunction,
   kebabCase
@@ -316,7 +317,8 @@ export class AgFeatureGrid extends React.Component {
     super(props);
 
     this.state = {
-      grid: null
+      grid: null,
+      selectedRows: []
     };
   }
 
@@ -909,14 +911,23 @@ export class AgFeatureGrid extends React.Component {
     } = this.props;
 
     const {
-      grid
+      grid,
+      selectedRows
     } = this.state;
 
-    const selectedRows = grid.api.getSelectedRows();
-    const selectedFeatures = selectedRows.map(row => this.getFeatureFromRowKey(row.key));
+    const selectedRowsAfter = grid.api.getSelectedRows();
+    const deselectedRows = differenceWith(selectedRows, selectedRowsAfter, (a,b) => a.key === b.key);
+
+    const selectedFeatures = selectedRowsAfter.map(row => this.getFeatureFromRowKey(row.key));
+    const deselectedFeatures = deselectedRows.map(row => this.getFeatureFromRowKey(row.key));
+
+    // update state
+    this.setState({
+      selectedRows: selectedRowsAfter
+    });
 
     if (isFunction(onRowSelectionChange)) {
-      onRowSelectionChange(selectedRows, selectedFeatures);
+      onRowSelectionChange(selectedRowsAfter, selectedFeatures, deselectedRows, deselectedFeatures);
     }
 
     this.resetFeatureStyles();
