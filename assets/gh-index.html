@@ -4,27 +4,25 @@
 	<title>react-geo</title>
 	<meta charset="utf-8">
 	<meta content="width=device-width, initial-scale=1" name="viewport">
+	<link href="assets/landing_page.css" rel="stylesheet" type="text/css">
+	<link rel="shortcut icon" type="image/x-icon" href="./assets/favicon.ico">
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-	<link href="assets/landing_page.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<script>
 	             $(document).ready(function() {
-
 	                 function checkWidth() {
 	                     var windowWidth = $(window).width();
 	                     if (windowWidth <= 767) {
 	                         $("#gh-link").show();
-
 	                     } else {
 	                         $("#gh-link").hide();
 	                     }
 	                 }
 	                 checkWidth();
-
 	                 $(window).resize(checkWidth);
 	             });
 	</script>
