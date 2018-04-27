@@ -51,6 +51,7 @@ rm -Rf ./docs/latest ./index.html
 
 # Copy the index page.
 cp $TRAVIS_BUILD_DIR/assets/gh-index.html index.html
+cp $TRAVIS_BUILD_DIR/assets/favicon.ico ./assets/favicon.ico
 
 # Copy the logo icon
 mkdir -p $SRC_DIR/styleguide/assets
