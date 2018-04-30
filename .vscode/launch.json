@@ -5,13 +5,15 @@
         "name": "Debug Jest Tests",
         "type": "node",
         "request": "launch",
+        "port": 9230,
         "runtimeArgs": [
-          "--inspect-brk",
+          "--inspect-brk=9230",
           "${workspaceRoot}/node_modules/.bin/jest",
-          "--runInBand"
+          "--runInBand",
+          "--watch"
         ],
-        "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen"
+        "runtimeExecutable": null,
+        "console": "externalTerminal"
       }
     ]
   }
