@@ -470,6 +470,10 @@ export class AgFeatureGrid extends React.Component {
       layerFilter: layerCand => layerCand === this._layer
     }) || [];
 
+    if (!grid || !grid.api) {
+      return;
+    }
+
     const rowRenderer = grid.api.rowRenderer;
 
     features.forEach(feature => {
@@ -713,6 +717,10 @@ export class AgFeatureGrid extends React.Component {
 
     let rowNode;
 
+    if (!grid || !grid.api) {
+      return;
+    }
+
     grid.api.forEachNode(node => {
       if (node.data.key === key) {
         rowNode = node;
@@ -731,6 +739,10 @@ export class AgFeatureGrid extends React.Component {
     const {
       grid
     } = this.state;
+
+    if (!grid || !grid.api) {
+      return;
+    }
 
     const selectedRows = grid.api.getSelectedRows();
 
@@ -860,7 +872,7 @@ export class AgFeatureGrid extends React.Component {
 
     unhighlightFeatures.forEach(feature => {
       const key = this.props.keyFunction(feature);
-      if (selectedRowKeys.includes(key)) {
+      if (selectedRowKeys && selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
         feature.setStyle(null);
@@ -905,7 +917,7 @@ export class AgFeatureGrid extends React.Component {
   /**
    * Called if the selection changes.
    */
-  onSelectionChanged = () => {
+  onSelectionChanged = evt => {
     const {
       onRowSelectionChange
     } = this.props;
@@ -915,7 +927,13 @@ export class AgFeatureGrid extends React.Component {
       selectedRows
     } = this.state;
 
-    const selectedRowsAfter = grid.api.getSelectedRows();
+    let selectedRowsAfter;
+    if (!grid || !grid.api) {
+      selectedRowsAfter = evt.api.getSelectedRows();
+    } else {
+      selectedRowsAfter = grid.api.getSelectedRows();
+    }
+
     const deselectedRows = differenceWith(selectedRows, selectedRowsAfter, (a,b) => a.key === b.key);
 
     const selectedFeatures = selectedRowsAfter.map(row => this.getFeatureFromRowKey(row.key));
