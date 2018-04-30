@@ -1010,7 +1010,10 @@ export class AgFeatureGrid extends React.Component {
     // row by using getRowFromFeatureKey instead.
     let rowClassNameFn;
     if (isFunction(rowClassName)) {
-      rowClassNameFn = node => `${this._rowClassName} ${rowClassName(node.data.key)}`;
+      rowClassNameFn = node => {
+        const determinedRowClass = rowClassName(node.data);
+        return `${this._rowClassName} ${determinedRowClass}`
+      }
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`
