@@ -895,7 +895,7 @@ export class AgFeatureGrid extends React.Component {
       return;
     }
 
-    features.forEach(feature => feature.setStyle(selectStyle));
+    features.forEach(feature => feature ? feature.setStyle(selectStyle): null);
   }
 
   /**
