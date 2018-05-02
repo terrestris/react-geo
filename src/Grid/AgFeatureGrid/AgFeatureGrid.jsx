@@ -895,7 +895,11 @@ export class AgFeatureGrid extends React.Component {
       return;
     }
 
-    features.forEach(feature => feature ? feature.setStyle(selectStyle): null);
+    features.forEach(feature => {
+      if (feature) {
+        feature.setStyle(selectStyle);
+      }
+    });
   }
 
   /**
@@ -1012,8 +1016,8 @@ export class AgFeatureGrid extends React.Component {
     if (isFunction(rowClassName)) {
       rowClassNameFn = node => {
         const determinedRowClass = rowClassName(node.data);
-        return `${this._rowClassName} ${determinedRowClass}`
-      }
+        return `${this._rowClassName} ${determinedRowClass}`;
+      };
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`
