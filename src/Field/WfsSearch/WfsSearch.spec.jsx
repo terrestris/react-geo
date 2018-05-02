@@ -113,7 +113,7 @@ describe('<WfsSearch />', () => {
   });
 
   describe('default #onSelect', () => {
-    it('zooms to the selected feature', () => {
+    it('zooms to the selected feature', (done) => {
       expect.assertions(3);
       jest.useFakeTimers();
       //SETUP
@@ -145,6 +145,7 @@ describe('<WfsSearch />', () => {
       setTimeout(() => {
         expect(map.getView().getCenter()).toEqual([25, 25]);
         expect(map.getView().getZoom()).toEqual(2);
+        done();
       }, 501);
       jest.runAllTimers();
       fitSpy.mockReset();
