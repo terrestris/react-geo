@@ -146,7 +146,7 @@ describe('<WfsSearch />', () => {
         expect(map.getView().getCenter()).toEqual([25, 25]);
         expect(map.getView().getZoom()).toEqual(2);
         done();
-      }, 501);
+      }, 510);
       jest.runAllTimers();
       fitSpy.mockReset();
       fitSpy.mockRestore();
