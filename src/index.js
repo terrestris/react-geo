@@ -52,6 +52,7 @@ import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/Visi
 import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent.jsx';
 import timeLayerAware from './HigherOrderComponent/TimeLayerAware/TimeLayerAware.jsx';
 import onDropAware from './HigherOrderComponent/DropTargetMap/DropTargetMap.jsx';
+import { LoadingComponent } from './HigherOrderComponent/LoadingComponent/LoadingComponent';
 
 export {
   AddWmsLayerEntry,
@@ -105,5 +106,6 @@ export {
   mappify,
   isVisibleComponent,
   timeLayerAware,
-  onDropAware
+  onDropAware,
+  LoadingComponent
 };
