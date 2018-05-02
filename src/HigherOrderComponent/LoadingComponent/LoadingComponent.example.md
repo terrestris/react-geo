@@ -1,19 +1,18 @@
 This demonstrates the use of `LoadingComponent`.
 A simple `Titlebar` set to be loading: 
 ```jsx
-const { LoadingComponent } = require('../../index.js');
+const { LoadingComponent, Titlebar } = require('../../index.js');
 const LoadingPanel = LoadingComponent(Titlebar);
 
 <LoadingPanel 
   spinning={true}
   style={{position: 'relative'}}
-  children={<p>The text here will be updated...</p>}
 />
 ```
 This shows the use of the component with the `LayerTree` component.
 ```jsx
 
-const { LoadingComponent } = require('../../index.js');
+const { LoadingComponent, LayerTree } = require('../../index.js');
 const React = require('react');
 const OlMap  = require('ol/map').default;
 const OlView  = require('ol/view').default;
@@ -65,41 +64,40 @@ class LoadingButtonTreeExample extends React.Component {
         zoom: 4
       })
     });
-
-  this.state = {
-    loading: false
+    this.state = {
+      loading: false
+    };
   }
-}
   loadingStart() {
     this.setState({
-      loading:true 
-    });
-};
+      loading: true 
+    })
+  }
   loadingEnd() {
     this.setState({
-      loading:false
-    });
-};
+      loading: false
+    })
+  }
   componentDidMount() {
     this.map.setTarget(this.mapDivId);
   }
 
   render() {
     return(
-       <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
-        >
+      <div
+        id={this.mapDivId}
+        style={{
+          height: '400px'
+        }}
+      >
         <LoadingTree 
           spinning={this.state.loading}
-          tip={"Loading Text Here"}
+          tip={'Loading Text Here'}
           onDragStart={() => this.loadingStart()}
           onDragEnd={() => this.loadingEnd()}
           layerGroup={this.layerGroup}
           map={this.map}
-          />
+        />
       </div>
     )
   }

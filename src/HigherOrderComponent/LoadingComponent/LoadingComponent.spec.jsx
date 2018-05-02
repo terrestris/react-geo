@@ -32,7 +32,6 @@ describe('LoadingComponent', () => {
 
     it('can be rendered', () => {
       const wrapper = TestUtil.mountComponent(EnhancedComponent);
-
       expect(wrapper).not.toBeUndefined();
       expect(wrapper.first().is(EnhancedComponent)).toBe(true);
     });
@@ -48,9 +47,7 @@ describe('LoadingComponent', () => {
         otherProp: 'ppp'
       };
       const wrapper = TestUtil.mountComponent(EnhancedComponent, props);
-      console.log(wrapper);
       const wrappedInstance = wrapper.instance().getWrappedInstance();
-
       expect(wrappedInstance.props).toEqual(expectedProps);
     });
 
@@ -63,16 +60,13 @@ describe('LoadingComponent', () => {
       };
       const wrapper = TestUtil.mountComponent(EnhancedComponent, props);
       const wrappedInstance = wrapper.instance().getWrappedInstance();
-
       expect(wrappedInstance).toBeInstanceOf(MockComponent);
 
       const EnhancedComponentNoRef = LoadingComponent(MockComponent, {
         withRef: false
       });
-
       const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props);
       const wrappedInstanceNoRef = wrapperNoRef.instance().getWrappedInstance();
-
       expect(wrappedInstanceNoRef).toBeUndefined();
     });
 

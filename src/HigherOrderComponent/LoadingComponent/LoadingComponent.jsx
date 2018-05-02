@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd'
+import { Spin } from 'antd';
 import Logger from '../../Util/Logger';
 
 /**
@@ -31,7 +31,34 @@ export function LoadingComponent(WrappedComponent,{
      * @type {Object}
      */
     static propTypes = {
-      spinning: PropTypes.bool
+      /**
+       * whether it should be loading or not.
+       * For the List of all the Spin component properties see
+       * https://ant.design/components/spin/
+       * @type {Boolean}
+       */
+      spinning: PropTypes.bool,
+      /**
+       * Size of the loading elmenet.
+       * @type {string}
+       */
+      size: PropTypes.oneOf(['small', 'default', 'large']),
+      /**
+       * The indicator element to use for the loader.
+       * @type {String}
+       */
+      indicator: PropTypes.any,
+      /**
+       * The tip text of loader element
+       * @type {String}
+       */
+      tip: PropTypes.string,
+      /**
+       * The delay time for the loader to show.
+       * @type {Number}
+       */
+      delay: PropTypes.number,
+      
     }
 
   /**
@@ -48,15 +75,15 @@ export function LoadingComponent(WrappedComponent,{
      *
      * @constructs LoadingComponent
      */
-    constructor(props) {
-      super(props);
+  constructor(props) {
+    super(props);
 
     /**
      * The wrapped instance.
      * @type {Element}
      */
     this.wrappedInstance = null;
-    }
+  }
 
     /**
      * Returns the wrapped instance. Only applicable if withRef is set to true.
@@ -102,13 +129,13 @@ export function LoadingComponent(WrappedComponent,{
         tip,
         delay,
         spinning
-      }  ;
+      };
       return (
-      <Spin {...passToLoader} >
-      { <WrappedComponent 
-        ref={this.setWrappedInstance}
-        {...passThroughProps} />}
-      </Spin>
+        <Spin {...passToLoader} >
+          { <WrappedComponent 
+            ref={this.setWrappedInstance}
+            {...passThroughProps} />}
+        </Spin>
       );
     }
   }
