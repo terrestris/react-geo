@@ -3,6 +3,8 @@ import OlSourceVector from 'ol/source/vector';
 import OlLayerVector from 'ol/layer/vector';
 import OlGeomGeometryCollection from 'ol/geom/geometrycollection';
 
+import { differenceWith } from 'lodash';
+
 import TestUtil from '../../Util/TestUtil';
 
 import { AgFeatureGrid } from '../../index';
@@ -310,6 +312,59 @@ describe('<AgFeatureGrid />', () => {
 
     mapUnSpy.mockReset();
     mapUnSpy.mockRestore();
+  });
+
+  it('handles row de-selection correctly', () => {
+    expect.assertions(3);
+    const onRowSelectionChange = jest.fn();
+    const mockedGetSelectedRows = jest.fn();
+    const selectionCurrent = [{
+      key: '1',
+      name: 'Yarmolenko'
+    }, {
+      key: '2',
+      name: 'Kagawa'
+    }, {
+      key: '3',
+      name: 'Zorc'
+    }, {
+      key: '4',
+      name: 'Chapuisat'
+    }];
+
+    const selectionAfter = [{
+      key: '1',
+      name: 'Yarmolenko'
+    }, {
+      key: '2',
+      name: 'Kagawa'
+    }];
+
+    mockedGetSelectedRows.mockReturnValueOnce(selectionAfter);
+    const wrapper = TestUtil.mountComponent(AgFeatureGrid, {
+      map,
+      features,
+      onRowSelectionChange
+    });
+    wrapper.setState({
+      selectedRows: selectionCurrent
+    }, () => {
+      const mockedEvt = {
+        api: {
+          getSelectedRows: mockedGetSelectedRows
+        }
+      };
+      wrapper.instance().onSelectionChanged(mockedEvt);
+      expect(onRowSelectionChange).toHaveBeenCalledTimes(1);
+      // selectedRows is the first passed parameter
+      const selectedRows = onRowSelectionChange.mock.calls[0][0];
+      expect(selectedRows).toEqual(selectionAfter);
+
+      // deselectedRows is the third passed parameter
+      const deselectedRows = differenceWith(selectionCurrent, selectionAfter, (a,b) => a.key === b.key);
+      const deselectedRowsIs = onRowSelectionChange.mock.calls[0][2];
+      expect(deselectedRowsIs).toEqual(deselectedRows);
+    });
   });
 
 });

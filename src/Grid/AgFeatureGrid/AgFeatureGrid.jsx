@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import {
+  differenceWith,
   isEqual,
   isFunction,
   kebabCase
@@ -316,7 +317,8 @@ export class AgFeatureGrid extends React.Component {
     super(props);
 
     this.state = {
-      grid: null
+      grid: null,
+      selectedRows: []
     };
   }
 
@@ -467,6 +469,10 @@ export class AgFeatureGrid extends React.Component {
     const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
       layerFilter: layerCand => layerCand === this._layer
     }) || [];
+
+    if (!grid || !grid.api) {
+      return;
+    }
 
     const rowRenderer = grid.api.rowRenderer;
 
@@ -711,6 +717,10 @@ export class AgFeatureGrid extends React.Component {
 
     let rowNode;
 
+    if (!grid || !grid.api) {
+      return;
+    }
+
     grid.api.forEachNode(node => {
       if (node.data.key === key) {
         rowNode = node;
@@ -729,6 +739,10 @@ export class AgFeatureGrid extends React.Component {
     const {
       grid
     } = this.state;
+
+    if (!grid || !grid.api) {
+      return;
+    }
 
     const selectedRows = grid.api.getSelectedRows();
 
@@ -858,7 +872,7 @@ export class AgFeatureGrid extends React.Component {
 
     unhighlightFeatures.forEach(feature => {
       const key = this.props.keyFunction(feature);
-      if (selectedRowKeys.includes(key)) {
+      if (selectedRowKeys && selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
         feature.setStyle(null);
@@ -881,7 +895,11 @@ export class AgFeatureGrid extends React.Component {
       return;
     }
 
-    features.forEach(feature => feature.setStyle(selectStyle));
+    features.forEach(feature => {
+      if (feature) {
+        feature.setStyle(selectStyle);
+      }
+    });
   }
 
   /**
@@ -903,20 +921,35 @@ export class AgFeatureGrid extends React.Component {
   /**
    * Called if the selection changes.
    */
-  onSelectionChanged = () => {
+  onSelectionChanged = evt => {
     const {
       onRowSelectionChange
     } = this.props;
 
     const {
-      grid
+      grid,
+      selectedRows
     } = this.state;
 
-    const selectedRows = grid.api.getSelectedRows();
-    const selectedFeatures = selectedRows.map(row => this.getFeatureFromRowKey(row.key));
+    let selectedRowsAfter;
+    if (!grid || !grid.api) {
+      selectedRowsAfter = evt.api.getSelectedRows();
+    } else {
+      selectedRowsAfter = grid.api.getSelectedRows();
+    }
+
+    const deselectedRows = differenceWith(selectedRows, selectedRowsAfter, (a,b) => a.key === b.key);
+
+    const selectedFeatures = selectedRowsAfter.map(row => this.getFeatureFromRowKey(row.key));
+    const deselectedFeatures = deselectedRows.map(row => this.getFeatureFromRowKey(row.key));
+
+    // update state
+    this.setState({
+      selectedRows: selectedRowsAfter
+    });
 
     if (isFunction(onRowSelectionChange)) {
-      onRowSelectionChange(selectedRows, selectedFeatures);
+      onRowSelectionChange(selectedRowsAfter, selectedFeatures, deselectedRows, deselectedFeatures);
     }
 
     this.resetFeatureStyles();
@@ -981,7 +1014,10 @@ export class AgFeatureGrid extends React.Component {
     // row by using getRowFromFeatureKey instead.
     let rowClassNameFn;
     if (isFunction(rowClassName)) {
-      rowClassNameFn = node => `${this._rowClassName} ${rowClassName(node.data.key)}`;
+      rowClassNameFn = node => {
+        const determinedRowClass = rowClassName(node.data);
+        return `${this._rowClassName} ${determinedRowClass}`;
+      };
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`
