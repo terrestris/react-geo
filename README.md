@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/terrestris/react-geo.svg?branch=master)](https://travis-ci.org/terrestris/react-geo)
 [![Coverage Status](https://coveralls.io/repos/github/terrestris/react-geo/badge.svg?branch=master)](https://coveralls.io/github/terrestris/react-geo?branch=master)
-[![dependencies Status](https://david-dm.org/terrestris/react-geo/status.svg)](https://david-dm.org/terrestris/react-geo)
-[![devDependencies Status](https://david-dm.org/terrestris/react-geo/dev-status.svg)](https://david-dm.org/terrestris/react-geo?type=dev)
-[![Greenkeeper badge](https://badges.greenkeeper.io/terrestris/react-geo.svg)](https://greenkeeper.io/)
-[![Known Vulnerabilities](https://snyk.io/test/github/terrestris/react-geo/badge.svg)](https://snyk.io/test/github/terrestris/react-geo)
 [![license: 2-Clause BSD](https://img.shields.io/badge/license-2--Clause%20BSD-brightgreen.svg)](https://opensource.org/licenses/BSD-2-Clause)
+[![Known Vulnerabilities](https://snyk.io/test/github/terrestris/react-geo/badge.svg)](https://snyk.io/test/github/terrestris/react-geo)
+[![Greenkeeper badge](https://badges.greenkeeper.io/terrestris/react-geo.svg)](https://greenkeeper.io/)
+[![devDependencies Status](https://david-dm.org/terrestris/react-geo/dev-status.svg)](https://david-dm.org/terrestris/react-geo?type=dev)
+[![dependencies Status](https://david-dm.org/terrestris/react-geo/status.svg)](https://david-dm.org/terrestris/react-geo) <sup title="Worried? Don't be! Please see the explanation in the footnote…">[&nbsp;1&nbsp;](#footnote-1)</sup> <a name="jumpback-footnote-1">&nbsp;</a>
 
 A set of geo related modules. To use in combination with [react](https://github.com/facebook/react), [antd](https://github.com/ant-design/ant-design) and [ol](https://github.com/openlayers/openlayers).
 
@@ -84,3 +84,21 @@ In your project:
 ```javascript static
 npm link @terrestris/react-geo
 ```
+
+## Footnotes
+
+<dl>
+  <dt>
+    <a name="footnote-1">1:</a>
+  </dt>
+  <dd>
+    The autodetected vulnerability is not applicable for
+    <code>react-geo</code>s use of the <code>ag-grid</code>-component,
+    see <a href="https://nodesecurity.io/advisories/327">Nodesecurity</a>,
+    which states 'if AngularJS is used in combination with ag-grid'.
+    This is clearly not the case for this react library. As long as
+    <a href="https://david-dm.org/terrestris/react-geo">the overview
+    page</a> only lists this specific warning, you should be fine.
+    <a title="Jump back to the origin of the footnote" href="#jumpback-footnote-1">↥ back</a>
+  </dd>
+</dl>
