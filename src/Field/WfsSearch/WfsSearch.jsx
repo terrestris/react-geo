@@ -155,7 +155,12 @@ export class WfsSearch extends React.Component {
      * Which prop value of option will render as content of select.
      * @type {string}
      */
-    optionLabelProp: PropTypes.string
+    optionLabelProp: PropTypes.string,
+    /**
+     * Delay in ms before actually sending requests.
+     * @type {number}
+     */
+    delay: PropTypes.number
   }
 
   static defaultProps = {
@@ -165,6 +170,7 @@ export class WfsSearch extends React.Component {
     additionalFetchOptions: {},
     optionLabelProp: 'title',
     attributeDetails: {},
+    delay: 300,
     /**
      * Create an AutoComplete.Option from the given data.
      *
@@ -217,7 +223,8 @@ export class WfsSearch extends React.Component {
     super(props);
     this.state = {
       searchTerm: '',
-      data: []
+      data: [],
+      latestRequestTime: 0
     };
     this.onUpdateInput = this.onUpdateInput.bind(this);
     this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
@@ -297,25 +304,35 @@ export class WfsSearch extends React.Component {
    * @private
    */
   doSearch() {
+    if (this.timeoutHandle) {
+      clearTimeout(this.timeoutHandle);
+    }
     const {
       additionalFetchOptions,
       baseUrl
     } = this.props;
 
     const request = this.getCombinedRequests();
+    const fetchTime = new Date();
 
-    this.setState({fetching: true});
-    fetch(`${baseUrl}`, {
-      method: 'POST',
-      credentials: additionalFetchOptions.credentials
-        ? additionalFetchOptions.credentials
-        : 'same-origin',
-      body: new XMLSerializer().serializeToString(request),
-      ...additionalFetchOptions
-    })
-      .then(response => response.json())
-      .then(this.onFetchSuccess.bind(this))
-      .catch(this.onFetchError.bind(this));
+    this.timeoutHandle = setTimeout(() => {
+      this.setState({
+        fetching: true,
+        latestRequestTime: fetchTime.getTime()
+      }, () => {
+        fetch(`${baseUrl}`, {
+          method: 'POST',
+          credentials: additionalFetchOptions.credentials
+            ? additionalFetchOptions.credentials
+            : 'same-origin',
+          body: new XMLSerializer().serializeToString(request),
+          ...additionalFetchOptions
+        })
+          .then(response => response.json())
+          .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
+          .catch(this.onFetchError.bind(this));
+      });
+    }, this.props.delay);
   }
 
   /**
@@ -358,9 +375,14 @@ export class WfsSearch extends React.Component {
    * This function gets called on success of the WFS GetFeature fetch request.
    * It sets the response as data.
    *
+   * @param {Number} searchTime the timestamp when the search was sent out
    * @param {Array<object>} response The found features.
    */
-  onFetchSuccess(response) {
+  onFetchSuccess(searchTime, response) {
+    const latestTime = this.state.latestRequestTime;
+    if (latestTime !== searchTime) {
+      return;
+    }
     const data = response.features ? response.features : [];
     data.forEach(feature => feature.searchTerm = this.state.searchTerm);
     this.setState({

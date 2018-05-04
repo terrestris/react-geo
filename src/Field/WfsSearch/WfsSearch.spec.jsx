@@ -53,13 +53,14 @@ describe('<WfsSearch />', () => {
   describe('#onFetchSuccess', () => {
     it('sets the response features as state.data', () => {
       const wrapper = TestUtil.mountComponent(WfsSearch);
+      wrapper.setState({latestRequestTime: 1, fetching: true});
       const features = [{
         id: '752526',
         properties: {
           name: 'Deutschland'
         }
       }];
-      wrapper.instance().onFetchSuccess({features});
+      wrapper.instance().onFetchSuccess(1, {features});
       expect(wrapper.state().data).toEqual(features);
     });
   });
