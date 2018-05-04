@@ -54,7 +54,13 @@ export class WfsSearch extends React.Component {
      * An object mapping feature types to an array of attribute details.
      * @type {Object}
      */
-    attributeDetails: PropTypes.object,
+    attributeDetails: PropTypes.objectOf(PropTypes.arrayOf(
+      PropTypes.objectOf(PropTypes.shape({
+        matchCase: PropTypes.bool,
+        type: PropTypes.string,
+        exactSearch: PropTypes.bool
+      }))
+    )),
     /**
      * The namespace URI used for features.
      * @type {String}
