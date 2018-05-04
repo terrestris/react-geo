@@ -297,18 +297,19 @@ export class WfsSearch extends React.Component {
     this.setState({
       fetching: true,
       latestRequestTime: fetchTime.getTime()
+    }, () => {
+      fetch(`${baseUrl}`, {
+        method: 'POST',
+        credentials: additionalFetchOptions.credentials
+          ? additionalFetchOptions.credentials
+          : 'same-origin',
+        body: new XMLSerializer().serializeToString(request),
+        ...additionalFetchOptions
+      })
+        .then(response => response.json())
+        .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
+        .catch(this.onFetchError.bind(this));
     });
-    fetch(`${baseUrl}`, {
-      method: 'POST',
-      credentials: additionalFetchOptions.credentials
-        ? additionalFetchOptions.credentials
-        : 'same-origin',
-      body: new XMLSerializer().serializeToString(request),
-      ...additionalFetchOptions
-    })
-      .then(response => response.json())
-      .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
-      .catch(this.onFetchError.bind(this));
   }
 
   /**
