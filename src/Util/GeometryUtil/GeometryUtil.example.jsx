@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import OlMap from 'ol/map';
-import OlView from 'ol/view';
-import OlLayerTile from 'ol/layer/tile';
-import OlSourceOsm from 'ol/source/osm';
-import olProj from 'ol/proj';
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOsm from 'ol/source/OSM';
+import { fromLonLat } from 'ol/proj';
 
 import {
   message
@@ -30,7 +30,7 @@ const map = new OlMap({
     })
   ],
   view: new OlView({
-    center: olProj.fromLonLat([37.40570, 8.81566]),
+    center: fromLonLat([37.40570, 8.81566]),
     zoom: 4
   })
 });

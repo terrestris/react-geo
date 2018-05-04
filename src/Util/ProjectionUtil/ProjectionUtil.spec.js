@@ -1,6 +1,6 @@
 /*eslint-env jest*/
 import proj4 from 'proj4';
-import OlProjection from 'ol/proj';
+import * as olproj4 from 'ol/proj/proj4';
 
 import ProjectionUtil from './ProjectionUtil.js';
 
@@ -27,18 +27,15 @@ describe('ProjectionUtil', () => {
         expect(ProjectionUtil.initProj4Definitions).not.toBeUndefined();
       });
       it('it registers the given CRS definitions in proj4 and ol', () => {
+        olproj4.register = jest.fn();
         const proj4Spy = jest.spyOn(proj4, 'defs');
-        const olSpy = jest.spyOn(OlProjection, 'setProj4');
 
         ProjectionUtil.initProj4Definitions(testCrsDefinition);
         expect(proj4Spy).toHaveBeenCalled();
-        expect(olSpy).toHaveBeenCalled();
+        expect(olproj4.register).toHaveBeenCalled();
 
         proj4Spy.mockReset();
         proj4Spy.mockRestore();
-        olSpy.mockReset();
-        olSpy.mockRestore();
-
       });
     });
 

@@ -1,6 +1,6 @@
-import OlWMSCapabilities from 'ol/format/wmscapabilities';
-import OlSourceImageWMS from 'ol/source/imagewms';
-import OlLayerImage from 'ol/layer/image';
+import OlWMSCapabilities from 'ol/format/WMSCapabilities';
+import OlSourceImageWMS from 'ol/source/ImageWMS';
+import OlLayerImage from 'ol/layer/Image';
 
 import { get } from 'lodash';
 

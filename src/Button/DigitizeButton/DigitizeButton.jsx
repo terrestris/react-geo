@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 
 import { Modal, Input } from 'antd';
 
-import OlMap from 'ol/map';
-import OlLayerVector from 'ol/layer/vector';
-import OlSourceVector from 'ol/source/vector';
-import OlCollection from 'ol/collection';
-import OlStyleStyle from 'ol/style/style';
-import OlStyleStroke from 'ol/style/stroke';
-import OlStyleFill from 'ol/style/fill';
-import OlStyleCircle from 'ol/style/circle';
-import OlStyleText from 'ol/style/text';
-import OlInteractionDraw from 'ol/interaction/draw';
-import OlInteractionSelect from 'ol/interaction/select';
-import OlInteractionModify from 'ol/interaction/modify';
-import OlInteractionTranslate from 'ol/interaction/translate';
-import OlEventsCondition from 'ol/events/condition';
+import OlMap from 'ol/Map';
+import OlLayerVector from 'ol/layer/Vector';
+import OlSourceVector from 'ol/source/Vector';
+import OlCollection from 'ol/Collection';
+import OlStyleStyle from 'ol/style/Style';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleText from 'ol/style/Text';
+import OlInteractionDraw, { createBox } from 'ol/interaction/Draw';
+import OlInteractionSelect from 'ol/interaction/Select';
+import OlInteractionModify from 'ol/interaction/Modify';
+import OlInteractionTranslate from 'ol/interaction/Translate';
+import { never, singleClick } from 'ol/events/condition';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import MapUtil from '../../Util/MapUtil/MapUtil';
@@ -562,7 +562,7 @@ class DigitizeButton extends React.Component {
     }
 
     if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
-      geometryFunction = OlInteractionDraw.createBox();
+      geometryFunction = createBox();
       type = DigitizeButton.CIRCLE_DRAW_TYPE;
     } else if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
       type = DigitizeButton.POINT_DRAW_TYPE;
@@ -574,7 +574,7 @@ class DigitizeButton extends React.Component {
       type: type,
       geometryFunction: geometryFunction,
       style: this.getDigitizeStyleFunction,
-      freehandCondition: OlEventsCondition.never
+      freehandCondition: never
     });
 
     if (onDrawEnd) {
@@ -605,7 +605,7 @@ class DigitizeButton extends React.Component {
     } = this.props;
 
     this._selectInteraction = new OlInteractionSelect({
-      condition: OlEventsCondition.singleClick,
+      condition: singleClick,
       hitTolerance: DigitizeButton.HIT_TOLERANCE,
       style: this.getSelectedStyleFunction
     });
@@ -621,7 +621,7 @@ class DigitizeButton extends React.Component {
     if (editType === DigitizeButton.EDIT_EDIT_TYPE) {
       const edit = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
-        deleteCondition: OlEventsCondition.singleClick,
+        deleteCondition: singleClick,
         style: this.getSelectedStyleFunction
       });
 

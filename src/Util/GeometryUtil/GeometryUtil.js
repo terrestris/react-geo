@@ -1,8 +1,8 @@
-import OlFeature from 'ol/feature';
-import OlGeomMultiPolygon from 'ol/geom/multipolygon';
-import OlGeomMultiPoint from 'ol/geom/multipoint';
-import OlGeomMultiLineString from 'ol/geom/multilinestring';
-import OlFormatGeoJSON from 'ol/format/geojson';
+import OlFeature from 'ol/Feature';
+import OlGeomMultiPolygon from 'ol/geom/MultiPolygon';
+import OlGeomMultiPoint from 'ol/geom/MultiPoint';
+import OlGeomMultiLineString from 'ol/geom/MultiLineString';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
 
 import {
   booleanPointInPolygon,

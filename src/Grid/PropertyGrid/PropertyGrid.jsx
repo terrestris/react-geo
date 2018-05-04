@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Table
 } from 'antd';
-import OlFeature from 'ol/feature';
+import OlFeature from 'ol/Feature';
 import { get } from 'lodash';
 
 import { CSS_PREFIX } from '../../constants';

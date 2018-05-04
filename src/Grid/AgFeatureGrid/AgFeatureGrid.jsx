@@ -7,16 +7,16 @@ import {
   isFunction,
   kebabCase
 } from 'lodash';
-import OlStyle from 'ol/style/style';
-import OlStyleFill from 'ol/style/fill';
-import OlStyleCircle from 'ol/style/circle';
-import OlStyleStroke from 'ol/style/stroke';
-import OlMap from 'ol/map';
-import OlFeature from 'ol/feature';
-import OlSourceVector from 'ol/source/vector';
-import OlLayerVector from 'ol/layer/vector';
-import OlGeomGeometry from 'ol/geom/geometry';
-import OlGeomGeometryCollection from 'ol/geom/geometrycollection';
+import OlStyle from 'ol/style/Style';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlMap from 'ol/Map';
+import OlFeature from 'ol/Feature';
+import OlSourceVector from 'ol/source/Vector';
+import OlLayerVector from 'ol/layer/Vector';
+import OlGeomGeometry from 'ol/geom/Geometry';
+import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 
 import { MapUtil } from '../../index';
 import { CSS_PREFIX } from '../../constants';

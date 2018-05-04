@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import OlMap from 'ol/map';
-import OlGeolocation from 'ol/geolocation';
-import OlGeomLineString from 'ol/geom/linestring';
-import OlOverlay from 'ol/overlay';
+import OlMap from 'ol/Map';
+import OlGeolocation from 'ol/Geolocation';
+import OlGeomLineString from 'ol/geom/LineString';
+import OlOverlay from 'ol/Overlay';
 
 import {
   MathUtil,

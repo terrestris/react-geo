@@ -9,10 +9,10 @@ const Option = Select.Option;
 import Logger from '../../Util/Logger';
 import { CSS_PREFIX } from '../../constants';
 
-import OlMap from 'ol/map';
-import OlFormatFilter from 'ol/format/filter';
-import OlFormatGeoJSON from 'ol/format/geojson';
-import OlFormatWFS from 'ol/format/wfs';
+import OlMap from 'ol/Map';
+import { like, or } from 'ol/format/filter';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlFormatWFS from 'ol/format/WFS';
 
 /**
  * The WfsSearch field.
@@ -322,9 +322,9 @@ export class WfsSearch extends React.Component {
     const attributes = searchAttributes[featureType];
 
     const propertyFilters = attributes.map(attribute =>
-      OlFormatFilter.like(attribute, `*${searchTerm}*`, '*', '.', '!', false));
+      like(attribute, `*${searchTerm}*`, '*', '.', '!', false));
     if (attributes.length > 1) {
-      return OlFormatFilter.or(...propertyFilters);
+      return or(...propertyFilters);
     } else {
       return propertyFilters[0];
     }

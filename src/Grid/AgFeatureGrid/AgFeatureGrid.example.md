@@ -3,12 +3,12 @@ This example demonstrates the usage of the AgFeatureGrid:
 ```jsx
 const React = require('react');
 const PropTypes = require('prop-types');
-const OlMap = require('ol/map').default;
-const OlView = require('ol/view').default;
-const OlLayerTile = require('ol/layer/tile').default;
-const OlSourceOsm = require('ol/source/osm').default;
-const OlProj = require('ol/proj').default;
-const OlFormatGeoJson = require('ol/format/geojson').default;
+const OlMap = require('ol/Map').default;
+const OlView = require('ol/View').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlSourceOsm = require('ol/source/OSM').default;
+const fromLonLat = require('ol/proj').fromLonLat;
+const OlFormatGeoJson = require('ol/format/GeoJSON').default;
 
 const federalStates = require('../../../assets/federal-states-ger.json');
 
@@ -57,7 +57,7 @@ class AgFeatureGridExample extends React.Component {
         })
       ],
       view: new OlView({
-        center: OlProj.fromLonLat([37.40570, 8.81566]),
+        center: fromLonLat([37.40570, 8.81566]),
         zoom: 4
       })
     });

@@ -1,5 +1,5 @@
 import proj4 from 'proj4';
-import OlProjection from 'ol/proj';
+import {register} from 'ol/proj/proj4';
 
 /**
  * Helper class for ol/proj4 projection handling.
@@ -17,7 +17,7 @@ export class ProjectionUtil {
     for (let [projCode, projDefinition] of Object.entries(proj4CrsDefinitions)) {
       proj4.defs(projCode, projDefinition);
     }
-    OlProjection.setProj4(proj4);
+    register(proj4);
   }
 
   /**
