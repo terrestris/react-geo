@@ -51,6 +51,17 @@ export class WfsSearch extends React.Component {
      */
     searchAttributes: PropTypes.object.isRequired,
     /**
+     * An object mapping feature types to an array of attribute details.
+     * @type {Object}
+     */
+    attributeDetails: PropTypes.objectOf(PropTypes.arrayOf(
+      PropTypes.objectOf(PropTypes.shape({
+        matchCase: PropTypes.bool,
+        type: PropTypes.string,
+        exactSearch: PropTypes.bool
+      }))
+    )),
+    /**
      * The namespace URI used for features.
      * @type {String}
      */
@@ -158,6 +169,7 @@ export class WfsSearch extends React.Component {
     minChars: 3,
     additionalFetchOptions: {},
     optionLabelProp: 'title',
+    attributeDetails: {},
     delay: 300,
     /**
      * Create an AutoComplete.Option from the given data.
@@ -333,13 +345,25 @@ export class WfsSearch extends React.Component {
       searchTerm
     } = this.state;
     const {
-      searchAttributes
+      searchAttributes,
+      attributeDetails
     } = this.props;
 
     const attributes = searchAttributes[featureType];
+    const details = attributeDetails[featureType];
 
-    const propertyFilters = attributes.map(attribute =>
-      OlFormatFilter.like(attribute, `*${searchTerm}*`, '*', '.', '!', false));
+    const propertyFilters = attributes.map(attribute => {
+      if (details && details[attribute].exactSearch) {
+        const type = details && details[attribute].type || 'int';
+        if ((type === 'int' || type === 'number') && searchTerm.match(/[^.\d]/)) {
+          return undefined;
+        }
+        return OlFormatFilter.equalTo(attribute, searchTerm);
+      } else {
+        return OlFormatFilter.like(attribute, `*${searchTerm}*`, '*', '.', '!', details && details[attribute].matchCase);
+      }
+    })
+      .filter(filter => filter !== undefined);
     if (attributes.length > 1) {
       return OlFormatFilter.or(...propertyFilters);
     } else {
