@@ -205,7 +205,8 @@ export class WfsSearch extends React.Component {
     super(props);
     this.state = {
       searchTerm: '',
-      data: []
+      data: [],
+      latestRequestTime: 0
     };
     this.onUpdateInput = this.onUpdateInput.bind(this);
     this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
@@ -291,8 +292,12 @@ export class WfsSearch extends React.Component {
     } = this.props;
 
     const request = this.getCombinedRequests();
+    const fetchTime = new Date();
 
-    this.setState({fetching: true});
+    this.setState({
+      fetching: true,
+      latestRequestTime: fetchTime.getTime()
+    });
     fetch(`${baseUrl}`, {
       method: 'POST',
       credentials: additionalFetchOptions.credentials
@@ -302,7 +307,7 @@ export class WfsSearch extends React.Component {
       ...additionalFetchOptions
     })
       .then(response => response.json())
-      .then(this.onFetchSuccess.bind(this))
+      .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
       .catch(this.onFetchError.bind(this));
   }
 
@@ -334,9 +339,14 @@ export class WfsSearch extends React.Component {
    * This function gets called on success of the WFS GetFeature fetch request.
    * It sets the response as data.
    *
+   * @param {Number} searchTime the timestamp when the search was sent out
    * @param {Array<object>} response The found features.
    */
-  onFetchSuccess(response) {
+  onFetchSuccess(searchTime, response) {
+    const latestTime = this.state.latestRequestTime;
+    if (latestTime !== searchTime) {
+      return;
+    }
     const data = response.features ? response.features : [];
     data.forEach(feature => feature.searchTerm = this.state.searchTerm);
     this.setState({
