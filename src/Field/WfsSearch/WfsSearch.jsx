@@ -144,7 +144,12 @@ export class WfsSearch extends React.Component {
      * Which prop value of option will render as content of select.
      * @type {string}
      */
-    optionLabelProp: PropTypes.string
+    optionLabelProp: PropTypes.string,
+    /**
+     * Delay in ms before actually sending requests.
+     * @type {number}
+     */
+    delay: PropTypes.number
   }
 
   static defaultProps = {
@@ -153,6 +158,7 @@ export class WfsSearch extends React.Component {
     minChars: 3,
     additionalFetchOptions: {},
     optionLabelProp: 'title',
+    delay: 300,
     /**
      * Create an AutoComplete.Option from the given data.
      *
@@ -286,6 +292,9 @@ export class WfsSearch extends React.Component {
    * @private
    */
   doSearch() {
+    if (this.timeoutHandle) {
+      clearTimeout(this.timeoutHandle);
+    }
     const {
       additionalFetchOptions,
       baseUrl
@@ -294,22 +303,24 @@ export class WfsSearch extends React.Component {
     const request = this.getCombinedRequests();
     const fetchTime = new Date();
 
-    this.setState({
-      fetching: true,
-      latestRequestTime: fetchTime.getTime()
-    }, () => {
-      fetch(`${baseUrl}`, {
-        method: 'POST',
-        credentials: additionalFetchOptions.credentials
-          ? additionalFetchOptions.credentials
-          : 'same-origin',
-        body: new XMLSerializer().serializeToString(request),
-        ...additionalFetchOptions
-      })
-        .then(response => response.json())
-        .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
-        .catch(this.onFetchError.bind(this));
-    });
+    this.timeoutHandle = setTimeout(() => {
+      this.setState({
+        fetching: true,
+        latestRequestTime: fetchTime.getTime()
+      }, () => {
+        fetch(`${baseUrl}`, {
+          method: 'POST',
+          credentials: additionalFetchOptions.credentials
+            ? additionalFetchOptions.credentials
+            : 'same-origin',
+          body: new XMLSerializer().serializeToString(request),
+          ...additionalFetchOptions
+        })
+          .then(response => response.json())
+          .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
+          .catch(this.onFetchError.bind(this));
+      });
+    }, this.props.delay);
   }
 
   /**
