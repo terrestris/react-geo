@@ -125,6 +125,6 @@
     "style-loader": "0.21.0",
     "url-loader": "1.0.1",
     "webpack": "4.7.0",
-    "whatwg-fetch": "2.0.3"
+    "whatwg-fetch": "2.0.4"
   }
 }
