@@ -73,7 +73,7 @@
     "@turf/turf": "5.1.6",
     "ag-grid": "17.1.1",
     "ag-grid-react": "17.1.0",
-    "lodash": "4.17.9",
+    "lodash": "4.17.10",
     "loglevel": "1.6.1",
     "moment": "2.22.1",
     "proj4": "2.4.4",
