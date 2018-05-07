@@ -73,7 +73,7 @@
     "@turf/turf": "5.1.6",
     "ag-grid": "17.1.1",
     "ag-grid-react": "17.1.0",
-    "lodash": "4.17.9",
+    "lodash": "4.17.10",
     "loglevel": "1.6.1",
     "moment": "2.22.1",
     "proj4": "2.4.4",
@@ -85,18 +85,18 @@
     "shpjs": "3.4.2",
     "react-rnd": "7.4.0",
     "url-parse": "1.4.0",
-    "validator": "10.0.0"
+    "validator": "10.1.0"
   },
   "devDependencies": {
     "antd": "3.5.0",
     "babel-cli": "6.26.0",
-    "babel-core": "6.26.0",
+    "babel-core": "6.26.3",
     "babel-eslint": "8.2.3",
-    "babel-jest": "22.4.1",
+    "babel-jest": "22.4.3",
     "babel-loader": "7.1.4",
     "babel-plugin-dynamic-import-node": "1.2.0",
     "babel-plugin-import": "1.7.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "6.26.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "6.26.2",
     "babel-plugin-transform-import-extension-jsx-to-js": "0.1.0",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.6.1",
@@ -112,7 +112,7 @@
     "eslint-plugin-markdown": "1.0.0-beta.7",
     "eslint-plugin-react": "7.7.0",
     "file-loader": "1.1.11",
-    "jest": "22.4.2",
+    "jest": "22.4.3",
     "less": "3.0.4",
     "less-loader": "4.1.0",
     "np": "2.20.1",
@@ -125,6 +125,6 @@
     "style-loader": "0.21.0",
     "url-loader": "1.0.1",
     "webpack": "4.7.0",
-    "whatwg-fetch": "2.0.3"
+    "whatwg-fetch": "2.0.4"
   }
 }
