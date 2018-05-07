@@ -197,8 +197,15 @@ class GeoLocationButton extends React.Component {
     });
     this.geolocationInteraction.setTracking(true);
     if (this.props.showMarker) {
+      const heading = this.geolocationInteraction.getHeading() || 0;
+      const speed = this.geolocationInteraction.getSpeed() || 0;
       this.markerEl = document.getElementById('react-geolocation-overlay').cloneNode();
       this.markerEl.id = null;
+      if (heading && speed) {
+        this.markerEl.src = mapMarkerHeading;
+      } else {
+        this.markerEl.src = mapMarker;
+      }
       this.marker = new OlOverlay({
         positioning: 'center-center',
         element: this.markerEl,
