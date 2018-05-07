@@ -539,7 +539,7 @@ export class AgFeatureGrid extends React.Component {
 
     selectedFeatures.forEach(selectedFeature => {
       const key = this.props.keyFunction(selectedFeature);
-      if (selectedRowKeys.includes(key)) {
+      if (selectedRowKeys && selectedRowKeys.includes(key)) {
         selectedFeature.setStyle(null);
 
         const node = this.getRowFromFeatureKey(key);
