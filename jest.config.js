@@ -21,5 +21,8 @@ module.exports = {
     '<rootDir>/jest/setup.js'
   ],
   collectCoverage: false,
+  collectCoverageFrom: [
+    'src/**/*.jsx'
+  ],
   coverageDirectory: '<rootDir>/coverage'
 };
