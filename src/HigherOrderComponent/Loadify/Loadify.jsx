@@ -11,20 +11,20 @@ import Logger from '../../Util/Logger';
  * will be shown and if not it wont.
  *
  * @param {Component} WrappedComponent The component to wrap and enhance.
- * @param {Component} Loader The Loader to apply to this component.
+ * @param {Component} options The options to apply.
  * @return {Component} The wrapped component.
  */
-export function LoadingComponent(WrappedComponent,{
+export function Loadify( WrappedComponent,{
   withRef = false
 } = {}) {
 
   /**
    * The wrapper class for the given component.
    *
-   * @class The LoadingComponent
+   * @class The Loadify
    * @extends React.Component
    */
-  class LoadingComponent extends React.Component {
+  class Loadify extends React.Component {
 
     /**
      * The props.
@@ -32,14 +32,14 @@ export function LoadingComponent(WrappedComponent,{
      */
     static propTypes = {
       /**
-       * whether it should be loading or not.
+       * Whether it should be loading or not.
        * For the List of all the Spin component properties see
        * https://ant.design/components/spin/
        * @type {Boolean}
        */
       spinning: PropTypes.bool,
       /**
-       * Size of the loading elmenet.
+       * Size of the loading element.
        * @type {string}
        */
       size: PropTypes.oneOf(['small', 'default', 'large']),
@@ -71,9 +71,9 @@ export function LoadingComponent(WrappedComponent,{
   }
 
     /**
-     * Create the LoadingComponent.
+     * Create the Loadify.
      *
-     * @constructs LoadingComponent
+     * @constructs Loadify
      */
   constructor(props) {
     super(props);
@@ -95,7 +95,7 @@ export function LoadingComponent(WrappedComponent,{
         return this.wrappedInstance;
       } else {
         Logger.debug('No wrapped instance referenced, please call the '
-          + 'LoadingComponent with option withRef = true.');
+          + 'Loadify with option withRef = true.');
       }
     }
 
@@ -140,5 +140,5 @@ export function LoadingComponent(WrappedComponent,{
     }
   }
 
-  return LoadingComponent;
+  return Loadify;
 }

@@ -1,18 +1,18 @@
-This demonstrates the use of `LoadingComponent`.
+This demonstrates the use of The  `Loadify` Component.
 A simple `Titlebar` set to be loading: 
 ```jsx
-const { LoadingComponent, Titlebar } = require('../../index.js');
-const LoadingPanel = LoadingComponent(Titlebar);
+const { Loadify, Titlebar } = require('../../index.js');
+const LoadingPanel = Loadify(Titlebar);
 
 <LoadingPanel 
   spinning={true}
   style={{position: 'relative'}}
-/>
+> A simple Titlebar 
+</LoadingPanel>
 ```
 This shows the use of the component with the `LayerTree` component.
 ```jsx
-
-const { LoadingComponent, LayerTree } = require('../../index.js');
+const { Loadify, LayerTree } = require('../../index.js');
 const React = require('react');
 const OlMap  = require('ol/map').default;
 const OlView  = require('ol/view').default;
@@ -22,9 +22,9 @@ const OlSourceTileJson  = require('ol/source/tilejson').default;
 const OlSourceOsm  = require('ol/source/osm').default;
 const OlProj  = require('ol/proj').default;
 
-const LoadingTree = LoadingComponent(LayerTree);
+const LoadingTree = Loadify(LayerTree);
 
-class LoadingButtonTreeExample extends React.Component {
+class LoadingTreeExample extends React.Component {
 
   constructor(props) {
     super(props);
@@ -68,16 +68,19 @@ class LoadingButtonTreeExample extends React.Component {
       loading: false
     };
   }
+
   loadingStart() {
     this.setState({
       loading: true 
     })
   }
+
   loadingEnd() {
     this.setState({
       loading: false
     })
   }
+
   componentDidMount() {
     this.map.setTarget(this.mapDivId);
   }
@@ -92,9 +95,9 @@ class LoadingButtonTreeExample extends React.Component {
       >
         <LoadingTree 
           spinning={this.state.loading}
-          tip={'Loading Text Here'}
-          onDragStart={() => this.loadingStart()}
-          onDragEnd={() => this.loadingEnd()}
+          tip={'Loading...'}
+          onDragStart={this.loadingStart.bind(this)}
+          onDragEnd={this.loadingEnd.bind(this)}
           layerGroup={this.layerGroup}
           map={this.map}
         />
@@ -102,7 +105,5 @@ class LoadingButtonTreeExample extends React.Component {
     )
   }
 }
-
-<LoadingButtonTreeExample />
+<LoadingTreeExample />
 ```
-  

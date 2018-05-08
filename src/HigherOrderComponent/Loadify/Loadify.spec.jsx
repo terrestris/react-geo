@@ -1,12 +1,9 @@
 /*eslint-env jest*/
 import React from 'react';
-
-
 import TestUtil from '../../Util/TestUtil';
+import { Loadify } from '../../index';
 
-import { LoadingComponent } from '../../index';
-
-describe('LoadingComponent', () => {
+describe('Loadify', () => {
   let EnhancedComponent;
 
   /* eslint-disable require-jsdoc */
@@ -20,14 +17,14 @@ describe('LoadingComponent', () => {
   /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
-    EnhancedComponent =  LoadingComponent(MockComponent, {
+    EnhancedComponent =  Loadify(MockComponent, {
       withRef: true
     });
   });
 
   describe('Basics', () => {
     it('is defined', () => {
-      expect(LoadingComponent).not.toBeUndefined();
+      expect(Loadify).not.toBeUndefined();
     });
 
     it('can be rendered', () => {
@@ -53,16 +50,14 @@ describe('LoadingComponent', () => {
 
     it('saves a reference to the wrapped instance if requested', () => {
       const props = {
-        name: 'shinjiKagawaModule',
-        activeModules: [{
-          name: 'shinjiKagawaModule'
-        }]
+        name: 'load',
+        prop: 'isprop'
       };
       const wrapper = TestUtil.mountComponent(EnhancedComponent, props);
       const wrappedInstance = wrapper.instance().getWrappedInstance();
       expect(wrappedInstance).toBeInstanceOf(MockComponent);
 
-      const EnhancedComponentNoRef = LoadingComponent(MockComponent, {
+      const EnhancedComponentNoRef = Loadify(MockComponent, {
         withRef: false
       });
       const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props);
@@ -73,13 +68,13 @@ describe('LoadingComponent', () => {
     it('shows or hides the Loading component based on the spinning prop', () => {
       let wrapper = TestUtil.mountComponent(EnhancedComponent);
 
-      // 1. show loading sign
+      // 1. Show loading sign.
       wrapper = TestUtil.mountComponent(EnhancedComponent, {
         spinning: false
       });
       expect(wrapper.find('.ant-spin').length).toBe(0);
 
-      // 2. don't show loading sign
+      // 2. Don't show loading sign.
       wrapper = TestUtil.mountComponent(EnhancedComponent, {
         spinning: true
       });
