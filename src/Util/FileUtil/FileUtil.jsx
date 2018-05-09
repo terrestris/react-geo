@@ -53,7 +53,6 @@ export class FileUtil {
         features: features
       })
     });
-
     map.addLayer(layer);
   }
 
