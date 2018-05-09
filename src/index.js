@@ -35,7 +35,7 @@ import CapabilitiesUtil from './Util/CapabilitiesUtil/CapabilitiesUtil';
 import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
 import AnimateUtil from './Util/AnimateUtil/AnimateUtil';
 import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
-import FileUtil from './Util/FileUtil/FileUtil.jsx';
+import FileUtil from './Util/FileUtil/FileUtil';
 import GeometryUtil from './Util/GeometryUtil/GeometryUtil';
 import MapUtil from './Util/MapUtil/MapUtil';
 import MathUtil from './Util/MathUtil/MathUtil';
