@@ -21,16 +21,26 @@ export function onDropAware(WrappedComponent) {
       map: PropTypes.object
     }
 
-    onDrop = event => {
+    /**
+     * Calls an appropriate addLayer method depending on the fileending.
+     * Currently expects shapefiles for '*.zip' and geojson for all other
+     * endings.
+     * @param  {Object} event the drop event
+     */
+    onDrop(event) {
+      const {
+        map
+      } = this.props;
+
       event.preventDefault();
       const files = event.dataTransfer.files;
       if (files.length > 0) {
         for (let i = 0; i < files.length; ++i) {
           const file = files[i];
           if (file.name.match(/\.zip$/g)) {
-            FileUtil.addShpLayerFromFile(file, this.props.map);
+            FileUtil.addShpLayerFromFile(file, map);
           } else {
-            FileUtil.addGeojsonLayerFromFile(file, this.props.map);
+            FileUtil.addGeojsonLayerFromFile(file, map);
           }
         }
       }
@@ -40,7 +50,7 @@ export function onDropAware(WrappedComponent) {
      * Prevents default in order to prevent browser navigation/opening the file.
      * @param  {Object} event the dragover event
      */
-    onDragOver = event => {
+    onDragOver(event) {
       event.preventDefault();
     }
 
@@ -50,7 +60,7 @@ export function onDropAware(WrappedComponent) {
      */
     render = () => {
       return <WrappedComponent
-        onDrop={this.onDrop}
+        onDrop={this.onDrop.bind(this)}
         onDragOver={this.onDragOver}
         {...this.props}
       />;
