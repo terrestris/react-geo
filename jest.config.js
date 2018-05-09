@@ -22,7 +22,9 @@ module.exports = {
   ],
   collectCoverage: false,
   collectCoverageFrom: [
-    'src/**/*.jsx'
+    'src/**/*.jsx',
+    'src/**/*.js',
+    '!src/**/*example*.*'
   ],
   coverageDirectory: '<rootDir>/coverage'
 };
