@@ -15,7 +15,8 @@ import {
   polygonize,
   polygonToLine,
   segmentEach,
-  union
+  union,
+  featureCollection
 } from '@turf/turf';
 
 /**
@@ -107,9 +108,21 @@ class GeometryUtil {
 
     // Polygonize the lines.
     const polygonizedUnionGeom = polygonize(filteredUnionGeom);
+    
+    // Only use cutted parts that lay inside the initial polygon
+    // This is necessary for polygons with holes
+    let newSegments=[]
+    polygonizedUnionGeom.features.forEach(function(a){
+      debugger;
+      const intersecttion =  intersect(turfPolygon,a)
+      if (intersecttion && intersecttion.geometry.type === 'Polygon') {
+        newSegments.push(intersecttion)
+      }
+    });
+    const newSegmentsFeatures = featureCollection(newSegments)
 
     // Return as Array of ol.Feature or ol.geom.Geometry.
-    const features = geoJsonFormat.readFeatures(polygonizedUnionGeom);
+    const features = geoJsonFormat.readFeatures(newSegmentsFeatures);
     if (polygon instanceof OlFeature) {
       return features;
     } else {
