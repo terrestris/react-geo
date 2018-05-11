@@ -184,7 +184,7 @@ describe('GeometryUtil', () => {
          *    +------------------------ +
          *
          */
-        it('splits a complex polygon geometry (including hole) with a straight line', () => {
+        it('splits a complex polygon geometry (including hole) with a straight line',() => {
           poly = new OlFeature({
             geometry: new OlGeomPolygon(holeCoords2)
           });
@@ -203,9 +203,14 @@ describe('GeometryUtil', () => {
               geometry: new OlGeomPolygon(holeCoords2ExpPoly3)
             })
           ];
-
           expect(got.length).toBe(3);
-          expect(format.writeFeatures(got)).toEqual(format.writeFeatures(exp));
+          got.forEach((polygon, i) => {
+            polygon.getGeometry().getCoordinates()[0].sort().forEach((coord, ii)=>{
+              coord.forEach(()=>{
+                expect(exp[i].getGeometry().getCoordinates()[0].sort()).toContainEqual((coord));
+              })
+            })
+          });
         });
       }); 
       describe('with ol.geom.Geometry as params', () => {

@@ -113,7 +113,7 @@ class GeometryUtil {
     // This is necessary for polygons with holes
     let newSegments = [];
     polygonizedUnionGeom.features.forEach(cutPolygon => {
-      const intersection =  intersect(turfPolygon,cutPolygon);
+      let intersection =  intersect(turfPolygon,cutPolygon);
       if (intersection && intersection.geometry.type === 'Polygon') {
         newSegments.push(intersection);
       }
