@@ -111,14 +111,14 @@ class GeometryUtil {
     
     // Only use cutted parts that lay inside the initial polygon
     // This is necessary for polygons with holes
-    let newSegments = []
-    polygonizedUnionGeom.features.forEach(function(a){
-      const intersecttion =  intersect(turfPolygon,a)
+    let newSegments = [];
+    polygonizedUnionGeom.features.forEach(cutPolygon => {
+      const intersecttion =  intersect(turfPolygon,cutPolygon);
       if (intersecttion && intersecttion.geometry.type === 'Polygon') {
-        newSegments.push(intersecttion)
+        newSegments.push(intersecttion);
       }
     });
-    const newSegmentsFeatures = featureCollection(newSegments)
+    const newSegmentsFeatures = featureCollection(newSegments);
 
     // Return as Array of ol.Feature or ol.geom.Geometry.
     const features = geoJsonFormat.readFeatures(newSegmentsFeatures);

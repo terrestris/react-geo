@@ -46,7 +46,12 @@ import {
   pointCoords3,
   pointCoords4,
   mergedPointCoordinates2,
-  expectedMultiPolygon
+  expectedMultiPolygon,
+  holeCoords2,
+  holeCoords2CutLine,
+  holeCoords2ExpPoly1,
+  holeCoords2ExpPoly2,
+  holeCoords2ExpPoly3
 } from '../../../assets/TestCoords';
 
 describe('GeometryUtil', () => {
@@ -163,8 +168,7 @@ describe('GeometryUtil', () => {
           ];
           expect(format.writeFeatures(got)).toEqual(format.writeFeatures(exp));
         });
-      });
-
+     
         /**
          *          +-------------------+
          *          |                   |
@@ -203,7 +207,7 @@ describe('GeometryUtil', () => {
           expect(got.length).toBe(3);
           expect(format.writeFeatures(got)).toEqual(format.writeFeatures(exp));
         });
-       
+      }); 
       describe('with ol.geom.Geometry as params', () => {
         /**
          *          +
