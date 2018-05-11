@@ -111,9 +111,8 @@ class GeometryUtil {
     
     // Only use cutted parts that lay inside the initial polygon
     // This is necessary for polygons with holes
-    let newSegments=[]
+    let newSegments = []
     polygonizedUnionGeom.features.forEach(function(a){
-      debugger;
       const intersecttion =  intersect(turfPolygon,a)
       if (intersecttion && intersecttion.geometry.type === 'Polygon') {
         newSegments.push(intersecttion)
