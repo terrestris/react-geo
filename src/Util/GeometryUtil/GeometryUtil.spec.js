@@ -205,11 +205,11 @@ describe('GeometryUtil', () => {
           ];
           expect(got.length).toBe(3);
           got.forEach((polygon, i) => {
-            polygon.getGeometry().getCoordinates()[0].sort().forEach((coord, ii)=>{
+            polygon.getGeometry().getCoordinates()[0].sort().forEach(coord=>{
               coord.forEach(()=>{
-                expect(exp[i].getGeometry().getCoordinates()[0].sort()).toContainEqual((coord));
-              })
-            })
+                expect(exp[i].getGeometry().getCoordinates()[0].sort()).toContainEqual(coord);
+              });
+            });
           });
         });
       }); 
