@@ -109,7 +109,7 @@ describe('<ScaleCombo />', () => {
       // eslint-disable-next-line
       const resolutionsFilter = res => {
         return res >= 19 || res <= 13;
-      }
+      };
 
       const expectedLength = testResolutions.filter(resolutionsFilter).length;
 

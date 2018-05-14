@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
 const Option = Select.Option;
+import OlMap from 'ol/map';
 import {
   isInteger,
   isEmpty,
@@ -79,7 +80,7 @@ class ScaleCombo extends React.Component {
      * The map
      * @type {Ol.Map}
      */
-    map: PropTypes.object.isRequired,
+    map: PropTypes.instanceOf(OlMap).isRequired,
 
     /**
      * Set to false to not listen to the map moveend event.
