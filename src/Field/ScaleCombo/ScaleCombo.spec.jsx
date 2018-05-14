@@ -99,6 +99,36 @@ describe('<ScaleCombo />', () => {
 
       TestUtil.removeMap(map);
     });
+
+    it('creates options array from given map with filtered resolutions and updates scales prop', () => {
+      const testResolutions = [560, 280, 140, 70, 28, 19, 15, 14, 13, 9];
+      const map = TestUtil.createMap({
+        resolutions: testResolutions
+      });
+
+      // eslint-disable-next-line
+      const resolutionsFilter = res => {
+        return res >= 19 || res <= 13;
+      }
+
+      const expectedLength = testResolutions.filter(resolutionsFilter).length;
+
+      const wrapper = TestUtil.mountComponent(ScaleCombo, {
+        map: map,
+        scales: [],
+        resolutionsFilter
+      });
+      wrapper.instance().getOptionsFromMap();
+      expect(wrapper.props().scales).toBeInstanceOf(Array);
+      expect(wrapper.props().scales).toHaveLength(expectedLength);
+
+      let roundScale = MapUtil.roundScale(MapUtil.getScaleForResolution(
+        testResolutions[testResolutions.length - 2] ,'m'));
+
+      expect(wrapper.props().scales[1]).toBe(roundScale);
+
+      TestUtil.removeMap(map);
+    });
   });
 
   describe('#determineOptionKeyForZoomLevel', () => {
