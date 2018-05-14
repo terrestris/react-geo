@@ -1,18 +1,50 @@
-This demonstrates the use of The  `Loadify` Component.
-A simple `Titlebar` set to be loading: 
-```jsx
-const { Loadify, Titlebar } = require('../../index.js');
-const LoadingPanel = Loadify(Titlebar);
+This demonstrates the use of The `LoadifiedComponent` HOC (High Order Component).
 
-<LoadingPanel 
-  spinning={true}
-  style={{position: 'relative'}}
-> A simple Titlebar 
-</LoadingPanel>
+The example below you see a `SimpleButton` that changes the `Titlebar`'s loading status: 
+```jsx
+const { loadify, Titlebar, SimpleButton } = require('../../index.js');
+const React = require('react');
+const LoadingPanel = loadify(Titlebar);
+
+class LoadingTitleBar extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false
+    };
+  }
+
+  loadingChange() {
+    const { loading } = this.state
+    this.setState({
+      loading: !loading 
+    })
+  }
+   
+  render() {
+    const { loading } = this.state
+    return(
+      <div>
+        <LoadingPanel 
+          spinning={loading}
+          style={{position: 'relative'}}
+        > A simple Titlebar 
+        </LoadingPanel>
+        <SimpleButton 
+          onClick={this.loadingChange.bind(this)}>
+          start/stop loading 
+        </SimpleButton>
+      </div>
+    )
+  }
+}
+<LoadingTitleBar />
 ```
 This shows the use of the component with the `LayerTree` component.
+Changing the layer orders in the `layerTree` will trigger the loading status to change. 
 ```jsx
-const { Loadify, LayerTree } = require('../../index.js');
+const { loadify, LayerTree } = require('../../index.js');
 const React = require('react');
 const OlMap  = require('ol/map').default;
 const OlView  = require('ol/view').default;
@@ -22,7 +54,7 @@ const OlSourceTileJson  = require('ol/source/tilejson').default;
 const OlSourceOsm  = require('ol/source/osm').default;
 const OlProj  = require('ol/proj').default;
 
-const LoadingTree = Loadify(LayerTree);
+const LoadingTree = loadify(LayerTree);
 
 class LoadingTreeExample extends React.Component {
 

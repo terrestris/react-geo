@@ -14,17 +14,17 @@ import Logger from '../../Util/Logger';
  * @param {Component} options The options to apply.
  * @return {Component} The wrapped component.
  */
-export function Loadify( WrappedComponent,{
+export function loadify(WrappedComponent,{
   withRef = false
 } = {}) {
 
   /**
    * The wrapper class for the given component.
    *
-   * @class The Loadify
+   * @class The loadify
    * @extends React.Component
    */
-  class Loadify extends React.Component {
+  class LoadifiedComponent extends React.Component {
 
     /**
      * The props.
@@ -140,5 +140,5 @@ export function Loadify( WrappedComponent,{
     }
   }
 
-  return Loadify;
+  return LoadifiedComponent;
 }

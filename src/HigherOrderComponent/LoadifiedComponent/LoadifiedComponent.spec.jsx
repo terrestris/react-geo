@@ -1,9 +1,9 @@
 /*eslint-env jest*/
 import React from 'react';
 import TestUtil from '../../Util/TestUtil';
-import { Loadify } from '../../index';
+import { loadify } from '../../index';
 
-describe('Loadify', () => {
+describe('loadify', () => {
   let EnhancedComponent;
 
   /* eslint-disable require-jsdoc */
@@ -17,14 +17,14 @@ describe('Loadify', () => {
   /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
-    EnhancedComponent =  Loadify(MockComponent, {
+    EnhancedComponent = loadify(MockComponent, {
       withRef: true
     });
   });
 
   describe('Basics', () => {
     it('is defined', () => {
-      expect(Loadify).not.toBeUndefined();
+      expect(loadify).not.toBeUndefined();
     });
 
     it('can be rendered', () => {
@@ -57,7 +57,7 @@ describe('Loadify', () => {
       const wrappedInstance = wrapper.instance().getWrappedInstance();
       expect(wrappedInstance).toBeInstanceOf(MockComponent);
 
-      const EnhancedComponentNoRef = Loadify(MockComponent, {
+      const EnhancedComponentNoRef = loadify(MockComponent, {
         withRef: false
       });
       const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props);
