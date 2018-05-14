@@ -88,7 +88,7 @@
     "validator": "10.1.0"
   },
   "devDependencies": {
-    "antd": "3.5.1",
+    "antd": "3.5.2",
     "babel-cli": "6.26.0",
     "babel-core": "6.26.3",
     "babel-eslint": "8.2.3",
