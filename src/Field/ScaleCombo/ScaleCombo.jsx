@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
 const Option = Select.Option;
+import OlMap from 'ol/map';
 import {
   isInteger,
   isEmpty,
@@ -64,6 +65,12 @@ class ScaleCombo extends React.Component {
     scales: PropTypes.arrayOf(PropTypes.shape),
 
     /**
+     * A filter function to filter resolutions no options should be created
+     * @type {Function}
+     */
+    resolutionsFilter: PropTypes.func,
+
+    /**
      * The style object
      * @type {Object}
      */
@@ -73,7 +80,7 @@ class ScaleCombo extends React.Component {
      * The map
      * @type {Ol.Map}
      */
-    map: PropTypes.object.isRequired,
+    map: PropTypes.instanceOf(OlMap).isRequired,
 
     /**
      * Set to false to not listen to the map moveend event.
@@ -87,6 +94,7 @@ class ScaleCombo extends React.Component {
    * The default props
    */
   static defaultProps = {
+    resolutionsFilter: () => true,
     style: {
       width: 100
     },
@@ -107,8 +115,8 @@ class ScaleCombo extends React.Component {
      *
      * @param  {Number} selectedScale The selectedScale.
      */
-    const defaultOnZoomLevelSelect = (selectedScale) => {
-      const mapView = this.props.map.getView();
+    const defaultOnZoomLevelSelect = selectedScale => {
+      const mapView = props.map.getView();
       const calculatedResolution = MapUtil.getResolutionForScale(
         selectedScale, mapView.getProjection().getUnits()
       );
@@ -116,13 +124,13 @@ class ScaleCombo extends React.Component {
     };
 
     this.state = {
-      zoomLevel: props.zoomLevel || this.props.map.getView().getZoom(),
+      zoomLevel: props.zoomLevel || props.map.getView().getZoom(),
       onZoomLevelSelect: props.onZoomLevelSelect || defaultOnZoomLevelSelect,
       scales: props.scales
     };
 
     if (props.syncWithMap) {
-      this.props.map.on('moveend', this.zoomListener);
+      props.map.on('moveend', this.zoomListener);
     }
   }
 
@@ -193,29 +201,37 @@ class ScaleCombo extends React.Component {
    * based on an existing instance of {@link Ol.Map}
    */
   getOptionsFromMap = () => {
+    const {
+      map,
+      resolutionsFilter
+    } = this.props;
+
     if (!isEmpty(this.state.scales)) {
       Logger.debug('Array with scales found. Returning');
       return;
     }
-    if (!this.props.map) {
+    if (!map) {
       Logger.warn('Map component not found. Could not initialize options array.');
       return;
     }
 
-    let map = this.props.map;
     let mv = map.getView();
     // use existing resolutions array if exists
     let resolutions = mv.getResolutions();
     if (isEmpty(resolutions)) {
       for (let currentZoomLevel = mv.getMaxZoom(); currentZoomLevel >= mv.getMinZoom(); currentZoomLevel--) {
         let resolution = mv.getResolutionForZoom(currentZoomLevel);
-        this.pushScale(resolution, mv);
+        if (resolutionsFilter(resolution)) {
+          this.pushScale(resolution, mv);
+        }
       }
     } else {
       let reversedResolutions = reverse(clone(resolutions));
-      reversedResolutions.forEach((resolution) => {
-        this.pushScale(resolution, mv);
-      });
+      reversedResolutions
+        .filter(resolutionsFilter)
+        .forEach((resolution) => {
+          this.pushScale(resolution, mv);
+        });
     }
   };
 
@@ -251,11 +267,17 @@ class ScaleCombo extends React.Component {
       className
     } = this.props;
 
+    const {
+      onZoomLevelSelect,
+      scales,
+      zoomLevel
+    } = this.state;
+
     const finalClassName = className
       ? `${className} ${this.className}`
       : this.className;
 
-    const options = this.state.scales.map((roundScale) => {
+    const options = scales.map(roundScale => {
       return <Option
         key={roundScale}
         value={roundScale.toString()}
@@ -267,9 +289,9 @@ class ScaleCombo extends React.Component {
     return (
       <Select
         showSearch
-        onChange={this.state.onZoomLevelSelect}
+        onChange={onZoomLevelSelect}
         filterOption={(input, option) => option.key.startsWith(input)}
-        value={this.determineOptionKeyForZoomLevel(this.state.zoomLevel)}
+        value={this.determineOptionKeyForZoomLevel(zoomLevel)}
         size="small"
         style={style}
         className={finalClassName}
