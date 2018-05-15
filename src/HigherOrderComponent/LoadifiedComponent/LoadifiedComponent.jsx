@@ -32,9 +32,7 @@ export function loadify(WrappedComponent,{
      */
     static propTypes = {
       /**
-       * Whether it should be loading or not.
-       * For the List of all the Spin component properties see
-       * https://ant.design/components/spin/
+       * Whether the component should be loading or not.
        * @type {Boolean}
        */
       spinning: PropTypes.bool,
@@ -123,6 +121,9 @@ export function loadify(WrappedComponent,{
         ...passThroughProps
       } = this.props;
 
+      // Porpoerties passed to the Spin component. For the List of all the Spin component 
+      // properties see:
+      // https://ant.design/components/spin/
       const passToLoader = {
         size,
         indicator,
