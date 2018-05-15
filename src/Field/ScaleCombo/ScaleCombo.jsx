@@ -94,6 +94,7 @@ class ScaleCombo extends React.Component {
    * The default props
    */
   static defaultProps = {
+    resolutionsFilter: () => true,
     style: {
       width: 100
     },
@@ -220,18 +221,14 @@ class ScaleCombo extends React.Component {
     if (isEmpty(resolutions)) {
       for (let currentZoomLevel = mv.getMaxZoom(); currentZoomLevel >= mv.getMinZoom(); currentZoomLevel--) {
         let resolution = mv.getResolutionForZoom(currentZoomLevel);
-        if (isFunction(resolutionsFilter)) {
-          if (resolutionsFilter(resolution)) {
-            this.pushScale(resolution, mv);
-          }
-        } else {
+        if (resolutionsFilter(resolution)) {
           this.pushScale(resolution, mv);
         }
       }
     } else {
       let reversedResolutions = reverse(clone(resolutions));
       reversedResolutions
-        .filter(isFunction(resolutionsFilter) ? resolutionsFilter : f => f)
+        .filter(resolutionsFilter)
         .forEach((resolution) => {
           this.pushScale(resolution, mv);
         });
