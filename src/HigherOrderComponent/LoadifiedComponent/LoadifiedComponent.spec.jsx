@@ -68,13 +68,13 @@ describe('loadify', () => {
     it('shows or hides the Loading component based on the spinning prop', () => {
       let wrapper = TestUtil.mountComponent(EnhancedComponent);
 
-      // 1. Show loading sign.
+      // 1. Don't Show loading sign.
       wrapper = TestUtil.mountComponent(EnhancedComponent, {
         spinning: false
       });
       expect(wrapper.find('.ant-spin').length).toBe(0);
 
-      // 2. Don't show loading sign.
+      // 2. show loading sign.
       wrapper = TestUtil.mountComponent(EnhancedComponent, {
         spinning: true
       });

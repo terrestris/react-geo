@@ -14,7 +14,7 @@ import Logger from '../../Util/Logger';
  * @param {Component} options The options to apply.
  * @return {Component} The wrapped component.
  */
-export function loadify(WrappedComponent,{
+export function loadify(WrappedComponent, {
   withRef = false
 } = {}) {
 
