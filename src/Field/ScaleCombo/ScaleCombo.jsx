@@ -14,6 +14,7 @@ import {
 
 import Logger from '@terrestris/base-util/src/Logger';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+
 import { CSS_PREFIX } from '../../constants';
 
 /**
