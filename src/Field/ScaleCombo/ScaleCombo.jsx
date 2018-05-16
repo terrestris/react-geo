@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
 const Option = Select.Option;
-import OlMap from 'ol/map';
-import isInteger from 'lodash/isInteger.js';
-import isEmpty from 'lodash/isEmpty.js';
-import isEqual from 'lodash/isEqual.js';
-import reverse from 'lodash/reverse.js';
-import clone from 'lodash/clone.js';
-import isFunction from 'lodash/isFunction.js';
+import OlMap from 'ol/Map';
+import {
+  isInteger,
+  isEmpty,
+  isEqual,
+  isFunction,
+  reverse,
+  clone
+} from 'lodash';
 
 import Logger from '@terrestris/base-util/src/Logger';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
