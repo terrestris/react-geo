@@ -1,6 +1,6 @@
 This demonstrates the use of The `LoadifiedComponent` HOC (High Order Component).
 
-The example below you see a `SimpleButton` that changes the `Titlebar`'s loading status: 
+The example below you see a `SimpleButton` that changes the `Titlebar`'s loading status:
 ```jsx
 const { loadify, Titlebar, SimpleButton } = require('../../index.js');
 const React = require('react');
@@ -18,22 +18,22 @@ class LoadingTitleBar extends React.Component {
   loadingChange() {
     const { loading } = this.state
     this.setState({
-      loading: !loading 
+      loading: !loading
     })
   }
-   
+
   render() {
     const { loading } = this.state
     return(
       <div>
-        <LoadingPanel 
+        <LoadingPanel
           spinning={loading}
           style={{position: 'relative'}}
-        > A simple Titlebar 
+        > A simple Titlebar
         </LoadingPanel>
-        <SimpleButton 
+        <SimpleButton
           onClick={this.loadingChange.bind(this)}>
-          start/stop loading 
+          start/stop loading
         </SimpleButton>
       </div>
     )
@@ -42,17 +42,17 @@ class LoadingTitleBar extends React.Component {
 <LoadingTitleBar />
 ```
 This shows the use of the component with the `LayerTree` component.
-Changing the layer orders in the `layerTree` will trigger the loading status to change. 
+Changing the layer orders in the `layerTree` will trigger the loading status to change.
 ```jsx
 const { loadify, LayerTree } = require('../../index.js');
 const React = require('react');
-const OlMap  = require('ol/map').default;
-const OlView  = require('ol/view').default;
-const OlLayerGroup  = require('ol/layer/group').default;
-const OlLayerTile  = require('ol/layer/tile').default;
-const OlSourceTileJson  = require('ol/source/tilejson').default;
-const OlSourceOsm  = require('ol/source/osm').default;
-const OlProj  = require('ol/proj').default;
+const OlMap  = require('ol/Map').default;
+const OlView  = require('ol/View').default;
+const OlLayerGroup  = require('ol/layer/Group').default;
+const OlLayerTile  = require('ol/layer/Tile').default;
+const OlSourceTileJson  = require('ol/source/TileJSON').default;
+const OlSourceOsm  = require('ol/source/OSM').default;
+const fromLonLat  = require('ol/proj').fromLonLat;
 
 const LoadingTree = loadify(LayerTree);
 
@@ -92,7 +92,7 @@ class LoadingTreeExample extends React.Component {
     this.map = new OlMap({
       layers: [this.layerGroup],
       view: new OlView({
-        center: OlProj.fromLonLat([37.40570, 8.81566]),
+        center: fromLonLat([37.40570, 8.81566]),
         zoom: 4
       })
     });
@@ -103,7 +103,7 @@ class LoadingTreeExample extends React.Component {
 
   loadingStart() {
     this.setState({
-      loading: true 
+      loading: true
     })
   }
 
@@ -125,7 +125,7 @@ class LoadingTreeExample extends React.Component {
           height: '400px'
         }}
       >
-        <LoadingTree 
+        <LoadingTree
           spinning={this.state.loading}
           tip={'Loading...'}
           onDragStart={this.loadingStart.bind(this)}
