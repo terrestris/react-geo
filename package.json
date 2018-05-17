@@ -93,7 +93,7 @@
     "babel-core": "6.26.3",
     "babel-eslint": "8.2.3",
     "babel-jest": "22.4.3",
-    "babel-loader": "7.1.4",
+    "babel-loader": "8.0.0-beta.3",
     "babel-plugin-dynamic-import-node": "1.2.0",
     "babel-plugin-import": "1.7.0",
     "babel-plugin-transform-es2015-modules-commonjs": "6.26.2",
