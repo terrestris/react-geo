@@ -5,18 +5,16 @@ import OlGeomMultiLineString from 'ol/geom/multilinestring';
 import OlFormatGeoJSON from 'ol/format/geojson';
 
 import {
-  booleanPointInPolygon,
   buffer,
-  centroid,
   difference,
-  getCoords,
   intersect,
-  multiLineString,
   polygonize,
-  polygonToLine,
-  segmentEach,
   union,
-  featureCollection
+  featureCollection,
+  lineString,
+  featureEach,
+  lineToPolygon,
+  polygon as makePolygon
 } from '@turf/turf';
 
 /**
@@ -43,13 +41,10 @@ class GeometryUtil {
    *  geometry with.
    * @param {ol.ProjectionLike} projection The EPSG code of the input features.
    *  Default is to EPSG:3857.
-   * @param {Number} tolerance The tolerance (in meters) used to find if a line
-   *  vertex is inside the polygon geometry. Default is to 10.
-   *
    * @returns {ol.Feature[] | ol.geom.Polygon[]} An array of instances of ol.feature
    *  with/or ol.geom.Polygon
    */
-  static splitByLine(polygon, line, projection = 'EPSG:3857', tolerance = 10) {
+  static splitByLine(polygon, line, projection = 'EPSG:3857') {
     const geoJsonFormat = new OlFormatGeoJSON({
       dataProjection: 'EPSG:4326',
       featureProjection: projection
@@ -63,69 +58,77 @@ class GeometryUtil {
         geometry: line
       });
 
-    // Convert the input features to turf.js/GeoJSON features while
+    // Convert the input line features to turf.js/GeoJSON features while
     // reprojecting them to the internal turf.js projection 'EPSG:4326'.
-    const turfPolygon = geoJsonFormat.writeFeatureObject(polygonFeat);
     const turfLine = geoJsonFormat.writeFeatureObject(lineFeat);
-
-    // Union both geometries to a set of MultiLineStrings.
-    const unionGeom = union(polygonToLine(turfPolygon), turfLine);
-
-    // Buffer the input polygon to take great circle (un-)precision
-    // into account.
-    const bufferedTurfPolygon = buffer(turfPolygon, tolerance, {
-      units: 'meters'
-    });
-
-    let filteredSegments = [];
-
-    // Iterate over each segment and remove any segment that is not covered by
-    // the (buffered) input polygon.
-    segmentEach(unionGeom, (currentSegment, featureIndex, multiFeatureIndex) => {
-      const segmentCenter = centroid(currentSegment);
-      const isSegmentInPolygon = booleanPointInPolygon(segmentCenter, bufferedTurfPolygon);
-
-      if (isSegmentInPolygon) {
-        if (!filteredSegments[multiFeatureIndex]) {
-          filteredSegments[multiFeatureIndex] = [];
+    // This lists all the polygons in the feature and splits the Multi polygons into an array of polygons.
+    const geometries = GeometryUtil.separateGeometries(polygonFeat.getGeometry());
+    // the array containing all the splited features 
+    let allSplitedPolygons = [];
+    // iterates over each polygon and splits it
+    geometries.forEach(geometry => {
+      // Convert the polygon to turf.js/GeoJSON geometry while
+      // reprojecting them to the internal turf.js projection 'EPSG:4326'.
+      const turfPolygon = geoJsonFormat.writeGeometryObject(geometry);
+      const turfPolygonCoordinates = turfPolygon.coordinates;
+      // ouline lines of the given polygon
+      const outer = lineString(turfPolygonCoordinates[0]);
+      // polygonized outer polygon
+      const outerPolygon = lineToPolygon(outer);
+      // holes in the polygon
+      const inners = [];
+      turfPolygonCoordinates.slice(1, turfPolygonCoordinates.length).forEach(function (coord) {
+        inners.push(lineString(coord));
+      });
+      // Polygonize the holes in the polygon 
+      const innerPolygon = polygonize(featureCollection(inners));
+      // make a lineString from the spliting line and the outline of the polygon
+      let unionGeom = union(outer, turfLine);
+      // Polygonize the unioned lines.
+      const polygonizedUnionGeom = polygonize(unionGeom);
+      // Array of the splited polygons within the geometry
+      const splitedPolygons = [];
+      // Iterate over each feature in the unined feature and remove sections that are outside the initial polygon and 
+      // remove the parts from the cutted polygons that are in polygon holes.
+      featureEach(polygonizedUnionGeom, cuttedSection => {
+        // checks to see if segment is in polygon 
+        const segmentInPolygon = intersect(cuttedSection, outerPolygon);
+        if (segmentInPolygon && segmentInPolygon.geometry.type === 'Polygon') {
+          let polygonWithoutHoles = [];
+          if (innerPolygon.features.length > 0) {
+            // iterates over all the holes and removes their intersection with the cutted polygon
+            innerPolygon.features.forEach(holes => {
+              const toCut = polygonWithoutHoles.length > 0 ? polygonWithoutHoles : [segmentInPolygon];
+              toCut.forEach((tocutPart, i) => {
+                let intersection = difference(tocutPart, holes);
+                if (intersection && (intersection.geometry.type === 'Polygon' || intersection.geometry.type === 'MultiPolygon')) {
+                  if (intersection.geometry.type === 'MultiPolygon') {
+                    intersection.geometry.coordinates.forEach(intersectPolyCoords => {
+                      polygonWithoutHoles.push(makePolygon(intersectPolyCoords));
+                    });
+                  } else {
+                    polygonWithoutHoles[i] = intersection;
+                  }
+                }
+              });
+            });
+          }
+          if (polygonWithoutHoles.length > 0) {
+            splitedPolygons.push(...polygonWithoutHoles);
+          }
+          else {
+            splitedPolygons.push(segmentInPolygon);
+          }
         }
-
-        if (filteredSegments[multiFeatureIndex].length === 0) {
-          filteredSegments[multiFeatureIndex].push(
-            getCoords(currentSegment)[0],
-            getCoords(currentSegment)[1]
-          );
-        } else {
-          filteredSegments[multiFeatureIndex].push(
-            getCoords(currentSegment)[1]
-          );
-        }
-      }
+      });
+      const collection = featureCollection(splitedPolygons);
+      const features = geoJsonFormat.readFeatures(collection);
+      allSplitedPolygons = [...features, ...allSplitedPolygons];
     });
-
-    // Rebuild the unioned geometry based in the filtered segments.
-    const filteredUnionGeom = multiLineString(filteredSegments);
-
-    // Polygonize the lines.
-    const polygonizedUnionGeom = polygonize(filteredUnionGeom);
-    
-    // Only use cutted parts that lay inside the initial polygon
-    // This is necessary for polygons with holes
-    let newSegments = [];
-    polygonizedUnionGeom.features.forEach(cutPolygon => {
-      let intersection =  intersect(turfPolygon,cutPolygon);
-      if (intersection && intersection.geometry.type === 'Polygon') {
-        newSegments.push(intersection);
-      }
-    });
-    const newSegmentsFeatures = featureCollection(newSegments);
-
-    // Return as Array of ol.Feature or ol.geom.Geometry.
-    const features = geoJsonFormat.readFeatures(newSegmentsFeatures);
     if (polygon instanceof OlFeature) {
-      return features;
+      return allSplitedPolygons;
     } else {
-      return features.map(f => f.getGeometry());
+      return allSplitedPolygons.map(f => f.getGeometry());
     }
   }
 
@@ -141,7 +144,7 @@ class GeometryUtil {
    *
    * @returns {ol.geom.Geometry | ol.Feature} The geometry or feature with the added buffer.
    */
-  static addBuffer (geometry, radius = 0, projection = 'EPSG:3857') {
+  static addBuffer(geometry, radius = 0, projection = 'EPSG:3857') {
     if (radius === 0) {
       return geometry;
     }
@@ -268,8 +271,8 @@ class GeometryUtil {
     const geoJsonsFeatures = polygons.map((geometry) => {
       const feature = geometry instanceof OlFeature
         ? geometry
-        : new OlFeature({geometry});
-      if (! ['Polygon', 'MultiPolygon'].includes(feature.getGeometry().getType())) {
+        : new OlFeature({ geometry });
+      if (!['Polygon', 'MultiPolygon'].includes(feature.getGeometry().getType())) {
         invalid = true;
       }
       return geoJsonFormat.writeFeatureObject(feature);
@@ -363,5 +366,4 @@ class GeometryUtil {
   }
 
 }
-
 export default GeometryUtil;
