@@ -9,15 +9,18 @@ import {
   buffer,
   centroid,
   difference,
-  getCoords,
   intersect,
-  multiLineString,
   polygonize,
   polygonToLine,
-  segmentEach,
   union
 } from '@turf/turf';
-
+import {
+  getCoords,
+  multiLineString,
+} from '@turf/helpers';
+import {
+  segmentEach
+} from '@turf/meta';
 /**
  * Helper Class for the geospatial analysis.
  *
