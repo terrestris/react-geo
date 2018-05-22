@@ -4,23 +4,18 @@ import OlGeomMultiPoint from 'ol/geom/multipoint';
 import OlGeomMultiLineString from 'ol/geom/multilinestring';
 import OlFormatGeoJSON from 'ol/format/geojson';
 
-import {
-  booleanPointInPolygon,
-  buffer,
-  centroid,
-  difference,
-  intersect,
-  polygonize,
-  polygonToLine,
-  union
-} from '@turf/turf';
-import {
-  getCoords,
-  multiLineString,
-} from '@turf/helpers';
-import {
-  segmentEach
-} from '@turf/meta';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import buffer from '@turf/buffer';
+import centroid from '@turf/centroid';
+import difference from '@turf/difference';
+import { getCoords } from '@turf/invariant';
+import intersect from '@turf/intersect';
+import { multiLineString } from '@turf/helpers';
+import polygonize from '@turf/polygonize';
+import polygonToLine from '@turf/polygon-to-line';
+import { segmentEach } from '@turf/meta';
+import union from '@turf/union';
+
 /**
  * Helper Class for the geospatial analysis.
  *

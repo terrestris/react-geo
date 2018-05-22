@@ -3,7 +3,7 @@ import OlSourceVector from 'ol/source/vector';
 import OlLayerVector from 'ol/layer/vector';
 import OlGeomGeometryCollection from 'ol/geom/geometrycollection';
 
-import { differenceWith } from 'lodash';
+import differenceWith from 'lodash/differenceWith.js';
 
 import TestUtil from '../../Util/TestUtil';
 

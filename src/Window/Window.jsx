@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId.js';
 
 import Panel from  '../Panel/Panel/Panel.jsx';
 import Logger from '../Util/Logger';

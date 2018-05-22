@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slider } from 'antd';
+import Slider from 'antd/lib/slider';
 import OlLayerBase from 'ol/layer/base';
 
 /**

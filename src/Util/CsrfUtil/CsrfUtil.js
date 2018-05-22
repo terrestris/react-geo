@@ -1,4 +1,4 @@
-import { template } from 'lodash';
+import template from 'lodash/template.js';
 import Logger from '../Logger';
 
 /**

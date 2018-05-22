@@ -1,6 +1,6 @@
 /*eslint-env jest*/
 
-import { template } from 'lodash';
+import template from 'lodash/template.js';
 
 import {
   CsrfUtil,

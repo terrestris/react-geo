@@ -1,38 +1,12 @@
 const path = require('path');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.jsx?$/,
          exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader', 
-          options: {
-            plugins:
-              [
-                [
-                  'import', [
-                    {
-                      'libraryName': 'antd',
-                      'libraryDirectory': 'es',
-                      'style': true
-                    },
-                    {
-                      'libraryName': 'ag-grid',
-                      'libraryDirectory': 'dist/lib',
-                      'style': true
-                    },
-                    {
-                      'libraryName': '@turf/turf',
-                      'libraryDirectory': '../',
-                    }              
-                  ]
-                ]
-              ]
-          }
-         }
-
+        use: 'babel-loader'
       }, {
         test: /\.css$/,
         use: [
@@ -63,5 +37,8 @@ module.exports = {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: 'file-loader'
       }]
-  }
+  },
+  plugins: [
+    new BundleAnalyzerPlugin()
+  ]
 };
