@@ -1,5 +1,4 @@
 const path = require('path');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   module: {
@@ -64,12 +63,5 @@ module.exports = {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: 'file-loader'
       }]
-  },
-  plugins: [
-    // new BundleAnalyzerPlugin({
-    //   analyzerMode: 'enable', // outcomment to see live stats
-    //   generateStatsFile: true
-    // })
-    new BundleAnalyzerPlugin()
-  ]
+  }
 };
