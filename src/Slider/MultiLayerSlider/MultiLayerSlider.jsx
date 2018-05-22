@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import OlLayerBase from 'ol/layer/base';
-import {
-  Slider
-} from 'antd';
+import Slider from 'antd/es/slider';
 
 import { CSS_PREFIX } from '../../constants';
 

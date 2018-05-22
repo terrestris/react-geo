@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Table
-} from 'antd';
+import Table from 'antd/es/table';
 import OlFeature from 'ol/feature';
-import { get } from 'lodash';
+import { get } from 'lodash/get.js';
 
 import { CSS_PREFIX } from '../../constants';
 
