@@ -6,45 +6,35 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              plugins:
+         exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader', 
+          options: {
+            plugins:
+              [
                 [
-                  [
-                    'import', [
-                      {
-                        'libraryName': 'antd',
-                        'libraryDirectory': 'es',
-                        'style': true
-                      },
-
-                      {
-                        'libraryName': 'lodash',
-                        'libraryDirectory': '',
-                        "camel2DashComponentName": false,
-                      },
-                      {
-                        'libraryName': 'ag-grid',
-                        'libraryDirectory': 'main',
-                      },
-                      {
-                        'libraryName': '@turf/turf',
-                        'libraryDirectory': '../',
-                        'fileName': 'main.es',
-                        'style': false
-                      },
-                    ]
+                  'import', [
+                    {
+                      'libraryName': 'antd',
+                      'libraryDirectory': 'es',
+                      'style': true
+                    },
+                    {
+                      'libraryName': 'ag-grid',
+                      'libraryDirectory': 'dist/lib',
+                      'style': true
+                    },
+                    {
+                      'libraryName': '@turf/turf',
+                      'libraryDirectory': '../',
+                    }              
                   ]
                 ]
-            }
+              ]
           }
-        ]
-      }
+         }
 
-      , {
+      }, {
         test: /\.css$/,
         use: [
           'style-loader',
@@ -76,6 +66,10 @@ module.exports = {
       }]
   },
   plugins: [
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'enable', // outcomment to see live stats
+    //   generateStatsFile: true
+    // })
     new BundleAnalyzerPlugin()
   ]
 };
