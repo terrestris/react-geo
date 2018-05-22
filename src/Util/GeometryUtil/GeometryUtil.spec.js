@@ -46,7 +46,12 @@ import {
   pointCoords3,
   pointCoords4,
   mergedPointCoordinates2,
-  expectedMultiPolygon
+  expectedMultiPolygon,
+  holeCoords2,
+  holeCoords2CutLine,
+  holeCoords2ExpPoly1,
+  holeCoords2ExpPoly2,
+  holeCoords2ExpPoly3
 } from '../../../assets/TestCoords';
 
 describe('GeometryUtil', () => {
@@ -161,6 +166,45 @@ describe('GeometryUtil', () => {
               geometry: new OlGeomPolygon(splitUFormerdCoords3)
             })
           ];
+          expect(format.writeFeatures(got)).toEqual(format.writeFeatures(exp));
+        });
+
+        /**
+         *          +-------------------+
+         *          |                   |
+         *    +     |    +---------+    |
+         *    |\    |    |         |    |
+         *    | \   |    |         |    |
+         * +----------------------------------+
+         *    |  \  |    |         |    |
+         *    |   \ |    +---------+    |
+         *    |    \|                   |
+         *    |     +                   |
+         *    |                         |
+         *    +------------------------ +
+         *
+         */
+        it('splits a complex polygon geometry (including hole) with a straight line', () => {
+          poly = new OlFeature({
+            geometry: new OlGeomPolygon(holeCoords2)
+          });
+          const line = new OlFeature({
+            geometry: new OlGeomLineString(holeCoords2CutLine)
+          });
+          const got = GeometryUtil.splitByLine(poly, line, 'EPSG:4326');
+          const exp = [
+            new OlFeature({
+              geometry: new OlGeomPolygon(holeCoords2ExpPoly1)
+            }),
+            new OlFeature({
+              geometry: new OlGeomPolygon(holeCoords2ExpPoly2)
+            }),
+            new OlFeature({
+              geometry: new OlGeomPolygon(holeCoords2ExpPoly3)
+            })
+          ];
+
+          expect(got.length).toBe(3);
           expect(format.writeFeatures(got)).toEqual(format.writeFeatures(exp));
         });
       });
