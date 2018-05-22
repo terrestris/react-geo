@@ -7,10 +7,10 @@ import {
 const Option = Select.Option;
 
 import Logger from '../../Util/Logger';
+import WfsFilterUtil from '../../Util/WfsFilterUtil/WfsFilterUtil';
 import { CSS_PREFIX } from '../../constants';
 
 import OlMap from 'ol/map';
-import OlFormatFilter from 'ol/format/filter';
 import OlFormatGeoJSON from 'ol/format/geojson';
 import OlFormatWFS from 'ol/format/wfs';
 
@@ -267,10 +267,18 @@ export class WfsSearch extends React.Component {
       outputFormat,
       propertyNames,
       srsName,
-      wfsFormatOptions
+      wfsFormatOptions,
+      searchAttributes,
+      attributeDetails
     } = this.props;
 
+    const { searchTerm } = this.state;
+
     const requests = featureTypes.map(featureType => {
+
+      const filter = WfsFilterUtil.createWfsFilter(
+        featureType, searchTerm, searchAttributes, attributeDetails
+      );
       const options = {
         featureNS,
         featurePrefix,
@@ -280,7 +288,7 @@ export class WfsSearch extends React.Component {
         outputFormat,
         propertyNames,
         srsName,
-        filter: this.createFilter(featureType)
+        filter: filter
       };
 
       const wfsFormat = new OlFormatWFS(wfsFormatOptions);
@@ -333,42 +341,6 @@ export class WfsSearch extends React.Component {
           .catch(this.onFetchError.bind(this));
       });
     }, this.props.delay);
-  }
-
-  /**
-   * Creates a filter fro the given searchAttributes prop and the current
-   * searchTerm.
-   * @private
-   */
-  createFilter(featureType) {
-    const {
-      searchTerm
-    } = this.state;
-    const {
-      searchAttributes,
-      attributeDetails
-    } = this.props;
-
-    const attributes = searchAttributes[featureType];
-    const details = attributeDetails[featureType];
-
-    const propertyFilters = attributes.map(attribute => {
-      if (details && details[attribute].exactSearch) {
-        const type = details && details[attribute].type || 'int';
-        if ((type === 'int' || type === 'number') && searchTerm.match(/[^.\d]/)) {
-          return undefined;
-        }
-        return OlFormatFilter.equalTo(attribute, searchTerm);
-      } else {
-        return OlFormatFilter.like(attribute, `*${searchTerm}*`, '*', '.', '!', details && details[attribute].matchCase);
-      }
-    })
-      .filter(filter => filter !== undefined);
-    if (attributes.length > 1) {
-      return OlFormatFilter.or(...propertyFilters);
-    } else {
-      return propertyFilters[0];
-    }
   }
 
   /**
