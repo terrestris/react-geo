@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Select,
-  Spin
-} from 'antd';
+import Select from 'antd/es/select';
+import Spin from 'antd/es/spin';
 const Option = Select.Option;
 
 import Logger from '../../Util/Logger';

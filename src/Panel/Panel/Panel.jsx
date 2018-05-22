@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Rnd from 'react-rnd';
-import {
-  uniqueId,
-  isNumber,
-  isFunction
-} from 'lodash';
+import uniqueId from 'lodash/uniqueId.js';
+import isNumber from 'lodash/isNumber.js';
+import isFunction from 'lodash/isFunction.js';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';

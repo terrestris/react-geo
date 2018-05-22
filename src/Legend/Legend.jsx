@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Logger from '../Util/Logger';
 import MapUtil from '../Util/MapUtil/MapUtil';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual.js';
 
 import { CSS_PREFIX } from '../constants';
 

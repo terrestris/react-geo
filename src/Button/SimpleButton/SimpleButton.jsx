@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  Tooltip
-} from 'antd';
-import { Icon } from 'react-fa';
+import Button from 'antd/es/button';
+import Tooltip from 'antd/es/tooltip';
+import Icon from 'react-fa/lib/Icon';
 
 import './SimpleButton.less';
 
