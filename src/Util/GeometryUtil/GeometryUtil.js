@@ -63,7 +63,7 @@ class GeometryUtil {
     const turfLine = geoJsonFormat.writeFeatureObject(lineFeat);
     // This lists all the polygons in the feature and splits the Multi polygons into an array of polygons.
     const geometries = GeometryUtil.separateGeometries(polygonFeat.getGeometry());
-    // the array containing all the splited features 
+    // the array containing all the split features 
     let allSplitedPolygons = [];
     // iterates over each polygon and splits it
     geometries.forEach(geometry => {
@@ -71,7 +71,7 @@ class GeometryUtil {
       // reprojecting them to the internal turf.js projection 'EPSG:4326'.
       const turfPolygon = geoJsonFormat.writeGeometryObject(geometry);
       const turfPolygonCoordinates = turfPolygon.coordinates;
-      // ouline lines of the given polygon
+      // outer lines of the given polygon
       const outer = lineString(turfPolygonCoordinates[0]);
       // polygonized outer polygon
       const outerPolygon = lineToPolygon(outer);
@@ -82,13 +82,13 @@ class GeometryUtil {
       });
       // Polygonize the holes in the polygon 
       const innerPolygon = polygonize(featureCollection(inners));
-      // make a lineString from the spliting line and the outline of the polygon
+      // make a lineString from the spliting line and the outer of the polygon
       let unionGeom = union(outer, turfLine);
-      // Polygonize the unioned lines.
+      // Polygonize the combined lines.
       const polygonizedUnionGeom = polygonize(unionGeom);
-      // Array of the splited polygons within the geometry
+      // Array of the split polygons within the geometry
       const splitedPolygons = [];
-      // Iterate over each feature in the unined feature and remove sections that are outside the initial polygon and 
+      // Iterate over each feature in the combined feature and remove sections that are outside the initial polygon and 
       // remove the parts from the cutted polygons that are in polygon holes.
       featureEach(polygonizedUnionGeom, cuttedSection => {
         // checks to see if segment is in polygon 
