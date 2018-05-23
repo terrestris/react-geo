@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Avatar, Dropdown } from 'antd';
+import Avatar from 'antd/lib/avatar';
+import Dropdown from 'antd/lib/dropdown';
 import './UserChip.less';
 
 import { CSS_PREFIX } from '../constants';

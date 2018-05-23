@@ -1,8 +1,6 @@
-import {
-  isObject,
-  isString,
-  isArray
-} from 'lodash';
+import isObject from 'lodash/isObject.js';
+import isString from 'lodash/isString.js';
+import isArray from 'lodash/isArray.js';
 import Logger from '../Logger';
 
 /**

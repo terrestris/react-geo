@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
-import {
-  isEqual,
-  isFunction,
-  kebabCase
-} from 'lodash';
+import Table from 'antd/lib/table';
+import isEqual from 'lodash/isEqual.js';
+import isFunction from 'lodash/isFunction.js';
+import kebabCase from 'lodash/kebabCase.js';
 import OlStyle from 'ol/style/style';
 import OlStyleFill from 'ol/style/fill';
 import OlStyleCircle from 'ol/style/circle';

@@ -1,6 +1,6 @@
 import URL from 'url-parse';
 import QueryString from 'query-string';
-import { clone } from 'lodash';
+import clone from 'lodash/clone.js';
 import isURL from 'validator/lib/isURL';
 
 /**

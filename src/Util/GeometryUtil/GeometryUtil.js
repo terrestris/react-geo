@@ -4,18 +4,16 @@ import OlGeomMultiPoint from 'ol/geom/multipoint';
 import OlGeomMultiLineString from 'ol/geom/multilinestring';
 import OlFormatGeoJSON from 'ol/format/geojson';
 
-import {
-  buffer,
-  difference,
-  intersect,
-  polygonize,
-  union,
-  featureCollection,
-  lineString,
-  featureEach,
-  lineToPolygon,
-  polygon as makePolygon
-} from '@turf/turf';
+import buffer from '@turf/buffer';
+import difference from '@turf/difference';
+import intersect from '@turf/intersect';
+import polygonize from '@turf/polygonize';
+import union from '@turf/union';
+import featureCollection from '@turf/helpers';
+import lineString from '@turf/helpers';
+import { featureEach } from '@turf/meta';
+import lineToPolygon from '@turf/line-to-polygon';
+import polygon as makePolygon from '@turf/helpers';
 
 /**
  * Helper Class for the geospatial analysis.
