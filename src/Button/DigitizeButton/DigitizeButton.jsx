@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Modal from 'antd/lib/modal';
-import Input from 'antd/lib/input';
+import { Modal, Input } from 'antd';
 
 import OlMap from 'ol/map';
 import OlLayerVector from 'ol/layer/vector';

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import OlLayerTile from 'ol/layer/tile';
 import OlLayerImage from 'ol/layer/image';
-import Checkbox from 'antd/lib/checkbox';
-import Tooltip from 'antd/lib/tooltip';
+import { Checkbox, Tooltip } from 'antd';
+
 import { Icon } from 'react-fa';
 
 import './AddWmsLayerEntry.less';

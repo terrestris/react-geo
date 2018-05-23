@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AutoComplete from 'antd/lib/auto-complete';
+import { AutoComplete } from 'antd';
 const Option = AutoComplete.Option;
 
 import UrlUtil from '../../Util/UrlUtil/UrlUtil';

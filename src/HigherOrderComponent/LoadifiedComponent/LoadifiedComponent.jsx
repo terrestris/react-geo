@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Spin from 'antd/lib/spin';
+import { Spin } from 'antd';
 import Logger from '../../Util/Logger';
 
 /**

@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 import React from 'react';
 
-import Select from 'antd/lib/select';
+import { Select } from 'antd';
 const Option = Select.Option;
 
 import TestUtil from '../../Util/TestUtil';

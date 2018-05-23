@@ -7,7 +7,7 @@ import OlLayerTile from 'ol/layer/tile';
 import OlSourceOsm from 'ol/source/osm';
 import olProj from 'ol/proj';
 
-import message from 'antd/lib/message';
+import { message } from 'antd';
 
 import {
   DigitizeButton,
