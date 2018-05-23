@@ -51,10 +51,30 @@ export class WfsSearch extends React.Component {
      */
     searchAttributes: PropTypes.object.isRequired,
     /**
-     * An object mapping feature types to an array of attribute details.
+     * A nested object mapping feature types to an object of attribute details,
+     * which are also mapped by search attribute name.
+     *
+     * Example:
+     *   ```
+     *   searchAttributes: {
+     *    featType1: {
+     *      attr1: {
+     *        matchCase: true,
+     *        type: 'number',
+     *        exactSearch: false
+     *      },
+     *      attr2: {
+     *        matchCase: false,
+     *        type: 'string',
+     *        exactSearch: true
+     *      }
+     *    },
+     *    featType2: {...}
+     *   }
+     *   ```
      * @type {Object}
      */
-    attributeDetails: PropTypes.objectOf(PropTypes.arrayOf(
+    attributeDetails: PropTypes.objectOf(PropTypes.objectOf(
       PropTypes.objectOf(PropTypes.shape({
         matchCase: PropTypes.bool,
         type: PropTypes.string,
