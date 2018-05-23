@@ -45,6 +45,7 @@ import ProjectionUtil from './Util/ProjectionUtil/ProjectionUtil';
 import StringUtil from './Util/StringUtil/StringUtil';
 import UndoUtil from './Util/UndoUtil/UndoUtil';
 import UrlUtil from './Util/UrlUtil/UrlUtil';
+import WfsFilterUtil from './Util/WfsFilterUtil/WfsFilterUtil';
 import Logger from './Util/Logger';
 
 import MapProvider from './Provider/MapProvider/MapProvider.jsx';
@@ -101,6 +102,7 @@ export {
   MultiLayerSlider,
   UndoUtil,
   UrlUtil,
+  WfsFilterUtil,
   MapProvider,
   MapComponent,
   mappify,
