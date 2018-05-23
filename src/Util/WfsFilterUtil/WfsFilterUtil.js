@@ -26,8 +26,12 @@ class WfsFilterUtil {
   static createWfsFilter(featureType, searchTerm, searchAttributes, attributeDetails) {
 
     const attributes = searchAttributes[featureType];
-    const details = attributeDetails[featureType];
 
+    if (!attributes) {
+      return null;
+    }
+
+    const details = attributeDetails[featureType];
     const propertyFilters = attributes.map(attribute => {
       if (details && details[attribute] && details[attribute].exactSearch) {
         const type = details && details[attribute].type || 'int';

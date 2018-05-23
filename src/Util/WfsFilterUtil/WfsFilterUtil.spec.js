@@ -57,6 +57,17 @@ describe('WfsFilterUtil', () => {
         expect(WfsFilterUtil.createWfsFilter).toBeDefined();
       });
 
+      it ('returns null if no search attributes for the provided feature type are found', () => {
+        searchAttributes = {
+          'someAnotherFeatureType': []
+        };
+        attributeDetails['featureType']['stringAttr1'] = stringAttr1;
+
+        const got = WfsFilterUtil.createWfsFilter(featureType, stringSearchTerm, searchAttributes, attributeDetails);
+
+        expect(got).toBeNull();
+      });
+
       it ('returns simple LIKE filter if only one attribute is provided and exactSearch flag is false', () => {
         searchAttributes[featureType].push('stringAttr1');
         attributeDetails['featureType']['stringAttr1'] = stringAttr1;
@@ -80,7 +91,6 @@ describe('WfsFilterUtil', () => {
       });
 
       it ('returns combined OR filter if more than one search attributes are provided', () => {
-
         searchAttributes[featureType].push(...['stringAttr1', 'stringAttr2']);
         attributeDetails = {
           'featureType': {
