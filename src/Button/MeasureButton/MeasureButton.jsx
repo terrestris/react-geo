@@ -282,7 +282,7 @@ class MeasureButton extends React.Component {
   }
 
   /**
-   * `componentWillMount` method of the MeasureButton. Just calls a
+   * `componentDidMount` method of the MeasureButton. Just calls a
    * `createMeasureLayer` method.
    *
    * @method

@@ -338,7 +338,7 @@ class DigitizeButton extends React.Component {
   }
 
   /**
-   * `componentWillMount` method of the DigitizeButton. Just calls
+   * `componentDidMount` method of the DigitizeButton. Just calls
    * `createDigitizeLayer` method.
    */
   componentDidMount() {
