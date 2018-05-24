@@ -341,35 +341,37 @@ export class AgFeatureGrid extends React.Component {
   }
 
   /**
-   * Called on lifecycle phase componentWillReceiveProps.
+   * Invoked immediately after updating occurs. This method is not called for
+   * the initial render.
    *
-   * @param {Object} nextProps The next props.
+   * @param {Object} prevProps The previous props.
    */
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     const {
       map,
       features,
-      selectable
+      selectable,
+      zoomToExtent
     } = this.props;
 
-    if (!(isEqual(nextProps.map, map))) {
-      this.initVectorLayer(nextProps.map);
-      this.initMapEventHandlers(nextProps.map);
+    if (!(isEqual(prevProps.map, map))) {
+      this.initVectorLayer(map);
+      this.initMapEventHandlers(map);
     }
 
-    if (!(isEqual(nextProps.features, features))) {
+    if (!(isEqual(prevProps.features, features))) {
       if (this._source) {
         this._source.clear();
-        this._source.addFeatures(nextProps.features);
+        this._source.addFeatures(features);
       }
 
-      if (nextProps.zoomToExtent) {
-        this.zoomToFeatures(nextProps.features);
+      if (zoomToExtent) {
+        this.zoomToFeatures(features);
       }
     }
 
-    if (!(isEqual(nextProps.selectable, selectable))) {
-      if (nextProps.selectable && map) {
+    if (!(isEqual(prevProps.selectable, selectable))) {
+      if (selectable && map) {
         map.on('singleclick', this.onMapSingleClick);
       } else {
         if (map) {
