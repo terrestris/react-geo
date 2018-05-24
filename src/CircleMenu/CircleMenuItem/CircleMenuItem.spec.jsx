@@ -13,7 +13,7 @@ describe('<CircleMenuItem />', () => {
     expect(wrapper).toBeDefined();
   });
 
-  it('applys the Transformation on update', (done) => {
+  it('applies the transformation on update', () => {
     const wrapper = TestUtil.mountComponent(CircleMenuItem, {
       children: 'A'
     });
@@ -24,17 +24,20 @@ describe('<CircleMenuItem />', () => {
       position: [100, 100]
     });
 
-    setTimeout(() => {
-      expect(transformationSpy).toHaveBeenCalledTimes(1);
-      done();
-    }, 2);
+    expect.assertions(1);
 
-    transformationSpy.mockReset();
-    transformationSpy.mockRestore();
+    return new Promise(resolve => {
+      setTimeout(resolve, 100);
+    })
+      .then(() => {
+        expect(transformationSpy).toHaveBeenCalledTimes(1);
+        transformationSpy.mockReset();
+        transformationSpy.mockRestore();
+      });
   });
 
   describe('applyTransformation', () => {
-    it('applys the Transformation to the ref', (done) => {
+    it('applies the transformation to the ref', () => {
       const radius = 1337;
       const duration = 1;
       const rotationAngle = 45;
@@ -46,14 +49,18 @@ describe('<CircleMenuItem />', () => {
       });
       const instance = wrapper.instance();
 
+      expect.assertions(2);
+
       expect(instance._ref.style.transform).toBe('rotate(0deg) translate(0px) rotate(0deg)');
 
       instance.applyTransformation();
 
-      setTimeout(() => {
-        expect(instance._ref.style.transform).toBe(`rotate(${rotationAngle}deg) translate(${radius}px) rotate(-${rotationAngle}deg)`);
-        done();
-      }, duration);
+      return new Promise(resolve => {
+        setTimeout(resolve, duration + 100);
+      })
+        .then(() => {
+          expect(instance._ref.style.transform).toBe(`rotate(${rotationAngle}deg) translate(${radius}px) rotate(-${rotationAngle}deg)`);
+        });
     });
   });
 
