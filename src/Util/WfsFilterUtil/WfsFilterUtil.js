@@ -25,22 +25,26 @@ class WfsFilterUtil {
    */
   static createWfsFilter(featureType, searchTerm, searchAttributes, attributeDetails) {
 
-    const attributes = searchAttributes[featureType];
+    const attributes = searchAttributes && searchAttributes[featureType];
 
     if (!attributes) {
       return null;
     }
 
-    const details = attributeDetails[featureType];
+    const details = attributeDetails && attributeDetails[featureType];
     const propertyFilters = attributes.map(attribute => {
-      if (details && details[attribute] && details[attribute].exactSearch) {
-        const type = details && details[attribute].type || 'int';
-        if ((type === 'int' || type === 'number') && searchTerm.match(/[^.\d]/)) {
+      if (details && details[attribute]) {
+        const type = details[attribute].type;
+        if (type && (type === 'int' || type === 'number') && searchTerm.match(/[^.\d]/)) {
           return undefined;
         }
-        return OlFormatFilter.equalTo(attribute, searchTerm, details[attribute].exactSearch);
+        if (details[attribute].exactSearch) {
+          return OlFormatFilter.equalTo(attribute, searchTerm, details[attribute].exactSearch);
+        } else {
+          return OlFormatFilter.like(attribute, `*${searchTerm}*`, '*', '.', '!', details[attribute].matchCase || false);
+        }
       } else {
-        return OlFormatFilter.like(attribute, `*${searchTerm}*`, '*', '.', '!', details && details[attribute].matchCase);
+        return OlFormatFilter.like(attribute, `*${searchTerm}*`, '*', '.', '!', false);
       }
     })
       .filter(filter => filter !== undefined);

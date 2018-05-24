@@ -68,15 +68,27 @@ describe('WfsFilterUtil', () => {
         expect(got).toBeNull();
       });
 
-      it ('returns simple LIKE filter if only one attribute is provided and exactSearch flag is false', () => {
-        searchAttributes[featureType].push('stringAttr1');
-        attributeDetails['featureType']['stringAttr1'] = stringAttr1;
+      it ('returns simple LIKE filter if only one attribute is provided and exactSearch flag is false or not given', () => {
+        searchAttributes[featureType].push('stringAttr2');
+        attributeDetails['featureType']['stringAttr2'] = stringAttr2;
 
         const got = WfsFilterUtil.createWfsFilter(featureType, stringSearchTerm, searchAttributes, attributeDetails);
 
         expect(got.getTagName()).toBe('PropertyIsLike');
         expect(got.pattern).toEqual(`*${stringSearchTerm}*`);
         expect(got.propertyName).toEqual(searchAttributes[featureType][0]);
+        expect(got.matchCase).toEqual(stringAttr2.matchCase);
+      });
+
+      it ('returns simple LIKE filter if only one attribute is provided and attributeDetails argument is omitted', () => {
+        searchAttributes[featureType].push('stringAttr1');
+
+        const got = WfsFilterUtil.createWfsFilter(featureType, stringSearchTerm, searchAttributes);
+
+        expect(got.getTagName()).toBe('PropertyIsLike');
+        expect(got.pattern).toEqual(`*${stringSearchTerm}*`);
+        expect(got.propertyName).toEqual(searchAttributes[featureType][0]);
+        expect(got.matchCase).toBeFalsy();
       });
 
       it ('returns simple EQUALTO filter if only one attribute is provided and exactSearch flag is true', () => {
