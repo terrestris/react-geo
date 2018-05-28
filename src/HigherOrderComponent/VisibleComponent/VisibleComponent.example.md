@@ -7,7 +7,7 @@ In the example below you see three components wrapped by the use of
 it won't be rendered.
 
 ```jsx
-const { Button } = require('antd');
+const Button = require('antd/lib/button');
 
 const { isVisibleComponent } = require('../../index.js');
 

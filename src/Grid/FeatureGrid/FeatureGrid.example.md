@@ -109,9 +109,7 @@ const OlStyleIcon = require('ol/style/icon').default;
 const OlStyleText = require('ol/style/text').default;
 const OlStyleFill = require('ol/style/fill').default;
 const OlStyleStroke = require('ol/style/stroke').default;
-const {
-  Input
-} = require('antd');
+const Input = require('antd/lib/button');
 
 const {
   UrlUtil
