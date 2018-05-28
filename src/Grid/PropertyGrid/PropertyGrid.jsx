@@ -87,24 +87,23 @@ class PropertyGrid extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      dataSource: null,
-      columns: []
-    };
-  }
-
-  /**
-   * The componentWillMount function
-   */
-  componentWillMount() {
     const {
       feature,
       attributeFilter,
       attributeNames,
       attributeNameColumnWidthInPercent
-    } = this.props;
+    } = props;
 
-    this.generatePropertyGrid(feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent);
+    const {
+      dataSource,
+      columns
+    } = this.generatePropertyGrid(feature, attributeFilter, attributeNames,
+      attributeNameColumnWidthInPercent);
+
+    this.state = {
+      dataSource,
+      columns
+    };
   }
 
   /**
@@ -142,10 +141,10 @@ class PropertyGrid extends React.Component {
       width: `${100 - attributeNameColumnWidthInPercent}%`
     }];
 
-    this.setState({
+    return {
       dataSource,
       columns
-    });
+    };
   }
 
   /**

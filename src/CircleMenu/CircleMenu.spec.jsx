@@ -25,8 +25,7 @@ describe('<CircleMenu />', () => {
     expect(wrapper.find('CircleMenuItem').at(1).props().children).toBe('B');
   });
 
-  it('applys the Transformation on update', (done) => {
-    jest.useFakeTimers();
+  it('applies the transformation on update', () => {
     const animationDuration = 1;
     const wrapper = TestUtil.mountComponent(CircleMenu, {
       children: ['A', 'B'],
@@ -40,21 +39,20 @@ describe('<CircleMenu />', () => {
       position: [100, 100]
     });
 
-    setTimeout(() => {
-      expect(transformationSpy).toHaveBeenCalledTimes(1);
-      done();
-    }, animationDuration + 10);
+    expect.assertions(1);
 
-    jest.runAllTimers();
-
-    transformationSpy.mockReset();
-    transformationSpy.mockRestore();
-
+    return new Promise(resolve => {
+      setTimeout(resolve, animationDuration + 100);
+    })
+      .then(() => {
+        expect(transformationSpy).toHaveBeenCalledTimes(1);
+        transformationSpy.mockReset();
+        transformationSpy.mockRestore();
+      });
   });
 
   describe('applyTransformation', () => {
-    it('applys the Transformation to the ref', (done) => {
-      jest.useFakeTimers();
+    it('applies the transformation to the ref', () => {
       const diameter = 1337;
       const animationDuration = 1;
       const wrapper = TestUtil.mountComponent(CircleMenu, {
@@ -67,13 +65,15 @@ describe('<CircleMenu />', () => {
 
       instance.applyTransformation();
 
-      setTimeout(() => {
-        expect(instance._ref.style.width).toBe('1337px');
-        expect(instance._ref.style.height).toBe('1337px');
-        done();
-      }, animationDuration + 10);
+      expect.assertions(2);
 
-      jest.runAllTimers();
+      return new Promise(resolve => {
+        setTimeout(resolve, animationDuration + 100);
+      })
+        .then(() => {
+          expect(instance._ref.style.width).toBe('1337px');
+          expect(instance._ref.style.height).toBe('1337px');
+        });
     });
   });
 
