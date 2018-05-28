@@ -101,6 +101,31 @@ class ScaleCombo extends React.Component {
   }
 
   /**
+   * Invoked after the component is instantiated as well as when it
+   * receives new props. It should return an object to update state, or null
+   * to indicate that the new props do not require any state updates.
+   *
+   * @param {Object} nextProps The next properties.
+   * @param {Object} prevState The previous state.
+   */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (!isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
+      return {
+        zoomLevel: nextProps.zoomLevel
+      };
+    }
+
+    if (isFunction(nextProps.onZoomLevelSelect) &&
+        !isEqual(nextProps.onZoomLevelSelect, prevState.onZoomLevelSelect)) {
+      return {
+        onZoomLevelSelect: nextProps.onZoomLevelSelect
+      };
+    }
+
+    return null;
+  }
+
+  /**
    * Create a scale combo.
    * @constructs ScaleCombo
    */
@@ -130,6 +155,31 @@ class ScaleCombo extends React.Component {
     if (props.syncWithMap) {
       props.map.on('moveend', this.zoomListener);
     }
+
+    if (isEmpty(this.state.scales) && this.props.map) {
+      this.getOptionsFromMap();
+    }
+  }
+
+  /**
+   * Invoked immediately after updating occurs. This method is not called for
+   * the initial render.
+   *
+   * @param {Object} prevProps The previous props.
+   */
+  componentDidUpdate(prevProps) {
+    const {
+      map,
+      syncWithMap
+    } = this.props;
+
+    if (!isEqual(syncWithMap, prevProps.syncWithMap)) {
+      if (syncWithMap) {
+        map.on('moveend', this.zoomListener);
+      } else {
+        map.un('moveend', this.zoomListener);
+      }
+    }
   }
 
   /**
@@ -147,34 +197,6 @@ class ScaleCombo extends React.Component {
     this.setState({
       zoomLevel: roundZoom
     });
-  }
-
-  /**
-   * Called on componentWillReceiveProps lifecycle event.
-   *
-   * @param {Object} newProps The new properties.
-   */
-  componentWillReceiveProps(newProps) {
-    if (!isEqual(newProps.zoomLevel, this.props.zoomLevel)) {
-      this.setState({
-        zoomLevel: newProps.zoomLevel
-      });
-    }
-
-    if (!newProps.syncWithMap !== this.props.syncWithMap) {
-      if (newProps.syncWithMap) {
-        this.props.map.on('moveend', this.zoomListener);
-      } else {
-        this.props.map.un('moveend', this.zoomListener);
-      }
-    }
-
-    if (isFunction(newProps.onZoomLevelSelect)
-      && !isEqual(newProps.onZoomLevelSelect, this.state.onZoomLevelSelect)) {
-      this.setState({
-        onZoomLevelSelect: newProps.onZoomLevelSelect
-      });
-    }
   }
 
   /**
@@ -245,15 +267,6 @@ class ScaleCombo extends React.Component {
       return undefined;
     }
     return this.state.scales[this.state.scales.length - 1 - zoom].toString();
-  }
-
-  /**
-   * componentWillMount - lifecycle event.
-   */
-  componentWillMount() {
-    if (isEmpty(this.state.scales) && this.props.map) {
-      this.getOptionsFromMap();
-    }
   }
 
   /**

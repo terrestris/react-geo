@@ -65,6 +65,26 @@ class ToggleButton extends React.Component {
   };
 
   /**
+   * Invoked after the component is instantiated as well as when it
+   * receives new props. It should return an object to update state, or null
+   * to indicate that the new props do not require any state updates.
+   *
+   * @param {Object} nextProps The next properties.
+   * @param {Object} prevState The previous state.
+   */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.pressed !== nextProps.pressed) {
+      nextProps.onToggle(nextProps.pressed);
+
+      return {
+        pressed: nextProps.pressed
+      };
+    }
+
+    return null;
+  }
+
+  /**
    * Create the ToggleButton.
    *
    * @constructs ToggleButton
@@ -82,20 +102,6 @@ class ToggleButton extends React.Component {
     }
 
     this.onClick = this.onClick.bind(this);
-  }
-
-  /**
-   * Called if this component receives properties.
-   *
-   * @param {Object} nextProps The received properties.
-   */
-  componentWillReceiveProps(nextProps) {
-    if (this.state.pressed !== nextProps.pressed) {
-      this.props.onToggle(nextProps.pressed);
-      this.setState({
-        pressed: nextProps.pressed
-      });
-    }
   }
 
   /**

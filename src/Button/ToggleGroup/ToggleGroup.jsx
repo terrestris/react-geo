@@ -90,6 +90,24 @@ class ToggleGroup extends React.Component {
   }
 
   /**
+   * Invoked after the component is instantiated as well as when it
+   * receives new props. It should return an object to update state, or null
+   * to indicate that the new props do not require any state updates.
+   *
+   * @param {Object} nextProps The next properties.
+   * @param {Object} prevState The previous state.
+   */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.selectedName != nextProps.selectedName) {
+      return {
+        selectedName: nextProps.selectedName
+      };
+    }
+
+    return null;
+  }
+
+  /**
    * The constructor.
    *
    * @param {Object} props The properties.
@@ -104,19 +122,6 @@ class ToggleGroup extends React.Component {
     this.state = {
       selectedName: props.selectedName
     };
-  }
-
-  /**
-   * Called if this component receives properties.
-   *
-   * @param {Object} nextProps The received properties.
-   */
-  componentWillReceiveProps = (nextProps) => {
-    if (this.state.selectedName != nextProps.selectedName) {
-      this.setState({
-        selectedName: nextProps.selectedName
-      });
-    }
   }
 
   /**

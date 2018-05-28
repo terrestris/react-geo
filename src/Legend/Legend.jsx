@@ -15,7 +15,6 @@ import { CSS_PREFIX } from '../constants';
  */
 export class Legend extends React.Component {
 
-
   /**
    * The className added to this component.
    * @type {String}
@@ -56,27 +55,30 @@ export class Legend extends React.Component {
   constructor(props) {
     super(props);
 
+    const layer = props.layer;
+    const extraParams = props.extraParams;
+
     this.state = {
-      legendUrl: null
+      legendUrl: this.getLegendUrl(layer, extraParams)
     };
   }
 
   /**
-   * Calls getLegendUrl.
+   * Invoked immediately after updating occurs. This method is not called for
+   * the initial render.
+   *
+   * @param {Object} prevProps The previous props.
    */
-  componentWillMount() {
-    let layer = this.props.layer;
-    let extraParams = this.props.extraParams;
-    this.getLegendUrl(layer, extraParams);
-  }
+  componentDidUpdate(prevProps) {
+    const {
+      extraParams,
+      layer
+    } = this.props;
 
-  /**
-   * Calls getLegendUrl for dynamic extraParams like scale
-   */
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.extraParams &&
-      !(isEqual(this.props.extraParams, nextProps.extraParams))) {
-      this.getLegendUrl(nextProps.layer, nextProps.extraParams);
+    if (extraParams && !(isEqual(extraParams, prevProps.extraParams))) {
+      this.setState({
+        legendUrl: this.getLegendUrl(layer, extraParams)
+      });
     }
   }
 
@@ -85,15 +87,19 @@ export class Legend extends React.Component {
    * "legendUrl" this will be used. Otherwise a getLegendGraphic requestString
    * will be created by the MapUtil.
    *
+   * @param {ol.Layer} layer The layer to get the legend graphic request for.
+   * @param {Object} extraParams The extra params.
    */
   getLegendUrl(layer, extraParams) {
     let legendUrl;
+
     if (layer.get('legendUrl')) {
       legendUrl = layer.get('legendUrl');
     } else {
       legendUrl = MapUtil.getLegendGraphicUrl(layer, extraParams);
     }
-    this.setState({legendUrl});
+
+    return legendUrl;
   }
 
   /**

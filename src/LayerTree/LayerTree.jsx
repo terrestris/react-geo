@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isBoolean from 'lodash/isBoolean.js';
 import isFunction from 'lodash/isFunction.js';
+import isEqual from 'lodash/isEqual.js';       
 import { Tree } from 'antd';
 import OlMap from 'ol/map';
 import OlLayerBase from 'ol/layer/base';
@@ -86,6 +87,28 @@ class LayerTree extends React.Component {
   }
 
   /**
+   * Invoked after the component is instantiated as well as when it
+   * receives new props. It should return an object to update state, or null
+   * to indicate that the new props do not require any state updates.
+   *
+   * @param {Object} nextProps The next properties.
+   * @param {Object} prevState The previous state.
+   */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.layerGroup && nextProps.layerGroup) {
+      if (!isEqual(prevState.layerGroup.ol_uid, nextProps.layerGroup.ol_uid) ||
+          !isEqual(prevState.layerGroupRevision, nextProps.layerGroup.getRevision())) {
+        return {
+          layerGroup: nextProps.layerGroup,
+          layerGroupRevision: nextProps.layerGroup.getRevision()
+        };
+      }
+    }
+
+    return null;
+  }
+
+  /**
    * Create the LayerTree.
    *
    * @constructs LayerTree
@@ -122,36 +145,33 @@ class LayerTree extends React.Component {
   }
 
   /**
+   * Invoked immediately after updating occurs. This method is not called for
+   * the initial render.
+   *
+   * @param {Object} prevProps The previous props.
+   * @param {Object} prevState The previous state.
+   */
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      layerGroup
+    } = this.props;
+
+    if (layerGroup && prevState.layerGroup) {
+      if (!isEqual(prevState.layerGroup.ol_uid, layerGroup.ol_uid)) {
+        olObservable.unByKey(this.olListenerKeys);
+        this.olListenerKeys = [];
+
+        this.registerAddRemoveListeners(layerGroup);
+        this.rebuildTreeNodes();
+      }
+    }
+  }
+
+  /**
    * Determines what to do when the component is unmounted.
    */
   componentWillUnmount() {
     olObservable.unByKey(this.olListenerKeys);
-  }
-
-  /**
-   * Determines what to do with new props.
-   *
-   * @param {Object} nextProps The new props.
-   */
-  componentWillReceiveProps(nextProps) {
-
-    const currentLayerGroup = this.state.layerGroup;
-    const newLayerGroup = nextProps.layerGroup;
-    const layerGroupRevision = this.state.layerGroupRevision;
-
-    if (currentLayerGroup.ol_uid !== newLayerGroup.ol_uid ||
-        layerGroupRevision !== newLayerGroup.getRevision()) {
-      olObservable.unByKey(this.olListenerKeys);
-      this.olListenerKeys = [];
-
-      this.setState({
-        layerGroup: newLayerGroup,
-        layerGroupRevision: newLayerGroup.getRevision()
-      }, () => {
-        this.registerAddRemoveListeners(newLayerGroup);
-        this.rebuildTreeNodes();
-      });
-    }
   }
 
   /**
