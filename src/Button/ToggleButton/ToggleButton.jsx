@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Tooltip } from 'antd';
-import Icon from 'react-fa/lib/Icon';
-import isFunction from 'lodash/isFunction.js';
+import {
+  Button,
+  Tooltip
+} from 'antd';
+import { Icon } from 'react-fa';
 
 import './ToggleButton.less';
 
@@ -15,7 +17,6 @@ import { CSS_PREFIX } from '../../constants';
  * @extends React.Component
  */
 class ToggleButton extends React.Component {
-
 
   /**
    * The className added to this component.
@@ -40,7 +41,7 @@ class ToggleButton extends React.Component {
     pressedIcon: PropTypes.string,
     fontIcon: PropTypes.string,
     pressed: PropTypes.bool,
-    onToggle: PropTypes.func.isRequired,
+    onToggle: PropTypes.func,
     tooltip: PropTypes.string,
     tooltipPlacement: PropTypes.string,
     className: PropTypes.string
@@ -57,35 +58,25 @@ class ToggleButton extends React.Component {
   }
 
   /**
-   * The context types.
-   * @type {Object}
-   */
-  static contextTypes = {
-    toggleGroup: PropTypes.object
-  };
-
-  /**
-   * Invoked after the component is instantiated as well as when it
-   * receives new props. It should return an object to update state, or null
-   * to indicate that the new props do not require any state updates.
-   *
+   * Invoked right before calling the render method, both on the initial mount
+   * and on subsequent updates. It should return an object to update the state,
+   * or null to update nothing.
    * @param {Object} nextProps The next properties.
    * @param {Object} prevState The previous state.
    */
   static getDerivedStateFromProps(nextProps, prevState) {
+    
     if (prevState.pressed !== nextProps.pressed) {
-      nextProps.onToggle(nextProps.pressed);
-
       return {
         pressed: nextProps.pressed
       };
     }
-
     return null;
   }
 
+
   /**
-   * Create the ToggleButton.
+   * Creates the ToggleButton.
    *
    * @constructs ToggleButton
    */
@@ -94,31 +85,77 @@ class ToggleButton extends React.Component {
 
     // Instantiate the state.
     this.state = {
-      pressed: props.pressed
+      pressed: props.pressed,
+      lastClickEvt: null
     };
-
-    if (props.pressed) {
-      this.props.onToggle(props.pressed);
-    }
-
-    this.onClick = this.onClick.bind(this);
   }
 
   /**
-   * Called on click
-   *
-   * @param {ClickEvent} evt the clickeEvent
+   * Invoked invoked right before the most recently rendered output is committed 
+   * to e.g. the DOM. Any value returned by this lifecycle will be passed as a 
+   * parameter to componentDidUpdate().
+   * 
+   * @param {Object} prevProps The previous properties.
+   * @param {Object} prevState The previous state.
    */
-  onClick(evt) {
-    if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
-      this.context.toggleGroup.onChange(this.props);
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    if (prevState.pressed !== this.props.pressed && prevProps.pressed !== this.props.pressed) {
+      return (
+        this.props.pressed
+      );
     }
-    if (this.props.onToggle) {
-      this.props.onToggle(!this.state.pressed, evt);
+    return this.state.pressed;
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log(nextState.pressed , this.state.pressed , nextProps.pressed ,this.props.pressed)
+    //  if (this.state.pressed == nextProps.pressed && nextProps.pressed ,this.props.pressed) return false
+    return true;
+  }
+
+ componentWillMount(){
+   
+ }
+  
+  /**
+   * Invoked immediately after updating occurs. This method is not called 
+   * for the initial render.
+   * @method
+   */
+  componentDidUpdate(prevProps, prevState, outerPressed) {
+    const {
+      onToggle
+    } = this.props;
+
+    const {
+      pressed,
+      lastClickEvt
+    } = this.state;
+debugger;
+   
+    if (outerPressed !== pressed ) {
+      this.setState({
+        pressed: outerPressed
+      });
     }
 
+    //   // Note: the lastClickEvt is only available if the button
+    //   // has been clicked, if the prop is changed, no click evt will
+    //   // be available.
+    if (onToggle && prevState.pressed !== pressed ) {
+      onToggle(pressed, lastClickEvt);
+    }
+  }
+
+  /**
+   * Called on click.
+   *
+   * @param {ClickEvent} evt The ClickEvent.
+   * @method
+   */
+  onClick(evt) {
     this.setState({
-      pressed: !this.state.pressed
+      pressed: !this.state.pressed,
+      lastClickEvt: evt
     });
   }
 
@@ -139,18 +176,22 @@ class ToggleButton extends React.Component {
       ...antBtnProps
     } = this.props;
 
+    const {
+      onClick,
+      ...filteredAntBtnProps
+    } = antBtnProps;
+
     const finalClassName = className
       ? `${className} ${this.className}`
       : this.className;
 
     let iconName = icon;
     let pressedClass = '';
-
     if (this.state.pressed) {
+
       iconName = pressedIcon || icon;
       pressedClass = ` ${this.pressedClass} `;
     }
-
     return (
       <Tooltip
         title={tooltip}
@@ -158,8 +199,8 @@ class ToggleButton extends React.Component {
       >
         <Button
           className={`${finalClassName}${pressedClass}`}
-          onClick={this.onClick}
-          {...antBtnProps}
+          onClick={this.onClick.bind(this)}
+          {...filteredAntBtnProps}
         >
           <Icon
             name={iconName}
