@@ -18,10 +18,15 @@
   },
   "plugins": [
     [
-      "import", {
-        "libraryName": "antd",
-        "style": true
-      }
+      "import", [{
+          "libraryName": "antd",
+          "libraryDirectory": "es",
+          "style": true
+        }, {
+          "libraryName": "@turf/turf",
+          "libraryDirectory": "../"
+        }
+      ]
     ]
   ]
 }

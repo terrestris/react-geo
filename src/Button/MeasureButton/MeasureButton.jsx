@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty.js';
 
 import OlMap from 'ol/map';
 import OlLayerVector from 'ol/layer/vector';

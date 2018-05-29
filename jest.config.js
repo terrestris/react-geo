@@ -14,7 +14,7 @@ module.exports = {
     '<rootDir>/build/'
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!ol)'
+     'node_modules/(?!(ol|antd|(rc-*[a-z]*))/)'
   ],
   setupFiles: [
     '<rootDir>/jest/__mocks__/shim.js',

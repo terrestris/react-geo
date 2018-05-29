@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Tree
-} from 'antd';
+import { Tree } from 'antd';
 const TreeNode = Tree.TreeNode;
 
 import './LayerTreeNode.less';

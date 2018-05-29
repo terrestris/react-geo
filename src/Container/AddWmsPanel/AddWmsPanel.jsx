@@ -4,7 +4,7 @@ import { Checkbox } from 'antd';
 import OlLayerTile from 'ol/layer/tile';
 import OlLayerImage  from 'ol/layer/image';
 import OlMap from 'ol/map';
-import { isFunction } from 'lodash';
+import isFunction from 'lodash/isFunction.js';
 
 import Panel from '../../Panel/Panel/Panel.jsx';
 import Titlebar from '../../Panel/Titlebar/Titlebar.jsx';

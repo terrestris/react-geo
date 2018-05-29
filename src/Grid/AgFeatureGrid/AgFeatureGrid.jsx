@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
-import {
-  differenceWith,
-  isEqual,
-  isFunction,
-  kebabCase
-} from 'lodash';
+import differenceWith from 'lodash/differenceWith.js';
+import isEqual from 'lodash/isEqual.js';
+import isFunction from 'lodash/isFunction.js';
+import kebabCase from 'lodash/kebabCase.js';
 import OlStyle from 'ol/style/style';
 import OlStyleFill from 'ol/style/fill';
 import OlStyleCircle from 'ol/style/circle';

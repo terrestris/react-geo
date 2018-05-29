@@ -2,7 +2,7 @@ import OlWMSCapabilities from 'ol/format/wmscapabilities';
 import OlSourceImageWMS from 'ol/source/imagewms';
 import OlLayerImage from 'ol/layer/image';
 
-import { get } from 'lodash';
+import get from 'lodash/get.js';
 
 /**
  * Helper Class to parse capabilities of WMS layers

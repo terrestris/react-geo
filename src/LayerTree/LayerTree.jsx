@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  isBoolean,
-  isFunction,
-  isEqual
-} from 'lodash';
+import isBoolean from 'lodash/isBoolean.js';
+import isFunction from 'lodash/isFunction.js';
+import isEqual from 'lodash/isEqual.js';       
 import { Tree } from 'antd';
 import OlMap from 'ol/map';
 import OlLayerBase from 'ol/layer/base';
