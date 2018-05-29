@@ -66,8 +66,9 @@ class ToggleButton extends React.Component {
    */
   static getDerivedStateFromProps(nextProps, prevState) {
     
-    if (prevState.pressed !== nextProps.pressed) {
+    if (prevState.pressed !== nextProps.pressed && prevState.propPressed !== nextProps.pressed) {
       return {
+        propPressed: nextProps.pressed,
         pressed: nextProps.pressed
       };
     }
@@ -86,42 +87,18 @@ class ToggleButton extends React.Component {
     // Instantiate the state.
     this.state = {
       pressed: props.pressed,
-      lastClickEvt: null
+      lastClickEvt: null,
+      propPressed: props.pressed
     };
   }
 
-  /**
-   * Invoked invoked right before the most recently rendered output is committed 
-   * to e.g. the DOM. Any value returned by this lifecycle will be passed as a 
-   * parameter to componentDidUpdate().
-   * 
-   * @param {Object} prevProps The previous properties.
-   * @param {Object} prevState The previous state.
-   */
-  getSnapshotBeforeUpdate(prevProps, prevState) {
-    if (prevState.pressed !== this.props.pressed && prevProps.pressed !== this.props.pressed) {
-      return (
-        this.props.pressed
-      );
-    }
-    return this.state.pressed;
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    console.log(nextState.pressed , this.state.pressed , nextProps.pressed ,this.props.pressed)
-    //  if (this.state.pressed == nextProps.pressed && nextProps.pressed ,this.props.pressed) return false
-    return true;
-  }
-
- componentWillMount(){
-   
- }
   
   /**
    * Invoked immediately after updating occurs. This method is not called 
    * for the initial render.
    * @method
    */
-  componentDidUpdate(prevProps, prevState, outerPressed) {
+  componentDidUpdate(prevProps, prevState) {
     const {
       onToggle
     } = this.props;
@@ -130,14 +107,7 @@ class ToggleButton extends React.Component {
       pressed,
       lastClickEvt
     } = this.state;
-debugger;
    
-    if (outerPressed !== pressed ) {
-      this.setState({
-        pressed: outerPressed
-      });
-    }
-
     //   // Note: the lastClickEvt is only available if the button
     //   // has been clicked, if the prop is changed, no click evt will
     //   // be available.
@@ -155,7 +125,8 @@ debugger;
   onClick(evt) {
     this.setState({
       pressed: !this.state.pressed,
-      lastClickEvt: evt
+      lastClickEvt: evt,
+      propPressed:this.state.pressed
     });
   }
 
