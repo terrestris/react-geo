@@ -121,7 +121,7 @@ export function loadify(WrappedComponent, {
         ...passThroughProps
       } = this.props;
 
-      // Porpoerties passed to the Spin component. For the List of all the Spin component
+      // Propoerties passed to the Spin component. For the List of all the Spin component
       // properties see:
       // https://ant.design/components/spin/
       const passToLoader = {
