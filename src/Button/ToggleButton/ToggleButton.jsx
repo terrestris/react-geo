@@ -126,7 +126,6 @@ class ToggleButton extends React.Component {
     this.setState({
       pressed: !this.state.pressed,
       lastClickEvt: evt,
-      propPressed:this.state.pressed
     });
   }
 
