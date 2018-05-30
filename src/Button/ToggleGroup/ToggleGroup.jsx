@@ -145,7 +145,6 @@ class ToggleGroup extends React.Component {
    * @param {Object} childProps The properties if the children.
    */
   onChange = (childProps) => {
-    debugger;
     if (isFunction(this.props.onChange)) {
       this.props.onChange(childProps);
     }
