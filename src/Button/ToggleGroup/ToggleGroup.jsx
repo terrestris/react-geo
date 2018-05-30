@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isFunction from 'lodash/isFunction.js';
 
-import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import { CSS_PREFIX } from '../../constants';
 
 import './ToggleGroup.less';

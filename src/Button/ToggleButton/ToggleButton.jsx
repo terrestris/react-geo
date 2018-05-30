@@ -58,7 +58,7 @@ class ToggleButton extends React.Component {
     pressed: false
   }
 
-   /**
+  /**
    * The context types.
    * @type {Object}
    */
