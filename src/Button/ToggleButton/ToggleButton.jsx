@@ -5,6 +5,7 @@ import {
   Tooltip
 } from 'antd';
 import { Icon } from 'react-fa';
+import isFunction from 'lodash/isFunction.js';
 
 import './ToggleButton.less';
 
@@ -57,6 +58,14 @@ class ToggleButton extends React.Component {
     pressed: false
   }
 
+   /**
+   * The context types.
+   * @type {Object}
+   */
+  static contextTypes = {
+    toggleGroup: PropTypes.object
+  };
+
   /**
    * Invoked right before calling the render method, both on the initial mount
    * and on subsequent updates. It should return an object to update the state,
@@ -65,8 +74,10 @@ class ToggleButton extends React.Component {
    * @param {Object} prevState The previous state.
    */
   static getDerivedStateFromProps(nextProps, prevState) {
-    
-    if (prevState.pressed !== nextProps.pressed && prevState.propPressed !== nextProps.pressed) {
+
+    // Checks to see if the pressed property has changed or if the internal state has changed
+    if (prevState.pressed != nextProps.pressed || prevState.propPressed !== nextProps.pressed) {
+
       return {
         propPressed: nextProps.pressed,
         pressed: nextProps.pressed
@@ -74,7 +85,6 @@ class ToggleButton extends React.Component {
     }
     return null;
   }
-
 
   /**
    * Creates the ToggleButton.
@@ -85,6 +95,8 @@ class ToggleButton extends React.Component {
     super(props);
 
     // Instantiate the state.
+    // The propPressed represents the pressed property while pressed represents the internal 
+    // components state
     this.state = {
       pressed: props.pressed,
       lastClickEvt: null,
@@ -92,7 +104,6 @@ class ToggleButton extends React.Component {
     };
   }
 
-  
   /**
    * Invoked immediately after updating occurs. This method is not called 
    * for the initial render.
@@ -108,9 +119,9 @@ class ToggleButton extends React.Component {
       lastClickEvt
     } = this.state;
    
-    //   // Note: the lastClickEvt is only available if the button
-    //   // has been clicked, if the prop is changed, no click evt will
-    //   // be available.
+    // Note: the lastClickEvt is only available if the button
+    // has been clicked, if the prop is changed, no click evt will
+    // be available.
     if (onToggle && prevState.pressed !== pressed ) {
       onToggle(pressed, lastClickEvt);
     }
@@ -125,7 +136,11 @@ class ToggleButton extends React.Component {
   onClick(evt) {
     this.setState({
       pressed: !this.state.pressed,
-      lastClickEvt: evt,
+      lastClickEvt: evt
+    }, () => {
+      if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
+        this.context.toggleGroup.onChange(this.props);
+      }
     });
   }
 

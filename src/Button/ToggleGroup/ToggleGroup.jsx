@@ -90,6 +90,14 @@ class ToggleGroup extends React.Component {
   }
 
   /**
+   * The child context types.
+   * @type {Object}
+   */
+  static childContextTypes = {
+    toggleGroup: PropTypes.object
+  }
+
+  /**
    * Invoked after the component is instantiated as well as when it
    * receives new props. It should return an object to update state, or null
    * to indicate that the new props do not require any state updates.
@@ -168,12 +176,9 @@ class ToggleGroup extends React.Component {
     const orientationClass = (orientation === 'vertical')
       ? 'vertical-toggle-group'
       : 'horizontal-toggle-group';
-
+      
     const childrenWithProps = React.Children.map(children, (child) => {
-      // Only set pressed state for ToggleButtons
-      if (!(child.type === ToggleButton)) {
-        return child;
-      }
+      // pass the press state through to child components
       return React.cloneElement(child, {
         pressed: this.state.selectedName === child.props.name
       });

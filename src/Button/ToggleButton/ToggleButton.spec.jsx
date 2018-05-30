@@ -160,12 +160,11 @@ describe('<ToggleButton />', () => {
     wrapper.setProps({
       pressed: true
     });
-    // If the prop has not changed but the inner pressed state has changed 
-    // nothing should happen.
-    expect(onToggle).toHaveBeenCalledTimes(2);
-  });
+    // If the prop has been changed, no click evt is available.
+    expect(onToggle).toHaveBeenCalledTimes(3);
+    expect(onToggle).toHaveBeenCalledWith(true, null);
 
-  
+  });
 
   it('toggles the pressed class on click', () => {
     const wrapper = TestUtil.mountComponent(ToggleButton);
