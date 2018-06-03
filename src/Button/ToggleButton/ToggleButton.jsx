@@ -11,8 +11,6 @@ import './ToggleButton.less';
 
 import { CSS_PREFIX } from '../../constants';
 
-let pressedGlobal = false;
-
 /**
  * The ToggleButton.
  *
@@ -76,15 +74,13 @@ class ToggleButton extends React.Component {
    */
   static getDerivedStateFromProps(nextProps, prevState) {
 
-    // Checks to see if the pressed property has changed or if the internal state has changed
-    if ( prevState.pressed !== nextProps.pressed) {
-console.log('prop changed to '+nextProps.pressed )
+    // Checks to see if the pressed property has changed
+    if (prevState.pressed !== nextProps.pressed) {
       return {
-        // propPressed: nextProps.pressed,
         pressed: nextProps.pressed,
         overallPressed: nextProps.pressed,
-        propPressedCounter: prevState.propPressedCounter + 1,
-        ovrallPressedCounter: prevState.ovrallPressedCounter
+        isClicked: false,
+        lastClickEvt: null
       };
     }
     return null;
@@ -99,25 +95,18 @@ console.log('prop changed to '+nextProps.pressed )
     super(props);
 
     // Instantiate the state.
-    // The propPressed represents the pressed property while pressed represents the internal 
+    // pressed: represents the pressed property of the component
+    // overallPressed: represents the pressed state that is also influenced by click events.  
+    // isClicked: shows whether the component is clicked or not 
     // components state
     this.state = {
       pressed: props.pressed,
       lastClickEvt: null,
-      clickedPressed: props.pressed,
       overallPressed: props.pressed,
-      clickedCounter: 0,
-      propPressedCounter: 0,
-      ovrallPressedCounter: 0
+      isClicked: false
     };
   }
 
-  // shouldComponentUpdate(nextProps,nextState){
-  //   if (  this.state . clickedPressed ===this.state.  overallPressed && this.state.lastClickEvt ==null) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
   /**
    * Invoked immediately after updating occurs. This method is not called 
    * for the initial render.
@@ -131,71 +120,42 @@ console.log('prop changed to '+nextProps.pressed )
     const {
       pressed,
       lastClickEvt,
-      clickedPressed,
-      clickedCounter
+      overallPressed,
+      isClicked
     } = this.state;
-   
-    // Note: the lastClickEvt is only available if the button
-    // has been clicked, if the prop is changed, no click evt will
-    // be available.
-    // if (onToggle ){ //&& prevProps.pressed !== this.props.pressed
-    //   console.log('--updating to', this.props.pressed+'  from '+prevProps.pressed)
 
-    //   onToggle( this.props.pressed, null);
-
-    // }else{
-    //   console.log('--updating with click to', !this.props.pressed+'  from '+this.props.pressed)
-
-    //   if (onToggle && prevState.pressed !== pressed ) {
-    //     onToggle(!this.props.pressed, lastClickEvt);
-    //   }
-    // }
-    console.log({
-      overallPressed:this.state.overallPressed ,
-      preoveral: prevState.overallPressed,
-      presed: this.state.pressed, 
-      prev: prevState.pressed
-     });
-     if (this.state.ovrallPressedCounter > prevState.ovrallPressedCounter && this.state.ovrallPressedCounter !== 0) {
-      if (this.state.clickedCounter > prevState.clickedCounter && this.state.clickedCounter !== 0 ){
-        console.log('getclicked')
-        if(onToggle && this.state.clickedPressed === this.state.overallPressed) onToggle(this.state.clickedPressed, lastClickEvt)
-  
-  
+    /**
+     * the following is performed here as a hack to keep track of the pressed changes.
+     * 
+     * check if the button has been clicked 
+     * |__ YES: ==> toggle the button
+     * |
+     * |__ NO: check if the prop has changed
+     *        |__ YES: ==> Toggle the button
+     *        |__ NO: check if previous update action was a click
+     *                |__ YES: ==> run the Toggle function fo the prop value
+     */
+    let shouldToggle;
+    if (isClicked || prevState.pressed !== pressed || prevState.isClicked) {
+      if (isClicked) {
+        // button clicked
+        shouldToggle = true;
       } else {
-        // console.log('NOclicked')
-      
-        if(this.state.propPressedCounter > prevState.propPressedCounter){
-          console.log('NOclicked - changed presed prop')
-  
-        
-          if (onToggle ) { 
-            onToggle(this.state.pressed, lastClickEvt);
-    
+        // check for prop change
+        if (pressed != prevState.overallPressed) {
+          // pressed prop has changed
+          shouldToggle = true;
+        } else {
+          if (prevState.isClicked) {
+            // prop has not changed but the previous was click event 
+            shouldToggle = true;
+          }
         }
-      
-      } else {
-        console.log('NOclicked - same pressed prop')
-  
-      
-        if (onToggle && this.state.propPressedCounter > prevState.propPressedCounter && this.state.propPressedCounter !== 0)  { 
-          onToggle(this.state.pressed, lastClickEvt);
-  
       }
+      if (shouldToggle && onToggle) {
+        onToggle(overallPressed, lastClickEvt);
       }
-  
-  
     }
-
-
-      
-     } else {
-       console.log("NO CHANGE")
-       if (onToggle)           onToggle(this.state.pressed, lastClickEvt);
-
-     }
-
-  
   }
 
   /**
@@ -207,17 +167,13 @@ console.log('prop changed to '+nextProps.pressed )
   onClick(evt) {
     this.setState({
       overallPressed: !this.state.overallPressed,
-      clickedPressed: !this.state.overallPressed,
       lastClickEvt: evt,
-      clickedCounter: this.state.clickedCounter + 1,
-      ovrallPressedCounter: this.state.ovrallPressedCounter + 1
+      isClicked: true,
     }, () => {
       if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
         this.context.toggleGroup.onChange(this.props);
       }
     });
-    console.log('--clicked',this.state.clickedPressed)
-
   }
 
   /**
@@ -248,12 +204,10 @@ console.log('prop changed to '+nextProps.pressed )
 
     let iconName = icon;
     let pressedClass = '';
-    if (this.state.overallPressed ) {
-
+    if (this.state.overallPressed) {
       iconName = pressedIcon || icon;
       pressedClass = ` ${this.pressedClass} `;
     }
-    // if ( this.state.lastClickEvt || pressed) console.log('it is pressed' )
     return (
       <Tooltip
         title={tooltip}
