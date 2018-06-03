@@ -166,39 +166,6 @@ describe('<ToggleButton />', () => {
 
   });
 
-  it('toggle with click and prop changes combined', () => {
-    const onToggle = jest.fn();
-    const props = {
-      onToggle
-    };
-    const clickEvtMock = expect.objectContaining({
-      type: 'click'
-    });
-    const wrapper = TestUtil.mountComponent(ToggleButton, props);
-
-    // Pressed will now become true.
-    wrapper.find('button').simulate('click');
-    expect(onToggle).toHaveBeenCalledTimes(1);
-    expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
-
-    wrapper.setProps({
-      pressed: true
-    });
-    // If the prop has been changed, no click evt is available.
-    expect(onToggle).toHaveBeenCalledTimes(2);
-    expect(onToggle).toHaveBeenCalledWith(true, null);
-    wrapper.setProps({
-      pressed: true
-    });
-    // If the prop has been changed, no click evt is available.
-    expect(onToggle).toHaveBeenCalledTimes(2);
-
-    // Pressed will now become true.
-    wrapper.find('button').simulate('click');
-    expect(onToggle).toHaveBeenCalledTimes(3);
-    expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
-  });
-
   it('toggles the pressed class on click', () => {
     const wrapper = TestUtil.mountComponent(ToggleButton);
     const pressedClass = wrapper.instance().pressedClass;

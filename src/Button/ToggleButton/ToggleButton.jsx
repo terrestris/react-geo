@@ -138,7 +138,7 @@ class ToggleButton extends React.Component {
     let shouldToggle;
     if (isClicked || prevState.pressed !== pressed || prevState.isClicked) {
       if (isClicked) {
-        // button clicked
+        // button is clicked
         shouldToggle = true;
       } else {
         // check for prop change
@@ -148,7 +148,9 @@ class ToggleButton extends React.Component {
         } else {
           if (prevState.isClicked) {
             // prop has not changed but the previous was click event 
-            shouldToggle = true;
+            if (prevState.overallPressed != overallPressed) {
+              shouldToggle = true;
+            }    
           }
         }
       }
