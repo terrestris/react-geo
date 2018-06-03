@@ -128,11 +128,16 @@ class ToggleGroup extends React.Component {
     };
   }
   
+  /**
+   * Is invoked before rendering when new props or state are being received. 
+   * @param {Object} nextProps the next properties
+   * @param {Object} nextState the next state
+   */
   shouldComponentUpdate(nextProps, nextState) {
-  if (nextState.selectedName === this.state.selectedName) {
-    return false;
-  }
-  return true;
+    if (nextState.selectedName === this.state.selectedName) {
+      return false;
+    }
+    return true;
   }
 
   /**
