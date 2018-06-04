@@ -129,18 +129,6 @@ class ToggleGroup extends React.Component {
   }
   
   /**
-   * Is invoked before rendering when new props or state are being received. 
-   * @param {Object} nextProps the next properties
-   * @param {Object} nextState the next state
-   */
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.selectedName === this.state.selectedName) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
    * The onChange handler.
    *
    * @param {Object} childProps The properties if the children.
@@ -149,7 +137,6 @@ class ToggleGroup extends React.Component {
     if (isFunction(this.props.onChange)) {
       this.props.onChange(childProps);
     }
-
     // Allow deselect.
     if (this.props.allowDeselect && (childProps.name === this.state.selectedName)) {
       this.setState({selectedName: null});

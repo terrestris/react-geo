@@ -172,8 +172,14 @@ class ToggleButton extends React.Component {
       lastClickEvt: evt,
       isClicked: true,
     }, () => {
+      // This part can be removed in future if the ToggleGroup button is removed. 
       if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
         this.context.toggleGroup.onChange(this.props);
+        // this allows for the allowDeselect property to be taken into account
+        // when used with ToggleGroup. Since the ToggleGroup changes the 
+        // pressed prop for its child components the click event dose not need to 
+        // change the pressed property.
+        this.setState({overallPressed: !this.state.overallPressed});
       }
     });
   }
