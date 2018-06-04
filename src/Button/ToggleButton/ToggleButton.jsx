@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Tooltip } from 'antd';
-import Icon from 'react-fa/lib/Icon';
+import {
+  Button,
+  Tooltip
+} from 'antd';
+import { Icon } from 'react-fa';
 import isFunction from 'lodash/isFunction.js';
 
 import './ToggleButton.less';
@@ -15,7 +18,6 @@ import { CSS_PREFIX } from '../../constants';
  * @extends React.Component
  */
 class ToggleButton extends React.Component {
-
 
   /**
    * The className added to this component.
@@ -40,7 +42,7 @@ class ToggleButton extends React.Component {
     pressedIcon: PropTypes.string,
     fontIcon: PropTypes.string,
     pressed: PropTypes.bool,
-    onToggle: PropTypes.func.isRequired,
+    onToggle: PropTypes.func,
     tooltip: PropTypes.string,
     tooltipPlacement: PropTypes.string,
     className: PropTypes.string
@@ -63,29 +65,29 @@ class ToggleButton extends React.Component {
   static contextTypes = {
     toggleGroup: PropTypes.object
   };
-
   /**
-   * Invoked after the component is instantiated as well as when it
-   * receives new props. It should return an object to update state, or null
-   * to indicate that the new props do not require any state updates.
-   *
+   * Invoked right before calling the render method, both on the initial mount
+   * and on subsequent updates. It should return an object to update the state,
+   * or null to update nothing.
    * @param {Object} nextProps The next properties.
    * @param {Object} prevState The previous state.
    */
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.pressed !== nextProps.pressed) {
-      nextProps.onToggle(nextProps.pressed);
 
+    // Checks to see if the pressed property has changed
+    if (prevState.pressed !== nextProps.pressed) {
       return {
-        pressed: nextProps.pressed
+        pressed: nextProps.pressed,
+        overallPressed: nextProps.pressed,
+        isClicked: false,
+        lastClickEvt: null
       };
     }
-
     return null;
   }
 
   /**
-   * Create the ToggleButton.
+   * Creates the ToggleButton.
    *
    * @constructs ToggleButton
    */
@@ -93,32 +95,89 @@ class ToggleButton extends React.Component {
     super(props);
 
     // Instantiate the state.
+    // components state
     this.state = {
-      pressed: props.pressed
+      pressed: props.pressed,
+      lastClickEvt: null,
+      overallPressed: props.pressed,
+      isClicked: false
     };
-
-    if (props.pressed) {
-      this.props.onToggle(props.pressed);
-    }
-
-    this.onClick = this.onClick.bind(this);
   }
 
   /**
-   * Called on click
+   * Invoked immediately after updating occurs. This method is not called 
+   * for the initial render.
+   * @method
+   */
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      onToggle
+    } = this.props;
+
+    const {
+      pressed,
+      lastClickEvt,
+      overallPressed,
+      isClicked
+    } = this.state;
+
+    /**
+     * the following is performed here as a hack to keep track of the pressed changes.
+     * 
+     * check if the button has been clicked 
+     * |__ YES: ==> toggle the button
+     * |
+     * |__ NO: check if the prop has changed
+     *        |__ YES: ==> Toggle the button
+     *        |__ NO: check if previous update action was a click
+     *                |__ YES: ==> run the Toggle function fo the prop value
+     */
+    let shouldToggle;
+    if (isClicked || prevState.pressed !== pressed || prevState.isClicked) {
+      if (isClicked) {
+        // button is clicked
+        shouldToggle = true;
+      } else {
+        // check for prop change
+        if (pressed !== prevState.overallPressed) {
+          // pressed prop has changed
+          shouldToggle = true;
+        } else {
+          if (prevState.isClicked) {
+            // prop has not changed but the previous was click event 
+            if (prevState.overallPressed !== overallPressed) {
+              shouldToggle = true;
+            }    
+          }
+        }
+      }
+      if (shouldToggle && onToggle) {
+        onToggle(overallPressed, lastClickEvt);
+      }
+    }
+  }
+
+  /**
+   * Called on click.
    *
-   * @param {ClickEvent} evt the clickeEvent
+   * @param {ClickEvent} evt The ClickEvent.
+   * @method
    */
   onClick(evt) {
-    if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
-      this.context.toggleGroup.onChange(this.props);
-    }
-    if (this.props.onToggle) {
-      this.props.onToggle(!this.state.pressed, evt);
-    }
-
     this.setState({
-      pressed: !this.state.pressed
+      overallPressed: !this.state.overallPressed,
+      lastClickEvt: evt,
+      isClicked: true
+    }, () => {
+      // This part can be removed in future if the ToggleGroup button is removed. 
+      if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
+        this.context.toggleGroup.onChange(this.props);
+        // this allows for the allowDeselect property to be taken into account
+        // when used with ToggleGroup. Since the ToggleGroup changes the 
+        // pressed prop for its child components the click event dose not need to 
+        // change the pressed property.
+        this.setState({overallPressed: !this.state.overallPressed});
+      }
     });
   }
 
@@ -139,18 +198,21 @@ class ToggleButton extends React.Component {
       ...antBtnProps
     } = this.props;
 
+    const {
+      onClick,
+      ...filteredAntBtnProps
+    } = antBtnProps;
+
     const finalClassName = className
       ? `${className} ${this.className}`
       : this.className;
 
     let iconName = icon;
     let pressedClass = '';
-
-    if (this.state.pressed) {
+    if (this.state.overallPressed) {
       iconName = pressedIcon || icon;
       pressedClass = ` ${this.pressedClass} `;
     }
-
     return (
       <Tooltip
         title={tooltip}
@@ -158,8 +220,8 @@ class ToggleButton extends React.Component {
       >
         <Button
           className={`${finalClassName}${pressedClass}`}
-          onClick={this.onClick}
-          {...antBtnProps}
+          onClick={this.onClick.bind(this)}
+          {...filteredAntBtnProps}
         >
           <Icon
             name={iconName}

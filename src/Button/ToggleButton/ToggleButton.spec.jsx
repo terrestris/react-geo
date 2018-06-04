@@ -17,86 +17,204 @@ describe('<ToggleButton />', () => {
     expect(wrapper).not.toBeUndefined();
   });
 
-  it('allows to set some props', () => {
+  it('isn\'t pressed by default', () => {
     const wrapper = TestUtil.mountComponent(ToggleButton);
-
-    wrapper.setProps({
-      name: 'Shinji',
-      type: 'secondary',
-      icon: 'bath',
-      shape: 'circle',
-      size: 'small',
-      disabled: true,
-      pressed: false
-    });
-
-    expect(wrapper.props().name).toBe('Shinji');
-    expect(wrapper.props().type).toBe('secondary');
-    expect(wrapper.props().icon).toBe('bath');
-    expect(wrapper.props().shape).toBe('circle');
-    expect(wrapper.props().size).toBe('small');
-    expect(wrapper.props().disabled).toBe(true);
-    expect(wrapper.props().pressed).toBe(false);
-
-    expect(wrapper.find('button.ant-btn-secondary').length).toBe(1);
-    expect(wrapper.find('span.fa-bath').length).toBe(1);
-    expect(wrapper.find('button.ant-btn-circle').length).toBe(1);
-    expect(wrapper.find('button.ant-btn-sm').length).toBe(1);
-    expect(wrapper.find('button', {disabled: true}).length).toBe(1);
+    const pressedClass = wrapper.instance().pressedClass;
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
   });
 
-  it('sets a pressed class if the pressed state becomes truthy', () => {
+  it('sets the pressed class if pressed prop is set to true initially', () => {
     const wrapper = TestUtil.mountComponent(ToggleButton, {
-      onToggle: () => {}
+      pressed: true
     });
-    let pressedClass = wrapper.instance().pressedClass;
+    const pressedClass = wrapper.instance().pressedClass;
+
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+  });
+
+  it('ignores the onClick callback', () => {
+    const onClick = jest.fn();
+    const wrapper = TestUtil.mountComponent(ToggleButton, {
+      onClick
+    });
+
+    wrapper.find('button').simulate('click');
+
+    expect(onClick).toHaveBeenCalledTimes(0);
+  });
+
+  it('toggles the pressed class if the pressed prop has changed', () => {
+    const wrapper = TestUtil.mountComponent(ToggleButton);
+    const pressedClass = wrapper.instance().pressedClass;
 
     expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
 
     wrapper.setProps({
       pressed: true
     });
-
     expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+
+    // Nothing should happen if the prop hasn't changed.
+    wrapper.setProps({
+      pressed: true
+    });
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+
+    wrapper.setProps({
+      pressed: false
+    });
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
   });
 
-  it('calls a given toggle callback method if the pressed state changes', () => {
+  it('calls the given toggle callback method if the pressed prop has changed initially to true', () => {
     const onToggle = jest.fn();
-    let props = {
-      onToggle: onToggle
+    const props = {
+      onToggle
     };
-
     const wrapper = TestUtil.mountComponent(ToggleButton, props);
 
     wrapper.setProps({
       pressed: true
     });
+    expect(onToggle).toHaveBeenCalledTimes(1);
+    // If the prop has been changed, no click evt is available.
+    expect(onToggle).toHaveBeenCalledWith(true, null);
 
-    expect(onToggle).toHaveBeenCalled();
+    wrapper.setProps({
+      pressed: false
+    });
+    expect(onToggle).toHaveBeenCalledTimes(2);
+    expect(onToggle).toHaveBeenCalledWith(false, null);
+
+    // Nothing should happen if the prop hasn't changed.
+    wrapper.setProps({
+      pressed: false
+    });
+    expect(onToggle).toHaveBeenCalledTimes(2);
+    expect(onToggle).toHaveBeenCalledWith(false, null);
+
+    wrapper.setProps({
+      pressed: true
+    });
+    expect(onToggle).toHaveBeenCalledTimes(3);
+    expect(onToggle).toHaveBeenCalledWith(true, null);
   });
 
-  it('changes the pressed state of the component on click (if standalone button)', () => {
+  it('calls the given toggle callback method if the pressed prop has changed to false (from being false by default)', () => {
+    const onToggle = jest.fn();
+    const props = {
+      onToggle
+    };
+    const wrapper = TestUtil.mountComponent(ToggleButton, props);
+
+    // Nothing should happen if the prop hasn't changed. 
+    // (pressed property is false by default)
+    wrapper.setProps({
+      pressed: false
+    });
+    expect(onToggle).toHaveBeenCalledTimes(0);
+ 
+    wrapper.setProps({
+      pressed: true
+    });
+    expect(onToggle).toHaveBeenCalledTimes(1);
+    // If the prop has been changed, no click evt is available.
+    expect(onToggle).toHaveBeenCalledWith(true, null);
+
+    // Nothing should happen if the prop hasn't changed.
+    wrapper.setProps({
+      pressed: true
+    });
+    expect(onToggle).toHaveBeenCalledTimes(1);
+    expect(onToggle).toHaveBeenCalledWith(true, null);
+
+    wrapper.setProps({
+      pressed: false
+    });
+    expect(onToggle).toHaveBeenCalledTimes(2);
+    expect(onToggle).toHaveBeenCalledWith(false, null);
+  });
+
+  it('cleans the last click event if not available', () => {
+    const onToggle = jest.fn();
+    const props = {
+      onToggle
+    };
+    const clickEvtMock = expect.objectContaining({
+      type: 'click'
+    });
+    const wrapper = TestUtil.mountComponent(ToggleButton, props);
+
+    wrapper.setProps({
+      pressed: true
+    });
+    expect(onToggle).toHaveBeenCalledTimes(1);
+    // If the prop has been changed, no click evt is available.
+    expect(onToggle).toHaveBeenCalledWith(true, null);
+
+    // Pressed will now become false.
+    wrapper.find('button').simulate('click');
+    expect(onToggle).toHaveBeenCalledTimes(2);
+    expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
+
+    wrapper.setProps({
+      pressed: true
+    });
+    // If the prop has been changed, no click evt is available.
+    expect(onToggle).toHaveBeenCalledTimes(3);
+    expect(onToggle).toHaveBeenCalledWith(true, null);
+
+  });
+
+  it('toggles the pressed class on click', () => {
+    const wrapper = TestUtil.mountComponent(ToggleButton);
+    const pressedClass = wrapper.instance().pressedClass;
+
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
+
+    wrapper.find('button').simulate('click');
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+
+    wrapper.find('button').simulate('click');
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
+
+    wrapper.find('button').simulate('click');
+    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+  });
+
+  it('calls the given toggle callback method on click', () => {
+    const onToggle = jest.fn();
+    const props = {
+      onToggle
+    };
+    const clickEvtMock = expect.objectContaining({
+      type: 'click'
+    });
+    const wrapper = TestUtil.mountComponent(ToggleButton, props);
+
+    wrapper.find('button').simulate('click');
+    expect(onToggle).toHaveBeenCalledTimes(1);
+    expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
+
+    wrapper.find('button').simulate('click');
+    expect(onToggle).toHaveBeenCalledTimes(2);
+    expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
+
+    wrapper.find('button').simulate('click');
+    expect(onToggle).toHaveBeenCalledTimes(3);
+    expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
+  });
+
+  it('toggles the pressed state of the component on click', () => {
     const wrapper = TestUtil.mountComponent(ToggleButton);
 
     wrapper.find('button').simulate('click');
-
-    expect(wrapper.state('pressed')).toBe(true);
-  });
-
-  it('calls the on change callback (if included in a ToggleGroup)', () => {
-    const onChangeSpy = jest.fn();
-    let context = {
-      context: {
-        toggleGroup: {
-          onChange: onChangeSpy
-        }
-      }
-    };
-    const wrapper = TestUtil.mountComponent(ToggleButton, null, context);
+    expect(wrapper.state('overallPressed')).toBe(true);
 
     wrapper.find('button').simulate('click');
+    expect(wrapper.state('overallPressed')).toBe(false);
 
-    expect(onChangeSpy).toHaveBeenCalled();
+    wrapper.find('button').simulate('click');
+    expect(wrapper.state('overallPressed')).toBe(true);
   });
-
 });
