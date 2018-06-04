@@ -104,9 +104,6 @@ describe('<ToggleGroup />', () => {
     });
 
     wrapper.find(ToggleButton).first().simulate('click');
-    expect(wrapper.state().selectedName).toBe('Shinji');
-
-    wrapper.find(ToggleButton).first().simulate('click');
     expect(wrapper.state().selectedName).toBe(null);
   });
 

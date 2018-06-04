@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isFunction from 'lodash/isFunction.js';
 
-import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import { CSS_PREFIX } from '../../constants';
 
 import './ToggleGroup.less';
@@ -90,21 +89,11 @@ class ToggleGroup extends React.Component {
   }
 
   /**
-   * Invoked after the component is instantiated as well as when it
-   * receives new props. It should return an object to update state, or null
-   * to indicate that the new props do not require any state updates.
-   *
-   * @param {Object} nextProps The next properties.
-   * @param {Object} prevState The previous state.
+   * The child context types.
+   * @type {Object}
    */
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.selectedName != nextProps.selectedName) {
-      return {
-        selectedName: nextProps.selectedName
-      };
-    }
-
-    return null;
+  static childContextTypes = {
+    toggleGroup: PropTypes.object
   }
 
   /**
@@ -138,18 +127,16 @@ class ToggleGroup extends React.Component {
       }
     };
   }
-
+  
   /**
    * The onChange handler.
    *
    * @param {Object} childProps The properties if the children.
    */
   onChange = (childProps) => {
-
     if (isFunction(this.props.onChange)) {
       this.props.onChange(childProps);
     }
-
     // Allow deselect.
     if (this.props.allowDeselect && (childProps.name === this.state.selectedName)) {
       this.setState({selectedName: null});
@@ -169,12 +156,8 @@ class ToggleGroup extends React.Component {
     const orientationClass = (orientation === 'vertical')
       ? 'vertical-toggle-group'
       : 'horizontal-toggle-group';
-
     const childrenWithProps = React.Children.map(children, (child) => {
-      // Only set pressed state for ToggleButtons
-      if (!(child.type === ToggleButton)) {
-        return child;
-      }
+      // pass the press state through to child components
       return React.cloneElement(child, {
         pressed: this.state.selectedName === child.props.name
       });
