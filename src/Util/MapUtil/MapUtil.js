@@ -168,9 +168,9 @@ export class MapUtil {
    */
   static getLayerByName(map, name) {
     const layers = MapUtil.getAllLayers(map);
-    return layers.find((layer) => {
+    return layers.filter((layer) => {
       return layer.get('name') === name;
-    });
+    })[0];
   }
 
   /**
