@@ -145,7 +145,7 @@ class TimeSlider extends React.Component {
           min={moment(this.props.min).unix()}
           max={moment(this.props.max).unix()}
           tipFormatter={this.formatTimestamp.bind(this)}
-          onChange={this.valueUpdated}
+          onChange={this.valueUpdated.bind(this)}
           value={this.convert(this.props.value)}
         />
       </div>
