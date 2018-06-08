@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Select, Spin } from 'antd';
 const Option = Select.Option;
+import isFunction from 'lodash/isFunction.js';
 
 import Logger from '../../Util/Logger';
 import WfsFilterUtil from '../../Util/WfsFilterUtil/WfsFilterUtil';
@@ -158,6 +159,12 @@ export class WfsSearch extends React.Component {
      */
     onSelect: PropTypes.func,
     /**
+     * An onChange function which gets called with the current value of the
+     * field.
+     * @type {function}
+     */
+    onChange: PropTypes.func,
+    /**
      * Options which are added to the fetch-POST-request. credentials is set to
      * 'same-origin' as default but can be overwritten. See also
      * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
@@ -258,6 +265,11 @@ export class WfsSearch extends React.Component {
    *                                      is pressed.
    */
   onUpdateInput(value) {
+    const {
+      minChars,
+      onChange
+    } = this.props;
+
     this.setState({
       data: []
     });
@@ -266,10 +278,14 @@ export class WfsSearch extends React.Component {
       this.setState({
         searchTerm: value
       }, () => {
-        if (this.state.searchTerm.length >= this.props.minChars) {
+        if (this.state.searchTerm.length >= minChars) {
           this.doSearch();
         }
       });
+    }
+
+    if (isFunction(onChange)) {
+      onChange(value);
     }
   }
 
@@ -431,6 +447,7 @@ export class WfsSearch extends React.Component {
       minChars,
       optionLabelProp,
       outputFormat,
+      onChange,
       onSelect,
       propertyNames,
       renderOption,
