@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {  Select,  Spin } from 'antd';
+import { Select, Spin } from 'antd';
 const Option = Select.Option;
 
 import Logger from '../../Util/Logger';
@@ -53,7 +53,7 @@ export class WfsSearch extends React.Component {
      *
      * Example:
      *   ```
-     *   searchAttributes: {
+     *   attributeDetails: {
      *    featType1: {
      *      attr1: {
      *        matchCase: true,
@@ -71,13 +71,15 @@ export class WfsSearch extends React.Component {
      *   ```
      * @type {Object}
      */
-    attributeDetails: PropTypes.objectOf(PropTypes.objectOf(
-      PropTypes.objectOf(PropTypes.shape({
-        matchCase: PropTypes.bool,
-        type: PropTypes.string,
-        exactSearch: PropTypes.bool
-      }))
-    )),
+    attributeDetails: PropTypes.objectOf(
+      PropTypes.objectOf(
+        PropTypes.shape({
+          matchCase: PropTypes.bool,
+          type: PropTypes.string,
+          exactSearch: PropTypes.bool
+        })
+      )
+    ),
     /**
      * The namespace URI used for features.
      * @type {String}
