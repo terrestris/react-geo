@@ -104,7 +104,7 @@ describe('<WfsSearch />', () => {
       wrapper.setState({
         data: data
       });
-      wrapper.instance().onMenuItemSelected('752526');
+      wrapper.instance().onMenuItemSelected('Deutschland', {key: '752526'});
       expect(selectSpy).toHaveBeenCalled();
       expect(selectSpy).toHaveBeenCalledWith(data[0], map);
 
@@ -163,7 +163,9 @@ describe('<WfsSearch />', () => {
           name: 'Deutschland'
         }
       };
-      const option = wrapper.props().renderOption(feature);
+      const option = wrapper.props().renderOption(feature, {
+        displayValue: 'name'
+      });
       expect(option.key).toBe(feature.id);
       expect(option.props.children).toBe(feature.properties.name);
     });
