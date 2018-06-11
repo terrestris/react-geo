@@ -7,6 +7,8 @@ import OlMap from 'ol/map';
 import OlLayerVector from 'ol/layer/vector';
 import OlSourceVector from 'ol/source/vector';
 import OlCollection from 'ol/collection';
+import OlMultiPolygon from 'ol/geom/multipolygon';
+import OlMultiLinestring from 'ol/geom/multilinestring';
 import OlStyleStyle from 'ol/style/style';
 import OlStyleStroke from 'ol/style/stroke';
 import OlStyleFill from 'ol/style/fill';
@@ -174,6 +176,14 @@ class MeasureButton extends React.Component {
     showMeasureInfoOnClickedPoints: PropTypes.bool,
 
     /**
+     * Determines if a tooltip with helpful information is shown next to the mouse
+     * position. Default is true.
+     *
+     * @type {Boolean}
+     */
+    showHelpTooltip: PropTypes.bool,
+
+    /**
      * Used to allow / disallow multiple drawings at a time on the map.
      * Default is false.
      * TODO known issue: only label of the last drawn feature will be shown!
@@ -252,6 +262,7 @@ class MeasureButton extends React.Component {
     fillColor: 'rgba(255, 0, 0, 0.5)',
     strokeColor: 'rgba(255, 0, 0, 0.8)',
     showMeasureInfoOnClickedPoints: false,
+    showHelpTooltip: true,
     decimalPlacesInTooltips: 2,
     multipleDrawing: false,
     continuePolygonMsg: 'Click to draw area',
@@ -309,7 +320,7 @@ class MeasureButton extends React.Component {
         'drawend', this.drawEnd, this
       );
       this._eventKeys.pointermove = this.props.map.on(
-        'pointermove', this.pointerMoveHandler, this
+        'pointermove', this.updateMeasureTooltip, this
       );
     }
   }
@@ -427,10 +438,14 @@ class MeasureButton extends React.Component {
    */
   onDrawInteractionActiveChange = () => {
     if (this.state.drawInteraction.getActive()) {
-      this.createHelpTooltip();
+      if (this.props.showHelpTooltip) {
+        this.createHelpTooltip();
+      }
       this.createMeasureTooltip();
     } else {
-      this.removeHelpTooltip();
+      if (this.props.showHelpTooltip) {
+        this.removeHelpTooltip();
+      }
       this.removeMeasureTooltip();
     }
   }
@@ -447,6 +462,7 @@ class MeasureButton extends React.Component {
   drawStart = (evt) => {
     const {
       showMeasureInfoOnClickedPoints,
+      showHelpTooltip,
       multipleDrawing,
       measureType,
       map
@@ -455,14 +471,20 @@ class MeasureButton extends React.Component {
     const source = this.state.measureLayer.getSource();
     this._feature = evt.feature;
 
-    if (showMeasureInfoOnClickedPoints && measureType === 'line') {
-      this._eventKeys.click = map.on('click', this.addMeasureStopTooltip, this);
+    if (showMeasureInfoOnClickedPoints) {
+      if (measureType === 'line') {
+        this._eventKeys.click = map.on('click', this.addMeasureStopTooltip, this);
+      } else if (measureType === 'polygon') {
+        this._eventKeys.click = map.on('click', this.updateMeasureTooltip, this);
+      }
     }
 
     if (!multipleDrawing && source.getFeatures().length > 0) {
       this.cleanupTooltips();
       this.createMeasureTooltip();
-      this.createHelpTooltip();
+      if (showHelpTooltip) {
+        this.createHelpTooltip();
+      }
       source.clear();
     }
   }
@@ -473,7 +495,7 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  drawEnd = () => {
+  drawEnd = (evt) => {
     const {
       measureType,
       showMeasureInfoOnClickedPoints,
@@ -493,6 +515,8 @@ class MeasureButton extends React.Component {
       this._measureTooltip.setOffset([0, -7]);
     }
 
+    this.updateMeasureTooltip(evt);
+
     // unset sketch
     this._feature = null;
 
@@ -501,6 +525,7 @@ class MeasureButton extends React.Component {
       this._measureTooltipElement = null;
       this.createMeasureTooltip();
     }
+
   }
 
   /**
@@ -520,7 +545,13 @@ class MeasureButton extends React.Component {
     } = this.props;
 
     if (!isEmpty(this._feature)) {
-      const geom = this._feature.getGeometry();
+      let geom = this._feature.getGeometry();
+      if (geom instanceof OlMultiPolygon) {
+        geom = geom.getPolygons()[0];
+      }
+      if (geom instanceof OlMultiLinestring) {
+        geom = geom.getLineStrings()[0];
+      }
       const value = measureType === 'line' ?
         MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips) :
         MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips);
@@ -643,6 +674,7 @@ class MeasureButton extends React.Component {
       }
     });
     this._createdTooltipDivs = [];
+    this.removeMeasureTooltip();
   }
 
   /**
@@ -667,13 +699,13 @@ class MeasureButton extends React.Component {
   }
 
   /**
-   * Handle pointer move by updating and repositioning the dynamic tooltip.
+   * Handle pointer move or click by updating and repositioning the dynamic tooltip.
    *
-   * @param {OlMapBrowserEvent} evt The event from the pointermove.
+   * @param {OlMapBrowserEvent} evt The event from the pointermoveor click.
    *
    * @method
    */
-  pointerMoveHandler = (evt) => {
+  updateMeasureTooltip = (evt) => {
     const {
       clickToDrawText,
       continuePolygonMsg,
@@ -688,7 +720,7 @@ class MeasureButton extends React.Component {
       return;
     }
 
-    if (!this._helpTooltipElement || !this._measureTooltipElement) {
+    if (!this._measureTooltipElement) {
       return;
     }
 
@@ -698,7 +730,13 @@ class MeasureButton extends React.Component {
 
     if (this._feature) {
       let output;
-      const geom = this._feature.getGeometry();
+      let geom = this._feature.getGeometry();
+      if (geom instanceof OlMultiPolygon) {
+        geom = geom.getPolygons()[0];
+      }
+      if (geom instanceof OlMultiLinestring) {
+        geom = geom.getLineStrings()[0];
+      }
       measureTooltipCoord = geom.getLastCoordinate();
       if (measureType === 'polygon') {
         output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips);
@@ -717,8 +755,10 @@ class MeasureButton extends React.Component {
       this._measureTooltip.setPosition(measureTooltipCoord);
     }
 
-    this._helpTooltipElement.innerHTML = helpMsg;
-    this._helpTooltip.setPosition(helpTooltipCoord);
+    if (this._helpTooltipElement) {
+      this._helpTooltipElement.innerHTML = helpMsg;
+      this._helpTooltip.setPosition(helpTooltipCoord);
+    }
   }
 
   /**
@@ -733,6 +773,7 @@ class MeasureButton extends React.Component {
       fillColor,
       strokeColor,
       showMeasureInfoOnClickedPoints,
+      showHelpTooltip,
       multipleDrawing,
       clickToDrawText,
       continuePolygonMsg,
