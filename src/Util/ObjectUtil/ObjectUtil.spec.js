@@ -1,6 +1,5 @@
 /*eslint-env jest*/
 
-
 import {
   ObjectUtil,
 } from '../../index';
@@ -8,6 +7,55 @@ import {
 describe('ObjectUtil', () => {
   it('is defined', () => {
     expect(ObjectUtil).not.toBeUndefined();
+  });
+
+  describe('#getPathByKeyValue', () => {
+    it('is defined', () => {
+      expect(ObjectUtil.getPathByKeyValue).toBeDefined();
+    });
+
+    it('returns the path of an object by the given key-value pair', () => {
+      const obj = {
+        level: 'first',
+        firstLevel: true,
+        levelNumber: 1,
+        firstNested: {
+          level: 'second',
+          secondLevel: true,
+          levelNumber: 2,
+          deeper: {
+            evenDeeper: {
+              deepest: 'you could go deeper of course'
+            }
+          }
+        }
+      };
+
+      // Check for primitive data types.
+      let res = ObjectUtil.getPathByKeyValue(obj, 'level', 'first');
+      expect(res).toBe('level');
+
+      res = ObjectUtil.getPathByKeyValue(obj, 'firstLevel', true);
+      expect(res).toBe('firstLevel');
+
+      res = ObjectUtil.getPathByKeyValue(obj, 'levelNumber', 1);
+      expect(res).toBe('levelNumber');
+
+      // Check for nested key-value.
+      res = ObjectUtil.getPathByKeyValue(obj, 'level', 'second');
+      expect(res).toBe('firstNested.level');
+
+      res = ObjectUtil.getPathByKeyValue(obj, 'deepest', 'you could go deeper of course');
+      expect(res).toBe('firstNested.deeper.evenDeeper.deepest');
+
+      // Returns undefined if not found.
+      res = ObjectUtil.getPathByKeyValue(obj, 'marco', 'polo');
+      expect(res).toBeUndefined();
+
+      // Appends the given root path if given.
+      res = ObjectUtil.getPathByKeyValue(obj, 'level', 'second', 'myroot');
+      expect(res).toBe('myroot.firstNested.level');
+    });
   });
 
   describe('getValue', () => {
