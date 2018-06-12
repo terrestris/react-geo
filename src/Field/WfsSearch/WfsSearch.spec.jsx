@@ -40,7 +40,9 @@ describe('<WfsSearch />', () => {
         placeholder: 'Type a countryname in its own language…',
         baseUrl: 'https://ows.terrestris.de/geoserver/osm/wfs',
         featureTypes: ['osm:osm-country-borders'],
-        searchAttributes: ['name']
+        searchAttributes: {
+          'osm:osm-country-borders': ['name']
+        }
       });
       wrapper.instance().doSearch = jest.fn();
       const inputValue = 'Deutsch';
@@ -104,7 +106,7 @@ describe('<WfsSearch />', () => {
       wrapper.setState({
         data: data
       });
-      wrapper.instance().onMenuItemSelected('752526');
+      wrapper.instance().onMenuItemSelected('Deutschland', {key: '752526'});
       expect(selectSpy).toHaveBeenCalled();
       expect(selectSpy).toHaveBeenCalledWith(data[0], map);
 
@@ -114,9 +116,7 @@ describe('<WfsSearch />', () => {
   });
 
   describe('default #onSelect', () => {
-    it('zooms to the selected feature', (done) => {
-      expect.assertions(3);
-      jest.useFakeTimers();
+    it('zooms to the selected feature', () => {
       //SETUP
       const feature = {
         type: 'Feature',
@@ -142,15 +142,20 @@ describe('<WfsSearch />', () => {
       const wrapper = TestUtil.mountComponent(WfsSearch, {map});
       const fitSpy = jest.spyOn(map.getView(), 'fit');
       wrapper.props().onSelect(feature, map);
+
+      expect.assertions(3);
+
       expect(fitSpy).toHaveBeenCalled();
-      setTimeout(() => {
-        expect(map.getView().getCenter()).toEqual([25, 25]);
-        expect(map.getView().getZoom()).toEqual(2);
-        done();
-      }, 510);
-      jest.runAllTimers();
-      fitSpy.mockReset();
-      fitSpy.mockRestore();
+
+      return new Promise(resolve => {
+        setTimeout(resolve, 510);
+      })
+        .then(() => {
+          expect(map.getView().getCenter()).toEqual([25, 25]);
+          expect(map.getView().getZoom()).toEqual(2);
+          fitSpy.mockReset();
+          fitSpy.mockRestore();
+        });
     });
   });
 
@@ -163,7 +168,9 @@ describe('<WfsSearch />', () => {
           name: 'Deutschland'
         }
       };
-      const option = wrapper.props().renderOption(feature);
+      const option = wrapper.props().renderOption(feature, {
+        displayValue: 'name'
+      });
       expect(option.key).toBe(feature.id);
       expect(option.props.children).toBe(feature.properties.name);
     });
