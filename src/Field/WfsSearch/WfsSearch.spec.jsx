@@ -116,9 +116,7 @@ describe('<WfsSearch />', () => {
   });
 
   describe('default #onSelect', () => {
-    it('zooms to the selected feature', (done) => {
-      expect.assertions(3);
-      jest.useFakeTimers();
+    it('zooms to the selected feature', () => {
       //SETUP
       const feature = {
         type: 'Feature',
@@ -144,15 +142,20 @@ describe('<WfsSearch />', () => {
       const wrapper = TestUtil.mountComponent(WfsSearch, {map});
       const fitSpy = jest.spyOn(map.getView(), 'fit');
       wrapper.props().onSelect(feature, map);
+
+      expect.assertions(3);
+
       expect(fitSpy).toHaveBeenCalled();
-      setTimeout(() => {
-        expect(map.getView().getCenter()).toEqual([25, 25]);
-        expect(map.getView().getZoom()).toEqual(2);
-        done();
-      }, 510);
-      jest.runAllTimers();
-      fitSpy.mockReset();
-      fitSpy.mockRestore();
+
+      return new Promise(resolve => {
+        setTimeout(resolve, 510);
+      })
+        .then(() => {
+          expect(map.getView().getCenter()).toEqual([25, 25]);
+          expect(map.getView().getZoom()).toEqual(2);
+          fitSpy.mockReset();
+          fitSpy.mockRestore();
+        });
     });
   });
 
