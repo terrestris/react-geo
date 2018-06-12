@@ -40,7 +40,9 @@ describe('<WfsSearch />', () => {
         placeholder: 'Type a countryname in its own language…',
         baseUrl: 'https://ows.terrestris.de/geoserver/osm/wfs',
         featureTypes: ['osm:osm-country-borders'],
-        searchAttributes: ['name']
+        searchAttributes: {
+          'osm:osm-country-borders': ['name']
+        }
       });
       wrapper.instance().doSearch = jest.fn();
       const inputValue = 'Deutsch';
