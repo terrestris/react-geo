@@ -1,4 +1,5 @@
 import isObject from 'lodash/isObject.js';
+import isPlainObject from 'lodash/isPlainObject.js';
 import isString from 'lodash/isString.js';
 import isArray from 'lodash/isArray.js';
 import Logger from '../Logger';
@@ -42,8 +43,13 @@ class ObjectUtil {
     for (let k in obj) {
       if (k === key && obj[k] === value) {
         return `${currentPath}${k}`;
-      } else if (typeof obj[k] === 'object') {
-        return ObjectUtil.getPathByKeyValue(obj[k], key, value, `${currentPath}${k}`);
+      } else if (isPlainObject(obj[k])) {
+        const path = ObjectUtil.getPathByKeyValue(obj[k], key, value, `${currentPath}${k}`);
+        if (path) {
+          return path;
+        } else {
+          continue;
+        }
       }
     }
   }
