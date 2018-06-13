@@ -119,7 +119,7 @@
     "ol": "4.6.5",
     "react": "16.4.1",
     "react-styleguidist": "7.0.17",
-    "react-test-renderer": "16.4.0",
+    "react-test-renderer": "16.4.1",
     "regenerator-runtime": "0.11.1",
     "rimraf": "2.6.2",
     "style-loader": "0.21.0",
