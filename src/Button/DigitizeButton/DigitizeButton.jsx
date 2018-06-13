@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Modal, Input } from 'antd';
 
+import isFunction from 'lodash/isFunction.js';
+
 import OlMap from 'ol/map';
 import OlLayerVector from 'ol/layer/vector';
 import OlSourceVector from 'ol/source/vector';
@@ -299,7 +301,71 @@ class DigitizeButton extends React.Component {
      * See https://openlayers.org/en/latest/apidoc/ol.interaction.Draw.Event.html
      * for more information.
      */
-    onDrawStart: PropTypes.func
+    onDrawStart: PropTypes.func,
+
+    /**
+     * Listener function for the 'modifystart' event of an ol.interaction.Modify.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Modify.Event.html
+     * for more information.
+     */
+    onModifyStart: PropTypes.func,
+
+    /**
+     * Listener function for the 'select' event of the ol.interaction.Select
+     * if in delete mode.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.Event.html
+     * for more information.
+     */
+    onFeatureRemove: PropTypes.func,
+
+    /**
+     * Listener function for the 'select' event of the ol.interaction.Select
+     * if in copy mode.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.Event.html
+     * for more information.
+     */
+    onFeatureCopy: PropTypes.func,
+
+    /**
+     * Additional configuration object to apply to the ol.interaction.Draw.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Draw.html
+     * for more information
+     *
+     * Note: The keys source, type, geometryFunction, style and freehandCondition
+     *       are handled internally and shouldn't be overwritten without any
+     *       specific cause.
+     */
+    drawInteractionConfig: PropTypes.object,
+
+    /**
+     * Additional configuration object to apply to the ol.interaction.Select.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.html
+     * for more information
+     *
+     * Note: The keys condition, hitTolerance and style are handled internally
+     *       and shouldn't be overwritten without any specific cause.
+     */
+    selectInteractionConfig: PropTypes.object,
+
+    /**
+     * Additional configuration object to apply to the ol.interaction.Modify.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Modify.html
+     * for more information
+     *
+     * Note: The keys features, deleteCondition and style are handled internally
+     *       and shouldn't be overwritten without any specific cause.
+     */
+    modifyInteractionConfig: PropTypes.object,
+
+    /**
+     * Additional configuration object to apply to the ol.interaction.Translate.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Translate.html
+     * for more information
+     *
+     * Note: The key features is handled internally and shouldn't be overwritten
+     *       without any specific cause.
+     */
+    translateInteractionConfig: PropTypes.object
   };
 
   /**
@@ -312,7 +378,11 @@ class DigitizeButton extends React.Component {
     selectStrokeColor: 'rgba(220, 120, 20, 0.8)',
     modalPromptTitle: 'Label',
     modalPromptOkButtonText: 'Ok',
-    modalPromptCancelButtonText: 'Cancel'
+    modalPromptCancelButtonText: 'Cancel',
+    drawInteractionConfig: {},
+    selectInteractionConfig: {},
+    modifyInteractionConfig: {},
+    translateInteractionConfig: {}
   }
 
   /**
@@ -549,7 +619,8 @@ class DigitizeButton extends React.Component {
       map,
       onDrawEnd,
       onDrawStart,
-      digitizeLayerName
+      digitizeLayerName,
+      drawInteractionConfig
     } = this.props;
 
     let geometryFunction;
@@ -574,7 +645,8 @@ class DigitizeButton extends React.Component {
       type: type,
       geometryFunction: geometryFunction,
       style: this.getDigitizeStyleFunction,
-      freehandCondition: OlEventsCondition.never
+      freehandCondition: OlEventsCondition.never,
+      ...drawInteractionConfig
     });
 
     if (onDrawEnd) {
@@ -601,13 +673,17 @@ class DigitizeButton extends React.Component {
   createSelectOrModifyInteraction = () => {
     const {
       editType,
-      map
+      map,
+      selectInteractionConfig,
+      modifyInteractionConfig,
+      translateInteractionConfig
     } = this.props;
 
     this._selectInteraction = new OlInteractionSelect({
       condition: OlEventsCondition.singleClick,
       hitTolerance: DigitizeButton.HIT_TOLERANCE,
-      style: this.getSelectedStyleFunction
+      style: this.getSelectedStyleFunction,
+      ...selectInteractionConfig
     });
 
     if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
@@ -622,13 +698,15 @@ class DigitizeButton extends React.Component {
       const edit = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
         deleteCondition: OlEventsCondition.singleClick,
-        style: this.getSelectedStyleFunction
+        style: this.getSelectedStyleFunction,
+        ...modifyInteractionConfig
       });
 
       edit.on('modifystart', this.onModifyStart);
 
       const translate = new OlInteractionTranslate({
-        features: this._selectInteraction.getFeatures()
+        features: this._selectInteraction.getFeatures(),
+        ...translateInteractionConfig
       });
 
       interactions.push(edit, translate);
@@ -648,6 +726,14 @@ class DigitizeButton extends React.Component {
    * @param {Event} evt Event containing selected feature to be removed.
    */
   onFeatureRemove = evt => {
+    const {
+      onFeatureRemove
+    } = this.props;
+
+    if (isFunction(onFeatureRemove)) {
+      onFeatureRemove(evt);
+    }
+
     const feat = evt.selected[0];
     this._selectInteraction.getFeatures().remove(feat);
     this.state.digitizeLayer.getSource().removeFeature(feat);
@@ -662,6 +748,14 @@ class DigitizeButton extends React.Component {
    * @param {Event} evt Event containing selected feature to be copied.
    */
   onFeatureCopy = evt => {
+    const {
+      onFeatureCopy
+    } = this.props;
+
+    if (isFunction(onFeatureCopy)) {
+      onFeatureCopy(evt);
+    }
+
     const feat = evt.selected[0];
     const copy = feat.clone();
     copy.setStyle(feat.getStyle());
@@ -684,6 +778,14 @@ class DigitizeButton extends React.Component {
    *
    */
   onModifyStart = evt => {
+    const {
+      onModifyStart
+    } = this.props;
+
+    if (isFunction(onModifyStart)) {
+      onModifyStart(evt);
+    }
+
     const feature = evt.features.getArray()[0];
     if (feature.get('isLabel')) {
       this._digitizeTextFeature = feature;
@@ -809,6 +911,13 @@ class DigitizeButton extends React.Component {
       modalPromptCancelButtonText,
       onDrawEnd,
       onDrawStart,
+      onModifyStart,
+      onFeatureRemove,
+      onFeatureCopy,
+      drawInteractionConfig,
+      selectInteractionConfig,
+      modifyInteractionConfig,
+      translateInteractionConfig,
       ...passThroughProps
     } = this.props;
 
