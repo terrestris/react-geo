@@ -444,6 +444,21 @@ class DigitizeButton extends React.Component {
   }
 
   /**
+   * Called on componentWillUnmount lifecycle.
+   */
+  componentWillUnmount() {
+    const {
+      map
+    } = this.props;
+
+    const {
+      interactions
+    } = this.state;
+
+    interactions.forEach(i => map.removeInteraction(i));
+  }
+
+  /**
    * Called when the digitize button is toggled. If the button state is pressed,
    * the appropriate draw, modify or select interaction will be created.
    * Otherwise, by untoggling, the same previously created interaction will be
