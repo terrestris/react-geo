@@ -1,6 +1,6 @@
 {
   "name": "@terrestris/react-geo",
-  "version": "8.6.1",
+  "version": "8.8.0",
   "description": "A set of geo related modules. To use in combination with react, antd and ol.",
   "license": "BSD-2-Clause",
   "author": "terrestris GmbH & Co. KG <info@terrestris.de>",
@@ -72,7 +72,7 @@
   "dependencies": {
     "@turf/turf": "5.1.6",
     "ag-grid": "18.0.1",
-    "ag-grid-react": "17.1.0",
+    "ag-grid-react": "18.0.0",
     "lodash": "4.17.10",
     "loglevel": "1.6.1",
     "moment": "2.22.2",

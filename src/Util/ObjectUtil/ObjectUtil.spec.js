@@ -19,13 +19,23 @@ describe('ObjectUtil', () => {
         level: 'first',
         firstLevel: true,
         levelNumber: 1,
+        isNull: null,
+        isObject: {},
+        isArray: [],
         firstNested: {
           level: 'second',
           secondLevel: true,
           levelNumber: 2,
+          isObject: {
+            notOfInterestKey: true,
+            anotherKey: 'here'
+          },
+          isArray: [],
           deeper: {
             evenDeeper: {
-              deepest: 'you could go deeper of course'
+              isObject: {},
+              deepest: 'you could go deeper of course',
+              isAnotherObject: {}
             }
           }
         }
@@ -40,6 +50,9 @@ describe('ObjectUtil', () => {
 
       res = ObjectUtil.getPathByKeyValue(obj, 'levelNumber', 1);
       expect(res).toBe('levelNumber');
+
+      res = ObjectUtil.getPathByKeyValue(obj, 'isNull', null);
+      expect(res).toBe('isNull');
 
       // Check for nested key-value.
       res = ObjectUtil.getPathByKeyValue(obj, 'level', 'second');
