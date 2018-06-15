@@ -311,6 +311,34 @@ class DigitizeButton extends React.Component {
     onModifyStart: PropTypes.func,
 
     /**
+     * Listener function for the 'modifyend' event of an ol.interaction.Modify.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Modify.Event.html
+     * for more information.
+     */
+    onModifyEnd: PropTypes.func,
+
+    /**
+     * Listener function for the 'translatestart' event of an ol.interaction.Translate.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Translate.Event.html
+     * for more information.
+     */
+    onTranslateStart: PropTypes.func,
+
+    /**
+     * Listener function for the 'translateend' event of an ol.interaction.Translate.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Translate.Event.html
+     * for more information.
+     */
+    onTranslateEnd: PropTypes.func,
+
+    /**
+     * Listener function for the 'translating' event of an ol.interaction.Translate.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Translate.Event.html
+     * for more information.
+     */
+    onTranslating: PropTypes.func,
+
+    /**
      * Listener function for the 'select' event of the ol.interaction.Select
      * if in delete mode.
      * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.Event.html
@@ -362,7 +390,7 @@ class DigitizeButton extends React.Component {
      * See https://openlayers.org/en/latest/apidoc/ol.interaction.Translate.html
      * for more information
      *
-     * Note: The key features is handled internally and shouldn't be overwritten
+     * Note: The key feature is handled internally and shouldn't be overwritten
      *       without any specific cause.
      */
     translateInteractionConfig: PropTypes.object
@@ -413,6 +441,21 @@ class DigitizeButton extends React.Component {
    */
   componentDidMount() {
     this.createDigitizeLayer();
+  }
+
+  /**
+   * Called on componentWillUnmount lifecycle.
+   */
+  componentWillUnmount() {
+    const {
+      map
+    } = this.props;
+
+    const {
+      interactions
+    } = this.state;
+
+    interactions.forEach(i => map.removeInteraction(i));
   }
 
   /**
@@ -703,11 +746,16 @@ class DigitizeButton extends React.Component {
       });
 
       edit.on('modifystart', this.onModifyStart);
+      edit.on('modifyend', this.onModifyEnd);
 
       const translate = new OlInteractionTranslate({
         features: this._selectInteraction.getFeatures(),
         ...translateInteractionConfig
       });
+
+      translate.on('translatestart', this.onTranslateStart);
+      translate.on('translateend', this.onTranslateEnd);
+      translate.on('translating', this.onTranslating);
 
       interactions.push(edit, translate);
     }
@@ -723,7 +771,7 @@ class DigitizeButton extends React.Component {
    * Listener for `select` event of OL select interaction in `Delete` mode.
    * Removes selected feature from the vector source and map.
    *
-   * @param {Event} evt Event containing selected feature to be removed.
+   * @param {ol.interaction.Select.Event} evt The interaction event.
    */
   onFeatureRemove = evt => {
     const {
@@ -745,7 +793,7 @@ class DigitizeButton extends React.Component {
    * Creates a clone of selected feature and calls utility method to move it
    * beside the original to avoid overlapping.
    *
-   * @param {Event} evt Event containing selected feature to be copied.
+   * @param {ol.interaction.Select.Event} evt The interaction event.
    */
   onFeatureCopy = evt => {
     const {
@@ -774,8 +822,7 @@ class DigitizeButton extends React.Component {
    * Checks if a labeled feature is being modified. If yes, opens prompt to
    * input a new label.
    *
-   * @param {Event} evt 'modifystart' event of OlInteractionModify.
-   *
+   * @param {ol.interaction.Modify.Event} evt The interaction event.
    */
   onModifyStart = evt => {
     const {
@@ -792,6 +839,66 @@ class DigitizeButton extends React.Component {
       this.setState({
         showLabelPrompt: true
       });
+    }
+  }
+
+  /**
+   * Called on modifyend of the ol.interaction.Modify.
+   *
+   * @param {ol.interaction.Modify.Event} evt The interaction event.
+   */
+  onModifyEnd = evt => {
+    const {
+      onModifyEnd
+    } = this.props;
+
+    if (isFunction(onModifyEnd)) {
+      onModifyEnd(evt);
+    }
+  }
+
+  /**
+   * Called on translatestart of the ol.interaction.Translate.
+   *
+   * @param {ol.interaction.Translate.Event} evt The interaction event.
+   */
+  onTranslateStart = evt => {
+    const {
+      onTranslateStart
+    } = this.props;
+
+    if (isFunction(onTranslateStart)) {
+      onTranslateStart(evt);
+    }
+  }
+
+  /**
+   * Called on translateend of the ol.interaction.Translate.
+   *
+   * @param {ol.interaction.Translate.Event} evt The interaction event.
+   */
+  onTranslateEnd = evt => {
+    const {
+      onTranslateEnd
+    } = this.props;
+
+    if (isFunction(onTranslateEnd)) {
+      onTranslateEnd(evt);
+    }
+  }
+
+  /**
+   * Called on translating of the ol.interaction.Translate.
+   *
+   * @param {ol.interaction.Translate.Event} evt The interaction event.
+   */
+  onTranslating = evt => {
+    const {
+      onTranslating
+    } = this.props;
+
+    if (isFunction(onTranslating)) {
+      onTranslating(evt);
     }
   }
 
@@ -909,9 +1016,13 @@ class DigitizeButton extends React.Component {
       modalPromptTitle,
       modalPromptOkButtonText,
       modalPromptCancelButtonText,
-      onDrawEnd,
       onDrawStart,
+      onDrawEnd,
       onModifyStart,
+      onModifyEnd,
+      onTranslateStart,
+      onTranslateEnd,
+      onTranslating,
       onFeatureRemove,
       onFeatureCopy,
       drawInteractionConfig,
