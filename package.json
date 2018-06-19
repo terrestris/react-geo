@@ -77,7 +77,7 @@
     "loglevel": "1.6.1",
     "moment": "2.22.2",
     "proj4": "2.4.4",
-    "prop-types": "15.6.1",
+    "prop-types": "15.6.2",
     "query-string": "5.1.1",
     "react-dom": "16.4.1",
     "react-dom-factories": "1.0.2",
