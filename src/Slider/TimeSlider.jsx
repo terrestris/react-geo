@@ -137,18 +137,16 @@ class TimeSlider extends React.Component {
    */
   render() {
     return (
-      <div>
-        <Slider
-          className={this.props.className}
-          defaultValue={this.convert(this.props.defaultValue)}
-          range={this.props.useRange}
-          min={moment(this.props.min).unix()}
-          max={moment(this.props.max).unix()}
-          tipFormatter={this.formatTimestamp.bind(this)}
-          onChange={this.valueUpdated.bind(this)}
-          value={this.convert(this.props.value)}
-        />
-      </div>
+      <Slider
+        className={this.props.className}
+        defaultValue={this.convert(this.props.defaultValue)}
+        range={this.props.useRange}
+        min={moment(this.props.min).unix()}
+        max={moment(this.props.max).unix()}
+        tipFormatter={this.formatTimestamp.bind(this)}
+        onChange={this.valueUpdated.bind(this)}
+        value={this.convert(this.props.value)}
+      />
     );
   }
 }
