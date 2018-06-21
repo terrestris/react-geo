@@ -41,7 +41,7 @@ export class NominatimSearch extends React.Component {
      */
     format: PropTypes.string,
     /**
-     * The preferred area to find search results in <left>,<top>,<right>,<bottom>.
+     * The preferred area to find search results in [left],[top],[right],[bottom].
      * @type {String}
      */
     viewbox: PropTypes.string,
@@ -71,7 +71,7 @@ export class NominatimSearch extends React.Component {
     limit: PropTypes.number,
     /**
      * Limit search results to a specific country (or a list of countries).
-     * <countrycode> should be the ISO 3166-1alpha2 code, e.g. gb for the United
+     * [countrycode] should be the ISO 3166-1alpha2 code, e.g. gb for the United
      * Kingdom, de for Germany, etc.
      * @type {String}
      */
@@ -286,7 +286,6 @@ export class NominatimSearch extends React.Component {
         allowClear={true}
         placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
         dataSource={this.state.dataSource.map(renderOption.bind(this))}
-        optionLabelProp="display_name"
         onChange={this.onUpdateInput}
         onSelect={this.onMenuItemSelected}
         {...passThroughProps}

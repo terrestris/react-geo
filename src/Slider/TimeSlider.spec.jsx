@@ -62,6 +62,28 @@ describe('<TimeSlider />', () => {
     expect(got2).toEqual(expected2);
   });
 
+  describe('convertMarks', () => {
+    it('converts the Keys of the marks prop', () => {
+      const format = 'YYYY-MM-DD hh:mm:ss';
+      const val1 = moment('2000-01-01 12:00:00', format);
+      const val2 = moment('2001-01-01 12:00:00', format);
+      const marks = {};
+      marks[val1] = val1;
+      marks[val2] = val2;
+
+      const expected1 = val1.unix();
+      const expected2 = val2.unix();
+
+      const slider = TestUtil.mountComponent(TimeSlider, {}).instance();
+      const gotMarks = slider.convertMarks(marks);
+      const gotKeys = Object.keys(gotMarks);
+
+      expect(gotKeys).toEqual(expect.arrayContaining([expected1.toString(), expected2.toString()]));
+      expect(gotMarks[expected1]).toEqual(val1);
+      expect(gotMarks[expected2]).toEqual(val2);
+    });
+  });
+
   it('#formatTimestamp', () => {
     const format = 'YYYY-MM-DD hh:mm:ss';
     const formatted = '2000-01-01 12:00:00';

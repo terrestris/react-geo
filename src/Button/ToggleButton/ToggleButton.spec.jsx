@@ -107,13 +107,13 @@ describe('<ToggleButton />', () => {
     };
     const wrapper = TestUtil.mountComponent(ToggleButton, props);
 
-    // Nothing should happen if the prop hasn't changed. 
+    // Nothing should happen if the prop hasn't changed.
     // (pressed property is false by default)
     wrapper.setProps({
       pressed: false
     });
     expect(onToggle).toHaveBeenCalledTimes(0);
- 
+
     wrapper.setProps({
       pressed: true
     });

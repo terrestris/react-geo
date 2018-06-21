@@ -64,7 +64,7 @@ export class UrlUtil {
    */
   static getQueryParam(url, key) {
     const queryParamsObj = UrlUtil.getQueryParams(url);
-    const foundKey = Object.keys(queryParamsObj).find(k => k.toLowerCase() === key.toLowerCase());
+    const foundKey = Object.keys(queryParamsObj).filter(k => k.toLowerCase() === key.toLowerCase())[0];
 
     return queryParamsObj[foundKey];
   }

@@ -260,6 +260,7 @@ describe('<MeasureButton />', () => {
 
       let wrapper;
       let instance;
+      let mockEvt;
 
       beforeEach(() => {
         wrapper = TestUtil.mountComponent(MeasureButton, {
@@ -268,6 +269,7 @@ describe('<MeasureButton />', () => {
           showMeasureInfoOnClickedPoints: true
         });
         instance = wrapper.instance();
+        mockEvt = {};
       });
 
       it ('unsets click event key', () => {
@@ -276,7 +278,7 @@ describe('<MeasureButton />', () => {
 
         const unByKeySpy = jest.spyOn(OlObservable, 'unByKey');
 
-        instance.drawEnd();
+        instance.drawEnd(mockEvt);
 
         expect(unByKeySpy).toHaveBeenCalledTimes(1);
 
@@ -289,7 +291,7 @@ describe('<MeasureButton />', () => {
           showMeasureInfoOnClickedPoints: true
         });
         const removeMeasureTooltipSpy = jest.spyOn(instance, 'removeMeasureTooltip');
-        instance.drawEnd();
+        instance.drawEnd(mockEvt);
         expect(removeMeasureTooltipSpy).toHaveBeenCalledTimes(1);
         jest.resetAllMocks();
         jest.restoreAllMocks();
@@ -301,7 +303,7 @@ describe('<MeasureButton />', () => {
         });
 
         instance.createMeasureTooltip();
-        instance.drawEnd();
+        instance.drawEnd(mockEvt);
 
         const expectedClassName = 'react-geo-measure-tooltip react-geo-measure-tooltip-static';
         const expectedOffset = [0, -7];
@@ -310,7 +312,7 @@ describe('<MeasureButton />', () => {
       });
 
       it ('unsets the feature', () => {
-        instance.drawEnd();
+        instance.drawEnd(mockEvt);
         expect(instance._feature).toBeNull;
       });
 
@@ -319,7 +321,7 @@ describe('<MeasureButton />', () => {
           showMeasureInfoOnClickedPoints: true
         });
         const createMeasureTooltipSpy = jest.spyOn(instance, 'createMeasureTooltip');
-        instance.drawEnd();
+        instance.drawEnd(mockEvt);
         expect(createMeasureTooltipSpy).toHaveBeenCalledTimes(1);
         jest.resetAllMocks();
         jest.restoreAllMocks();
@@ -682,7 +684,7 @@ describe('<MeasureButton />', () => {
       });
     });
 
-    describe('#pointerMoveHandler', () => {
+    describe('#updateMeasureTooltip', () => {
 
       let wrapper;
       let instance;
@@ -701,12 +703,12 @@ describe('<MeasureButton />', () => {
 
       it ('returns undefined by dragging state', () => {
         mockEvt.dragging = true;
-        const expectedOutput = instance.pointerMoveHandler(mockEvt);
+        const expectedOutput = instance.updateMeasureTooltip(mockEvt);
         expect(expectedOutput).toBeUndefined();
       });
 
       it ('returns undefined if measure and tooltip elements are not set', () => {
-        const expectedOutput = instance.pointerMoveHandler(mockEvt);
+        const expectedOutput = instance.updateMeasureTooltip(mockEvt);
         expect(expectedOutput).toBeUndefined();
       });
 
@@ -725,7 +727,7 @@ describe('<MeasureButton />', () => {
           element: instance._measureTooltipElement
         });
 
-        instance.pointerMoveHandler(mockEvt);
+        instance.updateMeasureTooltip(mockEvt);
 
         expect(instance._measureTooltipElement.innerHTML).toBe('100 m');
         expect(instance._measureTooltip.getPosition()).toEqual([0, 100]);
@@ -762,7 +764,7 @@ describe('<MeasureButton />', () => {
           element: instance._measureTooltipElement
         });
 
-        instance.pointerMoveHandler(mockEvt);
+        instance.updateMeasureTooltip(mockEvt);
 
         expect(instance._measureTooltipElement.innerHTML).toBe('100 m<sup>2</sup>');
         // Interior point as XYM coordinate, where M is the length of the horizontal
@@ -792,7 +794,7 @@ describe('<MeasureButton />', () => {
           element: instance._measureTooltipElement
         });
 
-        instance.pointerMoveHandler(mockEvt);
+        instance.updateMeasureTooltip(mockEvt);
 
         expect(instance._measureTooltipElement.innerHTML).toBe('0°');
         expect(instance._measureTooltip.getPosition()).toEqual([0, 100]);

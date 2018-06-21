@@ -21,11 +21,35 @@ describe('MeasureUtil', () => {
 
   describe('Static methods', () => {
 
+    describe('#getLength', () => {
+      it('is defined', () => {
+        expect(MeasureUtil.getLength).toBeDefined();
+      });
+      it('get the length of a line as expected', () => {
+        const start = [0, 0];
+        const end = [0, 100];
+        const end2 = [0, 100550];
+
+        const shortLine = new OlGeomLineString([start, end]);
+        const longLine = new OlGeomLineString([start, end2]);
+
+        map = TestUtil.createMap();
+
+        const expectedShortLength = MeasureUtil.getLength(shortLine, map);
+        const expectedLongLength = MeasureUtil.getLength(longLine, map);
+
+        expect(expectedShortLength).toEqual(99.99999999669033);
+        expect(expectedLongLength).toEqual(100545.83533277796);
+
+        TestUtil.removeMap(map);
+      });
+    });
+
     describe('#formatLength', () => {
       it('is defined', () => {
         expect(MeasureUtil.formatLength).toBeDefined();
       });
-      it('formats the length of a multiline as expected', () => {
+      it('formats the length of a line as expected', () => {
         const start = [0, 0];
         const end = [0, 100];
         const end2 = [0, 100550];
@@ -45,13 +69,40 @@ describe('MeasureUtil', () => {
       });
     });
 
+    describe('#getArea', () => {
+      it('is defined', () => {
+        expect(MeasureUtil.getArea).toBeDefined();
+      });
+      it('get the area of a polygon as expected', () => {
+        const smallPolyCoords = [
+          [0, 0],
+          [0, 10],
+          [10, 10],
+          [10, 0],
+          [0, 0]
+        ];
+        const bigPolyCoords = smallPolyCoords.map(coord => [coord[0] * 100, coord[1] * 100]);
 
+        const smallPoly = new OlGeomPolygon([smallPolyCoords]);
+        const bigPoly = new OlGeomPolygon([bigPolyCoords]);
+
+        map = TestUtil.createMap();
+
+        const expectedSmallArea = MeasureUtil.getArea(smallPoly, map);
+        const expectedBigArea = MeasureUtil.getArea(bigPoly, map);
+
+        expect(expectedSmallArea).toBe(99.99999999454045);
+        expect(expectedBigArea).toBe(999999.9918059125);
+
+        TestUtil.removeMap(map);
+      });
+    });
 
     describe('#formatArea', () => {
       it('is defined', () => {
         expect(MeasureUtil.formatArea).toBeDefined();
       });
-      it('formats the length of a multiline as expected', () => {
+      it('formats the area of a polygon as expected', () => {
         const smallPolyCoords = [
           [0, 0],
           [0, 10],

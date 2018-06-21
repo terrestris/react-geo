@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {  Select,  Spin } from 'antd';
+import { Select, Spin } from 'antd';
 const Option = Select.Option;
+import isFunction from 'lodash/isFunction.js';
 
 import Logger from '../../Util/Logger';
 import WfsFilterUtil from '../../Util/WfsFilterUtil/WfsFilterUtil';
@@ -53,7 +54,7 @@ export class WfsSearch extends React.Component {
      *
      * Example:
      *   ```
-     *   searchAttributes: {
+     *   attributeDetails: {
      *    featType1: {
      *      attr1: {
      *        matchCase: true,
@@ -71,13 +72,15 @@ export class WfsSearch extends React.Component {
      *   ```
      * @type {Object}
      */
-    attributeDetails: PropTypes.objectOf(PropTypes.objectOf(
-      PropTypes.objectOf(PropTypes.shape({
-        matchCase: PropTypes.bool,
-        type: PropTypes.string,
-        exactSearch: PropTypes.bool
-      }))
-    )),
+    attributeDetails: PropTypes.objectOf(
+      PropTypes.objectOf(
+        PropTypes.shape({
+          matchCase: PropTypes.bool,
+          type: PropTypes.string,
+          exactSearch: PropTypes.bool
+        })
+      )
+    ),
     /**
      * The namespace URI used for features.
      * @type {String}
@@ -156,6 +159,12 @@ export class WfsSearch extends React.Component {
      */
     onSelect: PropTypes.func,
     /**
+     * An onChange function which gets called with the current value of the
+     * field.
+     * @type {function}
+     */
+    onChange: PropTypes.func,
+    /**
      * Options which are added to the fetch-POST-request. credentials is set to
      * 'same-origin' as default but can be overwritten. See also
      * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
@@ -172,7 +181,7 @@ export class WfsSearch extends React.Component {
      * Which prop value of option will render as content of select.
      * @type {string}
      */
-    optionLabelProp: PropTypes.string,
+    displayValue: PropTypes.string,
     /**
      * Delay in ms before actually sending requests.
      * @type {number}
@@ -185,20 +194,31 @@ export class WfsSearch extends React.Component {
     outputFormat: 'application/json',
     minChars: 3,
     additionalFetchOptions: {},
-    optionLabelProp: 'title',
+    displayValue: 'name',
     attributeDetails: {},
     delay: 300,
     /**
      * Create an AutoComplete.Option from the given data.
      *
      * @param {Object} feature The feature as returned by the server.
+     * @param {Object} props The current props of the component.
      * @return {AutoComplete.Option} The AutoComplete.Option that will be
      * rendered for each feature.
      */
-    renderOption: feature => {
-      const display = feature.properties.name ? feature.properties.name : feature.id;
+    renderOption: (feature, props) => {
+      const {
+        displayValue
+      } = props;
+
+      const display = feature.properties[displayValue] ?
+        feature.properties[displayValue] : feature.id;
+
       return (
-        <Option key={feature.id} title={display}>
+        <Option
+          value={display}
+          key={feature.id}
+          title={display}
+        >
           {display}
         </Option>
       );
@@ -256,6 +276,11 @@ export class WfsSearch extends React.Component {
    *                                      is pressed.
    */
   onUpdateInput(value) {
+    const {
+      minChars,
+      onChange
+    } = this.props;
+
     this.setState({
       data: []
     });
@@ -264,10 +289,14 @@ export class WfsSearch extends React.Component {
       this.setState({
         searchTerm: value
       }, () => {
-        if (this.state.searchTerm.length >= this.props.minChars) {
+        if (this.state.searchTerm.length >= minChars) {
           this.doSearch();
         }
       });
+    }
+
+    if (isFunction(onChange)) {
+      onChange(value);
     }
   }
 
@@ -397,12 +426,14 @@ export class WfsSearch extends React.Component {
    * The function describes what to do when an item is selected.
    *
    * @param {String|number} value The value of the selected option.
+   * @param {Node} option The selected option.
    */
-  onMenuItemSelected(value) {
+  onMenuItemSelected(value, option) {
     const {
       map
     } = this.props;
-    const selectedFeature = this.state.data.filter(i => i.id === value)[0];
+
+    const selectedFeature = this.state.data.filter(feat => feat.id === option.key)[0];
     this.props.onSelect(selectedFeature, map);
   }
 
@@ -427,8 +458,8 @@ export class WfsSearch extends React.Component {
       map,
       maxFeatures,
       minChars,
-      optionLabelProp,
       outputFormat,
+      onChange,
       onSelect,
       propertyNames,
       renderOption,
@@ -451,12 +482,15 @@ export class WfsSearch extends React.Component {
         onChange={this.onUpdateInput}
         onSelect={this.onMenuItemSelected}
         notFoundContent={fetching ? <Spin size="small" /> : null}
-        optionLabelProp={optionLabelProp}
         filterOption={false}
         showArrow={false}
         {...passThroughProps}
       >
-        {data.map(renderOption.bind(this))}
+        {
+          data.map(d => {
+            return renderOption(d, this.props);
+          })
+        }
       </Select>
     );
   }

@@ -1,4 +1,5 @@
 import isObject from 'lodash/isObject.js';
+import isPlainObject from 'lodash/isPlainObject.js';
 import isString from 'lodash/isString.js';
 import isArray from 'lodash/isArray.js';
 import Logger from '../Logger';
@@ -10,6 +11,48 @@ import Logger from '../Logger';
  * @class ObjectUtil
  */
 class ObjectUtil {
+
+  /**
+   * Returns the dot delimited path of a given object by the given
+   * key-value pair. Example:
+   *
+   * ```
+   * const obj = {
+   *   level: 'first',
+   *   nested: {
+   *     level: 'second'
+   *   }
+   * };
+   * const key = 'level';
+   * const value = 'second';
+   *
+   * ObjectUtil.getPathByKeyValue(obj, key, value); // 'nested.level'
+   * ```
+   *
+   * Note: It will return the first available match!
+   *
+   * @param {Object} obj The object to obtain the path from.
+   * @param {String} key The key to look for.
+   * @param {String|Number|Boolean} value The value to look for.
+   * @param {String} [currentPath=''] The currentPath (if called in a recursion)
+   *                                  or the custom root path (default is to '').
+   */
+  static getPathByKeyValue(obj, key, value, currentPath = '') {
+    currentPath = currentPath ? `${currentPath}.` : currentPath;
+
+    for (let k in obj) {
+      if (k === key && obj[k] === value) {
+        return `${currentPath}${k}`;
+      } else if (isPlainObject(obj[k])) {
+        const path = ObjectUtil.getPathByKeyValue(obj[k], key, value, `${currentPath}${k}`);
+        if (path) {
+          return path;
+        } else {
+          continue;
+        }
+      }
+    }
+  }
 
   /**
    * Method may be used to return a value of a given input object by a
