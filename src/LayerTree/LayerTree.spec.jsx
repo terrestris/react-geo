@@ -380,7 +380,7 @@ describe('<LayerTree />', () => {
       const unregisterSpy = jest.spyOn(wrapper.instance(), 'unregisterEventsByLayer');
 
       layerGroup.getLayers().remove(nestedLayerGroup);
-      expect(rebuildSpy).toHaveBeenCalledTimes(1);
+      expect(rebuildSpy).toHaveBeenCalledTimes(2);
       expect(unregisterSpy).toHaveBeenCalledTimes(3);
 
       rebuildSpy.mockReset();
