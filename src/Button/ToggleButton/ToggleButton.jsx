@@ -105,7 +105,19 @@ class ToggleButton extends React.Component {
   }
 
   /**
-   * Invoked immediately after updating occurs. This method is not called
+   * We will handle the initial state of the button here.
+   * If it is pressed, we will have to call its `onToggle`
+   * method, if it exists, in order to reflect the initial
+   * state correctly (e.g. activating ol.Controls)
+   */
+  componentDidMount() {
+    if (this.props.onToggle && this.props.pressed === true) {
+      this.props.onToggle(true, null);
+    }
+  }
+
+  /**
+   * Invoked immediately after updating occurs. This method is not called 
    * for the initial render.
    * @method
    */
