@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isBoolean from 'lodash/isBoolean.js';
 import isFunction from 'lodash/isFunction.js';
-import isEqual from 'lodash/isEqual.js';       
+import isEqual from 'lodash/isEqual.js';
 import { Tree } from 'antd';
 import OlMap from 'ol/map';
 import OlLayerBase from 'ol/layer/base';
@@ -163,6 +163,9 @@ class LayerTree extends React.Component {
         this.olListenerKeys = [];
 
         this.registerAddRemoveListeners(layerGroup);
+        this.rebuildTreeNodes();
+      }
+      else if (!isEqual(prevState.layerGroupRevision, layerGroup.getRevision())) {
         this.rebuildTreeNodes();
       }
     }
