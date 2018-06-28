@@ -5,6 +5,7 @@ import OlLayerGroup from 'ol/layer/group';
 import OlLayerTile from 'ol/layer/tile';
 import OlSourceTileWMS from 'ol/source/tilewms';
 import olObservable from 'ol/observable';
+import OlCollection from 'ol/collection';
 
 import TestUtil from '../Util/TestUtil';
 
@@ -86,11 +87,11 @@ describe('<LayerTree />', () => {
       layers: [subLayer]
     });
 
-    expect(wrapper.instance().olListenerKeys).toHaveLength(5);
+    expect(wrapper.instance().olListenerKeys).toHaveLength(6);
     wrapper.setProps({
       layerGroup: nestedLayerGroup
     });
-    expect(wrapper.instance().olListenerKeys).toHaveLength(3);
+    expect(wrapper.instance().olListenerKeys).toHaveLength(4);
   });
 
   describe('<LayerTreeNode> creation', () => {
@@ -127,6 +128,22 @@ describe('<LayerTree />', () => {
       const groupNode = treeNodes.at(0);
       const subNode = groupNode.props().children[0];
       expect(subNode.props.title).toBe(subLayer.get('name'));
+    });
+
+    it('can handle a replacement of layergroups `ol.Collection`', () => {
+      const props = {
+        map
+      };
+      const subLayer = new OlLayerTile({
+        name: 'subLayer',
+        source: new OlSourceTileWMS()
+      });
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
+      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
+      map.getLayerGroup().setLayers(new OlCollection([subLayer]));
+      expect(rebuildSpy).toHaveBeenCalled();
+      rebuildSpy.mockReset();
+      rebuildSpy.mockRestore();
     });
 
     it('sets the layer name as title per default', () => {
