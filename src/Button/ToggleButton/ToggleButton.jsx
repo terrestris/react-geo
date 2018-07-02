@@ -105,6 +105,18 @@ class ToggleButton extends React.Component {
   }
 
   /**
+   * We will handle the initial state of the button here.
+   * If it is pressed, we will have to call its `onToggle`
+   * method, if it exists, in order to reflect the initial
+   * state correctly (e.g. activating ol.Controls)
+   */
+  componentDidMount() {
+    if (this.props.onToggle && this.props.pressed === true) {
+      this.props.onToggle(true, null);
+    }
+  }
+
+  /**
    * Invoked immediately after updating occurs. This method is not called 
    * for the initial render.
    * @method
@@ -123,8 +135,8 @@ class ToggleButton extends React.Component {
 
     /**
      * the following is performed here as a hack to keep track of the pressed changes.
-     * 
-     * check if the button has been clicked 
+     *
+     * check if the button has been clicked
      * |__ YES: ==> toggle the button
      * |
      * |__ NO: check if the prop has changed
@@ -144,10 +156,10 @@ class ToggleButton extends React.Component {
           shouldToggle = true;
         } else {
           if (prevState.isClicked) {
-            // prop has not changed but the previous was click event 
+            // prop has not changed but the previous was click event
             if (prevState.overallPressed !== overallPressed) {
               shouldToggle = true;
-            }    
+            }
           }
         }
       }
@@ -169,12 +181,12 @@ class ToggleButton extends React.Component {
       lastClickEvt: evt,
       isClicked: true
     }, () => {
-      // This part can be removed in future if the ToggleGroup button is removed. 
+      // This part can be removed in future if the ToggleGroup button is removed.
       if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
         this.context.toggleGroup.onChange(this.props);
         // this allows for the allowDeselect property to be taken into account
-        // when used with ToggleGroup. Since the ToggleGroup changes the 
-        // pressed prop for its child components the click event dose not need to 
+        // when used with ToggleGroup. Since the ToggleGroup changes the
+        // pressed prop for its child components the click event dose not need to
         // change the pressed property.
         this.setState({overallPressed: !this.state.overallPressed});
       }

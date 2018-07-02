@@ -7,6 +7,7 @@ import { Tree } from 'antd';
 import OlMap from 'ol/map';
 import OlLayerBase from 'ol/layer/base';
 import OlLayerGroup from 'ol/layer/group';
+import OlCollection from 'ol/collection';
 import olObservable from 'ol/observable';
 
 import Logger from '../Util/Logger';
@@ -198,8 +199,9 @@ class LayerTree extends React.Component {
     const collection = groupLayer.getLayers();
     const addEvtKey = collection.on('add', this.onCollectionAdd);
     const removeEvtKey = collection.on('remove', this.onCollectionRemove);
+    const changeEvtKey = groupLayer.on('change:layers', this.onChangeLayers);
 
-    this.olListenerKeys.push(addEvtKey, removeEvtKey);
+    this.olListenerKeys.push(addEvtKey, removeEvtKey, changeEvtKey);
 
     collection.forEach((layer) => {
       if (layer instanceof OlLayerGroup) {
@@ -251,6 +253,23 @@ class LayerTree extends React.Component {
   }
 
   /**
+   * Listens to the LayerGroups change:layers event.
+   * Unregisters the old and reregisters new listeners.
+   *
+   * @param {ol.layer.Group.Event} evt The change event.
+   */
+  onChangeLayers = (evt) => {
+    this.unregisterEventsByLayer(evt.oldValue);
+    if (evt.oldValue instanceof OlCollection) {
+      evt.oldValue.forEach((layer) => this.unregisterEventsByLayer(layer));
+    }
+    if (evt.target instanceof OlLayerGroup) {
+      this.registerAddRemoveListeners(evt.target);
+    }
+    this.rebuildTreeNodes();
+  }
+
+  /**
    * Unregisters the Events of a given layer.
    *
    * @param {ol.layer.Base} layer An ol.layer.Base.
@@ -261,7 +280,8 @@ class LayerTree extends React.Component {
         const layers = layer.getLayers();
         if (key.target === layers) {
           if ((key.type === 'add' && key.listener === this.onCollectionAdd) ||
-          (key.type === 'remove' && key.listener === this.onCollectionRemove)){
+          (key.type === 'remove' && key.listener === this.onCollectionRemove) ||
+          (key.type === 'change:layers' && key.listener === this.onChangeLayers)) {
 
             olObservable.unByKey(key);
             return false;
