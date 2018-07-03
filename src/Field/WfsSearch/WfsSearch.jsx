@@ -368,25 +368,29 @@ export class WfsSearch extends React.Component {
 
     const request = this.getCombinedRequests();
     const fetchTime = new Date();
+    if (request) {
+      this.timeoutHandle = setTimeout(() => {
+        this.setState({
+          fetching: true,
+          latestRequestTime: fetchTime.getTime()
+        }, () => {
+          fetch(`${baseUrl}`, {
+            method: 'POST',
+            credentials: additionalFetchOptions.credentials
+              ? additionalFetchOptions.credentials
+              : 'same-origin',
+            body: new XMLSerializer().serializeToString(request),
+            ...additionalFetchOptions
+          })
+            .then(response => response.json())
+            .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
+            .catch(this.onFetchError.bind(this));
+        });
+      }, this.props.delay);
+    } else {
+      this.onFetchError('Missing GetFeature request parameters');
+    }
 
-    this.timeoutHandle = setTimeout(() => {
-      this.setState({
-        fetching: true,
-        latestRequestTime: fetchTime.getTime()
-      }, () => {
-        fetch(`${baseUrl}`, {
-          method: 'POST',
-          credentials: additionalFetchOptions.credentials
-            ? additionalFetchOptions.credentials
-            : 'same-origin',
-          body: new XMLSerializer().serializeToString(request),
-          ...additionalFetchOptions
-        })
-          .then(response => response.json())
-          .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
-          .catch(this.onFetchError.bind(this));
-      });
-    }, this.props.delay);
   }
 
   /**
