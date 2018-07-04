@@ -40,7 +40,7 @@ describe('<GeoLocationButton />', () => {
       });
       const instance = wrapper.instance();
       instance.onToggle(true);
-      expect(instance.geolocationInteraction).not.toBeUndefined();
+      expect(instance._geoLocationInteraction).not.toBeUndefined();
     });
 
     it('can be pressed twice', () => {
@@ -51,7 +51,7 @@ describe('<GeoLocationButton />', () => {
       const instance = wrapper.instance();
       instance.onToggle(true);
       instance.onToggle(false);
-      expect(instance.geolocationInteraction).toBeNull();
+      expect(instance._geoLocationInteraction).toBeNull();
     });
 
     it('can use the geolocation interaction', () => {
@@ -66,7 +66,7 @@ describe('<GeoLocationButton />', () => {
 
       const getPosition = jest.fn();
       getPosition.mockReturnValue([2, 3]);
-      instance.geolocationInteraction.getPosition = getPosition;
+      instance._geoLocationInteraction.getPosition = getPosition;
 
       instance.onGeolocationChange();
       expect(onChange).toHaveBeenCalledTimes(1);

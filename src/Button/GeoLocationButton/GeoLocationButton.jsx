@@ -4,9 +4,15 @@ import PropTypes from 'prop-types';
 import OlMap from 'ol/map';
 import OlGeolocation from 'ol/geolocation';
 import OlGeomLineString from 'ol/geom/linestring';
-import OlOverlay from 'ol/overlay';
+import OlFeature from 'ol/feature';
+import OlGeomPoint from 'ol/geom/point';
+import OlLayerVector from 'ol/layer/vector';
+import OlSourceVector from 'ol/source/vector';
+import OlStyleStyle from 'ol/style/style';
+import OlStyleIcon from 'ol/style/icon';
 
 import {
+  MapUtil,
   MathUtil,
   ToggleButton
 } from '../../index';
@@ -30,6 +36,40 @@ class GeoLocationButton extends React.Component {
    * @private
    */
   className = `${CSS_PREFIX}geolocationbutton`;
+
+  /**
+   * The feature marking the current location.
+   */
+  _markerFeature = undefined;
+
+  /**
+   * The OpenLayers geolocation interaction.
+   */
+  _geoLocationInteraction = undefined;
+
+  /**
+   * The layer containing the markerFeature.
+   */
+  _geoLocationLayer = new OlLayerVector({
+    source: new OlSourceVector()
+  });
+
+  /**
+   * The styleFunction for the geoLocationLayer. Shows a marker with arrow when
+   * heading is not 0.
+   */
+  _styleFunction = (feature) => {
+    const heading = feature.get('heading');
+    const src = heading !== 0 ? mapMarkerHeading : mapMarker;
+    const rotation = heading !== 0 ? heading * Math.PI / 180 : 0;
+
+    return [new OlStyleStyle({
+      image: new OlStyleIcon({
+        rotation,
+        src
+      })
+    })];
+  };
 
   /**
    * The properties.
@@ -99,7 +139,7 @@ class GeoLocationButton extends React.Component {
     onGeolocationChange: () => undefined,
     onError: () => undefined,
     showMarker: true,
-    follow: true,
+    follow: false,
     trackingoptions: {
       maximumAge: 10000,
       enableHighAccuracy: true,
@@ -114,18 +154,48 @@ class GeoLocationButton extends React.Component {
    */
   constructor(props) {
     super(props);
+    const {
+      map,
+      showMarker
+    } = this.props;
+    const allLayers = MapUtil.getAllLayers(map);
 
     this.positions = new OlGeomLineString([], 'XYZM');
+    this._geoLocationLayer.setStyle(this._styleFunction);
+    if (!allLayers.includes(this._geoLocationLayer)) {
+      map.addLayer(this._geoLocationLayer);
+    }
+    this.state = {};
 
-    this.state = {
-    };
+    if (showMarker) {
+      this._markerFeature = new OlFeature();
+      this._geoLocationLayer.getSource().addFeature(this._markerFeature);
+    }
   }
 
+  /**
+   * Adds the markerFeature if not already done and adds it to the geoLocation
+   * layer.
+   */
+  componentDidUpdate() {
+    const {
+      showMarker
+    } = this.props;
+
+    if (showMarker && !this._markerFeature) {
+      this._markerFeature = new OlFeature();
+      this._geoLocationLayer.getSource().addFeature(this._markerFeature);
+    }
+  }
+
+  /**
+   * Callback of the interactions on change event.
+   */
   onGeolocationChange = () => {
-    const position = this.geolocationInteraction.getPosition();
-    const accuracy = this.geolocationInteraction.getAccuracy();
-    let heading = this.geolocationInteraction.getHeading() || 0;
-    const speed = this.geolocationInteraction.getSpeed() || 0;
+    const position = this._geoLocationInteraction.getPosition();
+    const accuracy = this._geoLocationInteraction.getAccuracy();
+    let heading = this._geoLocationInteraction.getHeading() || 0;
+    const speed = this._geoLocationInteraction.getSpeed() || 0;
 
     const x = position[0];
     const y = position[1];
@@ -146,14 +216,6 @@ class GeoLocationButton extends React.Component {
 
     // only keep the 20 last coordinates
     this.positions.setCoordinates(this.positions.getCoordinates().slice(-20));
-
-    if (this.markerEl) {
-      if (heading && speed) {
-        this.markerEl.src = mapMarkerHeading;
-      } else {
-        this.markerEl.src = mapMarker;
-      }
-    }
 
     this.updateView();
 
@@ -176,47 +238,49 @@ class GeoLocationButton extends React.Component {
    * @method
    */
   onToggle = (pressed) => {
-    if (!pressed && this.geolocationInteraction) {
-      this.geolocationInteraction.un('change', this.onGeolocationChange);
-      this.geolocationInteraction = null;
-      if (this.marker) {
-        this.props.map.removeOverlay(this.marker);
-        this.markerEl.parentNode.removeChild(this.markerEl);
-      }
-    }
-    if (!pressed) {
-      return;
-    }
-    const map = this.props.map;
+    const {
+      showMarker,
+      trackingoptions,
+      map
+    } = this.props;
+
     const view = map.getView();
 
-    // Geolocation Control
-    this.geolocationInteraction = new OlGeolocation({
-      projection: view.getProjection(),
-      trackingOptions: this.props.trackingoptions
-    });
-    this.geolocationInteraction.setTracking(true);
-    if (this.props.showMarker) {
-      const heading = this.geolocationInteraction.getHeading() || 0;
-      const speed = this.geolocationInteraction.getSpeed() || 0;
-      this.markerEl = document.getElementById('react-geolocation-overlay').cloneNode();
-      this.markerEl.id = null;
-      if (heading && speed) {
-        this.markerEl.src = mapMarkerHeading;
-      } else {
-        this.markerEl.src = mapMarker;
+    if (!pressed) {
+      if (this._geoLocationInteraction) {
+        this._geoLocationInteraction.un('change', this.onGeolocationChange);
+        this._geoLocationInteraction = null;
       }
-      this.marker = new OlOverlay({
-        positioning: 'center-center',
-        element: this.markerEl,
-        stopEvent: false
-      });
-      this.props.map.addOverlay(this.marker);
+      if (this._markerFeature) {
+        this._markerFeature = undefined;
+        this._geoLocationLayer.getSource().clear();
+      }
+      return;
+    }
+
+    // Geolocation Control
+    this._geoLocationInteraction = new OlGeolocation({
+      projection: view.getProjection(),
+      trackingOptions: trackingoptions
+    });
+    this._geoLocationInteraction.setTracking(true);
+
+    if (showMarker) {
+      if (!this._markerFeature) {
+        this._markerFeature = new OlFeature();
+      }
+      if (!this._geoLocationLayer.getSource().getFeatures().includes(this._markerFeature)) {
+        this._geoLocationLayer.getSource().addFeature(this._markerFeature);
+      }
+      const heading = this._geoLocationInteraction.getHeading() || 0;
+      const speed = this._geoLocationInteraction.getSpeed() || 0;
+      this._markerFeature.set('speed', speed);
+      this._markerFeature.set('heading', heading);
     }
 
     // add listeners
-    this.geolocationInteraction.on('change', this.onGeolocationChange);
-    this.geolocationInteraction.on('error', this.onGeolocationError);
+    this._geoLocationInteraction.on('change', this.onGeolocationChange);
+    this._geoLocationInteraction.on('error', this.onGeolocationError);
   }
 
   // recenters the view by putting the given coordinates at 3/4 from the top or
@@ -238,6 +302,7 @@ class GeoLocationButton extends React.Component {
     // use sampling period to get a smooth transition
     let m = Date.now() - deltaMean * 1.5;
     m = Math.max(m, previousM);
+
     previousM = m;
     // interpolate position along positions LineString
     const c = this.positions.getCoordinateAtM(m, true);
@@ -247,7 +312,8 @@ class GeoLocationButton extends React.Component {
         view.setRotation(-c[2]);
       }
       if (this.props.showMarker) {
-        this.marker.setPosition(c);
+        const pointGeometry = new OlGeomPoint([c[0], c[1]]);
+        this._markerFeature.setGeometry(pointGeometry);
       }
     }
   }
@@ -271,14 +337,11 @@ class GeoLocationButton extends React.Component {
       : this.className;
 
     return (
-      <div>
-        <img id='react-geolocation-overlay' />
-        <ToggleButton
-          onToggle={this.onToggle}
-          className={finalClassName}
-          {...passThroughProps}
-        />
-      </div>
+      <ToggleButton
+        onToggle={this.onToggle}
+        className={finalClassName}
+        {...passThroughProps}
+      />
     );
   }
 }
