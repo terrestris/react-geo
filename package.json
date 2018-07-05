@@ -72,7 +72,7 @@
   "dependencies": {
     "@turf/turf": "5.1.6",
     "ag-grid": "18.0.1",
-    "ag-grid-react": "18.0.0",
+    "ag-grid-react": "18.1.0",
     "lodash": "4.17.10",
     "loglevel": "1.6.1",
     "moment": "2.22.2",
