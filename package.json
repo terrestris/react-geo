@@ -72,7 +72,7 @@
   "dependencies": {
     "@turf/turf": "5.1.6",
     "ag-grid": "18.1.0",
-    "ag-grid-react": "18.0.0",
+    "ag-grid-react": "18.1.0",
     "lodash": "4.17.10",
     "loglevel": "1.6.1",
     "moment": "2.22.2",
@@ -124,7 +124,7 @@
     "rimraf": "2.6.2",
     "style-loader": "0.21.0",
     "url-loader": "1.0.1",
-    "webpack": "4.14.0",
+    "webpack": "4.15.0",
     "whatwg-fetch": "2.0.4"
   }
 }
