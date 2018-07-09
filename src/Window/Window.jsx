@@ -132,6 +132,7 @@ export class Window extends React.Component {
     const {
       className,
       children,
+      parentId,
       ...passThroughProps
     } = this.props;
 

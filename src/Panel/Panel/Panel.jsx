@@ -329,6 +329,8 @@ export class Panel extends React.Component {
       resizeOpts,
       titleBarHeight,
       collapseTooltip,
+      closable,
+      onEscape,
       ...rndOpts
     } = this.props;
     let tools = [...this.props.tools];
@@ -375,7 +377,7 @@ export class Panel extends React.Component {
           width: this.state.width,
           height: this.calculateHeight()
         }}
-        dragHandleClassName=".drag-handle"
+        dragHandleClassName="drag-handle"
         disableDragging={!draggable}
         enableResizing={enableResizing}
         resizeHandleClasses={{
