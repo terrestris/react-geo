@@ -327,6 +327,8 @@ export class Panel extends React.Component {
       className,
       draggable,
       resizeOpts,
+      titleBarHeight,
+      collapseTooltip,
       ...rndOpts
     } = this.props;
     let tools = [...this.props.tools];
