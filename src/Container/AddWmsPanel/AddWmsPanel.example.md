@@ -87,7 +87,6 @@ class AddWmsPanelExample extends React.Component {
             map={this.map}
             wmsLayers={layers}
             draggable={true}
-            t={t => t}
             width={500}
             height={400}
             x={0}
