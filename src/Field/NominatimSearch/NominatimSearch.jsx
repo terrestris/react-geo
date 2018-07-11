@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
 const Option = AutoComplete.Option;
 
-import Logger from '../../Util/Logger';
-import UrlUtil from '../../Util/UrlUtil/UrlUtil';
+import { Logger } from '@terrestris/base-util';
+import { UrlUtil } from '@terrestris/base-util';
 import olProj from 'ol/proj';
 
 import { CSS_PREFIX } from '../../constants';

@@ -9,7 +9,7 @@ import isFunction from 'lodash/isFunction.js';
 import Panel from '../../Panel/Panel/Panel.jsx';
 import Titlebar from '../../Panel/Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
-import Logger from '../../Util/Logger';
+import { Logger } from '@terrestris/base-util';
 
 import './AddWmsPanel.less';
 import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry.jsx';

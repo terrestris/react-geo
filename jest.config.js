@@ -1,3 +1,4 @@
+const path = require('path');
 module.exports = {
   testURL: 'http://localhost/',
   moduleFileExtensions: [
@@ -15,7 +16,7 @@ module.exports = {
     '<rootDir>/build/'
   ],
   transformIgnorePatterns: [
-     'node_modules/(?!(ol|antd|(rc-*[a-z]*))/)'
+     'node_modules/(?!(ol|@terrestris/*|antd|(rc-*[a-z]*))/)'
   ],
   setupFiles: [
     '<rootDir>/jest/__mocks__/shim.js',

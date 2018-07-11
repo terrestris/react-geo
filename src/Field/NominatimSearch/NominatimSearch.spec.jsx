@@ -6,7 +6,7 @@ import OlLayerTile from 'ol/layer/tile';
 import OlSourceOsm from 'ol/source/osm';
 
 import TestUtil from '../../Util/TestUtil';
-import Logger from '../../Util/Logger';
+import { Logger } from '@terrestris/base-util';
 
 import {NominatimSearch} from '../../index';
 

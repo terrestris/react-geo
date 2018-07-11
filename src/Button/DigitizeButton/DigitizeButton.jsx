@@ -21,10 +21,10 @@ import OlInteractionTranslate from 'ol/interaction/translate';
 import OlEventsCondition from 'ol/events/condition';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
-import MapUtil from '../../Util/MapUtil/MapUtil';
-import StringUtil from '../../Util/StringUtil/StringUtil';
-import AnimateUtil from '../../Util/AnimateUtil/AnimateUtil';
-import Logger from '../../Util/Logger';
+import { MapUtil } from '@terrestris/ol-util';
+import { StringUtil } from '@terrestris/base-util';
+import { AnimateUtil } from '@terrestris/ol-util';
+import { Logger } from '@terrestris/base-util';
 import { CSS_PREFIX } from '../../constants';
 
 /**
@@ -517,9 +517,7 @@ class DigitizeButton extends React.Component {
       digitizeLayerName,
       map
     } = this.props;
-
     let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
-
     if (!digitizeLayer) {
       digitizeLayer = new OlLayerVector({
         name: digitizeLayerName,

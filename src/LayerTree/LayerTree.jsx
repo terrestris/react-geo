@@ -10,8 +10,8 @@ import OlLayerGroup from 'ol/layer/group';
 import OlCollection from 'ol/collection';
 import olObservable from 'ol/observable';
 
-import Logger from '../Util/Logger';
-import MapUtil from '../Util/MapUtil/MapUtil';
+import { Logger } from '@terrestris/base-util';
+import { MapUtil } from '@terrestris/ol-util';
 import LayerTreeNode from '../LayerTreeNode/LayerTreeNode.jsx';
 import { CSS_PREFIX } from '../constants';
 

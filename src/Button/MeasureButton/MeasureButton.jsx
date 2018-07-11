@@ -18,8 +18,8 @@ import OlObservable from 'ol/observable';
 import OlOverlay from 'ol/overlay';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
-import MeasureUtil from '../../Util/MeasureUtil/MeasureUtil';
-import MapUtil from '../../Util/MapUtil/MapUtil';
+import { MeasureUtil } from '@terrestris/ol-util';
+import { MapUtil } from '@terrestris/ol-util';
 import { CSS_PREFIX } from '../../constants';
 
 import './MeasureButton.less';
