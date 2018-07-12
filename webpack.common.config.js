@@ -4,7 +4,7 @@ module.exports = {
   module: {
     rules: [{
       test: /\.jsx?$/,
-      exclude: /node_modules/,
+      exclude: /node_modules\/(?!@terrestris)/,
       use: 'babel-loader'
     }, {
       test: /\.css$/,
@@ -37,9 +37,4 @@ module.exports = {
       use: 'file-loader'
     }]
   },
-  resolve: {
-    alias: {
-      ol: path.join(__dirname, 'node_modules', 'ol')
-    }
-  }
 };
