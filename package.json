@@ -91,7 +91,7 @@
     "antd": "3.6.6",
     "babel-cli": "6.26.0",
     "babel-core": "6.26.3",
-    "babel-eslint": "8.2.5",
+    "babel-eslint": "8.2.6",
     "babel-jest": "23.0.1",
     "babel-loader": "7.1.5",
     "babel-plugin-dynamic-import-node": "2.0.0",
