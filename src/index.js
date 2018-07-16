@@ -31,23 +31,6 @@ import UserChip from './UserChip/UserChip.jsx';
 import CircleMenu from './CircleMenu/CircleMenu.jsx';
 import Window from './Window/Window.jsx';
 
-import { CapabilitiesUtil } from '@terrestris/ol-util';
-import { CsrfUtil } from '@terrestris/base-util';
-import { AnimateUtil } from '@terrestris/ol-util';
-import { FeatureUtil } from '@terrestris/ol-util';
-import { FileUtil } from '@terrestris/ol-util';
-import { GeometryUtil } from '@terrestris/ol-util';
-import { MapUtil } from '@terrestris/ol-util';
-import { MathUtil } from '@terrestris/base-util';
-import { MeasureUtil } from '@terrestris/ol-util';
-import { ObjectUtil } from '@terrestris/base-util';
-import { ProjectionUtil } from '@terrestris/ol-util';
-import { StringUtil } from '@terrestris/base-util';
-import { UndoUtil } from '@terrestris/base-util';
-import { UrlUtil } from '@terrestris/base-util';
-import { WfsFilterUtil } from '@terrestris/ol-util';
-import { Logger } from '@terrestris/base-util';
-
 import MapProvider from './Provider/MapProvider/MapProvider.jsx';
 import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/VisibleComponent.jsx';
 import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent.jsx';
@@ -82,27 +65,11 @@ export {
   UploadButton,
   UserChip,
   Window,
-  CapabilitiesUtil,
-  CsrfUtil,
-  AnimateUtil,
-  FeatureUtil,
-  FileUtil,
-  GeometryUtil,
-  Logger,
-  MapUtil,
-  MathUtil,
-  MeasureUtil,
   CoordinateReferenceSystemCombo,
   NominatimSearch,
   WfsSearch,
-  ObjectUtil,
-  ProjectionUtil,
-  StringUtil,
   TimeSlider,
   MultiLayerSlider,
-  UndoUtil,
-  UrlUtil,
-  WfsFilterUtil,
   MapProvider,
   MapComponent,
   mappify,

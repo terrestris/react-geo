@@ -3,7 +3,7 @@ import React from 'react';
 
 import TestUtil from '../Util/TestUtil';
 
-import {Toolbar} from '../index';
+import { Toolbar } from '../index';
 
 const testChildren = [
   <div key="testdiv1" id="testdiv1" />,

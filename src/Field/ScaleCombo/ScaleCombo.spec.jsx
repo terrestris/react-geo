@@ -6,11 +6,10 @@ const Option = Select.Option;
 
 import TestUtil from '../../Util/TestUtil';
 
-import {
-  ScaleCombo,
-  MapUtil,
-  Logger
-} from '../../index';
+import { ScaleCombo } from '../../index';
+
+import Logger from '@terrestris/base-util/src/Logger';
+import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
 
 describe('<ScaleCombo />', () => {
   it('is defined', () => {

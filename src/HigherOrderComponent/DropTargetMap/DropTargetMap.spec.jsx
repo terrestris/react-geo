@@ -5,10 +5,9 @@ import TestUtil from '../../Util/TestUtil';
 
 jest.unmock('../../index');
 
-import {
-  FileUtil,
-  onDropAware
-} from '../../index';
+import { onDropAware } from '../../index';
+
+import FileUtil from '@terrestris/ol-util/src/FileUtil/FileUtil';
 
 describe('onDropAware', () => {
   let EnhancedComponent;

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Logger } from '@terrestris/base-util';
-import { MapUtil } from '@terrestris/ol-util';
+import Logger from '@terrestris/base-util/src/Logger';
+import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
 import isEqual from 'lodash/isEqual.js';
 
 import { CSS_PREFIX } from '../constants';

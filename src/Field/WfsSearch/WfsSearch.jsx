@@ -4,8 +4,8 @@ import { Select, Spin } from 'antd';
 const Option = Select.Option;
 import isFunction from 'lodash/isFunction.js';
 
-import { Logger } from '@terrestris/base-util';
-import { WfsFilterUtil } from '@terrestris/ol-util';
+import Logger from '@terrestris/base-util/src/Logger';
+import WfsFilterUtil from '@terrestris/ol-util/src/WfsFilterUtil/WfsFilterUtil';
 import { CSS_PREFIX } from '../../constants';
 
 import OlMap from 'ol/map';

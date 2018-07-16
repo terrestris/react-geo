@@ -21,10 +21,10 @@ import OlInteractionTranslate from 'ol/interaction/translate';
 import OlEventsCondition from 'ol/events/condition';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
-import { MapUtil } from '@terrestris/ol-util';
-import { StringUtil } from '@terrestris/base-util';
-import { AnimateUtil } from '@terrestris/ol-util';
-import { Logger } from '@terrestris/base-util';
+import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+import StringUtil from '@terrestris/base-util/src/StringUtil/StringUtil';
+import AnimateUtil from '@terrestris/ol-util/src/AnimateUtil/AnimateUtil';
+import Logger from '@terrestris/base-util/src/Logger';
 import { CSS_PREFIX } from '../../constants';
 
 /**

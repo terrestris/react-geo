@@ -9,10 +9,9 @@ import OlCollection from 'ol/collection';
 
 import TestUtil from '../Util/TestUtil';
 
-import {
-  Logger,
-  LayerTree
-} from '../index';
+import { LayerTree } from '../index';
+
+import Logger from '@terrestris/base-util/src/Logger';
 
 describe('<LayerTree />', () => {
   let layerGroup;

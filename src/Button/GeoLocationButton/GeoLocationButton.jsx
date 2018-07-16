@@ -11,11 +11,10 @@ import OlSourceVector from 'ol/source/vector';
 import OlStyleStyle from 'ol/style/style';
 import OlStyleIcon from 'ol/style/icon';
 
-import {
-  MapUtil,
-  MathUtil,
-  ToggleButton
-} from '../../index';
+import { ToggleButton } from '../../index';
+
+import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+import MathUtil from '@terrestris/base-util/src/MathUtil/MathUtil';
 import { CSS_PREFIX } from '../../constants';
 
 import mapMarker from './geolocation-marker.png';

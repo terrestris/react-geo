@@ -1,6 +1,8 @@
 /*eslint-env jest*/
-import { Window, Logger } from '../index';
+import { Window } from '../index';
 import TestUtil from '../Util/TestUtil';
+
+import Logger from '@terrestris/base-util/src/Logger';
 
 describe('<Window />', () => {
 

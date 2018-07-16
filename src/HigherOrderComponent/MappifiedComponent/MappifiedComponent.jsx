@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import OlMap from 'ol/map';
 
-import { Logger } from '@terrestris/base-util';
+import Logger from '@terrestris/base-util/src/Logger';
 
 /**
  * The HOC factory function.
