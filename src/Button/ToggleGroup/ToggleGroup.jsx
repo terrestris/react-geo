@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import isFunction from 'lodash/isFunction.js';
-import isUndefined from 'lodash/isUndefined.js';
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -128,7 +127,7 @@ class ToggleGroup extends React.Component {
       }
     };
   }
-  
+
   /**
    * The onChange handler.
    *
@@ -157,18 +156,11 @@ class ToggleGroup extends React.Component {
     const orientationClass = (orientation === 'vertical')
       ? 'vertical-toggle-group'
       : 'horizontal-toggle-group';
+
     const childrenWithProps = React.Children.map(children, (child) => {
       // pass the press state through to child components
-      // if a pressed prop is given, it has priority over
-      // the selectedName
-      let pressed = false;
-      if (!isUndefined(child.props.pressed)) {
-        pressed = child.props.pressed;
-      } else {
-        pressed = this.state.selectedName === child.props.name;
-      }
       return React.cloneElement(child, {
-        pressed: pressed
+        pressed: this.state.selectedName === child.props.name
       });
     });
 
