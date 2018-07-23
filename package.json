@@ -113,7 +113,7 @@
     "eslint-plugin-react": "7.10.0",
     "file-loader": "1.1.11",
     "jest": "22.4.3",
-    "less": "3.7.1",
+    "less": "3.8.0",
     "less-loader": "4.1.0",
     "np": "3.0.4",
     "ol": "4.6.5",
