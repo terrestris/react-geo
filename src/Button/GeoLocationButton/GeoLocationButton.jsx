@@ -51,6 +51,7 @@ class GeoLocationButton extends React.Component {
    * The layer containing the markerFeature.
    */
   _geoLocationLayer = new OlLayerVector({
+    name: 'react-geo_geolocationlayer',
     source: new OlSourceVector()
   });
 
