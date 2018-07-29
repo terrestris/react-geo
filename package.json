@@ -84,7 +84,7 @@
     "react-fa": "5.0.0",
     "shpjs": "3.4.2",
     "react-rnd": "8.0.2",
-    "url-parse": "1.4.1",
+    "url-parse": "1.4.3",
     "validator": "10.4.0"
   },
   "devDependencies": {
