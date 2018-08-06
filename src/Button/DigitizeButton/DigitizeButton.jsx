@@ -470,7 +470,8 @@ class DigitizeButton extends React.Component {
     const {
       map,
       drawType,
-      editType
+      editType,
+      drawStyle
     } = this.props;
 
     const {
@@ -481,6 +482,9 @@ class DigitizeButton extends React.Component {
     this._digitizeFeatures = digitizeLayer.getSource().getFeaturesCollection();
 
     if (pressed) {
+      if (drawStyle) {
+        digitizeLayer.setStyle(this.getDigitizeStyleFunction);
+      }
       if (drawType) {
         this.createDrawInteraction(pressed);
       } else if (editType) {
