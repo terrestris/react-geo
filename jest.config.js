@@ -27,5 +27,6 @@ module.exports = {
     'src/**/*.js',
     '!src/**/*example*.*'
   ],
-  coverageDirectory: '<rootDir>/coverage'
+  coverageDirectory: '<rootDir>/coverage',
+  testURL: 'http://localhost/'
 };
