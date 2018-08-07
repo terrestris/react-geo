@@ -60,7 +60,15 @@ class SimpleButton extends React.Component {
       'leftBottom',
       'rightTop',
       'rightBottom'
-    ])
+    ]),
+    /**
+     * Additional [antd tooltip](https://ant.design/components/tooltip/)
+     * properties to pass to the tooltip component. Note: The props `title`
+     * and `placement` will override the props `tooltip` and `tooltipPlacement`
+     * of this component!
+     * @type {Object}
+     */
+    tooltipProps: PropTypes.object
   };
 
   /**
@@ -68,7 +76,10 @@ class SimpleButton extends React.Component {
    * @type {Object}
    */
   static defaultProps = {
-    type: 'primary'
+    type: 'primary',
+    tooltipProps: {
+      mouseEnterDelay: 1.5
+    }
   }
 
   /**
@@ -90,6 +101,7 @@ class SimpleButton extends React.Component {
       fontIcon,
       tooltip,
       tooltipPlacement,
+      tooltipProps,
       ...antBtnProps
     } = this.props;
 
@@ -101,6 +113,7 @@ class SimpleButton extends React.Component {
       <Tooltip
         title={tooltip}
         placement={tooltipPlacement}
+        {...tooltipProps}
       >
         <Button
           className={finalClassName}

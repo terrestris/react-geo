@@ -45,6 +45,14 @@ class ToggleButton extends React.Component {
     onToggle: PropTypes.func,
     tooltip: PropTypes.string,
     tooltipPlacement: PropTypes.string,
+    /**
+     * Additional [antd tooltip](https://ant.design/components/tooltip/)
+     * properties to pass to the tooltip component. Note: The props `title`
+     * and `placement` will override the props `tooltip` and `tooltipPlacement`
+     * of this component!
+     * @type {Object}
+     */
+    tooltipProps: PropTypes.object,
     className: PropTypes.string
   };
 
@@ -55,7 +63,10 @@ class ToggleButton extends React.Component {
   static defaultProps = {
     type: 'primary',
     icon: '',
-    pressed: false
+    pressed: false,
+    tooltipProps: {
+      mouseEnterDelay: 1.5
+    }
   }
 
   /**
@@ -117,7 +128,7 @@ class ToggleButton extends React.Component {
   }
 
   /**
-   * Invoked immediately after updating occurs. This method is not called 
+   * Invoked immediately after updating occurs. This method is not called
    * for the initial render.
    * @method
    */
@@ -207,6 +218,7 @@ class ToggleButton extends React.Component {
       onToggle,
       tooltip,
       tooltipPlacement,
+      tooltipProps,
       ...antBtnProps
     } = this.props;
 
@@ -229,6 +241,7 @@ class ToggleButton extends React.Component {
       <Tooltip
         title={tooltip}
         placement={tooltipPlacement}
+        {...tooltipProps}
       >
         <Button
           className={`${finalClassName}${pressedClass}`}
