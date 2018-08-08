@@ -1,4 +1,5 @@
 module.exports = {
+  testURL: 'http://localhost/',
   moduleFileExtensions: [
     'js',
     'jsx'
