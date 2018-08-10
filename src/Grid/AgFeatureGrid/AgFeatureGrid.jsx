@@ -19,6 +19,8 @@ import OlGeomGeometryCollection from 'ol/geom/geometrycollection';
 import { MapUtil } from '../../index';
 import { CSS_PREFIX } from '../../constants';
 
+import isArray from 'lodash/isArray.js';
+
 import 'ag-grid/dist/styles/ag-grid.css';
 import 'ag-grid/dist/styles/ag-theme-balham.css';
 
@@ -211,9 +213,22 @@ export class AgFeatureGrid extends React.Component {
      * See https://ant.design/components/table/#Column. You can either specify
      * an index property on every column definition to get an exact order, or
      * get a somewhat random order by not specifying an index property at all.
-     * @type {Object}
+     * If provided as array, #getColumnDefs won't be called.
+     * @type {Object|Array}
      */
-    columnDefs: PropTypes.object,
+    columnDefs: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.arrayOf(PropTypes.object)
+    ]),
+
+    /**
+     * Custom row data to be shown in feature grid. This might be helpful if
+     * original feature properties should be manipulated in some way before they
+     * are represented in grid.
+     * If provided, #getRowData method won't be called.
+     * @type {Array}
+     */
+    rowData: PropTypes.arrayOf(PropTypes.object),
 
     /**
      * The children to render.
@@ -1003,6 +1018,7 @@ export class AgFeatureGrid extends React.Component {
       layerName,
       columnDefs,
       children,
+      rowData,
       ...passThroughProps
     } = this.props;
 
@@ -1034,8 +1050,8 @@ export class AgFeatureGrid extends React.Component {
         }}
       >
         <AgGridReact
-          columnDefs={this.getColumnDefs()}
-          rowData={this.getRowData()}
+          columnDefs={columnDefs && isArray(columnDefs) ? columnDefs : this.getColumnDefs()}
+          rowData={rowData && isArray(rowData) ? rowData : this.getRowData()}
           onGridReady={this.onGridReady.bind(this)}
           rowSelection='multiple'
           suppressRowClickSelection={true}
