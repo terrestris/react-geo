@@ -23,6 +23,7 @@ import isArray from 'lodash/isArray.js';
 
 import 'ag-grid/dist/styles/ag-grid.css';
 import 'ag-grid/dist/styles/ag-theme-balham.css';
+import 'ag-grid/dist/styles/ag-theme-fresh.css';
 
 /**
  * The AgFeatureGrid.
