@@ -49,12 +49,6 @@ export class Panel extends React.Component {
     className: PropTypes.string,
 
     /**
-     * The dispatch function.
-      @type {Function}
-     */
-    dispatch: PropTypes.func,
-
-    /**
      * The children to show in the Window.
      * @type {node}
      */
