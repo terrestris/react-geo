@@ -184,7 +184,7 @@ export class Panel extends React.Component {
     tools: [],
     height: 'auto',
     width: 'auto',
-    collapseTooltip: 'collapse'
+    collapseTooltip: 'Collapse'
   }
 
   /**
