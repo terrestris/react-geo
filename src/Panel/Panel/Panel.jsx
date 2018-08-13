@@ -124,12 +124,6 @@ export class Panel extends React.Component {
     collapsible: PropTypes.bool,
 
     /**
-     * Whether to allow closing or not.
-     * @type {boolean}
-     */
-    closable: PropTypes.bool,
-
-    /**
      * The height of the panel.
      * @type {number|string}
      */
@@ -329,7 +323,6 @@ export class Panel extends React.Component {
       onEscape,
       draggable,
       collapsible,
-      closable,
       height,
       width,
       titleBarHeight,
