@@ -4,6 +4,7 @@ import Rnd from 'react-rnd';
 import uniqueId from 'lodash/uniqueId.js';
 import isNumber from 'lodash/isNumber.js';
 import isFunction from 'lodash/isFunction.js';
+import cloneDeep from 'lodash/cloneDeep.js';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
@@ -317,17 +318,27 @@ export class Panel extends React.Component {
    */
   render() {
     const {
-      collapsible,
+      id,
       className,
-      draggable,
+      children,
+      title,
       resizeOpts,
+      onResize,
+      onResizeStart,
+      onResizeStop,
+      onEscape,
+      draggable,
+      collapsible,
+      closable,
+      height,
+      width,
       titleBarHeight,
       collapseTooltip,
-      closable,
-      onEscape,
+      tools,
       ...rndOpts
     } = this.props;
-    let tools = [...this.props.tools];
+
+    let toolsClone = cloneDeep(tools);
 
     const finalClassName = className
       ? `${className} ${this.className}`
@@ -337,11 +348,11 @@ export class Panel extends React.Component {
     const enableResizing = resizeOpts === true ? undefined : resizeOpts;
 
     if (collapsible) {
-      tools.unshift(<SimpleButton
+      toolsClone.unshift(<SimpleButton
         icon="compress"
         key="collapse-tool"
         onClick={this.toggleCollapse.bind(this)}
-        tooltip={this.props.collapseTooltip}
+        tooltip={collapseTooltip}
         size="small"
       />);
     }
@@ -350,15 +361,15 @@ export class Panel extends React.Component {
       'drag-handle ant-modal-header' :
       'ant-modal-header';
 
-    const titleBar = this.props.title ? <Titlebar
+    const titleBar = title ? <Titlebar
       className={titleBarClassName}
-      tools={tools}
+      tools={toolsClone}
       style={{
         height: this.state.titleBarHeight,
         cursor: draggable ? 'move' : 'default'
       }}
     >
-      {this.props.title}
+      {title}
     </Titlebar> : null;
 
     return (
@@ -402,7 +413,7 @@ export class Panel extends React.Component {
             transition: this.state.resizing ? '' : 'height 0.25s',
           }}
         >
-          {this.props.children}
+          {children}
         </div>
       </Rnd>
     );
