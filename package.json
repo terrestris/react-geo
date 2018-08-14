@@ -71,6 +71,8 @@
   },
   "dependencies": {
     "@turf/turf": "5.1.6",
+    "@terrestris/base-util": "0.1.0",
+    "@terrestris/ol-util": "0.1.0",
     "ag-grid": "18.1.2",
     "ag-grid-react": "18.1.0",
     "lodash": "4.17.10",
@@ -82,8 +84,8 @@
     "react-dom": "16.4.2",
     "react-dom-factories": "1.0.2",
     "react-fa": "5.0.0",
-    "shpjs": "3.4.2",
     "react-rnd": "8.0.2",
+    "shpjs": "3.4.2",
     "url-parse": "1.4.3",
     "validator": "10.5.0"
   },

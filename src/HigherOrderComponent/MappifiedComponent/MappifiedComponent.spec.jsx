@@ -3,10 +3,9 @@ import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 
-import {
-  Logger,
-  mappify
-} from '../../index';
+import { mappify } from '../../index';
+
+import Logger from '@terrestris/base-util/src/Logger';
 
 describe('mappify', () => {
   let EnhancedComponent;

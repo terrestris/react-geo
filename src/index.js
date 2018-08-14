@@ -31,23 +31,6 @@ import UserChip from './UserChip/UserChip.jsx';
 import CircleMenu from './CircleMenu/CircleMenu.jsx';
 import Window from './Window/Window.jsx';
 
-import CapabilitiesUtil from './Util/CapabilitiesUtil/CapabilitiesUtil';
-import CsrfUtil from './Util/CsrfUtil/CsrfUtil';
-import AnimateUtil from './Util/AnimateUtil/AnimateUtil';
-import FeatureUtil from './Util/FeatureUtil/FeatureUtil';
-import FileUtil from './Util/FileUtil/FileUtil';
-import GeometryUtil from './Util/GeometryUtil/GeometryUtil';
-import MapUtil from './Util/MapUtil/MapUtil';
-import MathUtil from './Util/MathUtil/MathUtil';
-import MeasureUtil from './Util/MeasureUtil/MeasureUtil';
-import ObjectUtil from './Util/ObjectUtil/ObjectUtil';
-import ProjectionUtil from './Util/ProjectionUtil/ProjectionUtil';
-import StringUtil from './Util/StringUtil/StringUtil';
-import UndoUtil from './Util/UndoUtil/UndoUtil';
-import UrlUtil from './Util/UrlUtil/UrlUtil';
-import WfsFilterUtil from './Util/WfsFilterUtil/WfsFilterUtil';
-import Logger from './Util/Logger';
-
 import MapProvider from './Provider/MapProvider/MapProvider.jsx';
 import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/VisibleComponent.jsx';
 import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent.jsx';
@@ -82,27 +65,11 @@ export {
   UploadButton,
   UserChip,
   Window,
-  CapabilitiesUtil,
-  CsrfUtil,
-  AnimateUtil,
-  FeatureUtil,
-  FileUtil,
-  GeometryUtil,
-  Logger,
-  MapUtil,
-  MathUtil,
-  MeasureUtil,
   CoordinateReferenceSystemCombo,
   NominatimSearch,
   WfsSearch,
-  ObjectUtil,
-  ProjectionUtil,
-  StringUtil,
   TimeSlider,
   MultiLayerSlider,
-  UndoUtil,
-  UrlUtil,
-  WfsFilterUtil,
   MapProvider,
   MapComponent,
   mappify,

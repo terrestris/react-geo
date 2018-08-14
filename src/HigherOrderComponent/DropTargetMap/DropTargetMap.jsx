@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { FileUtil } from '../../index';
+import FileUtil from '@terrestris/ol-util/src/FileUtil/FileUtil';
 
 /**
  * HOC that adds layers to the map if GeoJSON files or shapefile zip files are

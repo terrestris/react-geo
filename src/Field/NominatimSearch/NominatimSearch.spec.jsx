@@ -6,9 +6,9 @@ import OlLayerTile from 'ol/layer/tile';
 import OlSourceOsm from 'ol/source/osm';
 
 import TestUtil from '../../Util/TestUtil';
-import Logger from '../../Util/Logger';
+import Logger from '@terrestris/base-util/src/Logger';
 
-import {NominatimSearch} from '../../index';
+import { NominatimSearch } from '../../index';
 
 describe('<NominatimSearch />', () => {
   it('is defined', () => {

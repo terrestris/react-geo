@@ -1,7 +1,9 @@
 /*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
-import { CoordinateReferenceSystemCombo, Logger } from '../../index';
+import { CoordinateReferenceSystemCombo } from '../../index';
+
+import Logger from '@terrestris/base-util/src/Logger';
 
 describe('<CoordinateReferenceSystemCombo />', () => {
 

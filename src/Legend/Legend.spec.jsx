@@ -7,10 +7,9 @@ import OlSourceTileJson from 'ol/source/tilejson';
 
 import TestUtil from '../Util/TestUtil';
 
-import {
-  MapUtil,
-  Legend
-} from '../index';
+import { Legend } from '../index';
+
+import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
 
 describe('<Legend />', () => {
   let layer1;
