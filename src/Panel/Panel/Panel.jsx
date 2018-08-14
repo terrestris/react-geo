@@ -364,15 +364,24 @@ export class Panel extends React.Component {
       {title}
     </Titlebar> : null;
 
+    const defWidth = this.state.width;
+    const defHeight = this.calculateHeight();
+    const {
+      x,
+      y
+    } = rndOpts;
+    const defX = x && isNumber(x) ? x : window.innerWidth / 2 - defWidth / 2;
+    const defY = y && isNumber(y) ? y : window.innerHeight / 2 - defHeight / 2;
+
     return (
       <Rnd
         className={rndClassName}
         ref={rnd => this.rnd = rnd}
         default={{
-          x: isNumber(rndOpts.x) ? rndOpts.x : (window.innerWidth / 2) - 160,
-          y: isNumber(rndOpts.y) ? rndOpts.y : (window.innerHeight / 2) - 100,
-          width: this.state.width,
-          height: this.calculateHeight()
+          x: defX,
+          y: defY,
+          width: defWidth,
+          height: defHeight
         }}
         dragHandleClassName="drag-handle"
         disableDragging={!draggable}
