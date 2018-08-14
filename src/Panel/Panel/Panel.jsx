@@ -4,7 +4,6 @@ import Rnd from 'react-rnd';
 import uniqueId from 'lodash/uniqueId.js';
 import isNumber from 'lodash/isNumber.js';
 import isFunction from 'lodash/isFunction.js';
-import cloneDeep from 'lodash/cloneDeep.js';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
@@ -331,7 +330,7 @@ export class Panel extends React.Component {
       ...rndOpts
     } = this.props;
 
-    let toolsClone = cloneDeep(tools);
+    let toolsClone = tools.map(t => React.cloneElement(t));
 
     const finalClassName = className
       ? `${className} ${this.className}`
