@@ -77,10 +77,7 @@ class CoordinateReferenceSystemComboExample extends React.Component {
 
     const newProjCode = 'EPSG:' + code;
     proj4.defs(newProjCode, proj4def);
-<<<<<<< HEAD
 
-=======
->>>>>>> use named imports for ol/extent class and make use of register() function of ol/proj/proj4
     register(proj4);
     const newProj = get(newProjCode);
     const fromLonLat = getTransform('EPSG:4326', newProj);

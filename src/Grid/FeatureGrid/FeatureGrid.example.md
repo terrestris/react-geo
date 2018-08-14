@@ -102,15 +102,7 @@ const OlMap = require('ol/Map').default;
 const OlView = require('ol/View').default;
 const OlLayerTile = require('ol/layer/Tile').default;
 const OlSourceOsm = require('ol/source/OSM').default;
-<<<<<<< HEAD
-<<<<<<< HEAD
 const fromLonLat = require('ol/proj').fromLonLat;
-=======
-const OlProj = require('ol/proj').default;
->>>>>>> use camelcase in class imports
-=======
-const fromLonLat = require('ol/proj').fromLonLat;
->>>>>>> use named import for fromLonLat function of ol/proj class
 const OlFormatGeoJson = require('ol/format/GeoJSON').default;
 const OlStyle = require('ol/style/Style').default;
 const OlStyleIcon = require('ol/style/Icon').default;
