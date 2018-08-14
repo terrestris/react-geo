@@ -358,8 +358,8 @@ describe('<MeasureButton />', () => {
         expect(instance._feature).toBeDefined();
         expect(instance._feature.getGeometry()).toBeDefined();
 
-        const value = MeasureUtil.formatLength(instance._feature.getGeometry(), map, 0);
-        expect(value).toBe('100 m');
+        const value = MeasureUtil.formatLength(instance._feature.getGeometry(), map, 2);
+        expect(value).toBe('99.89 m');
       });
 
       it('becomes a polygon feature with valid geometry', () => {
@@ -385,8 +385,8 @@ describe('<MeasureButton />', () => {
         expect(instance._feature).toBeDefined();
         expect(instance._feature.getGeometry()).toBeDefined();
 
-        const value = MeasureUtil.formatArea(instance._feature.getGeometry(), map, 0);
-        expect(value).toBe('100 m<sup>2</sup>');
+        const value = MeasureUtil.formatArea(instance._feature.getGeometry(), map, 2);
+        expect(value).toBe('99.78 m<sup>2</sup>');
       });
 
       it('adds a tooltip overlay with correct properties and position to the map', () => {
@@ -398,7 +398,7 @@ describe('<MeasureButton />', () => {
         instance._feature = mockLineFeat;
         instance.addMeasureStopTooltip(mockEvt);
 
-        const value = MeasureUtil.formatLength(instance._feature.getGeometry(), map, 0);
+        const value = MeasureUtil.formatLength(instance._feature.getGeometry(), map, 2);
         expect(parseInt(value, 10)).toBeGreaterThan(10);
 
         const overlays = map.getOverlays();
