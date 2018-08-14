@@ -119,7 +119,7 @@ describe('<MeasureButton />', () => {
         const props = {
           map: map,
           measureType: 'line',
-          onToggle: onToggle
+          onToggle
         };
 
         const wrapper = TestUtil.mountComponent(MeasureButton, props);

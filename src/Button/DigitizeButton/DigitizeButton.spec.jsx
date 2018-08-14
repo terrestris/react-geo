@@ -128,6 +128,18 @@ describe('<DigitizeButton />', () => {
   describe('#Private methods', () => {
 
     describe('#onToggle', () => {
+      it('calls passed onToggle in props it was provided', () => {
+        expect.assertions(1);
+        const wrapper = setupWrapper();
+        const onToggle = jest.fn();
+
+        wrapper.setProps({
+          onToggle
+        }, () => {
+          wrapper.instance().onToggle(true);
+          expect(onToggle).toHaveBeenCalledTimes(1);
+        });
+      });
 
       it ('calls a createDrawInteraction method if button was pressed and valid drawType was provided', () => {
         const wrapper = setupWrapper();
