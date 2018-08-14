@@ -120,7 +120,7 @@
     "np": "3.0.4",
     "ol": "4.6.5",
     "react": "16.4.2",
-    "react-styleguidist": "7.2.2",
+    "react-styleguidist": "7.2.3",
     "react-test-renderer": "16.4.2",
     "regenerator-runtime": "0.12.1",
     "rimraf": "2.6.2",
