@@ -2,10 +2,10 @@ This example demonstrates the Legend.
 
 ```jsx
 const React = require('react');
-const OlMap  = require('ol/Map').default;
-const OlView  = require('ol/View').default;
-const OlLayerTile  = require('ol/layer/Tile').default;
-const OlSourceTileWMS  = require('ol/source/TileWMS').default;
+const OlMap = require('ol/Map').default;
+const OlView = require('ol/View').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlSourceTileWMS = require('ol/source/TileWMS').default;
 const fromLonLat = require('ol/proj').fromLonLat;
 
 class LegendExample extends React.Component {
