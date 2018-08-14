@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import OlMap from 'ol/Map';
 import OlGeolocation from 'ol/Geolocation';
 import OlGeomLineString from 'ol/geom/LineString';
-import OlFeature from 'ol/feature';
-import OlGeomPoint from 'ol/geom/point';
-import OlLayerVector from 'ol/layer/vector';
-import OlSourceVector from 'ol/source/vector';
-import OlStyleStyle from 'ol/style/style';
-import OlStyleIcon from 'ol/style/icon';
+import OlFeature from 'ol/Feature';
+import OlGeomPoint from 'ol/geom/Point';
+import OlLayerVector from 'ol/layer/Vector';
+import OlSourceVector from 'ol/source/Vector';
+import OlStyleStyle from 'ol/style/Style';
+import OlStyleIcon from 'ol/style/Icon';
 
 import { ToggleButton } from '../../index';
 
