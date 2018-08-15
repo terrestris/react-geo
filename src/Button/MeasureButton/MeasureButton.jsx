@@ -250,7 +250,15 @@ class MeasureButton extends React.Component {
      *
      * @type {Boolean} pressed
      */
-    pressed: PropTypes.bool
+    pressed: PropTypes.bool,
+
+    /**
+     * A custom onToogle function that will be called
+     * if button is toggled
+     *
+     * @type {Function} onToggle
+     */
+    onToggle: PropTypes.func
   };
 
   /**
@@ -274,7 +282,8 @@ class MeasureButton extends React.Component {
       tooltipDynamic: `${CSS_PREFIX}measure-tooltip-dynamic`,
       tooltipStatic: `${CSS_PREFIX}measure-tooltip-static`
     },
-    pressed: false
+    pressed: false,
+    onToggle: () => {}
   }
 
   /**
@@ -310,6 +319,8 @@ class MeasureButton extends React.Component {
    */
   onToggle = (pressed) => {
     this.cleanup();
+
+    this.props.onToggle(pressed);
 
     if (pressed && this.state.drawInteraction) {
       this.state.drawInteraction.setActive(pressed);
@@ -781,6 +792,7 @@ class MeasureButton extends React.Component {
       continueAngleMsg,
       decimalPlacesInTooltips,
       measureTooltipCssClasses,
+      onToggle,
       ...passThroughProps
     } = this.props;
 

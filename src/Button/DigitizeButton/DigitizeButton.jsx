@@ -393,7 +393,15 @@ class DigitizeButton extends React.Component {
      * Note: The key feature is handled internally and shouldn't be overwritten
      *       without any specific cause.
      */
-    translateInteractionConfig: PropTypes.object
+    translateInteractionConfig: PropTypes.object,
+
+    /**
+     * A custom onToogle function that will be called
+     * if button is toggled
+     *
+     * @type {Function} onToggle
+     */
+    onToggle: PropTypes.func
   };
 
   /**
@@ -410,7 +418,8 @@ class DigitizeButton extends React.Component {
     drawInteractionConfig: {},
     selectInteractionConfig: {},
     modifyInteractionConfig: {},
-    translateInteractionConfig: {}
+    translateInteractionConfig: {},
+    onToggle: () => {}
   }
 
   /**
@@ -419,7 +428,6 @@ class DigitizeButton extends React.Component {
    * @constructs DigitizeButton
    */
   constructor(props) {
-
     super(props);
 
     if (!this.props.drawType && !this.props.editType) {
@@ -478,6 +486,8 @@ class DigitizeButton extends React.Component {
       digitizeLayer,
       interactions
     } = this.state;
+
+    this.props.onToggle(pressed);
 
     this._digitizeFeatures = digitizeLayer.getSource().getFeaturesCollection();
 
@@ -1031,6 +1041,7 @@ class DigitizeButton extends React.Component {
       selectInteractionConfig,
       modifyInteractionConfig,
       translateInteractionConfig,
+      onToggle,
       ...passThroughProps
     } = this.props;
 
