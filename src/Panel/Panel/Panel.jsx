@@ -4,7 +4,6 @@ import Rnd from 'react-rnd';
 import uniqueId from 'lodash/uniqueId.js';
 import isNumber from 'lodash/isNumber.js';
 import isFunction from 'lodash/isFunction.js';
-import cloneDeep from 'lodash/cloneDeep.js';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
@@ -331,7 +330,7 @@ export class Panel extends React.Component {
       ...rndOpts
     } = this.props;
 
-    let toolsClone = cloneDeep(tools);
+    let toolsClone = tools.map(t => React.cloneElement(t));
 
     const finalClassName = className
       ? `${className} ${this.className}`
@@ -365,15 +364,24 @@ export class Panel extends React.Component {
       {title}
     </Titlebar> : null;
 
+    const defWidth = this.state.width;
+    const defHeight = this.calculateHeight();
+    const {
+      x,
+      y
+    } = rndOpts;
+    const defX = x && isNumber(x) ? x : window.innerWidth / 2 - defWidth / 2;
+    const defY = y && isNumber(y) ? y : window.innerHeight / 2 - defHeight / 2;
+
     return (
       <Rnd
         className={rndClassName}
         ref={rnd => this.rnd = rnd}
         default={{
-          x: isNumber(rndOpts.x) ? rndOpts.x : (window.innerWidth / 2) - 160,
-          y: isNumber(rndOpts.y) ? rndOpts.y : (window.innerHeight / 2) - 100,
-          width: this.state.width,
-          height: this.calculateHeight()
+          x: defX,
+          y: defY,
+          width: defWidth,
+          height: defHeight
         }}
         dragHandleClassName="drag-handle"
         disableDragging={!draggable}
