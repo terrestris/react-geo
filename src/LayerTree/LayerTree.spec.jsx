@@ -312,6 +312,32 @@ describe('<LayerTree />', () => {
       expect(treeNode.props().checked).toBe(true);
     });
 
+    it('triggers tree rebuild on nodeTitleRenderer changes', () => {
+      const nodeTitleRenderer = function(layer) {
+        return (
+          <span className="span-1">
+            {layer.get('name')}
+          </span>
+        );
+      };
+
+      const props = {
+        layerGroup,
+        map,
+        nodeTitleRenderer
+      };
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
+
+      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
+      wrapper.setProps({
+        nodeTitleRenderer: null
+      });
+      expect(rebuildSpy).toHaveBeenCalledTimes(1);
+
+      rebuildSpy.mockReset();
+      rebuildSpy.mockRestore();
+    });
+
     it('triggers tree rebuild on layer add', () => {
       const props = {
         layerGroup,
