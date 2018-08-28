@@ -313,7 +313,7 @@ describe('<LayerTree />', () => {
     });
 
     it('triggers tree rebuild on nodeTitleRenderer changes', () => {
-      const nodeTitleRenderer = function(layer) {
+      const exampleNodeTitleRenderer = function(layer) {
         return (
           <span className="span-1">
             {layer.get('name')}
@@ -323,16 +323,20 @@ describe('<LayerTree />', () => {
 
       const props = {
         layerGroup,
-        map,
-        nodeTitleRenderer
+        map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-
       const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
+
+      wrapper.setProps({
+        nodeTitleRenderer: exampleNodeTitleRenderer
+      });
+      expect(rebuildSpy).toHaveBeenCalledTimes(1);
+
       wrapper.setProps({
         nodeTitleRenderer: null
       });
-      expect(rebuildSpy).toHaveBeenCalledTimes(1);
+      expect(rebuildSpy).toHaveBeenCalledTimes(2);
 
       rebuildSpy.mockReset();
       rebuildSpy.mockRestore();

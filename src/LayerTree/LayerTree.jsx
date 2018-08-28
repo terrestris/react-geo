@@ -168,7 +168,7 @@ class LayerTree extends React.Component {
       }
     }
 
-    if (nodeTitleRenderer != prevProps.nodeTitleRenderer){
+    if (nodeTitleRenderer !== prevProps.nodeTitleRenderer){
       this.rebuildTreeNodes();
     }
   }
