@@ -124,7 +124,7 @@
     "react-test-renderer": "16.4.2",
     "regenerator-runtime": "0.12.1",
     "rimraf": "2.6.2",
-    "style-loader": "0.22.1",
+    "style-loader": "0.23.0",
     "url-loader": "1.1.1",
     "webpack": "4.17.1",
     "whatwg-fetch": "2.0.4"
