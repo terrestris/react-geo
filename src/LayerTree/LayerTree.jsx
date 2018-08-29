@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isBoolean from 'lodash/isBoolean.js';
 import isFunction from 'lodash/isFunction.js';
-import isEqual from 'lodash/isEqual.js';       
+import isEqual from 'lodash/isEqual.js';
 import { Tree } from 'antd';
 import OlMap from 'ol/map';
 import OlLayerBase from 'ol/layer/base';
@@ -154,7 +154,8 @@ class LayerTree extends React.Component {
    */
   componentDidUpdate(prevProps, prevState) {
     const {
-      layerGroup
+      layerGroup,
+      nodeTitleRenderer
     } = this.props;
 
     if (layerGroup && prevState.layerGroup) {
@@ -165,6 +166,10 @@ class LayerTree extends React.Component {
         this.registerAddRemoveListeners(layerGroup);
         this.rebuildTreeNodes();
       }
+    }
+
+    if (nodeTitleRenderer !== prevProps.nodeTitleRenderer){
+      this.rebuildTreeNodes();
     }
   }
 
