@@ -779,7 +779,7 @@ export class AgFeatureGrid extends React.Component {
     const feature = this.getFeatureFromRowKey(row.key);
 
     if (isFunction(onRowClick)) {
-      onRowClick(row, feature);
+      onRowClick(row, feature, evt);
     } else {
       this.zoomToFeatures([feature]);
     }
@@ -800,7 +800,7 @@ export class AgFeatureGrid extends React.Component {
     const feature = this.getFeatureFromRowKey(row.key);
 
     if (isFunction(onRowMouseOver)) {
-      onRowMouseOver(row, feature);
+      onRowMouseOver(row, feature, evt);
     }
 
     this.highlightFeatures([feature]);
@@ -820,7 +820,7 @@ export class AgFeatureGrid extends React.Component {
     const feature = this.getFeatureFromRowKey(row.key);
 
     if (isFunction(onRowMouseOut)) {
-      onRowMouseOut(row, feature);
+      onRowMouseOut(row, feature, evt);
     }
 
     this.unhighlightFeatures([feature]);
@@ -965,7 +965,7 @@ export class AgFeatureGrid extends React.Component {
     });
 
     if (isFunction(onRowSelectionChange)) {
-      onRowSelectionChange(selectedRowsAfter, selectedFeatures, deselectedRows, deselectedFeatures);
+      onRowSelectionChange(selectedRowsAfter, selectedFeatures, deselectedRows, deselectedFeatures, evt);
     }
 
     this.resetFeatureStyles();
