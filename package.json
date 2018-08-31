@@ -118,7 +118,7 @@
     "less": "3.8.1",
     "less-loader": "4.1.0",
     "np": "3.0.4",
-    "ol": "5.1.3",
+    "ol": "5.2.0",
     "react": "16.4.2",
     "react-styleguidist": "7.3.5",
     "react-test-renderer": "16.4.2",
