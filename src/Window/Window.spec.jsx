@@ -60,4 +60,25 @@ describe('<Window />', () => {
     expect(document.getElementById(windowId)).toBeNull();
   });
 
+  it('changes class of component when className is changed in props', () => {
+    const testIdToMountIn = 'testAppId';
+    const windowId = 'testId1';
+    let className = 'test1';
+    const divToBeRenderedIn = document.createElement('div');
+    divToBeRenderedIn.id = testIdToMountIn;
+    document.body.appendChild(divToBeRenderedIn);
+    const wrapper = TestUtil.mountComponent(Window, {
+      parentId: testIdToMountIn,
+      className: className,
+      id: windowId
+    });
+    expect(document.getElementById(windowId)).toBeDefined();
+    expect(document.getElementById(windowId).className).toEqual(expect.stringContaining(className));
+    className = 'test2';
+    wrapper.setProps({
+      className: className
+    });
+    expect(document.getElementById(windowId).className).toEqual(expect.stringContaining(className));
+  });
+
 });

@@ -85,13 +85,8 @@ export class Window extends React.Component {
       'parameter was set correctly (default value is `app`)');
     }
 
-    const finalClassName = props.className
-      ? `${props.className} ${this.className}`
-      : this.className;
-
     const div = document.createElement('div');
     div.id = id;
-    div.className = finalClassName;
     this._elementDiv = div;
 
     this.state = {
@@ -135,6 +130,12 @@ export class Window extends React.Component {
       parentId,
       ...passThroughProps
     } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this.className}`
+      : this.className;
+
+    this._elementDiv.className = finalClassName;
 
     return ReactDOM.createPortal(
       <Panel {...passThroughProps} >
