@@ -72,7 +72,7 @@
   "dependencies": {
     "@turf/turf": "5.1.6",
     "@terrestris/base-util": "0.1.1",
-    "@terrestris/ol-util": "0.2.0",
+    "@terrestris/ol-util": "1.2.0",
     "ag-grid": "18.1.2",
     "ag-grid-react": "18.1.0",
     "lodash": "4.17.10",
