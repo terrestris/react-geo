@@ -81,9 +81,11 @@ This example demonstrates the use of Panels
   style={{position: 'relative'}}
   x={0}
   y={0}
-  title="Intial size (673 * 134)"
+  title="Initial size (673 * 134)"
   resizeOpts={true}
   width={673}
   height={134}
-/>
+>
+  Panel with initial size.
+</Panel>
 ```

@@ -9,7 +9,7 @@ import { CSS_PREFIX } from '../../constants';
 import './PropertyGrid.less';
 
 /**
- * Class representing a fature grid showing the attribute values of a simple feature.
+ * Class representing a feature grid showing the attribute values of a simple feature.
  *
  * @class PropertyGrid
  * @extends React.Component
