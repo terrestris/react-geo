@@ -1,9 +1,9 @@
 /*eslint-env jest*/
 
 
-import OlLayerTile from 'ol/layer/tile';
-import OlSourceTileWMS from 'ol/source/tilewms';
-import OlSourceTileJson from 'ol/source/tilejson';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlSourceTileJson from 'ol/source/TileJSON';
 
 import TestUtil from '../Util/TestUtil';
 

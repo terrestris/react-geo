@@ -1,8 +1,8 @@
 This is an example containing a property grid:
 
 ```jsx
-const OlFeature = require('ol/feature').default;
-const OlGeomPoint = require('ol/geom/point').default;
+const OlFeature = require('ol/Feature').default;
+const OlGeomPoint = require('ol/geom/Point').default;
 
 const feature = new OlFeature({
   geometry: new OlGeomPoint([19.09, 1.09]),

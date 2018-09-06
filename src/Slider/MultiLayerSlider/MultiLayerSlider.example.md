@@ -7,10 +7,10 @@ layers showing the same area but different content or time.
 
 ```jsx
 const React = require('react');
-const OlMap = require('ol/map').default;
-const OlView = require('ol/view').default;
-const OlLayerTile = require('ol/layer/tile').default;
-const OlSourceTileWMS = require('ol/source/tilewms').default;
+const OlMap = require('ol/Map').default;
+const OlView = require('ol/View').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlSourceTileWMS = require('ol/source/TileWMS').default;
 
 const {
   MultiLayerSlider

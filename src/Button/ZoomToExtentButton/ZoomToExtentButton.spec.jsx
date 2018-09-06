@@ -1,8 +1,8 @@
 /*eslint-env jest*/
 
 import TestUtil from '../../Util/TestUtil';
-import OlExtent from 'ol/extent';
-import OlGeomPolygon from 'ol/geom/polygon';
+import { getCenter, containsExtent } from 'ol/extent';
+import OlGeomPolygon from 'ol/geom/Polygon';
 
 import {
   ZoomToExtentButton
@@ -48,9 +48,9 @@ describe('<ZoomToExtentButton />', () => {
     expect.assertions(2);
     return promise.then(() => {
       const newExtent = map.getView().calculateExtent();
-      const newCenter = OlExtent.getCenter(newExtent);
+      const newCenter = getCenter(newExtent);
       expect(newCenter).toEqual(mockExtentCenter);
-      expect(OlExtent.containsExtent(newExtent, mockExtent)).toBe(true);
+      expect(containsExtent(newExtent, mockExtent)).toBe(true);
     });
   });
 
@@ -69,9 +69,9 @@ describe('<ZoomToExtentButton />', () => {
     expect.assertions(2);
     return promise.then(() => {
       const newExtent = map.getView().calculateExtent();
-      const newCenter = OlExtent.getCenter(newExtent);
+      const newCenter = getCenter(newExtent);
       expect(newCenter).toEqual(mockGeometryCenter);
-      expect(OlExtent.containsExtent(newExtent, mockExtent)).toBe(true);
+      expect(containsExtent(newExtent, mockExtent)).toBe(true);
     });
 
   });

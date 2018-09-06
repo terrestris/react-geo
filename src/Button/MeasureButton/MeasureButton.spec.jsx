@@ -1,13 +1,13 @@
 /*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
-import OlLayerVector from 'ol/layer/vector';
-import OlInteractionDraw from 'ol/interaction/draw';
-import OlFeature from 'ol/feature';
-import OlGeomLineString from 'ol/geom/linestring';
-import OlGeomPolygon from 'ol/geom/polygon';
-import OlOverlay from 'ol/overlay';
-import OlObservable from 'ol/observable';
+import OlLayerVector from 'ol/layer/Vector';
+import OlInteractionDraw from 'ol/interaction/Draw';
+import OlFeature from 'ol/Feature';
+import OlGeomLineString from 'ol/geom/LineString';
+import OlGeomPolygon from 'ol/geom/Polygon';
+import OlOverlay from 'ol/Overlay';
+import * as OlObservable from 'ol/Observable';
 
 import { MeasureButton } from '../../index';
 import MeasureUtil from '@terrestris/ol-util/src/MeasureUtil/MeasureUtil';
@@ -359,7 +359,7 @@ describe('<MeasureButton />', () => {
         expect(instance._feature.getGeometry()).toBeDefined();
 
         const value = MeasureUtil.formatLength(instance._feature.getGeometry(), map, 2);
-        expect(value).toBe('100 m');
+        expect(value).toBe('99.89 m');
       });
 
       it('becomes a polygon feature with valid geometry', () => {
@@ -386,7 +386,7 @@ describe('<MeasureButton />', () => {
         expect(instance._feature.getGeometry()).toBeDefined();
 
         const value = MeasureUtil.formatArea(instance._feature.getGeometry(), map, 2);
-        expect(value).toBe('100 m<sup>2</sup>');
+        expect(value).toBe('99.78 m<sup>2</sup>');
       });
 
       it('adds a tooltip overlay with correct properties and position to the map', () => {
@@ -649,14 +649,11 @@ describe('<MeasureButton />', () => {
           click: jest.fn(),
         };
 
-        const unByKeySpy = jest.spyOn(OlObservable, 'unByKey');
+        OlObservable.unByKey = jest.fn();
 
         instance.cleanup();
 
-        expect(unByKeySpy).toHaveBeenCalledTimes(4);
-
-        unByKeySpy.mockReset();
-        unByKeySpy.mockRestore();
+        expect(OlObservable.unByKey).toHaveBeenCalledTimes(4);
       });
 
       it ('calls cleanupTooltips method', () => {
@@ -730,7 +727,7 @@ describe('<MeasureButton />', () => {
 
         instance.updateMeasureTooltip(mockEvt);
 
-        expect(instance._measureTooltipElement.innerHTML).toBe('100 m');
+        expect(instance._measureTooltipElement.innerHTML).toBe('99.89 m');
         expect(instance._measureTooltip.getPosition()).toEqual([0, 100]);
 
         expect(instance._helpTooltipElement.innerHTML).toBe('Click to draw line');
@@ -767,7 +764,7 @@ describe('<MeasureButton />', () => {
 
         instance.updateMeasureTooltip(mockEvt);
 
-        expect(instance._measureTooltipElement.innerHTML).toBe('100 m<sup>2</sup>');
+        expect(instance._measureTooltipElement.innerHTML).toBe('99.78 m<sup>2</sup>');
         // Interior point as XYM coordinate, where M is the length of the horizontal
         // intersection that the point belongs to
         expect(instance._measureTooltip.getPosition()).toEqual([5, 5, 10]);

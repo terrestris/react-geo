@@ -37,4 +37,12 @@ module.exports = {
       use: 'file-loader'
     }]
   }
+  // Uncomment the following lines if you're working with a linked
+  // @terrestris/ol-util package (or any other package that requires ol
+  // itself).
+  // resolve: {
+  //   alias: {
+  //     'ol': path.join(__dirname, './node_modules', 'ol')
+  //   }
+  // }
 };

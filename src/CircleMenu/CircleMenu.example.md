@@ -4,17 +4,17 @@ CircleMenu in a Map (click the red feature):
 
 ```jsx
 const React = require('react');
-const OlSourceOsm = require('ol/source/osm').default;
-const OlSourceVector = require('ol/source/vector').default;
-const OlLayerTile = require('ol/layer/tile').default;
-const OlLayerVector = require('ol/layer/vector').default;
-const OlFeature = require('ol/feature').default;
-const OlGeomPoint = require('ol/geom/point').default;
-const OlView = require('ol/view').default;
-const OlMap = require('ol/map').default;
-const OlStyleStyle = require('ol/style/style').default;
-const OlStyleCircle = require('ol/style/circle').default;
-const OlStyleFill = require('ol/style/fill').default;
+const OlSourceOsm = require('ol/source/OSM').default;
+const OlSourceVector = require('ol/source/Vector').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlLayerVector = require('ol/layer/Vector').default;
+const OlFeature = require('ol/Feature').default;
+const OlGeomPoint = require('ol/geom/Point').default;
+const OlView = require('ol/View').default;
+const OlMap = require('ol/Map').default;
+const OlStyleStyle = require('ol/style/Style').default;
+const OlStyleCircle = require('ol/style/Circle').default;
+const OlStyleFill = require('ol/style/Fill').default;
 const {
   CircleMenu,
   SimpleButton

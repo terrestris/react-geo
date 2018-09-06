@@ -1,9 +1,9 @@
 /*eslint-env jest*/
 
-import OlMap from 'ol/map';
-import OlView from 'ol/view';
-import OlLayerTile from 'ol/layer/tile';
-import OlSourceOsm from 'ol/source/osm';
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOsm from 'ol/source/OSM';
 
 import TestUtil from '../../Util/TestUtil';
 import Logger from '@terrestris/base-util/src/Logger';

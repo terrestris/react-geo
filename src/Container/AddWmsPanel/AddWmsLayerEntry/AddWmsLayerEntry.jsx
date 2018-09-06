@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import OlLayerTile from 'ol/layer/tile';
-import OlLayerImage from 'ol/layer/image';
+import OlLayerTile from 'ol/layer/Tile';
+import OlLayerImage from 'ol/layer/Image';
 import { Checkbox, Tooltip } from 'antd';
 
 import { Icon } from 'react-fa';

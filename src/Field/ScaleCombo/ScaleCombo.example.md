@@ -2,11 +2,11 @@ This is a example containing a map component and a scale combo
 
 ```jsx
 const React = require('react');
-const OlMap = require('ol/map').default;
-const OlView = require('ol/view').default;
-const OlLayerTile = require('ol/layer/tile').default;
-const OlSourceOsm = require('ol/source/osm').default;
-const OlProj = require('ol/proj').default;
+const OlMap = require('ol/Map').default;
+const OlView = require('ol/View').default;
+const OlLayerTile = require('ol/layer/Tile').default;
+const OlSourceOsm = require('ol/source/OSM').default;
+const fromLonLat = require('ol/proj').fromLonLat;
 
 class ScaleComboExample extends React.Component {
 
@@ -24,7 +24,7 @@ class ScaleComboExample extends React.Component {
         })
       ],
       view: new OlView({
-        center: OlProj.fromLonLat([37.40570, 8.81566]),
+        center: fromLonLat([37.40570, 8.81566]),
         zoom: 4
       })
     });
