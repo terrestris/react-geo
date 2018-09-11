@@ -162,6 +162,15 @@ export class AgFeatureGrid extends React.Component {
     onRowSelectionChange: PropTypes.func,
 
     /**
+     * Optional callback function, that will be called if `selectable` is set
+     * `true` and the a `click` event on the map occurs, e.g. a feature has been
+     * selected in the map. The function receives the olEvt and the selected
+     * features (if any).
+     * @type {Function}
+     */
+    onMapSingleClick: PropTypes.func,
+
+    /**
      * Whether the map should center on the current feature's extent on init or
      * not.
      * @type {Boolean}
@@ -545,7 +554,8 @@ export class AgFeatureGrid extends React.Component {
   onMapSingleClick = olEvt => {
     const {
       map,
-      selectStyle
+      selectStyle,
+      onMapSingleClick
     } = this.props;
 
     const selectedRowKeys = this.getSelectedRowKeys();
@@ -553,6 +563,10 @@ export class AgFeatureGrid extends React.Component {
     const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
       layerFilter: layerCand => layerCand === this._layer
     }) || [];
+
+    if (isFunction(onMapSingleClick)) {
+      onMapSingleClick(olEvt, selectedFeatures);
+    }
 
     selectedFeatures.forEach(selectedFeature => {
       const key = this.props.keyFunction(selectedFeature);
