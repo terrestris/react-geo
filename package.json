@@ -75,7 +75,7 @@
     "@terrestris/ol-util": "1.2.0",
     "ag-grid": "18.1.2",
     "ag-grid-react": "18.1.0",
-    "lodash": "4.17.10",
+    "lodash": "4.17.11",
     "loglevel": "1.6.1",
     "moment": "2.22.2",
     "proj4": "2.5.0",
