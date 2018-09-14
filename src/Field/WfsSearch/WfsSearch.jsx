@@ -168,6 +168,13 @@ export class WfsSearch extends React.Component {
      */
     onChange: PropTypes.func,
     /**
+      * Optional callback function, that will be called before WFS search starts.
+      * Can be useful if input value manipulation is needed (e.g. umlaut
+      * replacement `ä => oa` etc.)
+      * @type {function}
+      */
+    onBeforeSearch: PropTypes.func,
+    /**
      * Options which are added to the fetch-POST-request. credentials is set to
      * 'same-origin' as default but can be overwritten. See also
      * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
@@ -281,12 +288,17 @@ export class WfsSearch extends React.Component {
   onUpdateInput(value) {
     const {
       minChars,
-      onChange
+      onChange,
+      onBeforeSearch
     } = this.props;
 
     this.setState({
       data: []
     });
+
+    if (isFunction(onBeforeSearch)) {
+      value = onBeforeSearch(value);
+    }
 
     if (value) {
       this.setState({
