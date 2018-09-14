@@ -13,7 +13,6 @@ import { CSS_PREFIX } from '../../constants';
 
 import OlMap from 'ol/Map';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
-import OlFormatWFS from 'ol/format/WFS';
 
 /**
  * The WfsSearch field.
@@ -316,10 +315,16 @@ export class WfsSearch extends React.Component {
   }
 
   /**
-   *
+   * Perform the search.
+   * @private
    */
-  getCombinedRequests() {
+  doSearch() {
+    if (this.timeoutHandle) {
+      clearTimeout(this.timeoutHandle);
+    }
     const {
+      additionalFetchOptions,
+      baseUrl,
       featureNS,
       featurePrefix,
       featureTypes,
@@ -333,55 +338,23 @@ export class WfsSearch extends React.Component {
       attributeDetails
     } = this.props;
 
-    const { searchTerm } = this.state;
+    const searchOpts = {
+      featureNS,
+      featurePrefix,
+      featureTypes,
+      geometryName,
+      maxFeatures,
+      outputFormat,
+      propertyNames,
+      srsName,
+      wfsFormatOptions,
+      searchAttributes,
+      attributeDetails
+    };
 
-    const requests = featureTypes.map(featureType => {
-
-      const filter = WfsFilterUtil.createWfsFilter(
-        featureType, searchTerm, searchAttributes, attributeDetails
-      );
-      const options = {
-        featureNS,
-        featurePrefix,
-        featureTypes: [featureType],
-        geometryName,
-        maxFeatures,
-        outputFormat,
-        propertyNames,
-        srsName,
-        filter: filter
-      };
-
-      const wfsFormat = new OlFormatWFS(wfsFormatOptions);
-      return wfsFormat.writeGetFeature(options);
-    });
-
-    const request = requests[0];
-
-    requests.forEach(req => {
-      if (req !== request) {
-        const query = req.querySelector('Query');
-        request.append(query);
-      }
-    });
-
-    return request;
-  }
-
-  /**
-   * Perform the search.
-   * @private
-   */
-  doSearch() {
-    if (this.timeoutHandle) {
-      clearTimeout(this.timeoutHandle);
-    }
-    const {
-      additionalFetchOptions,
-      baseUrl
-    } = this.props;
-
-    const request = this.getCombinedRequests();
+    const request = WfsFilterUtil.getCombinedRequests(
+      searchOpts, this.state.searchTerm
+    );
     const fetchTime = new Date();
     if (request) {
       this.timeoutHandle = setTimeout(() => {
