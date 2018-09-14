@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select, Spin } from 'antd';
-const Option = Select.Option;
+import {
+  AutoComplete,
+  Spin
+} from 'antd';
+const Option = AutoComplete.Option;
 import isFunction from 'lodash/isFunction.js';
 
 import Logger from '@terrestris/base-util/src/Logger';
@@ -478,8 +481,7 @@ export class WfsSearch extends React.Component {
       : this.className;
 
     return (
-      <Select
-        mode="combobox"
+      <AutoComplete
         className={finalClassName}
         defaultActiveFirstOption={false}
         allowClear={true}
@@ -495,7 +497,7 @@ export class WfsSearch extends React.Component {
             return renderOption(d, this.props);
           })
         }
-      </Select>
+      </AutoComplete>
     );
   }
 }
