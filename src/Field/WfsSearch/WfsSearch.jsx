@@ -456,8 +456,10 @@ export class WfsSearch extends React.Component {
       propertyNames,
       renderOption,
       searchAttributes,
+      attributeDetails,
       srsName,
       wfsFormatOptions,
+      displayValue,
       ...passThroughProps
     } = this.props;
 
