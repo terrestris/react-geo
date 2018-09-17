@@ -6,6 +6,7 @@ import {
 } from 'antd';
 const Option = AutoComplete.Option;
 import isFunction from 'lodash/isFunction.js';
+import debounce from 'lodash/debounce.js';
 
 import Logger from '@terrestris/base-util/src/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/src/WfsFilterUtil/WfsFilterUtil';
@@ -101,22 +102,22 @@ export class WfsSearch extends React.Component {
     /**
      * SRS name. No srsName attribute will be set on geometries when this is not
      * provided.
-     * @type {string}
+     * @type {String}
      */
     srsName: PropTypes.string,
     /**
      * The output format of the response.
-     * @type {string}
+     * @type {String}
      */
     outputFormat: PropTypes.string,
     /**
      * Maximum number of features to fetch.
-     * @type {number}
+     * @type {Number}
      */
     maxFeatures: PropTypes.number,
     /**
      * Geometry name to use in a BBOX filter.
-     * @type {string}
+     * @type {String}
      */
     geometryName: PropTypes.string,
     /**
@@ -125,15 +126,15 @@ export class WfsSearch extends React.Component {
      */
     propertyNames: PropTypes.arrayOf(PropTypes.string),
     /**
-     * Filter condition. See https://openlayers.org/en/latest/apidoc/ol.format.filter.html
+     * Filter condition. See https://openlayers.org/en/latest/apidoc/module-ol_format_filter.html
      * for more information.
-     * @type {object}
+     * @type {Object}
      */
     filter: PropTypes.object,
     /**
      * The ol.map to interact with on selection.
      *
-     * @type {Object}
+     * @type {ol.Map}
      */
     map: PropTypes.instanceOf(OlMap),
     /**
@@ -149,7 +150,7 @@ export class WfsSearch extends React.Component {
      * and requires an `id` field on the feature. A custom function is required
      * if your features don't have an `id` field.
      *
-     * @type {function}
+     * @type {Function}
      */
     renderOption: PropTypes.func,
     /**
@@ -157,43 +158,43 @@ export class WfsSearch extends React.Component {
      * returned by server.
      * The default function will create a searchlayer, adds the feature and will
      * zoom to its extend.
-     * @type {function}
+     * @type {Function}
      */
     onSelect: PropTypes.func,
     /**
      * An onChange function which gets called with the current value of the
      * field.
-     * @type {function}
+     * @type {Function}
      */
     onChange: PropTypes.func,
     /**
       * Optional callback function, that will be called before WFS search starts.
       * Can be useful if input value manipulation is needed (e.g. umlaut
       * replacement `ä => oa` etc.)
-      * @type {function}
+      * @type {Function}
       */
     onBeforeSearch: PropTypes.func,
     /**
      * Options which are added to the fetch-POST-request. credentials is set to
      * 'same-origin' as default but can be overwritten. See also
      * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
-     * @type {object}
+     * @type {Object}
      */
     additionalFetchOptions: PropTypes.object,
     /**
      * Options which are passed to the constructor of the ol.format.WFS.
-     * compare: https://openlayers.org/en/latest/apidoc/ol.format.WFS.html
-     * @type {object}
+     * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
+     * @type {Object}
      */
     wfsFormatOptions: PropTypes.object,
     /**
      * Which prop value of option will render as content of select.
-     * @type {string}
+     * @type {String}
      */
     displayValue: PropTypes.string,
     /**
      * Delay in ms before actually sending requests.
-     * @type {number}
+     * @type {Number}
      */
     delay: PropTypes.number
   }
@@ -269,11 +270,12 @@ export class WfsSearch extends React.Component {
     super(props);
     this.state = {
       searchTerm: '',
-      data: [],
-      latestRequestTime: 0
+      data: []
     };
     this.onUpdateInput = this.onUpdateInput.bind(this);
     this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
+    // delay requests invoking
+    this.doSearch = debounce(this.doSearch, this.props.delay);
   }
 
   /**
@@ -299,15 +301,13 @@ export class WfsSearch extends React.Component {
       value = onBeforeSearch(value);
     }
 
-    if (value) {
-      this.setState({
-        searchTerm: value
-      }, () => {
-        if (this.state.searchTerm.length >= minChars) {
-          this.doSearch();
-        }
-      });
-    }
+    this.setState({
+      searchTerm: value
+    }, () => {
+      if (this.state.searchTerm && this.state.searchTerm.length >= minChars) {
+        this.doSearch();
+      }
+    });
 
     if (isFunction(onChange)) {
       onChange(value);
@@ -319,9 +319,6 @@ export class WfsSearch extends React.Component {
    * @private
    */
   doSearch() {
-    if (this.timeoutHandle) {
-      clearTimeout(this.timeoutHandle);
-    }
     const {
       additionalFetchOptions,
       baseUrl,
@@ -355,44 +352,35 @@ export class WfsSearch extends React.Component {
     const request = WfsFilterUtil.getCombinedRequests(
       searchOpts, this.state.searchTerm
     );
-    const fetchTime = new Date();
+
     if (request) {
-      this.timeoutHandle = setTimeout(() => {
-        this.setState({
-          fetching: true,
-          latestRequestTime: fetchTime.getTime()
-        }, () => {
-          fetch(`${baseUrl}`, {
-            method: 'POST',
-            credentials: additionalFetchOptions.credentials
-              ? additionalFetchOptions.credentials
-              : 'same-origin',
-            body: new XMLSerializer().serializeToString(request),
-            ...additionalFetchOptions
-          })
-            .then(response => response.json())
-            .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
-            .catch(this.onFetchError.bind(this));
-        });
-      }, this.props.delay);
+      this.setState({
+        fetching: true
+      }, () => {
+        fetch(`${baseUrl}`, {
+          method: 'POST',
+          credentials: additionalFetchOptions.credentials
+            ? additionalFetchOptions.credentials
+            : 'same-origin',
+          body: new XMLSerializer().serializeToString(request),
+          ...additionalFetchOptions
+        })
+          .then(response => response.json())
+          .then(this.onFetchSuccess.bind(this))
+          .catch(this.onFetchError.bind(this));
+      });
     } else {
       this.onFetchError('Missing GetFeature request parameters');
     }
-
   }
 
   /**
    * This function gets called on success of the WFS GetFeature fetch request.
    * It sets the response as data.
    *
-   * @param {Number} searchTime the timestamp when the search was sent out
    * @param {Array<object>} response The found features.
    */
-  onFetchSuccess(searchTime, response) {
-    const latestTime = this.state.latestRequestTime;
-    if (latestTime !== searchTime) {
-      return;
-    }
+  onFetchSuccess(response) {
     const data = response.features ? response.features : [];
     data.forEach(feature => feature.searchTerm = this.state.searchTerm);
     this.setState({

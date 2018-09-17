@@ -34,15 +34,17 @@ describe('<WfsSearchInput />', () => {
     });
 
     it ('calls onBeforeSearch callback if passed in props', () => {
-      const wrapper = TestUtil.mountComponent(WfsSearchInput);
+      const wrapper = TestUtil.mountComponent(WfsSearchInput, {
+      });
       wrapper.setProps({
-        onBeforeSearch: jest.fn()
+        onBeforeSearch: jest.fn(),
       });
       const evt = {
         target: {
-          value: 'a'
+          value: 'abc'
         }
       };
+
       wrapper.instance().onUpdateInput(evt);
       expect(wrapper.props().onBeforeSearch).toHaveBeenCalled();
     });
@@ -72,15 +74,21 @@ describe('<WfsSearchInput />', () => {
   describe('#onFetchSuccess', () => {
     it('sets the response features as state.data', () => {
       const wrapper = TestUtil.mountComponent(WfsSearchInput);
-      wrapper.setState({latestRequestTime: 1, fetching: true});
-      const features = [{
-        id: '752526',
-        properties: {
-          name: 'Deutschland'
-        }
-      }];
-      wrapper.instance().onFetchSuccess(1, {features});
-      expect(wrapper.state().data).toEqual(features);
+      const response = {
+        features: [{
+          id: '752526',
+          properties: {
+            name: 'Deutschland'
+          }
+        }]
+      };
+      wrapper.instance().onFetchSuccess(response);
+      const promise = new Promise(resolve => {
+        setTimeout(resolve, 350);
+      });
+      return promise.then(() => {
+        expect(wrapper.state().data).toEqual(response.features);
+      });
     });
   });
 
