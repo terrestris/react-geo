@@ -244,7 +244,7 @@ export class WfsSearchInput extends React.Component {
     this.setState({
       searchTerm: value
     }, () => {
-      if (this.state.searchTerm.length >= minChars) {
+      if (this.state.searchTerm && this.state.searchTerm.length >= minChars) {
         this.doSearch();
       }
     });
