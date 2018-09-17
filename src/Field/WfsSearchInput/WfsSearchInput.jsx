@@ -162,7 +162,7 @@ export class WfsSearchInput extends React.Component {
     /**
       * Optional callback function, that will be called before WFS search starts.
       * Can be useful if input value manipulation is needed before (e.g. umlaut
-      * replacement `ä => oa` etc.)
+      * replacement `ä => ae` etc.)
       * @type {function}
       */
     onBeforeSearch: PropTypes.func,
