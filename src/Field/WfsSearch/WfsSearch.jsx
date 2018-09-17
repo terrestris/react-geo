@@ -102,22 +102,22 @@ export class WfsSearch extends React.Component {
     /**
      * SRS name. No srsName attribute will be set on geometries when this is not
      * provided.
-     * @type {string}
+     * @type {String}
      */
     srsName: PropTypes.string,
     /**
      * The output format of the response.
-     * @type {string}
+     * @type {String}
      */
     outputFormat: PropTypes.string,
     /**
      * Maximum number of features to fetch.
-     * @type {number}
+     * @type {Number}
      */
     maxFeatures: PropTypes.number,
     /**
      * Geometry name to use in a BBOX filter.
-     * @type {string}
+     * @type {String}
      */
     geometryName: PropTypes.string,
     /**
@@ -126,15 +126,15 @@ export class WfsSearch extends React.Component {
      */
     propertyNames: PropTypes.arrayOf(PropTypes.string),
     /**
-     * Filter condition. See https://openlayers.org/en/latest/apidoc/ol.format.filter.html
+     * Filter condition. See https://openlayers.org/en/latest/apidoc/module-ol_format_filter.html
      * for more information.
-     * @type {object}
+     * @type {Object}
      */
     filter: PropTypes.object,
     /**
      * The ol.map to interact with on selection.
      *
-     * @type {Object}
+     * @type {ol.Map}
      */
     map: PropTypes.instanceOf(OlMap),
     /**
@@ -150,7 +150,7 @@ export class WfsSearch extends React.Component {
      * and requires an `id` field on the feature. A custom function is required
      * if your features don't have an `id` field.
      *
-     * @type {function}
+     * @type {Function}
      */
     renderOption: PropTypes.func,
     /**
@@ -158,43 +158,43 @@ export class WfsSearch extends React.Component {
      * returned by server.
      * The default function will create a searchlayer, adds the feature and will
      * zoom to its extend.
-     * @type {function}
+     * @type {Function}
      */
     onSelect: PropTypes.func,
     /**
      * An onChange function which gets called with the current value of the
      * field.
-     * @type {function}
+     * @type {Function}
      */
     onChange: PropTypes.func,
     /**
       * Optional callback function, that will be called before WFS search starts.
       * Can be useful if input value manipulation is needed (e.g. umlaut
       * replacement `ä => oa` etc.)
-      * @type {function}
+      * @type {Function}
       */
     onBeforeSearch: PropTypes.func,
     /**
      * Options which are added to the fetch-POST-request. credentials is set to
      * 'same-origin' as default but can be overwritten. See also
      * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
-     * @type {object}
+     * @type {Object}
      */
     additionalFetchOptions: PropTypes.object,
     /**
      * Options which are passed to the constructor of the ol.format.WFS.
      * compare: https://openlayers.org/en/latest/apidoc/ol.format.WFS.html
-     * @type {object}
+     * @type {Object}
      */
     wfsFormatOptions: PropTypes.object,
     /**
      * Which prop value of option will render as content of select.
-     * @type {string}
+     * @type {String}
      */
     displayValue: PropTypes.string,
     /**
      * Delay in ms before actually sending requests.
-     * @type {number}
+     * @type {Number}
      */
     delay: PropTypes.number
   }

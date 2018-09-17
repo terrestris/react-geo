@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Input,
-  Icon,
+  Icon
 } from 'antd';
 import isFunction from 'lodash/isFunction.js';
 import debounce from 'lodash/debounce.js'
@@ -100,22 +100,22 @@ export class WfsSearchInput extends React.Component {
     /**
      * SRS name. No srsName attribute will be set on geometries when this is not
      * provided.
-     * @type {string}
+     * @type {String}
      */
     srsName: PropTypes.string,
     /**
      * The output format of the response.
-     * @type {string}
+     * @type {String}
      */
     outputFormat: PropTypes.string,
     /**
      * Maximum number of features to fetch.
-     * @type {number}
+     * @type {Number}
      */
     maxFeatures: PropTypes.number,
     /**
      * Geometry name to use in a BBOX filter.
-     * @type {string}
+     * @type {String}
      */
     geometryName: PropTypes.string,
     /**
@@ -124,15 +124,15 @@ export class WfsSearchInput extends React.Component {
      */
     propertyNames: PropTypes.arrayOf(PropTypes.string),
     /**
-     * Filter condition. See https://openlayers.org/en/latest/apidoc/ol.format.filter.html
+     * Filter condition. See https://openlayers.org/en/latest/apidoc/module-ol_format_filter.html.
      * for more information.
-     * @type {object}
+     * @type {Object}
      */
     filter: PropTypes.object,
     /**
      * The ol.map to interact with on selection.
      *
-     * @type {Object}
+     * @type {ol.Map}
      */
     map: PropTypes.instanceOf(OlMap),
     /**
@@ -145,46 +145,46 @@ export class WfsSearchInput extends React.Component {
      * successfully fetched data.
      * Please note: if omitted only data fetch will be performed and no data
      * will be shown afterwards!
-     * @type {function}
+     * @type {Function}
      */
     onFetchSuccess: PropTypes.func,
     /**
      * An onFetchError callback function which gets called if data fetch is
      * failed.
-     * @type {function}
+     * @type {Function}
      */
     onFetchError: PropTypes.func,
     /**
      * Optional callback function, that will be called if 'clear' button of
      * input field was clicked.
-     * @type {function}
+     * @type {Function}
      */
     onClearClick: PropTypes.func,
     /**
       * Optional callback function, that will be called before WFS search starts.
       * Can be useful if input value manipulation is needed before (e.g. umlaut
       * replacement `ä => ae` etc.)
-      * @type {function}
+      * @type {Function}
       */
     onBeforeSearch: PropTypes.func,
     /**
      * Options which are added to the fetch-POST-request. credentials is set to
      * 'same-origin' as default but can be overwritten. See also
      * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
-     * @type {object}
+     * @type {Object}
      */
     additionalFetchOptions: PropTypes.object,
     /**
      * Options which are passed to the constructor of the ol.format.WFS.
      * compare: https://openlayers.org/en/latest/apidoc/ol.format.WFS.html
-     * @type {object}
+     * @type {Object}
      */
     wfsFormatOptions: PropTypes.object,
     /**
      * Delay in ms before actually sending requests.
-     * @type {number}
+     * @type {Number}
      */
-    delay: PropTypes.number
+    delay: PropTypes.Number
   }
 
   static defaultProps = {
