@@ -5,7 +5,7 @@ import {
   Icon
 } from 'antd';
 import isFunction from 'lodash/isFunction.js';
-import debounce from 'lodash/debounce.js'
+import debounce from 'lodash/debounce.js';
 
 import Logger from '@terrestris/base-util/src/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/src/WfsFilterUtil/WfsFilterUtil';
@@ -184,7 +184,7 @@ export class WfsSearchInput extends React.Component {
      * Delay in ms before actually sending requests.
      * @type {Number}
      */
-    delay: PropTypes.Number
+    delay: PropTypes.number
   }
 
   static defaultProps = {
@@ -193,7 +193,7 @@ export class WfsSearchInput extends React.Component {
     minChars: 3,
     additionalFetchOptions: {},
     attributeDetails: {},
-    delay: 300,
+    delay: 300
   }
 
   /**
@@ -291,6 +291,9 @@ export class WfsSearchInput extends React.Component {
     );
 
     if (request) {
+      this.setState({
+        fetching: true
+      }, () => {
         fetch(`${baseUrl}`, {
           method: 'POST',
           credentials: additionalFetchOptions.credentials
@@ -302,6 +305,7 @@ export class WfsSearchInput extends React.Component {
           .then(response => response.json())
           .then(this.onFetchSuccess.bind(this))
           .catch(this.onFetchError.bind(this));
+      });
     } else {
       this.onFetchError('Missing GetFeature request parameters');
     }

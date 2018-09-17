@@ -304,7 +304,7 @@ export class WfsSearch extends React.Component {
     this.setState({
       searchTerm: value
     }, () => {
-      if (this.state.searchTerm.length >= minChars) {
+      if (this.state.searchTerm && this.state.searchTerm.length >= minChars) {
         this.doSearch();
       }
     });
@@ -354,17 +354,21 @@ export class WfsSearch extends React.Component {
     );
 
     if (request) {
-      fetch(`${baseUrl}`, {
-        method: 'POST',
-        credentials: additionalFetchOptions.credentials
-          ? additionalFetchOptions.credentials
-          : 'same-origin',
-        body: new XMLSerializer().serializeToString(request),
-        ...additionalFetchOptions
-      })
-        .then(response => response.json())
-        .then(this.onFetchSuccess.bind(this))
-        .catch(this.onFetchError.bind(this));
+      this.setState({
+        fetching: true
+      }, () => {
+        fetch(`${baseUrl}`, {
+          method: 'POST',
+          credentials: additionalFetchOptions.credentials
+            ? additionalFetchOptions.credentials
+            : 'same-origin',
+          body: new XMLSerializer().serializeToString(request),
+          ...additionalFetchOptions
+        })
+          .then(response => response.json())
+          .then(this.onFetchSuccess.bind(this))
+          .catch(this.onFetchError.bind(this));
+      });
     } else {
       this.onFetchError('Missing GetFeature request parameters');
     }
