@@ -183,7 +183,7 @@ export class WfsSearch extends React.Component {
     additionalFetchOptions: PropTypes.object,
     /**
      * Options which are passed to the constructor of the ol.format.WFS.
-     * compare: https://openlayers.org/en/latest/apidoc/ol.format.WFS.html
+     * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
      * @type {Object}
      */
     wfsFormatOptions: PropTypes.object,
