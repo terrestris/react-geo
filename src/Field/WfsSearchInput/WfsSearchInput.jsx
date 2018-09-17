@@ -362,11 +362,11 @@ export class WfsSearchInput extends React.Component {
     this.inputRef.input.value = '';
     this.setState({
       data: []
+    }, () => {
+      if (isFunction(onClearClick)) {
+        onClearClick();
+      }
     });
-
-    if (isFunction(onClearClick)) {
-      onClearClick();
-    }
   }
 
   /**
