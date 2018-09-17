@@ -5,6 +5,7 @@ import {
   Icon,
 } from 'antd';
 import isFunction from 'lodash/isFunction.js';
+import debounce from 'lodash/debounce.js'
 
 import Logger from '@terrestris/base-util/src/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/src/WfsFilterUtil/WfsFilterUtil';
@@ -205,10 +206,11 @@ export class WfsSearchInput extends React.Component {
     super(props);
     this.state = {
       searchTerm: '',
-      data: [],
-      latestRequestTime: 0
+      data: []
     };
     this.onUpdateInput = this.onUpdateInput.bind(this);
+    // delay requests invoking
+    this.doSearch = debounce(this.doSearch, this.props.delay);
   }
 
   /**
@@ -239,15 +241,14 @@ export class WfsSearchInput extends React.Component {
       value = onBeforeSearch(value);
     }
 
-    if (value) {
-      this.setState({
-        searchTerm: value
-      }, () => {
-        if (this.state.searchTerm.length >= minChars) {
-          this.doSearch();
-        }
-      });
-    }
+    this.setState({
+      searchTerm: value
+    }, () => {
+      if (this.state.searchTerm.length >= minChars) {
+        this.doSearch();
+      }
+    });
+
   }
 
   /**
@@ -255,9 +256,6 @@ export class WfsSearchInput extends React.Component {
    * @private
    */
   doSearch() {
-    if (this.timeoutHandle) {
-      clearTimeout(this.timeoutHandle);
-    }
     const {
       additionalFetchOptions,
       baseUrl,
@@ -292,26 +290,18 @@ export class WfsSearchInput extends React.Component {
       searchOpts, this.state.searchTerm
     );
 
-    const fetchTime = new Date();
     if (request) {
-      this.timeoutHandle = setTimeout(() => {
-        this.setState({
-          fetching: true,
-          latestRequestTime: fetchTime.getTime()
-        }, () => {
-          fetch(`${baseUrl}`, {
-            method: 'POST',
-            credentials: additionalFetchOptions.credentials
-              ? additionalFetchOptions.credentials
-              : 'same-origin',
-            body: new XMLSerializer().serializeToString(request),
-            ...additionalFetchOptions
-          })
-            .then(response => response.json())
-            .then(this.onFetchSuccess.bind(this, fetchTime.getTime()))
-            .catch(this.onFetchError.bind(this));
-        });
-      }, this.props.delay);
+        fetch(`${baseUrl}`, {
+          method: 'POST',
+          credentials: additionalFetchOptions.credentials
+            ? additionalFetchOptions.credentials
+            : 'same-origin',
+          body: new XMLSerializer().serializeToString(request),
+          ...additionalFetchOptions
+        })
+          .then(response => response.json())
+          .then(this.onFetchSuccess.bind(this))
+          .catch(this.onFetchError.bind(this));
     } else {
       this.onFetchError('Missing GetFeature request parameters');
     }
@@ -322,17 +312,12 @@ export class WfsSearchInput extends React.Component {
    * It sets the response as data.
    * If an additional function `onFetchSuccess` is provided, it will be called
    * as callback.
-   * @param {Number} searchTime the timestamp when the search was sent out
    * @param {Array<object>} response The found features.
    */
-  onFetchSuccess(searchTime, response) {
+  onFetchSuccess(response) {
     const {
       onFetchSuccess
     } = this.props;
-    const latestTime = this.state.latestRequestTime;
-    if (latestTime !== searchTime) {
-      return;
-    }
     const data = response.features ? response.features : [];
     data.forEach(feature => feature.searchTerm = this.state.searchTerm);
     this.setState({
