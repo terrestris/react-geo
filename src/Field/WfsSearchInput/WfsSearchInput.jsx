@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  AutoComplete,
-  Spin
+  Input,
+  Icon,
 } from 'antd';
-const Option = AutoComplete.Option;
 import isFunction from 'lodash/isFunction.js';
 
 import Logger from '@terrestris/base-util/src/Logger';
@@ -12,27 +11,26 @@ import WfsFilterUtil from '@terrestris/ol-util/src/WfsFilterUtil/WfsFilterUtil';
 import { CSS_PREFIX } from '../../constants';
 
 import OlMap from 'ol/Map';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
 
 /**
- * The WfsSearch field.
+ * The WfsSearchInput field.
  * Implements an input field to do a WFS-GetFeature request.
  *
  * The GetFeature request is created with `ol.format.WFS.writeGetFeature`
  * so most of the WFS specific options work like document in the corresponding
  * API-docs: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
  *
- * @class WfsSearch
+ * @class WfsSearchInput
  * @extends React.Component
  */
-export class WfsSearch extends React.Component {
+export class WfsSearchInput extends React.Component {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}wfssearch`
+  className = `${CSS_PREFIX}wfssearchinput`
 
   static propTypes = {
     /**
@@ -142,34 +140,29 @@ export class WfsSearch extends React.Component {
      */
     minChars: PropTypes.number,
     /**
-     * A render function which gets called with the selected item as it is
-     * returned by the server. It must return an `AutoComplete.Option` with
-     * `key={feature.id}`.
-     * The default will display the property `name` if existing or the `id` to
-     * and requires an `id` field on the feature. A custom function is required
-     * if your features don't have an `id` field.
-     *
+     * An onFetchSuccess callback function which gets called with the
+     * successfully fetched data.
+     * Please note: if omitted only data fetch will be performed and no data
+     * will be shown afterwards!
      * @type {function}
      */
-    renderOption: PropTypes.func,
+    onFetchSuccess: PropTypes.func,
     /**
-     * An onSelect function which gets called with the selected feature as it is
-     * returned by server.
-     * The default function will create a searchlayer, adds the feature and will
-     * zoom to its extend.
+     * An onFetchError callback function which gets called if data fetch is
+     * failed.
      * @type {function}
      */
-    onSelect: PropTypes.func,
+    onFetchError: PropTypes.func,
     /**
-     * An onChange function which gets called with the current value of the
-     * field.
+     * Optional callback function, that will be called if 'clear' button of
+     * input field was clicked.
      * @type {function}
      */
-    onChange: PropTypes.func,
+    onClearClick: PropTypes.func,
     /**
       * Optional callback function, that will be called before WFS search starts.
-      * Can be useful if input value manipulation is needed (e.g. umlaut
-      * replacement `ä => oa` etc.)
+      * Can be useful if input value manipulation is needed before (e.g. umlaut
+      * replacement `ä => ae` etc.)
       * @type {function}
       */
     onBeforeSearch: PropTypes.func,
@@ -187,11 +180,6 @@ export class WfsSearch extends React.Component {
      */
     wfsFormatOptions: PropTypes.object,
     /**
-     * Which prop value of option will render as content of select.
-     * @type {string}
-     */
-    displayValue: PropTypes.string,
-    /**
      * Delay in ms before actually sending requests.
      * @type {number}
      */
@@ -203,67 +191,15 @@ export class WfsSearch extends React.Component {
     outputFormat: 'application/json',
     minChars: 3,
     additionalFetchOptions: {},
-    displayValue: 'name',
     attributeDetails: {},
     delay: 300,
-    /**
-     * Create an AutoComplete.Option from the given data.
-     *
-     * @param {Object} feature The feature as returned by the server.
-     * @param {Object} props The current props of the component.
-     * @return {AutoComplete.Option} The AutoComplete.Option that will be
-     * rendered for each feature.
-     */
-    renderOption: (feature, props) => {
-      const {
-        displayValue
-      } = props;
-
-      const display = feature.properties[displayValue] ?
-        feature.properties[displayValue] : feature.id;
-
-      return (
-        <Option
-          value={display}
-          key={feature.id}
-          title={display}
-        >
-          {display}
-        </Option>
-      );
-    },
-
-    /**
-     * The default onSelect method if no onSelect prop is given. It zooms to the
-     * selected item.
-     *
-     * @param {object} feature The selected feature as returned by the server.
-     * @param {ol.map} olMap The openlayers map that was passed via prop.
-     */
-    onSelect: (feature, olMap) => {
-      if (feature) {
-        const olView = olMap.getView();
-        const geoJsonFormat = new OlFormatGeoJSON();
-        const olFeature = geoJsonFormat.readFeature(feature);
-        const geometry = olFeature.getGeometry();
-
-        if (geometry) {
-          olView.fit(geometry, {
-            duration: 500
-          });
-        }
-      }
-    },
-    style: {
-      width: 200
-    }
   }
 
   /**
-   * Create the WfsSearch.
+   * Create the WfsSearchInput.
    *
    * @param {Object} props The initial props.
-   * @constructs WfsSearch
+   * @constructs WfsSearchInput
    */
   constructor(props) {
     super(props);
@@ -273,27 +209,31 @@ export class WfsSearch extends React.Component {
       latestRequestTime: 0
     };
     this.onUpdateInput = this.onUpdateInput.bind(this);
-    this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
   }
 
   /**
-   * Called if the input of the AutoComplete is being updated. It sets the
-   * current inputValue as searchTerm and starts a search if the inputValue has
+   * Called if the input is being updated. It sets the current inputValue
+   * as searchTerm and starts a search if the inputValue has
    * a length of at least `this.props.minChars` (default 3).
    *
-   * @param {String|undefined} value The inputValue. Undefined if clear btn
-   *                                      is pressed.
+   * @param {Event|undefined} evt The input value from `keyup` event.
+   * Gets undefined if clear btn is pressed.
    */
-  onUpdateInput(value) {
+  onUpdateInput(evt) {
     const {
       minChars,
-      onChange,
       onBeforeSearch
     } = this.props;
 
     this.setState({
       data: []
     });
+
+    let value = '';
+
+    if (evt && evt.target && evt.target.value) {
+      value = evt.target.value;
+    }
 
     if (isFunction(onBeforeSearch)) {
       value = onBeforeSearch(value);
@@ -307,10 +247,6 @@ export class WfsSearch extends React.Component {
           this.doSearch();
         }
       });
-    }
-
-    if (isFunction(onChange)) {
-      onChange(value);
     }
   }
 
@@ -355,6 +291,7 @@ export class WfsSearch extends React.Component {
     const request = WfsFilterUtil.getCombinedRequests(
       searchOpts, this.state.searchTerm
     );
+
     const fetchTime = new Date();
     if (request) {
       this.timeoutHandle = setTimeout(() => {
@@ -378,17 +315,20 @@ export class WfsSearch extends React.Component {
     } else {
       this.onFetchError('Missing GetFeature request parameters');
     }
-
   }
 
   /**
    * This function gets called on success of the WFS GetFeature fetch request.
    * It sets the response as data.
-   *
+   * If an additional function `onFetchSuccess` is provided, it will be called
+   * as callback.
    * @param {Number} searchTime the timestamp when the search was sent out
    * @param {Array<object>} response The found features.
    */
   onFetchSuccess(searchTime, response) {
+    const {
+      onFetchSuccess
+    } = this.props;
     const latestTime = this.state.latestRequestTime;
     if (latestTime !== searchTime) {
       return;
@@ -398,35 +338,50 @@ export class WfsSearch extends React.Component {
     this.setState({
       data,
       fetching: false
+    }, () => {
+      if (isFunction(onFetchSuccess)) {
+        onFetchSuccess(data);
+      }
     });
   }
 
   /**
    * This function gets called when the WFS GetFeature fetch request returns an error.
    * It logs the error to the console.
+   * If an additional function `onFetchSuccess` is provided, it will be called
+   * as callback.
    *
    * @param {String} error The errorstring.
    */
   onFetchError(error) {
+    const {
+      onFetchError
+    } = this.props;
     Logger.error(`Error while requesting WFS GetFeature: ${error}`);
     this.setState({
       fetching: false
+    }, () => {
+      if (isFunction(onFetchError)) {
+        onFetchError(error);
+      }
     });
   }
 
   /**
-   * The function describes what to do when an item is selected.
-   *
-   * @param {String|number} value The value of the selected option.
-   * @param {Node} option The selected option.
+   * Resets input field value and previously fetched data on reset button click.
    */
-  onMenuItemSelected(value, option) {
+  resetSearch() {
     const {
-      map
+      onClearClick
     } = this.props;
+    this.inputRef.input.value = '';
+    this.setState({
+      data: []
+    });
 
-    const selectedFeature = this.state.data.filter(feat => feat.id === option.key)[0];
-    this.props.onSelect(selectedFeature, map);
+    if (isFunction(onClearClick)) {
+      onClearClick();
+    }
   }
 
   /**
@@ -434,7 +389,6 @@ export class WfsSearch extends React.Component {
    */
   render() {
     const {
-      data,
       fetching
     } = this.state;
 
@@ -451,15 +405,15 @@ export class WfsSearch extends React.Component {
       maxFeatures,
       minChars,
       outputFormat,
-      onChange,
-      onSelect,
       propertyNames,
-      renderOption,
       searchAttributes,
       attributeDetails,
       srsName,
       wfsFormatOptions,
-      displayValue,
+      onFetchSuccess,
+      onFetchError,
+      onClearClick,
+      onBeforeSearch,
       ...passThroughProps
     } = this.props;
 
@@ -468,25 +422,21 @@ export class WfsSearch extends React.Component {
       : this.className;
 
     return (
-      <AutoComplete
+      <Input
         className={finalClassName}
-        defaultActiveFirstOption={false}
-        allowClear={true}
-        onChange={this.onUpdateInput}
-        onSelect={this.onMenuItemSelected}
-        notFoundContent={fetching ? <Spin size="small" /> : null}
-        filterOption={false}
-        showArrow={false}
-        {...passThroughProps}
-      >
-        {
-          data.map(d => {
-            return renderOption(d, this.props);
-          })
+        ref={inputRef => {this.inputRef = inputRef;}}
+        suffix={
+          <Icon
+            type={fetching ? 'loading' : 'close-circle'}
+            onClick={this.resetSearch.bind(this)}
+          />
         }
-      </AutoComplete>
+        onPressEnter={this.onUpdateInput}
+        onKeyUp={this.onUpdateInput}
+        {...passThroughProps}
+      />
     );
   }
 }
 
-export default WfsSearch;
+export default WfsSearchInput;
