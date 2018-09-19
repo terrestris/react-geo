@@ -103,7 +103,7 @@
     "babel-preset-env": "1.7.0",
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
-    "canvas-prebuilt": "1.6.5-prerelease.1",
+    "canvas-prebuilt": "2.0.0-alpha.14",
     "coveralls": "3.0.2",
     "css-loader": "1.0.0",
     "enzyme": "3.6.0",
