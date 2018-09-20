@@ -401,7 +401,23 @@ class DigitizeButton extends React.Component {
      *
      * @type {Function} onToggle
      */
-    onToggle: PropTypes.func
+    onToggle: PropTypes.func,
+
+    /**
+     * Callback function that will be called
+     * when the ok-button of the modal was clicked
+     *
+     * @type {Function} onModalLabelOk
+     */
+    onModalLabelOk: PropTypes.func,
+
+    /**
+     * Callback function that will be called
+     * when the cancel-button of the modal was clicked
+     *
+     * @type {Function} onModalLabelCancel
+     */
+    onModalLabelCancel: PropTypes.func
   };
 
   /**
@@ -934,10 +950,21 @@ class DigitizeButton extends React.Component {
    * Turns visibility of modal off and call `setTextOnFeature` method.
    */
   onModalLabelOk = () => {
+    const {
+      textLabel
+    } = this.state;
+
+    const {
+      onModalLabelOk
+    } = this.props;
+
     this.setState({
       showLabelPrompt: false
     }, () => {
       this.setTextOnFeature(this._digitizeTextFeature);
+      if (onModalLabelOk) {
+        onModalLabelOk(this._digitizeTextFeature, textLabel);
+      }
     });
   }
 
@@ -947,6 +974,10 @@ class DigitizeButton extends React.Component {
    * digitize layer.
    */
   onModalLabelCancel = () => {
+    const {
+      onModalLabelCancel
+    } = this.props;
+
     this.setState({
       showLabelPrompt: false,
       textLabel: ''
@@ -954,6 +985,9 @@ class DigitizeButton extends React.Component {
       if (!(this.state.interactions.length > 1)) {
         this._digitizeFeatures.remove(this._digitizeTextFeature);
         this._digitizeTextFeature = null;
+      }
+      if (onModalLabelCancel) {
+        onModalLabelCancel();
       }
     });
   }
@@ -1042,6 +1076,8 @@ class DigitizeButton extends React.Component {
       modifyInteractionConfig,
       translateInteractionConfig,
       onToggle,
+      onModalLabelOk,
+      onModalLabelCancel,
       ...passThroughProps
     } = this.props;
 
