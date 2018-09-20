@@ -68,11 +68,11 @@ export function loadify(WrappedComponent, {
     spinning: false
   }
 
-    /**
-     * Create the Loadify.
-     *
-     * @constructs Loadify
-     */
+  /**
+   * Create the Loadify.
+   *
+   * @constructs Loadify
+   */
   constructor(props) {
     super(props);
 
