@@ -11,7 +11,7 @@ import {
 import { CSS_PREFIX } from '../../constants';
 
 /**
- * Class representing an zoom to extent button.
+ * Class representing a zoom to extent button.
  *
  *
  * @class The ZoomToExtentButton
@@ -40,8 +40,9 @@ class ZoomToExtentButton extends React.Component {
     map: PropTypes.instanceOf(OlMap).isRequired,
 
     /**
-     * The array extent[minx, miny, maxx, maxy]  (the values must be in the maps coordination system) or instance of Ol SimpleGeometry that the map should zoom to.
-     * @type {Array}
+     * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
+     * instance of Ol SimpleGeometry that the map should zoom to.
+     * @type {Array<Number>|OlSimpleGeometry}
      */
     extent: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.number),
@@ -49,7 +50,8 @@ class ZoomToExtentButton extends React.Component {
     ]).isRequired,
 
     /**
-     * Options for fitting to the given extent. See https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
+     * Options for fitting to the given extent. See
+     * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
      * @type {Object}
      */
     fitOptions: PropTypes.shape({
@@ -88,6 +90,13 @@ class ZoomToExtentButton extends React.Component {
     const view = map.getView();
 
     const {fitOptions: defaultFitOptions} = ZoomToExtentButton.defaultProps;
+
+    if (!view) { // no view, no zooming
+      return;
+    }
+    if (view.getAnimating()) {
+      view.cancelAnimations();
+    }
 
     const finalFitOptions = {
       ...defaultFitOptions,
