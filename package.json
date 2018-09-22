@@ -113,7 +113,7 @@
     "eslint-plugin-markdown": "1.0.0-beta.7",
     "eslint-plugin-react": "7.11.1",
     "file-loader": "2.0.0",
-    "jest": "22.4.3",
+    "jest": "23.6.0",
     "less": "3.8.1",
     "less-loader": "4.1.0",
     "np": "3.0.4",
