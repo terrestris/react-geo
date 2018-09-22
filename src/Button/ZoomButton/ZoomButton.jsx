@@ -52,9 +52,9 @@ class ZoomButton extends React.Component {
     animate: PropTypes.bool,
 
     /**
-     * The options for the zoom in animation. By default zooming in will take
-     * 250 milliseconds and an easing which starts fast and then slows down
-     * will be used.
+     * The options for the zoom animation. By default zooming will take 250
+     * milliseconds and an easing which starts fast and then slows down will be
+     * used.
      */
     animateOptions: PropTypes.shape({
       duration: PropTypes.number,
