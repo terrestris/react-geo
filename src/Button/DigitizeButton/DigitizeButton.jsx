@@ -291,49 +291,49 @@ class DigitizeButton extends React.Component {
 
     /**
      * Listener function for the 'drawend' event of an ol.interaction.Draw.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Draw.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
      * for more information.
      */
     onDrawEnd: PropTypes.func,
 
     /**
      * Listener function for the 'drawstart' event of an ol.interaction.Draw.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Draw.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
      * for more information.
      */
     onDrawStart: PropTypes.func,
 
     /**
      * Listener function for the 'modifystart' event of an ol.interaction.Modify.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Modify.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-ModifyEvent.html
      * for more information.
      */
     onModifyStart: PropTypes.func,
 
     /**
      * Listener function for the 'modifyend' event of an ol.interaction.Modify.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Modify.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-ModifyEvent.html
      * for more information.
      */
     onModifyEnd: PropTypes.func,
 
     /**
      * Listener function for the 'translatestart' event of an ol.interaction.Translate.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Translate.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
      * for more information.
      */
     onTranslateStart: PropTypes.func,
 
     /**
      * Listener function for the 'translateend' event of an ol.interaction.Translate.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Translate.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
      * for more information.
      */
     onTranslateEnd: PropTypes.func,
 
     /**
      * Listener function for the 'translating' event of an ol.interaction.Translate.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Translate.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
      * for more information.
      */
     onTranslating: PropTypes.func,
@@ -341,7 +341,7 @@ class DigitizeButton extends React.Component {
     /**
      * Listener function for the 'select' event of the ol.interaction.Select
      * if in delete mode.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-SelectEvent.html
      * for more information.
      */
     onFeatureRemove: PropTypes.func,
@@ -349,14 +349,14 @@ class DigitizeButton extends React.Component {
     /**
      * Listener function for the 'select' event of the ol.interaction.Select
      * if in copy mode.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-SelectEvent.html
      * for more information.
      */
     onFeatureCopy: PropTypes.func,
 
     /**
      * Additional configuration object to apply to the ol.interaction.Draw.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Draw.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-Draw.html
      * for more information
      *
      * Note: The keys source, type, geometryFunction, style and freehandCondition
@@ -367,7 +367,7 @@ class DigitizeButton extends React.Component {
 
     /**
      * Additional configuration object to apply to the ol.interaction.Select.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-Select.html
      * for more information
      *
      * Note: The keys condition, hitTolerance and style are handled internally
@@ -377,7 +377,7 @@ class DigitizeButton extends React.Component {
 
     /**
      * Additional configuration object to apply to the ol.interaction.Modify.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Modify.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
      * for more information
      *
      * Note: The keys features, deleteCondition and style are handled internally
@@ -387,7 +387,7 @@ class DigitizeButton extends React.Component {
 
     /**
      * Additional configuration object to apply to the ol.interaction.Translate.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Translate.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-Translate.html
      * for more information
      *
      * Note: The key feature is handled internally and shouldn't be overwritten

@@ -123,7 +123,7 @@ export class WfsSearch extends React.Component {
      */
     propertyNames: PropTypes.arrayOf(PropTypes.string),
     /**
-     * Filter condition. See https://openlayers.org/en/latest/apidoc/ol.format.filter.html
+     * Filter condition. See https://openlayers.org/en/latest/apidoc/module-ol_format_filter.html
      * for more information.
      * @type {object}
      */
@@ -173,7 +173,7 @@ export class WfsSearch extends React.Component {
     additionalFetchOptions: PropTypes.object,
     /**
      * Options which are passed to the constructor of the ol.format.WFS.
-     * compare: https://openlayers.org/en/latest/apidoc/ol.format.WFS.html
+     * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
      * @type {object}
      */
     wfsFormatOptions: PropTypes.object,
