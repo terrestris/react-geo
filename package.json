@@ -108,12 +108,12 @@
     "css-loader": "1.0.0",
     "enzyme": "3.6.0",
     "enzyme-adapter-react-16": "1.5.0",
-    "eslint": "5.5.0",
+    "eslint": "5.6.0",
     "eslint-plugin-html": "4.0.6",
     "eslint-plugin-markdown": "1.0.0-beta.7",
     "eslint-plugin-react": "7.11.1",
-    "file-loader": "1.1.11",
-    "jest": "22.4.3",
+    "file-loader": "2.0.0",
+    "jest": "23.6.0",
     "less": "3.8.1",
     "less-loader": "4.1.0",
     "np": "3.0.4",
@@ -126,6 +126,6 @@
     "style-loader": "0.23.0",
     "url-loader": "1.1.1",
     "webpack": "4.19.1",
-    "whatwg-fetch": "2.0.4"
+    "whatwg-fetch": "3.0.0"
   }
 }
