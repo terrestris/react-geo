@@ -41,7 +41,7 @@ class ZoomToExtentButton extends React.Component {
 
     /**
      * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
-     * instance of Ol SimpleGeometry that the map should zoom to.
+     * instance of ol.geom.SimpleGeometry that the map should zoom to.
      * @type {Array<Number>|OlSimpleGeometry}
      */
     extent: PropTypes.oneOfType([
@@ -54,13 +54,7 @@ class ZoomToExtentButton extends React.Component {
      * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
      * @type {Object}
      */
-    fitOptions: PropTypes.shape({
-      constrainResolution: PropTypes.bool,
-      duration: PropTypes.number,
-      easing: PropTypes.func,
-      padding: PropTypes.arrayOf(PropTypes.number),
-      nearest: PropTypes.bool
-    })
+    fitOptions: PropTypes.object
 
   }
 
