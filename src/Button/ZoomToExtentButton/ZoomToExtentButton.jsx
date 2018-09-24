@@ -54,13 +54,7 @@ class ZoomToExtentButton extends React.Component {
      * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
      * @type {Object}
      */
-    fitOptions: PropTypes.shape({
-      constrainResolution: PropTypes.bool,
-      duration: PropTypes.number,
-      easing: PropTypes.func,
-      padding: PropTypes.arrayOf(PropTypes.number),
-      nearest: PropTypes.bool
-    })
+    fitOptions: PropTypes.object
 
   }
 
