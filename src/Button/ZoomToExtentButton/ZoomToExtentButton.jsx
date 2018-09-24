@@ -41,7 +41,7 @@ class ZoomToExtentButton extends React.Component {
 
     /**
      * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
-     * instance of Ol SimpleGeometry that the map should zoom to.
+     * instance of ol.geom.SimpleGeometry that the map should zoom to.
      * @type {Array<Number>|OlSimpleGeometry}
      */
     extent: PropTypes.oneOfType([
