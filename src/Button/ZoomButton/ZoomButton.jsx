@@ -90,6 +90,9 @@ class ZoomButton extends React.Component {
     if (!view) { // no view, no zooming
       return;
     }
+    if (view.getAnimating()) {
+      view.cancelAnimations();
+    }
     const currentZoom = view.getZoom();
     const zoom = currentZoom + delta;
     if (animate) {
@@ -98,9 +101,6 @@ class ZoomButton extends React.Component {
         duration,
         easing
       };
-      if (view.getAnimating()) {
-        view.cancelAnimations();
-      }
       view.animate(finalOptions);
     } else {
       view.setZoom(zoom);
