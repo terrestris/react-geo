@@ -42,5 +42,10 @@ module.exports = {
       }
     }],
     "space-infix-ops": ["error", {"int32Hint": false}]
+  },
+  "settings": {
+    "react": {
+      "version": "16.0"
+    }
   }
 };
