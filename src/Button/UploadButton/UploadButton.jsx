@@ -14,6 +14,9 @@ import './UploadButton.less';
  *
  * To use a text with the UploadButton provide a SimpleButton as children.
  *
+ * This automatically supports uploads via drag and drop from the operating
+ * system.
+ *
  * @class The UploadButton
  * @extends React.Component
  */
