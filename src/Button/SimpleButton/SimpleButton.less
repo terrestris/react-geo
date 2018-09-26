@@ -20,7 +20,7 @@ button.react-geo-simplebutton {
     border-color: darken(@component-background, 10);
   }
 
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: @low-resolution-treshold) {
     height: 21px;
     .ant-btn {
       span {
@@ -39,9 +39,15 @@ button.react-geo-simplebutton {
   }
 }
 
-button.react-geo-togglebutton {
-  @media screen and (max-width: 1280px) {
-    &.ant-btn-circle {
+span.react-geo-simplebutton {
+  @media screen and (max-width: @low-resolution-threshold) {
+    height: 21px;
+    .ant-btn {
+      span {
+        font-size: 10px;
+      }
+    }
+    .ant-btn-circle {
       width: 24px;
       height: 24px;
 
