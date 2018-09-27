@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Modal, Input } from 'antd';
 
+const TextArea = Input.TextArea;
+
 import isFunction from 'lodash/isFunction.js';
 
 import OlMap from 'ol/map';
@@ -1138,9 +1140,10 @@ class DigitizeButton extends React.Component {
               onOk={this.onModalLabelOk}
               onCancel={this.onModalLabelCancel}
             >
-              <Input
+              <TextArea
                 value={this.state.textLabel}
                 onChange={this.onLabelChange}
+                autosize
               />
             </Modal>
             : null
