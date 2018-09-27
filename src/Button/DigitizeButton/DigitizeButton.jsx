@@ -996,20 +996,13 @@ class DigitizeButton extends React.Component {
    */
   onModalLabelOk = () => {
     const {
-      textLabel
-    } = this.state;
-
-    const {
       onModalLabelOk
     } = this.props;
 
     this.setState({
       showLabelPrompt: false
     }, () => {
-      this.setTextOnFeature(this._digitizeTextFeature);
-      if (onModalLabelOk) {
-        onModalLabelOk(this._digitizeTextFeature, textLabel);
-      }
+      this.setTextOnFeature(this._digitizeTextFeature, onModalLabelOk);
     });
   }
 
@@ -1031,7 +1024,7 @@ class DigitizeButton extends React.Component {
         this._digitizeFeatures.remove(this._digitizeTextFeature);
         this._digitizeTextFeature = null;
       }
-      if (onModalLabelCancel) {
+      if (isFunction(onModalLabelCancel)) {
         onModalLabelCancel();
       }
     });
@@ -1039,10 +1032,12 @@ class DigitizeButton extends React.Component {
 
   /**
    * Sets formatted label on feature.
+   * Calls `onModalLabelOk` callback function if provided.
    *
    * @param {OlFeature} feat The point feature to be styled with label.
+   * @param {Function} onModalOkCbk Optional callback function.
    */
-  setTextOnFeature = (feat, onModalClick) => {
+  setTextOnFeature = (feat, onModalOkCbk) => {
     const {
       maxLabelLineLength
     } = this.props;
@@ -1056,6 +1051,10 @@ class DigitizeButton extends React.Component {
     feat.set('label', label);
     this.setState({
       textLabel: ''
+    }, () => {
+      if (isFunction(onModalOkCbk)) {
+        onModalOkCbk(feat, label);
+      }
     });
   }
 
