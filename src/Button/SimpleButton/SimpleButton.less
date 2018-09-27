@@ -20,41 +20,21 @@ button.react-geo-simplebutton {
     border-color: darken(@component-background, 10);
   }
 
-  @media screen and (max-width: @low-resolution-treshold) {
-    height: 21px;
-    .ant-btn {
-      span {
-        font-size: 10px;
-      }
-    }
-    .ant-btn-circle {
+  @media screen and (max-width: @low-resolution-threshold) {
+    height: 24px;
+    &.ant-btn-circle {
       width: 24px;
       height: 24px;
-
-      span {
-        font-size: 2.5em;
-        line-height: 22px;
-      }
     }
   }
 }
 
 span.react-geo-simplebutton {
   @media screen and (max-width: @low-resolution-threshold) {
-    height: 21px;
-    .ant-btn {
-      span {
-        font-size: 10px;
-      }
-    }
+    height: 24px;
     .ant-btn-circle {
       width: 24px;
       height: 24px;
-
-      span {
-        font-size: 2.5em;
-        line-height: 22px;
-      }
     }
   }
 }
