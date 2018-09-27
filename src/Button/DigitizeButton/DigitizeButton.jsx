@@ -340,7 +340,7 @@ class DigitizeButton extends React.Component {
 
     /**
      * Listener function for the 'select' event of the ol.interaction.Select
-     * if in delete mode.
+     * if in `Delete` mode.
      * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-SelectEvent.html
      * for more information.
      */
@@ -348,7 +348,7 @@ class DigitizeButton extends React.Component {
 
     /**
      * Listener function for the 'select' event of the ol.interaction.Select
-     * if in copy mode.
+     * if in `Copy` mode.
      * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-SelectEvent.html
      * for more information.
      */
@@ -417,7 +417,16 @@ class DigitizeButton extends React.Component {
      *
      * @type {Function} onModalLabelCancel
      */
-    onModalLabelCancel: PropTypes.func
+    onModalLabelCancel: PropTypes.func,
+    /**
+     * Listener function for the 'select' event of the ol.interaction.Select
+     * if in `Edit` mode.
+     * Can be also called inside of 'select' listener function of
+     * the ol.interaction.Select in `Copy` and `Delete` mode if provided.
+     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.Event.html
+     * for more information.
+     */
+    onFeatureSelect: PropTypes.func
   };
 
   /**
@@ -495,7 +504,8 @@ class DigitizeButton extends React.Component {
       map,
       drawType,
       editType,
-      drawStyle
+      drawStyle,
+      onFeatureSelect
     } = this.props;
 
     const {
@@ -529,6 +539,9 @@ class DigitizeButton extends React.Component {
         }
         if (editType === DigitizeButton.COPY_EDIT_TYPE) {
           this._selectInteraction.un('select', this.onFeatureCopy);
+        }
+        if (isFunction(onFeatureSelect) && editType === DigitizeButton.EDIT_EDIT_TYPE) {
+          this._selectInteraction.un('select', onFeatureSelect);
         }
         map.un('pointermove', this.onPointerMove);
       }
@@ -747,7 +760,8 @@ class DigitizeButton extends React.Component {
       map,
       selectInteractionConfig,
       modifyInteractionConfig,
-      translateInteractionConfig
+      translateInteractionConfig,
+      onFeatureSelect
     } = this.props;
 
     this._selectInteraction = new OlInteractionSelect({
@@ -761,6 +775,10 @@ class DigitizeButton extends React.Component {
       this._selectInteraction.on('select', this.onFeatureRemove);
     } else if (editType === DigitizeButton.COPY_EDIT_TYPE) {
       this._selectInteraction.on('select', this.onFeatureCopy);
+    }
+
+    if (isFunction(onFeatureSelect) && editType === DigitizeButton.EDIT_EDIT_TYPE) {
+      this._selectInteraction.on('select', onFeatureSelect);
     }
 
     let interactions = [this._selectInteraction];
@@ -803,11 +821,16 @@ class DigitizeButton extends React.Component {
    */
   onFeatureRemove = evt => {
     const {
-      onFeatureRemove
+      onFeatureRemove,
+      onFeatureSelect
     } = this.props;
 
     if (isFunction(onFeatureRemove)) {
       onFeatureRemove(evt);
+    }
+
+    if (isFunction(onFeatureSelect)) {
+      onFeatureSelect(evt);
     }
 
     const feat = evt.selected[0];
@@ -825,14 +848,24 @@ class DigitizeButton extends React.Component {
    */
   onFeatureCopy = evt => {
     const {
-      onFeatureCopy
+      onFeatureCopy,
+      onFeatureSelect
     } = this.props;
+
+    const feat = evt.selected[0];
+
+    if (!feat) {
+      return;
+    }
 
     if (isFunction(onFeatureCopy)) {
       onFeatureCopy(evt);
     }
 
-    const feat = evt.selected[0];
+    if (isFunction(onFeatureSelect)) {
+      onFeatureSelect(evt);
+    }
+
     const copy = feat.clone();
     copy.setStyle(feat.getStyle());
     this._digitizeFeatures.push(copy);
@@ -1071,6 +1104,7 @@ class DigitizeButton extends React.Component {
       onTranslating,
       onFeatureRemove,
       onFeatureCopy,
+      onFeatureSelect,
       drawInteractionConfig,
       selectInteractionConfig,
       modifyInteractionConfig,
