@@ -418,12 +418,13 @@ class DigitizeButton extends React.Component {
      * @type {Function} onModalLabelCancel
      */
     onModalLabelCancel: PropTypes.func,
+
     /**
      * Listener function for the 'select' event of the ol.interaction.Select
      * if in `Edit` mode.
      * Can be also called inside of 'select' listener function of
      * the ol.interaction.Select in `Copy` and `Delete` mode if provided.
-     * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.Event.html
+     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select.html
      * for more information.
      */
     onFeatureSelect: PropTypes.func
