@@ -994,10 +994,6 @@ class DigitizeButton extends React.Component {
    */
   onModalLabelOk = () => {
     const {
-      textLabel
-    } = this.state;
-
-    const {
       onModalLabelOk
     } = this.props;
 
