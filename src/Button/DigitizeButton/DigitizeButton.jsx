@@ -429,7 +429,15 @@ class DigitizeButton extends React.Component {
      * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select.html
      * for more information.
      */
-    onFeatureSelect: PropTypes.func
+    onFeatureSelect: PropTypes.func,
+
+    /**
+     * Maximal length of feature label.
+     * If exceeded label will be divided into multiple lines. Optional.
+     *
+     * @type {Number} maxLabelLineLength
+     */
+    maxLabelLineLength: PropTypes.number
   };
 
   /**
@@ -1033,8 +1041,17 @@ class DigitizeButton extends React.Component {
    *
    * @param {OlFeature} feat The point feature to be styled with label.
    */
-  setTextOnFeature = feat => {
-    const label = StringUtil.stringDivider(this.state.textLabel, 16, '\n');
+  setTextOnFeature = (feat, onModalClick) => {
+    const {
+      maxLabelLineLength
+    } = this.props;
+
+    let label = this.state.textLabel;
+    if (maxLabelLineLength) {
+      label = StringUtil.stringDivider(
+        this.state.textLabel, maxLabelLineLength, '\n'
+      );
+    }
     feat.set('label', label);
     this.setState({
       textLabel: ''
@@ -1115,6 +1132,7 @@ class DigitizeButton extends React.Component {
       onToggle,
       onModalLabelOk,
       onModalLabelCancel,
+      maxLabelLineLength,
       ...passThroughProps
     } = this.props;
 
