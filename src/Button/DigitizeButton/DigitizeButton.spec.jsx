@@ -446,6 +446,9 @@ describe('<DigitizeButton />', () => {
         const wrapper = setupWrapper();
         const feat = new OlFeature();
         feat.set('isLabel', true);
+        feat.setStyle(new OlStyleStyle({
+          text: new OlStyleText()
+        }));
         const mockEvt = {
           features: {}
         };
