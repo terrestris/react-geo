@@ -909,7 +909,8 @@ class DigitizeButton extends React.Component {
     if (feature.get('isLabel')) {
       this._digitizeTextFeature = feature;
       this.setState({
-        showLabelPrompt: true
+        showLabelPrompt: true,
+        textLabel: feature.getStyle().getText().getText() || ''
       });
     }
   }
