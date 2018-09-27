@@ -1085,6 +1085,7 @@ class DigitizeButton extends React.Component {
       : this.className;
 
     const btnWrapperClass = `${CSS_PREFIX}digitize-button-wrapper`;
+    const modalClass = `${CSS_PREFIX}digitize-button-modal`;
 
     return (
       <span className={btnWrapperClass}>
@@ -1096,6 +1097,7 @@ class DigitizeButton extends React.Component {
         {
           this.state.showLabelPrompt ?
             <Modal
+              className={modalClass}
               title={modalPromptTitle}
               okText={modalPromptOkButtonText}
               cancelText={modalPromptCancelButtonText}

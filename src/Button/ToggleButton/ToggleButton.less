@@ -24,4 +24,22 @@ button.react-geo-togglebutton {
     background-color: darken(@primary-color, 20);
     border-color: darken(@primary-color, 25);
   }
+
+  @media screen and (max-width: @low-resolution-threshold) {
+    height: 24px;
+    &.ant-btn-circle {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+span.react-geo-togglebutton {
+  @media screen and (max-width: @low-resolution-threshold) {
+    height: 24px;
+    .ant-btn-circle {
+      width: 24px;
+      height: 24px;
+    }
+  }
 }

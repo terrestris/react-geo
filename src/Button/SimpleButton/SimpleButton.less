@@ -19,4 +19,22 @@ button.react-geo-simplebutton {
     background-color: @component-background;
     border-color: darken(@component-background, 10);
   }
+
+  @media screen and (max-width: @low-resolution-threshold) {
+    height: 24px;
+    &.ant-btn-circle {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+span.react-geo-simplebutton {
+  @media screen and (max-width: @low-resolution-threshold) {
+    height: 24px;
+    .ant-btn-circle {
+      width: 24px;
+      height: 24px;
+    }
+  }
 }
