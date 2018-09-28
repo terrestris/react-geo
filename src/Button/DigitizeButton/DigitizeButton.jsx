@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Modal, Input } from 'antd';
 
+const TextArea = Input.TextArea;
+
 import isFunction from 'lodash/isFunction.js';
 
 import OlMap from 'ol/map';
@@ -427,7 +429,15 @@ class DigitizeButton extends React.Component {
      * See https://openlayers.org/en/latest/apidoc/ol.interaction.Select.Event.html
      * for more information.
      */
-    onFeatureSelect: PropTypes.func
+    onFeatureSelect: PropTypes.func,
+
+    /**
+     * Maximal length of feature label.
+     * If exceeded label will be divided into multiple lines. Optional.
+     *
+     * @type {Number} maxLabelLineLength
+     */
+    maxLabelLineLength: PropTypes.number
   };
 
   /**
@@ -657,6 +667,10 @@ class DigitizeButton extends React.Component {
       selectFillColor,
       selectStrokeColor
     } = this.props;
+
+    if (feature.get('label')) {
+      text = feature.get('label');
+    }
 
     return new OlStyleStyle({
       image: new OlStyleCircle({
@@ -896,8 +910,17 @@ class DigitizeButton extends React.Component {
     const feature = evt.features.getArray()[0];
     if (feature.get('isLabel')) {
       this._digitizeTextFeature = feature;
+      let textLabel = '';
+
+      if (feature.getStyle() && feature.getStyle().getText()) {
+        textLabel = feature.getStyle().getText().getText();
+      } else if (feature.get('label')) {
+        textLabel = feature.get('label');
+      }
+
       this.setState({
-        showLabelPrompt: true
+        showLabelPrompt: true,
+        textLabel
       });
     }
   }
@@ -983,20 +1006,13 @@ class DigitizeButton extends React.Component {
    */
   onModalLabelOk = () => {
     const {
-      textLabel
-    } = this.state;
-
-    const {
       onModalLabelOk
     } = this.props;
 
     this.setState({
       showLabelPrompt: false
     }, () => {
-      this.setTextOnFeature(this._digitizeTextFeature);
-      if (onModalLabelOk) {
-        onModalLabelOk(this._digitizeTextFeature, textLabel);
-      }
+      this.setTextOnFeature(this._digitizeTextFeature, onModalLabelOk);
     });
   }
 
@@ -1018,7 +1034,7 @@ class DigitizeButton extends React.Component {
         this._digitizeFeatures.remove(this._digitizeTextFeature);
         this._digitizeTextFeature = null;
       }
-      if (onModalLabelCancel) {
+      if (isFunction(onModalLabelCancel)) {
         onModalLabelCancel();
       }
     });
@@ -1026,14 +1042,33 @@ class DigitizeButton extends React.Component {
 
   /**
    * Sets formatted label on feature.
+   * Calls `onModalLabelOk` callback function if provided.
    *
    * @param {OlFeature} feat The point feature to be styled with label.
+   * @param {Function} onModalOkCbk Optional callback function.
    */
-  setTextOnFeature = feat => {
-    const label = StringUtil.stringDivider(this.state.textLabel, 16, '\n');
+  setTextOnFeature = (feat, onModalOkCbk) => {
+    const {
+      maxLabelLineLength
+    } = this.props;
+
+    const {
+      textLabel
+    } = this.state;
+
+    let label = textLabel;
+    if (maxLabelLineLength) {
+      label = StringUtil.stringDivider(
+        textLabel, maxLabelLineLength, '\n'
+      );
+    }
     feat.set('label', label);
     this.setState({
       textLabel: ''
+    }, () => {
+      if (isFunction(onModalOkCbk)) {
+        onModalOkCbk(feat, label);
+      }
     });
   }
 
@@ -1111,6 +1146,7 @@ class DigitizeButton extends React.Component {
       onToggle,
       onModalLabelOk,
       onModalLabelCancel,
+      maxLabelLineLength,
       ...passThroughProps
     } = this.props;
 
@@ -1138,9 +1174,10 @@ class DigitizeButton extends React.Component {
               onOk={this.onModalLabelOk}
               onCancel={this.onModalLabelCancel}
             >
-              <Input
+              <TextArea
                 value={this.state.textLabel}
                 onChange={this.onLabelChange}
+                autosize
               />
             </Modal>
             : null
