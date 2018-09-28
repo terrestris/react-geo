@@ -1054,10 +1054,14 @@ class DigitizeButton extends React.Component {
       maxLabelLineLength
     } = this.props;
 
-    let label = this.state.textLabel;
+    const {
+      textLabel
+    } = this.state;
+
+    let label = textLabel;
     if (maxLabelLineLength) {
       label = StringUtil.stringDivider(
-        this.state.textLabel, maxLabelLineLength, '\n'
+        textLabel, maxLabelLineLength, '\n'
       );
     }
     feat.set('label', label);

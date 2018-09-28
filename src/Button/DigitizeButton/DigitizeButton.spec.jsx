@@ -325,7 +325,7 @@ describe('<DigitizeButton />', () => {
           selectStrokeColor: 'blue'
         });
 
-        const expectedStyle = wrapper.instance().getSelectedStyleFunction();
+        const expectedStyle = wrapper.instance().getSelectedStyleFunction(new OlFeature());
         expect(expectedStyle instanceof OlStyleStyle).toBeTruthy();
         expect(expectedStyle.getStroke().getColor()).toBe(wrapper.props().selectStrokeColor);
         expect(expectedStyle.getFill().getColor()).toBe(wrapper.props().selectFillColor);
