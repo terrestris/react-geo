@@ -668,6 +668,10 @@ class DigitizeButton extends React.Component {
       selectStrokeColor
     } = this.props;
 
+    if (feature.get('label')) {
+      text = feature.get('label');
+    }
+
     return new OlStyleStyle({
       image: new OlStyleCircle({
         radius: 7,
@@ -906,9 +910,17 @@ class DigitizeButton extends React.Component {
     const feature = evt.features.getArray()[0];
     if (feature.get('isLabel')) {
       this._digitizeTextFeature = feature;
+      let textLabel = '';
+
+      if (feature.getStyle() && feature.getStyle().getText()) {
+        textLabel = feature.getStyle().getText().getText();
+      } else if (feature.get('label')) {
+        textLabel = feature.get('label');
+      }
+
       this.setState({
         showLabelPrompt: true,
-        textLabel: feature.getStyle().getText().getText() || ''
+        textLabel
       });
     }
   }
