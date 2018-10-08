@@ -4,15 +4,17 @@ import { Checkbox } from 'antd';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerImage  from 'ol/layer/Image';
 import OlMap from 'ol/Map';
-import isFunction from 'lodash/isFunction.js';
+
+import isFunction from 'lodash/isFunction';
 
 import Panel from '../../Panel/Panel/Panel.jsx';
 import Titlebar from '../../Panel/Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
 import Logger from '@terrestris/base-util/src/Logger';
 
-import './AddWmsPanel.less';
 import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry.jsx';
+
+import './AddWmsPanel.less';
 
 /**
  * Panel containing a (checkable) list of AddWmsLayerEntry instances.

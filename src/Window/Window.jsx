@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import uniqueId from 'lodash/uniqueId.js';
+
+import uniqueId from 'lodash/uniqueId';
 
 import Panel from  '../Panel/Panel/Panel.jsx';
 import Logger from '@terrestris/base-util/src/Logger';
+
 import { CSS_PREFIX } from '../constants';
 
 import './Window.less';

@@ -1,5 +1,6 @@
 import React from 'react';
-import isArray from 'lodash/isArray.js';
+
+import isArray from 'lodash/isArray';
 
 /**
  * HOC that updates layers based on the wrapped components time instant or
