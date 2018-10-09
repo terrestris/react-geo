@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import isEmpty from 'lodash/isEmpty.js';
+
+import isEmpty from 'lodash/isEmpty';
 
 import { CSS_PREFIX } from '../../constants';
 

@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { Table } from 'antd';
-import isEqual from 'lodash/isEqual.js';
-import isFunction from 'lodash/isFunction.js';
-import kebabCase from 'lodash/kebabCase.js';
+
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
@@ -14,6 +13,10 @@ import OlSourceVector from 'ol/source/Vector';
 import OlLayerVector from 'ol/layer/Vector';
 import OlGeomGeometry from 'ol/geom/Geometry';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
+
+import isEqual from 'lodash/isEqual';
+import isFunction from 'lodash/isFunction';
+import kebabCase from 'lodash/kebabCase';
 
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
 

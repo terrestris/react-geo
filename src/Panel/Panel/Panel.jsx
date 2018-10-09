@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Rnd from 'react-rnd';
-import uniqueId from 'lodash/uniqueId.js';
-import isNumber from 'lodash/isNumber.js';
-import isFunction from 'lodash/isFunction.js';
+
+import uniqueId from 'lodash/uniqueId';
+import isNumber from 'lodash/isNumber';
+import isFunction from 'lodash/isFunction';
 
 import Titlebar from '../Titlebar/Titlebar.jsx';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
+
 import { CSS_PREFIX } from '../../constants';
 
 import './Panel.less';

@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import isEmpty from 'lodash/isEmpty.js';
-
 import OlMap from 'ol/Map';
 import OlLayerVector from 'ol/layer/Vector';
 import OlSourceVector from 'ol/source/Vector';
@@ -17,9 +15,12 @@ import OlInteractionDraw from 'ol/interaction/Draw';
 import { unByKey } from 'ol/Observable';
 import OlOverlay from 'ol/Overlay';
 
+import isEmpty from 'lodash/isEmpty';
+
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import MeasureUtil from '@terrestris/ol-util/src/MeasureUtil/MeasureUtil';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+
 import { CSS_PREFIX } from '../../constants';
 
 import './MeasureButton.less';

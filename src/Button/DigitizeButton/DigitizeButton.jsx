@@ -2,10 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Modal, Input } from 'antd';
-
 const TextArea = Input.TextArea;
-
-import isFunction from 'lodash/isFunction.js';
 
 import OlMap from 'ol/Map';
 import OlLayerVector from 'ol/layer/Vector';
@@ -22,11 +19,14 @@ import OlInteractionModify from 'ol/interaction/Modify';
 import OlInteractionTranslate from 'ol/interaction/Translate';
 import { never, singleClick } from 'ol/events/condition';
 
+import isFunction from 'lodash/isFunction';
+
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
 import StringUtil from '@terrestris/base-util/src/StringUtil/StringUtil';
 import AnimateUtil from '@terrestris/ol-util/src/AnimateUtil/AnimateUtil';
 import Logger from '@terrestris/base-util/src/Logger';
+
 import { CSS_PREFIX } from '../../constants';
 
 /**
