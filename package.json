@@ -124,7 +124,7 @@
     "regenerator-runtime": "0.12.1",
     "rimraf": "2.6.2",
     "style-loader": "0.23.1",
-    "url-loader": "1.1.1",
+    "url-loader": "1.1.2",
     "webpack": "4.20.2",
     "whatwg-fetch": "3.0.0"
   }
