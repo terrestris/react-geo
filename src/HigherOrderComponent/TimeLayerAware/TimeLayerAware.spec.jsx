@@ -2,6 +2,9 @@
 import React from 'react';
 import moment from 'moment';
 
+import TileLayer from 'ol/layer/Tile.js';
+import TileWMS from 'ol/source/TileWMS';
+
 import TestUtil from '../../Util/TestUtil';
 
 import {
@@ -10,6 +13,9 @@ import {
 
 describe('timeLayerAware', () => {
   let EnhancedComponent;
+  let EnhancedComponent2;
+  let layer;
+  let layerWithFunnyTimeSpelling;
   const customHandler = jest.fn();
 
   /* eslint-disable require-jsdoc */
@@ -23,9 +29,32 @@ describe('timeLayerAware', () => {
   /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
+    layer = new TileLayer({
+      source: new TileWMS({
+        params: {
+          LAYERS: 'humpty:dumpty',
+          TIME: 'overwrite me!'
+        }
+      })
+    });
+    layerWithFunnyTimeSpelling = new TileLayer({
+      source: new TileWMS({
+        params: {
+          LAYERS: 'humpty:dumpty',
+          tImE: 'overwrite me!'
+        }
+      })
+    });
     EnhancedComponent = timeLayerAware(MockComponent, [{
       isWmsTime: false,
       customHandler: customHandler
+    }]);
+    EnhancedComponent2 = timeLayerAware(MockComponent, [{
+      isWmsTime: true,
+      layer: layer
+    }, {
+      isWmsTime: true,
+      layer: layerWithFunnyTimeSpelling
     }]);
   });
 
@@ -45,6 +74,32 @@ describe('timeLayerAware', () => {
       new EnhancedComponent().timeChanged(time);
 
       expect(customHandler).toHaveBeenCalledWith(time);
+    });
+
+    it('changes WMS Time layer parameter TIME, single instant', () => {
+      const time = moment().toISOString();
+      new EnhancedComponent2().timeChanged(time);
+      const params = layer.getSource().getParams();
+
+      expect(params.TIME).toBe(time);
+    });
+
+    it('changes WMS Time layer parameter TIME, start and end instants', () => {
+      const start = moment().toISOString();
+      const end = moment().toISOString();
+      new EnhancedComponent2().timeChanged([start, end]);
+      const params = layer.getSource().getParams();
+
+      expect(params.TIME).toBe(`${start}/${end}`);
+    });
+
+    it('updates the correct parameter, even when spelled funnily', () => {
+      const time = moment().toISOString();
+      new EnhancedComponent2().timeChanged(time);
+      const params = layerWithFunnyTimeSpelling.getSource().getParams();
+
+      expect(params.tImE).toBe(time); // right one overwriten
+      expect('TIME' in params).toBe(false); // only right one overwritten
     });
   });
 });
