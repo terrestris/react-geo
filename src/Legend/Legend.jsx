@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import isEqual from 'lodash/isEqual';
+
 import Logger from '@terrestris/base-util/src/Logger';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
-import isEqual from 'lodash/isEqual.js';
 
 import { CSS_PREFIX } from '../constants';
 

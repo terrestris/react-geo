@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import {
   Button,
   Tooltip
 } from 'antd';
 import { Icon } from 'react-fa';
-import isFunction from 'lodash/isFunction.js';
+
+import isFunction from 'lodash/isFunction';
 
 import './ToggleButton.less';
 

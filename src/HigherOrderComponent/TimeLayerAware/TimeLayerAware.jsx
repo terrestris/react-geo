@@ -1,5 +1,27 @@
 import React from 'react';
-import isArray from 'lodash/isArray.js';
+
+import isArray from 'lodash/isArray';
+
+/**
+ * Finds the key time in the passed object regardless of upper- or lowercase
+ * characters. Will return `TIME` (all uppercase) as a fallback.
+ *
+ * @param {Object} params The object to find the key in, basically the params of
+ *   a WMS source that will end up as URL parameters.
+ * @return {String} The key for the time parameter, in the actual spelling.
+ */
+const findTimeParam = (params) => {
+  const keys = Object.keys(params);
+  let foundKey = 'TIME'; // fallback
+  keys.some(key => {
+    let lcKey = key && key.toLowerCase && key.toLowerCase();
+    if (lcKey === 'time') {
+      foundKey = key;
+      return true;
+    }
+  });
+  return foundKey;
+};
 
 /**
  * HOC that updates layers based on the wrapped components time instant or
@@ -16,10 +38,11 @@ export function timeLayerAware(WrappedComponent, layers) {
       layers.forEach(config => {
         if (config.isWmsTime) {
           const parms = config.layer.getSource().getParams();
+          const timeParam = findTimeParam(parms);
           if (isArray(newValues)) {
-            parms.time = `${newValues[0]}/${newValues[1]}`;
+            parms[timeParam] = `${newValues[0]}/${newValues[1]}`;
           } else {
-            parms.time = `${newValues}`;
+            parms[timeParam] = `${newValues}`;
           }
           config.layer.getSource().updateParams(parms);
         }

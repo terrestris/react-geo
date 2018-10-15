@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { AgGridReact } from 'ag-grid-react';
-import differenceWith from 'lodash/differenceWith.js';
-import isEqual from 'lodash/isEqual.js';
-import isFunction from 'lodash/isFunction.js';
-import kebabCase from 'lodash/kebabCase.js';
+
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
@@ -16,11 +14,15 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlGeomGeometry from 'ol/geom/Geometry';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 
+import isArray from 'lodash/isArray';
+import differenceWith from 'lodash/differenceWith';
+import isEqual from 'lodash/isEqual';
+import isFunction from 'lodash/isFunction';
+import kebabCase from 'lodash/kebabCase';
+
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../../constants';
-
-import isArray from 'lodash/isArray.js';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';

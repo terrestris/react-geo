@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import isArray from 'lodash/isArray.js';
-import isObject from 'lodash/isObject.js';
 
 import { Slider } from 'antd';
+
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 
 /**
  * Customized slider that uses ISO 8601 time strings as input.

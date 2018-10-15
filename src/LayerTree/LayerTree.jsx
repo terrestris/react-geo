@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import isBoolean from 'lodash/isBoolean.js';
-import isFunction from 'lodash/isFunction.js';
-import isEqual from 'lodash/isEqual.js';
+
 import { Tree } from 'antd';
 
 import OlMap from 'ol/Map';
@@ -11,9 +9,15 @@ import OlLayerGroup from 'ol/layer/Group';
 import OlCollection from 'ol/Collection';
 import { unByKey } from 'ol/Observable';
 
+import isBoolean from 'lodash/isBoolean';
+import isFunction from 'lodash/isFunction';
+import isEqual from 'lodash/isEqual';
+
 import Logger from '@terrestris/base-util/src/Logger';
 import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+
 import LayerTreeNode from '../LayerTreeNode/LayerTreeNode.jsx';
+
 import { CSS_PREFIX } from '../constants';
 
 /**

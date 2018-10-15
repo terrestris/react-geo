@@ -1,17 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import {
   Input,
   Icon
 } from 'antd';
-import isFunction from 'lodash/isFunction.js';
-import debounce from 'lodash/debounce.js';
+
+import OlMap from 'ol/Map';
+
+import isFunction from 'lodash/isFunction';
+import debounce from 'lodash/debounce';
 
 import Logger from '@terrestris/base-util/src/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/src/WfsFilterUtil/WfsFilterUtil';
-import { CSS_PREFIX } from '../../constants';
 
-import OlMap from 'ol/Map';
+import { CSS_PREFIX } from '../../constants';
 
 /**
  * The WfsSearchInput field.
