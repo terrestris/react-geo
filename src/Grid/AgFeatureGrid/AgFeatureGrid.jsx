@@ -24,9 +24,9 @@ import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../../constants';
 
-import 'ag-grid/dist/styles/ag-grid.css';
-import 'ag-grid/dist/styles/ag-theme-balham.css';
-import 'ag-grid/dist/styles/ag-theme-fresh.css';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-fresh.css';
 
 /**
  * The AgFeatureGrid.
