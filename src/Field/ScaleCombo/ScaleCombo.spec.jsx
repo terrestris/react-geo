@@ -8,8 +8,8 @@ import TestUtil from '../../Util/TestUtil';
 
 import { ScaleCombo } from '../../index';
 
-import Logger from '@terrestris/base-util/src/Logger';
-import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+import Logger from '@terrestris/base-util/dist/Logger';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 describe('<ScaleCombo />', () => {
   it('is defined', () => {

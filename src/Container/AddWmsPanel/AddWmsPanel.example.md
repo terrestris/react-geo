@@ -15,7 +15,7 @@ const {
   SimpleButton
 } = require('../../index.js');
 
-const CapabilitiesUtil = require('@terrestris/ol-util/src/CapabilitiesUtil/CapabilitiesUtil').default;
+const CapabilitiesUtil = require('@terrestris/ol-util/dist/CapabilitiesUtil/CapabilitiesUtil').default;
 
 // Please note: CORS headers must be set on server providing capabilities document. Otherwise proxy needed.
 const WMS_CAPABILITIES_URL = 'https://ows.terrestris.de/osm/service?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';

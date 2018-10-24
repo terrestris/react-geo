@@ -10,8 +10,8 @@ import reverse from 'lodash/reverse.js';
 import clone from 'lodash/clone.js';
 import isFunction from 'lodash/isFunction.js';
 
-import Logger from '@terrestris/base-util/src/Logger';
-import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+import Logger from '@terrestris/base-util/dist/Logger';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import { CSS_PREFIX } from '../../constants';
 
 /**

@@ -13,8 +13,8 @@ import OlStyleIcon from 'ol/style/icon';
 
 import { ToggleButton } from '../../index';
 
-import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
-import MathUtil from '@terrestris/base-util/src/MathUtil/MathUtil';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import MathUtil from '@terrestris/base-util/dist/MathUtil/MathUtil';
 import { CSS_PREFIX } from '../../constants';
 
 import mapMarker from './geolocation-marker.png';

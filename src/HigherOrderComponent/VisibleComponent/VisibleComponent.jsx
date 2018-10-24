@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Logger from '@terrestris/base-util/src/Logger';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 /**
  * The HOC factory function.

@@ -15,7 +15,7 @@ import OlLayerVector from 'ol/layer/vector';
 import OlGeomGeometry from 'ol/geom/geometry';
 import OlGeomGeometryCollection from 'ol/geom/geometrycollection';
 
-import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import './FeatureGrid.less';
 

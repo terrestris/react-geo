@@ -9,7 +9,7 @@ import TestUtil from '../Util/TestUtil';
 
 import { Legend } from '../index';
 
-import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 describe('<Legend />', () => {
   let layer1;
