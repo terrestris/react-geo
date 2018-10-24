@@ -16,8 +16,8 @@ import OlGeomLineString from 'ol/geom/LineString';
 import OlGeomPolygon from 'ol/geom/Polygon';
 
 import DigitizeButton from './DigitizeButton.jsx';
-import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
-import AnimateUtil from '@terrestris/ol-util/src/AnimateUtil/AnimateUtil';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 import ToggleButton from '../ToggleButton/ToggleButton';
 
 describe('<DigitizeButton />', () => {

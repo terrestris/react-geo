@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 
 import TestUtil from '../../Util/TestUtil';
-import Logger from '@terrestris/base-util/src/Logger';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 import { WfsSearchInput } from '../../index';
 

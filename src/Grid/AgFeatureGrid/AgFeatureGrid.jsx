@@ -20,7 +20,7 @@ import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
 import kebabCase from 'lodash/kebabCase';
 
-import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../../constants';
 

@@ -11,8 +11,8 @@ import OlMap from 'ol/Map';
 import isFunction from 'lodash/isFunction';
 import debounce from 'lodash/debounce';
 
-import Logger from '@terrestris/base-util/src/Logger';
-import WfsFilterUtil from '@terrestris/ol-util/src/WfsFilterUtil/WfsFilterUtil';
+import Logger from '@terrestris/base-util/dist/Logger';
+import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 
 import { CSS_PREFIX } from '../../constants';
 
