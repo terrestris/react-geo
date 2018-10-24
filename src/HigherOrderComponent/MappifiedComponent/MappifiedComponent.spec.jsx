@@ -5,7 +5,7 @@ import TestUtil from '../../Util/TestUtil';
 
 import { mappify } from '../../index';
 
-import Logger from '@terrestris/base-util/src/Logger';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 describe('mappify', () => {
   let EnhancedComponent;

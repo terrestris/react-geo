@@ -10,7 +10,7 @@ import OlOverlay from 'ol/Overlay';
 import * as OlObservable from 'ol/Observable';
 
 import { MeasureButton } from '../../index';
-import MeasureUtil from '@terrestris/ol-util/src/MeasureUtil/MeasureUtil';
+import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
 
 describe('<MeasureButton />', () => {
 

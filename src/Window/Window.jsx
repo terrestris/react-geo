@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import uniqueId from 'lodash/uniqueId';
 
 import Panel from  '../Panel/Panel/Panel.jsx';
-import Logger from '@terrestris/base-util/src/Logger';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../constants';
 

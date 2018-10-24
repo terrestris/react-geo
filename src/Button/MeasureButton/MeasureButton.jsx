@@ -18,8 +18,8 @@ import OlOverlay from 'ol/Overlay';
 import isEmpty from 'lodash/isEmpty';
 
 import ToggleButton from '../ToggleButton/ToggleButton.jsx';
-import MeasureUtil from '@terrestris/ol-util/src/MeasureUtil/MeasureUtil';
-import MapUtil from '@terrestris/ol-util/src/MapUtil/MapUtil';
+import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../../constants';
 

@@ -2,7 +2,7 @@
 import { Window } from '../index';
 import TestUtil from '../Util/TestUtil';
 
-import Logger from '@terrestris/base-util/src/Logger';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 describe('<Window />', () => {
 
