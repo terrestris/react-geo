@@ -25,7 +25,7 @@ Visit https://terrestris.github.io/react-geo/
 
 ## Workshop
 
-Visit https://terrestris.github.io/react-geo-ws (Currently only working with `react-geo@8` or smaller)
+Visit https://terrestris.github.io/react-geo-ws/
 
 ## Installation
 
