@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 
 import uniqueId from 'lodash/uniqueId';
 import isNumber from 'lodash/isNumber';
