@@ -53,7 +53,7 @@ describe('<FloatingMapLogo />', () => {
   it('passes position prop', () => {
     let props = {
       imageSrc: testLogo,
-      absolutelyPostioned: true,
+      absolutelyPositioned: true,
       style: {
         backgroundColor: 'yellow'
       }
