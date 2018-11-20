@@ -46,7 +46,7 @@ class FloatingMapLogo extends React.Component {
      * Whether the map-logo is absolutely postioned or not
      * @type {boolean}
      */
-    absolutelyPostioned: PropTypes.bool,
+    absolutelyPositioned: PropTypes.bool,
 
     /**
      * The style object
@@ -61,7 +61,7 @@ class FloatingMapLogo extends React.Component {
    */
   static defaultProps = {
     imageSrc: 'logo.png',
-    absolutelyPostioned: false
+    absolutelyPositioned: false
   }
 
   /**
@@ -71,7 +71,7 @@ class FloatingMapLogo extends React.Component {
     const {
       imageSrc,
       imageHeight,
-      absolutelyPostioned,
+      absolutelyPositioned,
       className,
       style
     } = this.props;
@@ -80,7 +80,7 @@ class FloatingMapLogo extends React.Component {
       ? `${className} ${this.className}`
       : this.className;
 
-    if (absolutelyPostioned) {
+    if (absolutelyPositioned) {
       Object.assign(style, {'position': 'absolute'});
     }
 

@@ -125,7 +125,7 @@ class GeoLocationButton extends React.Component {
      * https://www.w3.org/TR/geolocation-API/#position_options_interface
      * @type {Object}
      */
-    trackingoptions: PropTypes.shape({
+    trackingOptions: PropTypes.shape({
       maximumAge: PropTypes.number,
       enableHighAccuracy: PropTypes.bool,
       timeout: PropTypes.number
@@ -141,7 +141,7 @@ class GeoLocationButton extends React.Component {
     onError: () => undefined,
     showMarker: true,
     follow: false,
-    trackingoptions: {
+    trackingOptions: {
       maximumAge: 10000,
       enableHighAccuracy: true,
       timeout: 600000
@@ -241,7 +241,7 @@ class GeoLocationButton extends React.Component {
   onToggle = (pressed) => {
     const {
       showMarker,
-      trackingoptions,
+      trackingOptions,
       map
     } = this.props;
 
@@ -262,7 +262,7 @@ class GeoLocationButton extends React.Component {
     // Geolocation Control
     this._geoLocationInteraction = new OlGeolocation({
       projection: view.getProjection(),
-      trackingOptions: trackingoptions
+      trackingOptions: trackingOptions
     });
     this._geoLocationInteraction.setTracking(true);
 
