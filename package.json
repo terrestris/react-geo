@@ -107,7 +107,7 @@
     "coveralls": "3.0.2",
     "css-loader": "1.0.1",
     "enzyme": "3.8.0",
-    "enzyme-adapter-react-16": "1.7.0",
+    "enzyme-adapter-react-16": "1.7.1",
     "eslint": "5.9.0",
     "eslint-plugin-html": "5.0.0",
     "eslint-plugin-markdown": "1.0.0-rc.0",
