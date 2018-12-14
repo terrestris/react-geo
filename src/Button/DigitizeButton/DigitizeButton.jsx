@@ -285,11 +285,14 @@ class DigitizeButton extends React.Component {
     modalPromptCancelButtonText: PropTypes.string,
 
     /**
-     * Style object for drawn feature.
+     * Style object / style function for drawn feature.
      *
-     * @type {OlStyleStyle}
+     * @type {OlStyleStyle | FeatureStyleFunction}
      */
-    drawStyle: PropTypes.instanceOf(OlStyleStyle),
+    drawStyle: PropTypes.oneOf([
+      PropTypes.instanceOf(OlStyleStyle),
+      PropTypes.func
+    ]),
 
     /**
      * Listener function for the 'drawend' event of an ol.interaction.Draw.
