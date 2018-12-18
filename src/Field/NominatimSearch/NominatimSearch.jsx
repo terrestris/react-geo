@@ -102,6 +102,12 @@ export class NominatimSearch extends React.Component {
      */
     onSelect: PropTypes.func,
     /**
+     * A function that gets called when the clear Button is pressed or the input
+     * value is empty.
+     * @type {function}
+     */
+    onClear: PropTypes.func,
+    /**
      * The style object passed to the AutoComplete.
      * @type {Object}
      */
@@ -189,6 +195,10 @@ export class NominatimSearch extends React.Component {
    *                                      is pressed.
    */
   onUpdateInput(inputValue) {
+    const {
+      onClear
+    } = this.props;
+
     this.setState({
       dataSource: []
     });
@@ -200,6 +210,10 @@ export class NominatimSearch extends React.Component {
         this.doSearch();
       }
     });
+
+    if (!inputValue && onClear) {
+      onClear();
+    }
   }
 
   /**
