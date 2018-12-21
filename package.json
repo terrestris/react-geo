@@ -105,7 +105,7 @@
     "babel-preset-stage-0": "6.24.1",
     "canvas-prebuilt": "1.6.11",
     "coveralls": "3.0.2",
-    "css-loader": "2.0.1",
+    "css-loader": "2.0.2",
     "enzyme": "3.8.0",
     "enzyme-adapter-react-16": "1.7.1",
     "eslint": "5.9.0",
