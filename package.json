@@ -122,7 +122,7 @@
     "react-styleguidist": "8.0.6",
     "react-test-renderer": "16.7.0",
     "regenerator-runtime": "0.13.1",
-    "rimraf": "2.6.2",
+    "rimraf": "2.6.3",
     "style-loader": "0.23.1",
     "url-loader": "1.1.2",
     "webpack": "4.28.2",
