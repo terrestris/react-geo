@@ -10,7 +10,7 @@ import { CSS_PREFIX } from '../constants';
 /**
  * Class representing a layer tree node
  */
-class LayerTreeNode extends React.Component {
+class LayerTreeNode extends React.PureComponent {
 
   /**
    * The prop types.

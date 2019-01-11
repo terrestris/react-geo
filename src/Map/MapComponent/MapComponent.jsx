@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import OlMap from 'ol/Map';
 
@@ -6,9 +6,9 @@ import OlMap from 'ol/Map';
  * Class representing a map.
  *
  * @class The MapComponent.
- * @extends React.Component
+ * @extends React.PureComponent
  */
-export class MapComponent extends React.Component {
+export class MapComponent extends PureComponent {
 
   /**
    * The properties.
