@@ -125,7 +125,7 @@
     "rimraf": "2.6.3",
     "style-loader": "0.23.1",
     "url-loader": "1.1.2",
-    "webpack": "4.28.2",
+    "webpack": "4.28.4",
     "whatwg-fetch": "3.0.0"
   }
 }
