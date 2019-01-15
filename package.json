@@ -86,7 +86,7 @@
     "react-rnd": "9.0.4",
     "shpjs": "3.4.3",
     "url-parse": "1.4.4",
-    "validator": "10.10.0"
+    "validator": "10.11.0"
   },
   "devDependencies": {
     "antd": "3.12.3",
