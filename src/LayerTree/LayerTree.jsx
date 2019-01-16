@@ -314,7 +314,7 @@ class LayerTree extends React.Component {
 
     if (evt && evt instanceof OlMapEvent && evt.target && evt.target.getView) {
       if (mapResolution === evt.target.getView().getResolution()) {
-        // If map resolution didn't change => ne redraw of tree nodes needed.
+        // If map resolution didn't change => no redraw of tree nodes needed.
         return;
       }
     }
