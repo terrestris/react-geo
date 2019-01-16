@@ -7,6 +7,7 @@ import OlMap from 'ol/Map';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlCollection from 'ol/Collection';
+import OlMapEvent from 'ol/MapEvent';
 import { unByKey } from 'ol/Observable';
 
 import isBoolean from 'lodash/isBoolean';
@@ -29,7 +30,6 @@ import { CSS_PREFIX } from '../constants';
  * @extends React.Component
  */
 class LayerTree extends React.Component {
-
 
   /**
    * The className added to this component.
@@ -110,8 +110,6 @@ class LayerTree extends React.Component {
         };
       }
     }
-
-    return null;
   }
 
   /**
@@ -126,7 +124,8 @@ class LayerTree extends React.Component {
       layerGroup: null,
       layerGroupRevision: null,
       treeNodes: [],
-      checkedKeys: []
+      checkedKeys: [],
+      mapResolution: -1
     };
   }
 
@@ -225,10 +224,8 @@ class LayerTree extends React.Component {
    * nodes whenever the view's resolution changes.
    */
   registerResolutionChangeHandler() {
-    const mapView = this.props.map.getView();
-    const evtKey = mapView.on('change:resolution', () => {
-      this.rebuildTreeNodes();
-    });
+    const { map } = this.props;
+    const evtKey = map.on('moveend', this.rebuildTreeNodes.bind(this));
     this.olListenerKeys.push(evtKey); // TODO when and how to we unbind?
   }
 
@@ -309,12 +306,24 @@ class LayerTree extends React.Component {
 
   /**
    * Rebuilds the treeNodes and its checked states.
+   * @param {ol.MapEvent} evt The OpenLayers MapEvent (passed by moveend)
+   *
    */
-  rebuildTreeNodes = () => {
+  rebuildTreeNodes = evt => {
+    const { mapResolution } = this.state;
+
+    if (evt && evt instanceof OlMapEvent && evt.target && evt.target.getView) {
+      if (mapResolution === evt.target.getView().getResolution()) {
+        // If map resolution didn't change => no redraw of tree nodes needed.
+        return;
+      }
+    }
+
     this.treeNodesFromLayerGroup(this.state.layerGroup);
     const checkedKeys = this.getVisibleOlUids();
     this.setState({
-      checkedKeys
+      checkedKeys,
+      mapResolution: evt ? evt.target.getView().getResolution() : -1
     });
   }
 
