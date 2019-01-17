@@ -111,7 +111,7 @@
     "eslint": "5.9.0",
     "eslint-plugin-html": "5.0.0",
     "eslint-plugin-markdown": "1.0.0",
-    "eslint-plugin-react": "7.12.3",
+    "eslint-plugin-react": "7.12.4",
     "file-loader": "3.0.1",
     "jest": "23.6.0",
     "less": "3.9.0",
