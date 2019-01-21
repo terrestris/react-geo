@@ -110,6 +110,7 @@ class LayerTree extends React.Component {
         };
       }
     }
+    return null;
   }
 
   /**
