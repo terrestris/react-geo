@@ -15,7 +15,7 @@ module.exports = {
     '**/*.d.ts',
     '**/src/**/*.example.jsx'
   ],
-  showUsage: true,
+  usageMode: 'expand',
   getExampleFilename(componentPath) {
     return componentPath.replace(/\.jsx?$/, '.example.md')
   },
