@@ -330,6 +330,7 @@ class GeoLocationButton extends React.Component {
       follow,
       onGeolocationChange,
       onError,
+      trackingOptions,
       ...passThroughProps
     } = this.props;
 
