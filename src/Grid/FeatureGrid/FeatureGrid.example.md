@@ -109,7 +109,7 @@ const OlStyleIcon = require('ol/style/Icon').default;
 const OlStyleText = require('ol/style/Text').default;
 const OlStyleFill = require('ol/style/Fill').default;
 const OlStyleStroke = require('ol/style/Stroke').default;
-const Input = require('antd/lib/button');
+const Input = require('antd/lib/button').default;
 const UrlUtil = require('@terrestris/base-util/dist/UrlUtil/UrlUtil').default;
 
 // Credits to Maps Icons Collection https://mapicons.mapsmarker.com.
