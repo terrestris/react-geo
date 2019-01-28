@@ -20,11 +20,12 @@ module.exports = {
     sidebarWidth: 350
   },
   getExampleFilename(componentPath) {
-    return componentPath.replace(/\.jsx?$/, '.example.md')
+    return componentPath.replace(/\.jsx?$/, '.example.md');
   },
   getComponentPathLine(componentPath) {
-    const name = path.basename(componentPath, '.jsx')
-    return `import { ${name} } from '@terrestris/react-geo';`
+    const name = path.basename(componentPath, '.jsx');
+    const dir = path.dirname(componentPath).replace('src', 'dist');
+    return `import ${name} from '@terrestris/react-geo/${dir}/${name}';`;
   },
   require: [
     'babel-polyfill',
