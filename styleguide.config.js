@@ -16,6 +16,9 @@ module.exports = {
     '**/src/**/*.example.jsx'
   ],
   usageMode: 'expand',
+  theme: {
+    sidebarWidth: 350
+  },
   getExampleFilename(componentPath) {
     return componentPath.replace(/\.jsx?$/, '.example.md')
   },
