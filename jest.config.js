@@ -16,7 +16,8 @@ module.exports = {
     // "^ol/(.*)": '<rootDir>/node_modules/ol/$1'
   },
   modulePathIgnorePatterns: [
-    '<rootDir>/build/'
+    '<rootDir>/build/',
+    '<rootDir>/dist/'
   ],
   transformIgnorePatterns: [
      'node_modules/(?!(ol|antd|(rc-*[a-z]*)|css-animation)/)'
