@@ -73,22 +73,28 @@ class AgFeatureGridExample extends React.Component {
         <AgFeatureGrid
           features={features}
           map={this.map}
-          enableSorting={true}
-          enableFilter={true}
-          enableColResize={true}
           attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
           columnDefs={{
             'GEN': {
               headerName: 'Name',
-              cellRenderer: 'nameColumnRenderer'
+              cellRenderer: 'nameColumnRenderer',
+              sortable: true,
+              filter: true,
+              resizable: true
             },
             'SHAPE_LENG': {
               headerName: 'Length',
-              cellRenderer: 'mathRoundRenderer'
+              cellRenderer: 'mathRoundRenderer',
+              sortable: true,
+              filter: true,
+              resizable: true
             },
             'SHAPE_AREA': {
               headerName: 'Area',
-              cellRenderer: 'mathRoundRenderer'
+              cellRenderer: 'mathRoundRenderer',
+              sortable: true,
+              filter: true,
+              resizable: true
             }
           }}
           zoomToExtent={true}
