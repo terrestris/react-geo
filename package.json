@@ -83,7 +83,7 @@
     "react-dom": "16.7.0",
     "react-dom-factories": "1.0.2",
     "react-fa": "5.0.0",
-    "react-rnd": "9.0.4",
+    "react-rnd": "9.1.0",
     "shpjs": "3.4.3",
     "url-parse": "1.4.4",
     "validator": "10.11.0"
