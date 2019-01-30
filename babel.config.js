@@ -11,7 +11,14 @@ module.exports = {
     },
     build: {
       plugins: [
-        'babel-plugin-transform-import-extension-jsx-to-js'
+        [
+          'module-resolver',
+          {
+            resolvePath(sourcePath) {
+              return sourcePath.replace('.jsx', '.js');
+            }
+          }
+        ]
       ]
     }
   },
