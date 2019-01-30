@@ -289,7 +289,7 @@ class DigitizeButton extends React.Component {
      *
      * @type {OlStyleStyle | FeatureStyleFunction}
      */
-    drawStyle: PropTypes.oneOf([
+    drawStyle: PropTypes.oneOfType([
       PropTypes.instanceOf(OlStyleStyle),
       PropTypes.func
     ]),
