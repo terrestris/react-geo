@@ -110,7 +110,7 @@
     "enzyme": "3.8.0",
     "enzyme-adapter-react-16": "1.8.0",
     "eslint": "5.13.0",
-    "eslint-plugin-html": "5.0.0",
+    "eslint-plugin-html": "5.0.3",
     "eslint-plugin-markdown": "1.0.0",
     "eslint-plugin-react": "7.12.4",
     "file-loader": "3.0.1",
