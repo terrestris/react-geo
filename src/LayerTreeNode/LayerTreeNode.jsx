@@ -53,7 +53,7 @@ class LayerTreeNode extends React.PureComponent {
 }
 
 // Otherwise rc-tree wouldn't recognize this component as TreeNode, see
-// https://github.com/react-component/tree/blob/master/src/TreeNode.jsx#L328
+// https://github.com/react-component/tree/blob/master/src/TreeNode.jsx#L534
 LayerTreeNode.isTreeNode = 1;
 
 export default LayerTreeNode;

@@ -70,6 +70,11 @@ class LayerTree extends React.Component {
     nodeTitleRenderer: PropTypes.func,
 
     /**
+     * Compare https://ant.design/components/tree/
+     */
+    onExpand: PropTypes.func,
+
+    /**
      * An optional array-filter function that is applied to every layer and
      * subLayer. Return false to exclude this layer from the layerTree or true
      * to include it.
@@ -505,6 +510,20 @@ class LayerTree extends React.Component {
   }
 
   /**
+   * Call rebuildTreeNodes onExpand to avoid sync issues.
+   *
+   */
+  onExpand = (expandedKeys, {expanded, node}) => {
+    const {
+      onExpand
+    } = this.props;
+    this.rebuildTreeNodes();
+    if (onExpand) {
+      onExpand(expandedKeys, {expanded, node});
+    }
+  }
+
+  /**
    * The render function.
    */
   render() {
@@ -534,6 +553,7 @@ class LayerTree extends React.Component {
         onCheck={this.onCheck.bind(this)}
         {...ddListeners}
         {...passThroughProps}
+        onExpand={this.onExpand}
       >
         {this.state.treeNodes}
       </Tree>
