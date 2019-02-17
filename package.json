@@ -107,7 +107,7 @@
     "canvas-prebuilt": "1.6.11",
     "coveralls": "3.0.2",
     "css-loader": "2.1.0",
-    "enzyme": "3.8.0",
+    "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.9.1",
     "eslint": "5.13.0",
     "eslint-plugin-html": "5.0.3",
