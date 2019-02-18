@@ -79,11 +79,11 @@
     "loglevel": "1.6.1",
     "moment": "2.22.2",
     "proj4": "2.5.0",
-    "prop-types": "15.7.1",
+    "prop-types": "15.7.2",
     "react-dom": "16.8.2",
     "react-dom-factories": "1.0.2",
     "react-fa": "5.0.0",
-    "react-rnd": "9.1.1",
+    "react-rnd": "9.1.2",
     "shpjs": "3.4.3",
     "url-parse": "1.4.4",
     "validator": "10.11.0"
@@ -97,7 +97,7 @@
     "@babel/polyfill": "7.2.5",
     "@babel/preset-env": "7.3.1",
     "@babel/preset-react": "7.0.0",
-    "antd": "3.13.2",
+    "antd": "3.13.3",
     "babel-eslint": "10.0.1",
     "babel-jest": "24.0.0",
     "babel-loader": "8.0.5",
@@ -107,9 +107,9 @@
     "canvas-prebuilt": "1.6.11",
     "coveralls": "3.0.2",
     "css-loader": "2.1.0",
-    "enzyme": "3.8.0",
+    "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.9.1",
-    "eslint": "5.13.0",
+    "eslint": "5.14.0",
     "eslint-plugin-html": "5.0.3",
     "eslint-plugin-markdown": "1.0.0",
     "eslint-plugin-react": "7.12.4",
@@ -126,7 +126,7 @@
     "rimraf": "2.6.3",
     "style-loader": "0.23.1",
     "url-loader": "1.1.2",
-    "webpack": "4.29.3",
+    "webpack": "4.29.4",
     "whatwg-fetch": "3.0.0"
   }
 }
