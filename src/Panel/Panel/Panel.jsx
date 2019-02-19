@@ -202,13 +202,22 @@ export class Panel extends React.Component {
   }
 
   /**
-   * The reference callback.
-   *
-   * @param {Element} element The body div DOMElement of the panel.
+   * componentDidMount life cycle method.
+   * Registers `keydown` listener if `onEscape` function was provided via props.
    */
-  onBodyRef(element){
-    if (element) {
-      element.focus();
+  componentDidMount() {
+    if (this.props.onEscape) {
+      document.addEventListener('keydown', this.onKeyDown, false);
+    }
+  }
+
+  /**
+   * componentWillUnmount life cycle method.
+   * Unregisters `keydown` listener if `onEscape` function was provided via props.
+   */
+  componentWillUnmount() {
+    if (this.props.onEscape) {
+      document.removeEventListener('keydown', this.onKeyDown, false);
     }
   }
 
@@ -302,8 +311,9 @@ export class Panel extends React.Component {
    * is `escape` key and `onEscape` function is provided via props.
    * @param {React.KeyboardEvent<HTMLDivElement>} evt `keydown` event.
    */
-  onKeyDown(evt) {
-    if (evt.key === this._escapeKeyboardEventKey && this.props.onEscape) {
+  onKeyDown = evt => {
+    if (evt && evt.key === this._escapeKeyboardEventKey && this.props.onEscape) {
+      this.rnd.getSelfElement().focus();
       this.props.onEscape();
     }
   }
@@ -407,8 +417,6 @@ export class Panel extends React.Component {
         <div
           className="body"
           tabIndex="0"
-          ref={this.onBodyRef}
-          onKeyDown={this.onKeyDown.bind(this)}
           style={{
             cursor: 'default',
             overflow: 'hidden',
