@@ -25,35 +25,19 @@ describe('<Panel />', () => {
     expect(rnd.props.fc).toBe('koeln');
   });
 
-  describe('#onBodyRef', () => {
-
-    const wrapper = TestUtil.mountComponent(Panel);
-    const element = wrapper.find('div.body');
-    const elNode = element.getDOMNode();
-    const focusedElement = document.activeElement;
-
-    it('is defined', () => {
-      expect(wrapper.instance().onBodyRef).not.toBeUndefined();
-    });
-
-    it ('doesn\'t focus element if not provided', () => {
-      wrapper.instance().onBodyRef();
-      expect(element.matchesElement(focusedElement)).toBeFalsy();
-    });
-
-    it ('focuses element if provided', () => {
-      const focusSpy = jest.spyOn(elNode, 'focus');
-      wrapper.instance().onBodyRef(elNode);
-      expect(focusSpy).toHaveBeenCalledTimes(1);
-      expect(elNode).toEqual(focusedElement);
-      focusSpy.mockReset();
-      focusSpy.mockRestore();
-    });
-  });
-
   describe('#onKeyDown', () => {
 
     const wrapper = TestUtil.mountComponent(Panel);
+
+    // Mock a DOM to play around
+    document.body.innerHTML =
+        '<div class="body" tabindex="0" ' +
+          'style="cursor: default; ' +
+          'overflow: hidden; height: auto;">' +
+        '</div>';
+
+    const element = wrapper.instance().rnd.getSelfElement();
+    const focusedElement = document.activeElement;
 
     it('is defined', () => {
       expect(wrapper.instance().onKeyDown).not.toBeUndefined();
@@ -69,17 +53,21 @@ describe('<Panel />', () => {
       });
 
       const onEscSpy = jest.spyOn(wrapper.props(), 'onEscape');
+      const focusSpy = jest.spyOn(element, 'focus');
 
       wrapper.instance().onKeyDown(mockEvt);
       expect(onEscSpy).toHaveBeenCalledTimes(0);
+      expect(focusSpy).toHaveBeenCalledTimes(0);
 
       // call once again with valid key and onEscape function
       mockEvt.key = 'Escape';
+
       wrapper.instance().onKeyDown(mockEvt);
       expect(onEscSpy).toHaveBeenCalledTimes(1);
-
-      onEscSpy.mockReset();
-      onEscSpy.mockRestore();
+      expect(focusSpy).toHaveBeenCalledTimes(1);
+      expect(element.innerHTML).toEqual(focusedElement.innerHTML);
+      jest.resetAllMocks();
+      jest.restoreAllMocks();
     });
   });
 
