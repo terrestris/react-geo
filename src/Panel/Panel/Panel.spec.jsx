@@ -30,14 +30,9 @@ describe('<Panel />', () => {
     const wrapper = TestUtil.mountComponent(Panel);
 
     // Mock a DOM to play around
-    document.body.innerHTML =
-        '<div class="body" tabindex="0" ' +
-          'style="cursor: default; ' +
-          'overflow: hidden; height: auto;">' +
-        '</div>';
+    document.body.className = 'react-geo-panel';
 
     const element = wrapper.instance().rnd.getSelfElement();
-    const focusedElement = document.activeElement;
 
     it('is defined', () => {
       expect(wrapper.instance().onKeyDown).not.toBeUndefined();
@@ -65,7 +60,7 @@ describe('<Panel />', () => {
       wrapper.instance().onKeyDown(mockEvt);
       expect(onEscSpy).toHaveBeenCalledTimes(1);
       expect(focusSpy).toHaveBeenCalledTimes(1);
-      expect(element.innerHTML).toEqual(focusedElement.innerHTML);
+      expect(element.className).toContain(document.activeElement.className);
       jest.resetAllMocks();
       jest.restoreAllMocks();
     });
