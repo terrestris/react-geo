@@ -22,10 +22,15 @@ module.exports = {
   getExampleFilename(componentPath) {
     return componentPath.replace(/\.jsx?$/, '.example.md');
   },
+  skipComponentsWithoutExample: true,
   getComponentPathLine(componentPath) {
     const name = path.basename(componentPath, '.jsx');
     const dir = path.dirname(componentPath).replace('src', 'dist');
     return `import ${name} from '@terrestris/react-geo/${dir}/${name}';`;
+  },
+  moduleAliases: {
+    '@terrestris/react-geo': path.resolve(__dirname, 'src'),
+    'ol': path.resolve(__dirname, 'node_modules/ol')
   },
   require: [
     '@babel/polyfill',
