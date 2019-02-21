@@ -17,6 +17,7 @@ class LayerTreeNode extends React.PureComponent {
    * @type {Object}
    */
   static propTypes = {
+    children: PropTypes.array,
     inResolutionRange: PropTypes.bool
   }
 
@@ -37,16 +38,22 @@ class LayerTreeNode extends React.PureComponent {
   render() {
     const {
       inResolutionRange,
+      children,
       ...passThroughProps
     } = this.props;
 
-    const addClassName = (inResolutionRange ? 'within' : 'out-off') + '-range';
+    const isFolder = Array.isArray(children) && children.length > 0;
+    let addClassName = (inResolutionRange ? 'within' : 'out-off') + '-range';
+    addClassName += isFolder ? ' tree-folder' : ' tree-leaf';
     const finalClassname = `${CSS_PREFIX}layertree-node ${addClassName}`;
+
     return(
       <TreeNode
         className={finalClassname}
         {...passThroughProps}
-      />
+      >
+        {children}
+      </TreeNode>
     );
   }
 
