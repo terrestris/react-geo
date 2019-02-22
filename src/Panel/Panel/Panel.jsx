@@ -34,7 +34,7 @@ export class Panel extends React.Component {
     * @type {String}
     * @private
     */
-   _escapeKeyboardEventKey = 'Escape';
+   _escapeKeyboardEventKey = 'Esc';
 
   /**
    * The properties.
@@ -308,11 +308,11 @@ export class Panel extends React.Component {
 
   /**
    * Called on keyboard `keydown` event. Will be only triggered if pressed key
-   * is `escape` key and `onEscape` function is provided via props.
+   * is `Escape` key and `onEscape` function is provided via props.
    * @param {React.KeyboardEvent<HTMLDivElement>} evt `keydown` event.
    */
   onKeyDown = evt => {
-    if (evt && evt.key === this._escapeKeyboardEventKey && this.props.onEscape) {
+    if (evt && evt.key.startsWith(this._escapeKeyboardEventKey) && this.props.onEscape) {
       this.rnd.getSelfElement().focus();
       this.props.onEscape();
     }
