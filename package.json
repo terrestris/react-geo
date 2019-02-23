@@ -105,7 +105,7 @@
     "babel-plugin-import": "1.11.0",
     "babel-plugin-module-resolver": "3.2.0",
     "canvas-prebuilt": "1.6.11",
-    "coveralls": "3.0.2",
+    "coveralls": "3.0.3",
     "css-loader": "2.1.0",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.9.1",
