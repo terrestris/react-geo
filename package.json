@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "@terrestris/base-util": "0.1.4",
-    "@terrestris/ol-util": "2.1.0",
+    "@terrestris/ol-util": "2.2.0",
     "@turf/turf": "5.1.6",
     "ag-grid-community": "20.1.0",
     "ag-grid-react": "20.1.0",
