@@ -1,12 +1,15 @@
 This demonstrates the usage of the WfsSearch.
 
 ```jsx
-const React = require('react');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceOsm = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
+import React from 'react';
+
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
+import { fromLonLat } from 'ol/proj';
+
+import WfsSearch from '@terrestris/react-geo/Field/WfsSearch/WfsSearch';
 
 class WfsSearchExample extends React.Component {
 
@@ -20,7 +23,7 @@ class WfsSearchExample extends React.Component {
       layers: [
         new OlLayerTile({
           name: 'OSM',
-          source: new OlSourceOsm()
+          source: new OlSourceOSM()
         })
       ],
       view: new OlView({

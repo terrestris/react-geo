@@ -3,18 +3,17 @@ function. The wrapped map component needs to be mappified in order to access
 the map.
 
 ```jsx
-const React = require('react');
-const OlSourceOsm = require('ol/source/OSM').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlView = require('ol/View').default;
-const OlMap = require('ol/Map').default;
+import React from 'react';
 
-const {
-  MapComponent,
-  MapProvider,
-  mappify,
-  onDropAware
-} = require('../../index.js');
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
+
+import onDropAware from '@terrestris/react-geo/HigherOrderComponent/DropTargetMap/DropTargetMap';
+import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
+import MapProvider from '@terrestris/react-geo/Provider/MapProvider/MapProvider';
+import { mappify } from '@terrestris/react-geo/HigherOrderComponent/MappifiedComponent/MappifiedComponent';
 
 /**
  * Create the OlMap (you could do some asynchronus stuff here).
@@ -23,7 +22,7 @@ const {
  */
 const mapPromise = new Promise((resolve) => {
   const layer = new OlLayerTile({
-    source: new OlSourceOsm()
+    source: new OlSourceOSM()
   });
 
   const map = new OlMap({

@@ -1,17 +1,16 @@
 This demonstrates the use of DigitizeButton with different interactions.
 
 ```jsx
-const React = require('react');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceOsm = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
+import React from 'react';
 
-const {
-  ToggleGroup,
-  DigitizeButton
-} = require('../../index');
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOsm from 'ol/source/OSM';
+import { fromLonLat } from 'ol/proj';
+
+import DigitizeButton from '@terrestris/react-geo/Button/DigitizeButton/DigitizeButton';
+import ToggleGroup from '@terrestris/react-geo/Button/ToggleGroup/ToggleGroup';
 
 class DigitizeButtonExample extends React.Component {
 

@@ -1,16 +1,15 @@
 This example demonstrates some uses of of the `ZoomButton` to zoom in and out of the map, animated by default.
 
 ```jsx
-const React = require('react');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceOsm = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
+import React from 'react';
 
-const {
-  ZoomButton
-} = require ('../../index.js');
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
+import { fromLonLat } from 'ol/proj';
+
+import ZoomButton from '@terrestris/react-geo/Button/ZoomButton/ZoomButton';
 
 class ZoomButtonExample extends React.Component {
 
@@ -24,7 +23,7 @@ class ZoomButtonExample extends React.Component {
       layers: [
         new OlLayerTile({
           name: 'OSM',
-          source: new OlSourceOsm()
+          source: new OlSourceOSM()
         })
       ],
       view: new OlView({

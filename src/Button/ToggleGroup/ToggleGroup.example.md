@@ -1,6 +1,9 @@
 This demonstrates the use of ToggleGroups.
 
 ```jsx
+import ToggleGroup from '@terrestris/react-geo/Button/ToggleGroup/ToggleGroup';
+import ToggleButton from '@terrestris/react-geo/Button/ToggleButton/ToggleButton';
+
 const onChange = (pressed, evt) => {
   console.info('ToggleGroup changed', pressed, evt);
 };

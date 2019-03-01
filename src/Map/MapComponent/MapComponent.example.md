@@ -9,18 +9,17 @@ The map can be created asynchronusly so that every child of the MapProvider is j
 rendered when the map is ready.
 
 ```jsx
-const React = require('react');
-const OlSourceOsm = require('ol/source/OSM').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlView = require('ol/View').default;
-const OlMap = require('ol/Map').default;
+import React from 'react';
 
-const {
-  MapComponent,
-  MapProvider,
-  NominatimSearch,
-  mappify
-} = require('../../index.js');
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOsm from 'ol/source/OSM';
+
+import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
+import NominatimSearch from '@terrestris/react-geo/Field/NominatimSearch/NominatimSearch';
+import MapProvider from '@terrestris/react-geo/Provider/MapProvider/MapProvider';
+import { mappify } from '@terrestris/react-geo/HigherOrderComponent/MappifiedComponent/MappifiedComponent';
 
 const Map = mappify(MapComponent);
 const Search = mappify(NominatimSearch);

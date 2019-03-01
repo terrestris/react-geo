@@ -3,22 +3,23 @@ This demonstrates the usage of the CircleMenu.
 CircleMenu in a Map (click the red feature):
 
 ```jsx
-const React = require('react');
-const OlSourceOsm = require('ol/source/OSM').default;
-const OlSourceVector = require('ol/source/Vector').default;
-const OlLayerTile = require('ol/layer/Tile').default;
+import React from 'react';
+
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
 const OlLayerVector = require('ol/layer/Vector').default;
-const OlFeature = require('ol/Feature').default;
-const OlGeomPoint = require('ol/geom/Point').default;
-const OlView = require('ol/View').default;
-const OlMap = require('ol/Map').default;
-const OlStyleStyle = require('ol/style/Style').default;
-const OlStyleCircle = require('ol/style/Circle').default;
-const OlStyleFill = require('ol/style/Fill').default;
-const {
-  CircleMenu,
-  SimpleButton
-} = require('../index.js');
+// import OlLayerVector from 'ol/layer/Vector';
+import OlSourceOSM from 'ol/source/OSM';
+import OlSourceVector from 'ol/source/Vector';
+import OlFeature from 'ol/Feature';
+import OlGeomPoint from 'ol/geom/Point';
+import OlStyleStyle from 'ol/style/Style';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleFill from 'ol/style/Fill';
+
+import CircleMenu from '@terrestris/react-geo/CircleMenu/CircleMenu';
+import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 
 class CircleMenuExample extends React.Component {
 
@@ -29,7 +30,7 @@ class CircleMenuExample extends React.Component {
     this.mapDivId = `map-${Math.random()}`;
 
     const osmLayer = new OlLayerTile({
-      source: new OlSourceOsm()
+      source: new OlSourceOSM()
     });
     const featureLayer = new OlLayerVector({
       source: new OlSourceVector({

@@ -1,13 +1,16 @@
 This is a example containing a map component and a floating map logo
 
 ```jsx
-const React = require('react');
-const OlSourceOsm = require('ol/source/OSM').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlView = require('ol/View').default;
-const OlMap = require('ol/Map').default;
+import React from 'react';
 
-const logo = require('../../../assets/user.png');
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOsm from 'ol/source/OSM';
+
+import FloatingMapLogo from '@terrestris/react-geo/Map/FloatingMapLogo/FloatingMapLogo';
+
+import logo from '../../../assets/user.png';
 
 class FloatingMapLogoExample extends React.Component {
 

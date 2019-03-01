@@ -1,12 +1,15 @@
 This example demonstrates the Legend.
 
 ```jsx
-const React = require('react');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceTileWMS = require('ol/source/TileWMS').default;
-const fromLonLat = require('ol/proj').fromLonLat;
+import React from 'react';
+
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import { fromLonLat } from 'ol/proj';
+
+import Legend from '@terrestris/react-geo/Legend/Legend';
 
 class LegendExample extends React.Component {
 

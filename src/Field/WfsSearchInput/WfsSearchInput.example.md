@@ -3,13 +3,17 @@ results in AgFeatureGrid component.
 
 
 ```jsx
-const React = require('react');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceOsm = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
-const OlFormatGeoJson = require('ol/format/GeoJSON').default;
+import React from 'react';
+
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import { fromLonLat } from 'ol/proj';
+
+import AgFeatureGrid from '@terrestris/react-geo/Grid/AgFeatureGrid/AgFeatureGrid';
+import WfsSearchInput from '@terrestris/react-geo/Field/WfsSearchInput/WfsSearchInput';
 
 class WfsSearchInputExample extends React.Component {
 
@@ -27,7 +31,7 @@ class WfsSearchInputExample extends React.Component {
       layers: [
         new OlLayerTile({
           name: 'OSM',
-          source: new OlSourceOsm()
+          source: new OlSourceOSM()
         })
       ],
       view: new OlView({
@@ -42,7 +46,7 @@ class WfsSearchInputExample extends React.Component {
   }
 
   onFetchSuccess(data) {
-    const format = new OlFormatGeoJson();
+    const format = new OlFormatGeoJSON();
     const features = data.map(d => format.readFeature(d));
     this.setState({
       data: features
