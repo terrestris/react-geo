@@ -1,5 +1,4 @@
 const path = require('path');
-const fs = require('fs');
 const webpackCommonConf = require('./webpack.common.config.js');
 
 module.exports = {
@@ -29,8 +28,7 @@ module.exports = {
     return `import ${name} from '@terrestris/react-geo/${dir}/${name}';`;
   },
   moduleAliases: {
-    '@terrestris/react-geo': path.resolve(__dirname, 'src'),
-    'ol': path.resolve(__dirname, 'node_modules/ol')
+    '@terrestris/react-geo': path.resolve(__dirname, 'src')
   },
   require: [
     '@babel/polyfill',
