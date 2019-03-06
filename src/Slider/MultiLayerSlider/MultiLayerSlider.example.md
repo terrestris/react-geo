@@ -6,15 +6,14 @@ This way you can slide through a set of layers, which e.g. is useful when using
 layers showing the same area but different content or time.
 
 ```jsx
-const React = require('react');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceTileWMS = require('ol/source/TileWMS').default;
+import React from 'react';
 
-const {
-  MultiLayerSlider
-} = require('../../index');
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+
+import MultiLayerSlider from '@terrestris/react-geo/Slider/MultiLayerSlider/MultiLayerSlider';
 
 class MultiLayerSliderExample extends React.Component {
 

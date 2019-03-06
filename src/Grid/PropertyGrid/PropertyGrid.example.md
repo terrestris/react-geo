@@ -1,8 +1,10 @@
 This is an example containing a property grid:
 
 ```jsx
-const OlFeature = require('ol/Feature').default;
-const OlGeomPoint = require('ol/geom/Point').default;
+import OlFeature from 'ol/Feature';
+import OlGeomPoint from 'ol/geom/Point';
+
+import PropertyGrid from '@terrestris/react-geo/Grid/PropertyGrid/PropertyGrid';
 
 const feature = new OlFeature({
   geometry: new OlGeomPoint([19.09, 1.09]),

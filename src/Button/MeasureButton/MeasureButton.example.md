@@ -1,17 +1,16 @@
 This demonstrates the use of MeasureButton with different measure types.
 
 ```jsx
-const React = require('react');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceOsm = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
+import React from 'react';
 
-const {
-  MeasureButton,
-  ToggleGroup
-} = require('../../index');
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
+import { fromLonLat } from 'ol/proj';
+
+import MeasureButton from '@terrestris/react-geo/Button/MeasureButton/MeasureButton';
+import ToggleGroup from '@terrestris/react-geo/Button/ToggleGroup/ToggleGroup';
 
 class MeasureButtonExample extends React.Component {
 
@@ -25,7 +24,7 @@ class MeasureButtonExample extends React.Component {
       layers: [
         new OlLayerTile({
           name: 'OSM',
-          source: new OlSourceOsm()
+          source: new OlSourceOSM()
         })
       ],
       view: new OlView({

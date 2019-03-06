@@ -1,6 +1,8 @@
 This example demonstrates the use of Panels
 
 ```jsx
+import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+
 <Panel
   style={{position: 'relative'}}
   x={0}
@@ -14,6 +16,8 @@ This example demonstrates the use of Panels
 ```
 
 ```jsx
+import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+
 <Panel
   style={{position: 'relative'}}
   x={0}
@@ -28,6 +32,8 @@ This example demonstrates the use of Panels
 ```
 
 ```jsx
+import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+
 <Panel
   style={{position: 'relative'}}
   x={0}
@@ -44,6 +50,8 @@ This example demonstrates the use of Panels
 ```
 
 ```jsx
+import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+
 <Panel
   style={{position: 'relative'}}
   x={0}
@@ -65,6 +73,8 @@ This example demonstrates the use of Panels
 ```
 
 ```jsx
+import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+
 <Panel
   style={{position: 'relative'}}
   x={0}
@@ -77,6 +87,8 @@ This example demonstrates the use of Panels
 ```
 
 ```jsx
+import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+
 <Panel
   style={{position: 'relative'}}
   x={0}

@@ -1,14 +1,17 @@
 This example demonstrates the LayerTree.
 
 ```jsx
-const React = require('react');
-const OlMap  = require('ol/Map').default;
-const OlView  = require('ol/View').default;
-const OlLayerGroup  = require('ol/layer/Group').default;
-const OlLayerTile  = require('ol/layer/Tile').default;
-const OlSourceTileJson  = require('ol/source/TileJSON').default;
-const OlSourceOsm  = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
+import React from 'react';
+
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerGroup from 'ol/layer/Group';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
+import OlSourceTileJson from 'ol/source/TileJSON';
+import { fromLonLat } from 'ol/proj';
+
+import LayerTree from '@terrestris/react-geo/LayerTree/LayerTree';
 
 class LayerTreeExample extends React.Component {
 
@@ -46,7 +49,7 @@ class LayerTreeExample extends React.Component {
       layers: [
         new OlLayerTile({
           name: 'OSM',
-          source: new OlSourceOsm()
+          source: new OlSourceOSM()
         }),
         this.layerGroup
       ],

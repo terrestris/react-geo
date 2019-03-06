@@ -1,18 +1,22 @@
 This example demonstrates the usage of the AgFeatureGrid:
 
 ```jsx
-const React = require('react');
-const PropTypes = require('prop-types');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceOsm = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
-const OlFormatGeoJson = require('ol/format/GeoJSON').default;
+import React from 'react';
 
-const federalStates = require('../../../assets/federal-states-ger.json');
+import PropTypes from 'prop-types';
 
-const format = new OlFormatGeoJson();
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import { fromLonLat } from 'ol/proj';
+
+import AgFeatureGrid from '@terrestris/react-geo/Grid/AgFeatureGrid/AgFeatureGrid';
+
+import federalStates from '../../../assets/federal-states-ger.json';
+
+const format = new OlFormatGeoJSON();
 const features = format.readFeatures(federalStates);
 
 class NameColumnRenderer extends React.Component {
@@ -53,7 +57,7 @@ class AgFeatureGridExample extends React.Component {
       layers: [
         new OlLayerTile({
           name: 'OSM',
-          source: new OlSourceOsm()
+          source: new OlSourceOSM()
         })
       ],
       view: new OlView({

@@ -1,7 +1,9 @@
 This is a example using an UserChip.
 
 ```jsx
-const logo = require('../../assets/user.png');
+import UserChip from '@terrestris/react-geo/UserChip/UserChip';
+
+import logo from '../../assets/user.png';
 
 <div>
   <UserChip userName="John Doe" />

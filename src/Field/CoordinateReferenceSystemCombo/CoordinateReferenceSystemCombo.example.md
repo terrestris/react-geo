@@ -1,18 +1,24 @@
 This demonstrates the usage of the CoordinateReferenceSystemCombo.
 
 ```jsx
-const React = require('react');
-const proj4 = require('proj4').default;
+import React from 'react';
 
+import proj4 from 'proj4';
+
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
 const register = require('ol/proj/proj4').register;
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceOsm = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
-const getTransform = require('ol/proj').getTransform;
-const get = require('ol/proj').get;
-const applyTransform = require('ol/extent').applyTransform;
+// import { register } from 'ol/proj/proj4';
+import {
+  fromLonLat,
+  getTransform,
+  get
+} from 'ol/proj';
+import { applyTransform } from 'ol/extent';
+
+import CoordinateReferenceSystemCombo from '@terrestris/react-geo/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
 
 const predefinedCrsDefinitions = [{
   code: '25832',
@@ -40,7 +46,7 @@ class CoordinateReferenceSystemComboExample extends React.Component {
       layers: [
         new OlLayerTile({
           name: 'OSM',
-          source: new OlSourceOsm()
+          source: new OlSourceOSM()
         })
       ],
       view: new OlView({

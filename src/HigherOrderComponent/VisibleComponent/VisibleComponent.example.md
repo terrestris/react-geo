@@ -7,9 +7,9 @@ In the example below you see three components wrapped by the use of
 it won't be rendered.
 
 ```jsx
-const Button = require('antd/lib/button').default;
+import Button from 'antd/lib/button';
 
-const { isVisibleComponent } = require('../../index.js');
+import { isVisibleComponent } from '@terrestris/react-geo/HigherOrderComponent/VisibleComponent/VisibleComponent';
 
 // Enhance (any) Component by wrapping it using isVisibleComponent().
 const VisibleButton = isVisibleComponent(Button);

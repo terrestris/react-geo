@@ -1,17 +1,20 @@
 This example demonstrates the usage of the FeatureGrid:
 
 ```jsx
-const React = require('react');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceOsm = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
-const OlFormatGeoJson = require('ol/format/GeoJSON').default;
+import React from 'react';
 
-const federalStates = require('../../../assets/federal-states-ger.json');
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import { fromLonLat } from 'ol/proj';
 
-const format = new OlFormatGeoJson();
+import FeatureGrid from '@terrestris/react-geo/Grid/FeatureGrid/FeatureGrid';
+
+import federalStates from '../../../assets/federal-states-ger.json';
+
+const format = new OlFormatGeoJSON();
 const features = format.readFeatures(federalStates);
 
 const nameColumnRenderer = val => <a href={`https://en.wikipedia.org/wiki/${val}`}>{val}</a>;
@@ -28,7 +31,7 @@ class FeatureGridExample extends React.Component {
       layers: [
         new OlLayerTile({
           name: 'OSM',
-          source: new OlSourceOsm()
+          source: new OlSourceOSM()
         })
       ],
       view: new OlView({
@@ -96,21 +99,27 @@ class FeatureGridExample extends React.Component {
 An example with a remote feature source.
 
 ```jsx
-const React = require('react');
-const PropTypes = require('prop-types');
-const OlMap = require('ol/Map').default;
-const OlView = require('ol/View').default;
-const OlLayerTile = require('ol/layer/Tile').default;
-const OlSourceOsm = require('ol/source/OSM').default;
-const fromLonLat = require('ol/proj').fromLonLat;
-const OlFormatGeoJson = require('ol/format/GeoJSON').default;
-const OlStyle = require('ol/style/Style').default;
-const OlStyleIcon = require('ol/style/Icon').default;
-const OlStyleText = require('ol/style/Text').default;
-const OlStyleFill = require('ol/style/Fill').default;
-const OlStyleStroke = require('ol/style/Stroke').default;
-const Input = require('antd/lib/input').default;
-const UrlUtil = require('@terrestris/base-util/dist/UrlUtil/UrlUtil').default;
+import React from 'react';
+
+import PropTypes from 'prop-types';
+
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOSM from 'ol/source/OSM';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import { fromLonLat } from 'ol/proj';
+import OlStyle from 'ol/style/Style';
+import OlStyleIcon from 'ol/style/Icon';
+import OlStyleText from 'ol/style/Text';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleStroke from 'ol/style/Stroke';
+
+import Input from 'antd/lib/input';
+
+import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
+
+import FeatureGrid from '@terrestris/react-geo/Grid/FeatureGrid/FeatureGrid';
 
 // Credits to Maps Icons Collection https://mapicons.mapsmarker.com.
 const mapMarker = require('../../../assets/bus-map-marker.png');
@@ -151,7 +160,7 @@ class RemoteFeatureGrid extends React.Component {
       nameFilterText
     } = this.state;
 
-    const format = new OlFormatGeoJson();
+    const format = new OlFormatGeoJSON();
 
     this.setState({
       loading: true
@@ -347,7 +356,7 @@ class RemoteFeatureGridExample extends React.Component {
       layers: [
         new OlLayerTile({
           name: 'OSM',
-          source: new OlSourceOsm()
+          source: new OlSourceOSM()
         })
       ],
       view: new OlView({
