@@ -267,9 +267,9 @@ export class NominatimSearch extends React.Component {
    * @param {value} key The key of the selected option.
    */
   onMenuItemSelected(key) {
-    const selected = this.state.dataSource.filter(
+    const selected = this.state.dataSource.find(
       i => i.place_id.toString() === key.toString()
-    )[0];
+    );
     this.props.onSelect(selected, this.props.map);
   }
 
