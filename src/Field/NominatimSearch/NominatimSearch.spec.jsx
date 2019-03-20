@@ -103,7 +103,7 @@ describe('<NominatimSearch />', () => {
     it('calls this.props.onSelect with the selected item', () => {
       //SETUP
       const dataSource = [{
-        place_id: '752526',
+        place_id: 752526,
         display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland'
       }];
       const map = new OlMap({
