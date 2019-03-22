@@ -80,7 +80,7 @@
     "moment": "2.22.2",
     "proj4": "2.5.0",
     "prop-types": "15.7.2",
-    "react-dom": "16.8.4",
+    "react-dom": "16.8.5",
     "react-dom-factories": "1.0.2",
     "react-fa": "5.0.0",
     "react-rnd": "9.1.2",
