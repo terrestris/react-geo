@@ -149,10 +149,8 @@ export class WfsSearch extends React.Component {
      * A render function which gets called with the selected item as it is
      * returned by the server. It must return an `AutoComplete.Option` with
      * `key={feature.id}`.
-     * The default will display the property `name` if existing or the `id` to
-     * and requires an `id` field on the feature. A custom function is required
-     * if your features don't have an `id` field.
-     *
+     * The default will display the property `name` if existing or the
+     * property defined in `props.idProperty` (default is to `id`).
      * @type {Function}
      */
     renderOption: PropTypes.func,
@@ -196,6 +194,11 @@ export class WfsSearch extends React.Component {
      */
     displayValue: PropTypes.string,
     /**
+     * The id property of the feature. Default is to `id`.
+     * @type {String}
+     */
+    idProperty: PropTypes.string,
+    /**
      * Delay in ms before actually sending requests.
      * @type {Number}
      */
@@ -208,6 +211,7 @@ export class WfsSearch extends React.Component {
     minChars: 3,
     additionalFetchOptions: {},
     displayValue: 'name',
+    idProperty: 'id',
     attributeDetails: {},
     delay: 300,
     /**
@@ -220,16 +224,17 @@ export class WfsSearch extends React.Component {
      */
     renderOption: (feature, props) => {
       const {
-        displayValue
+        displayValue,
+        idProperty
       } = props;
 
       const display = feature.properties[displayValue] ?
-        feature.properties[displayValue] : feature.id;
+        feature.properties[displayValue] : feature[idProperty];
 
       return (
         <Option
           value={display}
-          key={feature.id}
+          key={feature[idProperty]}
           title={display}
         >
           {display}
@@ -413,10 +418,12 @@ export class WfsSearch extends React.Component {
    */
   onMenuItemSelected(value, option) {
     const {
-      map
+      map,
+      idProperty
     } = this.props;
 
-    const selectedFeature = this.state.data.filter(feat => feat.id === option.key)[0];
+    const selectedFeature = this.state.data.filter(feat =>
+      feat[idProperty] === option.key)[0];
     this.props.onSelect(selectedFeature, map);
   }
 

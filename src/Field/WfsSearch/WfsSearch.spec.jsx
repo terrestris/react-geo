@@ -175,9 +175,31 @@ describe('<WfsSearch />', () => {
         }
       };
       const option = wrapper.props().renderOption(feature, {
-        displayValue: 'name'
+        // Props must be passed to the renderOption function.
+        displayValue: 'name',
+        idProperty: 'id'
       });
+
       expect(option.key).toBe(feature.id);
+      expect(option.props.children).toBe(feature.properties.name);
+    });
+  });
+
+  describe('#idProperty', () => {
+    it('can be specified', () => {
+      const wrapper = TestUtil.mountComponent(WfsSearch);
+      const feature = {
+        customId: '7355608',
+        properties: {
+          name: 'Deutschland'
+        }
+      };
+      const option = wrapper.props().renderOption(feature, {
+        displayValue: 'name',
+        idProperty: 'customId'
+      });
+
+      expect(option.key).toBe(feature.customId);
       expect(option.props.children).toBe(feature.properties.name);
     });
   });
