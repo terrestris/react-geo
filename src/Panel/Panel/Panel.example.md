@@ -18,17 +18,31 @@ import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
 ```jsx
 import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
 
-<Panel
-  style={{position: 'relative'}}
-  x={0}
-  y={0}
-  title="Collapsible"
-  collapsible={true}
->
-  <div style={{padding: '5px'}}>
-    Content
-  </div>
-</Panel>
+<div style={{display: 'flex'}}>
+  <Panel
+    style={{position: 'relative', 'padding-right': '15px'}}
+    x={0}
+    y={0}
+    title="Collapsible"
+    collapsible={true}
+  >
+    <div style={{padding: '5px'}}>
+      Content
+    </div>
+  </Panel>
+  <Panel
+    style={{position: 'relative'}}
+    x={0}
+    y={0}
+    title="Initially collapsed"
+    collapsible={true}
+    collapsed={true}
+  >
+    <div style={{padding: '5px'}}>
+      Content
+    </div>
+  </Panel>
+</div>
 ```
 
 ```jsx
