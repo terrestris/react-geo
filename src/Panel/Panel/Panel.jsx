@@ -113,16 +113,22 @@ export class Panel extends React.Component {
      */
     onEscape: PropTypes.func,
     /**
-     * Whether to allow dragging or not.
+     * Whether to allow dragging or not. Default is false.
      * @type {boolean}
      */
     draggable: PropTypes.bool,
 
     /**
-     * Whether to allow collasping or not.
+     * Whether to allow collapsing or not. Default is false.
      * @type {boolean}
      */
     collapsible: PropTypes.bool,
+
+    /**
+     * Whether to show panel collapsed initially or not. Default is false.
+     * @type {boolean}
+     */
+    collapsed: PropTypes.bool,
 
     /**
      * The height of the panel.
@@ -175,6 +181,7 @@ export class Panel extends React.Component {
   static defaultProps = {
     draggable: false,
     collapsible: false,
+    collapsed: false,
     resizeOpts: false,
     titleBarHeight: 37.5,
     tools: [],
@@ -193,7 +200,7 @@ export class Panel extends React.Component {
     const id = props.id || uniqueId('panel-');
     this.state = {
       id: id,
-      collapsed: false,
+      collapsed: this.props.collapsible ? this.props.collapsed : false,
       titleBarHeight: this.props.title ? props.titleBarHeight : 0,
       height: props.height,
       width: props.width,
