@@ -97,7 +97,7 @@
     "@babel/polyfill": "7.4.3",
     "@babel/preset-env": "7.4.3",
     "@babel/preset-react": "7.0.0",
-    "antd": "3.15.2",
+    "antd": "3.16.3",
     "babel-eslint": "10.0.1",
     "babel-jest": "24.0.0",
     "babel-loader": "8.0.5",
