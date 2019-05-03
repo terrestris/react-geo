@@ -117,8 +117,25 @@ class MeasureButton extends React.Component {
     drawstart: null,
     drawend: null,
     pointermove: null,
-    click: null
+    click: null,
+    change: null
   };
+
+  /**
+   * The vector layer showing the geometries added by the draw interaction.
+   *
+   * @type {ol.layer.Vector}
+   * @private
+   */
+  _measureLayer = null;
+
+  /**
+   * The draw interaction used to draw the geometries to measure.
+   *
+   * @type {ol.interaction.Draw}
+   * @private
+   */
+  _drawInteraction = null;
 
   /**
    * The properties.
@@ -170,7 +187,7 @@ class MeasureButton extends React.Component {
 
     /**
      * Determines if a marker with current measurement should be shown every
-     * time the user clicks while drawing. Default is false.
+     * time the user clicks while measuring a distance. Default is false.
      *
      * @type {Boolean}
      */
@@ -296,20 +313,23 @@ class MeasureButton extends React.Component {
 
     super(props);
 
-    this.state = {
-      measureLayer: null,
-      drawInteraction: null
-    };
+    this.onDrawInteractionActiveChange = this.onDrawInteractionActiveChange.bind(this);
+    this.onToggle = this.onToggle.bind(this);
+    this.onDrawStart = this.onDrawStart.bind(this);
+    this.onDrawEnd = this.onDrawEnd.bind(this);
+    this.onDrawInteractionGeometryChange = this.onDrawInteractionGeometryChange.bind(this);
+    this.onMapPointerMove = this.onMapPointerMove.bind(this);
+    this.onMapClick = this.onMapClick.bind(this);
   }
 
   /**
-   * `componentDidMount` method of the MeasureButton. Just calls a
-   * `createMeasureLayer` method.
+   * `componentDidMount` method of the MeasureButton.
    *
    * @method
    */
   componentDidMount() {
     this.createMeasureLayer();
+    this.createDrawInteraction();
   }
 
   /**
@@ -318,21 +338,29 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  onToggle = (pressed) => {
+  onToggle(pressed) {
+    const {
+      map,
+      onToggle
+    } = this.props;
+
     this.cleanup();
 
-    this.props.onToggle(pressed);
+    onToggle(pressed);
 
-    if (pressed && this.state.drawInteraction) {
-      this.state.drawInteraction.setActive(pressed);
-      this._eventKeys.drawstart = this.state.drawInteraction.on(
-        'drawstart', this.drawStart, this
+    if (pressed && this._drawInteraction) {
+      this._drawInteraction.setActive(pressed);
+
+      this._eventKeys.drawstart = this._drawInteraction.on(
+        'drawstart', this.onDrawStart, this
       );
-      this._eventKeys.drawend = this.state.drawInteraction.on(
-        'drawend', this.drawEnd, this
+
+      this._eventKeys.drawend = this._drawInteraction.on(
+        'drawend', this.onDrawEnd, this
       );
-      this._eventKeys.pointermove = this.props.map.on(
-        'pointermove', this.updateMeasureTooltip, this
+
+      this._eventKeys.pointermove = map.on(
+        'pointermove', this.onMapPointerMove, this
       );
     }
   }
@@ -342,7 +370,7 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  createMeasureLayer = () => {
+  createMeasureLayer() {
     const {
       measureLayerName,
       fillColor,
@@ -374,11 +402,11 @@ class MeasureButton extends React.Component {
           })
         })
       });
+
       map.addLayer(measureLayer);
     }
-    this.setState({measureLayer}, () => {
-      this.createDrawInteraction();
-    });
+
+    this._measureLayer = measureLayer;
   }
 
   /**
@@ -390,7 +418,7 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  createDrawInteraction = () => {
+  createDrawInteraction() {
     const {
       fillColor,
       strokeColor,
@@ -404,7 +432,7 @@ class MeasureButton extends React.Component {
 
     const drawInteraction = new OlInteractionDraw({
       name: 'react-geo_drawaction',
-      source: this.state.measureLayer.getSource(),
+      source: this._measureLayer.getSource(),
       type: drawType,
       maxPoints: maxPoints,
       style: new OlStyleStyle({
@@ -432,33 +460,62 @@ class MeasureButton extends React.Component {
     });
 
     map.addInteraction(drawInteraction);
+
     drawInteraction.on('change:active', this.onDrawInteractionActiveChange, this);
 
-    this.setState({drawInteraction}, () => {
-      if (pressed) {
-        this.onDrawInteractionActiveChange();
-      }
-      drawInteraction.setActive(pressed);
-    });
+    this._drawInteraction = drawInteraction;
+
+    if (pressed) {
+      this.onDrawInteractionActiveChange();
+    }
+
+    drawInteraction.setActive(pressed);
   }
 
   /**
    * Adjusts visibility of measurement related tooltips depending on active
    * status of draw interaction.
-   *
-   * @method
    */
-  onDrawInteractionActiveChange = () => {
-    if (this.state.drawInteraction.getActive()) {
-      if (this.props.showHelpTooltip) {
+  onDrawInteractionActiveChange() {
+    const {
+      showHelpTooltip
+    } = this.props;
+
+    if (this._drawInteraction.getActive()) {
+      if (showHelpTooltip) {
         this.createHelpTooltip();
       }
       this.createMeasureTooltip();
     } else {
-      if (this.props.showHelpTooltip) {
+      if (showHelpTooltip) {
         this.removeHelpTooltip();
       }
       this.removeMeasureTooltip();
+    }
+  }
+
+  /**
+   * Called if the current geometry of the draw interaction has changed.
+   *
+   * @param {ol.events.Event} evt The generic change event.
+   */
+  onDrawInteractionGeometryChange(/*evt*/) {
+    this.updateMeasureTooltip();
+  }
+
+  /**
+   * Called on map click.
+   *
+   * @param {ol.MapBrowserPointerEvent} evt The pointer event.
+   */
+  onMapClick(evt) {
+    const {
+      measureType,
+      showMeasureInfoOnClickedPoints
+    } = this.props;
+
+    if (showMeasureInfoOnClickedPoints && measureType === 'line') {
+      this.addMeasureStopTooltip(evt.coordinate);
     }
   }
 
@@ -471,32 +528,29 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  drawStart = (evt) => {
+  onDrawStart(evt) {
     const {
-      showMeasureInfoOnClickedPoints,
       showHelpTooltip,
       multipleDrawing,
-      measureType,
       map
     } = this.props;
 
-    const source = this.state.measureLayer.getSource();
+    const source = this._measureLayer.getSource();
     this._feature = evt.feature;
 
-    if (showMeasureInfoOnClickedPoints) {
-      if (measureType === 'line') {
-        this._eventKeys.click = map.on('click', this.addMeasureStopTooltip, this);
-      } else if (measureType === 'polygon') {
-        this._eventKeys.click = map.on('click', this.updateMeasureTooltip, this);
-      }
-    }
+    this._eventKeys.change = this._feature.getGeometry().on('change',
+      this.onDrawInteractionGeometryChange);
+
+    this._eventKeys.click = map.on('click', this.onMapClick, this);
 
     if (!multipleDrawing && source.getFeatures().length > 0) {
       this.cleanupTooltips();
       this.createMeasureTooltip();
+
       if (showHelpTooltip) {
         this.createHelpTooltip();
       }
+
       source.clear();
     }
   }
@@ -507,9 +561,10 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  drawEnd = (evt) => {
+  onDrawEnd(evt) {
     const {
       measureType,
+      multipleDrawing,
       showMeasureInfoOnClickedPoints,
       measureTooltipCssClasses
     } = this.props;
@@ -518,8 +573,16 @@ class MeasureButton extends React.Component {
       unByKey(this._eventKeys.click);
     }
 
+    if (this._eventKeys.change) {
+      unByKey(this._eventKeys.change);
+    }
+
+    if (multipleDrawing) {
+      this.addMeasureStopTooltip(evt.feature.getGeometry().getLastCoordinate());
+    }
+
     // Fix doubled label for lastPoint of line
-    if (showMeasureInfoOnClickedPoints && measureType === 'line') {
+    if ((multipleDrawing || showMeasureInfoOnClickedPoints) && measureType === 'line') {
       this.removeMeasureTooltip();
     } else {
       this._measureTooltipElement.className =
@@ -527,28 +590,24 @@ class MeasureButton extends React.Component {
       this._measureTooltip.setOffset([0, -7]);
     }
 
-    this.updateMeasureTooltip(evt);
+    this.updateMeasureTooltip();
 
     // unset sketch
     this._feature = null;
 
     // fix doubled label for last point of line
-    if (showMeasureInfoOnClickedPoints && measureType === 'line') {
+    if ((multipleDrawing || showMeasureInfoOnClickedPoints) && measureType === 'line') {
       this._measureTooltipElement = null;
       this.createMeasureTooltip();
     }
-
   }
 
   /**
    * Adds a tooltip on click where a measuring stop occured.
    *
-   * @param {OlMapBrowserEvent} evt The event which contains the coordinate
-   *   for the tooltip.
-   *
-   * @method
+   * @param {ol.Coordinate} coordinate The coordinate for the tooltip.
    */
-  addMeasureStopTooltip = (evt) => {
+  addMeasureStopTooltip(coordinate) {
     const {
       measureType,
       decimalPlacesInTooltips,
@@ -558,12 +617,15 @@ class MeasureButton extends React.Component {
 
     if (!isEmpty(this._feature)) {
       let geom = this._feature.getGeometry();
+
       if (geom instanceof OlMultiPolygon) {
         geom = geom.getPolygons()[0];
       }
+
       if (geom instanceof OlMultiLinestring) {
         geom = geom.getLineStrings()[0];
       }
+
       const value = measureType === 'line' ?
         MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips) :
         MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips);
@@ -578,7 +640,8 @@ class MeasureButton extends React.Component {
           positioning: 'bottom-center'
         });
         map.addOverlay(tooltip);
-        tooltip.setPosition(evt.coordinate);
+
+        tooltip.setPosition(coordinate);
 
         this._createdTooltipDivs.push(div);
         this._createdTooltipOverlays.push(tooltip);
@@ -588,10 +651,8 @@ class MeasureButton extends React.Component {
 
   /**
    * Creates a new measure tooltip as `OlOverlay`.
-   *
-   * @method
    */
-  createMeasureTooltip = () => {
+  createMeasureTooltip() {
     const {
       map,
       measureTooltipCssClasses
@@ -604,20 +665,20 @@ class MeasureButton extends React.Component {
     this._measureTooltipElement = document.createElement('div');
     this._measureTooltipElement.className =
       `${measureTooltipCssClasses.tooltip} ${measureTooltipCssClasses.tooltipDynamic}`;
+
     this._measureTooltip = new OlOverlay({
       element: this._measureTooltipElement,
       offset: [0, -15],
       positioning: 'bottom-center'
     });
+
     map.addOverlay(this._measureTooltip);
   }
 
   /**
    * Creates a new help tooltip as `OlOverlay`.
-   *
-   * @method
    */
-  createHelpTooltip = () => {
+  createHelpTooltip() {
     const {
       map,
       measureTooltipCssClasses
@@ -629,23 +690,24 @@ class MeasureButton extends React.Component {
 
     this._helpTooltipElement = document.createElement('div');
     this._helpTooltipElement.className = measureTooltipCssClasses.tooltip;
+
     this._helpTooltip = new OlOverlay({
       element: this._helpTooltipElement,
       offset: [15, 0],
       positioning: 'center-left'
     });
+
     map.addOverlay(this._helpTooltip);
   }
 
   /**
    * Removes help tooltip from the map if measure button was untoggled.
-   *
-   * @method
    */
-  removeHelpTooltip = () => {
+  removeHelpTooltip() {
     if (this._helpTooltip) {
       this.props.map.removeOverlay(this._helpTooltip);
     }
+
     this._helpTooltipElement = null;
     this._helpTooltip = null;
   }
@@ -655,10 +717,11 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  removeMeasureTooltip = () => {
+  removeMeasureTooltip() {
     if (this._measureTooltip) {
       this.props.map.removeOverlay(this._measureTooltip);
     }
+
     this._measureTooltipElement = null;
     this._measureTooltip = null;
   }
@@ -668,7 +731,7 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  cleanupTooltips = () => {
+  cleanupTooltips() {
     const {
       map
     } = this.props;
@@ -685,6 +748,7 @@ class MeasureButton extends React.Component {
         parent.removeChild(tooltipDiv);
       }
     });
+
     this._createdTooltipDivs = [];
     this.removeMeasureTooltip();
   }
@@ -694,9 +758,9 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  cleanup = () => {
-    if (this.state.drawInteraction) {
-      this.state.drawInteraction.setActive(false);
+  cleanup() {
+    if (this._drawInteraction) {
+      this._drawInteraction.setActive(false);
     }
 
     Object.keys(this._eventKeys).forEach(key => {
@@ -704,72 +768,99 @@ class MeasureButton extends React.Component {
         unByKey(this._eventKeys[key]);
       }
     });
+
     this.cleanupTooltips();
-    if (this.state.measureLayer) {
-      this.state.measureLayer.getSource().clear();
+
+    if (this._measureLayer) {
+      this._measureLayer.getSource().clear();
     }
   }
 
   /**
-   * Handle pointer move or click by updating and repositioning the dynamic tooltip.
+   * Called on map's pointermove event.
    *
-   * @param {OlMapBrowserEvent} evt The event from the pointermoveor click.
-   *
-   * @method
+   * @param {ol.MapBrowserPointerEvent} evt The pointer event.
    */
-  updateMeasureTooltip = (evt) => {
+  onMapPointerMove(evt) {
+    if (!evt.dragging) {
+      this.updateHelpTooltip(evt.coordinate);
+    }
+  }
+
+  /**
+   * Updates the position and the text of the help tooltip.
+   *
+   * @param {ol.coordinate} coordinate The coordinate to center the tooltip to.
+   */
+  updateHelpTooltip(coordinate) {
     const {
+      measureType,
       clickToDrawText,
       continuePolygonMsg,
       continueLineMsg,
-      continueAngleMsg,
+      continueAngleMsg
+    } = this.props;
+
+    if (!this._helpTooltipElement) {
+      return;
+    }
+
+    let msg = clickToDrawText;
+
+    if (this._helpTooltipElement) {
+      if (measureType === 'polygon') {
+        msg = continuePolygonMsg;
+      } else if (measureType === 'line') {
+        msg = continueLineMsg;
+      } else if (measureType === 'angle') {
+        msg = continueAngleMsg;
+      }
+
+      this._helpTooltipElement.innerHTML = msg;
+      this._helpTooltip.setPosition(coordinate);
+    }
+  }
+
+  /**
+   * Updates the text and position of the measture tooltip.
+   */
+  updateMeasureTooltip() {
+    const {
       measureType,
       decimalPlacesInTooltips,
       map
     } = this.props;
 
-    if (evt.dragging) {
-      return;
-    }
-
     if (!this._measureTooltipElement) {
       return;
     }
 
-    let helpMsg = clickToDrawText;
-    const helpTooltipCoord = evt.coordinate;
-    let measureTooltipCoord = evt.coordinate;
-
     if (this._feature) {
       let output;
       let geom = this._feature.getGeometry();
+
       if (geom instanceof OlMultiPolygon) {
         geom = geom.getPolygons()[0];
       }
+
       if (geom instanceof OlMultiLinestring) {
         geom = geom.getLineStrings()[0];
       }
-      measureTooltipCoord = geom.getLastCoordinate();
+
+      let measureTooltipCoord = geom.getLastCoordinate();
+
       if (measureType === 'polygon') {
         output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips);
-        helpMsg = continuePolygonMsg;
         // attach area at interior point
         measureTooltipCoord = geom.getInteriorPoint().getCoordinates();
       } else if (measureType === 'line') {
         output = MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips);
-        helpMsg = continueLineMsg;
-        measureTooltipCoord = geom.getLastCoordinate();
       } else if (measureType === 'angle') {
         output = MeasureUtil.formatAngle(geom, map, decimalPlacesInTooltips);
-        helpMsg = continueAngleMsg;
       }
+
       this._measureTooltipElement.innerHTML = output;
       this._measureTooltip.setPosition(measureTooltipCoord);
-    }
-
-    if (this._helpTooltipElement) {
-      this._helpTooltipElement.innerHTML = helpMsg;
-      this._helpTooltip.setPosition(helpTooltipCoord);
     }
   }
 
