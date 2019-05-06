@@ -6,6 +6,7 @@ import OlInteractionDraw from 'ol/interaction/Draw';
 import OlFeature from 'ol/Feature';
 import OlGeomLineString from 'ol/geom/LineString';
 import OlGeomPolygon from 'ol/geom/Polygon';
+import OlGeomPoint from 'ol/geom/Point';
 import OlOverlay from 'ol/Overlay';
 import * as OlObservable from 'ol/Observable';
 
@@ -143,7 +144,7 @@ describe('<MeasureButton />', () => {
 
         const instance = wrapper.instance();
 
-        expect(wrapper.state('drawInteraction').getActive()).toBe(true);
+        expect(instance._drawInteraction.getActive()).toBe(true);
         expect(instance._eventKeys.drawstart).toBeDefined();
         expect(instance._eventKeys.drawend).toBeDefined();
         expect(instance._eventKeys.pointermove).toBeDefined();
@@ -159,8 +160,10 @@ describe('<MeasureButton />', () => {
           measureType: 'line'
         });
 
-        expect(wrapper.state('measureLayer')).toBeDefined;
-        expect(wrapper.state('measureLayer')).toBeInstanceOf(OlLayerVector);
+        const instance = wrapper.instance();
+
+        expect(instance._measureLayer).toBeDefined;
+        expect(instance._measureLayer).toBeInstanceOf(OlLayerVector);
       });
     });
 
@@ -173,9 +176,11 @@ describe('<MeasureButton />', () => {
           pressed: true
         });
 
-        expect(wrapper.state('drawInteraction')).toBeDefined;
-        expect(wrapper.state('drawInteraction')).toBeInstanceOf(OlInteractionDraw);
-        expect(wrapper.state('drawInteraction').getActive()).toBeTruthy();
+        const instance = wrapper.instance();
+
+        expect(instance._drawInteraction).toBeDefined;
+        expect(instance._drawInteraction).toBeInstanceOf(OlInteractionDraw);
+        expect(instance._drawInteraction.getActive()).toBeTruthy();
       });
     });
 
@@ -195,12 +200,12 @@ describe('<MeasureButton />', () => {
         const createHelpTooltipSpy = jest.spyOn(instance, 'createHelpTooltip');
         const createMeasureTooltipSpy = jest.spyOn(instance, 'createMeasureTooltip');
 
-        wrapper.state('drawInteraction').setActive(false);
+        instance._drawInteraction.setActive(false);
 
         expect(removeHelpTooltipSpy).toHaveBeenCalledTimes(1);
         expect(removeMeasureTooltipSpy).toHaveBeenCalledTimes(1);
 
-        wrapper.state('drawInteraction').setActive(true);
+        instance._drawInteraction.setActive(true);
 
         expect(createHelpTooltipSpy).toHaveBeenCalledTimes(1);
         expect(createMeasureTooltipSpy).toHaveBeenCalledTimes(1);
@@ -218,24 +223,26 @@ describe('<MeasureButton />', () => {
 
       beforeEach(() => {
         mockEvt = {
-          feature: new OlFeature()
+          feature: new OlFeature({
+            geometry: new OlGeomPoint([0, 0])
+          })
         };
         wrapper = TestUtil.mountComponent(MeasureButton, {
           map: map,
           measureType: 'line',
           showMeasureInfoOnClickedPoints: true
         });
-        wrapper.state('measureLayer').getSource().addFeature(mockEvt.feature);
+        wrapper.instance()._measureLayer.getSource().addFeature(mockEvt.feature);
         instance = wrapper.instance();
       });
 
       it('sets the feature', () => {
-        instance.drawStart(mockEvt);
+        instance.onDrawStart(mockEvt);
         expect(instance._feature).toBe(mockEvt.feature);
       });
 
       it('sets event key for click', () => {
-        instance.drawStart(mockEvt);
+        instance.onDrawStart(mockEvt);
         expect(instance._eventKeys.click).toBeDefined();
       });
 
@@ -243,9 +250,9 @@ describe('<MeasureButton />', () => {
         const cleanupTooltipsSpy = jest.spyOn(instance, 'cleanupTooltips');
         const createMeasureTooltipSpy = jest.spyOn(instance, 'createMeasureTooltip');
         const createHelpTooltipSpy = jest.spyOn(instance, 'createHelpTooltip');
-        const clearSpy = jest.spyOn(wrapper.state('measureLayer').getSource(), 'clear');
+        const clearSpy = jest.spyOn(wrapper.instance()._measureLayer.getSource(), 'clear');
 
-        instance.drawStart(mockEvt);
+        instance.onDrawStart(mockEvt);
 
         expect(cleanupTooltipsSpy).toHaveBeenCalledTimes(1);
         expect(createMeasureTooltipSpy).toHaveBeenCalledTimes(1);
@@ -270,7 +277,11 @@ describe('<MeasureButton />', () => {
           showMeasureInfoOnClickedPoints: true
         });
         instance = wrapper.instance();
-        mockEvt = {};
+        mockEvt = {
+          feature: new OlFeature({
+            geometry: new OlGeomPoint([0, 0])
+          })
+        };
       });
 
       it ('unsets click event key', () => {
@@ -279,7 +290,7 @@ describe('<MeasureButton />', () => {
 
         const unByKeySpy = jest.spyOn(OlObservable, 'unByKey');
 
-        instance.drawEnd(mockEvt);
+        instance.onDrawEnd(mockEvt);
 
         expect(unByKeySpy).toHaveBeenCalledTimes(1);
 
@@ -292,7 +303,7 @@ describe('<MeasureButton />', () => {
           showMeasureInfoOnClickedPoints: true
         });
         const removeMeasureTooltipSpy = jest.spyOn(instance, 'removeMeasureTooltip');
-        instance.drawEnd(mockEvt);
+        instance.onDrawEnd(mockEvt);
         expect(removeMeasureTooltipSpy).toHaveBeenCalledTimes(1);
         jest.resetAllMocks();
         jest.restoreAllMocks();
@@ -304,7 +315,7 @@ describe('<MeasureButton />', () => {
         });
 
         instance.createMeasureTooltip();
-        instance.drawEnd(mockEvt);
+        instance.onDrawEnd(mockEvt);
 
         const expectedClassName = 'react-geo-measure-tooltip react-geo-measure-tooltip-static';
         const expectedOffset = [0, -7];
@@ -313,7 +324,7 @@ describe('<MeasureButton />', () => {
       });
 
       it ('unsets the feature', () => {
-        instance.drawEnd(mockEvt);
+        instance.onDrawEnd(mockEvt);
         expect(instance._feature).toBeNull;
       });
 
@@ -322,7 +333,7 @@ describe('<MeasureButton />', () => {
           showMeasureInfoOnClickedPoints: true
         });
         const createMeasureTooltipSpy = jest.spyOn(instance, 'createMeasureTooltip');
-        instance.drawEnd(mockEvt);
+        instance.onDrawEnd(mockEvt);
         expect(createMeasureTooltipSpy).toHaveBeenCalledTimes(1);
         jest.resetAllMocks();
         jest.restoreAllMocks();
@@ -333,7 +344,7 @@ describe('<MeasureButton />', () => {
 
       let wrapper;
       let instance;
-      let mockEvt;
+      let coordinate;
       let mockLineFeat;
 
       beforeEach(() => {
@@ -342,9 +353,7 @@ describe('<MeasureButton />', () => {
           measureType: 'line'
         });
         instance = wrapper.instance();
-        mockEvt = {
-          coordinate: [100, 100]
-        };
+        coordinate = [100, 100];
         mockLineFeat = new OlFeature({
           geometry: new OlGeomLineString([[0, 0], [0, 100]])
         });
@@ -353,7 +362,7 @@ describe('<MeasureButton />', () => {
       it('becomes a lineString feature with valid geometry', () => {
 
         instance._feature = mockLineFeat;
-        instance.addMeasureStopTooltip(mockEvt);
+        instance.addMeasureStopTooltip(coordinate);
 
         expect(instance._feature).toBeDefined();
         expect(instance._feature.getGeometry()).toBeDefined();
@@ -380,7 +389,7 @@ describe('<MeasureButton />', () => {
         });
 
         instance._feature = mockPolyFeat;
-        instance.addMeasureStopTooltip(mockEvt);
+        instance.addMeasureStopTooltip(coordinate);
 
         expect(instance._feature).toBeDefined();
         expect(instance._feature.getGeometry()).toBeDefined();
@@ -396,7 +405,7 @@ describe('<MeasureButton />', () => {
         });
 
         instance._feature = mockLineFeat;
-        instance.addMeasureStopTooltip(mockEvt);
+        instance.addMeasureStopTooltip(coordinate);
 
         const value = MeasureUtil.formatLength(instance._feature.getGeometry(), map, 2);
         expect(parseInt(value, 10)).toBeGreaterThan(10);
@@ -412,7 +421,7 @@ describe('<MeasureButton />', () => {
         expect(offset).toEqual([0, -15]);
         expect(positioning).toBe('bottom-center');
         expect(className).toBe('react-geo-measure-tooltip react-geo-measure-tooltip-static');
-        expect(overlay.getPosition()).toEqual(mockEvt.coordinate);
+        expect(overlay.getPosition()).toEqual(coordinate);
 
         expect(instance._createdTooltipDivs.length).toBe(1);
         expect(instance._createdTooltipOverlays.length).toBe(1);
@@ -633,11 +642,11 @@ describe('<MeasureButton />', () => {
 
       it ('sets draw interaction state to false', () => {
         instance.createDrawInteraction();
-        wrapper.state('drawInteraction').setActive(true);
+        instance._drawInteraction.setActive(true);
 
         instance.cleanup();
 
-        expect(wrapper.state('drawInteraction').getActive()).not.toBeTruthy();
+        expect(instance._drawInteraction.getActive()).not.toBeTruthy();
       });
 
       it ('unbinds all event keys', () => {
@@ -673,12 +682,12 @@ describe('<MeasureButton />', () => {
 
         const mockFeat = new OlFeature();
 
-        wrapper.state('measureLayer').getSource().addFeature(mockFeat);
-        expect(wrapper.state('measureLayer').getSource().getFeatures().length).toBe(1);
+        instance._measureLayer.getSource().addFeature(mockFeat);
+        expect(instance._measureLayer.getSource().getFeatures().length).toBe(1);
 
         instance.cleanup();
 
-        expect(wrapper.state('measureLayer').getSource().getFeatures().length).toBe(0);
+        expect(instance._measureLayer.getSource().getFeatures().length).toBe(0);
       });
     });
 
@@ -686,7 +695,7 @@ describe('<MeasureButton />', () => {
 
       let wrapper;
       let instance;
-      let mockEvt;
+      let geometry;
 
       beforeEach(() => {
         wrapper = TestUtil.mountComponent(MeasureButton, {
@@ -694,47 +703,123 @@ describe('<MeasureButton />', () => {
           measureType: 'line'
         });
         instance = wrapper.instance();
-        mockEvt = {
-          coordinate: [100, 100]
-        };
-      });
-
-      it ('returns undefined by dragging state', () => {
-        mockEvt.dragging = true;
-        const expectedOutput = instance.updateMeasureTooltip(mockEvt);
-        expect(expectedOutput).toBeUndefined();
+        geometry = new OlGeomPoint([100, 100]);
       });
 
       it ('returns undefined if measure and tooltip elements are not set', () => {
-        const expectedOutput = instance.updateMeasureTooltip(mockEvt);
+        const expectedOutput = instance.updateMeasureTooltip(geometry);
         expect(expectedOutput).toBeUndefined();
       });
 
-      it ('sets correct help message and tooltip position for line measurements', () => {
+      it ('sets correct tooltip position for line measurements', () => {
+        const mockLineFeat = new OlFeature({
+          geometry: new OlGeomLineString([[0, 0], [0, 100]])
+        });
+        instance._feature = mockLineFeat;
+
+        instance._measureTooltipElement = document.createElement('div');
+        instance._measureTooltip = new OlOverlay({
+          element: instance._measureTooltipElement
+        });
+
+        instance.updateMeasureTooltip(geometry);
+
+        expect(instance._measureTooltipElement.innerHTML).toBe('99.89 m');
+        expect(instance._measureTooltip.getPosition()).toEqual([0, 100]);
+      });
+
+      it ('sets correct tooltip position for area measurements', () => {
+
+        const polyCoords = [
+          [0, 0],
+          [0, 10],
+          [10, 10],
+          [10, 0],
+          [0, 0]
+        ];
+        const mockPolyFeat = new OlFeature({
+          geometry: new OlGeomPolygon([polyCoords])
+        });
+
+        instance._feature = mockPolyFeat;
+
+        wrapper.setProps({
+          measureType: 'polygon'
+        });
+
+        instance._measureTooltipElement = document.createElement('div');
+        instance._measureTooltip = new OlOverlay({
+          element: instance._measureTooltipElement
+        });
+
+        instance.updateMeasureTooltip(geometry);
+
+        expect(instance._measureTooltipElement.innerHTML).toBe('99.78 m<sup>2</sup>');
+        // Interior point as XYM coordinate, where M is the length of the horizontal
+        // intersection that the point belongs to
+        expect(instance._measureTooltip.getPosition()).toEqual([5, 5, 10]);
+      });
+
+      it ('sets correct tooltip position for angle measurements', () => {
+        const mockLineFeat = new OlFeature({
+          geometry: new OlGeomLineString([[0, 0], [0, 100]])
+        });
+        instance._feature = mockLineFeat;
+
+        wrapper.setProps({
+          measureType: 'angle'
+        });
+
+        instance._measureTooltipElement = document.createElement('div');
+        instance._measureTooltip = new OlOverlay({
+          element: instance._measureTooltipElement
+        });
+
+        instance.updateMeasureTooltip(geometry);
+
+        expect(instance._measureTooltipElement.innerHTML).toBe('0°');
+        expect(instance._measureTooltip.getPosition()).toEqual([0, 100]);
+      });
+    });
+
+    describe('#updateHelpTooltip', () => {
+
+      let wrapper;
+      let instance;
+      let geometry;
+
+      beforeEach(() => {
+        wrapper = TestUtil.mountComponent(MeasureButton, {
+          map: map,
+          measureType: 'line'
+        });
+        instance = wrapper.instance();
+        geometry = new OlGeomPoint([100, 100]);
+      });
+
+      it ('returns undefined if measure and tooltip elements are not set', () => {
+        const expectedOutput = instance.updateHelpTooltip(geometry);
+        expect(expectedOutput).toBeUndefined();
+      });
+
+      it ('sets correct help message and position for line measurements', () => {
         const mockLineFeat = new OlFeature({
           geometry: new OlGeomLineString([[0, 0], [0, 100]])
         });
         instance._feature = mockLineFeat;
 
         instance._helpTooltipElement = document.createElement('div');
-        instance._measureTooltipElement = document.createElement('div');
         instance._helpTooltip = new OlOverlay({
           element: instance._helpTooltipElement
         });
-        instance._measureTooltip = new OlOverlay({
-          element: instance._measureTooltipElement
-        });
 
-        instance.updateMeasureTooltip(mockEvt);
-
-        expect(instance._measureTooltipElement.innerHTML).toBe('99.89 m');
-        expect(instance._measureTooltip.getPosition()).toEqual([0, 100]);
+        instance.updateHelpTooltip(geometry.getLastCoordinate());
 
         expect(instance._helpTooltipElement.innerHTML).toBe('Click to draw line');
-        expect(instance._helpTooltip.getPosition()).toEqual(mockEvt.coordinate);
+        expect(instance._helpTooltip.getPosition()).toEqual(geometry.getCoordinates());
       });
 
-      it ('sets correct help message and tooltip position for area measurements', () => {
+      it ('sets correct help message and position for area measurements', () => {
 
         const polyCoords = [
           [0, 0],
@@ -754,26 +839,17 @@ describe('<MeasureButton />', () => {
         });
 
         instance._helpTooltipElement = document.createElement('div');
-        instance._measureTooltipElement = document.createElement('div');
         instance._helpTooltip = new OlOverlay({
           element: instance._helpTooltipElement
         });
-        instance._measureTooltip = new OlOverlay({
-          element: instance._measureTooltipElement
-        });
 
-        instance.updateMeasureTooltip(mockEvt);
-
-        expect(instance._measureTooltipElement.innerHTML).toBe('99.78 m<sup>2</sup>');
-        // Interior point as XYM coordinate, where M is the length of the horizontal
-        // intersection that the point belongs to
-        expect(instance._measureTooltip.getPosition()).toEqual([5, 5, 10]);
+        instance.updateHelpTooltip(geometry.getLastCoordinate());
 
         expect(instance._helpTooltipElement.innerHTML).toBe('Click to draw area');
-        expect(instance._helpTooltip.getPosition()).toEqual(mockEvt.coordinate);
+        expect(instance._helpTooltip.getPosition()).toEqual(geometry.getCoordinates());
       });
 
-      it ('sets correct help message and tooltip position for angle measurements', () => {
+      it ('sets correct help message and position for angle measurements', () => {
         const mockLineFeat = new OlFeature({
           geometry: new OlGeomLineString([[0, 0], [0, 100]])
         });
@@ -784,21 +860,14 @@ describe('<MeasureButton />', () => {
         });
 
         instance._helpTooltipElement = document.createElement('div');
-        instance._measureTooltipElement = document.createElement('div');
         instance._helpTooltip = new OlOverlay({
           element: instance._helpTooltipElement
         });
-        instance._measureTooltip = new OlOverlay({
-          element: instance._measureTooltipElement
-        });
 
-        instance.updateMeasureTooltip(mockEvt);
-
-        expect(instance._measureTooltipElement.innerHTML).toBe('0°');
-        expect(instance._measureTooltip.getPosition()).toEqual([0, 100]);
+        instance.updateHelpTooltip(geometry.getLastCoordinate());
 
         expect(instance._helpTooltipElement.innerHTML).toBe('Click to draw angle');
-        expect(instance._helpTooltip.getPosition()).toEqual(mockEvt.coordinate);
+        expect(instance._helpTooltip.getPosition()).toEqual(geometry.getCoordinates());
       });
     });
   });
