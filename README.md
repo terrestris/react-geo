@@ -60,6 +60,12 @@ module: {
 }
 ```
 
+## Development requirements
+
+* Node.js 8 or later
+* npm 6.8.0 or later
+* Git 2.11 or later
+
 ## Development notes
 
 If you like to develop a react-geo component out of your project make use of [npm link](https://docs.npmjs.com/cli/link):
