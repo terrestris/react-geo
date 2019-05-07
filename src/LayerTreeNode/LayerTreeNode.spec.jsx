@@ -18,7 +18,8 @@ describe('<LayerTreeNode />', () => {
     const wrapper = TestUtil.mountComponent(LayerTreeNode, defaultProps, {
       context: {
         rcTree: {
-          prefixCls: ''
+          prefixCls: '',
+          registerTreeNode: () => {}
         }
       },
       childContextTypes: {
