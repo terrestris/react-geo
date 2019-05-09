@@ -43,6 +43,10 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=8",
+    "npm": ">=6.8.0"
+  },
   "scripts": {
     "clean": "rimraf ./build/* ./coverage/* ./dist/*",
     "clean:test": "rimraf ./coverage/*",
