@@ -116,6 +116,7 @@ class ZoomButton extends React.Component {
       delta,
       animate,
       animateOptions,
+      map,
       ...passThroughProps
     } = this.props;
 
