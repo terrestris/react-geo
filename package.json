@@ -106,7 +106,7 @@
     "babel-jest": "24.8.0",
     "babel-loader": "8.0.6",
     "babel-plugin-dynamic-import-node": "2.2.0",
-    "babel-plugin-import": "1.11.0",
+    "babel-plugin-import": "1.11.1",
     "babel-plugin-module-resolver": "3.2.0",
     "canvas-prebuilt": "1.6.11",
     "coveralls": "3.0.3",
