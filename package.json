@@ -80,7 +80,7 @@
     "ag-grid-community": "20.2.0",
     "ag-grid-react": "20.2.0",
     "lodash": "4.17.11",
-    "loglevel": "1.6.1",
+    "loglevel": "1.6.2",
     "moment": "2.24.0",
     "proj4": "2.5.0",
     "prop-types": "15.7.2",
