@@ -77,7 +77,7 @@
     "@terrestris/base-util": "0.1.4",
     "@terrestris/ol-util": "2.3.0",
     "@turf/turf": "5.1.6",
-    "ag-grid-community": "20.2.0",
+    "ag-grid-community": "21.0.0",
     "ag-grid-react": "20.2.0",
     "lodash": "4.17.11",
     "loglevel": "1.6.2",
