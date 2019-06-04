@@ -112,7 +112,7 @@
     "coveralls": "3.0.3",
     "css-loader": "2.1.1",
     "enzyme": "3.10.0",
-    "enzyme-adapter-react-16": "1.13.2",
+    "enzyme-adapter-react-16": "1.14.0",
     "eslint": "5.16.0",
     "eslint-plugin-html": "5.0.5",
     "eslint-plugin-markdown": "1.0.0",
