@@ -78,7 +78,7 @@
     "@terrestris/ol-util": "3.0.0",
     "@turf/turf": "5.1.6",
     "ag-grid-community": "21.0.0",
-    "ag-grid-react": "21.0.0",
+    "ag-grid-react": "21.0.1",
     "lodash": "4.17.11",
     "loglevel": "1.6.2",
     "moment": "2.24.0",
