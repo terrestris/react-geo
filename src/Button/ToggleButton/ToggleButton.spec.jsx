@@ -2,9 +2,7 @@
 
 import TestUtil from '../../Util/TestUtil';
 
-import {
-  ToggleButton
-} from '../../index';
+import ToggleButton from './ToggleButton';
 
 describe('<ToggleButton />', () => {
 

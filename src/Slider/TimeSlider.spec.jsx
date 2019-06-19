@@ -2,7 +2,7 @@
 
 import TestUtil from '../Util/TestUtil';
 import moment from 'moment';
-import { TimeSlider } from '../index';
+import TimeSlider from './TimeSlider';
 
 describe('<TimeSlider />', () => {
   it('is defined', () => {

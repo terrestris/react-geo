@@ -7,7 +7,7 @@ import OlSourceTileJson from 'ol/source/TileJSON';
 
 import TestUtil from '../Util/TestUtil';
 
-import { Legend } from '../index';
+import Legend from './Legend';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 

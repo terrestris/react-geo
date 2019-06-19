@@ -5,9 +5,7 @@ import OlMap from 'ol/Map';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 import { easeOut } from 'ol/easing';
 
-import {
-  SimpleButton
-} from '../../index';
+import SimpleButton from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 
 /**

@@ -3,9 +3,7 @@ import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 
-jest.unmock('../../index');
-
-import { onDropAware } from '../../index';
+import { onDropAware } from './DropTargetMap';
 
 import FileUtil from '@terrestris/ol-util/dist/FileUtil/FileUtil';
 

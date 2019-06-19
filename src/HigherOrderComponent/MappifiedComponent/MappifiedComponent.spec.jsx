@@ -3,7 +3,7 @@ import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 
-import { mappify } from '../../index';
+import { mappify } from './MappifiedComponent';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
@@ -54,7 +54,6 @@ describe('mappify', () => {
       expect(loggerSpy).toHaveBeenCalledWith('You trying to mappify a ' +
         'component without any map in the context. Did you implement ' +
         'the MapProvider?');
-      loggerSpy.mockReset();
       loggerSpy.mockRestore();
     });
 
