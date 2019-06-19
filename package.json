@@ -119,6 +119,7 @@
     "eslint-plugin-react": "7.13.0",
     "file-loader": "4.0.0",
     "jest": "24.8.0",
+    "jest-canvas-mock": "2.1.0",
     "less": "3.9.0",
     "less-loader": "5.0.0",
     "np": "5.0.3",
@@ -131,6 +132,7 @@
     "style-loader": "0.23.1",
     "url-loader": "2.0.0",
     "webpack": "4.33.0",
-    "whatwg-fetch": "3.0.0"
+    "whatwg-fetch": "3.0.0",
+    "xmldom": "0.1.27"
   }
 }
