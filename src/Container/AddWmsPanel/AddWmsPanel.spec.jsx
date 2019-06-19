@@ -1,7 +1,9 @@
 /*eslint-env jest*/
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-import { AddWmsPanel, SimpleButton } from '../../index';
+
+import AddWmsPanel from './AddWmsPanel';
+import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import TestUtil from '../../Util/TestUtil';
 
 describe('<AddWmsPanel />', () => {

@@ -3,7 +3,7 @@ import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 
-import { mappify } from '../../index';
+import { mappify } from './MappifiedComponent';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 

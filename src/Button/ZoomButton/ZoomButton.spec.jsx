@@ -3,7 +3,7 @@
 import TestUtil from '../../Util/TestUtil';
 import OlMap from 'ol/Map';
 
-import { ZoomButton } from '../../index';
+import ZoomButton from './ZoomButton';
 
 describe('<ZoomButton />', () => {
 

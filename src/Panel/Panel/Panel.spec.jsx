@@ -2,7 +2,7 @@
 
 import TestUtil from '../../Util/TestUtil';
 
-import { Panel } from '../../index';
+import Panel from './Panel';
 
 describe('<Panel />', () => {
 

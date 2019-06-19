@@ -2,7 +2,7 @@
 
 import TestUtil from '../../Util/TestUtil';
 
-import { UploadButton } from '../../index';
+import UploadButton from './UploadButton';
 
 describe('<UploadButton />', () => {
   it('is defined', () => {

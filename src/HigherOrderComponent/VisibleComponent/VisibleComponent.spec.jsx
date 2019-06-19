@@ -4,7 +4,7 @@ import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 
-import { isVisibleComponent } from '../../index';
+import { isVisibleComponent } from './VisibleComponent';
 
 describe('isVisibleComponent', () => {
   let EnhancedComponent;

@@ -8,7 +8,7 @@ import OlSourceOsm from 'ol/source/OSM';
 import TestUtil from '../../Util/TestUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
-import { WfsSearch } from '../../index';
+import WfsSearch from './WfsSearch';
 
 describe('<WfsSearch />', () => {
   it('is defined', () => {

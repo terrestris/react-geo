@@ -3,10 +3,8 @@ import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 
-import{
-  ToggleButton,
-  ToggleGroup
-} from '../../index';
+import ToggleButton from '../ToggleButton/ToggleButton';
+import ToggleGroup from './ToggleGroup';
 
 describe('<ToggleGroup />', () => {
 

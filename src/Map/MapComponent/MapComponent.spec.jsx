@@ -3,9 +3,7 @@
 
 import TestUtil from '../../Util/TestUtil';
 
-import {
-  MapComponent
-} from '../../index';
+import MapComponent from './MapComponent';
 
 describe('<MapComponent />', () => {
   let map;
