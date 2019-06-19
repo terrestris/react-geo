@@ -7,9 +7,7 @@ import TileWMS from 'ol/source/TileWMS';
 
 import TestUtil from '../../Util/TestUtil';
 
-import {
-  timeLayerAware
-} from '../../index';
+import { timeLayerAware } from './TimeLayerAware';
 
 describe('timeLayerAware', () => {
   let EnhancedComponent;

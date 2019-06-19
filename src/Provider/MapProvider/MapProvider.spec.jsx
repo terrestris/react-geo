@@ -6,10 +6,8 @@ import { mount } from 'enzyme';
 
 import { TestUtil } from '../../Util/TestUtil';
 
-import {
-  MapProvider,
-  mappify
-} from '../../index';
+import MapProvider from './MapProvider';
+import { mappify } from '../../HigherOrderComponent/MappifiedComponent/MappifiedComponent';
 
 describe('MapProvider', () => {
   /* eslint-disable require-jsdoc */

@@ -8,7 +8,7 @@ import OlSourceOsm from 'ol/source/OSM';
 import TestUtil from '../../Util/TestUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
-import { NominatimSearch } from '../../index';
+import NominatimSearch from '../NominatimSearch/NominatimSearch';
 
 describe('<NominatimSearch />', () => {
   it('is defined', () => {
@@ -40,7 +40,6 @@ describe('<NominatimSearch />', () => {
       const inputValue = 'Bonn';
       wrapper.instance().onUpdateInput(inputValue);
       expect(fetchSpy).toHaveBeenCalled();
-      fetchSpy.mockReset();
       fetchSpy.mockRestore();
     });
   });
@@ -70,7 +69,6 @@ describe('<NominatimSearch />', () => {
       expectations.forEach(expectation => {
         expect(fetchUrl).toMatch(expectation);
       });
-      fetchSpy.mockReset();
       fetchSpy.mockRestore();
     });
   });
@@ -94,7 +92,6 @@ describe('<NominatimSearch />', () => {
       wrapper.instance().onFetchError('Peter');
       expect(loggerSpy).toHaveBeenCalled();
       expect(loggerSpy).toHaveBeenCalledWith('Error while requesting Nominatim: Peter');
-      loggerSpy.mockReset();
       loggerSpy.mockRestore();
     });
   });
@@ -128,7 +125,6 @@ describe('<NominatimSearch />', () => {
       expect(selectSpy).toHaveBeenCalled();
       expect(selectSpy).toHaveBeenCalledWith(dataSource[0], map);
 
-      selectSpy.mockReset();
       selectSpy.mockRestore();
     });
   });
@@ -162,7 +158,6 @@ describe('<NominatimSearch />', () => {
       wrapper.props().onSelect(item, map);
       expect(fitSpy).toHaveBeenCalled();
       expect(fitSpy).toHaveBeenCalledWith(transformedExtent, expect.any(Object) );
-      fitSpy.mockReset();
       fitSpy.mockRestore();
     });
   });

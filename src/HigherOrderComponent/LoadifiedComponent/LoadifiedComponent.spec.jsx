@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 import React from 'react';
 import TestUtil from '../../Util/TestUtil';
-import { loadify } from '../../index';
+import { loadify } from './LoadifiedComponent';
 
 describe('loadify', () => {
   let EnhancedComponent;

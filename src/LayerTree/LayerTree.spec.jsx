@@ -9,7 +9,7 @@ import OlCollection from 'ol/Collection';
 
 import TestUtil from '../Util/TestUtil';
 
-import { LayerTree } from '../index';
+import LayerTree from './LayerTree';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
@@ -138,7 +138,6 @@ describe('<LayerTree />', () => {
       const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
       map.getLayerGroup().setLayers(new OlCollection([subLayer]));
       expect(rebuildSpy).toHaveBeenCalled();
-      rebuildSpy.mockReset();
       rebuildSpy.mockRestore();
     });
 
@@ -246,7 +245,6 @@ describe('<LayerTree />', () => {
 
         expect(logSpy).toHaveBeenCalled();
 
-        logSpy.mockReset();
         logSpy.mockRestore();
         layerGroup.setVisible(true);
       });
@@ -335,7 +333,6 @@ describe('<LayerTree />', () => {
       });
       expect(rebuildSpy).toHaveBeenCalledTimes(2);
 
-      rebuildSpy.mockReset();
       rebuildSpy.mockRestore();
     });
 
@@ -353,7 +350,6 @@ describe('<LayerTree />', () => {
       layerGroup.getLayers().push(layer);
       expect(rebuildSpy).toHaveBeenCalled();
 
-      rebuildSpy.mockReset();
       rebuildSpy.mockRestore();
     });
 
@@ -376,9 +372,7 @@ describe('<LayerTree />', () => {
       expect(rebuildSpy).toHaveBeenCalled();
       expect(registerSpy).toHaveBeenCalled();
 
-      rebuildSpy.mockReset();
       rebuildSpy.mockRestore();
-      registerSpy.mockReset();
       registerSpy.mockRestore();
     });
 
@@ -395,9 +389,7 @@ describe('<LayerTree />', () => {
       expect(rebuildSpy).toHaveBeenCalled();
       expect(unregisterSpy).toHaveBeenCalled();
 
-      rebuildSpy.mockReset();
       rebuildSpy.mockRestore();
-      unregisterSpy.mockReset();
       unregisterSpy.mockRestore();
     });
 
@@ -426,9 +418,7 @@ describe('<LayerTree />', () => {
       expect(rebuildSpy).toHaveBeenCalledTimes(1);
       expect(unregisterSpy).toHaveBeenCalledTimes(3);
 
-      rebuildSpy.mockReset();
       rebuildSpy.mockRestore();
-      unregisterSpy.mockReset();
       unregisterSpy.mockRestore();
     });
 
@@ -517,7 +507,6 @@ describe('<LayerTree />', () => {
       wrapper.instance().setLayerVisibility(layer1 , 'peter');
       expect(logSpy).toHaveBeenCalled();
 
-      logSpy.mockReset();
       logSpy.mockRestore();
     });
 

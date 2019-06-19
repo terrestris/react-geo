@@ -2,7 +2,7 @@
 
 import TestUtil from '../../Util/TestUtil';
 
-import { Panel } from '../../index';
+import Panel from './Panel';
 
 describe('<Panel />', () => {
 
@@ -61,8 +61,9 @@ describe('<Panel />', () => {
       expect(onEscSpy).toHaveBeenCalledTimes(1);
       expect(focusSpy).toHaveBeenCalledTimes(1);
       expect(element.className).toContain(document.activeElement.className);
-      jest.resetAllMocks();
-      jest.restoreAllMocks();
+
+      onEscSpy.mockRestore();
+      focusSpy.mockRestore();
     });
   });
 
