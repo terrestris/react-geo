@@ -9,7 +9,7 @@ import OlCollection from 'ol/Collection';
 
 import TestUtil from '../Util/TestUtil';
 
-import { LayerTree } from '../index';
+import LayerTree from './LayerTree';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 

@@ -6,7 +6,7 @@ const Option = Select.Option;
 
 import TestUtil from '../../Util/TestUtil';
 
-import { ScaleCombo } from '../../index';
+import ScaleCombo from './ScaleCombo';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';

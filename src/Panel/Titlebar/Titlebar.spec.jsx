@@ -3,10 +3,8 @@ import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 
-import {
-  Titlebar,
-  SimpleButton
-} from '../../index';
+import Titlebar from './Titlebar';
+import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 
 describe('<Titlebar />', () => {
 

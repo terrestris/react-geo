@@ -1,5 +1,5 @@
 /*eslint-env jest*/
-import { Window } from '../index';
+import Window from './Window';
 import TestUtil from '../Util/TestUtil';
 
 import Logger from '@terrestris/base-util/dist/Logger';

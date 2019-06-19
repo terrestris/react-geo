@@ -2,7 +2,7 @@
 
 import TestUtil from '../../Util/TestUtil';
 
-import { SimpleButton } from '../../index';
+import SimpleButton from './SimpleButton';
 
 describe('<SimpleButton />', () => {
   it('is defined', () => {

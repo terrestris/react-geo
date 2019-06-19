@@ -4,9 +4,7 @@ import OlGeomPoint from 'ol/geom/Point';
 
 import TestUtil from '../../Util/TestUtil';
 
-import {
-  PropertyGrid
-} from '../../index';
+import PropertyGrid from './PropertyGrid';
 
 describe('<PropertyGrid />', () => {
 

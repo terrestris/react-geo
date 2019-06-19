@@ -3,7 +3,7 @@
 import testImage from  '../../assets/user.png';
 import TestUtil from '../Util/TestUtil';
 
-import { UserChip } from '../index';
+import UserChip from './UserChip';
 
 describe('<UserChip />', () => {
 

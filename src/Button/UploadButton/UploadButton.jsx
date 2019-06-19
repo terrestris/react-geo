@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import  {
-  SimpleButton
-} from '../../index';
+import SimpleButton from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 
 import './UploadButton.less';

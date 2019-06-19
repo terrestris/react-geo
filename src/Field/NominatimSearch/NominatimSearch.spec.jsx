@@ -8,7 +8,7 @@ import OlSourceOsm from 'ol/source/OSM';
 import TestUtil from '../../Util/TestUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
-import { NominatimSearch } from '../../index';
+import NominatimSearch from '../NominatimSearch/NominatimSearch';
 
 describe('<NominatimSearch />', () => {
   it('is defined', () => {

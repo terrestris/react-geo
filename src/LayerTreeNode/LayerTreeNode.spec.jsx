@@ -1,5 +1,5 @@
 /*eslint-env jest*/
-import { LayerTreeNode } from '../index';
+import LayerTreeNode from './LayerTreeNode';
 import TestUtil from '../Util/TestUtil';
 import PropTypes from 'prop-types';
 

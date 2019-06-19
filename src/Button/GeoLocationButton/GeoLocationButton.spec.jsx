@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
-import { GeoLocationButton } from '../../index';
+import GeoLocationButton from './GeoLocationButton';
 
 describe('<GeoLocationButton />', () => {
 

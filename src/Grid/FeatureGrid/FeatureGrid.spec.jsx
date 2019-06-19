@@ -5,7 +5,7 @@ import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 
 import TestUtil from '../../Util/TestUtil';
 
-import { FeatureGrid } from '../../index';
+import FeatureGrid from './FeatureGrid';
 
 describe('<FeatureGrid />', () => {
   let map;

@@ -7,7 +7,7 @@ import differenceWith from 'lodash/differenceWith';
 
 import TestUtil from '../../Util/TestUtil';
 
-import { AgFeatureGrid } from '../../index';
+import AgFeatureGrid from './AgFeatureGrid';
 
 describe('<AgFeatureGrid />', () => {
   let map;
