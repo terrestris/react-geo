@@ -32,7 +32,6 @@ describe('<Window />', () => {
       'Please ensure that parentId parameter was set correctly (default ' +
       'value is `app`)');
 
-    loggerSpy.mockReset();
     loggerSpy.mockRestore();
   });
 

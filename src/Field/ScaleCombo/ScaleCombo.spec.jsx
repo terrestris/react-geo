@@ -60,7 +60,6 @@ describe('<ScaleCombo />', () => {
       });
       wrapper.instance().getOptionsFromMap();
       expect(logSpy).toHaveBeenCalled();
-      logSpy.mockReset();
       logSpy.mockRestore();
 
       TestUtil.removeMap(map);

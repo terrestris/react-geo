@@ -44,11 +44,11 @@ describe('<WfsSearch />', () => {
           'osm:osm-country-borders': ['name']
         }
       });
-      wrapper.instance().doSearch = jest.fn();
+      const doSearchSpy = jest.spyOn(wrapper.instance(), 'doSearch');
       const inputValue = 'Deutsch';
       wrapper.instance().onUpdateInput(inputValue);
-      expect(wrapper.instance().doSearch).toHaveBeenCalled();
-      wrapper.instance().doSearch.mockReset();
+      expect(doSearchSpy).toHaveBeenCalled();
+      doSearchSpy.mockRestore();
     });
   });
 
@@ -80,7 +80,6 @@ describe('<WfsSearch />', () => {
       wrapper.instance().onFetchError('Peter');
       expect(loggerSpy).toHaveBeenCalled();
       expect(loggerSpy).toHaveBeenCalledWith('Error while requesting WFS GetFeature: Peter');
-      loggerSpy.mockReset();
       loggerSpy.mockRestore();
     });
   });
@@ -116,7 +115,6 @@ describe('<WfsSearch />', () => {
       expect(selectSpy).toHaveBeenCalled();
       expect(selectSpy).toHaveBeenCalledWith(data[0], map);
 
-      selectSpy.mockReset();
       selectSpy.mockRestore();
     });
   });
@@ -159,7 +157,6 @@ describe('<WfsSearch />', () => {
         .then(() => {
           expect(map.getView().getCenter()).toEqual([25, 25]);
           expect(map.getView().getZoom()).toEqual(2);
-          fitSpy.mockReset();
           fitSpy.mockRestore();
         });
     });

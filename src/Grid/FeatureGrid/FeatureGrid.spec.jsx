@@ -93,7 +93,6 @@ describe('<FeatureGrid />', () => {
     expect(mapOnSpy).toHaveBeenCalledWith('pointermove', onPointerMove);
     expect(mapOnSpy).toHaveBeenCalledWith('singleclick', onMapSingleClick);
 
-    mapOnSpy.mockReset();
     mapOnSpy.mockRestore();
   });
 
@@ -110,7 +109,6 @@ describe('<FeatureGrid />', () => {
     expect(mapUnSpy).toHaveBeenCalledWith('pointermove', onPointerMove);
     expect(mapUnSpy).toHaveBeenCalledWith('singleclick', onMapSingleClick);
 
-    mapUnSpy.mockReset();
     mapUnSpy.mockRestore();
   });
 
@@ -266,10 +264,7 @@ describe('<FeatureGrid />', () => {
     expect(onRowClickSpy).toHaveBeenCalled();
     expect(zoomToFeaturesSpy).toHaveBeenCalled();
 
-    onRowClickSpy.mockReset();
     onRowClickSpy.mockRestore();
-
-    zoomToFeaturesSpy.mockReset();
     zoomToFeaturesSpy.mockRestore();
   });
 
@@ -286,10 +281,7 @@ describe('<FeatureGrid />', () => {
     expect(onRowMouseOverSpy).toHaveBeenCalled();
     expect(highlightFeaturesSpy).toHaveBeenCalled();
 
-    onRowMouseOverSpy.mockReset();
     onRowMouseOverSpy.mockRestore();
-
-    highlightFeaturesSpy.mockReset();
     highlightFeaturesSpy.mockRestore();
   });
 
@@ -306,10 +298,7 @@ describe('<FeatureGrid />', () => {
     expect(onRowMouseOutSpy).toHaveBeenCalled();
     expect(unhighlightFeaturesSpy).toHaveBeenCalled();
 
-    onRowMouseOutSpy.mockReset();
     onRowMouseOutSpy.mockRestore();
-
-    unhighlightFeaturesSpy.mockReset();
     unhighlightFeaturesSpy.mockRestore();
   });
 
@@ -338,7 +327,6 @@ describe('<FeatureGrid />', () => {
     expect(wrapper.instance()._source.getFeatures()).toEqual(features);
     expect(zoomToFeaturesSpy).toHaveBeenCalled();
 
-    zoomToFeaturesSpy.mockReset();
     zoomToFeaturesSpy.mockRestore();
 
     const mapOnSpy = jest.spyOn(map, 'on');
@@ -349,7 +337,6 @@ describe('<FeatureGrid />', () => {
 
     expect(mapOnSpy).toHaveBeenCalled();
 
-    mapOnSpy.mockReset();
     mapOnSpy.mockRestore();
 
     const mapUnSpy = jest.spyOn(map, 'un');
@@ -361,7 +348,6 @@ describe('<FeatureGrid />', () => {
     expect(mapUnSpy).toHaveBeenCalled();
     expect(wrapper.state('selectedRowKeys')).toEqual([]);
 
-    mapUnSpy.mockReset();
     mapUnSpy.mockRestore();
   });
 
@@ -380,7 +366,6 @@ describe('<FeatureGrid />', () => {
     expect(features[1].getStyle()).toEqual(null);
     expect(features[2].getStyle()).toEqual(null);
 
-    getFeaturesAtPixelSpy.mockReset();
     getFeaturesAtPixelSpy.mockRestore();
   });
 
@@ -396,7 +381,6 @@ describe('<FeatureGrid />', () => {
 
     expect(features[0].getStyle()).toEqual(wrapper.prop('selectStyle'));
 
-    getFeaturesAtPixelSpy.mockReset();
     getFeaturesAtPixelSpy.mockRestore();
   });
 

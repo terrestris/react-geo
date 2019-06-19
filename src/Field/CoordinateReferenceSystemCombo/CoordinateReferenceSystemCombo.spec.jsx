@@ -72,7 +72,6 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       expect(loggerSpy).toHaveBeenCalled();
       expect(loggerSpy).toHaveBeenCalledWith('Error while requesting in CoordinateReferenceSystemCombo: Peter');
 
-      loggerSpy.mockReset();
       loggerSpy.mockRestore();
     });
   });
