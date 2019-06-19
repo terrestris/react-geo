@@ -10,8 +10,8 @@ import OlGeomPoint from 'ol/geom/Point';
 import OlOverlay from 'ol/Overlay';
 import * as OlObservable from 'ol/Observable';
 
-import { MeasureButton } from '../../index';
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
+import MeasureButton from './MeasureButton';
 
 describe('<MeasureButton />', () => {
 
@@ -60,7 +60,6 @@ describe('<MeasureButton />', () => {
         expect.stringContaining('Warning: Failed prop type')
       );
 
-      consoleSpy.mockReset();
       consoleSpy.mockRestore();
     });
 
@@ -210,8 +209,10 @@ describe('<MeasureButton />', () => {
         expect(createHelpTooltipSpy).toHaveBeenCalledTimes(1);
         expect(createMeasureTooltipSpy).toHaveBeenCalledTimes(1);
 
-        jest.resetAllMocks();
-        jest.restoreAllMocks();
+        removeHelpTooltipSpy.mockRestore();
+        removeMeasureTooltipSpy.mockRestore();
+        createHelpTooltipSpy.mockRestore();
+        createMeasureTooltipSpy.mockRestore();
       });
     });
 
@@ -259,8 +260,10 @@ describe('<MeasureButton />', () => {
         expect(createHelpTooltipSpy).toHaveBeenCalledTimes(1);
         expect(clearSpy).toHaveBeenCalledTimes(1);
 
-        jest.resetAllMocks();
-        jest.restoreAllMocks();
+        cleanupTooltipsSpy.mockRestore();
+        createMeasureTooltipSpy.mockRestore();
+        createHelpTooltipSpy.mockRestore();
+        clearSpy.mockRestore();
       });
     });
 
@@ -294,7 +297,6 @@ describe('<MeasureButton />', () => {
 
         expect(unByKeySpy).toHaveBeenCalledTimes(1);
 
-        unByKeySpy.mockReset();
         unByKeySpy.mockRestore();
       });
 
@@ -305,8 +307,7 @@ describe('<MeasureButton />', () => {
         const removeMeasureTooltipSpy = jest.spyOn(instance, 'removeMeasureTooltip');
         instance.onDrawEnd(mockEvt);
         expect(removeMeasureTooltipSpy).toHaveBeenCalledTimes(1);
-        jest.resetAllMocks();
-        jest.restoreAllMocks();
+        removeMeasureTooltipSpy.mockRestore();
       });
 
       it ('sets correct properties on measureTooltipElement', () => {
@@ -335,8 +336,7 @@ describe('<MeasureButton />', () => {
         const createMeasureTooltipSpy = jest.spyOn(instance, 'createMeasureTooltip');
         instance.onDrawEnd(mockEvt);
         expect(createMeasureTooltipSpy).toHaveBeenCalledTimes(1);
-        jest.resetAllMocks();
-        jest.restoreAllMocks();
+        createMeasureTooltipSpy.mockRestore();
       });
     });
 
@@ -673,7 +673,6 @@ describe('<MeasureButton />', () => {
 
         expect(cleanupSpy).toHaveBeenCalledTimes(1);
 
-        cleanupSpy.mockReset();
         cleanupSpy.mockRestore();
       });
 

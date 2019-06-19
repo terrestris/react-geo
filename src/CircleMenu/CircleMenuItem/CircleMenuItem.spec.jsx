@@ -31,7 +31,6 @@ describe('<CircleMenuItem />', () => {
     })
       .then(() => {
         expect(transformationSpy).toHaveBeenCalledTimes(1);
-        transformationSpy.mockReset();
         transformationSpy.mockRestore();
       });
   });

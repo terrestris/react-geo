@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 
 import TestUtil from '../../Util/TestUtil';
-import { MultiLayerSlider } from '../../index';
+import MultiLayerSlider from './MultiLayerSlider';
 
 describe('<MultiLayerSlider />', () => {
   let layers;

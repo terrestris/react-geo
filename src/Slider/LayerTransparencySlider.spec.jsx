@@ -2,7 +2,7 @@
 
 
 import TestUtil from '../Util/TestUtil';
-import { LayerTransparencySlider } from '../index';
+import LayerTransparencySlider from './LayerTransparencySlider';
 
 describe('<LayerTransparencySlider />', () => {
   let layer;

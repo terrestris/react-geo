@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
-import { CoordinateReferenceSystemCombo } from '../../index';
+import CoordinateReferenceSystemCombo from '../CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
@@ -72,7 +72,6 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       expect(loggerSpy).toHaveBeenCalled();
       expect(loggerSpy).toHaveBeenCalledWith('Error while requesting in CoordinateReferenceSystemCombo: Peter');
 
-      loggerSpy.mockReset();
       loggerSpy.mockRestore();
     });
   });

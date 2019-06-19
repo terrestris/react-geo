@@ -120,7 +120,6 @@ describe('<DigitizeButton />', () => {
         expect.stringContaining('Warning: Failed prop type')
       );
 
-      consoleSpy.mockReset();
       consoleSpy.mockRestore();
     });
   });
@@ -148,7 +147,6 @@ describe('<DigitizeButton />', () => {
         wrapper.instance().onToggle(true);
         expect(createDrawInteraction).toHaveBeenCalledTimes(1);
 
-        createDrawInteraction.mockReset();
         createDrawInteraction.mockRestore();
       });
 
@@ -163,7 +161,6 @@ describe('<DigitizeButton />', () => {
         wrapper.instance().onToggle(true);
         expect(createSelectOrModifyInteraction).toHaveBeenCalledTimes(1);
 
-        createSelectOrModifyInteraction.mockReset();
         createSelectOrModifyInteraction.mockRestore();
       });
 
@@ -435,7 +432,6 @@ describe('<DigitizeButton />', () => {
 
         expect(moveFeatureSpy).toHaveBeenCalledTimes(1);
 
-        moveFeatureSpy.mockReset();
         moveFeatureSpy.mockRestore();
       });
     });

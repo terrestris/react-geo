@@ -3,7 +3,7 @@
 import testLogo from '../../../assets/user.png';
 import TestUtil from '../../Util/TestUtil';
 
-import { FloatingMapLogo } from '../../index';
+import FloatingMapLogo from './FloatingMapLogo';
 
 describe('<FloatingMapLogo />', () => {
   let wrapper;

@@ -11,7 +11,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlStyleStyle from 'ol/style/Style';
 import OlStyleIcon from 'ol/style/Icon';
 
-import { ToggleButton } from '../../index';
+import ToggleButton from '../ToggleButton/ToggleButton';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import MathUtil from '@terrestris/base-util/dist/MathUtil/MathUtil';

@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import OlMap from 'ol/Map';
 import { easeOut } from 'ol/easing';
 
-import  {
-  SimpleButton
-} from '../../index';
+import SimpleButton from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 
 /**
