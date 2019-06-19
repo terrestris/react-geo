@@ -54,7 +54,6 @@ describe('mappify', () => {
       expect(loggerSpy).toHaveBeenCalledWith('You trying to mappify a ' +
         'component without any map in the context. Did you implement ' +
         'the MapProvider?');
-      loggerSpy.mockReset();
       loggerSpy.mockRestore();
     });
 

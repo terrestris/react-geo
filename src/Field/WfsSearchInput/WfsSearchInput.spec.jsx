@@ -59,15 +59,15 @@ describe('<WfsSearchInput />', () => {
           'osm:osm-country-borders': ['name']
         }
       });
-      wrapper.instance().doSearch = jest.fn();
+      const doSearchSpy = jest.spyOn(wrapper.instance(), 'doSearch');
       const evt = {
         target: {
           value: 'abc'
         }
       };
       wrapper.instance().onUpdateInput(evt);
-      expect(wrapper.instance().doSearch).toHaveBeenCalled();
-      wrapper.instance().doSearch.mockReset();
+      expect(doSearchSpy).toHaveBeenCalled();
+      doSearchSpy.mockRestore();
     });
   });
 
@@ -99,7 +99,6 @@ describe('<WfsSearchInput />', () => {
       wrapper.instance().onFetchError('Peter');
       expect(loggerSpy).toHaveBeenCalled();
       expect(loggerSpy).toHaveBeenCalledWith('Error while requesting WFS GetFeature: Peter');
-      loggerSpy.mockReset();
       loggerSpy.mockRestore();
     });
   });

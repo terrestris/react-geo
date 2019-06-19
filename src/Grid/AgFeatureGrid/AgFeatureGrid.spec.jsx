@@ -95,7 +95,6 @@ describe('<AgFeatureGrid />', () => {
     expect(mapOnSpy).toHaveBeenCalledWith('pointermove', onPointerMove);
     expect(mapOnSpy).toHaveBeenCalledWith('singleclick', onMapSingleClick);
 
-    mapOnSpy.mockReset();
     mapOnSpy.mockRestore();
   });
 
@@ -112,7 +111,6 @@ describe('<AgFeatureGrid />', () => {
     expect(mapUnSpy).toHaveBeenCalledWith('pointermove', onPointerMove);
     expect(mapUnSpy).toHaveBeenCalledWith('singleclick', onMapSingleClick);
 
-    mapUnSpy.mockReset();
     mapUnSpy.mockRestore();
   });
 
@@ -234,10 +232,7 @@ describe('<AgFeatureGrid />', () => {
     expect(onRowClickSpy).toHaveBeenCalled();
     expect(zoomToFeaturesSpy).not.toHaveBeenCalled();
 
-    onRowClickSpy.mockReset();
     onRowClickSpy.mockRestore();
-
-    zoomToFeaturesSpy.mockReset();
     zoomToFeaturesSpy.mockRestore();
   });
 
@@ -256,10 +251,7 @@ describe('<AgFeatureGrid />', () => {
     expect(onRowMouseOverSpy).toHaveBeenCalled();
     expect(highlightFeaturesSpy).toHaveBeenCalled();
 
-    onRowMouseOverSpy.mockReset();
     onRowMouseOverSpy.mockRestore();
-
-    highlightFeaturesSpy.mockReset();
     highlightFeaturesSpy.mockRestore();
   });
 
@@ -288,7 +280,6 @@ describe('<AgFeatureGrid />', () => {
     expect(wrapper.instance()._source.getFeatures()).toEqual(features);
     expect(zoomToFeaturesSpy).toHaveBeenCalled();
 
-    zoomToFeaturesSpy.mockReset();
     zoomToFeaturesSpy.mockRestore();
 
     const mapOnSpy = jest.spyOn(map, 'on');
@@ -299,7 +290,6 @@ describe('<AgFeatureGrid />', () => {
 
     expect(mapOnSpy).toHaveBeenCalled();
 
-    mapOnSpy.mockReset();
     mapOnSpy.mockRestore();
 
     const mapUnSpy = jest.spyOn(map, 'un');
@@ -310,7 +300,6 @@ describe('<AgFeatureGrid />', () => {
 
     expect(mapUnSpy).toHaveBeenCalled();
 
-    mapUnSpy.mockReset();
     mapUnSpy.mockRestore();
   });
 
