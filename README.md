@@ -60,6 +60,11 @@ module: {
 }
 ```
 
+## Base application
+
+Check out the [react-geo-baseclient](https://github.com/terrestris/react-geo-baseclient) for a fully working
+web-mapping application based on `react-geo`.
+
 ## Development requirements
 
 * Node.js 8 or later
