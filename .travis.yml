@@ -2,12 +2,12 @@ language: node_js
 node_js:
 - "8"
 - "10"
+- "12"
 script:
 - npm run build
 after_success:
-- npm run-script coveralls
-# Generation of the styleguide on travis is broken at the moment
-#- "./.ci/update-gh-pages.sh > /dev/null 2>&1"
+- "./.ci/run-coveralls.sh"
+- "./.ci/update-gh-pages.sh > /dev/null 2>&1"
 cache:
   directories:
   - node_modules

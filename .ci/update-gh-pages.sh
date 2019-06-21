@@ -17,6 +17,11 @@ if [ $TRAVIS_BRANCH != "master" ]; then
   return 0;
 fi
 
+if [ "$TRAVIS_NODE_VERSION" != "12" ]; then
+  # Only proceed if node is set to version 12.
+  return 0;
+fi
+
 VERSION=$(node -pe "require('./package.json').version")
 
 ORIGINAL_AUTHOR_NAME=$(git show -s --format="%aN" $TRAVIS_COMMIT)
