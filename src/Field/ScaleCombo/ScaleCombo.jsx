@@ -112,7 +112,8 @@ class ScaleCombo extends React.Component {
    * @param {Object} prevState The previous state.
    */
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (!isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
+    if (isInteger(nextProps.zoomLevel) &&
+        !isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
       return {
         zoomLevel: nextProps.zoomLevel
       };
@@ -139,7 +140,7 @@ class ScaleCombo extends React.Component {
      * The default onZoomLevelSelect function sets the resolution of the passed
      * map according to the selected Scale.
      *
-     * @param  {Number} selectedScale The selectedScale.
+     * @param {Number} selectedScale The selectedScale.
      */
     const defaultOnZoomLevelSelect = selectedScale => {
       const mapView = props.map.getView();
