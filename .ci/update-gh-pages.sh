@@ -12,8 +12,8 @@ if [ $TRAVIS_PULL_REQUEST != "false" ]; then
   return 0;
 fi
 
-if [ $TRAVIS_BRANCH != "master" ]; then
-  # Only update when the target branch is master.
+if [ "$TRAVIS_BRANCH" != "master" ] && [ -z "$TRAVIS_TAG" ]; then
+  # Only update when the target branch is master or a when running for a tag.
   return 0;
 fi
 
@@ -62,13 +62,14 @@ cp $TRAVIS_BUILD_DIR/assets/favicon.ico ./assets/favicon.ico
 mkdir -p $SRC_DIR/styleguide/assets
 cp $TRAVIS_BUILD_DIR/assets/logo.svg $SRC_DIR/styleguide/assets/
 
+if [ "$TRAVIS_BRANCH" = "master" ]; then
+  cp -r $SRC_DIR/styleguide/ docs/latest/
+fi
+
 if [ -n "$TRAVIS_TAG" ]; then
   mkdir -p docs/v$VERSION
   cp -r $SRC_DIR/styleguide/. docs/v$VERSION/
 fi
-
-# Copy the src dir from previous build folder.
-cp -r $SRC_DIR/styleguide/ docs/latest/
 
 git add .
 git commit -m "$GH_PAGES_COMMIT_MSG"
