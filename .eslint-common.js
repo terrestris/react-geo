@@ -4,7 +4,6 @@ module.exports = {
     "plugin:react/recommended"
   ],
   "plugins": [
-    "html",
     "react",
     "markdown"
   ],
