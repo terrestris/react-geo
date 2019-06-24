@@ -65,19 +65,24 @@ describe('<ScaleCombo />', () => {
       TestUtil.removeMap(map);
     });
 
-    it('creates options array from given map without resolutions and updates scales prop', () => {
+    it('creates options array from given map without resolutions', () => {
       const map = TestUtil.createMap();
       const wrapper = TestUtil.mountComponent(ScaleCombo, {
         scales: [],
         map: map
       });
-      wrapper.instance().getOptionsFromMap();
-      expect(wrapper.props().scales).toBeInstanceOf(Array);
+
+      // Reset the scales array, as getOptionsFromMap() will be called in
+      // constructor.
+      wrapper.setState({'scales': []});
+
+      const scales = wrapper.instance().getOptionsFromMap();
+      expect(scales).toBeInstanceOf(Array);
 
       TestUtil.removeMap(map);
     });
 
-    it('creates options array from given map with resolutions and updates scales prop', () => {
+    it('creates options array from given map with resolutions', () => {
       const testResolutions = [560, 280, 140, 70, 28];
       const map = TestUtil.createMap({
         resolutions: testResolutions
@@ -86,19 +91,24 @@ describe('<ScaleCombo />', () => {
         scales: [],
         map: map
       });
-      wrapper.instance().getOptionsFromMap();
-      expect(wrapper.props().scales).toBeInstanceOf(Array);
-      expect(wrapper.props().scales).toHaveLength(testResolutions.length);
+
+      // Reset the scales array, as getOptionsFromMap() will be called in
+      // constructor.
+      wrapper.setState({'scales': []});
+
+      const scales = wrapper.instance().getOptionsFromMap();
+      expect(scales).toBeInstanceOf(Array);
+      expect(scales).toHaveLength(testResolutions.length);
 
       let roundScale = (Math.round(MapUtil.getScaleForResolution(
         testResolutions[testResolutions.length - 1] ,'m')));
 
-      expect(wrapper.props().scales[0]).toBe(roundScale);
+      expect(scales[0]).toBe(roundScale);
 
       TestUtil.removeMap(map);
     });
 
-    it('creates options array from given map with filtered resolutions and updates scales prop', () => {
+    it('creates options array from given map with filtered resolutions', () => {
       const testResolutions = [560, 280, 140, 70, 28, 19, 15, 14, 13, 9];
       const map = TestUtil.createMap({
         resolutions: testResolutions
@@ -116,14 +126,19 @@ describe('<ScaleCombo />', () => {
         scales: [],
         resolutionsFilter
       });
-      wrapper.instance().getOptionsFromMap();
-      expect(wrapper.props().scales).toBeInstanceOf(Array);
-      expect(wrapper.props().scales).toHaveLength(expectedLength);
+
+      // Reset the scales array, as getOptionsFromMap() will be called in
+      // constructor.
+      wrapper.setState({'scales': []});
+
+      const scales = wrapper.instance().getOptionsFromMap();
+      expect(scales).toBeInstanceOf(Array);
+      expect(scales).toHaveLength(expectedLength);
 
       let roundScale = MapUtil.roundScale(MapUtil.getScaleForResolution(
         testResolutions[testResolutions.length - 2] ,'m'));
 
-      expect(wrapper.props().scales[1]).toBe(roundScale);
+      expect(scales[1]).toBe(roundScale);
 
       TestUtil.removeMap(map);
     });

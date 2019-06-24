@@ -112,7 +112,8 @@ class ScaleCombo extends React.Component {
    * @param {Object} prevState The previous state.
    */
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (!isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
+    if (isInteger(nextProps.zoomLevel) &&
+        !isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
       return {
         zoomLevel: nextProps.zoomLevel
       };
@@ -139,7 +140,7 @@ class ScaleCombo extends React.Component {
      * The default onZoomLevelSelect function sets the resolution of the passed
      * map according to the selected Scale.
      *
-     * @param  {Number} selectedScale The selectedScale.
+     * @param {Number} selectedScale The selectedScale.
      */
     const defaultOnZoomLevelSelect = selectedScale => {
       const mapView = props.map.getView();
@@ -160,7 +161,7 @@ class ScaleCombo extends React.Component {
     }
 
     if (isEmpty(this.state.scales) && this.props.map) {
-      this.getOptionsFromMap();
+      this.state.scales = this.getOptionsFromMap();
     }
   }
 
@@ -197,6 +198,7 @@ class ScaleCombo extends React.Component {
     if (!roundZoom) {
       roundZoom = 0;
     }
+
     this.setState({
       zoomLevel: roundZoom
     });
@@ -206,22 +208,25 @@ class ScaleCombo extends React.Component {
    * @function pushScaleOption: Helper function to create a {@link Option} scale component
    * based on a resolution and the {@link Ol.View}
    *
+   * @param {Array} scales The scales array to push the scale to.
    * @param {Number} resolution map cresolution to generate the option for
    * @param {Ol.View} mv The map view
    *
    */
-  pushScale = (resolution, mv) => {
+  pushScale = (scales, resolution, mv) => {
     let scale = MapUtil.getScaleForResolution(resolution, mv.getProjection().getUnits());
     const roundScale = MapUtil.roundScale(scale);
-    if (this.state.scales.includes(roundScale) ) {
+    if (scales.includes(roundScale) ) {
       return;
     }
-    this.state.scales.push(roundScale);
+    scales.push(roundScale);
   };
 
   /**
-   * @function getOptionsFromMap: Helper function generate {@link Option} scale components
-   * based on an existing instance of {@link Ol.Map}
+   * Generates the scales to add as {@link Option} to the SelectField based on
+   * the given instance of {@link Ol.Map}.
+   *
+   * @return {Array} The array of scales.
    */
   getOptionsFromMap = () => {
     const {
@@ -238,6 +243,7 @@ class ScaleCombo extends React.Component {
       return;
     }
 
+    let scales = [];
     let mv = map.getView();
     // use existing resolutions array if exists
     let resolutions = mv.getResolutions();
@@ -245,7 +251,7 @@ class ScaleCombo extends React.Component {
       for (let currentZoomLevel = mv.getMaxZoom(); currentZoomLevel >= mv.getMinZoom(); currentZoomLevel--) {
         let resolution = mv.getResolutionForZoom(currentZoomLevel);
         if (resolutionsFilter(resolution)) {
-          this.pushScale(resolution, mv);
+          this.pushScale(scales, resolution, mv);
         }
       }
     } else {
@@ -253,9 +259,11 @@ class ScaleCombo extends React.Component {
       reversedResolutions
         .filter(resolutionsFilter)
         .forEach((resolution) => {
-          this.pushScale(resolution, mv);
+          this.pushScale(scales, resolution, mv);
         });
     }
+
+    return scales;
   };
 
   /**
