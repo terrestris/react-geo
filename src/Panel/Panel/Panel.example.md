@@ -20,7 +20,7 @@ import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
 
 <div style={{display: 'flex'}}>
   <Panel
-    style={{position: 'relative', 'padding-right': '15px'}}
+    style={{position: 'relative', paddingRight: '15px'}}
     x={0}
     y={0}
     title="Collapsible"
