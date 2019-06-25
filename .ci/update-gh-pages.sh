@@ -62,13 +62,16 @@ cp $TRAVIS_BUILD_DIR/assets/favicon.ico ./assets/favicon.ico
 mkdir -p $SRC_DIR/styleguide/assets
 cp $TRAVIS_BUILD_DIR/assets/logo.svg $SRC_DIR/styleguide/assets/
 
+# Copy to latest
 if [ "$TRAVIS_BRANCH" = "master" ]; then
   cp -r $SRC_DIR/styleguide/ docs/latest/
 fi
 
+# Copy to latest and tag
 if [ -n "$TRAVIS_TAG" ]; then
   mkdir -p docs/v$VERSION
   cp -r $SRC_DIR/styleguide/. docs/v$VERSION/
+  cp -r $SRC_DIR/styleguide/ docs/latest/
 fi
 
 git add .
