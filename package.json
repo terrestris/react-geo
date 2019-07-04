@@ -93,7 +93,7 @@
     "validator": "11.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.4.4",
+    "@babel/cli": "7.5.0",
     "@babel/core": "7.4.5",
     "@babel/plugin-proposal-class-properties": "7.4.4",
     "@babel/plugin-syntax-dynamic-import": "7.2.0",
