@@ -1,9 +1,40 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Avatar, Dropdown } from 'antd';
 import './UserChip.less';
 
 import { CSS_PREFIX } from '../constants';
+
+// i18n
+export interface UserChipLocale {
+}
+
+interface UserChipDefaultProps {
+  /**
+   * The user aname.
+   * @type {String}
+   */
+  userName: string;
+}
+
+// non default props
+export interface UserChipProps extends Partial<UserChipDefaultProps> {
+    /**
+     * An optional CSS class which should be added.
+     */
+    className: string;
+    /**
+     * The image src.
+     */
+    imageSrc: string;
+    /**
+     * The react element representing the user menu
+     */
+    userMenu: React.ReactNode;
+    /**
+     * The style object
+     */
+    style: any;
+}
 
 /**
  * Class representing the user chip containing an image of the user and his/her
@@ -12,60 +43,26 @@ import { CSS_PREFIX } from '../constants';
  * @class The UserChip
  * @extends React.Component
  */
-class UserChip extends React.Component {
+class UserChip extends React.Component<UserChipProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}userchip`
-
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The user aname.
-     * @type {String}
-     */
-    userName: PropTypes.string,
-
-    /**
-     * The image src.
-     * @type {String}
-     */
-    imageSrc: PropTypes.string,
-
-    /**
-     * The react element representing the user menu
-     * @type {Element}
-     */
-    userMenu: PropTypes.element,
-
-    /**
-     * The style object
-     * @type {Object}
-     */
-    style: PropTypes.object
-  }
+  className: string = `${CSS_PREFIX}userchip`;
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: UserChipDefaultProps = {
     userName: 'John Doe'
-  }
+  };
 
   /**
    * Create a UserChip.
    * @constructs UserChip
    */
-  constructor(props) {
+  constructor(props: UserChipProps) {
     super(props);
   }
 
@@ -75,11 +72,11 @@ class UserChip extends React.Component {
    * to the initials.
    * e.g. 'John Doe' leads to 'JD'
    *
-   * @return {String} initials if the user name.
+   * @return Initials if the user name.
    *
    * @method getInitials
    */
-  getInitials() {
+  getInitials(): string {
     let splittedName = this.props.userName.split(' ');
     let initals = [];
     splittedName.forEach((part) =>  {
@@ -134,7 +131,7 @@ class UserChip extends React.Component {
           overlay={this.props.userMenu}
           trigger={['click']}
           getPopupContainer={() => {
-            return document.getElementsByClassName(this.className)[0];
+            return document.getElementsByClassName(this.className)[0] as HTMLElement;
           }}
         >
           {this.getUserMenu()}
