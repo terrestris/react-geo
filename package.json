@@ -90,7 +90,7 @@
     "react-rnd": "9.2.0",
     "shpjs": "3.4.3",
     "url-parse": "1.4.7",
-    "validator": "11.0.0"
+    "validator": "11.1.0"
   },
   "devDependencies": {
     "@babel/cli": "7.4.4",
