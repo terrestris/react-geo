@@ -1,8 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './Toolbar.less';
 
 import { CSS_PREFIX } from '../constants';
+
+// i18n
+export interface ToolbarLocale {
+}
+
+interface ToolbarDefaultProps {
+  /**
+   * The alignment of the sub components.
+   */
+  alignment: 'horizontal' | 'vertical';
+}
+
+// non default props
+export interface ToolbarProps extends Partial<ToolbarDefaultProps> {
+    /**
+     * An optional CSS class which should be added.
+     */
+    className: string;
+    /**
+     * The style object
+     */
+    style: any;
+}
 
 /**
  * A base class representing a toolbar having n children
@@ -12,54 +34,20 @@ import { CSS_PREFIX } from '../constants';
  * @class The Toolbar
  * @extends React.Component
  */
-class Toolbar extends React.Component {
+class Toolbar extends React.Component<ToolbarProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}toolbar`
-
-  /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The children.
-     * @type {Array}
-     */
-    children: PropTypes.node,
-
-    /**
-     * The alignment of the sub components.
-     * @type {String}
-     */
-    alignment: PropTypes.oneOf(['horizontal', 'vertical']),
-
-    /**
-     * An object containing style informations. Applied to Toolbar.
-     * @type {Boolean}
-     */
-    style: PropTypes.object
-  }
+  className: string = `${CSS_PREFIX}toolbar`;
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps = {
-    children: [],
+  static defaultProps: ToolbarDefaultProps = {
     alignment: 'horizontal'
-  }
+  };
 
   /**
    * The render function
@@ -67,6 +55,7 @@ class Toolbar extends React.Component {
   render() {
     const {
       style,
+      children,
       className
     } = this.props;
 
@@ -76,7 +65,7 @@ class Toolbar extends React.Component {
 
     return (
       <div className={`${finalClassName} ${this.props.alignment}-toolbar`} style={style}>
-        {this.props.children}
+        {children}
       </div>
     );
   }
