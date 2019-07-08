@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 
 import uniqueId from 'lodash/uniqueId';
 
@@ -10,6 +9,61 @@ import Logger from '@terrestris/base-util/dist/Logger';
 import { CSS_PREFIX } from '../constants';
 
 import './Window.less';
+import { ResizeEnable } from 'react-rnd';
+
+// i18n
+export interface WindowLocale {
+}
+
+interface WindowDefaultProps {
+  /**
+   * The id of the parent component
+   * default: app
+   */
+  parentId: string;
+  /**
+   * The title text to be shown in the window header.
+   */
+  title: string;
+  /**
+   * The resize options.
+   */
+  resizeOpts: ResizeEnable | boolean;
+  /**
+   * Wheter the Window should be collapsible or not.
+   */
+  collapsible: boolean;
+  /**
+   * Wheter the Window should be draggable or not.
+   */
+  draggable: boolean;
+}
+
+export interface WindowProps extends Partial<WindowDefaultProps> {
+  /**
+   * Id of the component. Will be filled automatically if not provided.
+   */
+  id: string;
+  /**
+   * An optional CSS class which should be added.
+   */
+  className: string;
+  /**
+   * The children to show in the Window.
+   */
+  children: React.ReactChildren;
+}
+
+interface WindowState {
+  /**
+   * The user aname.
+   */
+  resizing: boolean;
+  /**
+   * The id of the Window.
+   */
+  id: string;
+}
 
 /**
  * Window component that creates a React portal that renders children into a DOM
@@ -19,63 +73,39 @@ import './Window.less';
  * @class Window
  * @extends React.Component
  */
-export class Window extends React.Component {
+export class Window extends React.Component<WindowProps, WindowState> {
+
+  /**
+   * The parent Element of the Window.
+   * @private
+   */
+  _parent: Element;
+
+  /**
+   * The Element of the Window.
+   * @private
+   */
+  _elementDiv: Element;
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}window-portal`
+  className: string = `${CSS_PREFIX}window-portal`;
 
-  /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * id of the component
-     * will be filled automatically if not provided
-     * @type {String}
-     */
-    id: PropTypes.string,
-    /**
-     * The id of the parent component
-     * default: app
-     *
-     * @type {String}
-     */
-    parentId: PropTypes.string.isRequired,
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-    /**
-     * The children to show in the Window.
-     * @type {node}
-     */
-    children: PropTypes.node,
-    /**
-     * The title text to be shown in the window header.
-     * @type {string}
-     */
-    title: PropTypes.string
-  }
-
-  static defaultProps = {
+  static defaultProps: WindowDefaultProps = {
     parentId: 'app',
     title: 'Window',
     resizeOpts: true,
     collapsible: true,
     draggable: true
-  }
+  };
 
   /**
    * Create a Window.
    * @constructs Window
    */
-  constructor(props) {
+  constructor(props: WindowProps) {
     super(props);
     const id = props.id || uniqueId('window-');
 
