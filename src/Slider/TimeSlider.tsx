@@ -1,11 +1,69 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import { Slider } from 'antd';
 
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
+import { SliderMarks, SliderValue } from 'antd/lib/slider';
+
+import { CSS_PREFIX } from '../constants';
+
+// i18n
+export interface TimeSliderLocale {
+}
+
+interface TimeSliderDefaultProps {
+  /**
+   * Whether to allow range selection.
+   * @type {Boolean}
+   */
+  useRange: boolean;
+  /**
+   * The default value(s).
+   */
+  defaultValue: string[] | string;
+  /**
+   * The minimum value.
+   */
+  min: string;
+  /**
+   * The maximum value.
+   */
+  max: string;
+  /**
+   * Called when the value changes.
+   * @type {Function}
+   */
+  onChange: (val: string | string[]) => void;
+  /**
+   * The current value(s).
+   * @type {Array<String> | String}
+   */
+  value: string[] | string;
+  /**
+   * The moment.js compliant format string for the slider tooltip.
+   */
+  formatString: string;
+}
+
+/**
+ *
+ * @export
+ * @interface TimeSliderProps
+ * @extends {Partial<TimeSliderDefaultProps>}
+ */
+export interface TimeSliderProps extends Partial<TimeSliderDefaultProps> {
+  /**
+   * An optional CSS class which should be added.
+   */
+  className: string;
+  /**
+   * Tick mark of Slider, type of key must be TimeStamp ISOString, and must in
+   * closed interval min, max，each mark can declare its own style.
+   */
+  marks: SliderMarks;
+}
 
 /**
  * Customized slider that uses ISO 8601 time strings as input.
@@ -13,65 +71,15 @@ import isObject from 'lodash/isObject';
  * @class The TimeSlider
  * @extends React.Component
  */
-class TimeSlider extends React.Component {
+class TimeSlider extends React.Component<TimeSliderProps> {
 
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
+  /**
+   * The className added to this component.
+   * @private
+   */
+  className: string = `${CSS_PREFIX}timeslider`;
 
-    /**
-     * Whether to allow range selection.
-     * @type {Boolean}
-     */
-    useRange: PropTypes.bool,
-
-    /**
-     * The default value(s).
-     * @type {Array<String> | String}
-     */
-    defaultValue: PropTypes.any,
-
-    /**
-     * The minimum value.
-     * @type {String}
-     */
-    min: PropTypes.string,
-
-    /**
-     * The maximum value.
-     * @type {String}
-     */
-    max: PropTypes.string,
-
-    /**
-     * Tick mark of Slider, type of key must be TimeStamp ISOString, and must in
-     * closed interval min, max，each mark can declare its own style.
-     */
-    marks: PropTypes.object,
-
-    /**
-     * Called when the value changes.
-     * @type {Function}
-     */
-    onChange: PropTypes.func,
-
-    /**
-     * The current value(s).
-     * @type {Array<String> | String}
-     */
-    value: PropTypes.any,
-
-    /**
-     * The moment.js compliant format string for the slider tooltip.
-     * @type {String}
-     */
-    formatString: PropTypes.string
-  }
-
-  static defaultProps = {
+  static defaultProps: TimeSliderDefaultProps = {
     useRange: false,
     defaultValue: moment().toISOString(),
     min: moment().subtract(1, 'hour').toISOString(),
@@ -79,7 +87,7 @@ class TimeSlider extends React.Component {
     onChange: () => undefined,
     value: moment().toISOString(),
     formatString: 'DD.MM. HH:mm'
-  }
+  };
 
   /**
    * The constructor.
@@ -87,9 +95,10 @@ class TimeSlider extends React.Component {
    * @constructs TimeSlider
    * @param {Object} props The properties.
    */
-  constructor(props) {
+  constructor(props: TimeSliderProps) {
     super(props);
 
+    // TODO: State is never used. Can we remove this?
     this.state = this.convertTimestamps();
   }
 
@@ -110,13 +119,13 @@ class TimeSlider extends React.Component {
    * @param  {Array | String} val the input value(s)
    * @return {Array | Number}     the converted value(s)
    */
-  convert(val) {
+  convert(val: string[] | string): SliderValue | undefined {
     if (val === undefined) {
-      return val;
+      return val as undefined;
     }
     return isArray(val) ?
-      val.map(iso => moment(iso).unix()) :
-      moment(val).unix();
+      val.map(iso => moment(iso).unix()) as SliderValue :
+      moment(val).unix() as SliderValue;
   }
 
   /**
@@ -125,12 +134,12 @@ class TimeSlider extends React.Component {
    * @param {Object} marks The marks prop.
    * @return {Object} The marks prop with converted keys.
    */
-  convertMarks(marks) {
+  convertMarks(marks: SliderMarks) {
     let convertedMarks;
     if (isObject(marks)) {
       convertedMarks = {};
       Object.keys(marks).forEach(key => {
-        const convertedKey = this.convert(key);
+        const convertedKey = this.convert(key) as number;
         convertedMarks[convertedKey] = marks[key];
       });
     }
@@ -142,7 +151,7 @@ class TimeSlider extends React.Component {
    * @param  {Number} unix unix timestamps
    * @return {String}      the formatted timestamps
    */
-  formatTimestamp(unix) {
+  formatTimestamp(unix: number): string {
     return moment(unix * 1000).format(this.props.formatString);
   }
 
@@ -151,7 +160,7 @@ class TimeSlider extends React.Component {
    * timestrings.
    * @param  {Array | Number} value the new value
    */
-  valueUpdated(value) {
+  valueUpdated(value: number | number[]) {
     this.props.onChange(isArray(value) ?
       [moment(value[0] * 1000).toISOString(),
         moment(value[1] * 1000).toISOString()] :
