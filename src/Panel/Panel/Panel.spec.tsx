@@ -32,7 +32,7 @@ describe('<Panel />', () => {
     // Mock a DOM to play around
     document.body.className = 'react-geo-panel';
 
-    const element = wrapper.instance().rnd.getSelfElement();
+    const element = wrapper.instance()._rnd.getSelfElement();
 
     it('is defined', () => {
       expect(wrapper.instance().onKeyDown).not.toBeUndefined();

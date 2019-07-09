@@ -1,6 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Rnd } from 'react-rnd';
+import {
+  Rnd,
+  ResizeEnable,
+  RndResizeCallback,
+  Props as RndProps,
+  RndResizeStartCallback
+} from 'react-rnd';
 
 import uniqueId from 'lodash/uniqueId';
 import isNumber from 'lodash/isNumber';
@@ -13,13 +18,110 @@ import { CSS_PREFIX } from '../../constants';
 
 import './Panel.less';
 
+// i18n
+export interface PanelLocale {
+}
+
+interface PanelDefaultProps extends RndProps {
+  /**
+   * Whether to allow dragging or not. Default is false.
+   */
+  draggable: boolean;
+  /**
+   * Whether to allow collapsing or not. Default is false.
+   */
+  collapsible: boolean;
+  /**
+   * Whether to show panel collapsed initially or not. Default is false.
+   */
+  collapsed: boolean;
+  /**
+   * The height of the panel.
+   */
+  height: number | 'inherit' | 'initial' | 'auto';
+  /**
+   * The width of the panel.
+   */
+  width: number | 'inherit' | 'initial' | 'auto';
+  /**
+   * The height of the TitleBar.
+   */
+  titleBarHeight: number;
+  /**
+   * The tooltip of the collapse button.
+   */
+  collapseTooltip: string;
+  /**
+   *
+   */
+  tools: React.ReactElement[];
+  /**
+   * The enableResizing property is used to set the resizable permission of a
+   * resizable component.
+   * The permission of top, right, bottom, left, topRight, bottomRight,
+   * bottomLeft, topLeft direction resizing. If omitted, all resizer are
+   * enabled. If you want to permit only right direction resizing, set {
+   *   top:false,
+   *   right:true,
+   *   bottom:false,
+   *   left:false,
+   *   topRight:false,
+   *   bottomRight:false,
+   *   bottomLeft:false,
+   *   topLeft:false
+   * }.
+   */
+  resizeOpts: ResizeEnable | boolean;
+}
+
+export interface PanelProps extends Partial<PanelDefaultProps> {
+  id?: string;
+  /**
+   * The children to show in the Window.
+   */
+  children?: React.ReactNode;
+  /**
+   * The title text to be shown in the window Header.
+   * @type {string}
+   */
+  title?: string;
+  /**
+   * Callback function on `keydown` keyboard event if `escape` key was pressed.
+   */
+  onEscape?: (evt: KeyboardEvent) => void;
+}
+
+interface PanelState {
+  id?: string;
+  /**
+   * Whether to show panel collapsed initially or not. Default is false.
+   */
+  collapsed: boolean;
+  /**
+   * The height of the TitleBar.
+   */
+  titleBarHeight: number;
+  /**
+   * The height of the panel.
+   */
+  height: number | 'inherit' | 'initial' | 'auto';
+  /**
+   * The width of the panel.
+   */
+  width: number | 'inherit' | 'initial' | 'auto';
+  /**
+   *
+   */
+  resizing: boolean;
+}
+
 /**
  * The Panel.
  *
  * @class The Panel
  * @extends React.Component
  */
-export class Panel extends React.Component {
+export class Panel extends React.Component<PanelProps, PanelState> {
 
   /**
    * The className added to this component.
@@ -28,157 +130,25 @@ export class Panel extends React.Component {
    */
   className = `${CSS_PREFIX}panel`;
 
-   /**
-    * Printed representation of the pressed escape keyboard key.
-    * s. https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
-    * @type {String}
-    * @private
-    */
-   _escapeKeyboardEventKey = 'Esc';
+  /**
+   * Printed representation of the pressed escape keyboard key.
+   * s. https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
+   * @type {String}
+   * @private
+   */
+  _escapeKeyboardEventKey = 'Esc';
 
   /**
-   * The properties.
-   * @type {Object}
+   *
+   *
    */
-  static propTypes = {
-
-    id: PropTypes.string,
-
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The children to show in the Window.
-     * @type {node}
-     */
-    children: PropTypes.node,
-
-    /**
-     * The title text to be shown in the window Header.
-     * @type {string}
-     */
-    title: PropTypes.string,
-
-    /**
-     * The enableResizing property is used to set the resizable permission of a
-     * resizable component.
-     * The permission of top, right, bottom, left, topRight, bottomRight,
-     * bottomLeft, topLeft direction resizing. If omitted, all resizer are
-     * enabled. If you want to permit only right direction resizing, set {
-     *   top:false,
-     *   right:true,
-     *   bottom:false,
-     *   left:false,
-     *   topRight:false,
-     *   bottomRight:false,
-     *   bottomLeft:false,
-     *   topLeft:false
-     * }.
-     * @type {object}
-     */
-    resizeOpts: PropTypes.oneOfType([
-      PropTypes.shape({
-        top: PropTypes.bool,
-        right: PropTypes.bool,
-        bottom: PropTypes.bool,
-        left: PropTypes.bool,
-        topRight: PropTypes.bool,
-        bottomRight: PropTypes.bool,
-        bottomLeft: PropTypes.bool,
-        topLeft: PropTypes.bool
-      }),
-      PropTypes.bool
-    ]),
-    /**
-     * Function called when onResize is triggered by react-rnd
-     * @type {Function}
-     */
-    onResize: PropTypes.func,
-    /**
-     * Function called when onResizeStart is triggered by react-rnd
-     * @type {Function}
-     */
-    onResizeStart: PropTypes.func,
-    /**
-     * Function called when onResizeStop is triggered by react-rnd
-     * @type {Function}
-     */
-    onResizeStop: PropTypes.func,
-    /**
-     * Callback function on `keydown` keyboard event if `escape` key was pressed.
-     * @type {Function}
-     */
-    onEscape: PropTypes.func,
-    /**
-     * Whether to allow dragging or not. Default is false.
-     * @type {boolean}
-     */
-    draggable: PropTypes.bool,
-
-    /**
-     * Whether to allow collapsing or not. Default is false.
-     * @type {boolean}
-     */
-    collapsible: PropTypes.bool,
-
-    /**
-     * Whether to show panel collapsed initially or not. Default is false.
-     * @type {boolean}
-     */
-    collapsed: PropTypes.bool,
-
-    /**
-     * The height of the panel.
-     * @type {number|string}
-     */
-    height: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.oneOf([
-        'inherit',
-        'initial',
-        'auto'
-      ])
-    ]),
-
-    /**
-     * The width of the panel.
-     * @type {number|string}
-     */
-    width: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.oneOf([
-        'inherit',
-        'initial',
-        'auto'
-      ])
-    ]),
-
-    /**
-     * The height of the TitleBar.
-     * @type {number}
-     */
-    titleBarHeight: PropTypes.number,
-
-    /**
-     * The tooltip of the collapse button.
-     * @type {String}
-     */
-    collapseTooltip: PropTypes.string,
-
-    /**
-     *
-     */
-    tools: PropTypes.arrayOf(PropTypes.node)
-  }
+  _rnd: Rnd;
 
   /**
    * The default properties.
    * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: PanelDefaultProps = {
     draggable: false,
     collapsible: false,
     collapsed: false,
@@ -188,14 +158,14 @@ export class Panel extends React.Component {
     height: 'auto',
     width: 'auto',
     collapseTooltip: 'Collapse'
-  }
+  };
 
   /**
    * Create the SimpleButton.
    *
    * @constructs SimpleButton
    */
-  constructor(props) {
+  constructor(props: PanelProps) {
     super(props);
     const id = props.id || uniqueId('panel-');
     this.state = {
@@ -262,7 +232,7 @@ export class Panel extends React.Component {
     this.setState({
       collapsed: !this.state.collapsed
     }, () => {
-      this.rnd.updateSize({
+      this._rnd.updateSize({
         height: this.calculateHeight(),
         width: this.state.width
       });
@@ -276,7 +246,7 @@ export class Panel extends React.Component {
    * @param {String} direction A string discribing where the element was grabed.
    * @param {HTMLElement} el The element which gets resized.
    */
-  onResize(evt, direction, el) {
+  onResize(evt: React.MouseEvent, direction: string, el: HTMLElement) {
     const { onResize } = this.props;
     if (isFunction(onResize)) {
       onResize(arguments);
@@ -316,12 +286,15 @@ export class Panel extends React.Component {
   /**
    * Called on keyboard `keydown` event. Will be only triggered if pressed key
    * is `Escape` key and `onEscape` function is provided via props.
-   * @param {React.KeyboardEvent<HTMLDivElement>} evt `keydown` event.
+   * @param {KeyboardEvent} evt `keydown` event.
    */
-  onKeyDown = evt => {
-    if (evt && evt.key.startsWith(this._escapeKeyboardEventKey) && this.props.onEscape) {
-      this.rnd.getSelfElement().focus();
-      this.props.onEscape();
+  onKeyDown = (evt: KeyboardEvent) => {
+    const {
+      onEscape
+    } = this.props;
+    if (evt && evt.key.startsWith(this._escapeKeyboardEventKey) && onEscape) {
+      this._rnd.getSelfElement().focus();
+      onEscape(evt);
     }
   }
 
@@ -350,7 +323,7 @@ export class Panel extends React.Component {
       ...rndOpts
     } = this.props;
 
-    let toolsClone = tools.map(t => React.cloneElement(t));
+    let toolsClone = tools.map(tool => React.cloneElement(tool));
 
     const finalClassName = className
       ? `${className} ${this.className}`
@@ -384,28 +357,36 @@ export class Panel extends React.Component {
       {title}
     </Titlebar> : null;
 
-    const defWidth = this.state.width;
-    const defHeight = this.calculateHeight();
+    const defaultWidth = this.state.width;
+    const defaultHeight = this.calculateHeight();
     const {
       x,
       y
     } = rndOpts;
-    const defX = x && isNumber(x) ? x : window.innerWidth / 2 - defWidth / 2;
-    const defY = y && isNumber(y) ? y : window.innerHeight / 2 - defHeight / 2;
+    const defX = x && isNumber(x)
+      ? x
+      : isNumber(defaultWidth)
+        ? window.innerWidth / 2 - defaultWidth / 2
+        : undefined;
+    const defY = y && isNumber(y)
+      ? y
+      : isNumber(defaultHeight)
+        ? window.innerHeight / 2 - defaultHeight / 2
+        : undefined;
 
     return (
       <Rnd
         className={rndClassName}
-        ref={rnd => this.rnd = rnd}
+        ref={rnd => this._rnd = rnd}
         default={{
           x: defX,
           y: defY,
-          width: defWidth,
-          height: defHeight
+          width: defaultWidth,
+          height: defaultHeight
         }}
         dragHandleClassName="drag-handle"
         disableDragging={!draggable}
-        enableResizing={enableResizing}
+        enableResizing={enableResizing as ResizeEnable}
         resizeHandleClasses={{
           bottom: 'resize-handle resize-handle-bottom',
           bottomLeft: 'resize-handle resize-handle-bottom-left',
@@ -424,7 +405,7 @@ export class Panel extends React.Component {
         {titleBar}
         <div
           className="body"
-          tabIndex="0"
+          tabIndex={0}
           style={{
             cursor: 'default',
             overflow: 'hidden',
