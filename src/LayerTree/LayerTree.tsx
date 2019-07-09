@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Tree } from 'antd';
 
@@ -20,6 +19,64 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import LayerTreeNode from '../LayerTreeNode/LayerTreeNode.jsx';
 
 import { CSS_PREFIX } from '../constants';
+import {
+  TreeProps,
+  AntTreeNodeCheckedEvent,
+  AntTreeNodeExpandedEvent
+} from 'antd/lib/tree';
+import { AntTreeNodeDropEvent } from 'antd/lib/tree/Tree';
+
+interface LayerTreeDefaultProps extends TreeProps {
+  /**
+   *
+   */
+  draggable: boolean;
+  /**
+   *
+   */
+  checkable: boolean;
+  /**
+   * An optional array-filter function that is applied to every layer and
+   * subLayer. Return false to exclude this layer from the layerTree or true
+   * to include it.
+   *
+   * Compare MDN Docs for Array.prototype.filter: https://mdn.io/array/filter
+   *
+   * @type {Function}
+   */
+  filterFunction: (value: any, index: number, array: any[]) => boolean;
+}
+
+export interface LayerTreeProps extends Partial<LayerTreeDefaultProps> {
+  /**
+   * An optional CSS class which should be added.
+   * @type {String}
+   */
+  className: string;
+  /**
+   * A LayerGroup the Tree should handle.
+   */
+  layerGroup?: OlLayerGroup;
+  /**
+   * The OpenLayers map the tree interacts with.
+   */
+  map: OlMap;
+
+  /**
+   * A function that can be used to pass a custom node title. It can return
+   * any renderable element (String, Number, Element etc.) and receives
+   * the layer instance of the current tree node.
+   */
+  nodeTitleRenderer: (layer: OlLayerBase) => React.ReactNode;
+}
+
+interface LayerTreeState {
+  layerGroup: OlLayerGroup;
+  layerGroupRevision: null;
+  treeNodes: [];
+  checkedKeys: [];
+  mapResolution: -1;
+}
 
 /**
  * The LayerTree.
@@ -29,73 +86,32 @@ import { CSS_PREFIX } from '../constants';
  * @class LayerTree
  * @extends React.Component
  */
-class LayerTree extends React.Component {
+class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}layertree`
-
+  className = `${CSS_PREFIX}layertree`;
 
   /**
    *  An array of ol.EventsKey as returned by on() or once().
    * @type {Array<ol.EventsKey>}
    * @private
    */
-  olListenerKeys = []
-
-  /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    layerGroup: PropTypes.instanceOf(OlLayerGroup),
-
-    map: PropTypes.instanceOf(OlMap).isRequired,
-
-    /**
-     * A function that can be used to pass a custom node title. It can return
-     * any renderable element (String, Number, Element etc.) and receives
-     * the layer instance of the current tree node.
-     * @type {Function}
-     */
-    nodeTitleRenderer: PropTypes.func,
-
-    /**
-     * Compare https://ant.design/components/tree/
-     */
-    onExpand: PropTypes.func,
-
-    /**
-     * An optional array-filter function that is applied to every layer and
-     * subLayer. Return false to exclude this layer from the layerTree or true
-     * to include it.
-     *
-     * Compare MDN Docs for Array.prototype.filter: https://mdn.io/array/filter
-     *
-     * @type {Function}
-     */
-    filterFunction: PropTypes.func
-  }
+  olListenerKeys = [];
 
   /**
    * The default properties.
    *
    * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: LayerTreeDefaultProps = {
     draggable: true,
     checkable: true,
     filterFunction: () => true
-  }
+  };
 
   /**
    * Invoked after the component is instantiated as well as when it
@@ -105,10 +121,10 @@ class LayerTree extends React.Component {
    * @param {Object} nextProps The next properties.
    * @param {Object} prevState The previous state.
    */
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps: LayerTreeProps, prevState: LayerTreeState) {
     if (prevState.layerGroup && nextProps.layerGroup) {
       if (!isEqual(prevState.layerGroup.ol_uid, nextProps.layerGroup.ol_uid) ||
-          !isEqual(prevState.layerGroupRevision, nextProps.layerGroup.getRevision())) {
+        !isEqual(prevState.layerGroupRevision, nextProps.layerGroup.getRevision())) {
         return {
           layerGroup: nextProps.layerGroup,
           layerGroupRevision: nextProps.layerGroup.getRevision()
@@ -123,7 +139,7 @@ class LayerTree extends React.Component {
    *
    * @constructs LayerTree
    */
-  constructor(props) {
+  constructor(props: LayerTreeProps) {
     super(props);
 
     this.state = {
@@ -162,7 +178,7 @@ class LayerTree extends React.Component {
    * @param {Object} prevProps The previous props.
    * @param {Object} prevState The previous state.
    */
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: LayerTreeProps, prevState: LayerTreeState) {
     const {
       layerGroup,
       nodeTitleRenderer
@@ -178,7 +194,7 @@ class LayerTree extends React.Component {
       }
     }
 
-    if (nodeTitleRenderer !== prevProps.nodeTitleRenderer){
+    if (nodeTitleRenderer !== prevProps.nodeTitleRenderer) {
       this.rebuildTreeNodes();
     }
   }
@@ -195,14 +211,14 @@ class LayerTree extends React.Component {
    *
    * @param {ol.layer.Group} groupLayer A grouplayer.
    */
-  treeNodesFromLayerGroup(groupLayer) {
+  treeNodesFromLayerGroup(groupLayer: OlLayerGroup) {
     let layerArray = groupLayer.getLayers().getArray()
       .filter(this.props.filterFunction);
     const treeNodes = layerArray.map((layer) => {
       return this.treeNodeFromLayer(layer);
     });
     treeNodes.reverse();
-    this.setState({treeNodes});
+    this.setState({ treeNodes });
   }
 
   /**
@@ -210,7 +226,7 @@ class LayerTree extends React.Component {
    *
    * @param {ol.layer.Group} groupLayer A ol.layer.Group
    */
-  registerAddRemoveListeners(groupLayer) {
+  registerAddRemoveListeners(groupLayer: OlLayerGroup) {
     const collection = groupLayer.getLayers();
     const addEvtKey = collection.on('add', this.onCollectionAdd);
     const removeEvtKey = collection.on('remove', this.onCollectionRemove);
@@ -242,7 +258,7 @@ class LayerTree extends React.Component {
    *
    * @param {ol.Collection.Event} evt The add event.
    */
-  onCollectionAdd = (evt) => {
+  onCollectionAdd = (evt: any) => {
     if (evt.element instanceof OlLayerGroup) {
       this.registerAddRemoveListeners(evt.element);
     }
@@ -255,7 +271,7 @@ class LayerTree extends React.Component {
    *
    * @param {ol.Collection.Event} evt The remove event.
    */
-  onCollectionRemove = (evt) => {
+  onCollectionRemove = (evt: any) => {
     this.unregisterEventsByLayer(evt.element);
     if (evt.element instanceof OlLayerGroup) {
       evt.element.getLayers().forEach((layer) => {
@@ -271,7 +287,7 @@ class LayerTree extends React.Component {
    *
    * @param {ol.layer.Group.Event} evt The change event.
    */
-  onChangeLayers = (evt) => {
+  onChangeLayers = (evt: any) => {
     this.unregisterEventsByLayer(evt.oldValue);
     if (evt.oldValue instanceof OlCollection) {
       evt.oldValue.forEach((layer) => this.unregisterEventsByLayer(layer));
@@ -287,14 +303,14 @@ class LayerTree extends React.Component {
    *
    * @param {ol.layer.Base} layer An ol.layer.Base.
    */
-  unregisterEventsByLayer = (layer) => {
+  unregisterEventsByLayer = (layer: OlLayerBase) => {
     this.olListenerKeys = this.olListenerKeys.filter((key) => {
       if (layer instanceof OlLayerGroup) {
         const layers = layer.getLayers();
         if (key.target === layers) {
           if ((key.type === 'add' && key.listener === this.onCollectionAdd) ||
-          (key.type === 'remove' && key.listener === this.onCollectionRemove) ||
-          (key.type === 'change:layers' && key.listener === this.onChangeLayers)) {
+            (key.type === 'remove' && key.listener === this.onCollectionRemove) ||
+            (key.type === 'change:layers' && key.listener === this.onChangeLayers)) {
 
             unByKey(key);
             return false;
@@ -315,7 +331,7 @@ class LayerTree extends React.Component {
    * @param {ol.MapEvent} evt The OpenLayers MapEvent (passed by moveend)
    *
    */
-  rebuildTreeNodes = evt => {
+  rebuildTreeNodes = (evt?: any) => {
     const { mapResolution } = this.state;
 
     if (evt && evt instanceof OlMapEvent && evt.target && evt.target.getView) {
@@ -342,7 +358,7 @@ class LayerTree extends React.Component {
    * @param {ol.layer.Base} layer The layer attached to the tree node.
    * @return {Element} The title composition to render.
    */
-  getTreeNodeTitle(layer) {
+  getTreeNodeTitle(layer: OlLayerBase) {
     if (isFunction(this.props.nodeTitleRenderer)) {
       return this.props.nodeTitleRenderer.call(this, layer);
     } else {
@@ -356,14 +372,14 @@ class LayerTree extends React.Component {
    * @param {ol.layer.Base} layer The given layer.
    * @return {LayerTreeNode} The corresponding LayerTreeNode Element.
    */
-  treeNodeFromLayer(layer) {
+  treeNodeFromLayer(layer: OlLayerBase) {
     let childNodes;
     let treeNode;
 
     if (layer instanceof OlLayerGroup) {
       if (!layer.getVisible()) {
         Logger.warn('Your map configuration contains layerGroups that are' +
-        'invisible. This might lead to buggy behaviour.');
+          'invisible. This might lead to buggy behaviour.');
       }
       let childLayers = layer.getLayers().getArray()
         .filter(this.props.filterFunction);
@@ -439,8 +455,8 @@ class LayerTree extends React.Component {
    * @param {Array<String>} checkedKeys Contains all checkedKeys.
    * @param {e} checked The ant-tree event object for this event. See ant docs.
    */
-  onCheck(checkedKeys, e) {
-    const {checked} = e;
+  onCheck(checkedKeys: string[], e: AntTreeNodeCheckedEvent) {
+    const { checked } = e;
     const eventKey = e.node.props.eventKey;
     const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
 
@@ -453,7 +469,7 @@ class LayerTree extends React.Component {
    * @param {ol.layer.Base} layer The layer.
    * @param {Boolean} visiblity The visiblity.
    */
-  setLayerVisibility(layer, visibility) {
+  setLayerVisibility(layer: OlLayerBase, visibility: boolean) {
     if (!(layer instanceof OlLayerBase) || !isBoolean(visibility)) {
       Logger.error('setLayerVisibility called without layer or visiblity.');
       return;
@@ -473,7 +489,7 @@ class LayerTree extends React.Component {
    *
    * @param {Object} e The ant-tree event object for this event. See ant docs.
    */
-  onDrop(e) {
+  onDrop(e: AntTreeNodeDropEvent) {
     const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
     const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
     const dragCollection = dragInfo.groupLayer.getLayers();
@@ -494,14 +510,14 @@ class LayerTree extends React.Component {
       } else {
         dropCollection.insertAt(dropPosition + 1, dragLayer);
       }
-    // drop on node
+      // drop on node
     } else if (location === 0) {
       if (dropLayer instanceof OlLayerGroup) {
         dropLayer.getLayers().push(dragLayer);
       } else {
         dropCollection.insertAt(dropPosition + 1, dragLayer);
       }
-    // drop after node
+      // drop after node
     } else if (location === 1) {
       dropCollection.insertAt(dropPosition, dragLayer);
     }
@@ -513,13 +529,13 @@ class LayerTree extends React.Component {
    * Call rebuildTreeNodes onExpand to avoid sync issues.
    *
    */
-  onExpand = (expandedKeys, {expanded, node}) => {
+  onExpand = (expandedKeys: string[], expandEvent: AntTreeNodeExpandedEvent) => {
     const {
       onExpand
     } = this.props;
     this.rebuildTreeNodes();
     if (onExpand) {
-      onExpand(expandedKeys, {expanded, node});
+      onExpand(expandedKeys, expandEvent);
     }
   }
 
