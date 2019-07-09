@@ -13,8 +13,8 @@ describe('MapProvider', () => {
   /* eslint-disable require-jsdoc */
   class MockComponent extends React.Component {
     static propTypes = {
-      map: PropTypes.object.isRequired,
-    }
+      map: PropTypes.object.isRequired
+    };
     render() {
       return (
         <div>Mockety-mock</div>
