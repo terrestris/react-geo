@@ -1,34 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Tree } from 'antd';
 const TreeNode = Tree.TreeNode;
 
 import './LayerTreeNode.less';
 
 import { CSS_PREFIX } from '../constants';
+import { AntTreeNodeProps } from 'antd/lib/tree';
+
+export interface LayerTreeNodeProps extends AntTreeNodeProps {
+  inResolutionRange: boolean;
+}
 
 /**
  * Class representing a layer tree node
  */
-class LayerTreeNode extends React.PureComponent {
-
-  /**
-   * The prop types.
-   * @type {Object}
-   */
-  static propTypes = {
-    children: PropTypes.array,
-    inResolutionRange: PropTypes.bool
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param {Object} props The initial props.
-   */
-  constructor(props) {
-    super(props);
-  }
+class LayerTreeNode extends React.PureComponent<LayerTreeNodeProps> {
 
   /**
    * The render function.
