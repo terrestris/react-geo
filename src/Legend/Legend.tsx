@@ -1,12 +1,35 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import isEqual from 'lodash/isEqual';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import OlLayer from 'ol/layer/Layer';
 
 import { CSS_PREFIX } from '../constants';
+
+export interface LegendProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * An optional CSS class which should be added.
+   */
+  className: string;
+  /**
+   * The layer you want to display the legend of.
+   */
+  layer: OlLayer;
+  /**
+   * An object containing additional request params like "{HEIGHT: 400}" will
+   * be transformed to "&HEIGHT=400" an added to the GetLegendGraphic request.
+   */
+  extraParams: any;
+}
+
+interface LegendState {
+  /**
+   * The legend url.
+   */
+  legendUrl: string;
+}
 
 /**
  * Class representing the Legend.
@@ -14,50 +37,26 @@ import { CSS_PREFIX } from '../constants';
  * @class Legend
  * @extends React.Component
  */
-export class Legend extends React.Component {
+export class Legend extends React.Component<LegendProps, LegendState> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}legend`
-
-  /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The layer you want to display the legend of.
-     * @type {ol.layer.Layer}
-     */
-    layer: PropTypes.object.isRequired,
-
-    /**
-     * An object containing additional request params like "{HEIGHT: 400}" will
-     * be transformed to "&HEIGHT=400" an added to the GetLegendGraphic request.
-     * @type {Object}
-     */
-    extraParams: PropTypes.object
-  }
+  className = `${CSS_PREFIX}legend`;
 
   /**
    * Create the Legend.
    *
    * @constructs Legend
    */
-  constructor(props) {
+  constructor(props: LegendProps) {
     super(props);
-
-    const layer = props.layer;
-    const extraParams = props.extraParams;
+    const {
+      layer,
+      extraParams
+    } = props;
 
     this.state = {
       legendUrl: this.getLegendUrl(layer, extraParams)
@@ -70,7 +69,7 @@ export class Legend extends React.Component {
    *
    * @param {Object} prevProps The previous props.
    */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: LegendProps) {
     const {
       extraParams,
       layer
@@ -91,7 +90,7 @@ export class Legend extends React.Component {
    * @param {ol.Layer} layer The layer to get the legend graphic request for.
    * @param {Object} extraParams The extra params.
    */
-  getLegendUrl(layer, extraParams) {
+  getLegendUrl(layer: OlLayer, extraParams: any) {
     let legendUrl;
 
     if (layer.get('legendUrl')) {
