@@ -1,8 +1,32 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './FloatingMapLogo.less';
 
 import { CSS_PREFIX } from '../../constants';
+// i18n
+export interface WindowLocale {
+}
+
+interface FloatingMapLogoDefaultProps extends React.HTMLAttributes<HTMLImageElement> {
+  /**
+   * The imageSrc.
+   */
+  imageSrc: string;
+  /**
+   * Whether the map-logo is absolutely postioned or not
+   */
+  absolutelyPositioned: boolean;
+}
+
+export interface FloatingMapLogoProps extends Partial<FloatingMapLogoDefaultProps> {
+  /**
+   * An optional CSS class which should be added.
+   */
+  className?: string;
+  /**
+   * The image height
+   */
+  imageHeight: string;
+}
 
 /**
  * Class representing a floating map logo
@@ -10,59 +34,30 @@ import { CSS_PREFIX } from '../../constants';
  * @class The FloatingMapLogo
  * @extends React.Component
  */
-class FloatingMapLogo extends React.Component {
+class FloatingMapLogo extends React.Component<FloatingMapLogoProps> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}floatingmaplogo`
+  className = `${CSS_PREFIX}floatingmaplogo`;
 
   /**
    * The properties.
    * @type {Object}
    */
   static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The imageSrc (required property).
-     * @type {String}
-     */
-    imageSrc: PropTypes.string.isRequired,
-
-    /**
-     * The image height
-     * @type {String}
-     */
-    imageHeight: PropTypes.string,
-
-    /**
-     * Whether the map-logo is absolutely postioned or not
-     * @type {boolean}
-     */
-    absolutelyPositioned: PropTypes.bool,
-
-    /**
-     * The style object
-     * @type {Object}
-     */
-    style: PropTypes.object
-  }
+  };
 
   /**
    * The default properties.
    * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: FloatingMapLogoDefaultProps = {
     imageSrc: 'logo.png',
     absolutelyPositioned: false
-  }
+  };
 
   /**
    * The render function.
