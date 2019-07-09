@@ -1,7 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Slider } from 'antd';
 import OlLayerBase from 'ol/layer/Base';
+
+/**
+ *
+ * @export
+ * @interface TimeSliderProps
+ * @extends {Partial<LayerTransparencySliderDefaultProps>}
+ */
+export interface LayerTransparencySliderProps {
+  /**
+   * The layer to handle.
+   */
+  layer: OlLayerBase;
+}
 
 /**
  * The LayerTransparencySlider.
@@ -9,28 +21,7 @@ import OlLayerBase from 'ol/layer/Base';
  * @class The LayerTransparencySlider
  * @extends React.Component
  */
-class LayerTransparencySlider extends React.Component {
-
-  /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * The layer to handle.
-     * @type {ol.layer.Base}
-     */
-    layer: PropTypes.instanceOf(OlLayerBase).isRequired
-  };
-
-  /**
-   * Create the LayerTransparencySlider.
-   *
-   * @constructs LayerTransparencySlider
-   */
-  constructor(props) {
-    super(props);
-  }
+class LayerTransparencySlider extends React.Component<LayerTransparencySliderProps> {
 
   /**
    * Sets the transparency to the provided layer.
@@ -39,11 +30,14 @@ class LayerTransparencySlider extends React.Component {
    *                              between 0 (fully visible) and 100 (fully
    *                              transparent).
    */
-  setLayerTransparency(transparency) {
+  setLayerTransparency(transparency: number) {
+    const {
+      layer
+    } = this.props;
     let opacity = 1 - (transparency / 100);
     // Round the opacity to two digits.
     opacity = Math.round((opacity) * 100) / 100;
-    this.props.layer.setOpacity(opacity);
+    layer.setOpacity(opacity);
   }
 
   /**
@@ -52,8 +46,11 @@ class LayerTransparencySlider extends React.Component {
    * @return {Number} The transparency of the layer.
    */
   getLayerTransparency() {
+    const {
+      layer
+    } = this.props;
     // 1 = fully opaque/visible.
-    let opacity = this.props.layer.getOpacity();
+    let opacity = layer.getOpacity();
     let transparency = (1 - opacity) * 100;
     // Remove any digits.
     transparency = Math.round(transparency);
@@ -74,7 +71,7 @@ class LayerTransparencySlider extends React.Component {
         tipFormatter={value => `${value}%`}
         defaultValue={this.getLayerTransparency()}
         onChange={(value) => {
-          this.setLayerTransparency(value);
+          this.setLayerTransparency(value as number);
         }}
         {...passThroughProps}
       />
