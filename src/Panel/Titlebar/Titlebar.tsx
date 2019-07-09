@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import isEmpty from 'lodash/isEmpty';
 
@@ -7,47 +6,32 @@ import { CSS_PREFIX } from '../../constants';
 
 import './Titlebar.less';
 
+export interface TitlebarProps {
+  /**
+   * An optional CSS class which should be added.
+   * @type {String}
+   */
+  className?: string;
+  /**
+   * Additional elements to show at the right side of the Titlebar.
+   */
+  tools: React.ReactNode[];
+}
+
 /**
  * Class representing the titlebar. Usually used in a panel.
  *
  * @class The TitleBar
  * @extends React.Component
  */
-export class Titlebar extends React.Component {
+export class Titlebar extends React.Component<TitlebarProps> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}titlebar`
-
-  /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-    /**
-     * The children to show in the Window.
-     * @type {node}
-     */
-    children: PropTypes.node,
-    /**
-     * The dispatch function.
-      @type {Function}
-     */
-    dispatch: PropTypes.func,
-    /**
-     * Additional elements to show at the right side of the Titlebar.
-     * @type {Array<object>}
-     */
-    tools: PropTypes.arrayOf(PropTypes.element)
-  }
+  className = `${CSS_PREFIX}titlebar`;
 
   /**
    * The render function.
