@@ -1,9 +1,34 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import OlLayerBase from 'ol/layer/Base';
 import { Slider } from 'antd';
 
 import { CSS_PREFIX } from '../../constants';
+import { SliderValue } from 'antd/lib/slider';
+
+interface MultiLayerSliderDefaultProps {
+  /**
+   * The layers that should be handled. Default is: `[]`.
+   *
+   */
+  layers: OlLayerBase[];
+  /**
+   * The default value(s). Default is `0`
+   */
+  defaultValue: SliderValue;
+}
+
+/**
+ *
+ * @export
+ * @interface TimeSliderProps
+ * @extends {Partial<MultiLayerSliderDefaultProps>}
+ */
+export interface MultiLayerSliderProps extends Partial<MultiLayerSliderDefaultProps> {
+  /**
+   * An optional CSS class which should be added.
+   */
+  className?: string;
+}
 
 /**
  * Slider that changes opacity on a set of layers.
@@ -11,7 +36,7 @@ import { CSS_PREFIX } from '../../constants';
  * @class The MultiLayerSlider
  * @extends React.Component
  */
-class MultiLayerSlider extends React.Component {
+class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
 
   /**
    * The className added to this component.
@@ -20,41 +45,22 @@ class MultiLayerSlider extends React.Component {
    */
   className = `${CSS_PREFIX}multilayerslider`;
 
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The layers that should be handled. Default is: `[]`.
-     *
-     * @type {Array}
-     */
-    layers: PropTypes.arrayOf(PropTypes.instanceOf(OlLayerBase)).isRequired,
-
-    /**
-     * The default value(s). Default is `0`
-     * @type {Array<String> | String}
-     */
-    defaultValue: PropTypes.any
-  }
-
   static defaultProps = {
     layers: [],
     defaultValue: 0
-  }
+  };
 
   /**
    * The constructor.
    *
    * @constructs MultiLayerSlider
-   * @param {Object} props The properties.
+   * @param {MultiLayerSliderProps} props The properties.
    */
-  constructor(props) {
+  constructor(props: MultiLayerSliderProps) {
     super(props);
-    const layers = this.props.layers;
+    const {
+      layers
+    } = props;
     layers.forEach(l => l.setOpacity(0));
     layers[0].setOpacity(1);
   }
@@ -64,9 +70,11 @@ class MultiLayerSlider extends React.Component {
    * @param  {Number} value the slider value
    * @return {String}      the formatted tip value
    */
-  formatTip(value) {
+  formatTip(value: number) {
+    const {
+      layers
+    } = this.props;
     const layerIdx = this.getLayerIndexForSliderValue(value);
-    const layers = this.props.layers;
     let tip;
     if (layers[layerIdx]) {
       const opacity = Math.round(layers[layerIdx].get('opacity') * 100);
@@ -79,9 +87,8 @@ class MultiLayerSlider extends React.Component {
 
   /**
    * Called when the value of the slider changed.
-   * @param  {Number} value the new value
    */
-  valueUpdated(value) {
+  valueUpdated(value: number) {
     const layerIdx = this.getLayerIndexForSliderValue(value);
     const opacity = this.getOpacityForValue(value);
     const layers = this.props.layers;
@@ -103,10 +110,13 @@ class MultiLayerSlider extends React.Component {
    * @param  {Number} value The current slider value
    * @return {Number} The opacity
    */
-  getOpacityForValue(value) {
-    const length = this.props.layers.length - 1;
+  getOpacityForValue(value: number) {
+    const {
+      layers
+    } = this.props;
+    const length = layers.length - 1;
     const ticksPerLayer = Math.round(100 / length);
-    const idx = parseInt(value / ticksPerLayer, 10);
+    const idx = value / ticksPerLayer;
     const opacity = value / ticksPerLayer - (idx > length ? length : idx);
     return opacity > 1 ? 1 : opacity;
   }
@@ -116,10 +126,13 @@ class MultiLayerSlider extends React.Component {
    * @param  {Number} value the current slider value
    * @return {Number} The layer array index
    */
-  getLayerIndexForSliderValue(value) {
-    const length = this.props.layers.length - 1;
+  getLayerIndexForSliderValue(value: number) {
+    const {
+      layers
+    } = this.props;
+    const length = layers.length - 1;
     const ticksPerLayer = Math.round(100 / length);
-    const idx = parseInt(value / ticksPerLayer, 10);
+    const idx = value / ticksPerLayer;
     return idx > length ? length : idx;
   }
 
@@ -129,11 +142,13 @@ class MultiLayerSlider extends React.Component {
    */
   getMarks() {
     const marks = {};
-    const layers = this.props.layers;
+    const {
+      layers
+    } = this.props;
     const length = layers.length - 1;
-    layers.forEach(function(l, i) {
-      const layername = l.get('name') || l.get('title') || 'Layer ' + i + 1;
-      const idx = Math.round(100 / length * i);
+    layers.forEach((layer, index) => {
+      const layername = layer.get('name') || layer.get('title') || 'Layer ' + index + 1;
+      const idx = Math.round(100 / length * index);
       marks[idx] = layername;
     });
     return marks;
