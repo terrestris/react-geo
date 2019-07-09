@@ -1,6 +1,5 @@
 /*eslint-env jest*/
 
-
 import TestUtil from '../../Util/TestUtil';
 
 import MapComponent from './MapComponent';

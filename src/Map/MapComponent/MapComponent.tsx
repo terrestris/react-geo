@@ -1,6 +1,18 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import OlMap from 'ol/Map';
+
+// i18n
+export interface WindowLocale {
+}
+
+interface MapDefaultProps extends React.HTMLAttributes<HTMLDivElement> {
+  mapDivId: string;
+}
+
+export interface MapProps extends Partial<MapDefaultProps> {
+  children?: React.ReactChildren;
+  map: OlMap;
+}
 
 /**
  * Class representing a map.
@@ -8,17 +20,7 @@ import OlMap from 'ol/Map';
  * @class The MapComponent.
  * @extends React.PureComponent
  */
-export class MapComponent extends PureComponent {
-
-  /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    children: PropTypes.node,
-    map: PropTypes.instanceOf(OlMap).isRequired,
-    mapDivId: PropTypes.string
-  }
+export class MapComponent extends PureComponent<MapProps> {
 
   /**
    * The default properties.
@@ -63,7 +65,10 @@ export class MapComponent extends PureComponent {
    * render.
    */
   componentDidUpdate() {
-    this.props.map.updateSize();
+    const {
+      map
+    } = this.props;
+    map.updateSize();
   }
 
   /**
