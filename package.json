@@ -130,7 +130,7 @@
     "rimraf": "^2.6.3",
     "style-loader": "^0.23.1",
     "url-loader": "^2.0.1",
-    "webpack": "^4.35.2",
+    "webpack": "^4.38.0",
     "whatwg-fetch": "^3.0.0",
     "xmldom": "^0.1.27"
   }
