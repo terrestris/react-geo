@@ -30,20 +30,32 @@ export class MapComponent extends PureComponent {
 
   /**
    * Create a MapComponent.
-   *
-   * @constructs Map
    */
   constructor(props) {
     super(props);
   }
 
   /**
-   * The componentDidMount function
-   *
-   * @method componentDidMount
+   * The componentDidMount function.
    */
   componentDidMount() {
-    this.props.map.setTarget(this.props.mapDivId);
+    const {
+      map,
+      mapDivId
+    } = this.props;
+
+    map.setTarget(mapDivId);
+  }
+
+  /**
+   * The componentWillUnmount function.
+   */
+  componentWillUnmount() {
+    const {
+      map
+    } = this.props;
+
+    map.setTarget(null);
   }
 
   /**
