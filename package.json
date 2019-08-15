@@ -128,7 +128,7 @@
     "react-test-renderer": "^16.8.6",
     "regenerator-runtime": "^0.13.2",
     "rimraf": "^3.0.0",
-    "style-loader": "^0.23.1",
+    "style-loader": "^1.0.0",
     "url-loader": "^2.0.1",
     "webpack": "^4.38.0",
     "whatwg-fetch": "^3.0.0",
