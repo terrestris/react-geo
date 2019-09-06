@@ -341,6 +341,7 @@ export class Panel extends React.Component {
       onEscape,
       draggable,
       collapsible,
+      collapsed,
       height,
       width,
       titleBarHeight,
