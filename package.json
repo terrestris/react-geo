@@ -87,7 +87,7 @@
     "react-dom": "^16.8.6",
     "react-dom-factories": "^1.0.2",
     "react-fa": "^5.0.0",
-    "react-rnd": "^9.2.0",
+    "react-rnd": "^10.0.0",
     "shpjs": "^3.4.3",
     "url-parse": "^1.4.7",
     "validator": "^11.1.0"
@@ -101,7 +101,7 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "antd": "^3.20.0",
+    "antd": "^3.23.2",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
