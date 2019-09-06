@@ -1,7 +1,8 @@
 /*eslint-env jest*/
+import React from 'react';
 import LayerTreeNode from './LayerTreeNode';
-import TestUtil from '../Util/TestUtil';
-import PropTypes from 'prop-types';
+import Tree from 'rc-tree';
+import { mount } from 'enzyme';
 
 describe('<LayerTreeNode />', () => {
 
@@ -14,18 +15,14 @@ describe('<LayerTreeNode />', () => {
     expect(LayerTreeNode).not.toBeUndefined();
   });
 
-  it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(LayerTreeNode, defaultProps, {
-      context: {
-        rcTree: {
-          prefixCls: '',
-          registerTreeNode: () => {}
-        }
-      },
-      childContextTypes: {
-        rcTree: PropTypes.object
-      }
-    });
+  it('can be rendered (inside a Tree component)', () => {
+    const Cmp = (
+      <Tree>
+        <LayerTreeNode {...defaultProps} />
+      </Tree>
+    );
+
+    const wrapper = mount(Cmp);
     expect(wrapper).not.toBeUndefined();
   });
 });
