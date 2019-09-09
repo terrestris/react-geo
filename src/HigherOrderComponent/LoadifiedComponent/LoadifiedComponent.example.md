@@ -56,7 +56,7 @@ import OlView from 'ol/View';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
-import OlSourceTileJSON from 'ol/source/TileJSON';
+import OlSourceTileWMS from 'ol/source/TileWMS';
 import { fromLonLat } from 'ol/proj';
 
 import LayerTree from '@terrestris/react-geo/LayerTree/LayerTree';
@@ -78,21 +78,14 @@ class LoadingTreeExample extends React.Component {
           source: new OlSourceOSM()
         }),
         new OlLayerTile({
-          name: 'Food insecurity layer',
-          minResolution: 2000,
-          maxResolution: 8000,
-          source: new OlSourceTileJSON({
-            url: 'https://api.tiles.mapbox.com/v3/mapbox.20110804-hoa-foodinsecurity-3month.json?secure',
-            crossOrigin: 'anonymous'
-          })
-        }),
-        new OlLayerTile({
-          name: 'World borders layer',
-          minResolution: 2000,
-          maxResolution: 20000,
-          source: new OlSourceTileJSON({
-            url: 'https://api.tiles.mapbox.com/v3/mapbox.world-borders-light.json?secure',
-            crossOrigin: 'anonymous'
+          name: 'SRTM30-Contour',
+          minResolution: 0,
+          maxResolution: 10,
+          source: new OlSourceTileWMS({
+            url: 'https://ows.terrestris.de/osm/service',
+            params: {
+              'LAYERS': 'SRTM30-Contour'
+            }
           })
         })
       ]
@@ -100,10 +93,11 @@ class LoadingTreeExample extends React.Component {
     this.map = new OlMap({
       layers: [this.layerGroup],
       view: new OlView({
-        center: fromLonLat([37.40570, 8.81566]),
-        zoom: 4
+        center: fromLonLat([12.924, 47.551]),
+        zoom: 13
       })
     });
+
     this.state = {
       loading: false
     };
