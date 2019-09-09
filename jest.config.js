@@ -32,5 +32,6 @@ module.exports = {
     'src/**/*.js',
     '!src/**/*example*.*'
   ],
-  coverageDirectory: '<rootDir>/coverage'
+  coverageDirectory: '<rootDir>/coverage',
+  testEnvironment: 'jest-environment-jsdom-fourteen'
 };
