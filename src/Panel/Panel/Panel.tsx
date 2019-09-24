@@ -2,9 +2,7 @@ import React from 'react';
 import {
   Rnd,
   ResizeEnable,
-  RndResizeCallback,
-  Props as RndProps,
-  RndResizeStartCallback
+  Props as RndProps
 } from 'react-rnd';
 
 import uniqueId from 'lodash/uniqueId';

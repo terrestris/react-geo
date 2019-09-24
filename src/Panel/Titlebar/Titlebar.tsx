@@ -6,7 +6,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './Titlebar.less';
 
-export interface TitlebarProps {
+export interface TitlebarProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * An optional CSS class which should be added.
    * @type {String}

@@ -9,10 +9,6 @@ import { SliderMarks, SliderValue } from 'antd/lib/slider';
 
 import { CSS_PREFIX } from '../constants';
 
-// i18n
-export interface TimeSliderLocale {
-}
-
 interface TimeSliderDefaultProps {
   /**
    * Whether to allow range selection.

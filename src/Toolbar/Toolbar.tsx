@@ -54,6 +54,7 @@ class Toolbar extends React.Component<ToolbarProps> {
    */
   render() {
     const {
+      alignment,
       style,
       children,
       className
@@ -64,7 +65,7 @@ class Toolbar extends React.Component<ToolbarProps> {
       : this.className;
 
     return (
-      <div className={`${finalClassName} ${this.props.alignment}-toolbar`} style={style}>
+      <div className={`${finalClassName} ${alignment}-toolbar`} style={style}>
         {children}
       </div>
     );

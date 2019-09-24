@@ -77,7 +77,11 @@ class UserChip extends React.Component<UserChipProps> {
    * @method getInitials
    */
   getInitials(): string {
-    let splittedName = this.props.userName.split(' ');
+    const {
+      userName
+    } = this.props;
+
+    const splittedName = userName.split(' ');
     let initals = [];
     splittedName.forEach((part) =>  {
       initals.push(part[0].toUpperCase());
