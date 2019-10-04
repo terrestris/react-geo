@@ -52,7 +52,14 @@ class ZoomToExtentButton extends React.Component {
      * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
      * @type {Object}
      */
-    fitOptions: PropTypes.object
+    fitOptions: PropTypes.object,
+
+    /**
+     * If true, the view will always animate to the closest zoom level after an interaction.
+     * False means intermediary zoom levels are allowed.
+     * Default is false.
+     */
+    constrainViewResolution: PropTypes.bool
 
   }
 
@@ -62,10 +69,10 @@ class ZoomToExtentButton extends React.Component {
    */
   static defaultProps = {
     fitOptions: {
-      constrainResolution: false,
       duration: 250,
       easing: easeOut
-    }
+    },
+    constrainViewResolution: false
   }
 
   /**
@@ -77,6 +84,7 @@ class ZoomToExtentButton extends React.Component {
     const{
       map,
       extent,
+      constrainViewResolution,
       fitOptions
     } = this.props;
     const view = map.getView();
@@ -89,6 +97,8 @@ class ZoomToExtentButton extends React.Component {
     if (view.getAnimating()) {
       view.cancelAnimations();
     }
+
+    view.setConstrainResolution(constrainViewResolution);
 
     const finalFitOptions = {
       ...defaultFitOptions,
@@ -105,6 +115,7 @@ class ZoomToExtentButton extends React.Component {
     const {
       className,
       fitOptions,
+      constrainViewResolution,
       ...passThroughProps
     } = this.props;
     const finalClassName = className ?

@@ -138,7 +138,8 @@ describe('<WfsSearch />', () => {
         view: new OlView({
           projection: 'EPSG:4326',
           center: [37.40570, 8.81566],
-          zoom: 4
+          zoom: 4,
+          constrainResolution: true
         })
       });
       //SETUP END
