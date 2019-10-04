@@ -866,9 +866,14 @@ class DigitizeButton extends React.Component {
    */
   onFeatureCopy = evt => {
     const {
+      map,
       onFeatureCopy,
       onFeatureSelect
     } = this.props;
+
+    const {
+      digitizeLayer
+    } = this.state;
 
     const feat = evt.selected[0];
 
@@ -889,11 +894,12 @@ class DigitizeButton extends React.Component {
     this._digitizeFeatures.push(copy);
 
     AnimateUtil.moveFeature(
-      this.props.map,
+      map,
+      digitizeLayer,
       copy,
       500,
       50,
-      feat.getStyle()
+      this.getDigitizeStyleFunction(feat)
     );
   }
 
