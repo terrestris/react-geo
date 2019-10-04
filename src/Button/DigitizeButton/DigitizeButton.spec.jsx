@@ -318,8 +318,8 @@ describe('<DigitizeButton />', () => {
         const wrapper = setupWrapper();
 
         wrapper.setProps({
-          selectFillColor: 'red',
-          selectStrokeColor: 'blue'
+          selectFillColor: '#ff0000',
+          selectStrokeColor: '#0000ff'
         });
 
         const expectedStyle = wrapper.instance().getSelectedStyleFunction(new OlFeature());
