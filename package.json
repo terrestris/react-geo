@@ -123,7 +123,7 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "np": "^5.0.3",
-    "ol": "^5.3.3",
+    "ol": "^6.1.0",
     "react": "^16.9.0",
     "react-styleguidist": "^9.1.16",
     "react-test-renderer": "^16.9.0",
