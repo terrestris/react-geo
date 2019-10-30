@@ -125,7 +125,7 @@
     "np": "^5.0.3",
     "ol": "^5.3.3",
     "react": "^16.9.0",
-    "react-styleguidist": "^9.1.16",
+    "react-styleguidist": "^10.0.0",
     "react-test-renderer": "^16.9.0",
     "regenerator-runtime": "^0.13.3",
     "rimraf": "^3.0.0",
