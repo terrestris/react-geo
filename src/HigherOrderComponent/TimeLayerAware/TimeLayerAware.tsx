@@ -1,4 +1,5 @@
 import React from 'react';
+import OlLayerBase from 'ol/layer/Base';
 
 import isArray from 'lodash/isArray';
 
@@ -10,7 +11,7 @@ import isArray from 'lodash/isArray';
  *   a WMS source that will end up as URL parameters.
  * @return {String} The key for the time parameter, in the actual spelling.
  */
-const findTimeParam = (params) => {
+const findTimeParam = (params: Object) => {
   const keys = Object.keys(params);
   let foundKey = 'TIME'; // fallback
   keys.some(key => {
@@ -19,6 +20,7 @@ const findTimeParam = (params) => {
       foundKey = key;
       return true;
     }
+    return false;
   });
   return foundKey;
 };
@@ -30,7 +32,7 @@ const findTimeParam = (params) => {
  * @param  {Array} layers array of layer configurations
  * @return {React.Component} a time layer aware component
  */
-export function timeLayerAware(WrappedComponent, layers) {
+export function timeLayerAware(WrappedComponent: React.ComponentType<any>, layers: OlLayerBase[]) {
 
   return class TimeLayerAware extends React.Component {
 
