@@ -17,6 +17,165 @@ import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 
 import { CSS_PREFIX } from '../../constants';
+import { OptionProps } from 'antd/lib/select';
+
+interface WfsSearchDefaultProps {
+  /**
+   * A nested object mapping feature types to an object of attribute details,
+   * which are also mapped by search attribute name.
+   *
+   * Example:
+   *   ```
+   *   attributeDetails: {
+   *    featType1: {
+   *      attr1: {
+   *        matchCase: true,
+   *        type: 'number',
+   *        exactSearch: false
+   *      },
+   *      attr2: {
+   *        matchCase: false,
+   *        type: 'string',
+   *        exactSearch: true
+   *      }
+   *    },
+   *    featType2: {...}
+   *   }
+   *   ```
+   * @type {Object}
+   */
+  attributeDetails: {
+    [featureType: string]: {
+      [attributeName: string]: {
+        matchCase: boolean,
+        type: string,
+        exactSearch: boolean
+      }
+    }
+  };
+  /**
+   * SRS name. No srsName attribute will be set on geometries when this is not
+   * provided.
+   */
+  srsName: string;
+  /**
+   * The output format of the response.
+   */
+  outputFormat: string;
+  /**
+   * Options which are added to the fetch-POST-request. credentials is set to
+   * 'same-origin' as default but can be overwritten. See also
+   * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
+   */
+  additionalFetchOptions: any;
+  /**
+   * The minimal amount of characters entered in the input to start a search.
+   */
+  minChars: number;
+  /**
+   * Which prop value of option will render as content of select.
+   */
+  displayValue: string;
+  /**
+   * The id property of the feature. Default is to `id`.
+   */
+  idProperty: string;
+  /**
+   * Delay in ms before actually sending requests.
+   */
+  delay: number;
+  /**
+   * A render function which gets called with the selected item as it is
+   * returned by the server. It must return an `AutoComplete.Option` with
+   * `key={feature.id}`.
+   * The default will display the property `name` if existing or the
+   * property defined in `props.idProperty` (default is to `id`).
+   */
+  renderOption: (feature: any, props: WfsSearchProps) => React.ReactElement<OptionProps>;
+  /**
+   * An onSelect function which gets called with the selected feature as it is
+   * returned by server.
+   * The default function will create a searchlayer, adds the feature and will
+   * zoom to its extend.
+   */
+  onSelect: (feature: any, olMap: OlMap) => void;
+  /**
+   *
+   */
+  style: any;
+}
+
+export interface WfsSearchProps extends Partial<WfsSearchDefaultProps> {
+  /**
+   * An optional CSS class which should be added.
+   */
+  className?: string;
+  /**
+   * The base URL. Please make sure that the WFS-Server supports CORS.
+   */
+  baseUrl: string;
+  /**
+   * An object mapping feature types to an array of attributes that should be searched through.
+   */
+  searchAttributes: {
+    [featurType: string]: string[]
+  };
+  /**
+   * The namespace URI used for features.
+   */
+  featureNS?: string;
+  /**
+   * The prefix for the feature namespace.
+   */
+  featurePrefix?: string;
+  /**
+   * The feature type names. Required.
+   */
+  featureTypes: string[];
+  /**
+   * Maximum number of features to fetch.
+   */
+  maxFeatures: number;
+  /**
+   * Geometry name to use in a BBOX filter.
+   */
+  geometryName: string;
+  /**
+   * Optional list of property names to serialize.
+   */
+  propertyNames?: string[];
+  /**
+   * Filter condition. See https://openlayers.org/en/latest/apidoc/module-ol_format_filter.html
+   * for more information.
+   */
+  filter?: any;
+  /**
+   * The ol.map to interact with on selection.
+   */
+  map: OlMap;
+  /**
+   * An onChange function which gets called with the current value of the
+   * field.
+   */
+  onChange: (value: string) => void;
+  /**
+   * Optional callback function, that will be called before WFS search starts.
+   * Can be useful if input value manipulation is needed (e.g. umlaut
+   * replacement `ä => oa` etc.)
+   */
+  onBeforeSearch: (value: string) => void;
+  /**
+   * Options which are passed to the constructor of the ol.format.WFS.
+   * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
+   */
+  wfsFormatOptions: any;
+}
+
+interface WfsSearchState {
+  searchTerm: string;
+  data: Array<any>;
+  fetching: boolean;
+}
 
 /**
  * The WfsSearch field.
@@ -29,183 +188,16 @@ import { CSS_PREFIX } from '../../constants';
  * @class WfsSearch
  * @extends React.Component
  */
-export class WfsSearch extends React.Component {
+export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}wfssearch`
+  className = `${CSS_PREFIX}wfssearch`;
 
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-    /**
-     * The base URL. Please make sure that the WFS-Server supports CORS.
-     * @type {String}
-     */
-    baseUrl: PropTypes.string.isRequired,
-    /**
-     * An object mapping feature types to an array of attributes that should be searched through.
-     * @type {Object}
-     */
-    searchAttributes: PropTypes.object.isRequired,
-    /**
-     * A nested object mapping feature types to an object of attribute details,
-     * which are also mapped by search attribute name.
-     *
-     * Example:
-     *   ```
-     *   attributeDetails: {
-     *    featType1: {
-     *      attr1: {
-     *        matchCase: true,
-     *        type: 'number',
-     *        exactSearch: false
-     *      },
-     *      attr2: {
-     *        matchCase: false,
-     *        type: 'string',
-     *        exactSearch: true
-     *      }
-     *    },
-     *    featType2: {...}
-     *   }
-     *   ```
-     * @type {Object}
-     */
-    attributeDetails: PropTypes.objectOf(
-      PropTypes.objectOf(
-        PropTypes.shape({
-          matchCase: PropTypes.bool,
-          type: PropTypes.string,
-          exactSearch: PropTypes.bool
-        })
-      )
-    ),
-    /**
-     * The namespace URI used for features.
-     * @type {String}
-     */
-    featureNS: PropTypes.string,
-    /**
-     * The prefix for the feature namespace.
-     * @type {String}
-     */
-    featurePrefix: PropTypes.string,
-    /**
-     * The feature type names. Required.
-     * @type {String[]}
-     */
-    featureTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
-    /**
-     * SRS name. No srsName attribute will be set on geometries when this is not
-     * provided.
-     * @type {String}
-     */
-    srsName: PropTypes.string,
-    /**
-     * The output format of the response.
-     * @type {String}
-     */
-    outputFormat: PropTypes.string,
-    /**
-     * Maximum number of features to fetch.
-     * @type {Number}
-     */
-    maxFeatures: PropTypes.number,
-    /**
-     * Geometry name to use in a BBOX filter.
-     * @type {String}
-     */
-    geometryName: PropTypes.string,
-    /**
-     * Optional list of property names to serialize.
-     * @type {String[]}
-     */
-    propertyNames: PropTypes.arrayOf(PropTypes.string),
-    /**
-     * Filter condition. See https://openlayers.org/en/latest/apidoc/module-ol_format_filter.html
-     * for more information.
-     * @type {Object}
-     */
-    filter: PropTypes.object,
-    /**
-     * The ol.map to interact with on selection.
-     *
-     * @type {ol.Map}
-     */
-    map: PropTypes.instanceOf(OlMap),
-    /**
-     * The minimal amount of characters entered in the input to start a search.
-     * @type {Number}
-     */
-    minChars: PropTypes.number,
-    /**
-     * A render function which gets called with the selected item as it is
-     * returned by the server. It must return an `AutoComplete.Option` with
-     * `key={feature.id}`.
-     * The default will display the property `name` if existing or the
-     * property defined in `props.idProperty` (default is to `id`).
-     * @type {Function}
-     */
-    renderOption: PropTypes.func,
-    /**
-     * An onSelect function which gets called with the selected feature as it is
-     * returned by server.
-     * The default function will create a searchlayer, adds the feature and will
-     * zoom to its extend.
-     * @type {Function}
-     */
-    onSelect: PropTypes.func,
-    /**
-     * An onChange function which gets called with the current value of the
-     * field.
-     * @type {Function}
-     */
-    onChange: PropTypes.func,
-    /**
-      * Optional callback function, that will be called before WFS search starts.
-      * Can be useful if input value manipulation is needed (e.g. umlaut
-      * replacement `ä => oa` etc.)
-      * @type {Function}
-      */
-    onBeforeSearch: PropTypes.func,
-    /**
-     * Options which are added to the fetch-POST-request. credentials is set to
-     * 'same-origin' as default but can be overwritten. See also
-     * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
-     * @type {Object}
-     */
-    additionalFetchOptions: PropTypes.object,
-    /**
-     * Options which are passed to the constructor of the ol.format.WFS.
-     * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
-     * @type {Object}
-     */
-    wfsFormatOptions: PropTypes.object,
-    /**
-     * Which prop value of option will render as content of select.
-     * @type {String}
-     */
-    displayValue: PropTypes.string,
-    /**
-     * The id property of the feature. Default is to `id`.
-     * @type {String}
-     */
-    idProperty: PropTypes.string,
-    /**
-     * Delay in ms before actually sending requests.
-     * @type {Number}
-     */
-    delay: PropTypes.number
-  }
-
-  static defaultProps = {
+  static defaultProps: WfsSearchDefaultProps = {
     srsName: 'EPSG:3857',
     outputFormat: 'application/json',
     minChars: 3,
@@ -230,7 +222,6 @@ export class WfsSearch extends React.Component {
 
       const display = feature.properties[displayValue] ?
         feature.properties[displayValue] : feature[idProperty];
-
       return (
         <Option
           value={display}
@@ -241,7 +232,6 @@ export class WfsSearch extends React.Component {
         </Option>
       );
     },
-
     /**
      * The default onSelect method if no onSelect prop is given. It zooms to the
      * selected item.
@@ -266,7 +256,7 @@ export class WfsSearch extends React.Component {
     style: {
       width: 200
     }
-  }
+  };
 
   /**
    * Create the WfsSearch.
@@ -274,11 +264,12 @@ export class WfsSearch extends React.Component {
    * @param {Object} props The initial props.
    * @constructs WfsSearch
    */
-  constructor(props) {
+  constructor(props: WfsSearchProps) {
     super(props);
     this.state = {
       searchTerm: '',
-      data: []
+      data: [],
+      fetching: false
     };
     this.onUpdateInput = this.onUpdateInput.bind(this);
     this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
@@ -291,10 +282,9 @@ export class WfsSearch extends React.Component {
    * current inputValue as searchTerm and starts a search if the inputValue has
    * a length of at least `this.props.minChars` (default 3).
    *
-   * @param {String|undefined} value The inputValue. Undefined if clear btn
-   *                                      is pressed.
+   * @param value The inputValue. Undefined if clear btn is pressed.
    */
-  onUpdateInput(value) {
+  onUpdateInput(value?: string) {
     const {
       minChars,
       onChange,
@@ -386,9 +376,9 @@ export class WfsSearch extends React.Component {
    * This function gets called on success of the WFS GetFeature fetch request.
    * It sets the response as data.
    *
-   * @param {Array<object>} response The found features.
+   * @param response The found features.
    */
-  onFetchSuccess(response) {
+  onFetchSuccess(response: any) {
     const data = response.features ? response.features : [];
     data.forEach(feature => feature.searchTerm = this.state.searchTerm);
     this.setState({
@@ -403,7 +393,7 @@ export class WfsSearch extends React.Component {
    *
    * @param {String} error The errorstring.
    */
-  onFetchError(error) {
+  onFetchError(error: string) {
     Logger.error(`Error while requesting WFS GetFeature: ${error}`);
     this.setState({
       fetching: false
@@ -413,10 +403,10 @@ export class WfsSearch extends React.Component {
   /**
    * The function describes what to do when an item is selected.
    *
-   * @param {String|number} value The value of the selected option.
-   * @param {Node} option The selected option.
+   * @param value The value of the selected option.
+   * @param option The selected option.
    */
-  onMenuItemSelected(value, option) {
+  onMenuItemSelected(value?: string, option?: React.ReactElement<OptionProps>) {
     const {
       map,
       idProperty
