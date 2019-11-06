@@ -23,19 +23,19 @@ export interface SimpleButtonProps extends Partial<SimpleButtonDefaultProps> {
   /**
    * The font awesome icon name.
    */
-  icon: string;
+  icon?: string;
   /**
    * The classname of an icon of an iconFont. Use either this or icon.
    */
-  fontIcon: string;
+  fontIcon?: string;
   /**
    * The tooltip to be shown on hover.
    */
-  tooltip: string;
+  tooltip?: string;
   /**
    * The position of the tooltip.
    */
-  tooltipPlacement: TooltipPlacement;
+  tooltipPlacement?: TooltipPlacement;
 }
 
 /**

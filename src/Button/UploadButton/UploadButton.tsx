@@ -1,10 +1,26 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import SimpleButton from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 
 import './UploadButton.less';
+
+export interface UploadButtonProps {
+  /**
+   * The className which should be added.
+   */
+  className?: string;
+
+  /**
+   * The onChange handler for the upload input field.
+   */
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
+  /**
+   * Object of props that should be passed to the input field.
+   */
+  inputProps: React.InputHTMLAttributes<HTMLInputElement>;
+}
 
 /**
  * Class representing an upload button. Can be used as wrapper if children
@@ -18,40 +34,14 @@ import './UploadButton.less';
  * @class The UploadButton
  * @extends React.Component
  */
-class UploadButton extends React.Component {
+class UploadButton extends React.Component<UploadButtonProps> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}uploadbutton`
-
-  static propTypes = {
-    /**
-     * The className which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The children.
-     * @type {Object}
-     */
-    children: PropTypes.node,
-
-    /**
-     * The onChange handler for the upload input field.
-     * @type {Function}
-     */
-    onChange: PropTypes.func,
-
-    /**
-     * Object of props that should be passed to the input field.
-     * @type {Object}
-     */
-    inputProps: PropTypes.object
-  }
+  _className = `${CSS_PREFIX}uploadbutton`;
 
   /**
    * The render function.
@@ -66,8 +56,8 @@ class UploadButton extends React.Component {
     } = this.props;
 
     const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
+      ? `${className} ${this._className}`
+      : this._className;
 
     const button = <SimpleButton {...passThroughProps} />;
 
