@@ -1,7 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Spin } from 'antd';
 import Logger from '@terrestris/base-util/dist/Logger';
+import { SpinProps } from 'antd/lib/spin';
+
+interface LoadifiedComponentProps {
+  withRef: boolean;
+}
 
 /**
  * The HOC factory function.
@@ -14,9 +18,9 @@ import Logger from '@terrestris/base-util/dist/Logger';
  * @param {Component} options The options to apply.
  * @return {Component} The wrapped component.
  */
-export function loadify(WrappedComponent, {
+export function loadify<P>(WrappedComponent: React.ComponentType<any>, {
   withRef = false
-} = {}) {
+}: LoadifiedComponentProps) {
 
   /**
    * The wrapper class for the given component.
@@ -24,40 +28,9 @@ export function loadify(WrappedComponent, {
    * @class The loadify
    * @extends React.Component
    */
-  class LoadifiedComponent extends React.Component {
+  return class LoadifiedComponent extends React.Component<Partial<SpinProps>> {
 
-    /**
-     * The props.
-     * @type {Object}
-     */
-    static propTypes = {
-      /**
-       * Whether the component should be loading or not.
-       * @type {Boolean}
-       */
-      spinning: PropTypes.bool,
-      /**
-       * Size of the loading element.
-       * @type {string}
-       */
-      size: PropTypes.oneOf(['small', 'default', 'large']),
-      /**
-       * The indicator element to use for the loader.
-       * @type {String}
-       */
-      indicator: PropTypes.any,
-      /**
-       * The tip text of loader element
-       * @type {String}
-       */
-      tip: PropTypes.string,
-      /**
-       * The delay time for the loader to show.
-       * @type {Number}
-       */
-      delay: PropTypes.number,
-
-    }
+    _wrappedInstance?: React.ReactElement;
 
   /**
    * The default properties.
@@ -66,21 +39,21 @@ export function loadify(WrappedComponent, {
    */
   static defaultProps = {
     spinning: false
-  }
+  };
 
   /**
    * Create the Loadify.
    *
    * @constructs Loadify
    */
-  constructor(props) {
+  constructor(props: Partial<SpinProps>) {
     super(props);
 
     /**
      * The wrapped instance.
      * @type {Element}
      */
-    this.wrappedInstance = null;
+    this._wrappedInstance = null;
   }
 
     /**
@@ -88,9 +61,9 @@ export function loadify(WrappedComponent, {
      *
      * @return {Element} The wrappend instance.
      */
-    getWrappedInstance = () => {
+    getWrappedInstance = (): React.ReactElement | void => {
       if (withRef) {
-        return this.wrappedInstance;
+        return this._wrappedInstance;
       } else {
         Logger.debug('No wrapped instance referenced, please call the '
           + 'Loadify with option withRef = true.');
@@ -104,7 +77,7 @@ export function loadify(WrappedComponent, {
      */
     setWrappedInstance = (instance) => {
       if (withRef) {
-        this.wrappedInstance = instance;
+        this._wrappedInstance = instance;
       }
     }
 
@@ -139,7 +112,5 @@ export function loadify(WrappedComponent, {
         </Spin>
       );
     }
-  }
-
-  return LoadifiedComponent;
+  };
 }
