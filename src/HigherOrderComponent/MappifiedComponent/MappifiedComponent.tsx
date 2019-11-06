@@ -4,6 +4,10 @@ import OlMap from 'ol/Map';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
+interface MappifiedComponentProps {
+  withRef: boolean;
+}
+
 /**
  * The HOC factory function.
  *
@@ -12,9 +16,9 @@ import Logger from '@terrestris/base-util/dist/Logger';
  * @param {Component} WrappedComponent The component to wrap and enhance.
  * @return {Component} The wrapped component.
  */
-export function mappify(WrappedComponent, {
+export function mappify<P>(WrappedComponent: React.ComponentType<any>, {
   withRef = false
-} = {}) {
+}: MappifiedComponentProps) {
 
   /**
    * The wrapper class for the given component.
@@ -22,7 +26,9 @@ export function mappify(WrappedComponent, {
    * @class The MappifiedComponent
    * @extends React.Component
    */
-  class MappifiedComponent extends React.Component {
+  return class MappifiedComponent extends React.Component {
+
+    _wrappedInstance?: React.ReactElement;
 
     /**
      * The context types.
@@ -30,21 +36,21 @@ export function mappify(WrappedComponent, {
      */
     static contextTypes = {
       map: PropTypes.instanceOf(OlMap).isRequired
-    }
+    };
 
     /**
      * Create the MappifiedComponent.
      *
      * @constructs MappifiedComponent
      */
-    constructor(props) {
+    constructor(props: P & MappifiedComponentProps) {
       super(props);
 
       /**
        * The wrapped instance.
        * @type {Element}
        */
-      this.wrappedInstance = null;
+      this._wrappedInstance = null;
     }
 
     /**
@@ -52,9 +58,9 @@ export function mappify(WrappedComponent, {
      *
      * @return {Element} The wrapped instance.
      */
-    getWrappedInstance = () => {
+    getWrappedInstance = (): React.ReactElement | void => {
       if (withRef) {
-        return this.wrappedInstance;
+        return this._wrappedInstance;
       } else {
         Logger.warn('No wrapped instance referenced, please call the '
           + 'mappify with option withRef = true.');
@@ -68,7 +74,7 @@ export function mappify(WrappedComponent, {
      */
     setWrappedInstance = (instance) => {
       if (withRef) {
-        this.wrappedInstance = instance;
+        this._wrappedInstance = instance;
       }
     }
 
@@ -94,7 +100,5 @@ export function mappify(WrappedComponent, {
       );
 
     }
-  }
-
-  return MappifiedComponent;
+  };
 }
