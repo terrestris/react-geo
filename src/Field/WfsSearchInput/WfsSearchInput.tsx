@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {
   Input,
@@ -16,6 +15,144 @@ import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil'
 
 import { CSS_PREFIX } from '../../constants';
 
+interface WfsSearchInputDefaultProps {
+  /**
+   * A nested object mapping feature types to an object of attribute details,
+   * which are also mapped by search attribute name.
+   *
+   * Example:
+   *   ```
+   *   attributeDetails: {
+   *    featType1: {
+   *      attr1: {
+   *        matchCase: true,
+   *        type: 'number',
+   *        exactSearch: false
+   *      },
+   *      attr2: {
+   *        matchCase: false,
+   *        type: 'string',
+   *        exactSearch: true
+   *      }
+   *    },
+   *    featType2: {...}
+   *   }
+   *   ```
+   * @type {Object}
+   */
+  attributeDetails: {
+    [featureType: string]: {
+      [attributeName: string]: {
+        matchCase: boolean,
+        type: string,
+        exactSearch: boolean
+      }
+    }
+  };
+  /**
+   * SRS name. No srsName attribute will be set on geometries when this is not
+   * provided.
+   */
+  srsName: string;
+  /**
+   * The output format of the response.
+   */
+  outputFormat: string;
+  /**
+   * Options which are added to the fetch-POST-request. credentials is set to
+   * 'same-origin' as default but can be overwritten. See also
+   * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
+   */
+  additionalFetchOptions: any;
+  /**
+   * The minimal amount of characters entered in the input to start a search.
+   */
+  minChars: number;
+  /**
+   * Delay in ms before actually sending requests.
+   */
+  delay: number;
+}
+
+export interface WfsSearchInputProps extends Partial<WfsSearchInputDefaultProps> {
+  /**
+   * An optional CSS class which should be added.
+   */
+  className?: string;
+  /**
+   * The base URL. Please make sure that the WFS-Server supports CORS.
+   */
+  baseUrl: string;
+  /**
+   * An object mapping feature types to an array of attributes that should be searched through.
+   */
+  searchAttributes: {
+    [featurType: string]: string[]
+  };
+  /**
+   * The namespace URI used for features.
+   */
+  featureNS?: string;
+  /**
+   * The prefix for the feature namespace.
+   */
+  featurePrefix?: string;
+  /**
+   * The feature type names.
+   */
+  featureTypes: string[];
+  /**
+   * Maximum number of features to fetch.
+   */
+  maxFeatures?: number;
+  /**
+   * Geometry name to use in a BBOX filter.
+   */
+  geometryName?: string;
+  /**
+   * Optional list of property names to serialize.
+   */
+  propertyNames?: string[];
+  /**
+   * The ol.map to interact with on selection.
+   */
+  map: OlMap;
+  /**
+   * Optional callback function, that will be called before WFS search starts.
+   * Can be useful if input value manipulation is needed (e.g. umlaut
+   * replacement `ä => oa` etc.)
+   */
+  onBeforeSearch: (value: string) => void;
+  /**
+   * An onFetchSuccess callback function which gets called with the
+   * successfully fetched data.
+   * Please note: if omitted only data fetch will be performed and no data
+   * will be shown afterwards!
+   */
+  onFetchSuccess: (data: any) => void;
+  /**
+   * An onFetchError callback function which gets called if data fetch is
+   * failed.
+   */
+  onFetchError: (data: any) => void;
+  /**
+   * Optional callback function, that will be called if 'clear' button of
+   * input field was clicked.
+   */
+  onClearClick: () => void;
+  /**
+   * Options which are passed to the constructor of the ol.format.WFS.
+   * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
+   */
+  wfsFormatOptions: any;
+}
+
+interface WfsSearchState {
+  searchTerm: string;
+  data: any[];
+  fetching: boolean;
+}
+
 /**
  * The WfsSearchInput field.
  * Implements an input field to do a WFS-GetFeature request.
@@ -27,177 +164,29 @@ import { CSS_PREFIX } from '../../constants';
  * @class WfsSearchInput
  * @extends React.Component
  */
-export class WfsSearchInput extends React.Component {
+export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSearchState> {
+
+  /**
+   * The reference to the Input Element of the WfsSearch.
+   * @private
+   */
+  _inputRef: any;
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}wfssearchinput`
+  className = `${CSS_PREFIX}wfssearchinput`;
 
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-    /**
-     * The base URL. Please make sure that the WFS-Server supports CORS.
-     * @type {String}
-     */
-    baseUrl: PropTypes.string.isRequired,
-    /**
-     * An object mapping feature types to an array of attributes that should be searched through.
-     * @type {Object}
-     */
-    searchAttributes: PropTypes.object.isRequired,
-    /**
-     * A nested object mapping feature types to an object of attribute details,
-     * which are also mapped by search attribute name.
-     *
-     * Example:
-     *   ```
-     *   attributeDetails: {
-     *    featType1: {
-     *      attr1: {
-     *        matchCase: true,
-     *        type: 'number',
-     *        exactSearch: false
-     *      },
-     *      attr2: {
-     *        matchCase: false,
-     *        type: 'string',
-     *        exactSearch: true
-     *      }
-     *    },
-     *    featType2: {...}
-     *   }
-     *   ```
-     * @type {Object}
-     */
-    attributeDetails: PropTypes.objectOf(
-      PropTypes.objectOf(
-        PropTypes.shape({
-          matchCase: PropTypes.bool,
-          type: PropTypes.string,
-          exactSearch: PropTypes.bool
-        })
-      )
-    ),
-    /**
-     * The namespace URI used for features.
-     * @type {String}
-     */
-    featureNS: PropTypes.string,
-    /**
-     * The prefix for the feature namespace.
-     * @type {String}
-     */
-    featurePrefix: PropTypes.string,
-    /**
-     * The feature type names. Required.
-     * @type {String[]}
-     */
-    featureTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
-    /**
-     * SRS name. No srsName attribute will be set on geometries when this is not
-     * provided.
-     * @type {String}
-     */
-    srsName: PropTypes.string,
-    /**
-     * The output format of the response.
-     * @type {String}
-     */
-    outputFormat: PropTypes.string,
-    /**
-     * Maximum number of features to fetch.
-     * @type {Number}
-     */
-    maxFeatures: PropTypes.number,
-    /**
-     * Geometry name to use in a BBOX filter.
-     * @type {String}
-     */
-    geometryName: PropTypes.string,
-    /**
-     * Optional list of property names to serialize.
-     * @type {String[]}
-     */
-    propertyNames: PropTypes.arrayOf(PropTypes.string),
-    /**
-     * Filter condition. See https://openlayers.org/en/latest/apidoc/module-ol_format_filter.html.
-     * for more information.
-     * @type {Object}
-     */
-    filter: PropTypes.object,
-    /**
-     * The ol.map to interact with on selection.
-     *
-     * @type {ol.Map}
-     */
-    map: PropTypes.instanceOf(OlMap),
-    /**
-     * The minimal amount of characters entered in the input to start a search.
-     * @type {Number}
-     */
-    minChars: PropTypes.number,
-    /**
-     * An onFetchSuccess callback function which gets called with the
-     * successfully fetched data.
-     * Please note: if omitted only data fetch will be performed and no data
-     * will be shown afterwards!
-     * @type {Function}
-     */
-    onFetchSuccess: PropTypes.func,
-    /**
-     * An onFetchError callback function which gets called if data fetch is
-     * failed.
-     * @type {Function}
-     */
-    onFetchError: PropTypes.func,
-    /**
-     * Optional callback function, that will be called if 'clear' button of
-     * input field was clicked.
-     * @type {Function}
-     */
-    onClearClick: PropTypes.func,
-    /**
-      * Optional callback function, that will be called before WFS search starts.
-      * Can be useful if input value manipulation is needed before (e.g. umlaut
-      * replacement `ä => ae` etc.)
-      * @type {Function}
-      */
-    onBeforeSearch: PropTypes.func,
-    /**
-     * Options which are added to the fetch-POST-request. credentials is set to
-     * 'same-origin' as default but can be overwritten. See also
-     * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
-     * @type {Object}
-     */
-    additionalFetchOptions: PropTypes.object,
-    /**
-     * Options which are passed to the constructor of the ol.format.WFS.
-     * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
-     * @type {Object}
-     */
-    wfsFormatOptions: PropTypes.object,
-    /**
-     * Delay in ms before actually sending requests.
-     * @type {Number}
-     */
-    delay: PropTypes.number
-  }
-
-  static defaultProps = {
+  static defaultProps: WfsSearchInputDefaultProps = {
     srsName: 'EPSG:3857',
     outputFormat: 'application/json',
     minChars: 3,
     additionalFetchOptions: {},
     attributeDetails: {},
     delay: 300
-  }
+  };
 
   /**
    * Create the WfsSearchInput.
@@ -205,11 +194,12 @@ export class WfsSearchInput extends React.Component {
    * @param {Object} props The initial props.
    * @constructs WfsSearchInput
    */
-  constructor(props) {
+  constructor(props: WfsSearchInputProps) {
     super(props);
     this.state = {
       searchTerm: '',
-      data: []
+      data: [],
+      fetching: false
     };
     this.onUpdateInput = this.onUpdateInput.bind(this);
     // delay requests invoking
@@ -221,10 +211,10 @@ export class WfsSearchInput extends React.Component {
    * as searchTerm and starts a search if the inputValue has
    * a length of at least `this.props.minChars` (default 3).
    *
-   * @param {Event|undefined} evt The input value from `keyup` event.
+   * @param evt The input value from `keyup` event.
    * Gets undefined if clear btn is pressed.
    */
-  onUpdateInput(evt) {
+  onUpdateInput(evt: any) {
     const {
       minChars,
       onBeforeSearch
@@ -319,9 +309,9 @@ export class WfsSearchInput extends React.Component {
    * It sets the response as data.
    * If an additional function `onFetchSuccess` is provided, it will be called
    * as callback.
-   * @param {Array<object>} response The found features.
+   * @param response The found features.
    */
-  onFetchSuccess(response) {
+  onFetchSuccess(response: any) {
     const {
       onFetchSuccess
     } = this.props;
@@ -345,7 +335,7 @@ export class WfsSearchInput extends React.Component {
    *
    * @param {String} error The errorstring.
    */
-  onFetchError(error) {
+  onFetchError(error: string) {
     const {
       onFetchError
     } = this.props;
@@ -366,7 +356,7 @@ export class WfsSearchInput extends React.Component {
     const {
       onClearClick
     } = this.props;
-    this.inputRef.input.value = '';
+    this._inputRef.input.value = '';
     this.setState({
       data: []
     }, () => {
@@ -391,7 +381,6 @@ export class WfsSearchInput extends React.Component {
       featureNS,
       featurePrefix,
       featureTypes,
-      filter,
       geometryName,
       map,
       maxFeatures,
@@ -416,7 +405,7 @@ export class WfsSearchInput extends React.Component {
     return (
       <Input
         className={finalClassName}
-        ref={inputRef => {this.inputRef = inputRef;}}
+        ref={inputRef => {this._inputRef = inputRef; }}
         suffix={
           <Icon
             type={fetching ? 'loading' : 'close-circle'}
