@@ -1,10 +1,34 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import CircleMenuItem from './CircleMenuItem/CircleMenuItem.jsx';
 import { CSS_PREFIX } from '../constants';
 
 import './CircleMenu.less';
+
+interface CircleMenuDefaultProps {
+  /**
+   * The duration of the animation in milliseconds. Pass 0 to avoid animation.
+   */
+  animationDuration: number;
+  /**
+   * The diameter of the CircleMenu in pixels.
+   */
+  diameter: number;
+  /**
+   * Optional Segement of angles where to show the children.
+   */
+  segmentAngles: [number, number];
+}
+
+export interface CircleMenuProps extends Partial<CircleMenuDefaultProps> {
+  className?: string;
+  style?: any;
+  /**
+   * An array containing the x and y coordinates of the CircleMenus Center.
+   * @type {Number[]}
+   */
+  position: [number, number];
+}
 
 /**
  * The CircleMenu.
@@ -12,14 +36,14 @@ import './CircleMenu.less';
  * @class CircleMenu
  * @extends React.Component
  */
-export class CircleMenu extends React.Component {
+export class CircleMenu extends React.Component<CircleMenuProps> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}circlemenu`;
+  _className = `${CSS_PREFIX}circlemenu`;
 
   /**
    * Internal reference used to apply the transformation right on the div.
@@ -27,40 +51,7 @@ export class CircleMenu extends React.Component {
    */
   _ref = null;
 
-  static propTypes = {
-    className: PropTypes.string,
-    style: PropTypes.object,
-    /**
-     * The duration of the animation in milliseconds. Pass 0 to avoid animation.
-     * Default is 300.
-     *
-     * @type {Number}
-     */
-    animationDuration: PropTypes.number,
-    /**
-     * The diameter of the CircleMenu in pixels. Default is 100.
-     *
-     * @type {Number}
-     */
-    diameter: PropTypes.number,
-    /**
-     * The children of the CircleMenu. Most common are buttons.
-     *
-     * @type {Node}
-     */
-    children: PropTypes.node.isRequired,
-    /**
-     * An array containing the x and y coordinates of the CircleMenus Center.
-     * @type {Number[]}
-     */
-    position: PropTypes.arrayOf(PropTypes.number).isRequired,
-    /**
-     * Optional Segement of angles where to show the children. Default is [0, 360].
-     */
-    segmentAngles: PropTypes.arrayOf(PropTypes.number)
-  };
-
-  static defaultProps = {
+  static defaultProps: CircleMenuDefaultProps = {
     animationDuration: 300,
     diameter: 100,
     segmentAngles: [0, 360]
@@ -93,6 +84,28 @@ export class CircleMenu extends React.Component {
     }
   }
 
+  childrenMapper = (child: React.ReactNode, idx?: number, children?: React.ReactNode[]): React.ReactNode => {
+    const {
+      diameter,
+      segmentAngles,
+    } = this.props;
+    const start = segmentAngles[0];
+    const end = segmentAngles[1];
+    const range = end - start;
+    const amount = range > 270 ? children.length : children.length - 1;
+    const rotationAngle = start + (range / amount) * idx;
+    return (
+      <CircleMenuItem
+        radius={diameter / 2}
+        rotationAngle={rotationAngle}
+        animationDuration={this.props.animationDuration}
+        key={idx}
+      >
+        {child}
+      </CircleMenuItem>
+    );
+  }
+
   /**
    * The render function.
    */
@@ -109,8 +122,8 @@ export class CircleMenu extends React.Component {
     } = this.props;
 
     const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
+      ? `${className} ${this._className}`
+      : this._className;
 
     return (
       <div
@@ -125,24 +138,9 @@ export class CircleMenu extends React.Component {
         {...passThroughProps}
       >
         {
-          children.map((child, idx, children) => {
-            const start = segmentAngles[0];
-            const end = segmentAngles[1];
-            const range = end - start;
-            const amount = range > 270 ? children.length : children.length - 1;
-            const rotationAngle = start + (range / amount) * idx;
-            return (
-              <CircleMenuItem
-                radius={diameter / 2}
-                rotationAngle={rotationAngle}
-                idx={idx}
-                animationDuration={this.props.animationDuration}
-                key={idx}
-              >
-                {child}
-              </CircleMenuItem>
-            );
-          })
+          Array.isArray(children)
+          ? children.map(this.childrenMapper)
+          : this.childrenMapper(children)
         }
       </div>
     );

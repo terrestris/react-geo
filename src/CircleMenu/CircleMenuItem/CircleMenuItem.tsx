@@ -1,9 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { CSS_PREFIX } from '../../constants';
 
 import './CircleMenuItem.less';
+
+interface CircleMenuItemDefaultProps {
+  /**
+   * The duration of the animation in milliseconds. Pass 0 to avoid animation.
+   */
+  animationDuration: number;
+}
+
+export interface CircleMenuItemProps extends Partial<CircleMenuItemDefaultProps> {
+  className?: string;
+  /**
+   * The radius of the CircleMenu in pixels.
+   */
+  radius: number;
+  /**
+   * The children of the CircleMenuItem. Should be just one Node.
+   */
+  children?: React.ReactNode;
+  /**
+   * The rotation Angle in degree.
+   */
+  rotationAngle: number;
+}
 
 /**
  * The CircleMenuItem.
@@ -11,49 +33,20 @@ import './CircleMenuItem.less';
  * @class CircleMenuItem
  * @extends React.Component
  */
-export class CircleMenuItem extends React.Component {
+export class CircleMenuItem extends React.Component<CircleMenuItemProps> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}circlemenuitem`;
+  _className = `${CSS_PREFIX}circlemenuitem`;
 
   /**
    * Internal reference used to apply the transformation right on the div.
    * @private
    */
   _ref = null;
-
-  static propTypes = {
-    className: PropTypes.string,
-    /**
-     * The duration of the animation in milliseconds. Pass 0 to avoid animation.
-     * Default is 300.
-     *
-     * @type {Number}
-     */
-    animationDuration: PropTypes.number,
-    /**
-     * The radius of the CircleMenu in pixels.
-     *
-     * @type {Number}
-     */
-    radius: PropTypes.number.isRequired,
-    /**
-     * The children of the CircleMenuItem. Should be just one Node.
-     *
-     * @type {Node}
-     */
-    children: PropTypes.node,
-    /**
-     * The rotation Angle in degree.
-     *
-     * @type {Number}
-     */
-    rotationAngle: PropTypes.number.isRequired,
-  };
 
   static defaultProps = {
     animationDuration: 300
@@ -99,8 +92,8 @@ export class CircleMenuItem extends React.Component {
     } = this.props;
 
     const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
+      ? `${className} ${this._className}`
+      : this._className;
 
     return (
       <div
