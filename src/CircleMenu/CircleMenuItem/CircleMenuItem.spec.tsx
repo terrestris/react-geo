@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
-import { CircleMenuItem } from './CircleMenuItem.jsx';
+import { CircleMenuItem } from './CircleMenuItem.tsx';
 
 describe('<CircleMenuItem />', () => {
   it('is defined', () => {

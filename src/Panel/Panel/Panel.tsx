@@ -9,8 +9,8 @@ import uniqueId from 'lodash/uniqueId';
 import isNumber from 'lodash/isNumber';
 import isFunction from 'lodash/isFunction';
 
-import Titlebar from '../Titlebar/Titlebar.jsx';
-import SimpleButton from '../../Button/SimpleButton/SimpleButton.jsx';
+import Titlebar from '../Titlebar/Titlebar';
+import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 
 import { CSS_PREFIX } from '../../constants';
 

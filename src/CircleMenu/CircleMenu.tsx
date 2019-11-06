@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CircleMenuItem from './CircleMenuItem/CircleMenuItem.jsx';
+import CircleMenuItem from './CircleMenuItem/CircleMenuItem';
 import { CSS_PREFIX } from '../constants';
 
 import './CircleMenu.less';

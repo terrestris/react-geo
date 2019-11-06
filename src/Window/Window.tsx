@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import uniqueId from 'lodash/uniqueId';
 
-import Panel from  '../Panel/Panel/Panel.jsx';
+import Panel from  '../Panel/Panel/Panel';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../constants';

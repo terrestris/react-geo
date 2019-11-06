@@ -22,7 +22,7 @@ import { never, singleClick } from 'ol/events/condition';
 
 import isFunction from 'lodash/isFunction';
 
-import ToggleButton from '../ToggleButton/ToggleButton.jsx';
+import ToggleButton from '../ToggleButton/ToggleButton';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
 import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';

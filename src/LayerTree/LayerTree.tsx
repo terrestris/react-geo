@@ -16,7 +16,7 @@ import isEqual from 'lodash/isEqual';
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
-import LayerTreeNode from '../LayerTreeNode/LayerTreeNode.jsx';
+import LayerTreeNode from '../LayerTreeNode/LayerTreeNode';
 
 import { CSS_PREFIX } from '../constants';
 import {

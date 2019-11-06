@@ -17,7 +17,7 @@ import OlOverlay from 'ol/Overlay';
 
 import isEmpty from 'lodash/isEmpty';
 
-import ToggleButton from '../ToggleButton/ToggleButton.jsx';
+import ToggleButton from '../ToggleButton/ToggleButton';
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
