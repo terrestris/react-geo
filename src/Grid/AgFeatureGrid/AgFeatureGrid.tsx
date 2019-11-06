@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { AgGridReact } from 'ag-grid-react';
 
@@ -28,20 +27,144 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community/dist/styles/ag-theme-fresh.css';
 
+interface AgFeatureGridDefaultProps {
+  /**
+   * The height of the grid.
+   */
+  height: number | string;
+  /**
+   * The theme to use for the grid. See
+   * https://www.ag-grid.com/javascript-grid-styling/ for available options.
+   * Note: CSS must be loaded to use the theme!
+   */
+  theme: string;
+  /**
+   * The features to show in the grid and the map (if set).
+   */
+  features: OlFeature[];
+  /**
+   */
+  attributeBlacklist?: string[];
+  /**
+   * The default style to apply to the features.
+   */
+  featureStyle: OlStyle | (() => OlStyle);
+  /**
+   * The highlight style to apply to the features.
+   */
+  highlightStyle: OlStyle | (() => OlStyle);
+  /**
+   * The select style to apply to the features.
+   */
+  selectStyle: OlStyle | (() => OlStyle);
+  /**
+   * The name of the vector layer presenting the features in the grid.
+   */
+  layerName: string;
+  /**
+   * Custom column definitions to apply to the given column (mapping via key).
+   */
+  columnDefs: any;
+  /**
+   * A Function that creates the rowkey from the given feature.
+   * Receives the feature as property.
+   * Default is: feature => feature.ol_uid
+   */
+  keyFunction: (feature: OlFeature) => string;
+  /**
+   * Whether the map should center on the current feature's extent on init or
+   * not.
+   */
+  zoomToExtent: boolean;
+  /**
+   * Whether rows and features should be selectable or not.
+   */
+  selectable: boolean;
+}
+
+export interface AgFeatureGridProps extends Partial<AgFeatureGridDefaultProps> {
+  /**
+   * The width of the grid.
+   *
+   * @type {Number|String}
+   */
+  width: number | string;
+  /**
+   * A CSS class which should be added to the table.
+   */
+  className?: string;
+  /**
+   * A CSS class to add to each table row or a function that
+   * is evaluated for each record.
+   */
+  rowClassName?: string | ((record: any) => string);
+  /**
+   * The map the features should be rendered on. If not given, the features
+   * will be rendered in the table only.
+   */
+  map: OlMap;
+  /**
+   * Custom row data to be shown in feature grid. This might be helpful if
+   * original feature properties should be manipulated in some way before they
+   * are represented in grid.
+   * If provided, #getRowData method won't be called.
+   */
+  rowData: any[];
+  /**
+   * Callback function, that will be called on rowclick.
+   */
+  onRowClick?: () => void;
+  /**
+   * Callback function, that will be called on rowmouseover.
+   */
+  onRowMouseOver?: () => void;
+  /**
+   * Callback function, that will be called on rowmouseout.
+   */
+  onRowMouseOut?: () => void;
+  /**
+   * Callback function, that will be called if the selection changes.
+   */
+  onRowSelectionChange?: () => void;
+  /**
+   * Optional callback function, that will be called if `selectable` is set
+   * `true` and the a `click` event on the map occurs, e.g. a feature has been
+   * selected in the map. The function receives the olEvt and the selected
+   * features (if any).
+   */
+  onMapSingleClick: () => void;
+  /*
+   * A Function that is called once the grid is ready.
+   */
+  onGridIsReady?: (grid: any) => void;
+}
+
+interface AgFeatureGridState {
+  grid: any;
+  selectedRows: any[];
+}
+
 /**
  * The AgFeatureGrid.
  *
  * @class The AgFeatureGrid
  * @extends React.Component
  */
-export class AgFeatureGrid extends React.Component {
+export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeatureGridState> {
+
+  /**
+   * The reference of this grid.
+   * @type {String}
+   * @private
+   */
+  _ref;
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  _className = `${CSS_PREFIX}ag-feature-grid`
+  _className = `${CSS_PREFIX}ag-feature-grid`;
 
   /**
    * The class name to add to each table row.
@@ -79,197 +202,10 @@ export class AgFeatureGrid extends React.Component {
   _layer = null;
 
   /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added to the table.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The height of the grid.
-     *
-     * @type {Number|String}
-     */
-    height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-
-    /**
-     * The width of the grid.
-     *
-     * @type {Number|String}
-     */
-    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-
-    /**
-     * The theme to use for the grid. See
-     * https://www.ag-grid.com/javascript-grid-styling/ for available options.
-     * Note: CSS must be loaded to use the theme!
-     */
-    theme: PropTypes.string,
-
-    /**
-     * An optional CSS class to add to each table row or a function that
-     * is evaluated for each record.
-     * @type {String|Function}
-     */
-    rowClassName: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.func
-    ]),
-
-    /**
-     * The features to show in the grid and the map (if set).
-     * @type {Array}
-     */
-    features: PropTypes.arrayOf(PropTypes.instanceOf(OlFeature)),
-
-    /**
-     * The map the features should be rendered on. If not given, the features
-     * will be rendered in the table only.
-     * @type {ol.Map}
-     */
-    map: PropTypes.instanceOf(OlMap),
-
-    /**
-     * A list of attribute names to hide in the table.
-     * @type {Array}
-     */
-    attributeBlacklist: PropTypes.arrayOf(PropTypes.string),
-
-    /**
-     * Optional callback function, that will be called on rowclick.
-     * @type {Function}
-     */
-    onRowClick: PropTypes.func,
-
-    /**
-     * Optional callback function, that will be called on rowmouseover.
-     * @type {Function}
-     */
-    onRowMouseOver: PropTypes.func,
-
-    /**
-     * Optional callback function, that will be called on rowmouseout.
-     * @type {Function}
-     */
-    onRowMouseOut: PropTypes.func,
-
-    /**
-     * Optional callback function, that will be called if the selection changes.
-     * @type {Function}
-     */
-    onRowSelectionChange: PropTypes.func,
-
-    /**
-     * Optional callback function, that will be called if `selectable` is set
-     * `true` and the a `click` event on the map occurs, e.g. a feature has been
-     * selected in the map. The function receives the olEvt and the selected
-     * features (if any).
-     * @type {Function}
-     */
-    onMapSingleClick: PropTypes.func,
-
-    /**
-     * Whether the map should center on the current feature's extent on init or
-     * not.
-     * @type {Boolean}
-     */
-    zoomToExtent: PropTypes.bool,
-
-    /**
-     * Whether features should be selectable via a map click or not. If you want
-     * to enable/disable a checkbox, please set checkboxSelection on a column
-     * in columnDefs.
-     *
-     * @type {Boolean}
-     */
-    selectable: PropTypes.bool,
-
-    /**
-     * The default style to apply to the features.
-     * @type {ol.Style|ol.FeatureStyleFunction}
-     */
-    featureStyle: PropTypes.oneOfType([
-      PropTypes.instanceOf(OlStyle),
-      PropTypes.func
-    ]),
-
-    /**
-     * The highlight style to apply to the features.
-     * @type {ol.Style|ol.FeatureStyleFunction}
-     */
-    highlightStyle: PropTypes.oneOfType([
-      PropTypes.instanceOf(OlStyle),
-      PropTypes.func
-    ]),
-
-    /**
-     * The select style to apply to the features.
-     * @type {ol.Style|ol.FeatureStyleFunction}
-     */
-    selectStyle: PropTypes.oneOfType([
-      PropTypes.instanceOf(OlStyle),
-      PropTypes.func
-    ]),
-
-    /**
-     * The name of the vector layer presenting the features in the grid.
-     * @type {String}
-     */
-    layerName: PropTypes.string,
-
-    /**
-     * Custom column definitions to apply to the given column (mapping via key).
-     * See https://ant.design/components/table/#Column. You can either specify
-     * an index property on every column definition to get an exact order, or
-     * get a somewhat random order by not specifying an index property at all.
-     * If provided as array, #getColumnDefs won't be called.
-     * @type {Object|Array}
-     */
-    columnDefs: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.arrayOf(PropTypes.object)
-    ]),
-
-    /**
-     * Custom row data to be shown in feature grid. This might be helpful if
-     * original feature properties should be manipulated in some way before they
-     * are represented in grid.
-     * If provided, #getRowData method won't be called.
-     * @type {Array}
-     */
-    rowData: PropTypes.arrayOf(PropTypes.object),
-
-    /**
-     * The children to render.
-     * @type {Element}
-     */
-    children: PropTypes.element,
-
-    /**
-     * A Function that creates the rowkey from the given feature.
-     * Receives the feature as property.
-     * Default is: feature => feature.ol_uid
-     *
-     * @type {Function}
-     */
-    keyFunction: PropTypes.func,
-
-    /**
-     * A Function that is called once the grid is ready.
-     * @type {Function}
-     */
-    onGridIsReady: PropTypes.func
-  };
-
-  /**
    * The default properties.
    * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: AgFeatureGridDefaultProps = {
     theme: 'ag-theme-balham',
     height: 250,
     features: [],
@@ -333,13 +269,15 @@ export class AgFeatureGrid extends React.Component {
     }),
     layerName: 'react-geo-feature-grid-layer',
     columnDefs: {},
-    keyFunction: feature => feature.ol_uid
-  }
+    keyFunction: feature => feature.ol_uid,
+    zoomToExtent: false,
+    selectable: false
+  };
 
   /**
    * The constructor.
    */
-  constructor(props) {
+  constructor(props: AgFeatureGridProps) {
     super(props);
 
     this.state = {
@@ -372,7 +310,7 @@ export class AgFeatureGrid extends React.Component {
    *
    * @param {Object} prevProps The previous props.
    */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: AgFeatureGridProps) {
     const {
       map,
       features,
@@ -732,7 +670,7 @@ export class AgFeatureGrid extends React.Component {
       keyFunction
     } = this.props;
 
-    const feature = features.filter(feature => keyFunction(feature) === key);
+    const feature = features.filter(f => keyFunction(f) === key);
 
     return feature[0];
   }
@@ -971,7 +909,7 @@ export class AgFeatureGrid extends React.Component {
       selectedRowsAfter = grid.api.getSelectedRows();
     }
 
-    const deselectedRows = differenceWith(selectedRows, selectedRowsAfter, (a,b) => a.key === b.key);
+    const deselectedRows = differenceWith(selectedRows, selectedRowsAfter, (a: any , b: any) => a.key === b.key);
 
     const selectedFeatures = selectedRowsAfter.map(row => this.getFeatureFromRowKey(row.key));
     const deselectedFeatures = deselectedRows.map(row => this.getFeatureFromRowKey(row.key));
@@ -993,7 +931,7 @@ export class AgFeatureGrid extends React.Component {
    *
    * @param {*} grid
    */
-  onGridReady(grid) {
+  onGridReady(grid: any) {
     this.setState({
       grid
     }, this.onVisiblityChange);
@@ -1071,7 +1009,7 @@ export class AgFeatureGrid extends React.Component {
           columnDefs={columnDefs && isArray(columnDefs) ? columnDefs : this.getColumnDefs()}
           rowData={rowData && isArray(rowData) ? rowData : this.getRowData()}
           onGridReady={this.onGridReady.bind(this)}
-          rowSelection='multiple'
+          rowSelection="multiple"
           suppressRowClickSelection={true}
           onSelectionChanged={this.onSelectionChanged.bind(this)}
           onRowClicked={this.onRowClick.bind(this)}
