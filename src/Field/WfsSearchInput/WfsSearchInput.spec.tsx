@@ -106,9 +106,9 @@ describe('<WfsSearchInput />', () => {
   describe('#resetSearch', () => {
     it('resets input value', () => {
       const wrapper = TestUtil.mountComponent(WfsSearchInput);
-      wrapper.instance().inputRef.input.value = 'some value';
+      wrapper.instance()._inputRef.input.value = 'some value';
       wrapper.instance().resetSearch();
-      expect(wrapper.instance().inputRef.input.value).toBe('');
+      expect(wrapper.instance()._inputRef.input.value).toBe('');
     });
 
     it('resets state value for data', () => {
