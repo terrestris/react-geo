@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Table } from 'antd';
 
@@ -10,6 +9,56 @@ import get from 'lodash/get';
 import { CSS_PREFIX } from '../../constants';
 
 import './PropertyGrid.less';
+import { TableCurrentDataSource, ColumnProps } from 'antd/lib/table';
+
+// i18n
+export interface UserChipLocale {
+}
+
+type AttributeNames = {
+  [key: string]: string
+};
+
+interface PropertyGridDefaultProps {
+  /**
+   * Title of the attribute name column
+   */
+  attributeNameColumnTitle?: string;
+  /**
+   * Value in percent representing the width of the attribute name column
+   * The width of attribute value column wil be calculated depending in this
+   */
+  attributeNameColumnWidthInPercent?: number;
+  /**
+   * Title of the attribute value column
+   */
+  attributeValueColumnTitle?: string;
+}
+
+export interface PropertyGridProps extends Partial<PropertyGridDefaultProps> {
+  /**
+   * A CSS class which should be added.
+   */
+  className?: string;
+  /**
+   * Array of attribute names to filter
+   */
+  attributeFilter?: string[];
+  /**
+   * Object containing a mapping of attribute names in OL feature to custom ones
+   *
+   */
+  attributeNames?: AttributeNames;
+  /**
+   * Feature for which the properties should be shown
+   */
+  feature: OlFeature;
+}
+
+interface PropertyGridState {
+  dataSource: any[];
+  columns: ColumnProps<any>[];
+}
 
 /**
  * Class representing a feature grid showing the attribute values of a simple feature.
@@ -17,77 +66,27 @@ import './PropertyGrid.less';
  * @class PropertyGrid
  * @extends React.Component
  */
-class PropertyGrid extends React.Component {
+class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState> {
 
   /**
    * The CSS-className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}propertygrid`
+  className = `${CSS_PREFIX}propertygrid`;
 
-  /**
-   * The prop types.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * Optional title of the attribute name column
-     * @type {String}
-     */
-    attributeNameColumnTitle: PropTypes.string,
-
-    /**
-     * Optional value in percent representing the width of the attribute name column
-     * The width of attribute value column wil be calculated depending in this
-     * @type {String}
-     */
-    attributeNameColumnWidthInPercent: PropTypes.number,
-
-    /**
-     * Optional title of the attribute value column
-     * @type {String}
-     */
-    attributeValueColumnTitle: PropTypes.string,
-
-    /**
-     * Optional array of attribute names to filter
-     * @type {Array}
-     */
-    attributeFilter: PropTypes.arrayOf(PropTypes.string),
-
-    /**
-     * Optional object containing a mapping of attribute names in OL feature to custom ones
-     *
-     * @type {Object}
-     */
-    attributeNames: PropTypes.object,
-
-    /**
-     * Feature for which the properties should be shown
-     * @type {OlFeature}
-     */
-    feature: PropTypes.instanceOf(OlFeature).isRequired
-  }
-
-  static defaultProps = {
+  static defaultProps: PropertyGridDefaultProps = {
     attributeNameColumnTitle: 'Attribute name',
+    attributeNameColumnWidthInPercent: 50,
     attributeValueColumnTitle: 'Attribute value',
-    attributeNameColumnWidthInPercent: 50
-  }
+  };
 
   /**
    * The constructor.
    *
    * @param {Object} props The initial props.
    */
-  constructor(props) {
+  constructor(props: PropertyGridProps) {
     super(props);
 
     const {
@@ -100,8 +99,8 @@ class PropertyGrid extends React.Component {
     const {
       dataSource,
       columns
-    } = this.generatePropertyGrid(feature, attributeFilter, attributeNames,
-      attributeNameColumnWidthInPercent);
+    } = this.generatePropertyGrid({feature, attributeFilter, attributeNames,
+      attributeNameColumnWidthInPercent});
 
     this.state = {
       dataSource,
@@ -110,15 +109,22 @@ class PropertyGrid extends React.Component {
   }
 
   /**
-  * generatePropertyGrid function
-  * Initialize data store and column definitions of table
-  *
-  * @param {OlFeature} feature feature to display
-  * @param {Array} attributeFilter Array of string values to filter the grid rows
-  * @param {Object} attributeNames Object containing mapping of attribute names names in feature to custom ones
-  * @param {Number} attributeNameColumnWidthInPercent Column width (in percent)
-  */
-  generatePropertyGrid(feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent) {
+   * Initialize data store and column definitions of table
+   *
+   * @param feature feature to display
+   * @param attributeFilter Array of string values to filter the grid rows
+   * @param {Object} attributeNames Object containing mapping of attribute names names in feature to custom ones
+   * @param {Number} attributeNameColumnWidthInPercent Column width (in percent)
+   */
+  generatePropertyGrid({feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent}: {
+    feature: OlFeature,
+    attributeFilter: string[],
+    attributeNames: AttributeNames,
+    attributeNameColumnWidthInPercent: number
+  }): {
+    dataSource: any,
+    columns: ColumnProps<any>[]
+  } {
     if (!attributeFilter) {
       attributeFilter = feature.getKeys().filter((attrName) => attrName !== 'geometry');
     }
