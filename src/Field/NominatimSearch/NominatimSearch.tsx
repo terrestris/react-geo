@@ -1,14 +1,98 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
 const Option = AutoComplete.Option;
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 
+import OlMap from 'ol/Map';
+
 import { transformExtent } from 'ol/proj';
 
 import { CSS_PREFIX } from '../../constants';
+import { OptionProps } from 'antd/lib/select';
+
+interface NominatimSearchDefaultProps {
+  /**
+   * The Nominatim Base URL. See https://wiki.openstreetmap.org/wiki/Nominatim
+   */
+  nominatimBaseUrl: string;
+  /**
+   * Output format.
+   */
+  format: string;
+  /**
+   * The preferred area to find search results in [left],[top],[right],[bottom].
+   */
+  viewbox: string;
+  /**
+   * Restrict the results to only items contained with the bounding box.
+   * Restricting the results to the bounding box also enables searching by
+   * amenity only. For example a search query of just "[pub]" would normally be
+   * rejected but with bounded=1 will result in a list of items matching within
+   * the bounding box.
+   */
+  bounded: number;
+  /**
+   * Output geometry of results in geojson format.
+   */
+  polygon_geojson: number;
+  /**
+   * Include a breakdown of the address into elements.
+   */
+  addressdetails: number;
+  /**
+   * Limit the number of returned results.
+   */
+  limit: number;
+  /**
+   * Limit search results to a specific country (or a list of countries).
+   * [countrycode] should be the ISO 3166-1alpha2 code, e.g. gb for the United
+   * Kingdom, de for Germany, etc.
+   */
+  countrycodes: string;
+  /**
+   * The minimal amount of characters entered in the input to start a search.
+   */
+  minChars: number;
+  /**
+   * A render function which gets called with the selected item as it is
+   * returned by nominatim. It must return an `AutoComplete.Option`.
+   */
+  renderOption: (item: any) => React.ReactElement<OptionProps>;
+  /**
+   * An onSelect function which gets called with the selected item as it is
+   * returned by nominatim.
+   */
+  onSelect: (item: any, olMap: OlMap) => void;
+  /**
+   * The style object passed to the AutoComplete.
+   */
+  style: any;
+}
+
+export interface NominatimSearchProps extends Partial<NominatimSearchDefaultProps> {
+  /**
+   * An optional CSS class which should be added.
+   */
+  className?: string;
+  children: React.ReactElement<OptionProps>;
+  /**
+   * The ol.map where the map will zoom to.
+   *
+   */
+  map: OlMap;
+  /**
+   * A function that gets called when the clear Button is pressed or the input
+   * value is empty.
+   */
+  onClear?: () => void;
+}
+
+interface NominatimSearchState {
+  searchTerm: string;
+  dataSource: any;
+}
 
 /**
  * The NominatimSearch.
@@ -16,105 +100,16 @@ import { CSS_PREFIX } from '../../constants';
  * @class NominatimSearch
  * @extends React.Component
  */
-export class NominatimSearch extends React.Component {
+export class NominatimSearch extends React.Component<NominatimSearchProps, NominatimSearchState> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}nominatimsearch`
+  className = `${CSS_PREFIX}nominatimsearch`;
 
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-    /**
-     * The Nominatim Base URL. See https://wiki.openstreetmap.org/wiki/Nominatim
-     * @type {String}
-     */
-    nominatimBaseUrl: PropTypes.string,
-    /**
-     * Output format.
-     * @type {String}
-     */
-    format: PropTypes.string,
-    /**
-     * The preferred area to find search results in [left],[top],[right],[bottom].
-     * @type {String}
-     */
-    viewbox: PropTypes.string,
-    /**
-     * Restrict the results to only items contained with the bounding box.
-     * Restricting the results to the bounding box also enables searching by
-     * amenity only. For example a search query of just "[pub]" would normally be
-     * rejected but with bounded=1 will result in a list of items matching within
-     * the bounding box.
-     * @type {Number}
-     */
-    bounded: PropTypes.number,
-    /**
-     * Output geometry of results in geojson format.
-     * @type {Number}
-     */
-    polygon_geojson: PropTypes.number,
-    /**
-     * Include a breakdown of the address into elements.
-     * @type {Number}
-     */
-    addressdetails: PropTypes.number,
-    /**
-     * Limit the number of returned results.
-     * @type {Number}
-     */
-    limit: PropTypes.number,
-    /**
-     * Limit search results to a specific country (or a list of countries).
-     * [countrycode] should be the ISO 3166-1alpha2 code, e.g. gb for the United
-     * Kingdom, de for Germany, etc.
-     * @type {String}
-     */
-    countrycodes: PropTypes.string,
-    /**
-     * The ol.map where the map will zoom to.
-     *
-     * @type {Object}
-     */
-    map: PropTypes.object.isRequired,
-    /**
-     * The minimal amount of characters entered in the input to start a search.
-     * @type {Number}
-     */
-    minChars: PropTypes.number,
-    /**
-     * A render function which gets called with the selected item as it is
-     * returned by nominatim. It must return an `AutoComplete.Option`.
-     *
-     * @type {function}
-     */
-    renderOption: PropTypes.func,
-    /**
-     * An onSelect function which gets called with the selected item as it is
-     * returned by nominatim.
-     * @type {function}
-     */
-    onSelect: PropTypes.func,
-    /**
-     * A function that gets called when the clear Button is pressed or the input
-     * value is empty.
-     * @type {function}
-     */
-    onClear: PropTypes.func,
-    /**
-     * The style object passed to the AutoComplete.
-     * @type {Object}
-     */
-    style: PropTypes.object
-  }
-
-  static defaultProps = {
+  static defaultProps: NominatimSearchDefaultProps = {
     nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
     format: 'json',
     viewbox: '-180,90,180,-90',
@@ -153,7 +148,7 @@ export class NominatimSearch extends React.Component {
           selected.boundingbox[1]
         ];
 
-        extent = extent.map(function(coord) {
+        extent = extent.map(function(coord: string) {
           return parseFloat(coord);
         });
 
@@ -168,7 +163,7 @@ export class NominatimSearch extends React.Component {
     style: {
       width: 200
     }
-  }
+  };
 
   /**
    * Create the NominatimSearch.
@@ -176,7 +171,7 @@ export class NominatimSearch extends React.Component {
    * @param {Object} props The initial props.
    * @constructs NominatimSearch
    */
-  constructor(props) {
+  constructor(props: NominatimSearchProps) {
     super(props);
     this.state = {
       searchTerm: '',
@@ -191,10 +186,10 @@ export class NominatimSearch extends React.Component {
    * current inputValue as searchTerm and starts a search if the inputValue has
    * a length of at least `this.props.minChars` (default 3).
    *
-   * @param {String|undefined} inputValue The inputValue. Undefined if clear btn
+   * @param inputValue The inputValue. Undefined if clear btn
    *                                      is pressed.
    */
-  onUpdateInput(inputValue) {
+  onUpdateInput(inputValue?: string) {
     const {
       onClear
     } = this.props;
@@ -245,7 +240,7 @@ export class NominatimSearch extends React.Component {
    *
    * @param {Array<object>} response The found features.
    */
-  onFetchSuccess(response) {
+  onFetchSuccess(response: any) {
     this.setState({
       dataSource: response
     });
@@ -257,7 +252,7 @@ export class NominatimSearch extends React.Component {
    *
    * @param {String} error The errorstring.
    */
-  onFetchError(error) {
+  onFetchError(error: string) {
     Logger.error(`Error while requesting Nominatim: ${error}`);
   }
 
@@ -266,7 +261,7 @@ export class NominatimSearch extends React.Component {
    *
    * @param {value} key The key of the selected option.
    */
-  onMenuItemSelected(key) {
+  onMenuItemSelected(key: string) {
     const selected = this.state.dataSource.find(
       i => i.place_id.toString() === key.toString()
     );
