@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerImage  from 'ol/layer/Image';
@@ -16,6 +15,54 @@ import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry.jsx';
 
 import './AddWmsPanel.less';
 
+interface AddWmsLayerDefaultProps {
+  /**
+   * Optional text to be shown in button to add all layers
+   */
+  addAllLayersText: string;
+  /**
+   * Optional text to be shown in button to add selected layers
+   */
+  addSelectedLayersText: string;
+  /**
+   * Optional text to be shown in cancel button
+   */
+  cancelText: string;
+  /**
+   * Optional text to be shown in panel title
+   */
+  titleText: string;
+}
+
+export interface AddWmsLayerProps extends Partial<AddWmsLayerDefaultProps> {
+    /**
+     * Array containing layers (e.g. `Capability.Layer.Layer` of ol capabilities
+     * parser)
+     */
+    wmsLayers: Array<OlLayerTile | OlLayerImage>;
+    /**
+     * Optional instance of OlMap which is used if onLayerAddToMap is not provided
+     */
+    map: OlMap;
+    /**
+     * Optional function being called when onAddSelectedLayers or onAddAllLayers
+     * is triggered
+     */
+    onLayerAddToMap: (layers: Array<OlLayerTile | OlLayerImage>) => void;
+    /**
+     * Optional function that is called if cancel button is clicked
+     */
+    onCancel: () => void;
+    /**
+     * Optional function that is called if selection has changed.
+     */
+    onSelectionChange: (selection: any[]) => void;
+}
+
+interface AddWmsLayerState {
+  selectedWmsLayers: Array<OlLayerTile | OlLayerImage>;
+}
+
 /**
  * Panel containing a (checkable) list of AddWmsLayerEntry instances.
  * This class can be used e.g with a result obtained by ol WMS capabilities
@@ -24,78 +71,13 @@ import './AddWmsPanel.less';
  * @class The AddWmsPanel
  * @extends React.Component
  */
-export class AddWmsPanel extends React.Component {
-
-  /**
-   * The prop types.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * Array containing layers (e.g. `Capability.Layer.Layer` of ol capabilities
-     * parser)
-     * @type {Array} -- required
-     */
-    wmsLayers: PropTypes.arrayOf(PropTypes.oneOfType([
-      PropTypes.instanceOf(OlLayerTile),
-      PropTypes.instanceOf(OlLayerImage)
-    ])).isRequired,
-
-    /**
-     * Optional instance of OlMap which is used if onLayerAddToMap is not provided
-     * @type {OlMap}
-     */
-    map: PropTypes.instanceOf(OlMap),
-
-    /**
-     * Optional function being called when onAddSelectedLayers or onAddAllLayers
-     * is triggered
-     * @type {Function}
-     */
-    onLayerAddToMap: PropTypes.func,
-
-    /**
-     * Optional function that is called if cancel button is clicked
-     * @type {Function}
-     */
-    onCancel: PropTypes.func,
-
-    /**
-     * Optional function that is called if selection has changed.
-     * @type {Function}
-     */
-    onSelectionChange: PropTypes.func,
-
-    /**
-     * Optional text to be shown in button to add all layers
-     * @type {String}
-     */
-    addAllLayersText: PropTypes.string,
-
-    /**
-     * Optional text to be shown in button to add selected layers
-     * @type {String}
-     */
-    addSelectedLayersText: PropTypes.string,
-
-    /**
-     * Optional text to be shown in cancel button
-     * @type {String}
-     */
-    cancelText: PropTypes.string,
-
-    /**
-     * Optional text to be shown in panel title
-     * @type {String}
-     */
-    titleText: PropTypes.string
-  }
+export class AddWmsPanel extends React.Component<AddWmsLayerProps, AddWmsLayerState> {
 
   /**
    * Create an AddWmsPanel.
    * @constructs AddWmsPanel
    */
-  constructor(props) {
+  constructor(props: AddWmsLayerProps) {
     super(props);
 
     this.state = {
@@ -112,7 +94,7 @@ export class AddWmsPanel extends React.Component {
     addSelectedLayersText: 'Add selected layers',
     cancelText: 'Cancel',
     titleText: 'Add WMS layer'
-  }
+  };
 
   /**
    * onSelectedLayersChange - set state for selectedWmsLayers
@@ -224,7 +206,7 @@ export class AddWmsPanel extends React.Component {
           </Checkbox.Group>
           <Titlebar tools={[
             <SimpleButton
-              size='small'
+              size="small"
               key="useSelectedBtn"
               disabled={selectedWmsLayers.length === 0}
               onClick={this.onAddSelectedLayers}
@@ -232,7 +214,7 @@ export class AddWmsPanel extends React.Component {
               {addSelectedLayersText}
             </SimpleButton>,
             <SimpleButton
-              size='small'
+              size="small"
               key="useAllBtn"
               onClick={this.onAddAllLayers}
             >
@@ -240,7 +222,7 @@ export class AddWmsPanel extends React.Component {
             </SimpleButton>,
             onCancel ?
               <SimpleButton
-                size='small'
+                size="small"
                 key="cancelBtn"
                 onClick={onCancel}
               >
