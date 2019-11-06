@@ -1,5 +1,6 @@
 /*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 import OlSourceVector from 'ol/source/Vector';
 import OlInteractionDraw from 'ol/interaction/Draw';
@@ -15,7 +16,7 @@ import OlGeomPoint from 'ol/geom/Point';
 import OlGeomLineString from 'ol/geom/LineString';
 import OlGeomPolygon from 'ol/geom/Polygon';
 
-import DigitizeButton from './DigitizeButton.tsx';
+import DigitizeButton from './DigitizeButton';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 import ToggleButton from '../ToggleButton/ToggleButton';
@@ -107,20 +108,14 @@ describe('<DigitizeButton />', () => {
     });
 
     it('drawType or editType prop must be provided and have valid values', () => {
-
-      const wrapper = setupWrapper();
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-      wrapper.setProps({
-        drawType: 'invalid'
-      });
-
-      expect(consoleSpy).toHaveBeenCalledTimes(1);
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Warning: Failed prop type')
+      const loggerSpy = jest.spyOn(Logger, 'warn');
+      TestUtil.mountComponent(DigitizeButton, {map});
+      expect(loggerSpy).toHaveBeenCalledTimes(1);
+      expect(loggerSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Neither "drawType" nor "editType" was provided. Digitize ' +
+        'button won\'t work properly!')
       );
-
-      consoleSpy.mockRestore();
+      loggerSpy.mockRestore();
     });
   });
 

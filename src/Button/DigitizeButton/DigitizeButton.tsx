@@ -113,16 +113,16 @@ export interface DigitizeButtonProps extends Partial<DigitizeButtonDefaultProps>
    * Whether the line, point, polygon, circle, rectangle or text shape should
    * be drawn.
    */
-  drawType: DrawType;
+  drawType?: DrawType;
   /**
    * Whether the digitize feature should be deleted, copied or modified.
    * be drawn.
    */
-  editType: 'Copy' | 'Edit' | 'Delete';
+  editType?: 'Copy' | 'Edit' | 'Delete';
   /**
    * Style object / style function for drawn feature.
    */
-  drawStyle: OlStyleStyle | ((feature: OlFeature) => OlStyleStyle);
+  drawStyle?: OlStyleStyle | ((feature: OlFeature) => OlStyleStyle);
   /**
    * Listener function for the 'drawend' event of an ol.interaction.Draw.
    * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
@@ -422,7 +422,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   constructor(props: DigitizeButtonProps) {
     super(props);
 
-    if (!this.props.drawType && !this.props.editType) {
+    if (!props.drawType && !props.editType) {
       Logger.warn('Neither "drawType" nor "editType" was provided. Digitize ' +
       'button won\'t work properly!');
     }
