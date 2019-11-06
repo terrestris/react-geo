@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Modal, Input } from 'antd';
 const TextArea = Input.TextArea;
@@ -13,10 +12,12 @@ import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
 import OlStyleText from 'ol/style/Text';
+import OlInteraction from 'ol/interaction/Interaction';
 import OlInteractionDraw, { createBox } from 'ol/interaction/Draw';
 import OlInteractionSelect from 'ol/interaction/Select';
 import OlInteractionModify from 'ol/interaction/Modify';
 import OlInteractionTranslate from 'ol/interaction/Translate';
+import OlFeature from 'ol/Feature';
 import { never, singleClick } from 'ol/events/condition';
 
 import isFunction from 'lodash/isFunction';
@@ -29,6 +30,187 @@ import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
 
+interface DigitizeButtonDefaultProps {
+  /**
+   * Name of system vector layer which will be used for digitize features.
+   */
+  digitizeLayerName: string;
+  /**
+   * Fill color of selected digitize feature.
+   */
+  selectFillColor: string;
+  /**
+   * Stroke color of selected digitize feature.
+   */
+  selectStrokeColor: string;
+  /**
+   * Title for modal used for input of labels for digitize features.
+   */
+  modalPromptTitle: string;
+  /**
+   * Text string for `OK` button of the modal.
+   */
+  modalPromptOkButtonText: string;
+  /**
+   * Text string for `Cancel` button of the modal.
+   */
+  modalPromptCancelButtonText: string;
+  /**
+   * Additional configuration object to apply to the ol.interaction.Draw.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-Draw.html
+   * for more information
+   *
+   * Note: The keys source, type, geometryFunction, style and freehandCondition
+   *       are handled internally and shouldn't be overwritten without any
+   *       specific cause.
+   */
+  drawInteractionConfig: any;
+  /**
+   * Additional configuration object to apply to the ol.interaction.Select.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-Select.html
+   * for more information
+   *
+   * Note: The keys condition, hitTolerance and style are handled internally
+   *       and shouldn't be overwritten without any specific cause.
+   */
+  selectInteractionConfig: any;
+  /**
+   * Additional configuration object to apply to the ol.interaction.Modify.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
+   * for more information
+   *
+   * Note: The keys features, deleteCondition and style are handled internally
+   *       and shouldn't be overwritten without any specific cause.
+   */
+  modifyInteractionConfig: any;
+  /**
+   * Additional configuration object to apply to the ol.interaction.Translate.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-Translate.html
+   * for more information
+   *
+   * Note: The key feature is handled internally and shouldn't be overwritten
+   *       without any specific cause.
+   */
+  translateInteractionConfig: any;
+  /**
+   * A custom onToogle function that will be called if button is toggled.
+   */
+  onToggle?: (event: any) => void;
+}
+
+type DrawType = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Text';
+
+export interface DigitizeButtonProps extends Partial<DigitizeButtonDefaultProps> {
+  /**
+   * The className which should be added.
+   */
+  className?: string;
+  /**
+   * Instance of OL map this component is bound to.
+   */
+  map: OlMap;
+  /**
+   * Whether the line, point, polygon, circle, rectangle or text shape should
+   * be drawn.
+   */
+  drawType: DrawType;
+  /**
+   * Whether the digitize feature should be deleted, copied or modified.
+   * be drawn.
+   */
+  editType: 'Copy' | 'Edit' | 'Delete';
+  /**
+   * Style object / style function for drawn feature.
+   */
+  drawStyle: OlStyleStyle | ((feature: OlFeature) => OlStyleStyle);
+  /**
+   * Listener function for the 'drawend' event of an ol.interaction.Draw.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
+   * for more information.
+   */
+  onDrawEnd?: (event: any) => void;
+  /**
+   * Listener function for the 'drawstart' event of an ol.interaction.Draw.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
+   * for more information.
+   */
+  onDrawStart?: (event: any) => void;
+  /**
+   * Listener function for the 'modifystart' event of an ol.interaction.Modify.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-ModifyEvent.html
+   * for more information.
+   */
+  onModifyStart?: (event: any) => void;
+  /**
+   * Listener function for the 'modifyend' event of an ol.interaction.Modify.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-ModifyEvent.html
+   * for more information.
+   */
+  onModifyEnd?: (event: any) => void;
+  /**
+   * Listener function for the 'translatestart' event of an ol.interaction.Translate.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
+   * for more information.
+   */
+  onTranslateStart?: (event: any) => void;
+  /**
+   * Listener function for the 'translateend' event of an ol.interaction.Translate.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
+   * for more information.
+   */
+  onTranslateEnd?: (event: any) => void;
+  /**
+   * Listener function for the 'translating' event of an ol.interaction.Translate.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
+   * for more information.
+   */
+  onTranslating?: (event: any) => void;
+  /**
+   * Listener function for the 'select' event of the ol.interaction.Select
+   * if in `Delete` mode.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-SelectEvent.html
+   * for more information.
+   */
+  onFeatureRemove?: (event: any) => void;
+  /**
+   * Listener function for the 'select' event of the ol.interaction.Select
+   * if in `Copy` mode.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-SelectEvent.html
+   * for more information.
+   */
+  onFeatureCopy?: (event: any) => void;
+  /**
+   * Callback function that will be called when the ok-button of the modal was clicked
+   */
+  onModalLabelOk?: (event: any) => void;
+  /**
+   * Callback function that will be called
+   * when the cancel-button of the modal was clicked
+   */
+  onModalLabelCancel?: (event: any) => void;
+  /**
+   * Listener function for the 'select' event of the ol.interaction.Select
+   * if in `Edit` mode.
+   * Can be also called inside of 'select' listener function of
+   * the ol.interaction.Select in `Copy` and `Delete` mode if provided.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select.html
+   * for more information.
+   */
+  onFeatureSelect?: (event: any) => void;
+  /**
+   * Maximal length of feature label.
+   * If exceeded label will be divided into multiple lines. Optional.
+   */
+  maxLabelLineLength?: number;
+}
+
+interface DigitizeButtonState {
+  digitizeLayer: OlLayerVector;
+  interactions: OlInteraction[];
+  showLabelPrompt: boolean;
+  textLabel: string;
+}
+
 /**
  * The DigitizeButton.
  *
@@ -36,7 +218,7 @@ import { CSS_PREFIX } from '../../constants';
  * @extends React.Component
  *
  */
-class DigitizeButton extends React.Component {
+class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButtonState> {
 
   /**
    * The className added to this component.
@@ -141,7 +323,7 @@ class DigitizeButton extends React.Component {
    *
    * @type {Number}
    */
-   static HIT_TOLERANCE = 5;
+  static HIT_TOLERANCE = 5;
 
   /**
    * Default style for digitized points.
@@ -212,242 +394,13 @@ class DigitizeButton extends React.Component {
    * @type {Object}
    */
   static propTypes = {
-    /**
-     * The className which should be added.
-     *
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * Instance of OL map this component is bound to.
-     *
-     * @type {OlMap}
-     */
-    map: PropTypes.instanceOf(OlMap).isRequired,
-
-    /**
-     * Whether the line, point, polygon, circle, rectangle or text shape should
-     * be drawn.
-     *
-     * @type {String}
-     */
-    drawType: PropTypes.oneOf(['Point', 'LineString', 'Polygon', 'Circle', 'Rectangle', 'Text']),
-
-    /**
-     * Whether the digitize feature should be deleted, copied or modified.
-     * be drawn.
-     *
-     * @type {String}
-     */
-    editType: PropTypes.oneOf(['Copy', 'Edit', 'Delete']),
-
-    /**
-     * Name of system vector layer which will be used for digitize features.
-     *
-     * @type {String}
-     */
-    digitizeLayerName: PropTypes.string,
-
-    /**
-     * Fill color of selected digitize feature.
-     *
-     * @type {String}
-     */
-    selectFillColor: PropTypes.string,
-
-    /**
-     * Stroke color of selected digitize feature.
-     *
-     * @type {String}
-     */
-    selectStrokeColor: PropTypes.string,
-
-    /**
-     * Title for modal used for input of labels for digitize features.
-     *
-     * @type {String}
-     */
-    modalPromptTitle: PropTypes.string,
-
-    /**
-     * Text string for `OK` button of the modal.
-     *
-     * @type {String}
-     */
-    modalPromptOkButtonText: PropTypes.string,
-
-    /**
-     * Text string for `Cancel` button of the modal.
-     *
-     * @type {String}
-     */
-    modalPromptCancelButtonText: PropTypes.string,
-
-    /**
-     * Style object / style function for drawn feature.
-     *
-     * @type {OlStyleStyle | FeatureStyleFunction}
-     */
-    drawStyle: PropTypes.oneOfType([
-      PropTypes.instanceOf(OlStyleStyle),
-      PropTypes.func
-    ]),
-
-    /**
-     * Listener function for the 'drawend' event of an ol.interaction.Draw.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
-     * for more information.
-     */
-    onDrawEnd: PropTypes.func,
-
-    /**
-     * Listener function for the 'drawstart' event of an ol.interaction.Draw.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
-     * for more information.
-     */
-    onDrawStart: PropTypes.func,
-
-    /**
-     * Listener function for the 'modifystart' event of an ol.interaction.Modify.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-ModifyEvent.html
-     * for more information.
-     */
-    onModifyStart: PropTypes.func,
-
-    /**
-     * Listener function for the 'modifyend' event of an ol.interaction.Modify.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-ModifyEvent.html
-     * for more information.
-     */
-    onModifyEnd: PropTypes.func,
-
-    /**
-     * Listener function for the 'translatestart' event of an ol.interaction.Translate.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
-     * for more information.
-     */
-    onTranslateStart: PropTypes.func,
-
-    /**
-     * Listener function for the 'translateend' event of an ol.interaction.Translate.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
-     * for more information.
-     */
-    onTranslateEnd: PropTypes.func,
-
-    /**
-     * Listener function for the 'translating' event of an ol.interaction.Translate.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
-     * for more information.
-     */
-    onTranslating: PropTypes.func,
-
-    /**
-     * Listener function for the 'select' event of the ol.interaction.Select
-     * if in `Delete` mode.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-SelectEvent.html
-     * for more information.
-     */
-    onFeatureRemove: PropTypes.func,
-
-    /**
-     * Listener function for the 'select' event of the ol.interaction.Select
-     * if in `Copy` mode.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-SelectEvent.html
-     * for more information.
-     */
-    onFeatureCopy: PropTypes.func,
-
-    /**
-     * Additional configuration object to apply to the ol.interaction.Draw.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-Draw.html
-     * for more information
-     *
-     * Note: The keys source, type, geometryFunction, style and freehandCondition
-     *       are handled internally and shouldn't be overwritten without any
-     *       specific cause.
-     */
-    drawInteractionConfig: PropTypes.object,
-
-    /**
-     * Additional configuration object to apply to the ol.interaction.Select.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-Select.html
-     * for more information
-     *
-     * Note: The keys condition, hitTolerance and style are handled internally
-     *       and shouldn't be overwritten without any specific cause.
-     */
-    selectInteractionConfig: PropTypes.object,
-
-    /**
-     * Additional configuration object to apply to the ol.interaction.Modify.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
-     * for more information
-     *
-     * Note: The keys features, deleteCondition and style are handled internally
-     *       and shouldn't be overwritten without any specific cause.
-     */
-    modifyInteractionConfig: PropTypes.object,
-
-    /**
-     * Additional configuration object to apply to the ol.interaction.Translate.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-Translate.html
-     * for more information
-     *
-     * Note: The key feature is handled internally and shouldn't be overwritten
-     *       without any specific cause.
-     */
-    translateInteractionConfig: PropTypes.object,
-
-    /**
-     * A custom onToogle function that will be called
-     * if button is toggled
-     *
-     * @type {Function} onToggle
-     */
-    onToggle: PropTypes.func,
-
-    /**
-     * Callback function that will be called
-     * when the ok-button of the modal was clicked
-     *
-     * @type {Function} onModalLabelOk
-     */
-    onModalLabelOk: PropTypes.func,
-
-    /**
-     * Callback function that will be called
-     * when the cancel-button of the modal was clicked
-     *
-     * @type {Function} onModalLabelCancel
-     */
-    onModalLabelCancel: PropTypes.func,
-
-    /**
-     * Listener function for the 'select' event of the ol.interaction.Select
-     * if in `Edit` mode.
-     * Can be also called inside of 'select' listener function of
-     * the ol.interaction.Select in `Copy` and `Delete` mode if provided.
-     * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select.html
-     * for more information.
-     */
-    onFeatureSelect: PropTypes.func,
-
-    /**
-     * Maximal length of feature label.
-     * If exceeded label will be divided into multiple lines. Optional.
-     *
-     * @type {Number} maxLabelLineLength
-     */
-    maxLabelLineLength: PropTypes.number
   };
 
   /**
    * The default properties.
    * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: DigitizeButtonDefaultProps = {
     digitizeLayerName: 'react-geo_digitize',
     selectFillColor: 'rgba(240, 240, 90, 0.5)',
     selectStrokeColor: 'rgba(220, 120, 20, 0.8)',
@@ -458,15 +411,15 @@ class DigitizeButton extends React.Component {
     selectInteractionConfig: {},
     modifyInteractionConfig: {},
     translateInteractionConfig: {},
-    onToggle: () => {}
-  }
+    onToggle: () => undefined
+  };
 
   /**
    * Creates the DigitizeButton.
    *
    * @constructs DigitizeButton
    */
-  constructor(props) {
+  constructor(props: DigitizeButtonProps) {
     super(props);
 
     if (!this.props.drawType && !this.props.editType) {
@@ -740,9 +693,9 @@ class DigitizeButton extends React.Component {
 
     if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
       geometryFunction = createBox();
-      type = DigitizeButton.CIRCLE_DRAW_TYPE;
+      type = DigitizeButton.CIRCLE_DRAW_TYPE as DrawType;
     } else if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
-      type = DigitizeButton.POINT_DRAW_TYPE;
+      type = DigitizeButton.POINT_DRAW_TYPE as DrawType;
       this._digitizeFeatures.on('add', this.handleTextAdding);
     }
 
