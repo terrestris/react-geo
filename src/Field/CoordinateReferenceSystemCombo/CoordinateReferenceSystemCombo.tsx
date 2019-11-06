@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
 const Option = AutoComplete.Option;
 
@@ -8,6 +7,39 @@ import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
 
+interface CRSComboDefaultProps {
+  /**
+   * The API to query for CRS definitions
+   * default: https://epsg.io
+   */
+  crsApiUrl: string;
+  /**
+   * The empty text set if no value is given / provided
+   */
+  emptyTextPlaceholderText: string;
+  /**
+   * A function
+   */
+  onSelect: (crsDefinition: any) => void;
+}
+
+export interface CRSComboProps extends Partial<CRSComboDefaultProps> {
+  /**
+   * An optional CSS class which should be added.
+   */
+  className: string;
+  /**
+   * An array of predefined crs definitions habving at least value (name of
+   * CRS) and code (e.g. EPSG-code of CRS) property
+   */
+  predefinedCrsDefinitions: {value: string, code: string}[];
+}
+
+interface CRSComboState {
+  crsDefinitions: any[];
+  value: string;
+}
+
 /**
  * Class representing a combo to choose coordinate projection system via a
  * dropdown menu and / or autocompletion
@@ -15,59 +47,26 @@ import { CSS_PREFIX } from '../../constants';
  * @class The CoordinateReferenceSystemCombo
  * @extends React.Component
  */
-class CoordinateReferenceSystemCombo extends React.Component {
+class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSComboState> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}coordinatereferencesystemcombo`
+  className = `${CSS_PREFIX}coordinatereferencesystemcombo`;
 
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-    /**
-     * The API to query for CRS definitions
-     * default: https://epsg.io
-     * @type {String}
-     */
-    crsApiUrl: PropTypes.string,
-    /**
-     * The empty text set if no value is given / provided
-     * @type {String}
-     */
-    emptyTextPlaceholderText: PropTypes.string,
-    /**
-     * An array of predefined crs definitions habving at least value (name of
-     * CRS) and code (e.g. EPSG-code of CRS) property
-     * @type {Array}
-     */
-    predefinedCrsDefinitions: PropTypes.arrayOf(PropTypes.shape({
-      value: PropTypes.string,
-      code: PropTypes.string
-    })),
-    /**
-     * A function
-     * @type {String}
-     */
-    onSelect: PropTypes.func
-  }
-
-  static defaultProps = {
+  static defaultProps: CRSComboDefaultProps = {
     emptyTextPlaceholderText: 'Please select a CRS',
     crsApiUrl: 'https://epsg.io/',
-    onSelect: () => {}
-  }
+    onSelect: () => undefined
+  };
 
   /**
    * Create a CRS combo.
    * @constructs CoordinateReferenceSystemCombo
    */
-  constructor(props) {
+  constructor(props: CRSComboProps) {
     super(props);
 
     this.state = {
@@ -99,9 +98,8 @@ class CoordinateReferenceSystemCombo extends React.Component {
    * This function gets called when the EPSG.io fetch returns an error.
    * It logs the error to the console.
    *
-   * @param {String} error The error string.
    */
-  onFetchError(error) {
+  onFetchError(error: string) {
     Logger.error(`Error while requesting in CoordinateReferenceSystemCombo: ${error}`);
   }
 
@@ -181,7 +179,7 @@ class CoordinateReferenceSystemCombo extends React.Component {
    *
    * @return {Option} Option component to render
    */
-  transformCrsObjectsToOptions(crsObject) {
+  transformCrsObjectsToOptions(crsObject: any) {
     return (
       <Option key={crsObject.code}>
         {`${crsObject.value} (EPSG:${crsObject.code})`}
