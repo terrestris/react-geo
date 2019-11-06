@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Select } from 'antd';
 const Option = Select.Option;
 
@@ -17,79 +16,80 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../../constants';
 
+interface ScaleComboDefaultProps {
+  /**
+   * A filter function to filter resolutions no options should be created
+   * @type {Function}
+   */
+  resolutionsFilter: (item: any, index?: number, resolutions?: number[]) => boolean;
+  /**
+   * The style object
+   */
+  style: any;
+  /**
+   * Set to false to not listen to the map moveend event.
+   */
+  syncWithMap: boolean;
+  /**
+   * The scales.
+   */
+  scales: number[];
+}
+
+export interface ScaleComboProps extends Partial<ScaleComboDefaultProps> {
+  /**
+   * An optional CSS class which should be added.
+   */
+  className: string;
+  /**
+   * The zoomLevel.
+   */
+  zoomLevel?: number;
+  /**
+   * The onZoomLevelSelect function. Pass a function if you want something
+   * different than the resolution of the passed map.
+   */
+  onZoomLevelSelect?: (zoomLevel: string) => void;
+  /**
+   * The resolutions.
+   */
+  resolutions: number[];
+  /**
+   * The map
+   */
+  map: OlMap;
+}
+
+interface ScaleComboState {
+  /**
+   * The zoomLevel.
+   */
+  zoomLevel?: number;
+  /**
+   * The onZoomLevelSelect function. Pass a function if you want something
+   * different than the resolution of the passed map.
+   */
+  onZoomLevelSelect?: (zoomLevel: string) => void;
+  /**
+   * The scales.
+   */
+  scales: number[];
+}
+
 /**
  * Class representing a scale combo to choose map scale via a dropdown menu.
  *
  * @class The ScaleCombo
  * @extends React.Component
  */
-class ScaleCombo extends React.Component {
+class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}scalecombo`
-
-  static propTypes = {
-    /**
-     * An optional CSS class which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The zoomLevel.
-     * @type {Number}
-     */
-    zoomLevel: PropTypes.number,
-
-    /**
-     * The onZoomLevelSelect function. Pass a function if you want something
-     * different than the resolution of the passed map.
-     *
-     * @type {Function}
-     */
-    onZoomLevelSelect: PropTypes.func,
-
-    /**
-     * The resolutions.
-     * @type {Array}
-     */
-    resolutions: PropTypes.arrayOf(PropTypes.number),
-
-    /**
-     * The scales.
-     * @type {Array}
-     */
-    scales: PropTypes.arrayOf(PropTypes.shape),
-
-    /**
-     * A filter function to filter resolutions no options should be created
-     * @type {Function}
-     */
-    resolutionsFilter: PropTypes.func,
-
-    /**
-     * The style object
-     * @type {Object}
-     */
-    style: PropTypes.object,
-
-    /**
-     * The map
-     * @type {Ol.Map}
-     */
-    map: PropTypes.instanceOf(OlMap).isRequired,
-
-    /**
-     * Set to false to not listen to the map moveend event.
-     *
-     * @type {Boolean}
-     */
-    syncWithMap: PropTypes.bool
-  }
+  className = `${CSS_PREFIX}scalecombo`;
 
   /**
    * The default props
@@ -101,7 +101,7 @@ class ScaleCombo extends React.Component {
     },
     scales: [],
     syncWithMap: true
-  }
+  };
 
   /**
    * Invoked after the component is instantiated as well as when it
@@ -111,7 +111,7 @@ class ScaleCombo extends React.Component {
    * @param {Object} nextProps The next properties.
    * @param {Object} prevState The previous state.
    */
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps: ScaleComboProps, prevState: ScaleComboState) {
     if (isInteger(nextProps.zoomLevel) &&
         !isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
       return {
@@ -133,7 +133,7 @@ class ScaleCombo extends React.Component {
    * Create a scale combo.
    * @constructs ScaleCombo
    */
-  constructor(props) {
+  constructor(props: ScaleComboProps) {
     super(props);
 
     /**
@@ -153,16 +153,13 @@ class ScaleCombo extends React.Component {
     this.state = {
       zoomLevel: props.zoomLevel || props.map.getView().getZoom(),
       onZoomLevelSelect: props.onZoomLevelSelect || defaultOnZoomLevelSelect,
-      scales: props.scales
+      scales: props.scales || this.getOptionsFromMap()
     };
 
     if (props.syncWithMap) {
       props.map.on('moveend', this.zoomListener);
     }
 
-    if (isEmpty(this.state.scales) && this.props.map) {
-      this.state.scales = this.getOptionsFromMap();
-    }
   }
 
   /**
@@ -171,7 +168,7 @@ class ScaleCombo extends React.Component {
    *
    * @param {Object} prevProps The previous props.
    */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: ScaleComboProps) {
     const {
       map,
       syncWithMap
@@ -220,7 +217,7 @@ class ScaleCombo extends React.Component {
       return;
     }
     scales.push(roundScale);
-  };
+  }
 
   /**
    * Generates the scales to add as {@link Option} to the SelectField based on
@@ -236,11 +233,11 @@ class ScaleCombo extends React.Component {
 
     if (!isEmpty(this.state.scales)) {
       Logger.debug('Array with scales found. Returning');
-      return;
+      return [];
     }
     if (!map) {
       Logger.warn('Map component not found. Could not initialize options array.');
-      return;
+      return [];
     }
 
     let scales = [];
@@ -264,7 +261,7 @@ class ScaleCombo extends React.Component {
     }
 
     return scales;
-  };
+  }
 
   /**
    * Determine option element for provided zoom level out of array of valid options.
@@ -312,7 +309,7 @@ class ScaleCombo extends React.Component {
       <Select
         showSearch
         onChange={onZoomLevelSelect}
-        filterOption={(input, option) => option.key.startsWith(input)}
+        filterOption={(input, option) => option.key.toString().startsWith(input)}
         value={this.determineOptionKeyForZoomLevel(zoomLevel)}
         size="small"
         style={style}
