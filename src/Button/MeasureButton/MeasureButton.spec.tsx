@@ -35,34 +35,6 @@ describe('<MeasureButton />', () => {
       expect(wrapper).not.toBeUndefined();
     });
 
-    it('measureType prop must have valid value', () => {
-      const wrapper = TestUtil.mountComponent(MeasureButton, {
-        map: map,
-        measureType: 'line'
-      });
-
-      const measureTypeValidValues = [
-        'line',
-        'area',
-        'angle'
-      ];
-
-      expect(measureTypeValidValues).toContain(wrapper.props().measureType);
-
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-      wrapper.setProps({
-        measureType: 'invalid'
-      });
-
-      expect(consoleSpy).toHaveBeenCalledTimes(1);
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Warning: Failed prop type')
-      );
-
-      consoleSpy.mockRestore();
-    });
-
     it('allows to set some props', () => {
       const wrapper = TestUtil.mountComponent(MeasureButton, {
         map: map,
