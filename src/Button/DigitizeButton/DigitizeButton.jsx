@@ -598,6 +598,10 @@ class DigitizeButton extends React.Component {
 
     let styleObj;
 
+    if (!feature.getGeometry()) {
+      return;
+    }
+
     switch (feature.getGeometry().getType()) {
       case DigitizeButton.POINT_DRAW_TYPE: {
         if (!feature.get('isLabel')) {
