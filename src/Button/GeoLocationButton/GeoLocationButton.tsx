@@ -21,13 +21,82 @@ import { CSS_PREFIX } from '../../constants';
 import mapMarker from './geolocation-marker.png';
 import mapMarkerHeading from './geolocation-marker-heading.png';
 
+interface GeoLocationButtonDefaultProps {
+  /**
+   * Will be called if geolocation fails.
+   */
+  onError: (error: any) => void;
+  /**
+   * Will be called when position changes. Receives an object with the properties
+   * position, accuracy, heading and speed
+   */
+  onGeolocationChange: (geolocation: any) => void;
+  /**
+   * Whether to show a map marker at the current position.
+   */
+  showMarker: boolean;
+  /**
+   * Whether to follow the current position.
+   */
+  follow: boolean;
+  /**
+   * The openlayers tracking options. See also
+   * https://www.w3.org/TR/geolocation-API/#position_options_interface
+   */
+  trackingOptions: {
+    maximumAge: number;
+    enableHighAccuracy: boolean;
+    timeout: number;
+  };
+}
+
+export interface GeoLocationButtonProps extends Partial<GeoLocationButtonDefaultProps> {
+  /**
+   * The className which should be added.
+   */
+  className?: string;
+  /**
+   * Instance of OL map this component is bound to.
+   */
+  map: OlMap;
+  /**
+   * Will be called if geolocation fails.
+   */
+  onError: (error: any) => void;
+  /**
+   * Will be called when position changes. Receives an object with the properties
+   * position, accuracy, heading and speed
+   */
+  onGeolocationChange: (geolocation: any) => void;
+  /**
+   * Whether to show a map marker at the current position.
+   */
+  showMarker: boolean;
+  /**
+   * Whether to follow the current position.
+   */
+  follow: boolean;
+  /**
+   * The openlayers tracking options. See also
+   * https://www.w3.org/TR/geolocation-API/#position_options_interface
+   */
+  trackingOptions: {
+    maximumAge: number;
+    enableHighAccuracy: boolean;
+    timeout: number;
+  };
+}
+
+interface GeoLocationButtonState {
+}
+
 /**
  * The GeoLocationButton.
  *
  * @class The GeoLocationButton
  * @extends React.Component
  */
-class GeoLocationButton extends React.Component {
+class GeoLocationButton extends React.Component<GeoLocationButtonProps, GeoLocationButtonState> {
 
   /**
    * The className added to this component.
@@ -35,7 +104,7 @@ class GeoLocationButton extends React.Component {
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}geolocationbutton`;
+  _className = `${CSS_PREFIX}geolocationbutton`;
 
   /**
    * The feature marking the current location.
@@ -70,67 +139,9 @@ class GeoLocationButton extends React.Component {
         src
       })
     })];
-  };
+  }
 
-  /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * The className which should be added.
-     *
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * Instance of OL map this component is bound to.
-     *
-     * @type {OlMap}
-     */
-    map: PropTypes.instanceOf(OlMap).isRequired,
-
-    /**
-     * Will be called if geolocation fails.
-     *
-     * @type {Function}
-     */
-    onError: PropTypes.func,
-
-    /**
-     * Will be called when position changes. Receives an object with the properties
-     * position, accuracy, heading and speed
-     *
-     * @type {Function}
-     */
-    onGeolocationChange: PropTypes.func,
-
-    /**
-     * Whether to show a map marker at the current position.
-     *
-     * @type {Boolean}
-     */
-    showMarker: PropTypes.bool,
-
-    /**
-     * Whether to follow the current position.
-     *
-     * @type {Boolean}
-     */
-    follow: PropTypes.bool,
-
-    /**
-     * The openlayers tracking options. See also
-     * https://www.w3.org/TR/geolocation-API/#position_options_interface
-     * @type {Object}
-     */
-    trackingOptions: PropTypes.shape({
-      maximumAge: PropTypes.number,
-      enableHighAccuracy: PropTypes.bool,
-      timeout: PropTypes.number
-    })
-  };
+  _positions: OlGeomLineString;
 
   /**
    * The default properties.
@@ -146,14 +157,14 @@ class GeoLocationButton extends React.Component {
       enableHighAccuracy: true,
       timeout: 600000
     }
-  }
+  };
 
   /**
    * Creates the MeasureButton.
    *
    * @constructs MeasureButton
    */
-  constructor(props) {
+  constructor(props: GeoLocationButtonProps) {
     super(props);
     const {
       map,
@@ -161,7 +172,7 @@ class GeoLocationButton extends React.Component {
     } = this.props;
     const allLayers = MapUtil.getAllLayers(map);
 
-    this.positions = new OlGeomLineString([], 'XYZM');
+    this._positions = new OlGeomLineString([], 'XYZM');
     this._geoLocationLayer.setStyle(this._styleFunction);
     if (!allLayers.includes(this._geoLocationLayer)) {
       map.addLayer(this._geoLocationLayer);
@@ -200,7 +211,7 @@ class GeoLocationButton extends React.Component {
 
     const x = position[0];
     const y = position[1];
-    const fCoords = this.positions.getCoordinates();
+    const fCoords = this._positions.getCoordinates();
     const previous = fCoords[fCoords.length - 1];
     const prevHeading = previous && previous[2];
     if (prevHeading) {
@@ -213,10 +224,10 @@ class GeoLocationButton extends React.Component {
       }
       heading = prevHeading + headingDiff;
     }
-    this.positions.appendCoordinate([x, y, heading, Date.now()]);
+    this._positions.appendCoordinate([x, y, heading, Date.now()]);
 
     // only keep the 20 last coordinates
-    this.positions.setCoordinates(this.positions.getCoordinates().slice(-20));
+    this._positions.setCoordinates(this._positions.getCoordinates().slice(-20));
 
     this.updateView();
 
@@ -228,8 +239,8 @@ class GeoLocationButton extends React.Component {
     });
   }
 
-  onGeolocationError = () => {
-    this.props.onError();
+  onGeolocationError = (error: any) => {
+    this.props.onError(error);
   }
 
   /**
@@ -306,7 +317,7 @@ class GeoLocationButton extends React.Component {
 
     previousM = m;
     // interpolate position along positions LineString
-    const c = this.positions.getCoordinateAtM(m, true);
+    const c = this._positions.getCoordinateAtM(m, true);
     if (c) {
       if (this.props.follow) {
         view.setCenter(this.getCenterWithHeading(c, -c[2], view.getResolution()));
@@ -335,8 +346,8 @@ class GeoLocationButton extends React.Component {
     } = this.props;
 
     const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
+      ? `${className} ${this._className}`
+      : this._className;
 
     return (
       <ToggleButton
