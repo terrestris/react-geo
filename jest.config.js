@@ -2,7 +2,9 @@ module.exports = {
   testURL: 'http://localhost/',
   moduleFileExtensions: [
     'js',
-    'jsx'
+    'jsx',
+    'ts',
+    'tsx'
   ],
   moduleDirectories: [
     'node_modules'
@@ -26,10 +28,13 @@ module.exports = {
     '<rootDir>/jest/__mocks__/shim.js',
     '<rootDir>/jest/setup.js'
   ],
-  collectCoverage: false,
+  transform: {
+    '^.+\\.jsx?$': '<rootDir>/node_modules/babel-jest',
+    '^.+\\.tsx?$': '<rootDir>/node_modules/babel-jest'
+  },
   collectCoverageFrom: [
-    'src/**/*.jsx',
-    'src/**/*.js',
+    'src/**/*.{tsx,jsx}',
+    'src/**/*.{ts,js}',
     '!src/**/*example*.*'
   ],
   coverageDirectory: '<rootDir>/coverage',
