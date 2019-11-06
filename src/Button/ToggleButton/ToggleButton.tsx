@@ -27,6 +27,10 @@ interface ToggleButtonDefaultProps {
    * The initial pressed state of the ToggleButton
    */
   pressed: boolean;
+  /**
+   * The function the gets filtered out
+   */
+  onClick: () => void;
 }
 
 export interface ToggleButtonProps extends Partial<ToggleButtonDefaultProps> {
@@ -275,6 +279,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
     } = this.props;
 
     const {
+      onClick,
       ...filteredAntBtnProps
     } = antBtnProps;
 
