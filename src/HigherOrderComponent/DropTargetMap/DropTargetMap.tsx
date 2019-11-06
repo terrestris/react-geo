@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import FileUtil from '@terrestris/ol-util/dist/FileUtil/FileUtil';
+import { MapProps } from '../../Map/MapComponent/MapComponent';
 
 /**
  * HOC that adds layers to the map if GeoJSON files or shapefile zip files are
@@ -9,17 +9,9 @@ import FileUtil from '@terrestris/ol-util/dist/FileUtil/FileUtil';
  * @param  {React.Component} WrappedComponent the map component
  * @return {React.Component} a time layer aware component
  */
-export function onDropAware(WrappedComponent) {
+export function onDropAware(WrappedComponent: React.ComponentType<any>) {
 
-  return class DropTargetMap extends React.Component {
-
-    static propTypes = {
-      /**
-       * The openlayers map injected by mappify.
-       * @type {ol.Map}
-       */
-      map: PropTypes.object
-    }
+  return class DropTargetMap extends React.Component<MapProps> {
 
     /**
      * Calls an appropriate addLayer method depending on the fileending.
@@ -27,7 +19,7 @@ export function onDropAware(WrappedComponent) {
      * endings.
      * @param  {Object} event the drop event
      */
-    onDrop(event) {
+    onDrop(event: DragEvent) {
       const {
         map
       } = this.props;
@@ -50,7 +42,7 @@ export function onDropAware(WrappedComponent) {
      * Prevents default in order to prevent browser navigation/opening the file.
      * @param  {Object} event the dragover event
      */
-    onDragOver(event) {
+    onDragOver(event: DragEvent) {
       event.preventDefault();
     }
 

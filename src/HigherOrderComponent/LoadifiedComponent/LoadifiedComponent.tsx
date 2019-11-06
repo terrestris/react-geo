@@ -18,7 +18,7 @@ interface LoadifiedComponentProps {
  * @param {Component} options The options to apply.
  * @return {Component} The wrapped component.
  */
-export function loadify<P>(WrappedComponent: React.ComponentType<any>, {
+export function loadify(WrappedComponent: React.ComponentType<any>, {
   withRef = false
 }: LoadifiedComponentProps) {
 
