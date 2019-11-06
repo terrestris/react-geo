@@ -7,70 +7,59 @@ import { CSS_PREFIX } from '../../constants';
 
 import './ToggleGroup.less';
 
+interface ToggleGroupDefaultProps {
+  /**
+   * The orientation of the children.
+   */
+  orientation: 'vertical' | 'horizontal';
+  /**
+   * Whether it's allowed to deselect a children or not.
+   */
+  allowDeselect: boolean;
+}
+
+export interface ToggleGroupProps extends Partial<ToggleGroupDefaultProps> {
+  /**
+   * The className which should be added.
+   */
+  className?: string;
+  /**
+   * The name of this group.
+   */
+  name: string;
+  /**
+   * The value fo the `name` attribute of the children to select/press
+   * initially.
+   */
+  selectedName: string;
+  /**
+   * Callback function for onChange.
+   */
+  onChange: () => void;
+  /**
+   * The children of this group. Typically a set of `ToggleButton`s.
+   */
+  children: React.ReactElement[];
+}
+
+interface ToggleGroupState {
+  selectedName: string;
+}
+
 /**
  * A group for toggle components (e.g. buttons)
  *
  * @class The ToggleGroup
  * @extends React.Component
  */
-class ToggleGroup extends React.Component {
+class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}togglegroup`
-
-  /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * The className which should be added.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * The name of this group.
-     * @type {String}
-     */
-    name: PropTypes.string,
-
-    /**
-     * The orientation of the children. Either `vertical` (default)
-     * or `horizontal`.
-     * @type {String}
-     */
-    orientation: PropTypes.string,
-
-    /**
-     * Whether it's allowed to deselect a children or not.
-     * @type {Boolean}
-     */
-    allowDeselect: PropTypes.bool,
-
-    /**
-     * The value fo the `name` attribute of the children to select/press
-     * initially.
-     * @type {String}
-     */
-    selectedName: PropTypes.string,
-
-    /**
-     * Callback function for onChange.
-     * @type {Function}
-     */
-    onChange: PropTypes.func,
-
-    /**
-     * The children of this group. Typically a set of `ToggleButton`s.
-     * @type {Object}
-     */
-    children: PropTypes.node
-  }
+  _className = `${CSS_PREFIX}togglegroup`;
 
   /**
    * The default properties.
@@ -79,7 +68,7 @@ class ToggleGroup extends React.Component {
   static defaultProps = {
     orientation: 'vertical',
     allowDeselect: true
-  }
+  };
 
   /**
    * The child context types.
@@ -87,22 +76,14 @@ class ToggleGroup extends React.Component {
    */
   static childContextTypes = {
     toggleGroup: PropTypes.object
-  }
-
-  /**
-   * The child context types.
-   * @type {Object}
-   */
-  static childContextTypes = {
-    toggleGroup: PropTypes.object
-  }
+  };
 
   /**
    * The constructor.
    *
    * @param {Object} props The properties.
    */
-  constructor(props) {
+  constructor(props: ToggleGroupProps) {
     super(props);
 
     /**
@@ -152,8 +133,8 @@ class ToggleGroup extends React.Component {
   render() {
     const {orientation, children} = this.props;
     const className = this.props.className
-      ? `${this.props.className} ${this.className}`
-      : this.className;
+      ? `${this.props.className} ${this._className}`
+      : this._className;
     const orientationClass = (orientation === 'vertical')
       ? 'vertical-toggle-group'
       : 'horizontal-toggle-group';
