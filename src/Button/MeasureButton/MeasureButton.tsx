@@ -11,6 +11,7 @@ import OlStyleStyle from 'ol/style/Style';
 import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
+import OlCoordinate from 'ol/coordinate';
 import OlInteractionDraw from 'ol/interaction/Draw';
 import { unByKey } from 'ol/Observable';
 import OlOverlay from 'ol/Overlay';
@@ -25,13 +26,106 @@ import { CSS_PREFIX } from '../../constants';
 
 import './MeasureButton.less';
 
+interface MeasureButtonDefaultProps {
+  /**
+   * Name of system vector layer which will be used to draw measurement
+   * results.
+   */
+  measureLayerName: string;
+  /**
+   * Fill color of the measurement feature.
+   */
+  fillColor: string;
+  /**
+   * Stroke color of the measurement feature.
+   */
+  strokeColor: string;
+  /**
+   * Determines if a marker with current measurement should be shown every
+   * time the user clicks while measuring a distance. Default is false.
+   */
+  showMeasureInfoOnClickedPoints: boolean;
+  /**
+   * Determines if a tooltip with helpful information is shown next to the mouse
+   * position. Default is true.
+   */
+  showHelpTooltip: boolean;
+  /**
+   * How many decimal places will be allowed for the measure tooltips.
+   * Default is 2.
+   */
+  decimalPlacesInTooltips: number;
+  /**
+   * Used to allow / disallow multiple drawings at a time on the map.
+   * Default is false.
+   * TODO known issue: only label of the last drawn feature will be shown!
+   */
+  multipleDrawing: boolean;
+  /**
+   * Tooltip which will be shown on map mouserover after measurement button
+   * was activated.
+   */
+  clickToDrawText: string;
+  /**
+   * Tooltip which will be shown after polygon measurement button was toggled
+   * and at least one click in the map is occured.
+   */
+  continuePolygonMsg: string;
+  /**
+   * Tooltip which will be shown after line measurement button was toggled
+   * and at least one click in the map is occured.
+   */
+  continueLineMsg: string;
+  /**
+   * Tooltip which will be shown after angle measurement button was toggled
+   * and at least one click in the map is occured.
+   */
+  continueAngleMsg: string;
+  /**
+   * CSS classes we'll assign to the popups and tooltips from measuring.
+   * Overwrite this object to style the text of the popups / overlays, if you
+   * don't want to use default classes.
+   */
+  measureTooltipCssClasses: {
+    tooltip: string;
+    tooltipDynamic: string;
+    tooltipStatic: string;
+  };
+  /**
+   * Whether the measure button is pressed.
+   */
+  pressed: boolean;
+  /**
+   * A custom onToogle function that will be called if button is toggled
+   */
+  onToggle: (pressed: boolean) => void;
+}
+
+export interface MeasureButtonProps extends Partial<MeasureButtonDefaultProps> {
+  /**
+   * The className which should be added.
+   */
+  className?: string;
+  /**
+   * Instance of OL map this component is bound to.
+   */
+  map: OlMap;
+  /**
+   * Whether line, area or angle will be measured.
+   */
+  measureType: 'line' | 'polygon' | 'angle';
+}
+
+interface MeasureButtonState {
+}
+
 /**
  * The MeasureButton.
  *
  * @class The MeasureButton
  * @extends React.Component
  */
-class MeasureButton extends React.Component {
+class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonState> {
 
   /**
    * The className added to this component.
@@ -58,19 +152,19 @@ class MeasureButton extends React.Component {
   _measureTooltip = null;
 
   /**
-  * Overlay to show the help messages.
-  *
-  * @type {olOverlay}
-  * @private
-  */
+   * Overlay to show the help messages.
+   *
+   * @type {olOverlay}
+   * @private
+   */
   _helpTooltip = null;
 
   /**
-  * The help tooltip element.
-  *
-  * @type {Element}
-  * @private
-  */
+   * The help tooltip element.
+   *
+   * @type {Element}
+   * @private
+   */
   _helpTooltipElement = null;
 
   /**
@@ -138,152 +232,10 @@ class MeasureButton extends React.Component {
   _drawInteraction = null;
 
   /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    /**
-     * The className which should be added.
-     *
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * Instance of OL map this component is bound to.
-     *
-     * @type {OlMap}
-     */
-    map: PropTypes.instanceOf(OlMap).isRequired,
-
-    /**
-     * Whether line, area or angle will be measured.
-     *
-     * @type {String}
-     */
-    measureType: PropTypes.oneOf(['line', 'polygon', 'angle']).isRequired,
-
-    /**
-     * Name of system vector layer which will be used to draw measurement
-     * results.
-     *
-     * @type {String}
-     */
-    measureLayerName: PropTypes.string,
-
-    /**
-     * Fill color of the measurement feature.
-     *
-     * @type {String}
-     */
-    fillColor: PropTypes.string,
-
-    /**
-     * Stroke color of the measurement feature.
-     *
-     * @type {String}
-     */
-    strokeColor: PropTypes.string,
-
-    /**
-     * Determines if a marker with current measurement should be shown every
-     * time the user clicks while measuring a distance. Default is false.
-     *
-     * @type {Boolean}
-     */
-    showMeasureInfoOnClickedPoints: PropTypes.bool,
-
-    /**
-     * Determines if a tooltip with helpful information is shown next to the mouse
-     * position. Default is true.
-     *
-     * @type {Boolean}
-     */
-    showHelpTooltip: PropTypes.bool,
-
-    /**
-     * Used to allow / disallow multiple drawings at a time on the map.
-     * Default is false.
-     * TODO known issue: only label of the last drawn feature will be shown!
-     *
-     * @type {Boolean}
-     */
-    multipleDrawing: PropTypes.bool,
-
-    /**
-    * Tooltip which will be shown on map mouserover after measurement button
-    * was activated.
-    *
-    * @type {String}
-    */
-    clickToDrawText: PropTypes.string,
-
-    /**
-     * Tooltip which will be shown after polygon measurement button was toggled
-     * and at least one click in the map is occured.
-     *
-     * @type {String}
-     */
-    continuePolygonMsg: PropTypes.string,
-
-    /**
-     * Tooltip which will be shown after line measurement button was toggled
-     * and at least one click in the map is occured.
-     *
-     * @type {String}
-     */
-    continueLineMsg: PropTypes.string,
-
-    /**
-     * Tooltip which will be shown after angle measurement button was toggled
-     * and at least one click in the map is occured.
-     *
-     * @type {String}
-     */
-    continueAngleMsg: PropTypes.string,
-
-    /**
-     * How many decimal places will be allowed for the measure tooltips.
-     * Default is 2.
-     *
-     * @type {Number} decimalPlacesInTooltips
-     */
-    decimalPlacesInTooltips: PropTypes.number,
-
-    /**
-     * CSS classes we'll assign to the popups and tooltips from measuring.
-     * Overwrite this object to style the text of the popups / overlays, if you
-     * don't want to use default classes.
-     *
-     * @type {Object} measureTooltipCssClasses
-     */
-    measureTooltipCssClasses: PropTypes.shape({
-      tooltip: PropTypes.string,
-      tooltipDynamic: PropTypes.string,
-      tooltipStatic: PropTypes.string
-    }),
-
-    /**
-     * Whether the measure button is pressed.
-     *
-     * @type {Boolean} pressed
-     */
-    pressed: PropTypes.bool,
-
-    /**
-     * A custom onToogle function that will be called
-     * if button is toggled
-     *
-     * @type {Function} onToggle
-     */
-    onToggle: PropTypes.func
-  };
-
-  /**
    * The default properties.
    * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: MeasureButtonDefaultProps = {
     measureLayerName: 'react-geo_measure',
     fillColor: 'rgba(255, 0, 0, 0.5)',
     strokeColor: 'rgba(255, 0, 0, 0.8)',
@@ -301,15 +253,15 @@ class MeasureButton extends React.Component {
       tooltipStatic: `${CSS_PREFIX}measure-tooltip-static`
     },
     pressed: false,
-    onToggle: () => {}
-  }
+    onToggle: () => undefined
+  };
 
   /**
    * Creates the MeasureButton.
    *
    * @constructs MeasureButton
    */
-  constructor(props) {
+  constructor(props: MeasureButtonProps) {
 
     super(props);
 
@@ -338,7 +290,7 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  onToggle(pressed) {
+  onToggle(pressed: boolean) {
     const {
       map,
       onToggle
@@ -508,7 +460,7 @@ class MeasureButton extends React.Component {
    *
    * @param {ol.MapBrowserPointerEvent} evt The pointer event.
    */
-  onMapClick(evt) {
+  onMapClick(evt: any) {
     const {
       measureType,
       showMeasureInfoOnClickedPoints
@@ -528,7 +480,7 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  onDrawStart(evt) {
+  onDrawStart(evt: any) {
     const {
       showHelpTooltip,
       multipleDrawing,
@@ -561,7 +513,7 @@ class MeasureButton extends React.Component {
    *
    * @method
    */
-  onDrawEnd(evt) {
+  onDrawEnd(evt: any) {
     const {
       measureType,
       multipleDrawing,
@@ -607,7 +559,7 @@ class MeasureButton extends React.Component {
    *
    * @param {ol.Coordinate} coordinate The coordinate for the tooltip.
    */
-  addMeasureStopTooltip(coordinate) {
+  addMeasureStopTooltip(coordinate: OlCoordinate) {
     const {
       measureType,
       decimalPlacesInTooltips,
@@ -781,7 +733,7 @@ class MeasureButton extends React.Component {
    *
    * @param {ol.MapBrowserPointerEvent} evt The pointer event.
    */
-  onMapPointerMove(evt) {
+  onMapPointerMove(evt: any) {
     if (!evt.dragging) {
       this.updateHelpTooltip(evt.coordinate);
     }
@@ -792,7 +744,7 @@ class MeasureButton extends React.Component {
    *
    * @param {ol.coordinate} coordinate The coordinate to center the tooltip to.
    */
-  updateHelpTooltip(coordinate) {
+  updateHelpTooltip(coordinate: any) {
     const {
       measureType,
       clickToDrawText,
