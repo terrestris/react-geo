@@ -894,7 +894,8 @@ class DigitizeButton extends React.Component {
     }
 
     const copy = feat.clone();
-    copy.setStyle(feat.getStyle());
+
+    copy.setStyle(this.getDigitizeStyleFunction(feat));
     this._digitizeFeatures.push(copy);
 
     AnimateUtil.moveFeature(
@@ -923,12 +924,15 @@ class DigitizeButton extends React.Component {
     }
 
     const feature = evt.features.getArray()[0];
+
     if (feature.get('isLabel')) {
       this._digitizeTextFeature = feature;
       let textLabel = '';
 
-      if (feature.getStyle() && feature.getStyle().getText()) {
-        textLabel = feature.getStyle().getText().getText();
+      const featureStyle = this.getDigitizeStyleFunction(feature);
+
+      if (featureStyle && featureStyle.getText()) {
+        textLabel = featureStyle.getText().getText();
       } else if (feature.get('label')) {
         textLabel = feature.get('label');
       }
