@@ -12,6 +12,57 @@ import isFunction from 'lodash/isFunction';
 import './ToggleButton.less';
 
 import { CSS_PREFIX } from '../../constants';
+import { AbstractTooltipProps, TooltipPlacement } from 'antd/lib/tooltip';
+
+interface ToggleButtonDefaultProps {
+  type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
+  /**
+   * Additional [antd tooltip](https://ant.design/components/tooltip/)
+   * properties to pass to the tooltip component. Note: The props `title`
+   * and `placement` will override the props `tooltip` and `tooltipPlacement`
+   * of this component!
+   */
+  tooltipProps: AbstractTooltipProps;
+  /**
+   * The initial pressed state of the ToggleButton
+   */
+  pressed: boolean;
+}
+
+export interface ToggleButtonProps extends Partial<ToggleButtonDefaultProps> {
+  className?: string;
+  /**
+   * The font awesome icon name.
+   */
+  icon: string;
+  /**
+   * The classname of an icon of an iconFont. Use either this or icon.
+   */
+  fontIcon: string;
+  /**
+   * The font awesome icon name.
+   */
+  pressedIcon: string;
+  /**
+   * The tooltip to be shown on hover.
+   */
+  tooltip: string;
+  /**
+   * The position of the tooltip.
+   */
+  tooltipPlacement: TooltipPlacement;
+  /**
+   *
+   */
+  onToggle: (pressed: boolean, lastClickEvt: any) => void;
+}
+
+interface ToggleButtonState {
+  pressed: boolean;
+  lastClickEvt: any;
+  overallPressed: boolean;
+  isClicked: boolean;
+}
 
 /**
  * The ToggleButton.
@@ -19,14 +70,14 @@ import { CSS_PREFIX } from '../../constants';
  * @class The ToggleButton
  * @extends React.Component
  */
-class ToggleButton extends React.Component {
+class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState> {
 
   /**
    * The className added to this component.
    * @type {String}
    * @private
    */
-  className = `${CSS_PREFIX}togglebutton`
+  _className = `${CSS_PREFIX}togglebutton`;
 
   /**
    * The class to apply for a toggled/pressed button.
@@ -69,7 +120,7 @@ class ToggleButton extends React.Component {
     tooltipProps: {
       mouseEnterDelay: 1.5
     }
-  }
+  };
 
   /**
    * The context types.
@@ -85,7 +136,7 @@ class ToggleButton extends React.Component {
    * @param {Object} nextProps The next properties.
    * @param {Object} prevState The previous state.
    */
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps: ToggleButtonProps, prevState: ToggleButtonState) {
 
     // Checks to see if the pressed property has changed
     if (prevState.pressed !== nextProps.pressed) {
@@ -104,7 +155,7 @@ class ToggleButton extends React.Component {
    *
    * @constructs ToggleButton
    */
-  constructor(props) {
+  constructor(props: ToggleButtonProps) {
     super(props);
 
     // Instantiate the state.
@@ -134,7 +185,7 @@ class ToggleButton extends React.Component {
    * for the initial render.
    * @method
    */
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: ToggleButtonProps, prevState: ToggleButtonState) {
     const {
       onToggle
     } = this.props;
@@ -188,7 +239,7 @@ class ToggleButton extends React.Component {
    * @param {ClickEvent} evt The ClickEvent.
    * @method
    */
-  onClick(evt) {
+  onClick(evt: any) {
     this.setState({
       overallPressed: !this.state.overallPressed,
       lastClickEvt: evt,
@@ -212,7 +263,6 @@ class ToggleButton extends React.Component {
   render() {
     const {
       className,
-      name,
       icon,
       pressedIcon,
       fontIcon,
@@ -225,13 +275,12 @@ class ToggleButton extends React.Component {
     } = this.props;
 
     const {
-      onClick,
       ...filteredAntBtnProps
     } = antBtnProps;
 
     const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
+      ? `${className} ${this._className}`
+      : this._className;
 
     let iconName = icon;
     let pressedClass = '';
