@@ -5,11 +5,11 @@ import OlMap from 'ol/Map';
 export interface WindowLocale {
 }
 
-interface MapDefaultProps extends React.HTMLAttributes<HTMLDivElement> {
+interface MapComponentDefaultProps extends React.HTMLAttributes<HTMLDivElement> {
   mapDivId: string;
 }
 
-export interface MapProps extends Partial<MapDefaultProps> {
+export interface MapComponentProps extends Partial<MapComponentDefaultProps> {
   children?: React.ReactChildren;
   map: OlMap;
 }
@@ -20,7 +20,7 @@ export interface MapProps extends Partial<MapDefaultProps> {
  * @class The MapComponent.
  * @extends React.PureComponent
  */
-export class MapComponent extends PureComponent<MapProps> {
+export class MapComponent extends PureComponent<MapComponentProps> {
 
   /**
    * The default properties.
@@ -28,12 +28,12 @@ export class MapComponent extends PureComponent<MapProps> {
    */
   static defaultProps = {
     mapDivId: 'map'
-  }
+  };
 
   /**
    * Create a MapComponent.
    */
-  constructor(props) {
+  constructor(props: MapComponentProps) {
     super(props);
   }
 

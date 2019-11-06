@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import OlMap from 'ol/Map';
 import OlLayerVector from 'ol/layer/Vector';

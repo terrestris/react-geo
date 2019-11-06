@@ -34,23 +34,23 @@ export interface ToggleButtonProps extends Partial<ToggleButtonDefaultProps> {
   /**
    * The font awesome icon name.
    */
-  icon: string;
+  icon?: string;
   /**
    * The classname of an icon of an iconFont. Use either this or icon.
    */
-  fontIcon: string;
+  fontIcon?: string;
   /**
    * The font awesome icon name.
    */
-  pressedIcon: string;
+  pressedIcon?: string;
   /**
    * The tooltip to be shown on hover.
    */
-  tooltip: string;
+  tooltip?: string;
   /**
    * The position of the tooltip.
    */
-  tooltipPlacement: TooltipPlacement;
+  tooltipPlacement?: TooltipPlacement;
   /**
    *
    */

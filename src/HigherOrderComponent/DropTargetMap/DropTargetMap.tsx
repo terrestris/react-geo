@@ -1,7 +1,7 @@
 import React from 'react';
 
 import FileUtil from '@terrestris/ol-util/dist/FileUtil/FileUtil';
-import { MapProps } from '../../Map/MapComponent/MapComponent';
+import { MapComponentProps } from '../../Map/MapComponent/MapComponent';
 
 /**
  * HOC that adds layers to the map if GeoJSON files or shapefile zip files are
@@ -11,7 +11,7 @@ import { MapProps } from '../../Map/MapComponent/MapComponent';
  */
 export function onDropAware(WrappedComponent: React.ComponentType<any>) {
 
-  return class DropTargetMap extends React.Component<MapProps> {
+  return class DropTargetMap extends React.Component<MapComponentProps> {
 
     /**
      * Calls an appropriate addLayer method depending on the fileending.
