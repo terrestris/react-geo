@@ -6,6 +6,7 @@ import './SimpleButton.less';
 
 import { CSS_PREFIX } from '../../constants';
 import { TooltipPlacement, AbstractTooltipProps } from 'antd/lib/tooltip';
+import { ButtonProps } from 'antd/lib/button';
 
 interface SimpleButtonDefaultProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
@@ -44,7 +45,7 @@ export interface SimpleButtonProps extends Partial<SimpleButtonDefaultProps> {
  * @class The SimpleButton
  * @extends React.Component
  */
-class SimpleButton extends React.Component<SimpleButtonProps> {
+class SimpleButton extends React.Component<SimpleButtonProps & ButtonProps> {
 
   /**
    * The className added to this component.
