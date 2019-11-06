@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Table } from 'antd';
 
@@ -21,6 +20,91 @@ import kebabCase from 'lodash/kebabCase';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import './FeatureGrid.less';
+import { ColumnProps } from 'antd/lib/table';
+
+interface FeatureGridDefaultProps {
+  /**
+   * The features to show in the grid and the map (if set).
+   */
+  features: OlFeature[];
+  /**
+   */
+  attributeBlacklist?: string[];
+  /**
+   * The default style to apply to the features.
+   */
+  featureStyle: OlStyle | (() => OlStyle);
+  /**
+   * The highlight style to apply to the features.
+   */
+  highlightStyle: OlStyle | (() => OlStyle);
+  /**
+   * The select style to apply to the features.
+   */
+  selectStyle: OlStyle | (() => OlStyle);
+  /**
+   * The name of the vector layer presenting the features in the grid.
+   */
+  layerName: string;
+  /**
+   * Custom column definitions to apply to the given column (mapping via key).
+   * See https://ant.design/components/table/#Column.
+   */
+  columnDefs: ColumnProps<any>;
+  /**
+   * A Function that creates the rowkey from the given feature.
+   * Receives the feature as property.
+   * Default is: feature => feature.ol_uid
+   *
+   */
+  keyFunction: (feature: OlFeature) => string;
+  /**
+   * Whether the map should center on the current feature's extent on init or
+   * not.
+   */
+  zoomToExtent: boolean;
+  /**
+   * Whether rows and features should be selectable or not.
+   */
+  selectable: boolean;
+}
+
+export interface FeatureGridProps extends Partial<FeatureGridDefaultProps> {
+  /**
+   * A CSS class which should be added to the table.
+   */
+  className?: string;
+  /**
+   * A CSS class to add to each table row or a function that
+   * is evaluated for each record.
+   */
+  rowClassName?: string | ((record: any) => string);
+  /**
+   * The map the features should be rendered on. If not given, the features
+   * will be rendered in the table only.
+   */
+  map: OlMap;
+  /**
+   * Callback function, that will be called on rowclick.
+   */
+  onRowClick?: () => void;
+  /**
+   * Callback function, that will be called on rowmouseover.
+   */
+  onRowMouseOver?: () => void;
+  /**
+   * Callback function, that will be called on rowmouseout.
+   */
+  onRowMouseOut?: () => void;
+  /**
+   * Callback function, that will be called if the selection changes.
+   */
+  onRowSelectionChange?: () => void;
+}
+
+interface FeatureGridState {
+  selectedRowKeys: string[];
+}
 
 /**
  * The FeatureGrid.
@@ -28,14 +112,21 @@ import './FeatureGrid.less';
  * @class The FeatureGrid
  * @extends React.Component
  */
-export class FeatureGrid extends React.Component {
+export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridState> {
+
+  /**
+   * The reference of this grid.
+   * @type {String}
+   * @private
+   */
+  _ref;
 
   /**
    * The class name to add to this component.
    * @type {String}
    * @private
    */
-  _className = 'react-geo-feature-grid'
+  _className = 'react-geo-feature-grid';
 
   /**
    * The class name to add to each table row.
@@ -77,140 +168,13 @@ export class FeatureGrid extends React.Component {
    * @type {Object}
    */
   static propTypes = {
-    /**
-     * An optional CSS class which should be added to the table.
-     * @type {String}
-     */
-    className: PropTypes.string,
-
-    /**
-     * An optional CSS class to add to each table row or a function that
-     * is evaluated for each record.
-     * @type {String|Function}
-     */
-    rowClassName: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.func
-    ]),
-
-    /**
-     * The features to show in the grid and the map (if set).
-     * @type {Array}
-     */
-    features: PropTypes.arrayOf(PropTypes.instanceOf(OlFeature)),
-
-    /**
-     * The map the features should be rendered on. If not given, the features
-     * will be rendered in the table only.
-     * @type {ol.Map}
-     */
-    map: PropTypes.instanceOf(OlMap),
-
-    /**
-     * A list of attribute names to hide in the table.
-     * @type {Array}
-     */
-    attributeBlacklist: PropTypes.arrayOf(PropTypes.string),
-
-    /**
-     * Optional callback function, that will be called on rowclick.
-     * @type {Function}
-     */
-    onRowClick: PropTypes.func,
-
-    /**
-     * Optional callback function, that will be called on rowmouseover.
-     * @type {Function}
-     */
-    onRowMouseOver: PropTypes.func,
-
-    /**
-     * Optional callback function, that will be called on rowmouseout.
-     * @type {Function}
-     */
-    onRowMouseOut: PropTypes.func,
-
-    /**
-     * Optional callback function, that will be called if the selection changes.
-     * @type {Function}
-     */
-    onRowSelectionChange: PropTypes.func,
-
-    /**
-     * Whether the map should center on the current feature's extent on init or
-     * not.
-     * @type {Boolean}
-     */
-    zoomToExtent: PropTypes.bool,
-
-    /**
-     * Whether rows and features should be selectable or not.
-     *
-     * @type {Boolean}
-     */
-    selectable: PropTypes.bool,
-
-    /**
-     * The default style to apply to the features.
-     * @type {ol.Style|ol.FeatureStyleFunction}
-     */
-    featureStyle: PropTypes.oneOfType([
-      PropTypes.instanceOf(OlStyle),
-      PropTypes.func
-    ]),
-
-    /**
-     * The highlight style to apply to the features.
-     * @type {ol.Style|ol.FeatureStyleFunction}
-     */
-    highlightStyle: PropTypes.oneOfType([
-      PropTypes.instanceOf(OlStyle),
-      PropTypes.func
-    ]),
-
-    /**
-     * The select style to apply to the features.
-     * @type {ol.Style|ol.FeatureStyleFunction}
-     */
-    selectStyle: PropTypes.oneOfType([
-      PropTypes.instanceOf(OlStyle),
-      PropTypes.func
-    ]),
-
-    /**
-     * The name of the vector layer presenting the features in the grid.
-     * @type {String}
-     */
-    layerName: PropTypes.string,
-
-    /**
-     * Custom column definitions to apply to the given column (mapping via key).
-     * See https://ant.design/components/table/#Column.
-     * @type {Object}
-     */
-    columnDefs: PropTypes.object,
-
-    /**
-     * The children to render.
-     * @type {Element}
-     */
-    children: PropTypes.element,
-
-    /**
-     * A Function that creates the rowkey from the given feature.
-     * Receives the feature as property.
-     * Default is: feature => feature.ol_uid
-     *
-     * @type {Function}
-     */
-    keyFunction: PropTypes.func
   };
 
   /**
    * The default properties.
    * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: FeatureGridDefaultProps = {
     features: [],
     attributeBlacklist: [],
     featureStyle: new OlStyle({
@@ -272,13 +236,15 @@ export class FeatureGrid extends React.Component {
     }),
     layerName: 'react-geo-feature-grid-layer',
     columnDefs: {},
-    keyFunction: feature => feature.ol_uid
-  }
+    keyFunction: feature => feature.ol_uid,
+    zoomToExtent: false,
+    selectable: false
+  };
 
   /**
    * The constructor.
    */
-  constructor(props) {
+  constructor(props: FeatureGridProps) {
     super(props);
 
     this.state = {
@@ -310,7 +276,7 @@ export class FeatureGrid extends React.Component {
    *
    * @param {Object} prevProps The previous props.
    */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: FeatureGridProps) {
     const {
       map,
       features,
@@ -619,7 +585,7 @@ export class FeatureGrid extends React.Component {
       keyFunction
     } = this.props;
 
-    const feature = features.filter(feature => keyFunction(feature) === key);
+    const feature = features.filter(f => keyFunction(f) === key);
 
     return feature[0];
   }

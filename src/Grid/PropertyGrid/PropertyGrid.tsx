@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Table } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
 
 import OlFeature from 'ol/Feature';
 
@@ -9,7 +10,6 @@ import get from 'lodash/get';
 import { CSS_PREFIX } from '../../constants';
 
 import './PropertyGrid.less';
-import { TableCurrentDataSource, ColumnProps } from 'antd/lib/table';
 
 // i18n
 export interface UserChipLocale {
