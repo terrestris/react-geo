@@ -598,6 +598,10 @@ class DigitizeButton extends React.Component {
 
     let styleObj;
 
+    if (!feature.getGeometry()) {
+      return;
+    }
+
     switch (feature.getGeometry().getType()) {
       case DigitizeButton.POINT_DRAW_TYPE: {
         if (!feature.get('isLabel')) {
@@ -866,9 +870,14 @@ class DigitizeButton extends React.Component {
    */
   onFeatureCopy = evt => {
     const {
+      map,
       onFeatureCopy,
       onFeatureSelect
     } = this.props;
+
+    const {
+      digitizeLayer
+    } = this.state;
 
     const feat = evt.selected[0];
 
@@ -885,15 +894,17 @@ class DigitizeButton extends React.Component {
     }
 
     const copy = feat.clone();
-    copy.setStyle(feat.getStyle());
+
+    copy.setStyle(this.getDigitizeStyleFunction(feat));
     this._digitizeFeatures.push(copy);
 
     AnimateUtil.moveFeature(
-      this.props.map,
+      map,
+      digitizeLayer,
       copy,
       500,
       50,
-      feat.getStyle()
+      this.getDigitizeStyleFunction(feat)
     );
   }
 
@@ -913,12 +924,15 @@ class DigitizeButton extends React.Component {
     }
 
     const feature = evt.features.getArray()[0];
+
     if (feature.get('isLabel')) {
       this._digitizeTextFeature = feature;
       let textLabel = '';
 
-      if (feature.getStyle() && feature.getStyle().getText()) {
-        textLabel = feature.getStyle().getText().getText();
+      const featureStyle = this.getDigitizeStyleFunction(feature);
+
+      if (featureStyle && featureStyle.getText()) {
+        textLabel = featureStyle.getText().getText();
       } else if (feature.get('label')) {
         textLabel = feature.get('label');
       }

@@ -70,7 +70,7 @@
   },
   "peerDependencies": {
     "antd": "^3.0",
-    "ol": "^5.0",
+    "ol": "^6.0",
     "react": "^16.0"
   },
   "dependencies": {
@@ -123,7 +123,7 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "np": "^5.0.3",
-    "ol": "^5.3.3",
+    "ol": "^6.1.1",
     "react": "^16.9.0",
     "react-styleguidist": "^10.2.0",
     "react-test-renderer": "^16.9.0",
