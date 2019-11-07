@@ -1,5 +1,6 @@
 import React from 'react';
 import OlMap from 'ol/Map';
+import PropTypes from 'prop-types';
 
 /**
  *
@@ -27,6 +28,14 @@ interface MapProviderState {
  * @type {Object}
  */
 class MapProvider extends React.Component<MapProviderProps, MapProviderState> {
+
+  /**
+   * The child context types.
+   * @type {Object}
+   */
+  static childContextTypes = {
+    map: PropTypes.instanceOf(OlMap)
+  };
 
   /**
    * The constructor of the MapProvider sets the

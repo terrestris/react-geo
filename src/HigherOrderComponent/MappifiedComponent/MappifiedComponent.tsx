@@ -16,9 +16,9 @@ interface MappifiedComponentProps {
  * @param {Component} WrappedComponent The component to wrap and enhance.
  * @return {Component} The wrapped component.
  */
-export function mappify<P>(WrappedComponent: React.ComponentType<any>, {
-  withRef = false
-}: MappifiedComponentProps) {
+export function mappify<P>(WrappedComponent: React.ComponentType<any>, mappifiedOptions?: MappifiedComponentProps) {
+
+  const withRef = mappifiedOptions ? mappifiedOptions.withRef : false;
 
   /**
    * The wrapper class for the given component.
