@@ -103,12 +103,11 @@ export function isVisibleComponent<P extends VisibleComponentProps>(WrappedCompo
       // passed through.
       const {
         activeModules,
-        name,
         ...passThroughProps
       } = this.props;
 
       // Check if the current component should be visible or not.
-      let isVisible = this.isVisibleComponent(name);
+      let isVisible = this.isVisibleComponent(this.props.name);
 
       // Inject props into the wrapped component. These are usually state
       // values or instance methods.
