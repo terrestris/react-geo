@@ -116,7 +116,7 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
     } = this.props;
     const length = layers.length - 1;
     const ticksPerLayer = Math.round(100 / length);
-    const idx = value / ticksPerLayer;
+    const idx = Math.floor(value / ticksPerLayer);
     const opacity = value / ticksPerLayer - (idx > length ? length : idx);
     return opacity > 1 ? 1 : opacity;
   }
@@ -132,7 +132,7 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
     } = this.props;
     const length = layers.length - 1;
     const ticksPerLayer = Math.round(100 / length);
-    const idx = value / ticksPerLayer;
+    const idx = Math.floor(value / ticksPerLayer);
     return idx > length ? length : idx;
   }
 
