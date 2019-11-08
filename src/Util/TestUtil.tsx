@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
+import { mount, ShallowWrapper, ReactWrapper, MountRendererProps } from 'enzyme';
 import OlView from 'ol/View';
 import OlMap from 'ol/Map';
 import OlSourceVector from 'ol/source/Vector';
@@ -7,6 +7,8 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import OlMapBrowserPointerEvent from 'ol/MapBrowserPointerEvent';
+
+type Wrapper =  ShallowWrapper | ReactWrapper;
 
 /**
  * A set of some useful static helper methods.
@@ -26,10 +28,9 @@ export class TestUtil {
    * @param {Object} [props] The props to be used.
    * @param {Object} [options] The options to be set.
    */
-  static mountComponent = (Component, props, options) => {
-    const wrapper = mount(<Component {...props} />, options);
-    return wrapper;
-  };
+  static mountComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
+    return mount(<Component {...props}/>, options);
+  }
 
   /**
    * Creates and applies a map <div> element to the body.
@@ -50,7 +51,7 @@ export class TestUtil {
     document.body.appendChild(div);
 
     return div;
-  };
+  }
 
   /**
    * Removes the map div element from the body.
@@ -65,7 +66,7 @@ export class TestUtil {
       parent.removeChild(div);
     }
     div = null;
-  };
+  }
 
   /**
    * Creates an ol map.
@@ -94,7 +95,7 @@ export class TestUtil {
     map.renderSync();
 
     return map;
-  };
+  }
 
   /**
    * Removes the map.
@@ -104,39 +105,41 @@ export class TestUtil {
       map.dispose();
     }
     TestUtil.unmountMapDiv();
-  };
+  }
 
   /**
    * Simulates a browser pointer event on the map viewport.
    * Origin: https://github.com/openlayers/openlayers/blob/master/test/spec/ol/interaction/Draw.test.js#L67
    *
-   * @param {ol.Map} map The map to use.
-   * @param {string} type Event type.
-   * @param {number} x Horizontal offset from map center.
-   * @param {number} y Vertical offset from map center.
-   * @param {boolean} [opt_shiftKey] Shift key is pressed
-   * @param {boolean} [dragging] Whether the map is being dragged or not.
+   * @param map The map to use.
+   * @param type Event type.
+   * @param x Horizontal offset from map center.
+   * @param y Vertical offset from map center.
+   * @param [opt_shiftKey] Shift key is pressed
+   * @param [dragging] Whether the map is being dragged or not.
    */
-  static simulatePointerEvent = (map, type, x, y, opt_shiftKey, dragging) => {
+  static simulatePointerEvent = ({map, type, x, y, opt_shiftKey, dragging}:
+    {map: any, type: string, x: number, y: number, opt_shiftKey?: boolean, dragging?: boolean}) => {
     let viewport = map.getViewport();
     // Calculated in case body has top < 0 (test runner with small window).
     let position = viewport.getBoundingClientRect();
     let shiftKey = opt_shiftKey !== undefined ? opt_shiftKey : false;
-    const event = new Event();
-    event.type = type;
-    event.clientX = position.left + x + TestUtil.mapDivWidth / 2;
-    event.clientY = position.top + y + TestUtil.mapDivHeight / 2;
-    event.shiftKey = shiftKey;
-    map.handleMapBrowserEvent(new OlMapBrowserPointerEvent(type, map, event, dragging));
+    const event = new PointerEvent(type, {
+      clientX: position.left + x + TestUtil.mapDivWidth / 2,
+      clientY: position.top + y + TestUtil.mapDivHeight / 2,
+      shiftKey
+    });
+    const olEvt = OlMapBrowserPointerEvent(type, map, event, dragging);
+    map.handleMapBrowserEvent(olEvt);
   }
 
   /**
    * Creates and returns an empty vector layer.
    *
-   * @param {Object} [properties] The properties to set.
+   * @param [properties] The properties to set.
    * @return {ol.layer.Vector} The layer.
    */
-  static createVectorLayer = (properties) => {
+  static createVectorLayer = (properties: any) => {
     let source = new OlSourceVector();
     let layer = new OlLayerVector({source: source});
 
@@ -149,7 +152,7 @@ export class TestUtil {
    * Returns a point feature with a random position.
    * @type {Object}
    */
-  static generatePointFeature = ((props = {
+  static generatePointFeature = (props = {
     ATTR_1: Math.random() * 100,
     ATTR_2: 'Borsigplatz 9',
     ATTR_3: 'Dortmund'
@@ -166,7 +169,7 @@ export class TestUtil {
     feat.setProperties(props);
 
     return feat;
-  })
+  }
 
 }
 
