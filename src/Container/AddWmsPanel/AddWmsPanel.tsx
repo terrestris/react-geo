@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Checkbox } from 'antd';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerImage  from 'ol/layer/Image';

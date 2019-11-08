@@ -3,7 +3,7 @@ function. The wrapped map component needs to be mappified in order to access
 the map.
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';

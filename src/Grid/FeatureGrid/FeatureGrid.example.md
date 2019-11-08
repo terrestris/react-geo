@@ -1,7 +1,7 @@
 This example demonstrates the usage of the FeatureGrid:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
@@ -99,7 +99,7 @@ class FeatureGridExample extends React.Component {
 An example with a remote feature source.
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import PropTypes from 'prop-types';
 

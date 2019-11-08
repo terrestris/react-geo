@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import OlLayerBase from 'ol/layer/Base';
 
 import isArray from 'lodash/isArray';

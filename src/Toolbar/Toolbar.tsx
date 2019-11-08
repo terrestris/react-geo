@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import './Toolbar.less';
 
 import { CSS_PREFIX } from '../constants';

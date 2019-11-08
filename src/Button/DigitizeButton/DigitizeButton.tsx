@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { Modal, Input } from 'antd';
 const TextArea = Input.TextArea;

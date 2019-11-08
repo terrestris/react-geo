@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button, Tooltip } from 'antd';
 import Icon from 'react-fa/lib/Icon';
 

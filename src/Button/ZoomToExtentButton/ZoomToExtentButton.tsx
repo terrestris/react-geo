@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';

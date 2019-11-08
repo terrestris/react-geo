@@ -1,5 +1,5 @@
 /*eslint-env jest*/
-import React from 'react';
+import * as React from 'react';
 
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';

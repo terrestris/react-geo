@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import SimpleButton from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';

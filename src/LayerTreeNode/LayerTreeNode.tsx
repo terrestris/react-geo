@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Tree } from 'antd';
 const TreeNode = Tree.TreeNode;
 

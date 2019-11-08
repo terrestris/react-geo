@@ -1,5 +1,5 @@
 /*eslint-env jest*/
-import React from 'react';
+import * as React from 'react';
 import LayerTreeNode from './LayerTreeNode';
 import Tree from 'rc-tree';
 import { mount } from 'enzyme';

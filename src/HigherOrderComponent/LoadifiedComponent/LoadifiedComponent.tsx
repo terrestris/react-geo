@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Spin } from 'antd';
 import Logger from '@terrestris/base-util/dist/Logger';
 import { SpinProps } from 'antd/lib/spin';

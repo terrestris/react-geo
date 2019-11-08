@@ -3,7 +3,7 @@ This demonstrates the usage of the CircleMenu.
 CircleMenu in a Map (click the red feature):
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';

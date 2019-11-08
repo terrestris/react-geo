@@ -1,7 +1,7 @@
 This example demonstrates the usage of the AgFeatureGrid:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import PropTypes from 'prop-types';
 
