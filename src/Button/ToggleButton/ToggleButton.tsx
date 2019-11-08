@@ -90,30 +90,6 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
   pressedClass = 'btn-pressed';
 
   /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-    name: PropTypes.string,
-    icon: PropTypes.string,
-    pressedIcon: PropTypes.string,
-    fontIcon: PropTypes.string,
-    pressed: PropTypes.bool,
-    onToggle: PropTypes.func,
-    tooltip: PropTypes.string,
-    tooltipPlacement: PropTypes.string,
-    /**
-     * Additional [antd tooltip](https://ant.design/components/tooltip/)
-     * properties to pass to the tooltip component. Note: The props `title`
-     * and `placement` will override the props `tooltip` and `tooltipPlacement`
-     * of this component!
-     * @type {Object}
-     */
-    tooltipProps: PropTypes.object,
-    className: PropTypes.string
-  };
-
-  /**
    * The default properties.
    * @type {Object}
    */
@@ -133,6 +109,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
   static contextTypes = {
     toggleGroup: PropTypes.object
   };
+
   /**
    * Invoked right before calling the render method, both on the initial mount
    * and on subsequent updates. It should return an object to update the state,
