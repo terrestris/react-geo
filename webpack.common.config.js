@@ -1,15 +1,43 @@
 const path = require('path');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   devServer: {
     https: true
   },
-
+  resolve: {
+    extensions: [
+      '.ts',
+      '.tsx',
+      '.js',
+      '.json',
+      '.jsx',
+    ],
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: path.join(__dirname, './tsconfig.json')
+      })
+    ]
+  },
   module: {
     rules: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
       use: 'babel-loader'
+    },
+    // Compile .tsx?
+    {
+      test: /\.(ts|tsx)$/,
+      use: [
+        {
+          loader: require.resolve('ts-loader'),
+          options: {
+            // disable type checker - we will use it in fork plugin
+            transpileOnly: true
+          },
+        },
+      ],
     }, {
       test: /\.css$/,
       use: [
@@ -48,7 +76,15 @@ module.exports = {
       test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       use: 'file-loader'
     }]
-  }
+  },
+  plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      async: false,
+      watch: path.join(__dirname, './src'),
+      tsconfig: path.join(__dirname, './tsconfig.json'),
+      tslint: path.join(__dirname, './tslint.json'),
+    })
+  ]
   // Uncomment the following lines if you're working with a linked
   // @terrestris/ol-util package (or any other package that requires ol
   // itself).
