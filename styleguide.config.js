@@ -11,12 +11,15 @@ module.exports = {
     favicon: 'https://terrestris.github.io/react-geo/assets/favicon.ico'
   },
   propsParser: reactDogGenTypeScript
-    .withCustomConfig('./tsconfig.json', {propFilter: (prop) => {
-      if (prop.parent) {
-        return !prop.parent.fileName.includes('node_modules');
+    .withCustomConfig('./tsconfig.json', {
+      savePropValueAsString: true,
+      propFilter: (prop) => {
+        if (prop.parent) {
+          return !prop.parent.fileName.includes('node_modules');
+        }
+        return true;
       }
-      return true;
-    }}).parse,
+    }).parse,
   ignore: [
     '**/__tests__/**',
     '**/*.spec.{js,jsx,ts,tsx}',
