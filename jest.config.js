@@ -2,7 +2,6 @@ module.exports = {
   testURL: 'http://localhost/',
   moduleFileExtensions: [
     'js',
-    'jsx',
     'ts',
     'tsx'
   ],
@@ -33,7 +32,7 @@ module.exports = {
     '^.+\\.tsx?$': '<rootDir>/node_modules/babel-jest'
   },
   collectCoverageFrom: [
-    'src/**/*.{tsx,jsx}',
+    'src/**/*.{tsx}',
     'src/**/*.{ts,js}',
     '!src/**/*example*.*'
   ],

@@ -11,8 +11,7 @@ module.exports = {
       '.ts',
       '.tsx',
       '.js',
-      '.json',
-      '.jsx',
+      '.json'
     ],
     plugins: [
       new TsconfigPathsPlugin({
@@ -21,11 +20,7 @@ module.exports = {
     ]
   },
   module: {
-    rules: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      use: 'babel-loader'
-    },
+    rules: [
     // Compile .tsx?
     {
       test: /\.(ts|tsx)$/,
