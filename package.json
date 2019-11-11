@@ -68,7 +68,7 @@
     "release": "np --no-yarn && git push https://github.com/terrestris/react-geo.git master --tags"
   },
   "peerDependencies": {
-    "@types/react": "^16.8.23",
+    "@types/react": "^16.0",
     "antd": "^3.0",
     "ol": "^6.0",
     "react": "^16.0"
@@ -77,6 +77,7 @@
     "@terrestris/base-util": "^0.2.2",
     "@terrestris/ol-util": "^3.0.1",
     "@turf/turf": "^5.1.6",
+    "@types/lodash": "^4.14.146",
     "@types/moment": "^2.13.0",
     "@types/node": "^12.12.6",
     "@types/react-dom": "^16.9.3",
@@ -111,7 +112,7 @@
     "@types/enzyme": "^3.10.3",
     "@types/jest": "^24.0.22",
     "@types/react": "^16.9.11",
-    "acorn": "^7.1.0",
+    "acorn": "^6.3.0",
     "antd": "^3.23.2",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
