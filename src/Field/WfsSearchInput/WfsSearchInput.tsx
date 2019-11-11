@@ -7,8 +7,8 @@ import {
 
 import OlMap from 'ol/Map';
 
-import isFunction from 'lodash/isFunction';
-import debounce from 'lodash/debounce';
+const isFunction = require('lodash/isFunction');
+const debounce = require('lodash/debounce');
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
@@ -122,7 +122,7 @@ export interface WfsSearchInputProps extends Partial<WfsSearchInputDefaultProps>
    * Can be useful if input value manipulation is needed (e.g. umlaut
    * replacement `ä => oa` etc.)
    */
-  onBeforeSearch: (value: string) => void;
+  onBeforeSearch: (value: string) => string;
   /**
    * An onFetchSuccess callback function which gets called with the
    * successfully fetched data.

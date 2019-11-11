@@ -15,7 +15,7 @@ import OlInteractionDraw from 'ol/interaction/Draw';
 import { unByKey } from 'ol/Observable';
 import OlOverlay from 'ol/Overlay';
 
-import isEmpty from 'lodash/isEmpty';
+const _isEmpty = require('lodash/isEmpty');
 
 import ToggleButton from '../ToggleButton/ToggleButton';
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
@@ -566,7 +566,7 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
       measureTooltipCssClasses
     } = this.props;
 
-    if (!isEmpty(this._feature)) {
+    if (!_isEmpty(this._feature)) {
       let geom = this._feature.getGeometry();
 
       if (geom instanceof OlMultiPolygon) {

@@ -9,9 +9,9 @@ import OlCollection from 'ol/Collection';
 import OlMapEvent from 'ol/MapEvent';
 import { unByKey } from 'ol/Observable';
 
-import isBoolean from 'lodash/isBoolean';
-import isFunction from 'lodash/isFunction';
-import isEqual from 'lodash/isEqual';
+const _isBoolean = require('lodash/isBoolean');
+const _isFunction = require('lodash/isFunction');
+const _isEqual = require('lodash/isEqual');
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
@@ -123,8 +123,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    */
   static getDerivedStateFromProps(nextProps: LayerTreeProps, prevState: LayerTreeState) {
     if (prevState.layerGroup && nextProps.layerGroup) {
-      if (!isEqual(prevState.layerGroup.ol_uid, nextProps.layerGroup.ol_uid) ||
-        !isEqual(prevState.layerGroupRevision, nextProps.layerGroup.getRevision())) {
+      if (!_isEqual(prevState.layerGroup.ol_uid, nextProps.layerGroup.ol_uid) ||
+        !_isEqual(prevState.layerGroupRevision, nextProps.layerGroup.getRevision())) {
         return {
           layerGroup: nextProps.layerGroup,
           layerGroupRevision: nextProps.layerGroup.getRevision()
@@ -185,7 +185,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     } = this.props;
 
     if (layerGroup && prevState.layerGroup) {
-      if (!isEqual(prevState.layerGroup.ol_uid, layerGroup.ol_uid)) {
+      if (!_isEqual(prevState.layerGroup.ol_uid, layerGroup.ol_uid)) {
         unByKey(this.olListenerKeys);
         this.olListenerKeys = [];
 
@@ -359,7 +359,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @return {Element} The title composition to render.
    */
   getTreeNodeTitle(layer: OlLayerBase) {
-    if (isFunction(this.props.nodeTitleRenderer)) {
+    if (_isFunction(this.props.nodeTitleRenderer)) {
       return this.props.nodeTitleRenderer.call(this, layer);
     } else {
       return layer.get('name');
@@ -470,7 +470,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @param {Boolean} visiblity The visiblity.
    */
   setLayerVisibility(layer: OlLayerBase, visibility: boolean) {
-    if (!(layer instanceof OlLayerBase) || !isBoolean(visibility)) {
+    if (!(layer instanceof OlLayerBase) || !_isBoolean(visibility)) {
       Logger.error('setLayerVisibility called without layer or visiblity.');
       return;
     }

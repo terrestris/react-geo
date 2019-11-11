@@ -1,7 +1,7 @@
 import * as React from 'react';
 import OlLayerBase from 'ol/layer/Base';
 
-import isArray from 'lodash/isArray';
+const _isArray = require('lodash/isArray');
 
 /**
  * Finds the key time in the passed object regardless of upper- or lowercase
@@ -41,7 +41,7 @@ export function timeLayerAware(WrappedComponent: React.ComponentType<any>, layer
         if (config.isWmsTime) {
           const parms = config.layer.getSource().getParams();
           const timeParam = findTimeParam(parms);
-          if (isArray(newValues)) {
+          if (_isArray(newValues)) {
             parms[timeParam] = `${newValues[0]}/${newValues[1]}`;
           } else {
             parms[timeParam] = `${newValues}`;

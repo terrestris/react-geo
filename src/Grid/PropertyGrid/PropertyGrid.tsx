@@ -5,7 +5,7 @@ import { ColumnProps } from 'antd/lib/table';
 
 import OlFeature from 'ol/Feature';
 
-import get from 'lodash/get';
+const _get = require('lodash/get');
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -131,7 +131,7 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
 
     const dataSource = attributeFilter.map((attr) => {
       const rowObj = {
-        attributeName: (attributeNames && get(attributeNames, attr)) ? get(attributeNames, attr) : attr,
+        attributeName: (attributeNames && _get(attributeNames, attr)) ? _get(attributeNames, attr) : attr,
         attributeValue: feature.get(attr),
         key: `ATTR_${attr}_fid_${feature.ol_uid}`
       };

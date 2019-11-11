@@ -4,7 +4,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlLayerImage  from 'ol/layer/Image';
 import OlMap from 'ol/Map';
 
-import isFunction from 'lodash/isFunction';
+const _isFunction = require('lodash/isFunction');
 
 import Panel from '../../Panel/Panel/Panel';
 import Titlebar from '../../Panel/Titlebar/Titlebar';
@@ -107,7 +107,7 @@ export class AddWmsPanel extends React.Component<AddWmsLayerProps, AddWmsLayerSt
       onSelectionChange
     } = this.props;
 
-    if (isFunction(onSelectionChange)) {
+    if (_isFunction(onSelectionChange)) {
       onSelectionChange(selectedWmsLayers);
     }
 

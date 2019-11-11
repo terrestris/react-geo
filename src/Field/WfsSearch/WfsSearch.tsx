@@ -9,8 +9,8 @@ const Option = AutoComplete.Option;
 import OlMap from 'ol/Map';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 
-import isFunction from 'lodash/isFunction';
-import debounce from 'lodash/debounce';
+const _isFunction = require('lodash/isFunction');
+const _debounce = require('lodash/debounce');
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
@@ -162,7 +162,7 @@ export interface WfsSearchProps extends Partial<WfsSearchDefaultProps> {
    * Can be useful if input value manipulation is needed (e.g. umlaut
    * replacement `ä => oa` etc.)
    */
-  onBeforeSearch: (value: string) => void;
+  onBeforeSearch: (value: string) => string;
   /**
    * Options which are passed to the constructor of the ol.format.WFS.
    * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
@@ -273,7 +273,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
     this.onUpdateInput = this.onUpdateInput.bind(this);
     this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
     // delay requests invoking
-    this.doSearch = debounce(this.doSearch, this.props.delay);
+    this.doSearch = _debounce(this.doSearch, this.props.delay);
   }
 
   /**
@@ -294,7 +294,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
       data: []
     });
 
-    if (isFunction(onBeforeSearch)) {
+    if (_isFunction(onBeforeSearch)) {
       value = onBeforeSearch(value);
     }
 
@@ -306,7 +306,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
       }
     });
 
-    if (isFunction(onChange)) {
+    if (_isFunction(onChange)) {
       onChange(value);
     }
   }

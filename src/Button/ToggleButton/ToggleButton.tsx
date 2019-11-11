@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import { Icon } from 'react-fa';
 
-import isFunction from 'lodash/isFunction';
+const _isFunction = require('lodash/isFunction');
 
 import './ToggleButton.less';
 
@@ -227,7 +227,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
       isClicked: true
     }, () => {
       // This part can be removed in future if the ToggleGroup button is removed.
-      if (this.context.toggleGroup && isFunction(this.context.toggleGroup.onChange)) {
+      if (this.context.toggleGroup && _isFunction(this.context.toggleGroup.onChange)) {
         this.context.toggleGroup.onChange(this.props);
         // this allows for the allowDeselect property to be taken into account
         // when used with ToggleGroup. Since the ToggleGroup changes the

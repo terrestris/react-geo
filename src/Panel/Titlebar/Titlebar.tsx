@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import isEmpty from 'lodash/isEmpty';
+const _isEmpty = require('lodash/isEmpty');
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -54,7 +53,7 @@ export class Titlebar extends React.Component<TitlebarProps> {
           {children}
         </span>
         {
-          !isEmpty(tools) ?
+          !_isEmpty(tools) ?
             <span className="controls">
               {tools}
             </span> :

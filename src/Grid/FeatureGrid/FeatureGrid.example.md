@@ -100,8 +100,7 @@ An example with a remote feature source.
 
 ```jsx
 import * as React from 'react';
-
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';

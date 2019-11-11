@@ -1,11 +1,11 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import OlMap from 'ol/Map';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
 interface MappifiedComponentProps {
-  withRef: boolean;
+  withRef?: boolean;
 }
 
 /**
@@ -16,9 +16,9 @@ interface MappifiedComponentProps {
  * @param {Component} WrappedComponent The component to wrap and enhance.
  * @return {Component} The wrapped component.
  */
-export function mappify<P>(WrappedComponent: React.ComponentType<any>, mappifiedOptions?: MappifiedComponentProps) {
-
-  const withRef = mappifiedOptions ? mappifiedOptions.withRef : false;
+export function mappify<P>(WrappedComponent: React.ComponentType<any>,  {
+  withRef = false
+}: MappifiedComponentProps = {}) {
 
   /**
    * The wrapper class for the given component.

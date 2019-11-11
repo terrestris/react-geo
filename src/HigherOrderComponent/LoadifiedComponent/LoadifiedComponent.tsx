@@ -3,8 +3,8 @@ import { Spin } from 'antd';
 import Logger from '@terrestris/base-util/dist/Logger';
 import { SpinProps } from 'antd/lib/spin';
 
-interface LoadifiedComponentProps {
-  withRef: boolean;
+export interface LoadifiedComponentProps {
+  withRef?: boolean;
 }
 
 /**
@@ -20,7 +20,7 @@ interface LoadifiedComponentProps {
  */
 export function loadify(WrappedComponent: React.ComponentType<any>, {
   withRef = false
-}: LoadifiedComponentProps) {
+}: LoadifiedComponentProps = {}) {
 
   /**
    * The wrapper class for the given component.

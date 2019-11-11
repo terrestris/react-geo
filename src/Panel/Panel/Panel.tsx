@@ -2,12 +2,15 @@ import * as React from 'react';
 import {
   Rnd,
   ResizeEnable,
+  ResizableDelta,
+  Position,
   Props as RndProps
 } from 'react-rnd';
+import { ResizeDirection } from 're-resizable';
 
-import uniqueId from 'lodash/uniqueId';
-import isNumber from 'lodash/isNumber';
-import isFunction from 'lodash/isFunction';
+const _uniqueId = require('lodash/uniqueId');
+const _isNumber = require('lodash/isNumber');
+const _isFunction = require('lodash/isFunction');
 
 import Titlebar from '../Titlebar/Titlebar';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
@@ -165,7 +168,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
    */
   constructor(props: PanelProps) {
     super(props);
-    const id = props.id || uniqueId('panel-');
+    const id = props.id || _uniqueId('panel-');
     this.state = {
       id: id,
       collapsed: this.props.collapsible ? this.props.collapsed : false,
@@ -217,8 +220,8 @@ export class Panel extends React.Component<PanelProps, PanelState> {
     if (this.state.collapsed) {
       return '0px';
     } else {
-      return isNumber(this.state.height)
-        ? (this.state.height - this.state.titleBarHeight) + 'px'
+      return _isNumber(this.state.height)
+        ? ((this.state.height as number) - this.state.titleBarHeight) + 'px'
         : this.state.height;
     }
   }
@@ -240,14 +243,22 @@ export class Panel extends React.Component<PanelProps, PanelState> {
   /**
    * Function called while resizing.
    *
-   * @param {MouseEvent|TouchEvent} evt The MouseEvent event.
-   * @param {String} direction A string discribing where the element was grabed.
-   * @param {HTMLElement} el The element which gets resized.
+   * @param evt The MouseEvent event.
+   * @param direction A string discribing where the element was grabed.
+   * @param el The element which gets resized.
+   * @param delta The delta of the resizing.
+   * @param position The position of the resizing.
    */
-  onResize(evt: React.MouseEvent, direction: string, el: HTMLElement) {
+  onResize(
+    evt: MouseEvent | TouchEvent,
+    direction: ResizeDirection,
+    el: HTMLDivElement,
+    delta: ResizableDelta,
+    position: Position
+  ) {
     const { onResize } = this.props;
-    if (isFunction(onResize)) {
-      onResize(arguments);
+    if (_isFunction(onResize)) {
+      onResize(evt, direction, el, delta, position);
     }
     this.setState({
       height: el.clientHeight,
@@ -257,11 +268,19 @@ export class Panel extends React.Component<PanelProps, PanelState> {
 
   /**
    * Function called when resizing is started.
+   *
+   * @param evt The MouseEvent event.
+   * @param direction A string discribing where the element was grabed.
+   * @param el The element which gets resized.
    */
-  onResizeStart() {
+  onResizeStart(
+    evt: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+    direction: ResizeDirection,
+    el: HTMLDivElement
+  ) {
     const { onResizeStart } = this.props;
-    if (isFunction(onResizeStart)) {
-      onResizeStart(arguments);
+    if (_isFunction(onResizeStart)) {
+      onResizeStart(evt, direction, el);
     }
     this.setState({
       resizing: true
@@ -270,11 +289,23 @@ export class Panel extends React.Component<PanelProps, PanelState> {
 
   /**
    * Function called when resizing is stopped.
+   *
+   * @param evt The MouseEvent event.
+   * @param direction A string discribing where the element was grabed.
+   * @param el The element which gets resized.
+   * @param delta The delta of the resizing.
+   * @param position The position of the resizing.
    */
-  onResizeStop() {
+  onResizeStop(
+    evt: MouseEvent | TouchEvent,
+    direction: ResizeDirection,
+    el: HTMLDivElement,
+    delta: ResizableDelta,
+    position: Position
+  ) {
     const { onResizeStop } = this.props;
-    if (isFunction(onResizeStop)) {
-      onResizeStop(arguments);
+    if (_isFunction(onResizeStop)) {
+      onResizeStop(evt, direction, el, delta, position);
     }
     this.setState({
       resizing: false
@@ -361,15 +392,15 @@ export class Panel extends React.Component<PanelProps, PanelState> {
       x,
       y
     } = rndOpts;
-    const defX = x && isNumber(x)
+    const defX = x && _isNumber(x)
       ? x
-      : isNumber(defaultWidth)
-        ? window.innerWidth / 2 - defaultWidth / 2
+      : _isNumber(defaultWidth)
+        ? window.innerWidth / 2 - (defaultWidth as number) / 2
         : undefined;
-    const defY = y && isNumber(y)
+    const defY = y && _isNumber(y)
       ? y
-      : isNumber(defaultHeight)
-        ? window.innerHeight / 2 - defaultHeight / 2
+      : _isNumber(defaultHeight)
+        ? window.innerHeight / 2 - (defaultHeight as number) / 2
         : undefined;
 
     return (

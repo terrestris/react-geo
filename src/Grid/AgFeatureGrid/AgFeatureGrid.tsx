@@ -12,12 +12,13 @@ import OlSourceVector from 'ol/source/Vector';
 import OlLayerVector from 'ol/layer/Vector';
 import OlGeomGeometry from 'ol/geom/Geometry';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
-import isArray from 'lodash/isArray';
-import differenceWith from 'lodash/differenceWith';
-import isEqual from 'lodash/isEqual';
-import isFunction from 'lodash/isFunction';
-import kebabCase from 'lodash/kebabCase';
+const _isArray = require('lodash/isArray');
+const _differenceWith = require('lodash/differenceWith');
+const _isEqual = require('lodash/isEqual');
+const _isFunction = require('lodash/isFunction');
+const _kebabCase = require('lodash/kebabCase');
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
@@ -26,6 +27,7 @@ import { CSS_PREFIX } from '../../constants';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community/dist/styles/ag-theme-fresh.css';
+import { RowClickedEvent, CellMouseOverEvent, CellMouseOutEvent, SelectionChangedEvent } from 'ag-grid-community';
 
 interface AgFeatureGridDefaultProps {
   /**
@@ -113,26 +115,32 @@ export interface AgFeatureGridProps extends Partial<AgFeatureGridDefaultProps> {
   /**
    * Callback function, that will be called on rowclick.
    */
-  onRowClick?: () => void;
+  onRowClick?: (row: any, feature: OlFeature, evt: RowClickedEvent) => void;
   /**
    * Callback function, that will be called on rowmouseover.
    */
-  onRowMouseOver?: () => void;
+  onRowMouseOver?: (row: any, feature: OlFeature, evt: CellMouseOverEvent) => void;
   /**
    * Callback function, that will be called on rowmouseout.
    */
-  onRowMouseOut?: () => void;
+  onRowMouseOut?: (row: any, feature: OlFeature, evt: CellMouseOutEvent) => void;
   /**
    * Callback function, that will be called if the selection changes.
    */
-  onRowSelectionChange?: () => void;
+  onRowSelectionChange?: (
+    selectedRowsAfter: any[],
+    selectedFeatures: OlFeature[],
+    deselectedRows: any[],
+    deselectedFeatures: OlFeature[],
+    evt: SelectionChangedEvent
+  ) => void;
   /**
    * Optional callback function, that will be called if `selectable` is set
    * `true` and the a `click` event on the map occurs, e.g. a feature has been
    * selected in the map. The function receives the olEvt and the selected
    * features (if any).
    */
-  onMapSingleClick: () => void;
+  onMapSingleClick: (olEvt: OlMapBrowserEvent, selectedFeatures: OlFeature[]) => void;
   /*
    * A Function that is called once the grid is ready.
    */
@@ -318,12 +326,12 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       zoomToExtent
     } = this.props;
 
-    if (!(isEqual(prevProps.map, map))) {
+    if (!(_isEqual(prevProps.map, map))) {
       this.initVectorLayer(map);
       this.initMapEventHandlers(map);
     }
 
-    if (!(isEqual(prevProps.features, features))) {
+    if (!(_isEqual(prevProps.features, features))) {
       if (this._source) {
         this._source.clear();
         this._source.addFeatures(features);
@@ -334,7 +342,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       }
     }
 
-    if (!(isEqual(prevProps.selectable, selectable))) {
+    if (!(_isEqual(prevProps.selectable, selectable))) {
       if (selectable && map) {
         map.on('singleclick', this.onMapSingleClick);
       } else {
@@ -489,9 +497,9 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
   /**
    * Selects the selected feature in the map and in the grid.
    *
-   * @param {ol.MapBrowserEvent} olEvt The ol event.
+   * @param olEvt The ol event.
    */
-  onMapSingleClick = olEvt => {
+  onMapSingleClick = (olEvt: OlMapBrowserEvent) => {
     const {
       map,
       selectStyle,
@@ -504,7 +512,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       layerFilter: layerCand => layerCand === this._layer
     }) || [];
 
-    if (isFunction(onMapSingleClick)) {
+    if (_isFunction(onMapSingleClick)) {
       onMapSingleClick(olEvt, selectedFeatures);
     }
 
@@ -725,7 +733,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    *
    * @param {Object} row The clicked row.
    */
-  onRowClick = evt => {
+  onRowClick = (evt: RowClickedEvent) => {
     const {
       onRowClick
     } = this.props;
@@ -733,7 +741,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     const row = evt.data;
     const feature = this.getFeatureFromRowKey(row.key);
 
-    if (isFunction(onRowClick)) {
+    if (_isFunction(onRowClick)) {
       onRowClick(row, feature, evt);
     } else {
       this.zoomToFeatures([feature]);
@@ -746,7 +754,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    *
    * @param {Object} row The highlighted row.
    */
-  onRowMouseOver = evt => {
+  onRowMouseOver = (evt: CellMouseOverEvent) => {
     const {
       onRowMouseOver
     } = this.props;
@@ -754,7 +762,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     const row = evt.data;
     const feature = this.getFeatureFromRowKey(row.key);
 
-    if (isFunction(onRowMouseOver)) {
+    if (_isFunction(onRowMouseOver)) {
       onRowMouseOver(row, feature, evt);
     }
 
@@ -766,7 +774,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    *
    * @param {Object} row The unhighlighted row.
    */
-  onRowMouseOut = evt => {
+  onRowMouseOut = (evt: CellMouseOutEvent) => {
     const {
       onRowMouseOut
     } = this.props;
@@ -774,7 +782,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     const row = evt.data;
     const feature = this.getFeatureFromRowKey(row.key);
 
-    if (isFunction(onRowMouseOut)) {
+    if (_isFunction(onRowMouseOut)) {
       onRowMouseOut(row, feature, evt);
     }
 
@@ -892,7 +900,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
   /**
    * Called if the selection changes.
    */
-  onSelectionChanged = evt => {
+  onSelectionChanged = (evt: SelectionChangedEvent) => {
     const {
       onRowSelectionChange
     } = this.props;
@@ -909,7 +917,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       selectedRowsAfter = grid.api.getSelectedRows();
     }
 
-    const deselectedRows = differenceWith(selectedRows, selectedRowsAfter, (a: any , b: any) => a.key === b.key);
+    const deselectedRows = _differenceWith(selectedRows, selectedRowsAfter, (a: any , b: any) => a.key === b.key);
 
     const selectedFeatures = selectedRowsAfter.map(row => this.getFeatureFromRowKey(row.key));
     const deselectedFeatures = deselectedRows.map(row => this.getFeatureFromRowKey(row.key));
@@ -919,7 +927,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       selectedRows: selectedRowsAfter
     });
 
-    if (isFunction(onRowSelectionChange)) {
+    if (_isFunction(onRowSelectionChange)) {
       onRowSelectionChange(selectedRowsAfter, selectedFeatures, deselectedRows, deselectedFeatures, evt);
     }
 
@@ -985,16 +993,16 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     // TODO: Not sure, if this is still needed. One may want to get a specific
     // row by using getRowFromFeatureKey instead.
     let rowClassNameFn;
-    if (isFunction(rowClassName)) {
+    if (_isFunction(rowClassName)) {
       rowClassNameFn = node => {
-        const determinedRowClass = rowClassName(node.data);
+        const determinedRowClass = (rowClassName as Function)(node.data);
         return `${this._rowClassName} ${determinedRowClass}`;
       };
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`
         : this._rowClassName;
-      rowClassNameFn = node => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${kebabCase(node.data.key)}`;
+      rowClassNameFn = node => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${_kebabCase(node.data.key)}`;
     }
 
     return (
@@ -1006,8 +1014,8 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
         }}
       >
         <AgGridReact
-          columnDefs={columnDefs && isArray(columnDefs) ? columnDefs : this.getColumnDefs()}
-          rowData={rowData && isArray(rowData) ? rowData : this.getRowData()}
+          columnDefs={columnDefs && _isArray(columnDefs) ? columnDefs : this.getColumnDefs()}
+          rowData={rowData && _isArray(rowData) ? rowData : this.getRowData()}
           onGridReady={this.onGridReady.bind(this)}
           rowSelection="multiple"
           suppressRowClickSelection={true}

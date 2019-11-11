@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 
-import uniqueId from 'lodash/uniqueId';
+const _uniqueId = require('lodash/uniqueId');
 
 import Panel from  '../Panel/Panel/Panel';
 import Logger from '@terrestris/base-util/dist/Logger';
@@ -107,7 +107,7 @@ export class Window extends React.Component<WindowProps, WindowState> {
    */
   constructor(props: WindowProps) {
     super(props);
-    const id = props.id || uniqueId('window-');
+    const id = props.id || _uniqueId('window-');
 
     const { parentId } = this.props;
     this._parent = document.getElementById(parentId);

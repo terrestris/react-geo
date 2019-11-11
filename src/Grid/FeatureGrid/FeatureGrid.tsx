@@ -13,9 +13,9 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlGeomGeometry from 'ol/geom/Geometry';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 
-import isEqual from 'lodash/isEqual';
-import isFunction from 'lodash/isFunction';
-import kebabCase from 'lodash/kebabCase';
+const _isEqual = require('lodash/isEqual');
+const _isFunction = require('lodash/isFunction');
+const _kebabCase = require('lodash/kebabCase');
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
@@ -87,19 +87,19 @@ export interface FeatureGridProps extends Partial<FeatureGridDefaultProps> {
   /**
    * Callback function, that will be called on rowclick.
    */
-  onRowClick?: () => void;
+  onRowClick?: (row: any, feature: OlFeature) => void;
   /**
    * Callback function, that will be called on rowmouseover.
    */
-  onRowMouseOver?: () => void;
+  onRowMouseOver?: (row: any, feature: OlFeature) => void;
   /**
    * Callback function, that will be called on rowmouseout.
    */
-  onRowMouseOut?: () => void;
+  onRowMouseOut?: (row: any, feature: OlFeature) => void;
   /**
    * Callback function, that will be called if the selection changes.
    */
-  onRowSelectionChange?: () => void;
+  onRowSelectionChange?: (selectedRowKeys: Array<number | string>, selectedFeatures: OlFeature[]) => void;
 }
 
 interface FeatureGridState {
@@ -284,12 +284,12 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       zoomToExtent
     } = this.props;
 
-    if (!(isEqual(prevProps.map, map))) {
+    if (!(_isEqual(prevProps.map, map))) {
       this.initVectorLayer(map);
       this.initMapEventHandlers(map);
     }
 
-    if (!(isEqual(prevProps.features, features))) {
+    if (!(_isEqual(prevProps.features, features))) {
       if (this._source) {
         this._source.clear();
         this._source.addFeatures(features);
@@ -300,7 +300,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       }
     }
 
-    if (!(isEqual(prevProps.selectable, selectable))) {
+    if (!(_isEqual(prevProps.selectable, selectable))) {
       if (selectable && map) {
         map.on('singleclick', this.onMapSingleClick);
       } else {
@@ -405,7 +405,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     }) || [];
 
     features.forEach(feature => {
-      const key = kebabCase(this.props.keyFunction(feature));
+      const key = _kebabCase(this.props.keyFunction(feature));
       const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
       const el = document.querySelectorAll(sel)[0];
       if (el) {
@@ -419,7 +419,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     });
 
     selectedFeatures.forEach(feature => {
-      const key = kebabCase(this.props.keyFunction(feature));
+      const key = _kebabCase(this.props.keyFunction(feature));
       const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
       const el = document.querySelectorAll(sel)[0];
       if (el) {
@@ -576,10 +576,10 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Returns the correspondig feature for the given table row key.
    *
-   * @param {Number} key The row key to obtain the feature from.
-   * @return {ol.Feature} The feature candidate.
+   * @param key The row key to obtain the feature from.
+   * @return The feature candidate.
    */
-  getFeatureFromRowKey = key => {
+  getFeatureFromRowKey = (key: number | string): OlFeature => {
     const {
       features,
       keyFunction
@@ -602,7 +602,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
 
     const feature = this.getFeatureFromRowKey(row.key);
 
-    if (isFunction(onRowClick)) {
+    if (_isFunction(onRowClick)) {
       onRowClick(row, feature);
     }
 
@@ -622,7 +622,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
 
     const feature = this.getFeatureFromRowKey(row.key);
 
-    if (isFunction(onRowMouseOver)) {
+    if (_isFunction(onRowMouseOver)) {
       onRowMouseOver(row, feature);
     }
 
@@ -641,7 +641,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
 
     const feature = this.getFeatureFromRowKey(row.key);
 
-    if (isFunction(onRowMouseOut)) {
+    if (_isFunction(onRowMouseOut)) {
       onRowMouseOut(row, feature);
     }
 
@@ -766,7 +766,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
 
     const selectedFeatures = selectedRowKeys.map(key => this.getFeatureFromRowKey(key));
 
-    if (isFunction(onRowSelectionChange)) {
+    if (_isFunction(onRowSelectionChange)) {
       onRowSelectionChange(selectedRowKeys, selectedFeatures);
     }
 
@@ -813,13 +813,13 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       : this._className;
 
     let rowClassNameFn;
-    if (isFunction(rowClassName)) {
-      rowClassNameFn = record => `${this._rowClassName} ${rowClassName(record)}`;
+    if (_isFunction(rowClassName)) {
+      rowClassNameFn = record => `${this._rowClassName} ${(rowClassName as Function)(record)}`;
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`
         : this._rowClassName;
-      rowClassNameFn = record => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${kebabCase(record.key)}`;
+      rowClassNameFn = record => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${_kebabCase(record.key)}`;
     }
 
     return (

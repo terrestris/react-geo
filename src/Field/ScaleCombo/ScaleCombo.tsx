@@ -4,12 +4,12 @@ const Option = Select.Option;
 
 import OlMap from 'ol/Map';
 
-import isInteger from 'lodash/isInteger';
-import isEmpty from 'lodash/isEmpty';
-import isEqual from 'lodash/isEqual';
-import isFunction from 'lodash/isFunction';
-import reverse from 'lodash/reverse';
-import clone from 'lodash/clone';
+const _isInteger = require('lodash/isInteger');
+const _isEmpty = require('lodash/isEmpty');
+const _isEqual = require('lodash/isEqual');
+const _isFunction = require('lodash/isFunction');
+const _reverse = require('lodash/reverse');
+const _clone = require('lodash/clone');
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
@@ -112,15 +112,15 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    * @param {Object} prevState The previous state.
    */
   static getDerivedStateFromProps(nextProps: ScaleComboProps, prevState: ScaleComboState) {
-    if (isInteger(nextProps.zoomLevel) &&
-        !isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
+    if (_isInteger(nextProps.zoomLevel) &&
+        !_isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
       return {
         zoomLevel: nextProps.zoomLevel
       };
     }
 
-    if (isFunction(nextProps.onZoomLevelSelect) &&
-        !isEqual(nextProps.onZoomLevelSelect, prevState.onZoomLevelSelect)) {
+    if (_isFunction(nextProps.onZoomLevelSelect) &&
+        !_isEqual(nextProps.onZoomLevelSelect, prevState.onZoomLevelSelect)) {
       return {
         onZoomLevelSelect: nextProps.onZoomLevelSelect
       };
@@ -174,7 +174,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
       syncWithMap
     } = this.props;
 
-    if (!isEqual(syncWithMap, prevProps.syncWithMap)) {
+    if (!_isEqual(syncWithMap, prevProps.syncWithMap)) {
       if (syncWithMap) {
         map.on('moveend', this.zoomListener);
       } else {
@@ -231,7 +231,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
       resolutionsFilter
     } = this.props;
 
-    if (!isEmpty(this.state.scales)) {
+    if (!_isEmpty(this.state.scales)) {
       Logger.debug('Array with scales found. Returning');
       return [];
     }
@@ -244,7 +244,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     let mv = map.getView();
     // use existing resolutions array if exists
     let resolutions = mv.getResolutions();
-    if (isEmpty(resolutions)) {
+    if (_isEmpty(resolutions)) {
       for (let currentZoomLevel = mv.getMaxZoom(); currentZoomLevel >= mv.getMinZoom(); currentZoomLevel--) {
         let resolution = mv.getResolutionForZoom(currentZoomLevel);
         if (resolutionsFilter(resolution)) {
@@ -252,7 +252,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
         }
       }
     } else {
-      let reversedResolutions = reverse(clone(resolutions));
+      let reversedResolutions = _reverse(_clone(resolutions));
       reversedResolutions
         .filter(resolutionsFilter)
         .forEach((resolution) => {
@@ -271,7 +271,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    * @return {Element} Option element for provided zoom level
    */
   determineOptionKeyForZoomLevel = (zoom) => {
-    if (!isInteger(zoom) || (this.state.scales.length - 1 - zoom) < 0) {
+    if (!_isInteger(zoom) || (this.state.scales.length - 1 - zoom) < 0) {
       return undefined;
     }
     return this.state.scales[this.state.scales.length - 1 - zoom].toString();

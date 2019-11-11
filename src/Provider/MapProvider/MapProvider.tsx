@@ -1,6 +1,6 @@
 import * as React from 'react';
 import OlMap from 'ol/Map';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 
 /**
  *

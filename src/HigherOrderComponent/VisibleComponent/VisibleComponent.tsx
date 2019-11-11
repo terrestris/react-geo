@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
-interface IsVisibleComponentProps {
-  withRef: boolean;
+export interface IsVisibleComponentProps {
+  withRef?: boolean;
 }
 
 export interface VisibleComponentProps {
@@ -24,7 +24,7 @@ export interface VisibleComponentProps {
  */
 export function isVisibleComponent<P extends VisibleComponentProps>(WrappedComponent: React.ComponentType<any>, {
   withRef = false
-}: IsVisibleComponentProps): React.ComponentType {
+}: IsVisibleComponentProps = {}): React.ComponentType {
 
   /**
    * The wrapper class for the given component.

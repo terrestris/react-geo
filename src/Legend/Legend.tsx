@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import isEqual from 'lodash/isEqual';
+const _isEqual = require('lodash/isEqual');
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
@@ -75,7 +75,7 @@ export class Legend extends React.Component<LegendProps, LegendState> {
       layer
     } = this.props;
 
-    if (extraParams && !(isEqual(extraParams, prevProps.extraParams))) {
+    if (extraParams && !(_isEqual(extraParams, prevProps.extraParams))) {
       this.setState({
         legendUrl: this.getLegendUrl(layer, extraParams)
       });

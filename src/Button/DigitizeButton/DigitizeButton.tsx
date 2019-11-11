@@ -20,7 +20,7 @@ import OlInteractionTranslate from 'ol/interaction/Translate';
 import OlFeature from 'ol/Feature';
 import { never, singleClick } from 'ol/events/condition';
 
-import isFunction from 'lodash/isFunction';
+const _isFunction = require('lodash/isFunction');
 
 import ToggleButton from '../ToggleButton/ToggleButton';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
@@ -507,7 +507,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         if (editType === DigitizeButton.COPY_EDIT_TYPE) {
           this._selectInteraction.un('select', this.onFeatureCopy);
         }
-        if (isFunction(onFeatureSelect) && editType === DigitizeButton.EDIT_EDIT_TYPE) {
+        if (_isFunction(onFeatureSelect) && editType === DigitizeButton.EDIT_EDIT_TYPE) {
           this._selectInteraction.un('select', onFeatureSelect);
         }
         map.un('pointermove', this.onPointerMove);
@@ -752,7 +752,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       this._selectInteraction.on('select', this.onFeatureCopy);
     }
 
-    if (isFunction(onFeatureSelect) && editType === DigitizeButton.EDIT_EDIT_TYPE) {
+    if (_isFunction(onFeatureSelect) && editType === DigitizeButton.EDIT_EDIT_TYPE) {
       this._selectInteraction.on('select', onFeatureSelect);
     }
 
@@ -800,11 +800,11 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onFeatureSelect
     } = this.props;
 
-    if (isFunction(onFeatureRemove)) {
+    if (_isFunction(onFeatureRemove)) {
       onFeatureRemove(evt);
     }
 
-    if (isFunction(onFeatureSelect)) {
+    if (_isFunction(onFeatureSelect)) {
       onFeatureSelect(evt);
     }
 
@@ -838,11 +838,11 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       return;
     }
 
-    if (isFunction(onFeatureCopy)) {
+    if (_isFunction(onFeatureCopy)) {
       onFeatureCopy(evt);
     }
 
-    if (isFunction(onFeatureSelect)) {
+    if (_isFunction(onFeatureSelect)) {
       onFeatureSelect(evt);
     }
 
@@ -872,7 +872,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onModifyStart
     } = this.props;
 
-    if (isFunction(onModifyStart)) {
+    if (_isFunction(onModifyStart)) {
       onModifyStart(evt);
     }
 
@@ -907,7 +907,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onModifyEnd
     } = this.props;
 
-    if (isFunction(onModifyEnd)) {
+    if (_isFunction(onModifyEnd)) {
       onModifyEnd(evt);
     }
   }
@@ -922,7 +922,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onTranslateStart
     } = this.props;
 
-    if (isFunction(onTranslateStart)) {
+    if (_isFunction(onTranslateStart)) {
       onTranslateStart(evt);
     }
   }
@@ -937,7 +937,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onTranslateEnd
     } = this.props;
 
-    if (isFunction(onTranslateEnd)) {
+    if (_isFunction(onTranslateEnd)) {
       onTranslateEnd(evt);
     }
   }
@@ -952,7 +952,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onTranslating
     } = this.props;
 
-    if (isFunction(onTranslating)) {
+    if (_isFunction(onTranslating)) {
       onTranslating(evt);
     }
   }
@@ -993,7 +993,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Turns visibility of modal off and removes last drawn feature from the
    * digitize layer.
    */
-  onModalLabelCancel = () => {
+  onModalLabelCancel = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const {
       onModalLabelCancel
     } = this.props;
@@ -1006,8 +1006,8 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         this._digitizeFeatures.remove(this._digitizeTextFeature);
         this._digitizeTextFeature = null;
       }
-      if (isFunction(onModalLabelCancel)) {
-        onModalLabelCancel();
+      if (_isFunction(onModalLabelCancel)) {
+        onModalLabelCancel(event);
       }
     });
   }
@@ -1038,7 +1038,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     this.setState({
       textLabel: ''
     }, () => {
-      if (isFunction(onModalOkCbk)) {
+      if (_isFunction(onModalOkCbk)) {
         onModalOkCbk(feat, label);
       }
     });

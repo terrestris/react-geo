@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 
-import isFunction from 'lodash/isFunction';
+const _isFunction = require('lodash/isFunction');
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -35,7 +35,7 @@ export interface ToggleGroupProps extends Partial<ToggleGroupDefaultProps> {
   /**
    * Callback function for onChange.
    */
-  onChange: () => void;
+  onChange: (childProps: any) => void;
   /**
    * The children of this group. Typically a set of `ToggleButton`s.
    */
@@ -113,10 +113,10 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
   /**
    * The onChange handler.
    *
-   * @param {Object} childProps The properties if the children.
+   * @param {Object} childProps The properties of the children.
    */
   onChange = (childProps) => {
-    if (isFunction(this.props.onChange)) {
+    if (_isFunction(this.props.onChange)) {
       this.props.onChange(childProps);
     }
     // Allow deselect.
