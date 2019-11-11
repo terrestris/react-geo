@@ -43,7 +43,8 @@ module.exports = {
   require: [
     '@babel/polyfill',
     'whatwg-fetch',
-    'ol/ol.css'
+    'ol/ol.css',
+    'antd/dist/antd.css'
   ],
   components: 'src/**/*.tsx',
   sections: [{
