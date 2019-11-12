@@ -6,7 +6,7 @@ This way you can slide through a set of layers, which e.g. is useful when using
 layers showing the same area but different content or time.
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';

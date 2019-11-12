@@ -1,29 +1,39 @@
 const path = require('path');
 const webpackCommonConf = require('./webpack.common.config.js');
+const reactDogGenTypeScript = require('react-docgen-typescript');
 
 module.exports = {
   title: 'react-geo',
   styleguideDir: './build/styleguide',
+  webpackConfig: webpackCommonConf,
+  usageMode: 'expand',
   template: {
     favicon: 'https://terrestris.github.io/react-geo/assets/favicon.ico'
   },
+  propsParser: reactDogGenTypeScript
+    .withCustomConfig('./tsconfig.json', {
+      savePropValueAsString: true,
+      propFilter: (prop) => {
+        if (prop.parent) {
+          return !prop.parent.fileName.includes('node_modules');
+        }
+        return true;
+      }
+    }).parse,
   ignore: [
     '**/__tests__/**',
-    '**/*.test.{js,jsx,ts,tsx}',
     '**/*.spec.{js,jsx,ts,tsx}',
-    '**/*.d.ts',
-    '**/src/**/*.example.jsx'
+    '**/*.d.ts'
   ],
-  usageMode: 'expand',
   theme: {
     sidebarWidth: 350
   },
   getExampleFilename(componentPath) {
-    return componentPath.replace(/\.jsx?$/, '.example.md');
+    return componentPath.replace(/\.tsx?$/, '.example.md');
   },
   skipComponentsWithoutExample: true,
   getComponentPathLine(componentPath) {
-    const name = path.basename(componentPath, '.jsx');
+    const name = path.basename(componentPath, '.js');
     const dir = path.dirname(componentPath).replace('src', 'dist');
     return `import ${name} from '@terrestris/react-geo/${dir}/${name}';`;
   },
@@ -33,9 +43,10 @@ module.exports = {
   require: [
     '@babel/polyfill',
     'whatwg-fetch',
-    'ol/ol.css'
+    'ol/ol.css',
+    'antd/dist/antd.css'
   ],
-  webpackConfig: webpackCommonConf,
+  components: 'src/**/*.tsx',
   sections: [{
     name: 'Introduction',
     content: 'README.md'
@@ -43,49 +54,49 @@ module.exports = {
     name: 'Components',
     sections: [{
       name: 'Buttons',
-      components: 'src/Button/**/*.jsx'
+      components: 'src/Button/**/*.tsx'
     }, {
       name: 'CircleMenu',
-      components: 'src/CircleMenu/**/*.jsx'
+      components: 'src/CircleMenu/**/*.tsx'
     }, {
       name: 'Containers',
-      components: 'src/Container/**/*.jsx'
+      components: 'src/Container/**/*.tsx'
     }, {
       name: 'Fields',
-      components: 'src/Field/**/*.jsx'
+      components: 'src/Field/**/*.tsx'
     }, {
       name: 'Grids',
-      components: 'src/Grid/**/*.jsx'
+      components: 'src/Grid/**/*.tsx'
     }, {
       name: 'HigherOrderComponents',
-      components: 'src/HigherOrderComponent/**/*.jsx'
+      components: 'src/HigherOrderComponent/**/*.tsx'
     }, {
       name: 'LayerTree',
-      components: 'src/LayerTree/**/*.jsx'
+      components: 'src/LayerTree/**/*.tsx'
     }, {
       name: 'LayerTreeNode',
-      components: 'src/LayerTreeNode/**/*.jsx'
+      components: 'src/LayerTreeNode/**/*.tsx'
     }, {
       name: 'Legend',
-      components: 'src/Legend/**/*.jsx'
+      components: 'src/Legend/**/*.tsx'
     }, {
       name: 'Map',
-      components: 'src/Map/**/*.jsx'
+      components: 'src/Map/**/*.tsx'
     }, {
       name: 'Panel',
-      components: 'src/Panel/**/*.jsx'
+      components: 'src/Panel/**/*.tsx'
     }, {
       name: 'Slider',
-      components: 'src/Slider/**/*.jsx'
+      components: 'src/Slider/**/*.tsx'
     }, {
       name: 'Toolbar',
-      components: 'src/Toolbar/**/*.jsx'
+      components: 'src/Toolbar/**/*.tsx'
     }, {
       name: 'UserChip',
-      components: 'src/UserChip/**/*.jsx'
+      components: 'src/UserChip/**/*.tsx'
     }, {
       name: 'Window',
-      components: 'src/Window/**/*.jsx'
+      components: 'src/Window/**/*.tsx'
     }]
   }]
 };

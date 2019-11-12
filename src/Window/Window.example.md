@@ -3,7 +3,7 @@ This example demonstrates the usage of a Window component.
 Click to open window:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 import Window from '@terrestris/react-geo/Window/Window';

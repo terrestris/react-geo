@@ -1,7 +1,7 @@
 This demonstrates the use of ZoomToExtentButton.
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';

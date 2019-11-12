@@ -9,7 +9,7 @@ The map can be created asynchronusly so that every child of the MapProvider is j
 rendered when the map is ready.
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';

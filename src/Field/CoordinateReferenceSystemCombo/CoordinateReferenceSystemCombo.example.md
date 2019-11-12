@@ -1,7 +1,7 @@
 This demonstrates the usage of the CoordinateReferenceSystemCombo.
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import proj4 from 'proj4';
 

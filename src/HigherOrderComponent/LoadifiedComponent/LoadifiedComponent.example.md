@@ -2,7 +2,7 @@ This demonstrates the use of The `LoadifiedComponent` HOC (High Order Component)
 
 The example below you see a `SimpleButton` that changes the `Titlebar`'s loading status:
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 import Titlebar from '@terrestris/react-geo/Panel/Titlebar/Titlebar';
@@ -49,7 +49,7 @@ class LoadingTitleBar extends React.Component {
 This shows the use of the component with the `LayerTree` component.
 Changing the layer orders in the `layerTree` will trigger the loading status to change.
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';

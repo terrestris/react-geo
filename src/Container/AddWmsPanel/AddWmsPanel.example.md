@@ -3,7 +3,7 @@ The capabilities of this WMS are fetched and parsed to OL layer instances using 
 An `AddWmsPanel` shows a list of the parsed layers and each checked layer (or the entire set) can be added to the map.
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
