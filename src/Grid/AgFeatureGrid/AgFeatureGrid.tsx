@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { AgGridReact } from 'ag-grid-react';
-
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
@@ -24,10 +22,17 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../../constants';
 
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import 'ag-grid-community/dist/styles/ag-theme-fresh.css';
-import { RowClickedEvent, CellMouseOverEvent, CellMouseOutEvent, SelectionChangedEvent } from 'ag-grid-community';
+import '@ag-grid-community/core/dist/styles/ag-grid.css';
+import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
+import '@ag-grid-community/core/dist/styles/ag-theme-fresh.css';
+import { AgGridReact } from '@ag-grid-community/react';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import {
+  RowClickedEvent,
+  CellMouseOverEvent,
+  CellMouseOutEvent,
+  SelectionChangedEvent
+} from '@ag-grid-community/core';
 
 interface AgFeatureGridDefaultProps {
   /**
@@ -1025,6 +1030,9 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
           onCellMouseOut={this.onRowMouseOut.bind(this)}
           ref={ref => this._ref = ref}
           getRowClass={rowClassNameFn}
+          modules={[
+            ClientSideRowModelModule
+          ]}
           {...passThroughProps}
         >
           {children}

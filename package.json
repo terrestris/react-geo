@@ -72,9 +72,12 @@
     "@types/react": "^16.0",
     "antd": "^3.0",
     "ol": "^6.0",
-    "react": "^16.0"
+    "react": "^16.3"
   },
   "dependencies": {
+    "@ag-grid-community/client-side-row-model": "^22.0.0",
+    "@ag-grid-community/core": "^22.0.0",
+    "@ag-grid-community/react": "^22.0.0",
     "@terrestris/base-util": "^0.2.2",
     "@terrestris/ol-util": "^3.0.1",
     "@turf/turf": "^5.1.6",
@@ -83,8 +86,6 @@
     "@types/node": "^12.12.6",
     "@types/react-dom": "^16.9.3",
     "@types/react-rnd": "^8.0.0",
-    "ag-grid-community": "^21.2.2",
-    "ag-grid-react": "^21.2.2",
     "copyfiles": "^2.1.1",
     "lodash": "^4.17.15",
     "loglevel": "^1.6.4",
@@ -96,7 +97,7 @@
     "react-fa": "^5.0.0",
     "react-rnd": "^10.0.0",
     "shpjs": "^3.4.3",
-    "typescript": "~3.6.2",
+    "typescript": "^3.7.2",
     "url-parse": "^1.4.7",
     "validator": "^12.0.0"
   },
@@ -137,7 +138,7 @@
     "less-loader": "^5.0.0",
     "np": "^5.0.3",
     "ol": "^6.1.1",
-    "react": "^16.9.0",
+    "react": "^16.11.0",
     "react-docgen-typescript": "^1.15.1",
     "react-styleguidist": "^10.2.0",
     "react-test-renderer": "^16.9.0",
