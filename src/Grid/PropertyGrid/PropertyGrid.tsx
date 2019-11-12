@@ -126,10 +126,10 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
     columns: ColumnProps<any>[]
   } {
     if (!attributeFilter) {
-      attributeFilter = feature.getKeys().filter((attrName) => attrName !== 'geometry');
+      attributeFilter = feature.getKeys().filter((attrName: string) => attrName !== 'geometry');
     }
 
-    const dataSource = attributeFilter.map((attr) => {
+    const dataSource = attributeFilter.map((attr: any) => {
       const rowObj = {
         attributeName: (attributeNames && _get(attributeNames, attr)) ? _get(attributeNames, attr) : attr,
         attributeValue: feature.get(attr),
