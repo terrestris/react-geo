@@ -1,39 +1,33 @@
 import * as React from 'react';
-import { Avatar, Dropdown } from 'antd';
+import { Dropdown } from 'antd';
+import Avatar, { AvatarProps } from 'antd/lib/avatar';
 import './UserChip.less';
 
 import { CSS_PREFIX } from '../constants';
-
-// i18n
-export interface UserChipLocale {
-}
-
-interface UserChipDefaultProps {
-  /**
-   * The user aname.
-   * @type {String}
-   */
-  userName: string;
-}
+import { string } from 'prop-types';
 
 // non default props
-export interface UserChipProps extends Partial<UserChipDefaultProps> {
+export interface UserChipProps extends AvatarProps {
     /**
      * An optional CSS class which should be added.
      */
-    className: string;
+    className?: string;
     /**
      * The image src.
      */
-    imageSrc: string;
+    imageSrc?: string;
     /**
      * The react element representing the user menu
      */
-    userMenu: React.ReactNode;
+    userMenu?: React.ReactNode;
+    /**
+     * The user name.
+     */
+    userName?: React.ReactNode;
     /**
      * The style object
      */
-    style: any;
+    style?: any;
 }
 
 /**
@@ -49,14 +43,7 @@ class UserChip extends React.Component<UserChipProps> {
    * The className added to this component.
    * @private
    */
-  className: string = `${CSS_PREFIX}userchip`;
-
-  /**
-   * The default properties.
-   */
-  static defaultProps: UserChipDefaultProps = {
-    userName: 'John Doe'
-  };
+  _className: string = `${CSS_PREFIX}userchip`;
 
   /**
    * Create a UserChip.
@@ -81,7 +68,11 @@ class UserChip extends React.Component<UserChipProps> {
       userName
     } = this.props;
 
-    const splittedName = userName.split(' ');
+    if (!(userName instanceof string || typeof userName === 'string')) {
+      return '??';
+    }
+
+    const splittedName = (userName as string).split(' ');
     let initals = [];
     splittedName.forEach((part) =>  {
       initals.push(part[0].toUpperCase());
@@ -95,30 +86,38 @@ class UserChip extends React.Component<UserChipProps> {
    * @return {type} Description
    */
   getUserMenu() {
-    const className = this.props.className
-      ? `${this.props.className} ${this.className}`
-      : this.className;
+    const {
+      className,
+      imageSrc,
+      userMenu,
+      userName,
+      style,
+      ...passThroughProps
+    } = this.props;
+
+    const finalClassName = className
+      ? `${className} ${this._className}`
+      : this._className;
 
     return (
       <div
-        className={className}
-        style={this.props.style}
+        className={finalClassName}
+        style={style}
       >
         <Avatar
-          src={this.props.imageSrc}
+          src={imageSrc}
           size="large"
           className="userimage"
+          {...passThroughProps}
         >
           {
-            this.props.imageSrc ?
-              '' :
-              this.getInitials()
+            imageSrc ? '' : this.getInitials()
           }
         </Avatar>
         <span
           className="username"
         >
-          {this.props.userName}
+          {userName}
         </span>
       </div>
     );
@@ -128,22 +127,25 @@ class UserChip extends React.Component<UserChipProps> {
    * The render function
    */
   render() {
+    const {
+      userMenu
+    } = this.props;
 
-    if (this.props.userMenu && React.isValidElement(this.props.userMenu)) {
+    if (userMenu && React.isValidElement(userMenu)) {
       return (
         <Dropdown
-          overlay={this.props.userMenu}
+          overlay={userMenu}
           trigger={['click']}
           getPopupContainer={() => {
-            return document.getElementsByClassName(this.className)[0] as HTMLElement;
+            return document.getElementsByClassName(this._className)[0] as HTMLElement;
           }}
         >
           {this.getUserMenu()}
         </Dropdown>
       );
+    } else {
+      return this.getUserMenu();
     }
-
-    return this.getUserMenu();
   }
 }
 
