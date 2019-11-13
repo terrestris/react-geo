@@ -49,12 +49,11 @@ describe('<UserChip />', () => {
   it('should pass style prop', () => {
     const props = {
       style: {
-        'backgroundColor': 'yellow'
+        backgroundColor: 'yellow'
       }
     };
     const wrapper = TestUtil.mountComponent(UserChip, props);
-    const className = wrapper.instance().className;
-    expect(wrapper.find(`div.${className}`).props().style.backgroundColor).toBe('yellow');
+    expect(wrapper.props().style.backgroundColor).toBe('yellow');
   });
 
 });
