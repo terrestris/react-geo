@@ -13,7 +13,7 @@
           "--watch"
         ],
         "runtimeExecutable": null,
-        "console": "externalTerminal"
+        "console": "integratedTerminal"
       }
     ]
   }
