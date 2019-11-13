@@ -66,7 +66,7 @@
     "build:dist": "npm run clean:dist && BABEL_ENV=build tsc -p ./ && copyfiles \"./src/**/*.less\" dist --up 1",
     "build:all": "npm run build:styleguide && npm run build:dist",
     "build": "npm run test -- --coverage && npm run build:all",
-    "release": "np --no-yarn && git push https://github.com/terrestris/react-geo.git master --tags"
+    "release": "np --no-yarn"
   },
   "peerDependencies": {
     "@types/react": "^16.0",
