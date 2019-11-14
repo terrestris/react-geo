@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { Dropdown } from 'antd';
-import Avatar, { AvatarProps } from 'antd/lib/avatar';
+import {
+  Avatar,
+  Dropdown
+} from 'antd';
+
+import { AvatarProps } from 'antd/lib/avatar';
+
 import './UserChip.less';
 
 import { CSS_PREFIX } from '../constants';
-import { string } from 'prop-types';
 
 // non default props
 export interface UserChipProps extends AvatarProps {
@@ -68,7 +72,7 @@ class UserChip extends React.Component<UserChipProps> {
       userName
     } = this.props;
 
-    if (!(userName instanceof string || typeof userName === 'string')) {
+    if (!(userName instanceof String || typeof userName === 'string')) {
       return '??';
     }
 
