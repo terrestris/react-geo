@@ -43,10 +43,8 @@ module.exports = {
   require: [
     '@babel/polyfill',
     'whatwg-fetch',
-    'ol/ol.css',
-    'antd/dist/antd.css'
+    'ol/ol.css'
   ],
-  components: 'src/**/*.tsx',
   sections: [{
     name: 'Introduction',
     content: 'README.md'

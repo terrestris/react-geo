@@ -24,15 +24,7 @@ module.exports = {
     // Compile .tsx?
     {
       test: /\.(ts|tsx)$/,
-      use: [
-        {
-          loader: require.resolve('ts-loader'),
-          options: {
-            // disable type checker - we will use it in fork plugin
-            transpileOnly: true
-          },
-        },
-      ],
+      use: 'babel-loader'
     }, {
       test: /\.css$/,
       use: [
