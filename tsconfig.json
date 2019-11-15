@@ -10,7 +10,6 @@
     "lib": ["es7", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "noEmit": true,
     "noImplicitAny": false, //temporal
     "noImplicitReturns": true,
     "noImplicitThis": true,
