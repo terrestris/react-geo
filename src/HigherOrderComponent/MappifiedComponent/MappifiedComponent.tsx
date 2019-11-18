@@ -13,10 +13,10 @@ interface MappifiedComponentProps {
  *
  * Wrapped components will receive the map from the context as a prop.
  *
- * @param {Component} WrappedComponent The component to wrap and enhance.
- * @return {Component} The wrapped component.
+ * @param WrappedComponent The component to wrap and enhance.
+ * @return The wrapped component.
  */
-export function mappify<P extends Omit<P, 'map'>>(WrappedComponent: React.ComponentType<P>,  {
+export function mappify<P>(WrappedComponent: React.ComponentType<P>,  {
   withRef = false
 }: MappifiedComponentProps = {}) {
 
@@ -26,13 +26,12 @@ export function mappify<P extends Omit<P, 'map'>>(WrappedComponent: React.Compon
    * @class The MappifiedComponent
    * @extends React.Component
    */
-  return class MappifiedComponent extends React.Component<P & MappifiedComponentProps> {
+  return class MappifiedComponent extends React.Component<Omit<P, 'map'> & MappifiedComponentProps> {
 
     _wrappedInstance?: React.ReactElement;
 
     /**
      * The context types.
-     * @type {Object}
      */
     static contextTypes = {
       map: PropTypes.instanceOf(OlMap).isRequired
@@ -48,7 +47,6 @@ export function mappify<P extends Omit<P, 'map'>>(WrappedComponent: React.Compon
 
       /**
        * The wrapped instance.
-       * @type {Element}
        */
       this._wrappedInstance = null;
     }
@@ -56,7 +54,7 @@ export function mappify<P extends Omit<P, 'map'>>(WrappedComponent: React.Compon
     /**
      * Returns the wrapped instance. Only applicable if withRef is set to true.
      *
-     * @return {Element} The wrapped instance.
+     * @return The wrapped instance.
      */
     getWrappedInstance = (): React.ReactElement | void => {
       if (withRef) {
@@ -70,7 +68,7 @@ export function mappify<P extends Omit<P, 'map'>>(WrappedComponent: React.Compon
     /**
      * Sets the wrapped instance.
      *
-     * @param {Element} instance The instance to set.
+     * @param instance The instance to set.
      */
     setWrappedInstance = (instance) => {
       if (withRef) {
@@ -95,7 +93,7 @@ export function mappify<P extends Omit<P, 'map'>>(WrappedComponent: React.Compon
         <WrappedComponent
           ref={this.setWrappedInstance}
           map={map}
-          {...this.props}
+          {...this.props as P}
         />
       );
 

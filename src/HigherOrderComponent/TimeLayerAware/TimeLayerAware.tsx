@@ -7,9 +7,9 @@ const _isArray = require('lodash/isArray');
  * Finds the key time in the passed object regardless of upper- or lowercase
  * characters. Will return `TIME` (all uppercase) as a fallback.
  *
- * @param {Object} params The object to find the key in, basically the params of
+ * @param params The object to find the key in, basically the params of
  *   a WMS source that will end up as URL parameters.
- * @return {String} The key for the time parameter, in the actual spelling.
+ * @return The key for the time parameter, in the actual spelling.
  */
 const findTimeParam = (params: Object) => {
   const keys = Object.keys(params);
@@ -28,13 +28,13 @@ const findTimeParam = (params: Object) => {
 /**
  * HOC that updates layers based on the wrapped components time instant or
  * interval. Can for example be used with the TimeSlider component.
- * @param  {React.Component} WrappedComponent a component with an onChange prop
- * @param  {Array} layers array of layer configurations
- * @return {React.Component} a time layer aware component
+ * @param WrappedComponent A component with an onChange prop
+ * @param layers Array of layer configurations
+ * @return A time layer aware component
  */
 export function timeLayerAware<P extends object>(WrappedComponent: React.ComponentType<P>, layers: OlLayerBase[]) {
 
-  return class TimeLayerAware extends React.Component<P> {
+  return class TimeLayerAware extends React.Component<Omit<P, 'onChange'>> {
 
     timeChanged = newValues => {
       layers.forEach(config => {
@@ -56,12 +56,12 @@ export function timeLayerAware<P extends object>(WrappedComponent: React.Compone
 
     /**
      * Injects the onChange property.
-     * @return {React.Component} the wrapped component
+     * @return The wrapped component
      */
     render = () => {
       return <WrappedComponent
         onChange={this.timeChanged}
-        {...this.props}
+        {...this.props as P}
       />;
     }
 

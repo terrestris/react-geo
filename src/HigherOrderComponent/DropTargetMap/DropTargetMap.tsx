@@ -6,18 +6,18 @@ import { MapComponentProps } from '../../Map/MapComponent/MapComponent';
 /**
  * HOC that adds layers to the map if GeoJSON files or shapefile zip files are
  * dropped on it.
- * @param  {React.Component} WrappedComponent the map component
- * @return {React.Component} a time layer aware component
+ * @param WrappedComponent the map component
+ * @return a time layer aware component
  */
-export function onDropAware<P>(WrappedComponent: React.ComponentType<P>) {
+export function onDropAware(WrappedComponent: React.ComponentType<MapComponentProps>) {
 
-  return class DropTargetMap extends React.Component<P & MapComponentProps> {
+  return class DropTargetMap extends React.Component<MapComponentProps> {
 
     /**
      * Calls an appropriate addLayer method depending on the fileending.
      * Currently expects shapefiles for '*.zip' and geojson for all other
      * endings.
-     * @param  {Object} event the drop event
+     * @param event The drop event
      */
     onDrop(event: DragEvent) {
       const {
@@ -40,15 +40,15 @@ export function onDropAware<P>(WrappedComponent: React.ComponentType<P>) {
 
     /**
      * Prevents default in order to prevent browser navigation/opening the file.
-     * @param  {Object} event the dragover event
+     * @param event The dragover event
      */
-    onDragOver(event: DragEvent) {
+    onDragOver(event: React.DragEvent<HTMLDivElement>) {
       event.preventDefault();
     }
 
     /**
      * Injects the onDrop and onDragOver properties.
-     * @return {React.Component} the wrapped component
+     * @return the wrapped component
      */
     render = () => {
       return <WrappedComponent
