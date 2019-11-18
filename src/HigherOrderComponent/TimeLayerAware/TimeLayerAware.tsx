@@ -32,9 +32,9 @@ const findTimeParam = (params: Object) => {
  * @param  {Array} layers array of layer configurations
  * @return {React.Component} a time layer aware component
  */
-export function timeLayerAware(WrappedComponent: React.ComponentType<any>, layers: OlLayerBase[]) {
+export function timeLayerAware<P extends object>(WrappedComponent: React.ComponentType<P>, layers: OlLayerBase[]) {
 
-  return class TimeLayerAware extends React.Component {
+  return class TimeLayerAware extends React.Component<P> {
 
     timeChanged = newValues => {
       layers.forEach(config => {

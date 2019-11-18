@@ -16,7 +16,7 @@ interface MappifiedComponentProps {
  * @param {Component} WrappedComponent The component to wrap and enhance.
  * @return {Component} The wrapped component.
  */
-export function mappify<P>(WrappedComponent: React.ComponentType<any>,  {
+export function mappify<P extends Omit<P, 'map'>>(WrappedComponent: React.ComponentType<P>,  {
   withRef = false
 }: MappifiedComponentProps = {}) {
 
@@ -26,7 +26,7 @@ export function mappify<P>(WrappedComponent: React.ComponentType<any>,  {
    * @class The MappifiedComponent
    * @extends React.Component
    */
-  return class MappifiedComponent extends React.Component {
+  return class MappifiedComponent extends React.Component<P & MappifiedComponentProps> {
 
     _wrappedInstance?: React.ReactElement;
 
