@@ -18,7 +18,7 @@ export interface LoadifiedComponentProps {
  * @param {Component} options The options to apply.
  * @return {Component} The wrapped component.
  */
-export function loadify(WrappedComponent: React.ComponentType<any>, {
+export function loadify<P>(WrappedComponent: React.ComponentType<any>, {
   withRef = false
 }: LoadifiedComponentProps = {}) {
 
@@ -28,33 +28,33 @@ export function loadify(WrappedComponent: React.ComponentType<any>, {
    * @class The loadify
    * @extends React.Component
    */
-  return class LoadifiedComponent extends React.Component<Partial<SpinProps>> {
+  return class LoadifiedComponent extends React.Component<P & Partial<SpinProps>> {
 
     _wrappedInstance?: React.ReactElement;
 
-  /**
-   * The default properties.
-   *
-   * @type {Object}
-   */
-  static defaultProps = {
-    spinning: false
-  };
-
-  /**
-   * Create the Loadify.
-   *
-   * @constructs Loadify
-   */
-  constructor(props: Partial<SpinProps>) {
-    super(props);
+    /**
+     * The default properties.
+     *
+     * @type {Object}
+     */
+    static defaultProps = {
+      spinning: false
+    };
 
     /**
-     * The wrapped instance.
-     * @type {Element}
+     * Create the Loadify.
+     *
+     * @constructs Loadify
      */
-    this._wrappedInstance = null;
-  }
+    constructor(props: P) {
+      super(props);
+
+      /**
+       * The wrapped instance.
+       * @type {Element}
+       */
+      this._wrappedInstance = null;
+    }
 
     /**
      * Returns the wrapped instance. Only applicable if withRef is set to true.
@@ -97,18 +97,20 @@ export function loadify(WrappedComponent: React.ComponentType<any>, {
       // Propoerties passed to the Spin component. For the List of all the Spin component
       // properties see:
       // https://ant.design/components/spin/
-      const passToLoader = {
+      const passToLoader: Partial<SpinProps> = {
         size,
         indicator,
         tip,
         delay,
         spinning
       };
+
       return (
         <Spin {...passToLoader} >
-          { <WrappedComponent
+          <WrappedComponent
             ref={this.setWrappedInstance}
-            {...passThroughProps} />}
+            {...passThroughProps}
+          />
         </Spin>
       );
     }

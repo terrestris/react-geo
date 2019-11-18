@@ -9,9 +9,9 @@ import { MapComponentProps } from '../../Map/MapComponent/MapComponent';
  * @param  {React.Component} WrappedComponent the map component
  * @return {React.Component} a time layer aware component
  */
-export function onDropAware(WrappedComponent: React.ComponentType<any>) {
+export function onDropAware<P>(WrappedComponent: React.ComponentType<P>) {
 
-  return class DropTargetMap extends React.Component<MapComponentProps> {
+  return class DropTargetMap extends React.Component<P & MapComponentProps> {
 
     /**
      * Calls an appropriate addLayer method depending on the fileending.
