@@ -102,10 +102,14 @@ export function loadify<P>(WrappedComponent: React.ComponentType<any>, {
         spinning
       };
 
+      // Check if WrappedComponent is a ReactComponent (class) as functional components
+      // can't have a ref
+      const isReactComponent = WrappedComponent.prototype.isReactComponent;
+
       return (
         <Spin {...passToLoader} >
           <WrappedComponent
-            ref={this.setWrappedInstance}
+            ref={isReactComponent && this.setWrappedInstance}
             {...passThroughProps}
           />
         </Spin>
