@@ -107,14 +107,18 @@ export function isVisibleComponent<P extends VisibleComponentProps>(WrappedCompo
       } = this.props;
 
       // Check if the current component should be visible or not.
-      let isVisible = this.isVisibleComponent(this.props.name);
+      const isVisible = this.isVisibleComponent(this.props.name);
+
+      // Check if WrappedComponent is a ReactComponent (class) as functional components
+      // can't have a ref
+      const isReactComponent = WrappedComponent.prototype.isReactComponent;
 
       // Inject props into the wrapped component. These are usually state
       // values or instance methods.
       return (
         isVisible ?
           <WrappedComponent
-            ref={this.setWrappedInstance}
+            ref={isReactComponent && this.setWrappedInstance}
             {...passThroughProps as P}
           /> :
           null

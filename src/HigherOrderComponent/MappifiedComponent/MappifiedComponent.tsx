@@ -16,7 +16,7 @@ interface MappifiedComponentProps {
  * @param WrappedComponent The component to wrap and enhance.
  * @return The wrapped component.
  */
-export function mappify<P>(WrappedComponent: React.ComponentType<P>,  {
+export function mappify<P>(WrappedComponent: React.ComponentType<P>, {
   withRef = false
 }: MappifiedComponentProps = {}) {
 
@@ -89,9 +89,13 @@ export function mappify<P>(WrappedComponent: React.ComponentType<P>,  {
         'context. Did you implement the MapProvider?');
       }
 
+      // Check if WrappedComponent is a ReactComponent (class) as functional components
+      // can't have a ref
+      const isReactComponent = WrappedComponent.prototype.isReactComponent;
+
       return (
         <WrappedComponent
-          ref={this.setWrappedInstance}
+          ref={isReactComponent && this.setWrappedInstance}
           map={map}
           {...this.props as P}
         />
