@@ -28,7 +28,7 @@ const findTimeParam = (params: Object) => {
 /**
  * HOC that updates layers based on the wrapped components time instant or
  * interval. Can for example be used with the TimeSlider component.
- * @param WrappedComponent A component with an onChange prop
+ * @param WrappedComponent A component with an onChange prop.
  * @param layers An array of layer configurations.
  * @return A time layer aware component.
  */
