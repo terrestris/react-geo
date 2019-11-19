@@ -7,7 +7,7 @@ import { MapComponentProps } from '../../Map/MapComponent/MapComponent';
  * HOC that adds layers to the map if GeoJSON files or shapefile zip files are
  * dropped on it.
  * @param WrappedComponent The map component.
- * @return a time layer aware component
+ * @return A time layer aware component.
  */
 export function onDropAware(WrappedComponent: React.ComponentType<MapComponentProps>) {
 
