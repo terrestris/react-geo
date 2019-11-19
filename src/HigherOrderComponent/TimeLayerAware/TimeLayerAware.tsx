@@ -30,7 +30,7 @@ const findTimeParam = (params: Object) => {
  * interval. Can for example be used with the TimeSlider component.
  * @param WrappedComponent A component with an onChange prop
  * @param layers An array of layer configurations.
- * @return A time layer aware component
+ * @return A time layer aware component.
  */
 export function timeLayerAware<P extends object>(WrappedComponent: React.ComponentType<P>, layers: OlLayerBase[]) {
 
