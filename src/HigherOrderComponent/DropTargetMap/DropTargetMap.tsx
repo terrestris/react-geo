@@ -40,7 +40,7 @@ export function onDropAware(WrappedComponent: React.ComponentType<MapComponentPr
 
     /**
      * Prevents default in order to prevent browser navigation/opening the file.
-     * @param event The dragover event
+     * @param event The dragover event.
      */
     onDragOver(event: React.DragEvent<HTMLDivElement>) {
       event.preventDefault();
