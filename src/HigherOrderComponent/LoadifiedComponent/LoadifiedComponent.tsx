@@ -14,9 +14,9 @@ export interface LoadifiedComponentProps {
  * If the wrapped component is set to be loading the loader element
  * will be shown and if not it wont.
  *
- * @param {Component} WrappedComponent The component to wrap and enhance.
- * @param {Component} options The options to apply.
- * @return {Component} The wrapped component.
+ * @param WrappedComponent The component to wrap and enhance.
+ * @param options The options to apply.
+ * @return The wrapped component.
  */
 export function loadify<P>(WrappedComponent: React.ComponentType<any>, {
   withRef = false
@@ -34,8 +34,6 @@ export function loadify<P>(WrappedComponent: React.ComponentType<any>, {
 
     /**
      * The default properties.
-     *
-     * @type {Object}
      */
     static defaultProps = {
       spinning: false
@@ -51,7 +49,6 @@ export function loadify<P>(WrappedComponent: React.ComponentType<any>, {
 
       /**
        * The wrapped instance.
-       * @type {Element}
        */
       this._wrappedInstance = null;
     }
@@ -59,7 +56,7 @@ export function loadify<P>(WrappedComponent: React.ComponentType<any>, {
     /**
      * Returns the wrapped instance. Only applicable if withRef is set to true.
      *
-     * @return {Element} The wrappend instance.
+     * @return The wrappend instance.
      */
     getWrappedInstance = (): React.ReactElement | void => {
       if (withRef) {
@@ -73,7 +70,7 @@ export function loadify<P>(WrappedComponent: React.ComponentType<any>, {
     /**
      * Sets the wrapped instance.
      *
-     * @param {Element} instance The instance to set.
+     * @param instance The instance to set.
      */
     setWrappedInstance = (instance) => {
       if (withRef) {
