@@ -17,7 +17,7 @@ export function onDropAware(WrappedComponent: React.ComponentType<MapComponentPr
      * Calls an appropriate addLayer method depending on the fileending.
      * Currently expects shapefiles for '*.zip' and geojson for all other
      * endings.
-     * @param event The drop event
+     * @param event The drop event.
      */
     onDrop(event: DragEvent) {
       const {
