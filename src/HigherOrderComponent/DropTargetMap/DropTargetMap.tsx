@@ -48,7 +48,7 @@ export function onDropAware(WrappedComponent: React.ComponentType<MapComponentPr
 
     /**
      * Injects the onDrop and onDragOver properties.
-     * @return the wrapped component
+     * @return The wrapped component.
      */
     render = () => {
       return <WrappedComponent
