@@ -13,6 +13,7 @@ import NominatimSearch from './Field/NominatimSearch/NominatimSearch';
 import WfsSearch from './Field/WfsSearch/WfsSearch';
 import WfsSearchInput from './Field/WfsSearchInput/WfsSearchInput';
 import ScaleCombo from './Field/ScaleCombo/ScaleCombo';
+import LayerSwitcher from './LayerSwitcher/LayerSwitcher';
 import LayerTree from './LayerTree/LayerTree';
 import LayerTreeNode from './LayerTreeNode/LayerTreeNode';
 import Legend from './Legend/Legend';
@@ -51,6 +52,7 @@ export {
   DigitizeButton,
   ZoomButton,
   ZoomToExtentButton,
+  LayerSwitcher,
   LayerTree,
   LayerTreeNode,
   Legend,
