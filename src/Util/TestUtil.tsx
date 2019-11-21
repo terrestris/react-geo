@@ -71,10 +71,10 @@ export class TestUtil {
   /**
    * Creates an ol map.
    *
-   * @param {Object} [mapOpts] Additional options for the map to create.
-   * @return {ol.Map} The ol map.
+   * @param [mapOpts] Additional options for the map to create.
+   * @return The ol map.
    */
-  static createMap = (mapOpts?) => {
+  static createMap = (mapOpts?: any) => {
     let source = new OlSourceVector();
     let layer = new OlLayerVector({source: source});
     let targetDiv = TestUtil.mountMapDiv();
@@ -100,7 +100,7 @@ export class TestUtil {
   /**
    * Removes the map.
    */
-  static removeMap = (map) => {
+  static removeMap =  (map: OlMap) => {
     if (map instanceof OlMap) {
       map.dispose();
     }
