@@ -68,6 +68,9 @@ module.exports = {
     }, {
       name: 'HigherOrderComponents',
       components: 'src/HigherOrderComponent/**/*.tsx'
+    },{
+      name: 'LayerSwitcher',
+      components: 'src/LayerSwitcher/**/*.tsx'
     }, {
       name: 'LayerTree',
       components: 'src/LayerTree/**/*.tsx'
