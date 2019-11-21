@@ -75,7 +75,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    * The className added to this component.
    * @private
    */
-  className = `${CSS_PREFIX}layer-switcher`;
+  _className = `${CSS_PREFIX}layer-switcher`;
 
   /**
    * Creates the LayerSwitcher.
@@ -216,7 +216,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    */
   onSwitcherClick = (evt: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     evt.stopPropagation();
-    this._map.getLayers().getArray().forEach((layer, index) => {
+    this._map.getLayers().getArray().forEach((layer, index: number) => {
       if (layer.getVisible()) {
         this._visibleLayerIndex = index;
       }
@@ -234,8 +234,8 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
     } = this.props;
 
     const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
+      ? `${className} ${this._className}`
+      : this._className;
 
     return (
       <div
