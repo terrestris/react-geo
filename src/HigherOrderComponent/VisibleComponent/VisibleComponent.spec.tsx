@@ -20,9 +20,7 @@ describe('isVisibleComponent', () => {
   /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
-    EnhancedComponent = isVisibleComponent(MockComponent, {
-      withRef: true
-    });
+    EnhancedComponent = isVisibleComponent(MockComponent);
   });
 
   describe('Basics', () => {
@@ -50,31 +48,9 @@ describe('isVisibleComponent', () => {
         name: 'shinjiKagawaModule'
       };
       const wrapper = TestUtil.mountComponent(EnhancedComponent, props);
-      const wrappedInstance = wrapper.instance().getWrappedInstance();
+      const wrappedInstance = wrapper.childAt(0).instance();
 
       expect(wrappedInstance.props).toEqual(expectedProps);
-    });
-
-    it('saves a reference to the wrapped instance if requested', () => {
-      const props = {
-        name: 'shinjiKagawaModule',
-        activeModules: [{
-          name: 'shinjiKagawaModule'
-        }]
-      };
-      const wrapper = TestUtil.mountComponent(EnhancedComponent, props);
-      const wrappedInstance = wrapper.instance().getWrappedInstance();
-
-      expect(wrappedInstance).toBeInstanceOf(MockComponent);
-
-      const EnhancedComponentNoRef = isVisibleComponent(MockComponent, {
-        withRef: false
-      });
-
-      const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props);
-      const wrappedInstanceNoRef = wrapperNoRef.instance().getWrappedInstance();
-
-      expect(wrappedInstanceNoRef).toBeUndefined();
     });
 
     it('shows or hides the wrapped component in relation to it\'s representation in the activeModules prop', () => {

@@ -17,9 +17,7 @@ describe('loadify', () => {
   /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
-    EnhancedComponent = loadify(MockComponent, {
-      withRef: true
-    });
+    EnhancedComponent = loadify(MockComponent);
   });
 
   describe('Basics', () => {
@@ -44,25 +42,9 @@ describe('loadify', () => {
         otherProp: 'ppp'
       };
       const wrapper = TestUtil.mountComponent(EnhancedComponent, props);
-      const wrappedInstance = wrapper.instance().getWrappedInstance();
+      const wrappedInstance = wrapper.childAt(0).prop('children');
+
       expect(wrappedInstance.props).toEqual(expectedProps);
-    });
-
-    it('saves a reference to the wrapped instance if requested', () => {
-      const props = {
-        name: 'load',
-        prop: 'isprop'
-      };
-      const wrapper = TestUtil.mountComponent(EnhancedComponent, props);
-      const wrappedInstance = wrapper.instance().getWrappedInstance();
-      expect(wrappedInstance).toBeInstanceOf(MockComponent);
-
-      const EnhancedComponentNoRef = loadify(MockComponent, {
-        withRef: false
-      });
-      const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props);
-      const wrappedInstanceNoRef = wrapperNoRef.instance().getWrappedInstance();
-      expect(wrappedInstanceNoRef).toBeUndefined();
     });
 
     it('shows or hides the Loading component based on the spinning prop', () => {
