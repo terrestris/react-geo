@@ -43,6 +43,8 @@ interface LayerSwitcherState {
 
 /**
  * Class representing the LayerSwitcher.
+ * A basic component to switch between the passed layers.
+ * This is most likely to be used for the backgroundlayer.
  *
  * @class LayerSwitcher
  * @extends React.Component
@@ -93,7 +95,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    */
   componentDidMount() {
     this.setMapLayers();
-    this.updateLayerVisibilty();
+    this.updateLayerVisibility();
   }
 
   /**
@@ -116,7 +118,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
   componentDidUpdate(prevProps: LayerSwitcherProps) {
     if (!(_isEqual(this.props.layers, prevProps.layers))) {
       this.setMapLayers();
-      this.updateLayerVisibilty();
+      this.updateLayerVisibility();
     }
   }
 
@@ -171,7 +173,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    * Also sets the previewLayer in the state.
    *
    */
-  updateLayerVisibilty = () => {
+  updateLayerVisibility = () => {
     const {
       layers
     } = this.props;
@@ -219,7 +221,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
         this._visibleLayerIndex = index;
       }
     });
-    this.updateLayerVisibilty();
+    this.updateLayerVisibility();
   }
 
   /**
@@ -227,7 +229,8 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    */
   render() {
     const {
-      className
+      className,
+      ...passThroughProps
     } = this.props;
 
     const finalClassName = className
@@ -235,7 +238,10 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       : this.className;
 
     return (
-      <div className={finalClassName}>
+      <div
+        className={finalClassName}
+        {...passThroughProps}
+      >
         <div
           className="clip"
           onClick={this.onSwitcherClick}
