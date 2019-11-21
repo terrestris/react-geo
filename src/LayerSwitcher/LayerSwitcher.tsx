@@ -24,15 +24,15 @@ type ArrayTwoOrMore<T> = {
  */
 export interface LayerSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
-   * An optional CSS class which should be added.
+   * An optional CSS class which will be added to the wrapping div Element.
    */
   className?: string;
   /**
-   * The layer you want to display the legend of.
+   * The layers to be available in the switcher.
    */
   layers: ArrayTwoOrMore<OlLayerTile | OlLayerGroup>;
   /**
-   *
+   * The main map the layers should be synced with.
    */
   map: OlMap;
 }
@@ -76,9 +76,9 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
   className = `${CSS_PREFIX}layer-switcher`;
 
   /**
-   * Create the Legend.
+   * Creates the LayerSwitcher.
    *
-   * @constructs Legend
+   * @constructs LayerSwitcher
    */
   constructor(props: LayerSwitcherProps) {
     super(props);
@@ -94,6 +94,17 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
   componentDidMount() {
     this.setMapLayers();
     this.updateLayerVisibilty();
+  }
+
+  /**
+   * Destroy all map specific stuff when umounting the component.
+   *
+   * @memberof LayerSwitcher
+   */
+  componentWillUnMount() {
+    this._map.getLayers().clear();
+    this._map.setTarget(null);
+    this._map = null;
   }
 
   /**
