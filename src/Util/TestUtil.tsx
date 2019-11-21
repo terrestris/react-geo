@@ -74,7 +74,7 @@ export class TestUtil {
    * @param {Object} [mapOpts] Additional options for the map to create.
    * @return {ol.Map} The ol map.
    */
-  static createMap = (mapOpts) => {
+  static createMap = (mapOpts?) => {
     let source = new OlSourceVector();
     let layer = new OlLayerVector({source: source});
     let targetDiv = TestUtil.mountMapDiv();

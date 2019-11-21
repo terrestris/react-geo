@@ -23,9 +23,7 @@ describe('mappify', () => {
 
   beforeEach(() => {
     map = TestUtil.createMap();
-    EnhancedComponent = mappify(MockComponent, {
-      withRef: true
-    });
+    EnhancedComponent = mappify(MockComponent);
   });
 
   describe('Basics', () => {
@@ -42,7 +40,7 @@ describe('mappify', () => {
 
     it('adds the map from the context as a prop', () => {
       const wrapper = TestUtil.mountComponent(EnhancedComponent, {}, {context: {map}});
-      const wrappedInstance = wrapper.instance().getWrappedInstance();
+      const wrappedInstance = wrapper.childAt(0).instance();
 
       expect(wrappedInstance.props.map).toBe(map);
     });
@@ -51,7 +49,7 @@ describe('mappify', () => {
       const loggerSpy = jest.spyOn(Logger, 'warn');
       TestUtil.mountComponent(EnhancedComponent);
       expect(loggerSpy).toHaveBeenCalled();
-      expect(loggerSpy).toHaveBeenCalledWith('You trying to mappify a ' +
+      expect(loggerSpy).toHaveBeenCalledWith('You\'re trying to mappify a ' +
         'component without any map in the context. Did you implement ' +
         'the MapProvider?');
       loggerSpy.mockRestore();
@@ -68,28 +66,9 @@ describe('mappify', () => {
         map: map
       };
       const wrapper = TestUtil.mountComponent(EnhancedComponent, props, {context: {map}});
-      const wrappedInstance = wrapper.instance().getWrappedInstance();
+      const wrappedInstance = wrapper.childAt(0).instance();
 
       expect(wrappedInstance.props).toEqual(expectedProps);
-    });
-
-    it('saves a reference to the wrapped instance if requested', () => {
-      const props = {
-        name: 'Podolski'
-      };
-      const wrapper = TestUtil.mountComponent(EnhancedComponent, props, {context: {map}});
-      const wrappedInstance = wrapper.instance().getWrappedInstance();
-
-      expect(wrappedInstance).toBeInstanceOf(MockComponent);
-
-      const EnhancedComponentNoRef = mappify(MockComponent, {
-        withRef: false
-      });
-
-      const wrapperNoRef = TestUtil.mountComponent(EnhancedComponentNoRef, props, {context: {map}});
-      const wrappedInstanceNoRef = wrapperNoRef.instance().getWrappedInstance();
-
-      expect(wrappedInstanceNoRef).toBeUndefined();
     });
 
   });

@@ -1,11 +1,5 @@
 import * as React from 'react';
 
-import Logger from '@terrestris/base-util/dist/Logger';
-
-export interface IsVisibleComponentProps {
-  withRef?: boolean;
-}
-
 export interface VisibleComponentProps {
   activeModules: any[];
   name: string;
@@ -19,12 +13,10 @@ export interface VisibleComponentProps {
  * in the state, it will be rendered, if not, it wont.
  *
  * @param {Component} WrappedComponent The component to wrap and enhance.
- * @param {Object} options The options to apply.
  * @return {Component} The wrapped component.
  */
-export function isVisibleComponent<P extends VisibleComponentProps>(WrappedComponent: React.ComponentType<any>, {
-  withRef = false
-}: IsVisibleComponentProps = {}): React.ComponentType {
+export function isVisibleComponent<P extends VisibleComponentProps>(
+  WrappedComponent: React.ComponentType<any>): React.ComponentType {
 
   /**
    * The wrapper class for the given component.
@@ -34,46 +26,13 @@ export function isVisibleComponent<P extends VisibleComponentProps>(WrappedCompo
    */
   return class VisibleComponent extends React.Component<P> {
 
-    _wrappedInstance?: React.ReactElement;
-
     /**
      * Create the VisibleComponent.
      *
      * @constructs VisibleComponent
      */
-    constructor(props: P & IsVisibleComponentProps) {
+    constructor(props: P) {
       super(props);
-
-      /**
-       * The wrapped instance.
-       * @type {Element}
-       */
-      this._wrappedInstance = null;
-    }
-
-    /**
-     * Returns the wrapped instance. Only applicable if withRef is set to true.
-     *
-     * @return {Element} The wrappend instance.
-     */
-    getWrappedInstance = (): React.ReactElement | void => {
-      if (withRef) {
-        return this._wrappedInstance;
-      } else {
-        Logger.debug('No wrapped instance referenced, please call the '
-          + 'isVisibleComponent with option withRef = true.');
-      }
-    }
-
-    /**
-     * Sets the wrapped instance.
-     *
-     * @param {Element} instance The instance to set.
-     */
-    setWrappedInstance = (instance) => {
-      if (withRef) {
-        this._wrappedInstance = instance;
-      }
     }
 
     /**
@@ -109,16 +68,11 @@ export function isVisibleComponent<P extends VisibleComponentProps>(WrappedCompo
       // Check if the current component should be visible or not.
       const isVisible = this.isVisibleComponent(this.props.name);
 
-      // Check if WrappedComponent is a ReactComponent (class) as functional components
-      // can't have a ref
-      const isReactComponent = WrappedComponent.prototype.isReactComponent;
-
       // Inject props into the wrapped component. These are usually state
       // values or instance methods.
       return (
         isVisible ?
           <WrappedComponent
-            ref={isReactComponent && this.setWrappedInstance}
             {...passThroughProps as P}
           /> :
           null
