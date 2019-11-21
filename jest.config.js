@@ -32,8 +32,7 @@ module.exports = {
     '^.+\\.tsx?$': '<rootDir>/node_modules/babel-jest'
   },
   collectCoverageFrom: [
-    'src/**/*.{tsx}',
-    'src/**/*.{ts,js}',
+    'src/**/*.{ts,tsx}',
     '!src/**/*example*.*'
   ],
   coverageDirectory: '<rootDir>/coverage',
