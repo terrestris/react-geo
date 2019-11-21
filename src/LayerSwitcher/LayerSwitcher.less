@@ -1,0 +1,35 @@
+.react-geo-layer-switcher {
+  .clip {
+    width: 80px;
+    height: 80px;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  #layer-switcher-map {
+    width: 256px;
+    height: 256px;
+    position: relative;
+    left: -68px;
+    top: -68px;
+    pointer-events: none;
+  }
+
+  .layer-title {
+    font-size: 0.8em;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    padding: 3px 6px;
+    border-radius: 0 0 4px 4px;
+    color: white;
+    background-image: linear-gradient(rgba(0,0,0,0.01),rgba(0,0,0,0.7));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
