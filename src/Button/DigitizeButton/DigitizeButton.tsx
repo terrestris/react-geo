@@ -22,7 +22,7 @@ import { never, singleClick } from 'ol/events/condition';
 
 const _isFunction = require('lodash/isFunction');
 
-import ToggleButton from '../ToggleButton/ToggleButton';
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
 import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
@@ -30,7 +30,7 @@ import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
 
-interface DigitizeButtonDefaultProps {
+interface DefaultProps {
   /**
    * Name of system vector layer which will be used for digitize features.
    */
@@ -95,12 +95,12 @@ interface DigitizeButtonDefaultProps {
   /**
    * A custom onToogle function that will be called if button is toggled.
    */
-  onToggle?: (event: any) => void;
+  onToggle: (event: any) => void;
 }
 
 type DrawType = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Text';
 
-export interface DigitizeButtonProps extends Partial<DigitizeButtonDefaultProps> {
+interface BaseProps {
   /**
    * The className which should be added.
    */
@@ -205,11 +205,11 @@ export interface DigitizeButtonProps extends Partial<DigitizeButtonDefaultProps>
 }
 
 interface DigitizeButtonState {
-  digitizeLayer: OlLayerVector;
-  interactions: OlInteraction[];
   showLabelPrompt: boolean;
   textLabel: string;
 }
+
+export type DigitizeButtonProps = BaseProps & Partial<DefaultProps> & ToggleButtonProps;
 
 /**
  * The DigitizeButton.
@@ -223,7 +223,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   /**
    * The className added to this component.
    *
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}digitizebutton`;
@@ -231,24 +230,34 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   /**
    * Currently existing digitize features as collection.
    *
-   * @type {OlCollection}
    * @private
    */
   _digitizeFeatures = null;
 
   /**
+   * The layer used for the digitization.
+   *
+   * @private
+   */
+  _digitizeLayer = null;
+
+  /**
    * Currently drawn feature which should be represent as label or postit.
-   * @type {OlFeature}
    * @private
    */
   _digitizeTextFeature = null;
 
   /**
    * Reference to OL select interaction which will be used in edit mode.
-   * @type {OlInteractionSelect}
    * @private
    */
   _selectInteraction = null;
+
+  /**
+   * The interactions.
+   * @private
+   */
+  _interactions?: OlInteraction[];
 
   /**
    * Name of point draw type.
@@ -306,29 +315,21 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
   /**
    * Default fill color used in style object of drawn features.
-   *
-   * @type {String}
    */
   static DEFAULT_FILL_COLOR = 'rgba(154, 26, 56, 0.5)';
 
   /**
    * Default stroke color used in style object of drawn features.
-   *
-   * @type {String}
    */
   static DEFAULT_STROKE_COLOR = 'rgba(154, 26, 56, 0.8)';
 
   /**
    * Hit detection in pixels used for select interaction.
-   *
-   * @type {Number}
    */
   static HIT_TOLERANCE = 5;
 
   /**
    * Default style for digitized points.
-   *
-   * @type {OlStyleStyle}
    */
   static DEFAULT_POINT_STYLE = new OlStyleStyle({
     image: new OlStyleCircle({
@@ -344,8 +345,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
   /**
    * Default style for digitized lines.
-   *
-   * @type {OlStyleStyle}
    */
   static DEFAULT_LINESTRING_STYLE = new OlStyleStyle({
     stroke: new OlStyleStroke({
@@ -356,8 +355,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
   /**
    * Default style for digitized polygons or circles.
-   *
-   * @type {OlStyleStyle}
    */
   static DEFAULT_POLYGON_STYLE = new OlStyleStyle({
     fill: new OlStyleFill({
@@ -371,8 +368,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
   /**
    * Default style for digitized labels.
-   *
-   * @type {OlStyleStyle}
    */
   static DEFAULT_TEXT_STYLE = new OlStyleStyle({
     text: new OlStyleText({
@@ -390,17 +385,9 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   });
 
   /**
-   * The properties.
-   * @type {Object}
-   */
-  static propTypes = {
-  };
-
-  /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps: DigitizeButtonDefaultProps = {
+  static defaultProps: DefaultProps = {
     digitizeLayerName: 'react-geo_digitize',
     selectFillColor: 'rgba(240, 240, 90, 0.5)',
     selectStrokeColor: 'rgba(220, 120, 20, 0.8)',
@@ -428,8 +415,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
 
     this.state = {
-      digitizeLayer: null,
-      interactions: [],
       showLabelPrompt: false,
       textLabel: ''
     };
@@ -451,11 +436,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       map
     } = this.props;
 
-    const {
-      interactions
-    } = this.state;
-
-    interactions.forEach(i => map.removeInteraction(i));
+    this._interactions.forEach(i => map.removeInteraction(i));
   }
 
   /**
@@ -464,9 +445,9 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Otherwise, by untoggling, the same previously created interaction will be
    * removed from the map.
    *
-   * @param {Boolean} pressed Whether the digitize button is pressed or not.
+   * @param pressed Whether the digitize button is pressed or not.
    */
-  onToggle = pressed => {
+  onToggle = (pressed: boolean) => {
     const {
       map,
       drawType,
@@ -475,18 +456,13 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onFeatureSelect
     } = this.props;
 
-    const {
-      digitizeLayer,
-      interactions
-    } = this.state;
-
     this.props.onToggle(pressed);
 
-    this._digitizeFeatures = digitizeLayer.getSource().getFeaturesCollection();
+    this._digitizeFeatures = this._digitizeLayer.getSource().getFeaturesCollection();
 
     if (pressed) {
       if (drawStyle) {
-        digitizeLayer.setStyle(this.getDigitizeStyleFunction);
+        this._digitizeLayer.setStyle(this.getDigitizeStyleFunction);
       }
       if (drawType) {
         this.createDrawInteraction(pressed);
@@ -494,7 +470,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         this.createSelectOrModifyInteraction();
       }
     } else {
-      interactions.forEach(i => map.removeInteraction(i));
+      this._interactions.forEach(i => map.removeInteraction(i));
       if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
         this._digitizeFeatures.un('add', this.handleTextAdding);
       } else {
@@ -534,7 +510,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       map.addLayer(digitizeLayer);
     }
     digitizeLayer.setStyle(this.getDigitizeStyleFunction);
-    this.setState({digitizeLayer});
+    this._digitizeLayer = digitizeLayer;
   }
 
   /**
@@ -688,7 +664,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     // check whether the digitizeLayer is in map and set it from state if not
     let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
     if (!digitizeLayer) {
-      map.addLayer(this.state.digitizeLayer);
+      map.addLayer(this._digitizeLayer);
     }
 
     if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
@@ -700,7 +676,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
 
     const drawInteraction = new OlInteractionDraw({
-      source: this.state.digitizeLayer.getSource(),
+      source: this._digitizeLayer.getSource(),
       type: type,
       geometryFunction: geometryFunction,
       style: this.getDigitizeStyleFunction,
@@ -718,11 +694,8 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     map.addInteraction(drawInteraction);
 
-    this.setState({
-      interactions: [drawInteraction]
-    }, () => {
-      drawInteraction.setActive(pressed);
-    });
+    this._interactions = [drawInteraction];
+    drawInteraction.setActive(pressed);
   }
 
   /**
@@ -785,7 +758,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     map.on('pointermove', this.onPointerMove);
 
-    this.setState({interactions});
+    this._interactions = interactions;
   }
 
   /**
@@ -810,7 +783,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     const feat = evt.selected[0];
     this._selectInteraction.getFeatures().remove(feat);
-    this.state.digitizeLayer.getSource().removeFeature(feat);
+    this._digitizeLayer.getSource().removeFeature(feat);
     this.props.map.renderSync();
   }
 
@@ -827,10 +800,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onFeatureCopy,
       onFeatureSelect
     } = this.props;
-
-    const {
-      digitizeLayer
-    } = this.state;
 
     const feat = evt.selected[0];
 
@@ -853,7 +822,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     AnimateUtil.moveFeature(
       map,
-      digitizeLayer,
+      this._digitizeLayer,
       copy,
       500,
       50,
@@ -1002,7 +971,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       showLabelPrompt: false,
       textLabel: ''
     }, () => {
-      if (!(this.state.interactions.length > 1)) {
+      if (!(this._interactions.length > 1)) {
         this._digitizeFeatures.remove(this._digitizeTextFeature);
         this._digitizeTextFeature = null;
       }
@@ -1016,10 +985,10 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Sets formatted label on feature.
    * Calls `onModalLabelOk` callback function if provided.
    *
-   * @param {OlFeature} feat The point feature to be styled with label.
-   * @param {Function} onModalOkCbk Optional callback function.
+   * @param feat The point feature to be styled with label.
+   * @param onModalOkCbk Optional callback function.
    */
-  setTextOnFeature = (feat, onModalOkCbk) => {
+  setTextOnFeature = (feat: OlFeature, onModalOkCbk: (feat: OlFeature, label: string) => void) => {
     const {
       maxLabelLineLength
     } = this.props;

@@ -13,8 +13,9 @@ import './ToggleButton.less';
 
 import { CSS_PREFIX } from '../../constants';
 import { AbstractTooltipProps, TooltipPlacement } from 'antd/lib/tooltip';
+import { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 
-interface ToggleButtonDefaultProps {
+interface DefaultProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
   /**
    * Additional [antd tooltip](https://ant.design/components/tooltip/)
@@ -28,17 +29,17 @@ interface ToggleButtonDefaultProps {
    */
   pressed: boolean;
   /**
-   * The function the gets filtered out
+   * The toggle handler
    */
-  onClick: () => void;
-}
-
-export interface ToggleButtonProps extends Partial<ToggleButtonDefaultProps> {
-  className?: string;
+  onToggle: (pressed: boolean, lastClickEvt: any) => void;
   /**
    * The font awesome icon name.
    */
-  icon?: string;
+  icon: string;
+}
+
+interface BaseProps {
+  className?: string;
   /**
    * The classname of an icon of an iconFont. Use either this or icon.
    */
@@ -55,10 +56,6 @@ export interface ToggleButtonProps extends Partial<ToggleButtonDefaultProps> {
    * The position of the tooltip.
    */
   tooltipPlacement?: TooltipPlacement;
-  /**
-   *
-   */
-  onToggle: (pressed: boolean, lastClickEvt: any) => void;
 }
 
 interface ToggleButtonState {
@@ -67,6 +64,8 @@ interface ToggleButtonState {
   overallPressed: boolean;
   isClicked: boolean;
 }
+
+export type ToggleButtonProps = BaseProps & Partial<DefaultProps> & SimpleButtonProps;
 
 /**
  * The ToggleButton.
@@ -78,33 +77,30 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   _className = `${CSS_PREFIX}togglebutton`;
 
   /**
    * The class to apply for a toggled/pressed button.
-   * @type {String}
    */
   pressedClass = 'btn-pressed';
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     type: 'primary',
     icon: '',
     pressed: false,
     tooltipProps: {
       mouseEnterDelay: 1.5
-    }
+    },
+    onToggle: () => undefined
   };
 
   /**
    * The context types.
-   * @type {Object}
    */
   static contextTypes = {
     toggleGroup: PropTypes.object
@@ -114,8 +110,8 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
    * Invoked right before calling the render method, both on the initial mount
    * and on subsequent updates. It should return an object to update the state,
    * or null to update nothing.
-   * @param {Object} nextProps The next properties.
-   * @param {Object} prevState The previous state.
+   * @param nextProps The next properties.
+   * @param prevState The previous state.
    */
   static getDerivedStateFromProps(nextProps: ToggleButtonProps, prevState: ToggleButtonState) {
 
@@ -166,7 +162,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
    * for the initial render.
    * @method
    */
-  componentDidUpdate(prevProps: ToggleButtonProps, prevState: ToggleButtonState) {
+  componentDidUpdate(prevProps: BaseProps, prevState: ToggleButtonState) {
     const {
       onToggle
     } = this.props;
@@ -189,7 +185,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
      *        |__ NO: check if previous update action was a click
      *                |__ YES: ==> run the Toggle function fo the prop value
      */
-    let shouldToggle;
+    let shouldToggle: boolean;
     if (isClicked || prevState.pressed !== pressed || prevState.isClicked) {
       if (isClicked) {
         // button is clicked

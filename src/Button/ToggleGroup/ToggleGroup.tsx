@@ -7,7 +7,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './ToggleGroup.less';
 
-interface ToggleGroupDefaultProps {
+interface DefaultProps {
   /**
    * The orientation of the children.
    */
@@ -18,7 +18,7 @@ interface ToggleGroupDefaultProps {
   allowDeselect: boolean;
 }
 
-export interface ToggleGroupProps extends Partial<ToggleGroupDefaultProps> {
+interface BaseProps {
   /**
    * The className which should be added.
    */
@@ -46,6 +46,8 @@ interface ToggleGroupState {
   selectedName: string;
 }
 
+export type ToggleGroupProps = BaseProps & Partial<DefaultProps>;
+
 /**
  * A group for toggle components (e.g. buttons)
  *
@@ -56,23 +58,20 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   _className = `${CSS_PREFIX}togglegroup`;
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     orientation: 'vertical',
     allowDeselect: true
   };
 
   /**
    * The child context types.
-   * @type {Object}
    */
   static childContextTypes = {
     toggleGroup: PropTypes.object
@@ -81,14 +80,13 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
   /**
    * The constructor.
    *
-   * @param {Object} props The properties.
+   * @param props The properties.
    */
   constructor(props: ToggleGroupProps) {
     super(props);
 
     /**
      * The initial state.
-     * @type {Object}
      */
     this.state = {
       selectedName: props.selectedName
@@ -98,7 +96,7 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
   /**
    * Returns the context for the children.
    *
-   * @return {Object} The child context.
+   * @return The child context.
    */
   getChildContext() {
     return {
@@ -113,7 +111,7 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
   /**
    * The onChange handler.
    *
-   * @param {Object} childProps The properties of the children.
+   * @param childProps The properties of the children.
    */
   onChange = (childProps) => {
     if (_isFunction(this.props.onChange)) {

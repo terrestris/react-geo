@@ -19,11 +19,11 @@ export interface ToolbarProps extends Partial<ToolbarDefaultProps> {
     /**
      * An optional CSS class which should be added.
      */
-    className: string;
+    className?: string;
     /**
      * The style object
      */
-    style: any;
+    style?: any;
 }
 
 /**

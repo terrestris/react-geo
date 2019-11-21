@@ -10,7 +10,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlStyleStyle from 'ol/style/Style';
 import OlStyleIcon from 'ol/style/Icon';
 
-import ToggleButton from '../ToggleButton/ToggleButton';
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import MathUtil from '@terrestris/base-util/dist/MathUtil/MathUtil';
@@ -20,7 +20,7 @@ import { CSS_PREFIX } from '../../constants';
 import mapMarker from './geolocation-marker.png';
 import mapMarkerHeading from './geolocation-marker-heading.png';
 
-interface GeoLocationButtonDefaultProps {
+interface DefaultProps {
   /**
    * Will be called if geolocation fails.
    */
@@ -49,7 +49,7 @@ interface GeoLocationButtonDefaultProps {
   };
 }
 
-export interface GeoLocationButtonProps extends Partial<GeoLocationButtonDefaultProps> {
+interface BaseProps {
   /**
    * The className which should be added.
    */
@@ -86,8 +86,7 @@ export interface GeoLocationButtonProps extends Partial<GeoLocationButtonDefault
   };
 }
 
-interface GeoLocationButtonState {
-}
+export type GeoLocationButtonProps = BaseProps & Partial<DefaultProps> & ToggleButtonProps;
 
 /**
  * The GeoLocationButton.
@@ -95,12 +94,11 @@ interface GeoLocationButtonState {
  * @class The GeoLocationButton
  * @extends React.Component
  */
-class GeoLocationButton extends React.Component<GeoLocationButtonProps, GeoLocationButtonState> {
+class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
 
   /**
    * The className added to this component.
    *
-   * @type {String}
    * @private
    */
   _className = `${CSS_PREFIX}geolocationbutton`;
@@ -127,7 +125,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps, GeoLocat
    * The styleFunction for the geoLocationLayer. Shows a marker with arrow when
    * heading is not 0.
    */
-  _styleFunction = (feature) => {
+  _styleFunction = (feature: OlFeature) => {
     const heading = feature.get('heading');
     const src = heading !== 0 ? mapMarkerHeading : mapMarker;
     const rotation = heading !== 0 ? heading * Math.PI / 180 : 0;
@@ -144,9 +142,8 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps, GeoLocat
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     onGeolocationChange: () => undefined,
     onError: () => undefined,
     showMarker: true,
@@ -163,7 +160,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps, GeoLocat
    *
    * @constructs MeasureButton
    */
-  constructor(props: GeoLocationButtonProps) {
+  constructor(props: BaseProps) {
     super(props);
     const {
       map,
@@ -248,7 +245,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps, GeoLocat
    *
    * @method
    */
-  onToggle = (pressed) => {
+  onToggle = (pressed: boolean) => {
     const {
       showMarker,
       trackingOptions,
