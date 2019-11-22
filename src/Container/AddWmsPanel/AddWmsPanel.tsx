@@ -6,7 +6,7 @@ import OlMap from 'ol/Map';
 
 const _isFunction = require('lodash/isFunction');
 
-import Panel from '../../Panel/Panel/Panel';
+import Panel, { PanelProps } from '../../Panel/Panel/Panel';
 import Titlebar from '../../Panel/Titlebar/Titlebar';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import Logger from '@terrestris/base-util/dist/Logger';
@@ -15,7 +15,7 @@ import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry';
 
 import './AddWmsPanel.less';
 
-interface AddWmsLayerDefaultProps {
+interface DefaultProps {
   /**
    * Optional text to be shown in button to add all layers
    */
@@ -34,7 +34,7 @@ interface AddWmsLayerDefaultProps {
   titleText: string;
 }
 
-export interface AddWmsLayerProps extends Partial<AddWmsLayerDefaultProps> {
+interface BaseProps {
     /**
      * Array containing layers (e.g. `Capability.Layer.Layer` of ol capabilities
      * parser)
@@ -48,20 +48,22 @@ export interface AddWmsLayerProps extends Partial<AddWmsLayerDefaultProps> {
      * Optional function being called when onAddSelectedLayers or onAddAllLayers
      * is triggered
      */
-    onLayerAddToMap: (layers: Array<OlLayerTile | OlLayerImage>) => void;
+    onLayerAddToMap?: (layers: Array<OlLayerTile | OlLayerImage>) => void;
     /**
      * Optional function that is called if cancel button is clicked
      */
-    onCancel: () => void;
+    onCancel?: () => void;
     /**
      * Optional function that is called if selection has changed.
      */
-    onSelectionChange: (selection: any[]) => void;
+    onSelectionChange?: (selection: any[]) => void;
 }
 
 interface AddWmsLayerState {
   selectedWmsLayers: Array<OlLayerTile | OlLayerImage>;
 }
+
+export type AddWmsPanelProps = BaseProps & Partial<DefaultProps> & PanelProps;
 
 /**
  * Panel containing a (checkable) list of AddWmsLayerEntry instances.
@@ -71,13 +73,13 @@ interface AddWmsLayerState {
  * @class The AddWmsPanel
  * @extends React.Component
  */
-export class AddWmsPanel extends React.Component<AddWmsLayerProps, AddWmsLayerState> {
+export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerState> {
 
   /**
    * Create an AddWmsPanel.
    * @constructs AddWmsPanel
    */
-  constructor(props: AddWmsLayerProps) {
+  constructor(props: AddWmsPanelProps) {
     super(props);
 
     this.state = {
@@ -87,7 +89,6 @@ export class AddWmsPanel extends React.Component<AddWmsLayerProps, AddWmsLayerSt
 
   /**
    * The defaultProps.
-   * @type {Object}
    */
   static defaultProps = {
     addAllLayersText: 'Add all layers',
@@ -99,7 +100,7 @@ export class AddWmsPanel extends React.Component<AddWmsLayerProps, AddWmsLayerSt
   /**
    * onSelectedLayersChange - set state for selectedWmsLayers
    *
-   * @param {Array} selectedWmsLayers titles of selected WMS layers to set
+   * @param selectedWmsLayers titles of selected WMS layers to set
    * in state
    */
   onSelectedLayersChange = (selectedWmsLayers) => {
@@ -182,7 +183,7 @@ export class AddWmsPanel extends React.Component<AddWmsLayerProps, AddWmsLayerSt
       cancelText,
       addAllLayersText,
       addSelectedLayersText,
-      ...passThroughOpts
+      ...passThroughProps
     } = this.props;
 
     const {
@@ -195,7 +196,7 @@ export class AddWmsPanel extends React.Component<AddWmsLayerProps, AddWmsLayerSt
           title={titleText}
           bounds="#main"
           className="add-wms-panel"
-          {...passThroughOpts}
+          {...passThroughProps}
         >
           <Checkbox.Group onChange={this.onSelectedLayersChange}>
             {wmsLayers.map((layer, idx) =>
