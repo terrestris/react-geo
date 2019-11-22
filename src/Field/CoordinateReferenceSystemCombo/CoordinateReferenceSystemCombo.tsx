@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { AutoComplete } from 'antd';
+import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
 
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
@@ -7,7 +8,7 @@ import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
 
-interface CRSComboDefaultProps {
+interface DefaultProps {
   /**
    * The API to query for CRS definitions
    * default: https://epsg.io
@@ -23,22 +24,24 @@ interface CRSComboDefaultProps {
   onSelect: (crsDefinition: any) => void;
 }
 
-export interface CRSComboProps extends Partial<CRSComboDefaultProps> {
+interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
-  className: string;
+  className?: string;
   /**
    * An array of predefined crs definitions habving at least value (name of
    * CRS) and code (e.g. EPSG-code of CRS) property
    */
-  predefinedCrsDefinitions: {value: string, code: string}[];
+  predefinedCrsDefinitions?: {value: string, code: string}[];
 }
 
 interface CRSComboState {
   crsDefinitions: any[];
   value: string;
 }
+
+export type CRSComboProps = BaseProps & Partial<DefaultProps> & AutoCompleteProps;
 
 /**
  * Class representing a combo to choose coordinate projection system via a
@@ -51,12 +54,11 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}coordinatereferencesystemcombo`;
 
-  static defaultProps: CRSComboDefaultProps = {
+  static defaultProps: DefaultProps = {
     emptyTextPlaceholderText: 'Please select a CRS',
     crsApiUrl: 'https://epsg.io/',
     onSelect: () => undefined
@@ -80,9 +82,9 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
   /**
    * Fetch CRS definitions from epsg.io for given search string
    *
-   * @param {String} searchVal The search string
+   * @param searchVal The search string
    */
-  fetchCrs = (searchVal) => {
+  fetchCrs = async (searchVal: string) => {
     const { crsApiUrl } = this.props;
 
     const queryParameters = {
@@ -106,11 +108,11 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
   /**
    * This function transforms results of EPSG.io
    *
-   * @param {Object} json The result object of EPSG.io-API, see where
-   *                 https://github.com/klokantech/epsg.io#api-for-results   *
-   * @return {Array} Array of CRS definitons used in CoordinateReferenceSystemCombo
+   * @param json The result object of EPSG.io-API, see where
+   *  https://github.com/klokantech/epsg.io#api-for-results
+   * @return Array of CRS definitons used in CoordinateReferenceSystemCombo
    */
-  transformResults = (json) => {
+  transformResults = (json: any) => {
     const results = json.results;
     if (results && results.length > 0) {
       return results.map(obj => ({code: obj.code, value: obj.name, proj4def: obj.proj4, bbox: obj.bbox}));
@@ -123,9 +125,9 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
    * This function gets called when the EPSG.io fetch returns an error.
    * It logs the error to the console.
    *
-   * @param {String} error The error string.
+   * @param value The search value.
    */
-  handleSearch = (value) => {
+  handleSearch = (value?: string) => {
     const {
       predefinedCrsDefinitions
     } = this.props;
@@ -151,9 +153,9 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
   /**
    * Handles selection of a CRS item in Autocomplete
    *
-   * @param {type} code EPSG code
+   * @param code EPSG code
    */
-  onCrsItemSelect = (code) => {
+  onCrsItemSelect = (code: string) => {
     const {
       onSelect,
       predefinedCrsDefinitions
@@ -175,9 +177,9 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
   /**
    * Tranforms CRS object returned by EPSG.io to antd  Option component
    *
-   * @param {type} crsObj Single plain CRS object returned by EPSG.io
+   * @param crsObj Single plain CRS object returned by EPSG.io
    *
-   * @return {Option} Option component to render
+   * @return Option component to render
    */
   transformCrsObjectsToOptions(crsObject: any) {
     return (

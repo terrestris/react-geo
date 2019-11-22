@@ -4,6 +4,7 @@ import {
   Input,
   Icon
 } from 'antd';
+import { InputProps } from 'antd/lib/input';
 
 import OlMap from 'ol/Map';
 
@@ -15,7 +16,7 @@ import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil'
 
 import { CSS_PREFIX } from '../../constants';
 
-interface WfsSearchInputDefaultProps {
+interface DefaultProps {
   /**
    * A nested object mapping feature types to an object of attribute details,
    * which are also mapped by search attribute name.
@@ -38,7 +39,6 @@ interface WfsSearchInputDefaultProps {
    *    featType2: {...}
    *   }
    *   ```
-   * @type {Object}
    */
   attributeDetails: {
     [featureType: string]: {
@@ -74,7 +74,7 @@ interface WfsSearchInputDefaultProps {
   delay: number;
 }
 
-export interface WfsSearchInputProps extends Partial<WfsSearchInputDefaultProps> {
+interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -122,29 +122,29 @@ export interface WfsSearchInputProps extends Partial<WfsSearchInputDefaultProps>
    * Can be useful if input value manipulation is needed (e.g. umlaut
    * replacement `ä => oa` etc.)
    */
-  onBeforeSearch: (value: string) => string;
+  onBeforeSearch?: (value: string) => string;
   /**
    * An onFetchSuccess callback function which gets called with the
    * successfully fetched data.
    * Please note: if omitted only data fetch will be performed and no data
    * will be shown afterwards!
    */
-  onFetchSuccess: (data: any) => void;
+  onFetchSuccess?: (data: any) => void;
   /**
    * An onFetchError callback function which gets called if data fetch is
    * failed.
    */
-  onFetchError: (data: any) => void;
+  onFetchError?: (data: any) => void;
   /**
    * Optional callback function, that will be called if 'clear' button of
    * input field was clicked.
    */
-  onClearClick: () => void;
+  onClearClick?: () => void;
   /**
    * Options which are passed to the constructor of the ol.format.WFS.
    * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
    */
-  wfsFormatOptions: any;
+  wfsFormatOptions?: any;
 }
 
 interface WfsSearchState {
@@ -152,6 +152,8 @@ interface WfsSearchState {
   data: any[];
   fetching: boolean;
 }
+
+export type WfsSearchInputProps = BaseProps & Partial<DefaultProps> & InputProps;
 
 /**
  * The WfsSearchInput field.
@@ -174,12 +176,11 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}wfssearchinput`;
 
-  static defaultProps: WfsSearchInputDefaultProps = {
+  static defaultProps: DefaultProps = {
     srsName: 'EPSG:3857',
     outputFormat: 'application/json',
     minChars: 3,

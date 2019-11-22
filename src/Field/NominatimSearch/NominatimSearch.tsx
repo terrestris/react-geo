@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { AutoComplete } from 'antd';
+import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
 
 import Logger from '@terrestris/base-util/dist/Logger';
@@ -12,7 +13,7 @@ import { transformExtent } from 'ol/proj';
 import { CSS_PREFIX } from '../../constants';
 import { OptionProps } from 'antd/lib/select';
 
-interface NominatimSearchDefaultProps {
+interface DefaultProps {
   /**
    * The Nominatim Base URL. See https://wiki.openstreetmap.org/wiki/Nominatim
    */
@@ -71,12 +72,11 @@ interface NominatimSearchDefaultProps {
   style: any;
 }
 
-export interface NominatimSearchProps extends Partial<NominatimSearchDefaultProps> {
+interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
   className?: string;
-  children: React.ReactElement<OptionProps>;
   /**
    * The ol.map where the map will zoom to.
    *
@@ -94,6 +94,8 @@ interface NominatimSearchState {
   dataSource: any;
 }
 
+export type NominatimSearchProps = BaseProps & Partial<DefaultProps> & AutoCompleteProps;
+
 /**
  * The NominatimSearch.
  *
@@ -109,7 +111,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    */
   className = `${CSS_PREFIX}nominatimsearch`;
 
-  static defaultProps: NominatimSearchDefaultProps = {
+  static defaultProps: DefaultProps = {
     nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
     format: 'json',
     viewbox: '-180,90,180,-90',
@@ -122,10 +124,10 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
     /**
      * Create an AutoComplete.Option from the given data.
      *
-     * @param {Object} item The tuple as an object.
-     * @return {AutoComplete.Option} The returned option
+     * @param item The tuple as an object.
+     * @return The returned option
      */
-    renderOption: (item) => {
+    renderOption: (item: any): React.ReactElement<OptionProps> => {
       return (
         <Option key={item.place_id}>
           {item.display_name}
@@ -136,9 +138,9 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
      * The default onSelect method if no onSelect prop is given. It zooms to the
      * selected item.
      *
-     * @param {object} selected The selected item as it is returned by nominatim.
+     * @param selected The selected item as it is returned by nominatim.
      */
-    onSelect: (selected, olMap) => {
+    onSelect: (selected: any, olMap: OlMap) => {
       if (selected && selected.boundingbox) {
         const olView = olMap.getView();
         let extent = [
@@ -168,7 +170,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
   /**
    * Create the NominatimSearch.
    *
-   * @param {Object} props The initial props.
+   * @param props The initial props.
    * @constructs NominatimSearch
    */
   constructor(props: NominatimSearchProps) {
@@ -238,7 +240,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    * This function gets called on success of the nominatim fetch.
    * It sets the response as dataSource.
    *
-   * @param {Array<object>} response The found features.
+   * @param response The found features.
    */
   onFetchSuccess(response: any) {
     this.setState({
@@ -250,7 +252,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    * This function gets called when the nomintim fetch returns an error.
    * It logs the error to the console.
    *
-   * @param {String} error The errorstring.
+   * @param error The errorstring.
    */
   onFetchError(error: string) {
     Logger.error(`Error while requesting Nominatim: ${error}`);
@@ -259,11 +261,11 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
   /**
    * The function describes what to do when an item is selected.
    *
-   * @param {value} key The key of the selected option.
+   * @param key The key of the selected option.
    */
   onMenuItemSelected(key: string) {
     const selected = this.state.dataSource.find(
-      i => i.place_id.toString() === key.toString()
+      (i: any) => i.place_id.toString() === key.toString()
     );
     this.props.onSelect(selected, this.props.map);
   }

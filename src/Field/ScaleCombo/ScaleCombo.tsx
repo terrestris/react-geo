@@ -3,6 +3,7 @@ import { Select } from 'antd';
 const Option = Select.Option;
 
 import OlMap from 'ol/Map';
+import OlView from 'ol/View';
 
 const _isInteger = require('lodash/isInteger');
 const _isEmpty = require('lodash/isEmpty');
@@ -16,10 +17,9 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../../constants';
 
-interface ScaleComboDefaultProps {
+interface DefaultProps {
   /**
    * A filter function to filter resolutions no options should be created
-   * @type {Function}
    */
   resolutionsFilter: (item: any, index?: number, resolutions?: number[]) => boolean;
   /**
@@ -36,11 +36,11 @@ interface ScaleComboDefaultProps {
   scales: number[];
 }
 
-export interface ScaleComboProps extends Partial<ScaleComboDefaultProps> {
+interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
-  className: string;
+  className?: string;
   /**
    * The zoomLevel.
    */
@@ -53,7 +53,7 @@ export interface ScaleComboProps extends Partial<ScaleComboDefaultProps> {
   /**
    * The resolutions.
    */
-  resolutions: number[];
+  resolutions?: number[];
   /**
    * The map
    */
@@ -76,6 +76,8 @@ interface ScaleComboState {
   scales: number[];
 }
 
+export type ScaleComboProps = BaseProps & Partial<DefaultProps>;
+
 /**
  * Class representing a scale combo to choose map scale via a dropdown menu.
  *
@@ -86,7 +88,6 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}scalecombo`;
@@ -108,8 +109,8 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    * receives new props. It should return an object to update state, or null
    * to indicate that the new props do not require any state updates.
    *
-   * @param {Object} nextProps The next properties.
-   * @param {Object} prevState The previous state.
+   * @param nextProps The next properties.
+   * @param prevState The previous state.
    */
   static getDerivedStateFromProps(nextProps: ScaleComboProps, prevState: ScaleComboState) {
     if (_isInteger(nextProps.zoomLevel) &&
@@ -140,9 +141,9 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
      * The default onZoomLevelSelect function sets the resolution of the passed
      * map according to the selected Scale.
      *
-     * @param {Number} selectedScale The selectedScale.
+     * @param selectedScale The selectedScale.
      */
-    const defaultOnZoomLevelSelect = selectedScale => {
+    const defaultOnZoomLevelSelect = (selectedScale: string) => {
       const mapView = props.map.getView();
       const calculatedResolution = MapUtil.getResolutionForScale(
         selectedScale, mapView.getProjection().getUnits()
@@ -166,7 +167,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    * Invoked immediately after updating occurs. This method is not called for
    * the initial render.
    *
-   * @param {Object} prevProps The previous props.
+   * @param prevProps The previous props.
    */
   componentDidUpdate(prevProps: ScaleComboProps) {
     const {
@@ -186,7 +187,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
   /**
    * Set the zoomLevel of the to the ScaleCombo.
    *
-   * @param  {Object} evt The 'moveend' event
+   * @param evt The 'moveend' event
    * @private
    */
   zoomListener = (evt) => {
@@ -205,13 +206,13 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    * @function pushScaleOption: Helper function to create a {@link Option} scale component
    * based on a resolution and the {@link Ol.View}
    *
-   * @param {Array} scales The scales array to push the scale to.
-   * @param {Number} resolution map cresolution to generate the option for
-   * @param {Ol.View} mv The map view
+   * @param scales The scales array to push the scale to.
+   * @param resolution map cresolution to generate the option for
+   * @param view The map view
    *
    */
-  pushScale = (scales, resolution, mv) => {
-    let scale = MapUtil.getScaleForResolution(resolution, mv.getProjection().getUnits());
+  pushScale = (scales: string[], resolution: number, view: OlView) => {
+    let scale = MapUtil.getScaleForResolution(resolution, view.getProjection().getUnits());
     const roundScale = MapUtil.roundScale(scale);
     if (scales.includes(roundScale) ) {
       return;
@@ -223,7 +224,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    * Generates the scales to add as {@link Option} to the SelectField based on
    * the given instance of {@link Ol.Map}.
    *
-   * @return {Array} The array of scales.
+   * @return The array of scales.
    */
   getOptionsFromMap = () => {
     const {
@@ -241,14 +242,14 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     }
 
     let scales = [];
-    let mv = map.getView();
+    let view = map.getView();
     // use existing resolutions array if exists
-    let resolutions = mv.getResolutions();
+    let resolutions = view.getResolutions();
     if (_isEmpty(resolutions)) {
-      for (let currentZoomLevel = mv.getMaxZoom(); currentZoomLevel >= mv.getMinZoom(); currentZoomLevel--) {
-        let resolution = mv.getResolutionForZoom(currentZoomLevel);
+      for (let currentZoomLevel = view.getMaxZoom(); currentZoomLevel >= view.getMinZoom(); currentZoomLevel--) {
+        let resolution = view.getResolutionForZoom(currentZoomLevel);
         if (resolutionsFilter(resolution)) {
-          this.pushScale(scales, resolution, mv);
+          this.pushScale(scales, resolution, view);
         }
       }
     } else {
@@ -256,7 +257,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
       reversedResolutions
         .filter(resolutionsFilter)
         .forEach((resolution) => {
-          this.pushScale(scales, resolution, mv);
+          this.pushScale(scales, resolution, view);
         });
     }
 
@@ -266,11 +267,11 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
   /**
    * Determine option element for provided zoom level out of array of valid options.
    *
-   * @param {Number} zoom zoom level
+   * @param zoom zoom level
    *
-   * @return {Element} Option element for provided zoom level
+   * @return Option element for provided zoom level
    */
-  determineOptionKeyForZoomLevel = (zoom) => {
+  determineOptionKeyForZoomLevel = (zoom: number): string | undefined => {
     if (!_isInteger(zoom) || (this.state.scales.length - 1 - zoom) < 0) {
       return undefined;
     }
