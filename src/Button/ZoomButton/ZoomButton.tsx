@@ -3,10 +3,10 @@ import * as React from 'react';
 import OlMap from 'ol/Map';
 import { easeOut } from 'ol/easing';
 
-import SimpleButton from '../SimpleButton/SimpleButton';
+import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 
-interface ZoomButtonDefaultProps {
+interface DefaultProps {
   /**
    * Whether the zoom in shall be animated.
    */
@@ -27,7 +27,7 @@ interface ZoomButtonDefaultProps {
   };
 }
 
-export interface ZoomButtonProps extends Partial<ZoomButtonDefaultProps> {
+interface BaseProps {
   /**
    * The className which should be added.
    */
@@ -37,6 +37,8 @@ export interface ZoomButtonProps extends Partial<ZoomButtonDefaultProps> {
    */
   map: OlMap;
 }
+
+export type ZoomButtonProps = BaseProps & Partial<DefaultProps> & SimpleButtonProps;
 
 /**
  * Class representing a zoom button.
@@ -48,12 +50,11 @@ class ZoomButton extends React.Component<ZoomButtonProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   _className = `${CSS_PREFIX}zoominbutton`;
 
-  static defaultProps: ZoomButtonDefaultProps = {
+  static defaultProps: DefaultProps = {
     delta: 1,
     animate: true,
     animateOptions: {

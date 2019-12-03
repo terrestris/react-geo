@@ -8,7 +8,7 @@ import { CSS_PREFIX } from '../../constants';
 import { TooltipPlacement, AbstractTooltipProps } from 'antd/lib/tooltip';
 import { ButtonProps } from 'antd/lib/button';
 
-interface SimpleButtonDefaultProps {
+interface DefaultProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
   /**
    * Additional [antd tooltip](https://ant.design/components/tooltip/)
@@ -19,7 +19,7 @@ interface SimpleButtonDefaultProps {
   tooltipProps: AbstractTooltipProps;
 }
 
-export interface SimpleButtonProps extends Partial<SimpleButtonDefaultProps> {
+interface BaseProps {
   className?: string;
   /**
    * The font awesome icon name.
@@ -39,26 +39,26 @@ export interface SimpleButtonProps extends Partial<SimpleButtonDefaultProps> {
   tooltipPlacement?: TooltipPlacement;
 }
 
+export type SimpleButtonProps = BaseProps & Partial<DefaultProps> & ButtonProps;
+
 /**
  * The SimpleButton.
  *
  * @class The SimpleButton
  * @extends React.Component
  */
-class SimpleButton extends React.Component<SimpleButtonProps & ButtonProps> {
+class SimpleButton extends React.Component<SimpleButtonProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}simplebutton`;
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps: SimpleButtonDefaultProps = {
+  static defaultProps: DefaultProps = {
     type: 'primary',
     tooltipProps: {
       mouseEnterDelay: 1.5

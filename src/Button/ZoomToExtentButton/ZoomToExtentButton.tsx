@@ -4,10 +4,10 @@ import OlMap from 'ol/Map';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 import { easeOut } from 'ol/easing';
 
-import SimpleButton from '../SimpleButton/SimpleButton';
+import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 
-interface ZoomToExtentButtonDefaultProps {
+interface DefaultProps {
   /**
    * Options for fitting to the given extent. See
    * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
@@ -31,7 +31,7 @@ interface ZoomToExtentButtonDefaultProps {
   constrainViewResolution: boolean;
 }
 
-export interface ZoomToExtentButtonProps extends Partial<ZoomToExtentButtonDefaultProps> {
+interface BaseProps {
   /**
    * The className which should be added.
    */
@@ -47,6 +47,8 @@ export interface ZoomToExtentButtonProps extends Partial<ZoomToExtentButtonDefau
   extent: number[] | OlSimpleGeometry;
 }
 
+export type ZoomToExtentButtonProps = BaseProps & Partial<DefaultProps> & SimpleButtonProps;
+
 /**
  * Class representing a zoom to extent button.
  *
@@ -58,16 +60,14 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   _className = `${CSS_PREFIX}zoomtoextentbutton`;
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps: ZoomToExtentButtonDefaultProps = {
+  static defaultProps: DefaultProps = {
     fitOptions: {
       duration: 250,
       easing: easeOut

@@ -5,7 +5,7 @@ import { CSS_PREFIX } from '../constants';
 
 import './CircleMenu.less';
 
-interface CircleMenuDefaultProps {
+interface DefaultProps {
   /**
    * The duration of the animation in milliseconds. Pass 0 to avoid animation.
    */
@@ -20,15 +20,18 @@ interface CircleMenuDefaultProps {
   segmentAngles: [number, number];
 }
 
-export interface CircleMenuProps extends Partial<CircleMenuDefaultProps> {
+interface BaseProps {
   className?: string;
   style?: any;
   /**
    * An array containing the x and y coordinates of the CircleMenus Center.
-   * @type {Number[]}
    */
   position: [number, number];
 }
+
+export type CircleMenuProps = BaseProps
+  & Partial<DefaultProps>
+  & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 /**
  * The CircleMenu.
@@ -40,7 +43,6 @@ export class CircleMenu extends React.Component<CircleMenuProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   _className = `${CSS_PREFIX}circlemenu`;
@@ -51,7 +53,7 @@ export class CircleMenu extends React.Component<CircleMenuProps> {
    */
   _ref = null;
 
-  static defaultProps: CircleMenuDefaultProps = {
+  static defaultProps: DefaultProps = {
     animationDuration: 300,
     diameter: 100,
     segmentAngles: [0, 360]

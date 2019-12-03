@@ -6,7 +6,7 @@ import { CSS_PREFIX } from '../../constants';
 export interface WindowLocale {
 }
 
-interface FloatingMapLogoDefaultProps extends React.HTMLAttributes<HTMLImageElement> {
+interface DefaultProps {
   /**
    * The imageSrc.
    */
@@ -17,7 +17,7 @@ interface FloatingMapLogoDefaultProps extends React.HTMLAttributes<HTMLImageElem
   absolutelyPositioned: boolean;
 }
 
-export interface FloatingMapLogoProps extends Partial<FloatingMapLogoDefaultProps> {
+interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -25,8 +25,10 @@ export interface FloatingMapLogoProps extends Partial<FloatingMapLogoDefaultProp
   /**
    * The image height
    */
-  imageHeight: string;
+  imageHeight?: string;
 }
+
+export type FloatingMapLogoProps = BaseProps & Partial<DefaultProps> & React.HTMLAttributes<HTMLImageElement>;
 
 /**
  * Class representing a floating map logo
@@ -38,23 +40,20 @@ class FloatingMapLogo extends React.Component<FloatingMapLogoProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}floatingmaplogo`;
 
   /**
    * The properties.
-   * @type {Object}
    */
   static propTypes = {
   };
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps: FloatingMapLogoDefaultProps = {
+  static defaultProps: DefaultProps = {
     imageSrc: 'logo.png',
     absolutelyPositioned: false
   };

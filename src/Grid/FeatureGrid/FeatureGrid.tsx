@@ -9,9 +9,11 @@ import OlStyleStroke from 'ol/style/Stroke';
 import OlMap from 'ol/Map';
 import OlFeature from 'ol/Feature';
 import OlSourceVector from 'ol/source/Vector';
+import OlLayerBase from 'ol/layer/Base';
 import OlLayerVector from 'ol/layer/Vector';
 import OlGeomGeometry from 'ol/geom/Geometry';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
 const _isEqual = require('lodash/isEqual');
 const _isFunction = require('lodash/isFunction');
@@ -20,9 +22,10 @@ const _kebabCase = require('lodash/kebabCase');
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import './FeatureGrid.less';
-import { ColumnProps } from 'antd/lib/table';
+import { ColumnProps, TableProps } from 'antd/lib/table';
+import StoreTable from 'antd/lib/table/Table';
 
-interface FeatureGridDefaultProps {
+interface DefaultProps {
   /**
    * The features to show in the grid and the map (if set).
    */
@@ -69,7 +72,7 @@ interface FeatureGridDefaultProps {
   selectable: boolean;
 }
 
-export interface FeatureGridProps extends Partial<FeatureGridDefaultProps> {
+export interface BaseProps {
   /**
    * A CSS class which should be added to the table.
    */
@@ -106,6 +109,8 @@ interface FeatureGridState {
   selectedRowKeys: string[];
 }
 
+export type FeatureGridProps = BaseProps & Partial<DefaultProps> & TableProps<any>;
+
 /**
  * The FeatureGrid.
  *
@@ -116,65 +121,55 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
 
   /**
    * The reference of this grid.
-   * @type {String}
    * @private
    */
-  _ref;
+  _ref: StoreTable<any>;
 
   /**
    * The class name to add to this component.
-   * @type {String}
    * @private
    */
   _className = 'react-geo-feature-grid';
 
   /**
    * The class name to add to each table row.
-   * @type {String}
    * @private
    */
   _rowClassName = 'react-geo-feature-grid-row';
 
   /**
    * The prefix to use for each table row class.
-   * @type {String}
    * @private
    */
   _rowKeyClassNamePrefix = 'row-key-';
 
   /**
    * The hover class name.
-   * @type {String}
    * @private
    */
   _rowHoverClassName = 'row-hover';
 
   /**
    * The source holding the features of the grid.
-   * @type {ol.source.Vector}
    * @private
    */
-  _source = null;
+  _source: OlSourceVector = null;
 
   /**
    * The layer representing the features of the grid.
-   * @type {ol.layer.Vector}
    * @private
    */
-  _layer = null;
+  _layer: OlLayerVector = null;
 
   /**
    * The properties.
-   * @type {Object}
    */
-  static propTypes = {
-  };
+  static propTypes: any = {};
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps: FeatureGridDefaultProps = {
+  static defaultProps: DefaultProps = {
     features: [],
     attributeBlacklist: [],
     featureStyle: new OlStyle({
@@ -327,9 +322,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * Initialized the vector layer that will be used to draw the input features
    * on and adds it to the map (if any).
    *
-   * @param {ol.Map} map The map to add the layer to.
+   * @param map The map to add the layer to.
    */
-  initVectorLayer = map => {
+  initVectorLayer = (map: OlMap) => {
     const {
       features,
       featureStyle,
@@ -365,9 +360,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * given) on pointermove and singleclick. Hovered and selected features will
    * be highlighted and selected in the grid as well.
    *
-   * @param {ol.Map} map The map to register the handlers to.
+   * @param map The map to register the handlers to.
    */
-  initMapEventHandlers = map => {
+  initMapEventHandlers = (map: OlMap) => {
     const {
       selectable
     } = this.props;
@@ -386,9 +381,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Highlights the feature beneath the cursor on the map and in the grid.
    *
-   * @param {ol.MapBrowserEvent} olEvt The ol event.
+   * @param olEvt The ol event.
    */
-  onMapPointerMove = olEvt => {
+  onMapPointerMove = (olEvt: OlMapBrowserEvent) => {
     const {
       map,
       features,
@@ -401,7 +396,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     } = this.state;
 
     const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
-      layerFilter: layerCand => layerCand === this._layer
+      layerFilter: (layerCand: OlLayerBase) => layerCand === this._layer
     }) || [];
 
     features.forEach(feature => {
@@ -418,7 +413,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       }
     });
 
-    selectedFeatures.forEach(feature => {
+    selectedFeatures.forEach((feature: OlFeature) => {
       const key = _kebabCase(this.props.keyFunction(feature));
       const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
       const el = document.querySelectorAll(sel)[0];
@@ -432,9 +427,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Selects the selected feature in the map and in the grid.
    *
-   * @param {ol.MapBrowserEvent} olEvt The ol event.
+   * @param olEvt The ol event.
    */
-  onMapSingleClick = olEvt => {
+  onMapSingleClick = (olEvt: OlMapBrowserEvent) => {
     const {
       map,
       selectStyle
@@ -445,7 +440,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     } = this.state;
 
     const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
-      layerFilter: layerCand => layerCand === this._layer
+      layerFilter: (layerCand: OlLayerBase) => layerCand === this._layer
     }) || [];
 
     let rowKeys = [...selectedRowKeys];
@@ -505,7 +500,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * Returns the column definitions out of the attributes of the first
    * given feature.
    *
-   * @return {Array} The column definitions.
+   * @return The column definitions.
    */
   getColumnDefs = () => {
     const {
@@ -546,7 +541,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Returns the table row data from all of the given features.
    *
-   * @return {Array} The table data.
+   * @return The table data.
    */
   getTableData = () => {
     const {
@@ -593,9 +588,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Called on row click and zooms the the corresponding feature's extent.
    *
-   * @param {Object} row The clicked row.
+   * @param row The clicked row.
    */
-  onRowClick = row => {
+  onRowClick = (row: any) => {
     const {
       onRowClick
     } = this.props;
@@ -613,9 +608,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * Called on row mouseover and hightlights the corresponding feature's
    * geometry.
    *
-   * @param {Object} row The highlighted row.
+   * @param row The highlighted row.
    */
-  onRowMouseOver = row => {
+  onRowMouseOver = (row: any) => {
     const {
       onRowMouseOver
     } = this.props;
@@ -632,9 +627,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Called on mouseout and unhightlights any highlighted feature.
    *
-   * @param {Object} row The unhighlighted row.
+   * @param row The unhighlighted row.
    */
-  onRowMouseOut = row => {
+  onRowMouseOut = (row: any) => {
     const {
       onRowMouseOut
     } = this.props;
@@ -651,9 +646,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Fits the map's view to the extent of the passed features.
    *
-   * @param {ol.Feature[]} features The features to zoom to.
+   * @param features The features to zoom to.
    */
-  zoomToFeatures = features => {
+  zoomToFeatures = (features: OlFeature[]) => {
     const {
       map
     } = this.props;
@@ -676,9 +671,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Highlights the given features in the map.
    *
-   * @param {ol.Feature[]} highlightFeatures The features to highlight.
+   * @param highlightFeatures The features to highlight.
    */
-  highlightFeatures = highlightFeatures => {
+  highlightFeatures = (highlightFeatures: OlFeature[]) => {
     const {
       map,
       highlightStyle
@@ -694,9 +689,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Unhighlights the given features in the map.
    *
-   * @param {ol.Feature[]} unhighlightFeatures The features to unhighlight.
+   * @param unhighlightFeatures The features to unhighlight.
    */
-  unhighlightFeatures = unhighlightFeatures => {
+  unhighlightFeatures = (unhighlightFeatures: OlFeature[]) => {
     const {
       map,
       selectStyle
@@ -723,9 +718,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Sets the select style to the given features in the map.
    *
-   * @param {ol.Feature[]} features The features to select.
+   * @param features The features to select.
    */
-  selectFeatures = features => {
+  selectFeatures = (features: OlFeature[]) => {
     const {
       map,
       selectStyle
@@ -757,9 +752,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * Called if the selection changes.
    *
-   * @param {Array} selectedRowKeys The list of currently selected row keys.
+   * @param selectedRowKeys The list of currently selected row keys.
    */
-  onSelectChange = selectedRowKeys => {
+  onSelectChange = (selectedRowKeys: string[]) => {
     const {
       onRowSelectionChange
     } = this.props;
@@ -812,7 +807,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       ? `${className} ${this._className}`
       : this._className;
 
-    let rowClassNameFn;
+    let rowClassNameFn: (record: any) => string;
     if (_isFunction(rowClassName)) {
       rowClassNameFn = record => `${this._rowClassName} ${(rowClassName as Function)(record)}`;
     } else {

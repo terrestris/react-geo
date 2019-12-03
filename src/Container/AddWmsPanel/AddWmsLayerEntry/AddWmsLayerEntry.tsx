@@ -7,7 +7,7 @@ import { Icon } from 'react-fa';
 
 import './AddWmsLayerEntry.less';
 
-interface AddWmsLayerEntryDefaultProps {
+interface DefaultProps {
   /**
    * Function returning a span with the textual representation of this layer
    * Default: Title of the layer and its abstract (if available)
@@ -19,10 +19,9 @@ interface AddWmsLayerEntryDefaultProps {
   layerQueryableText: string;
 }
 
-export interface AddWmsLayerEntryProps extends Partial<AddWmsLayerEntryDefaultProps> {
+interface BaseProps {
     /**
      * Object containing layer information
-     * @type {Object}
      */
     wmsLayer: OlLayerTile | OlLayerImage;
 }
@@ -31,6 +30,8 @@ interface AddWmsLayerEntryState {
   copyright: string;
   queryable: boolean;
 }
+
+export type AddWmsLayerEntryProps = BaseProps & Partial<DefaultProps>;
 
 /**
  * Class representing a layer parsed from capabilities document.
@@ -57,7 +58,7 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
   /**
    * The defaultProps.
    */
-  static defaultProps: AddWmsLayerEntryDefaultProps = {
+  static defaultProps: DefaultProps = {
     layerQueryableText: 'Layer is queryable',
     layerTextTemplateFn: (wmsLayer) => {
       const title = wmsLayer.get('title');

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 const _uniqueId = require('lodash/uniqueId');
 
-import Panel from  '../Panel/Panel/Panel';
+import Panel, { PanelProps } from  '../Panel/Panel/Panel';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../constants';
@@ -11,11 +11,11 @@ import { CSS_PREFIX } from '../constants';
 import './Window.less';
 import { ResizeEnable } from 'react-rnd';
 
-// i18n
-export interface WindowLocale {
-}
-
-interface WindowDefaultProps {
+interface DefaultProps {
+  /**
+   * Id of the component
+   */
+  id: string;
   /**
    * The id of the parent component
    * default: app
@@ -39,15 +39,11 @@ interface WindowDefaultProps {
   draggable: boolean;
 }
 
-export interface WindowProps extends Partial<WindowDefaultProps> {
-  /**
-   * Id of the component. Will be filled automatically if not provided.
-   */
-  id: string;
+export interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
-  className: string;
+  className?: string;
   /**
    * The children to show in the Window.
    */
@@ -64,6 +60,8 @@ interface WindowState {
    */
   id: string;
 }
+
+export type WindowProps = BaseProps & Partial<DefaultProps> & PanelProps;
 
 /**
  * Window component that creates a React portal that renders children into a DOM
@@ -93,12 +91,13 @@ export class Window extends React.Component<WindowProps, WindowState> {
    */
   className: string = `${CSS_PREFIX}window-portal`;
 
-  static defaultProps: WindowDefaultProps = {
+  static defaultProps: DefaultProps = {
     parentId: 'app',
     title: 'Window',
     resizeOpts: true,
     collapsible: true,
-    draggable: true
+    draggable: true,
+    id: _uniqueId('window-')
   };
 
   /**
@@ -107,7 +106,6 @@ export class Window extends React.Component<WindowProps, WindowState> {
    */
   constructor(props: WindowProps) {
     super(props);
-    const id = props.id || _uniqueId('window-');
 
     const { parentId } = this.props;
     this._parent = document.getElementById(parentId);
@@ -118,11 +116,11 @@ export class Window extends React.Component<WindowProps, WindowState> {
     }
 
     const div = document.createElement('div');
-    div.id = id;
+    div.id = props.id;
     this._elementDiv = div;
 
     this.state = {
-      id: id,
+      id: props.id,
       resizing: false
     };
   }

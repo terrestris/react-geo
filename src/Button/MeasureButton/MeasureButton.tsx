@@ -17,7 +17,7 @@ import OlOverlay from 'ol/Overlay';
 
 const _isEmpty = require('lodash/isEmpty');
 
-import ToggleButton from '../ToggleButton/ToggleButton';
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
@@ -25,7 +25,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './MeasureButton.less';
 
-interface MeasureButtonDefaultProps {
+interface DefaultProps {
   /**
    * Name of system vector layer which will be used to draw measurement
    * results.
@@ -100,7 +100,7 @@ interface MeasureButtonDefaultProps {
   onToggle: (pressed: boolean) => void;
 }
 
-export interface MeasureButtonProps extends Partial<MeasureButtonDefaultProps> {
+interface BaseProps {
   /**
    * The className which should be added.
    */
@@ -115,8 +115,7 @@ export interface MeasureButtonProps extends Partial<MeasureButtonDefaultProps> {
   measureType: 'line' | 'polygon' | 'angle';
 }
 
-interface MeasureButtonState {
-}
+export type MeasureButtonProps = BaseProps & Partial<DefaultProps> & ToggleButtonProps;
 
 /**
  * The MeasureButton.
@@ -124,12 +123,11 @@ interface MeasureButtonState {
  * @class The MeasureButton
  * @extends React.Component
  */
-class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonState> {
+class MeasureButton extends React.Component<MeasureButtonProps> {
 
   /**
    * The className added to this component.
    *
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}measurebutton`;
@@ -137,7 +135,6 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
   /**
    * Currently drawn feature.
    *
-   * @type {OlFeature}
    * @private
    */
   _feature = null;
@@ -145,7 +142,6 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
   /**
    * Overlay to show the measurement.
    *
-   * @type {olOverlay}
    * @private
    */
   _measureTooltip = null;
@@ -153,7 +149,6 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
   /**
    * Overlay to show the help messages.
    *
-   * @type {olOverlay}
    * @private
    */
   _helpTooltip = null;
@@ -161,7 +156,6 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
   /**
    * The help tooltip element.
    *
-   * @type {Element}
    * @private
    */
   _helpTooltipElement = null;
@@ -169,7 +163,6 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
   /**
    * The measure tooltip element.
    *
-   * @type {Element}
    * @private
    */
   _measureTooltipElement = null;
@@ -178,7 +171,6 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
    * An array of created overlays we use for the tooltips. Used to eventually
    * clean up everything we added.
    *
-   * @type{Array<OlOverlay>}
    * @private
    */
   _createdTooltipOverlays = [];
@@ -187,7 +179,6 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
    * An array of created divs we use for the tooltips. Used to eventually
    * clean up everything we added.
    *
-   * @type{Array<HTMLDivElement>}
    * @private
    */
   _createdTooltipDivs = [];
@@ -203,7 +194,6 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
    * memory, and to ensure we have no concurring listeners being active at a
    * time (E.g. when multiple measure buttons are in an application).
    *
-   * @type {Object}
    * @private
    */
   _eventKeys = {
@@ -217,7 +207,6 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
   /**
    * The vector layer showing the geometries added by the draw interaction.
    *
-   * @type {ol.layer.Vector}
    * @private
    */
   _measureLayer = null;
@@ -225,16 +214,14 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
   /**
    * The draw interaction used to draw the geometries to measure.
    *
-   * @type {ol.interaction.Draw}
    * @private
    */
   _drawInteraction = null;
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps: MeasureButtonDefaultProps = {
+  static defaultProps: DefaultProps = {
     measureLayerName: 'react-geo_measure',
     fillColor: 'rgba(255, 0, 0, 0.5)',
     strokeColor: 'rgba(255, 0, 0, 0.8)',
@@ -260,7 +247,7 @@ class MeasureButton extends React.Component<MeasureButtonProps, MeasureButtonSta
    *
    * @constructs MeasureButton
    */
-  constructor(props: MeasureButtonProps) {
+  constructor(props: BaseProps) {
 
     super(props);
 

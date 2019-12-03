@@ -26,7 +26,7 @@ import {
 } from 'antd/lib/tree';
 import { AntTreeNodeDropEvent } from 'antd/lib/tree/Tree';
 
-interface LayerTreeDefaultProps extends TreeProps {
+interface DefaultProps extends TreeProps {
   /**
    *
    */
@@ -41,18 +41,15 @@ interface LayerTreeDefaultProps extends TreeProps {
    * to include it.
    *
    * Compare MDN Docs for Array.prototype.filter: https://mdn.io/array/filter
-   *
-   * @type {Function}
    */
   filterFunction: (value: any, index: number, array: any[]) => boolean;
 }
 
-export interface LayerTreeProps extends Partial<LayerTreeDefaultProps> {
+export interface BaseProps {
   /**
    * An optional CSS class which should be added.
-   * @type {String}
    */
-  className: string;
+  className?: string;
   /**
    * A LayerGroup the Tree should handle.
    */
@@ -67,7 +64,7 @@ export interface LayerTreeProps extends Partial<LayerTreeDefaultProps> {
    * any renderable element (String, Number, Element etc.) and receives
    * the layer instance of the current tree node.
    */
-  nodeTitleRenderer: (layer: OlLayerBase) => React.ReactNode;
+  nodeTitleRenderer?: (layer: OlLayerBase) => React.ReactNode;
 }
 
 interface LayerTreeState {
@@ -77,6 +74,8 @@ interface LayerTreeState {
   checkedKeys: [];
   mapResolution: -1;
 }
+
+export type LayerTreeProps = BaseProps & Partial<DefaultProps> & TreeProps;
 
 /**
  * The LayerTree.
@@ -107,7 +106,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    *
    * @type {Object}
    */
-  static defaultProps: LayerTreeDefaultProps = {
+  static defaultProps: DefaultProps = {
     draggable: true,
     checkable: true,
     filterFunction: () => true

@@ -19,11 +19,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './Panel.less';
 
-// i18n
-export interface PanelLocale {
-}
-
-interface PanelDefaultProps extends RndProps {
+interface DefaultProps {
   /**
    * Whether to allow dragging or not. Default is false.
    */
@@ -75,7 +71,7 @@ interface PanelDefaultProps extends RndProps {
   resizeOpts: ResizeEnable | boolean;
 }
 
-export interface PanelProps extends Partial<PanelDefaultProps> {
+export interface BaseProps {
   id?: string;
   /**
    * The children to show in the Window.
@@ -116,6 +112,8 @@ interface PanelState {
   resizing: boolean;
 }
 
+export type PanelProps = BaseProps & Partial<DefaultProps> & RndProps;
+
 /**
  * The Panel.
  *
@@ -126,7 +124,6 @@ export class Panel extends React.Component<PanelProps, PanelState> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}panel`;
@@ -134,7 +131,6 @@ export class Panel extends React.Component<PanelProps, PanelState> {
   /**
    * Printed representation of the pressed escape keyboard key.
    * s. https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
-   * @type {String}
    * @private
    */
   _escapeKeyboardEventKey = 'Esc';
@@ -147,9 +143,8 @@ export class Panel extends React.Component<PanelProps, PanelState> {
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps: PanelDefaultProps = {
+  static defaultProps: DefaultProps = {
     draggable: false,
     collapsible: false,
     collapsed: false,
@@ -201,8 +196,6 @@ export class Panel extends React.Component<PanelProps, PanelState> {
 
   /**
    * Calculates the height of the Panel and returns a number.
-   *
-   * @return {number}
    */
   calculateHeight() {
     return this.state.collapsed
@@ -213,8 +206,6 @@ export class Panel extends React.Component<PanelProps, PanelState> {
   /**
    * Calculates the height of the Panel body and returns a valid css height
    * expression.
-   *
-   * @return {string}
    */
   calculateBodyHeight() {
     if (this.state.collapsed) {
@@ -315,7 +306,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
   /**
    * Called on keyboard `keydown` event. Will be only triggered if pressed key
    * is `Escape` key and `onEscape` function is provided via props.
-   * @param {KeyboardEvent} evt `keydown` event.
+   * @param evt `keydown` event.
    */
   onKeyDown = (evt: KeyboardEvent) => {
     const {

@@ -4,6 +4,7 @@ import {
   AutoComplete,
   Spin
 } from 'antd';
+import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
 
 import OlMap from 'ol/Map';
@@ -18,7 +19,7 @@ import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil'
 import { CSS_PREFIX } from '../../constants';
 import { OptionProps } from 'antd/lib/select';
 
-interface WfsSearchDefaultProps {
+interface DefaultProps {
   /**
    * A nested object mapping feature types to an object of attribute details,
    * which are also mapped by search attribute name.
@@ -41,7 +42,6 @@ interface WfsSearchDefaultProps {
    *    featType2: {...}
    *   }
    *   ```
-   * @type {Object}
    */
   attributeDetails: {
     [featureType: string]: {
@@ -104,7 +104,7 @@ interface WfsSearchDefaultProps {
   style: any;
 }
 
-export interface WfsSearchProps extends Partial<WfsSearchDefaultProps> {
+interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -134,11 +134,11 @@ export interface WfsSearchProps extends Partial<WfsSearchDefaultProps> {
   /**
    * Maximum number of features to fetch.
    */
-  maxFeatures: number;
+  maxFeatures?: number;
   /**
    * Geometry name to use in a BBOX filter.
    */
-  geometryName: string;
+  geometryName?: string;
   /**
    * Optional list of property names to serialize.
    */
@@ -156,18 +156,18 @@ export interface WfsSearchProps extends Partial<WfsSearchDefaultProps> {
    * An onChange function which gets called with the current value of the
    * field.
    */
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   /**
    * Optional callback function, that will be called before WFS search starts.
    * Can be useful if input value manipulation is needed (e.g. umlaut
    * replacement `ä => oa` etc.)
    */
-  onBeforeSearch: (value: string) => string;
+  onBeforeSearch?: (value: string) => string;
   /**
    * Options which are passed to the constructor of the ol.format.WFS.
    * compare: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
    */
-  wfsFormatOptions: any;
+  wfsFormatOptions?: any;
 }
 
 interface WfsSearchState {
@@ -175,6 +175,8 @@ interface WfsSearchState {
   data: Array<any>;
   fetching: boolean;
 }
+
+export type WfsSearchProps = BaseProps & Partial<DefaultProps> & AutoCompleteProps;
 
 /**
  * The WfsSearch field.
@@ -191,12 +193,11 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}wfssearch`;
 
-  static defaultProps: WfsSearchDefaultProps = {
+  static defaultProps: DefaultProps = {
     srsName: 'EPSG:3857',
     outputFormat: 'application/json',
     minChars: 3,
@@ -208,12 +209,12 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
     /**
      * Create an AutoComplete.Option from the given data.
      *
-     * @param {Object} feature The feature as returned by the server.
-     * @param {Object} props The current props of the component.
-     * @return {AutoComplete.Option} The AutoComplete.Option that will be
+     * @param feature The feature as returned by the server.
+     * @param props The current props of the component.
+     * @return The AutoComplete.Option that will be
      * rendered for each feature.
      */
-    renderOption: (feature, props) => {
+    renderOption: (feature: any, props: any): React.ReactElement<OptionProps> => {
       const {
         displayValue,
         idProperty
@@ -235,10 +236,10 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
      * The default onSelect method if no onSelect prop is given. It zooms to the
      * selected item.
      *
-     * @param {object} feature The selected feature as returned by the server.
-     * @param {ol.map} olMap The openlayers map that was passed via prop.
+     * @param feature The selected feature as returned by the server.
+     * @param olMap The openlayers map that was passed via prop.
      */
-    onSelect: (feature, olMap) => {
+    onSelect: (feature: any, olMap: OlMap) => {
       if (feature) {
         const olView = olMap.getView();
         const geoJsonFormat = new OlFormatGeoJSON();
@@ -260,7 +261,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
   /**
    * Create the WfsSearch.
    *
-   * @param {Object} props The initial props.
+   * @param props The initial props.
    * @constructs WfsSearch
    */
   constructor(props: WfsSearchProps) {
@@ -379,7 +380,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
    */
   onFetchSuccess(response: any) {
     const data = response.features ? response.features : [];
-    data.forEach(feature => feature.searchTerm = this.state.searchTerm);
+    data.forEach((feature: any) => feature.searchTerm = this.state.searchTerm);
     this.setState({
       data,
       fetching: false
@@ -390,7 +391,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
    * This function gets called when the WFS GetFeature fetch request returns an error.
    * It logs the error to the console.
    *
-   * @param {String} error The errorstring.
+   * @param error The errorstring.
    */
   onFetchError(error: string) {
     Logger.error(`Error while requesting WFS GetFeature: ${error}`);

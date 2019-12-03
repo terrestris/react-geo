@@ -6,14 +6,16 @@ import OlMap from 'ol/Map';
 export interface WindowLocale {
 }
 
-interface MapComponentDefaultProps extends React.HTMLAttributes<HTMLDivElement> {
+interface DefaultProps {
   mapDivId: string;
 }
 
-export interface MapComponentProps extends Partial<MapComponentDefaultProps> {
+interface BaseProps {
   children?: React.ReactChildren;
   map: OlMap;
 }
+
+export type MapComponentProps = BaseProps & Partial<DefaultProps> & React.HTMLAttributes<HTMLDivElement>;
 
 /**
  * Class representing a map.
@@ -25,9 +27,8 @@ export class MapComponent extends PureComponent<MapComponentProps> {
 
   /**
    * The default properties.
-   * @type {Object}
    */
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     mapDivId: 'map'
   };
 

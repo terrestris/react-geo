@@ -7,9 +7,11 @@ import './LayerTreeNode.less';
 import { CSS_PREFIX } from '../constants';
 import { AntTreeNodeProps } from 'antd/lib/tree';
 
-export interface LayerTreeNodeProps extends AntTreeNodeProps {
-  inResolutionRange: boolean;
+export interface BaseProps {
+  inResolutionRange?: boolean;
 }
+
+export type LayerTreeNodeProps = BaseProps & AntTreeNodeProps;
 
 /**
  * Class representing a layer tree node
@@ -19,7 +21,7 @@ class LayerTreeNode extends React.PureComponent<LayerTreeNodeProps> {
   /**
    * The render function.
    *
-   * @return {Element} The element.
+   * @return The element.
    */
   render() {
     const {
