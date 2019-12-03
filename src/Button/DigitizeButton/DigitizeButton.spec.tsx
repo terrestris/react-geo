@@ -192,8 +192,7 @@ describe('<DigitizeButton />', () => {
 
         const instance = wrapper.instance();
         instance.createDigitizeLayer();
-        instance._digitizeFeatures =
-          wrapper.state().digitizeLayer.getSource().getFeaturesCollection();
+        instance._digitizeFeatures = instance._digitizeLayer.getSource().getFeaturesCollection();
 
         map.addInteraction(mockInteraction);
         instance._digitizeFeatures.on('add', wrapper.instance().handleTextAdding);
@@ -270,7 +269,7 @@ describe('<DigitizeButton />', () => {
 
         digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
         expect(digitizeLayer).toBeDefined();
-        expect(wrapper.state().digitizeLayer).toBe(digitizeLayer);
+        expect(wrapper.instance()._digitizeLayer).toBe(digitizeLayer);
       });
     });
 
@@ -334,8 +333,8 @@ describe('<DigitizeButton />', () => {
 
         wrapper.instance().createDrawInteraction(true);
 
-        expect(wrapper.state().interactions.length).toBe(1);
-        expect(wrapper.state().interactions[0].type_).toBe('Circle');
+        expect(wrapper.instance()._interactions.length).toBe(1);
+        expect(wrapper.instance()._interactions[0].type_).toBe('Circle');
 
         wrapper.setState({
           interactions: []
@@ -347,8 +346,8 @@ describe('<DigitizeButton />', () => {
         wrapper.instance()._digitizeFeatures = new OlCollection();
         wrapper.instance().createDrawInteraction(true);
 
-        expect(wrapper.state().interactions.length).toBe(1);
-        expect(wrapper.state().interactions[0].type_).toBe('Point');
+        expect(wrapper.instance()._interactions.length).toBe(1);
+        expect(wrapper.instance()._interactions[0].type_).toBe('Point');
       });
     });
 
@@ -369,7 +368,7 @@ describe('<DigitizeButton />', () => {
         expect(wrapper.instance()._selectInteraction).toBeDefined();
         expect(wrapper.instance()._selectInteraction.listeners_.select).toBeDefined();
 
-        expect(wrapper.state().interactions.length).toBe(1);
+        expect(wrapper.instance()._interactions.length).toBe(1);
 
         wrapper.setState({
           interactions: null
@@ -381,7 +380,7 @@ describe('<DigitizeButton />', () => {
 
         wrapper.instance().createSelectOrModifyInteraction();
 
-        expect(wrapper.state().interactions.length).toBe(3);
+        expect(wrapper.instance()._interactions.length).toBe(3);
       });
     });
 
@@ -397,16 +396,16 @@ describe('<DigitizeButton />', () => {
         wrapper.instance().createDigitizeLayer();
         wrapper.instance().createSelectOrModifyInteraction();
 
-        wrapper.state().digitizeLayer.getSource().addFeature(feat);
+        wrapper.instance()._digitizeLayer.getSource().addFeature(feat);
         wrapper.instance()._selectInteraction.getFeatures().push(feat);
 
         expect(wrapper.instance()._selectInteraction.getFeatures().getArray().length).toBe(1);
-        expect(wrapper.state().digitizeLayer.getSource().getFeaturesCollection().getArray().length).toBe(1);
+        expect(wrapper.instance()._digitizeLayer.getSource().getFeaturesCollection().getArray().length).toBe(1);
 
         wrapper.instance().onFeatureRemove(mockEvt);
 
         expect(wrapper.instance()._selectInteraction.getFeatures().getArray().length).toBe(0);
-        expect(wrapper.state().digitizeLayer.getSource().getFeaturesCollection().getArray().length).toBe(0);
+        expect(wrapper.instance()._digitizeLayer.getSource().getFeaturesCollection().getArray().length).toBe(0);
       });
     });
 

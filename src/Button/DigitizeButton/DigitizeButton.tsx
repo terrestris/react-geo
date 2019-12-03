@@ -257,7 +257,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * The interactions.
    * @private
    */
-  _interactions?: OlInteraction[];
+  _interactions?: OlInteraction[] = [];
 
   /**
    * Name of point draw type.
