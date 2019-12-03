@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Table } from 'antd';
-import { ColumnProps } from 'antd/lib/table';
+import { ColumnProps, TableProps } from 'antd/lib/table';
 
 import OlFeature from 'ol/Feature';
 
@@ -11,15 +11,11 @@ import { CSS_PREFIX } from '../../constants';
 
 import './PropertyGrid.less';
 
-// i18n
-export interface UserChipLocale {
-}
-
 type AttributeNames = {
   [key: string]: string
 };
 
-interface PropertyGridDefaultProps {
+interface DefaultProps {
   /**
    * Title of the attribute name column
    */
@@ -35,7 +31,7 @@ interface PropertyGridDefaultProps {
   attributeValueColumnTitle?: string;
 }
 
-export interface PropertyGridProps extends Partial<PropertyGridDefaultProps> {
+export interface BaseProps {
   /**
    * A CSS class which should be added.
    */
@@ -60,6 +56,8 @@ interface PropertyGridState {
   columns: ColumnProps<any>[];
 }
 
+export type PropertyGridProps = BaseProps & Partial<DefaultProps> & TableProps<any>;
+
 /**
  * Class representing a feature grid showing the attribute values of a simple feature.
  *
@@ -70,12 +68,11 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
 
   /**
    * The CSS-className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}propertygrid`;
 
-  static defaultProps: PropertyGridDefaultProps = {
+  static defaultProps: DefaultProps = {
     attributeNameColumnTitle: 'Attribute name',
     attributeNameColumnWidthInPercent: 50,
     attributeValueColumnTitle: 'Attribute value',
@@ -84,7 +81,7 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
   /**
    * The constructor.
    *
-   * @param {Object} props The initial props.
+   * @param props The initial props.
    */
   constructor(props: PropertyGridProps) {
     super(props);
@@ -113,8 +110,8 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
    *
    * @param feature feature to display
    * @param attributeFilter Array of string values to filter the grid rows
-   * @param {Object} attributeNames Object containing mapping of attribute names names in feature to custom ones
-   * @param {Number} attributeNameColumnWidthInPercent Column width (in percent)
+   * @param attributeNames Object containing mapping of attribute names names in feature to custom ones
+   * @param attributeNameColumnWidthInPercent Column width (in percent)
    */
   generatePropertyGrid({feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent}: {
     feature: OlFeature,
@@ -159,7 +156,7 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
   /**
    * The render function.
    *
-   * @return {Element} The element.
+   * @return The element.
    */
   render() {
     const {
