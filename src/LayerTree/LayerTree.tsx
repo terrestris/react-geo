@@ -76,7 +76,7 @@ interface LayerTreeState {
   mapResolution: -1;
 }
 
-export type LayerTreeProps = DefaultProps & BaseProps & TreeProps;
+export type LayerTreeProps = BaseProps & Partial<DefaultProps> & TreeProps;
 
 /**
  * The LayerTree.
