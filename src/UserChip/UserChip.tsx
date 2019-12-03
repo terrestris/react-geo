@@ -11,7 +11,7 @@ import './UserChip.less';
 import { CSS_PREFIX } from '../constants';
 
 // non default props
-export interface UserChipProps extends AvatarProps {
+export interface BaseProps {
     /**
      * An optional CSS class which should be added.
      */
@@ -33,6 +33,8 @@ export interface UserChipProps extends AvatarProps {
      */
     style?: any;
 }
+
+export type UserChipProps = BaseProps & AvatarProps;
 
 /**
  * Class representing the user chip containing an image of the user and his/her
@@ -87,7 +89,7 @@ class UserChip extends React.Component<UserChipProps> {
   /**
    * getUserMenu - Description
    *
-   * @return {type} Description
+   * @return Description
    */
   getUserMenu() {
     const {
