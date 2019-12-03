@@ -3,11 +3,7 @@ import './Toolbar.less';
 
 import { CSS_PREFIX } from '../constants';
 
-// i18n
-export interface ToolbarLocale {
-}
-
-interface ToolbarDefaultProps {
+interface DefaultProps {
   /**
    * The alignment of the sub components.
    */
@@ -15,16 +11,14 @@ interface ToolbarDefaultProps {
 }
 
 // non default props
-export interface ToolbarProps extends Partial<ToolbarDefaultProps> {
+export interface BaseProps extends Partial<DefaultProps> {
     /**
      * An optional CSS class which should be added.
      */
     className?: string;
-    /**
-     * The style object
-     */
-    style?: any;
 }
+
+export type ToolbarProps = BaseProps & Partial<DefaultProps> & React.HTMLAttributes<HTMLDivElement>;
 
 /**
  * A base class representing a toolbar having n children
@@ -45,7 +39,7 @@ class Toolbar extends React.Component<ToolbarProps> {
   /**
    * The default properties.
    */
-  static defaultProps: ToolbarDefaultProps = {
+  static defaultProps: DefaultProps = {
     alignment: 'horizontal'
   };
 
@@ -55,9 +49,9 @@ class Toolbar extends React.Component<ToolbarProps> {
   render() {
     const {
       alignment,
-      style,
       children,
-      className
+      className,
+      ...passThroughProps
     } = this.props;
 
     const finalClassName = className
@@ -65,7 +59,10 @@ class Toolbar extends React.Component<ToolbarProps> {
       : this.className;
 
     return (
-      <div className={`${finalClassName} ${alignment}-toolbar`} style={style}>
+      <div
+        className={`${finalClassName} ${alignment}-toolbar`}
+        {...passThroughProps}
+      >
         {children}
       </div>
     );
