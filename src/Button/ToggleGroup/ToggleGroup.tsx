@@ -26,20 +26,20 @@ interface BaseProps {
   /**
    * The name of this group.
    */
-  name: string;
+  name?: string;
   /**
    * The value fo the `name` attribute of the children to select/press
    * initially.
    */
-  selectedName: string;
+  selectedName?: string;
   /**
    * Callback function for onChange.
    */
-  onChange: (childProps: any) => void;
+  onChange?: (childProps: any) => void;
   /**
    * The children of this group. Typically a set of `ToggleButton`s.
    */
-  children: React.ReactElement[];
+  children?: React.ReactElement[];
 }
 
 interface ToggleGroupState {
