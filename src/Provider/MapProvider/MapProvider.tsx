@@ -11,8 +11,6 @@ export interface MapProviderProps {
   /**
    * The map can be either an OlMap or a Promise that resolves with an OlMap
    * if your map is created asynchronously.
-   *
-   * @type {ol.Map|Promise}
    */
   map: OlMap | Promise<OlMap>;
 }
@@ -24,14 +22,11 @@ interface MapProviderState {
 
 /**
  * The MapProvider.
- *
- * @type {Object}
  */
 class MapProvider extends React.Component<MapProviderProps, MapProviderState> {
 
   /**
    * The child context types.
-   * @type {Object}
    */
   static childContextTypes = {
     map: PropTypes.instanceOf(OlMap)
@@ -41,7 +36,7 @@ class MapProvider extends React.Component<MapProviderProps, MapProviderState> {
    * The constructor of the MapProvider sets the
    *
    * @constructs MapProvider
-   * @param {Object} props The initial props.
+   * @param props The initial props.
    */
   constructor(props: MapProviderProps) {
     super(props);
@@ -63,7 +58,7 @@ class MapProvider extends React.Component<MapProviderProps, MapProviderState> {
   /**
    * Returns the context for the children.
    *
-   * @return {Object} The child context.
+   * @return The child context.
    */
   getChildContext() {
     const {
