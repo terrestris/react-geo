@@ -1,19 +1,16 @@
 import * as React from 'react';
 import { Slider } from 'antd';
 import OlLayerBase from 'ol/layer/Base';
+import { SliderProps } from 'antd/lib/slider';
 
-/**
- *
- * @export
- * @interface TimeSliderProps
- * @extends {Partial<LayerTransparencySliderDefaultProps>}
- */
-export interface LayerTransparencySliderProps {
+export interface BaseProps {
   /**
    * The layer to handle.
    */
   layer: OlLayerBase;
 }
+
+export type LayerTransparencySliderProps = BaseProps & SliderProps;
 
 /**
  * The LayerTransparencySlider.
@@ -26,9 +23,8 @@ class LayerTransparencySlider extends React.Component<LayerTransparencySliderPro
   /**
    * Sets the transparency to the provided layer.
    *
-   * @param {Number} transparency The transparency to set, provide a value
-   *                              between 0 (fully visible) and 100 (fully
-   *                              transparent).
+   * @param transparency The transparency to set, provide a value between 0
+   * (fully visible) and 100 (fully transparent).
    */
   setLayerTransparency(transparency: number) {
     const {
@@ -43,7 +39,7 @@ class LayerTransparencySlider extends React.Component<LayerTransparencySliderPro
   /**
    * Returns the transparency from the provided layer.
    *
-   * @return {Number} The transparency of the layer.
+   * @return The transparency of the layer.
    */
   getLayerTransparency() {
     const {

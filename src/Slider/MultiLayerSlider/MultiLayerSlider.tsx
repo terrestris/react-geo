@@ -3,9 +3,9 @@ import OlLayerBase from 'ol/layer/Base';
 import { Slider } from 'antd';
 
 import { CSS_PREFIX } from '../../constants';
-import { SliderValue } from 'antd/lib/slider';
+import { SliderValue, SliderProps } from 'antd/lib/slider';
 
-interface MultiLayerSliderDefaultProps {
+interface DefaultProps {
   /**
    * The layers that should be handled. Default is: `[]`.
    *
@@ -21,14 +21,15 @@ interface MultiLayerSliderDefaultProps {
  *
  * @export
  * @interface TimeSliderProps
- * @extends {Partial<MultiLayerSliderDefaultProps>}
  */
-export interface MultiLayerSliderProps extends Partial<MultiLayerSliderDefaultProps> {
+export interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
   className?: string;
 }
+
+export type MultiLayerSliderProps = BaseProps & Partial<DefaultProps> & SliderProps;
 
 /**
  * Slider that changes opacity on a set of layers.
@@ -40,12 +41,11 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}multilayerslider`;
 
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     layers: [],
     defaultValue: 0
   };
@@ -54,7 +54,7 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
    * The constructor.
    *
    * @constructs MultiLayerSlider
-   * @param {MultiLayerSliderProps} props The properties.
+   * @param props The properties.
    */
   constructor(props: MultiLayerSliderProps) {
     super(props);
@@ -67,15 +67,15 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
 
   /**
    * Formats the tip for the slider.
-   * @param  {Number} value the slider value
-   * @return {String}      the formatted tip value
+   * @param value The slider value
+   * @return The formatted tip value
    */
   formatTip(value: number) {
     const {
       layers
     } = this.props;
     const layerIdx = this.getLayerIndexForSliderValue(value);
-    let tip;
+    let tip: string;
     if (layers[layerIdx]) {
       const opacity = Math.round(layers[layerIdx].get('opacity') * 100);
       const layer = layers[layerIdx];
@@ -107,8 +107,8 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
 
   /**
    * Gets the opacity for a given slider value
-   * @param  {Number} value The current slider value
-   * @return {Number} The opacity
+   * @param value The current slider value
+   * @return The opacity
    */
   getOpacityForValue(value: number) {
     const {
@@ -123,8 +123,8 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
 
   /**
    * Gets the matching index of the layer array for a given slider value
-   * @param  {Number} value the current slider value
-   * @return {Number} The layer array index
+   * @param value the current slider value
+   * @return The layer array index
    */
   getLayerIndexForSliderValue(value: number) {
     const {
@@ -138,7 +138,7 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
 
   /**
    * Creates the marks used with the slider based on the layers names.
-   * @return {Object} The marks object
+   * @return The marks object
    */
   getMarks() {
     const marks = {};
