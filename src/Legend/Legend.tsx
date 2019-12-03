@@ -12,7 +12,7 @@ export interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
-  className: string;
+  className?: string;
   /**
    * The layer you want to display the legend of.
    */
@@ -21,7 +21,7 @@ export interface BaseProps {
    * An object containing additional request params like "{HEIGHT: 400}" will
    * be transformed to "&HEIGHT=400" an added to the GetLegendGraphic request.
    */
-  extraParams: any;
+  extraParams?: any;
 }
 
 interface LegendState {

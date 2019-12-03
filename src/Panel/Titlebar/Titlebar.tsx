@@ -5,7 +5,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './Titlebar.less';
 
-export interface TitlebarProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface BaseProps {
   /**
    * An optional CSS class which should be added.
    * @type {String}
@@ -14,8 +14,10 @@ export interface TitlebarProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Additional elements to show at the right side of the Titlebar.
    */
-  tools: React.ReactNode[];
+  tools?: React.ReactNode[];
 }
+
+export type TitlebarProps = BaseProps & React.HTMLAttributes<HTMLDivElement>;
 
 /**
  * Class representing the titlebar. Usually used in a panel.
@@ -27,7 +29,6 @@ export class Titlebar extends React.Component<TitlebarProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}titlebar`;

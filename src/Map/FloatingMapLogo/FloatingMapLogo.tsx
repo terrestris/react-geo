@@ -25,7 +25,7 @@ interface BaseProps {
   /**
    * The image height
    */
-  imageHeight: string;
+  imageHeight?: string;
 }
 
 export type FloatingMapLogoProps = BaseProps & Partial<DefaultProps> & React.HTMLAttributes<HTMLImageElement>;

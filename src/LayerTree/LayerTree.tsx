@@ -48,9 +48,8 @@ interface DefaultProps extends TreeProps {
 export interface BaseProps {
   /**
    * An optional CSS class which should be added.
-   * @type {String}
    */
-  className: string;
+  className?: string;
   /**
    * A LayerGroup the Tree should handle.
    */
@@ -65,7 +64,7 @@ export interface BaseProps {
    * any renderable element (String, Number, Element etc.) and receives
    * the layer instance of the current tree node.
    */
-  nodeTitleRenderer: (layer: OlLayerBase) => React.ReactNode;
+  nodeTitleRenderer?: (layer: OlLayerBase) => React.ReactNode;
 }
 
 interface LayerTreeState {

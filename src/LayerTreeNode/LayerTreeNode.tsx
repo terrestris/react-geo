@@ -8,7 +8,7 @@ import { CSS_PREFIX } from '../constants';
 import { AntTreeNodeProps } from 'antd/lib/tree';
 
 export interface BaseProps {
-  inResolutionRange: boolean;
+  inResolutionRange?: boolean;
 }
 
 export type LayerTreeNodeProps = BaseProps & AntTreeNodeProps;
