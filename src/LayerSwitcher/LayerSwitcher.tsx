@@ -22,7 +22,7 @@ type ArrayTwoOrMore<T> = {
  * @interface LayerSwitcherProps
  * @extends {React.HTMLAttributes<HTMLDivElement>}
  */
-export interface LayerSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface BaseProps {
   /**
    * An optional CSS class which will be added to the wrapping div Element.
    */
@@ -40,6 +40,8 @@ export interface LayerSwitcherProps extends React.HTMLAttributes<HTMLDivElement>
 interface LayerSwitcherState {
   previewLayer: OlLayerTile | OlLayerGroup;
 }
+
+export type LayerSwitcherProps = BaseProps & React.HTMLAttributes<HTMLDivElement>;
 
 /**
  * Class representing the LayerSwitcher.
