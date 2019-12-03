@@ -8,7 +8,7 @@ import OlLayer from 'ol/layer/Layer';
 
 import { CSS_PREFIX } from '../constants';
 
-export interface LegendProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -31,6 +31,8 @@ interface LegendState {
   legendUrl: string;
 }
 
+export type LegendProps = BaseProps & React.HTMLAttributes<HTMLDivElement>;
+
 /**
  * Class representing the Legend.
  *
@@ -41,7 +43,6 @@ export class Legend extends React.Component<LegendProps, LegendState> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}legend`;
@@ -67,7 +68,7 @@ export class Legend extends React.Component<LegendProps, LegendState> {
    * Invoked immediately after updating occurs. This method is not called for
    * the initial render.
    *
-   * @param {Object} prevProps The previous props.
+   * @param prevProps The previous props.
    */
   componentDidUpdate(prevProps: LegendProps) {
     const {
@@ -87,8 +88,8 @@ export class Legend extends React.Component<LegendProps, LegendState> {
    * "legendUrl" this will be used. Otherwise a getLegendGraphic requestString
    * will be created by the MapUtil.
    *
-   * @param {ol.Layer} layer The layer to get the legend graphic request for.
-   * @param {Object} extraParams The extra params.
+   * @param layer The layer to get the legend graphic request for.
+   * @param extraParams The extra params.
    */
   getLegendUrl(layer: OlLayer, extraParams: any) {
     let legendUrl;
