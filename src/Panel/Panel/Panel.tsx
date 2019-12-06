@@ -79,7 +79,6 @@ export interface BaseProps {
   children?: React.ReactNode;
   /**
    * The title text to be shown in the window Header.
-   * @type {string}
    */
   title?: string;
   /**

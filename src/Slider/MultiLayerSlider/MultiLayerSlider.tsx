@@ -5,14 +5,14 @@ import { Slider } from 'antd';
 import { CSS_PREFIX } from '../../constants';
 import { SliderValue, SliderProps } from 'antd/lib/slider';
 
+type ArrayTwoOrMore<T> = {
+  0: T
+  1: T
+} & Array<T>;
+
 interface DefaultProps {
   /**
-   * The layers that should be handled. Default is: `[]`.
-   *
-   */
-  layers: OlLayerBase[];
-  /**
-   * The default value(s). Default is `0`
+   * The default value(s).
    */
   defaultValue: SliderValue;
 }
@@ -23,6 +23,11 @@ interface DefaultProps {
  * @interface TimeSliderProps
  */
 export interface BaseProps {
+  /**
+   * The layers that should be handled.
+   *
+   */
+  layers: ArrayTwoOrMore<OlLayerBase>;
   /**
    * An optional CSS class which should be added.
    */
@@ -46,7 +51,6 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
   className = `${CSS_PREFIX}multilayerslider`;
 
   static defaultProps: DefaultProps = {
-    layers: [],
     defaultValue: 0
   };
 

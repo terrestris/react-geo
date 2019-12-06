@@ -168,56 +168,48 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
 
   /**
    * The reference of this grid.
-   * @type {String}
    * @private
    */
   _ref;
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   _className = `${CSS_PREFIX}ag-feature-grid`;
 
   /**
    * The class name to add to each table row.
-   * @type {String}
    * @private
    */
   _rowClassName = `${CSS_PREFIX}ag-feature-grid-row`;
 
   /**
    * The prefix to use for each table row class.
-   * @type {String}
    * @private
    */
   _rowKeyClassNamePrefix = 'row-key-';
 
   /**
    * The hover class name.
-   * @type {String}
    * @private
    */
   _rowHoverClassName = 'ag-row-hover';
 
   /**
    * The source holding the features of the grid.
-   * @type {ol.source.Vector}
    * @private
    */
   _source = null;
 
   /**
    * The layer representing the features of the grid.
-   * @type {ol.layer.Vector}
    * @private
    */
   _layer = null;
 
   /**
    * The default properties.
-   * @type {Object}
    */
   static defaultProps: DefaultProps = {
     theme: 'ag-theme-balham',

@@ -30,7 +30,7 @@ interface BaseProps {
    */
   className?: string;
   /**
-   * An array of predefined crs definitions habving at least value (name of
+   * An array of predefined crs definitions having at least value (name of
    * CRS) and code (e.g. EPSG-code of CRS) property
    */
   predefinedCrsDefinitions?: {value: string, code: string}[];

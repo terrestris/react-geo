@@ -106,7 +106,6 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}nominatimsearch`;

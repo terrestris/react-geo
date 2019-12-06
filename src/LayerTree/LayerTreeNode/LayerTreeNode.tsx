@@ -4,14 +4,14 @@ const TreeNode = Tree.TreeNode;
 
 import './LayerTreeNode.less';
 
-import { CSS_PREFIX } from '../constants';
+import { CSS_PREFIX } from '../../constants';
 import { AntTreeNodeProps } from 'antd/lib/tree';
 
 export interface BaseProps {
   inResolutionRange?: boolean;
 }
 
-export type LayerTreeNodeProps = BaseProps & AntTreeNodeProps;
+export type LayerTreeNodeProps = BaseProps & Partial<AntTreeNodeProps>;
 
 /**
  * Class representing a layer tree node

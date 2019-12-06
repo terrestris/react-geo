@@ -1,6 +1,6 @@
 {
   "name": "@terrestris/react-geo",
-  "version": "12.0.0-beta.7",
+  "version": "12.0.0-beta.8",
   "description": "A set of geo related modules. To use in combination with react, antd and ol.",
   "license": "BSD-2-Clause",
   "author": "terrestris GmbH & Co. KG <info@terrestris.de>",
@@ -64,7 +64,7 @@
     "start:styleguide": "styleguidist server",
     "build:styleguide": "npm run clean:build && styleguidist build",
     "build:declaration": "tsc --emitDeclarationOnly",
-    "build:dist": "npm run clean:dist && babel src --out-dir dist --copy-files --ignore spec.tsx,.md --extensions '.ts,.tsx' && npm run build:declaration",
+    "build:dist": "babel src --out-dir dist --copy-files --ignore spec.tsx,.md --extensions '.ts,.tsx' && npm run build:declaration",
     "build:all": "npm run build:styleguide && npm run build:dist",
     "build": "npm run test -- --coverage && npm run build:all",
     "release": "np --no-yarn"

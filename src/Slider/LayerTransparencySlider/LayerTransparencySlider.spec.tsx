@@ -1,7 +1,7 @@
 /*eslint-env jest*/
 
 
-import TestUtil from '../Util/TestUtil';
+import TestUtil from '../../Util/TestUtil';
 import LayerTransparencySlider from './LayerTransparencySlider';
 
 describe('<LayerTransparencySlider />', () => {

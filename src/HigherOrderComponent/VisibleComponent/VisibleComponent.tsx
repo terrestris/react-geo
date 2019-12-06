@@ -12,11 +12,11 @@ export interface VisibleComponentProps {
  * the state: If the wrapped component (identified by it's name) is included
  * in the state, it will be rendered, if not, it wont.
  *
- * @param {Component} WrappedComponent The component to wrap and enhance.
- * @return {Component} The wrapped component.
+ * @param WrappedComponent The component to wrap and enhance.
+ * @return The wrapped component.
  */
-export function isVisibleComponent<P extends VisibleComponentProps>(
-  WrappedComponent: React.ComponentType<any>): React.ComponentType {
+export function isVisibleComponent<P>(
+  WrappedComponent: React.ComponentType<P>): React.ComponentType<P & VisibleComponentProps> {
 
   /**
    * The wrapper class for the given component.
@@ -24,28 +24,19 @@ export function isVisibleComponent<P extends VisibleComponentProps>(
    * @class The VisibleComponent
    * @extends React.Component
    */
-  return class VisibleComponent extends React.Component<P> {
-
-    /**
-     * Create the VisibleComponent.
-     *
-     * @constructs VisibleComponent
-     */
-    constructor(props: P) {
-      super(props);
-    }
+  return class VisibleComponent extends React.Component<P & VisibleComponentProps> {
 
     /**
      * Checks if the current component (identified by it's name) should be
      * visible or not.
      *
-     * @param {String} componentName The name of the component.
-     * @return {Boolean} Whether the component should be visible or not.
+     * @param componentName The name of the component.
+     * @return Whether the component should be visible or not.
      */
-    isVisibleComponent = (componentName) => {
+    isVisibleComponent = (componentName: string) => {
       let activeModules = this.props.activeModules || [];
 
-      return activeModules.some(activeModule => {
+      return activeModules.some((activeModule: any) => {
         if (!activeModule.name) {
           return false;
         } else {
@@ -73,7 +64,7 @@ export function isVisibleComponent<P extends VisibleComponentProps>(
       return (
         isVisible ?
           <WrappedComponent
-            {...passThroughProps as P}
+            {...passThroughProps as P & VisibleComponentProps}
           /> :
           null
       );

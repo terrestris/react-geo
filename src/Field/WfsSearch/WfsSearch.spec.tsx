@@ -121,7 +121,7 @@ describe('<WfsSearch />', () => {
 
   describe('default #onSelect', () => {
     it('zooms to the selected feature', () => {
-      //SETUP
+      // SETUP
       const feature = {
         type: 'Feature',
         id: '752526',
@@ -130,7 +130,7 @@ describe('<WfsSearch />', () => {
         },
         geometry: {
           type: 'Polygon',
-          coordinates: [[[10, 40],[40, 40],[40, 10],[10, 10],[10, 40]]]
+          coordinates: [[[10, 40], [40, 40], [40, 10], [10, 10], [10, 40]]]
         }
       };
       const map = new OlMap({
@@ -142,7 +142,7 @@ describe('<WfsSearch />', () => {
           constrainResolution: true
         })
       });
-      //SETUP END
+      // SETUP END
 
       const wrapper = TestUtil.mountComponent(WfsSearch, {map});
       const fitSpy = jest.spyOn(map.getView(), 'fit');
@@ -153,7 +153,7 @@ describe('<WfsSearch />', () => {
       expect(fitSpy).toHaveBeenCalled();
 
       return new Promise(resolve => {
-        setTimeout(resolve, 510);
+        setTimeout(resolve, 600);
       })
         .then(() => {
           expect(map.getView().getCenter()).toEqual([25, 25]);

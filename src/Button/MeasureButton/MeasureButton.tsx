@@ -435,7 +435,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
   /**
    * Called if the current geometry of the draw interaction has changed.
    *
-   * @param {ol.events.Event} evt The generic change event.
+   * @param evt The generic change event.
    */
   onDrawInteractionGeometryChange(/*evt*/) {
     this.updateMeasureTooltip();
@@ -444,7 +444,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
   /**
    * Called on map click.
    *
-   * @param {ol.MapBrowserPointerEvent} evt The pointer event.
+   * @param evt The pointer event.
    */
   onMapClick(evt: any) {
     const {
@@ -461,7 +461,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
    * Sets up listeners whenever the drawing of a measurement sketch is
    * started.
    *
-   * @param {OlInteractionDrawEvent} evt The event which contains the
+   * @param evt The event which contains the
    *   feature we are drawing.
    *
    * @method
@@ -543,7 +543,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
   /**
    * Adds a tooltip on click where a measuring stop occured.
    *
-   * @param {ol.Coordinate} coordinate The coordinate for the tooltip.
+   * @param coordinate The coordinate for the tooltip.
    */
   addMeasureStopTooltip(coordinate: OlCoordinate) {
     const {
@@ -717,7 +717,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
   /**
    * Called on map's pointermove event.
    *
-   * @param {ol.MapBrowserPointerEvent} evt The pointer event.
+   * @param evt The pointer event.
    */
   onMapPointerMove(evt: any) {
     if (!evt.dragging) {
@@ -728,7 +728,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
   /**
    * Updates the position and the text of the help tooltip.
    *
-   * @param {ol.coordinate} coordinate The coordinate to center the tooltip to.
+   * @param coordinate The coordinate to center the tooltip to.
    */
   updateHelpTooltip(coordinate: any) {
     const {

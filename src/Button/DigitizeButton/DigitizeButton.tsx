@@ -458,7 +458,9 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     this.props.onToggle(pressed);
 
-    this._digitizeFeatures = this._digitizeLayer.getSource().getFeaturesCollection();
+    if (this._digitizeLayer) {
+      this._digitizeFeatures = this._digitizeLayer.getSource().getFeaturesCollection();
+    }
 
     if (pressed) {
       if (drawStyle) {
@@ -517,8 +519,8 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * The styling function for the digitize vector layer, which considers
    * different geometry types of drawn features.
    *
-   * @param {OlFeature} feature The feature which is being styled.
-   * @return {OlStyleStyle} The style to use.
+   * @param feature The feature which is being styled.
+   * @return The style to use.
    */
   getDigitizeStyleFunction = feature => {
     const {
@@ -594,12 +596,12 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   /**
    * The OL style for selected digitized features.
    *
-   * @param {OlFeature} feature The selected feature.
-   * @param {Number} View resolution.
-   * @param {String} text Text for labeled feature (optional).
-   * @return {OlStyleStyle} The style to use.
+   * @param feature The selected feature.
+   * @param res resolution.
+   * @param text Text for labeled feature (optional).
+   * @return The style to use.
    */
-  getSelectedStyleFunction = (feature, res, text) => {
+  getSelectedStyleFunction = (feature: OlFeature, res: number, text: React.ReactText) => {
     const {
       selectFillColor,
       selectStrokeColor
@@ -645,7 +647,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Creates a correctly configured OL draw interaction depending on given
    * drawType and adds this to the map.
    *
-   * @param {Boolean} pressed Whether the digitize button is pressed or not.
+   * @param pressed Whether the digitize button is pressed or not.
    * Will be used to handle active state of the draw interaction.
    */
   createDrawInteraction = pressed => {
@@ -765,7 +767,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Listener for `select` event of OL select interaction in `Delete` mode.
    * Removes selected feature from the vector source and map.
    *
-   * @param {ol.interaction.Select.Event} evt The interaction event.
+   * @param evt The interaction event.
    */
   onFeatureRemove = evt => {
     const {
@@ -786,13 +788,12 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     this._digitizeLayer.getSource().removeFeature(feat);
     this.props.map.renderSync();
   }
-
   /**
    * Listener for `select` event of OL select interaction in `Copy` mode.
    * Creates a clone of selected feature and calls utility method to move it
    * beside the original to avoid overlapping.
    *
-   * @param {ol.interaction.Select.Event} evt The interaction event.
+   * @param evt The interaction event.
    */
   onFeatureCopy = evt => {
     const {
@@ -834,7 +835,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Checks if a labeled feature is being modified. If yes, opens prompt to
    * input a new label.
    *
-   * @param {ol.interaction.Modify.Event} evt The interaction event.
+   * @param evt The interaction event.
    */
   onModifyStart = evt => {
     const {
@@ -869,7 +870,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   /**
    * Called on modifyend of the ol.interaction.Modify.
    *
-   * @param {ol.interaction.Modify.Event} evt The interaction event.
+   * @param evt The interaction event.
    */
   onModifyEnd = evt => {
     const {
@@ -884,7 +885,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   /**
    * Called on translatestart of the ol.interaction.Translate.
    *
-   * @param {ol.interaction.Translate.Event} evt The interaction event.
+   * @param evt The interaction event.
    */
   onTranslateStart = evt => {
     const {
@@ -899,7 +900,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   /**
    * Called on translateend of the ol.interaction.Translate.
    *
-   * @param {ol.interaction.Translate.Event} evt The interaction event.
+   * @param evt The interaction event.
    */
   onTranslateEnd = evt => {
     const {
@@ -914,7 +915,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   /**
    * Called on translating of the ol.interaction.Translate.
    *
-   * @param {ol.interaction.Translate.Event} evt The interaction event.
+   * @param evt The interaction event.
    */
   onTranslating = evt => {
     const {
@@ -929,7 +930,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   /**
    * Changes state for showLabelPrompt to make modal for label input visible.
    *
-   * @param {Event} evt Click event on adding feature to the digitize layer.
+   * @param evt Click event on adding feature to the digitize layer.
    *
    * @method
    */
@@ -1017,7 +1018,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Called if label input field value was changed. Updates state value for
    * textLabel.
    *
-   * @param {Event} evt Input event containing new text value to be set as
+   * @param evt Input event containing new text value to be set as
    * textLabel.
    */
   onLabelChange = evt => {
@@ -1030,7 +1031,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Sets the cursor to `pointer` if the pointer enters a non-oqaque pixel of
    * a hoverable layer.
    *
-   * @param {ol.MapEvent} evt The `pointermove` event.
+   * @param evt The `pointermove` event.
    */
   onPointerMove = evt => {
     if (evt.dragging) {

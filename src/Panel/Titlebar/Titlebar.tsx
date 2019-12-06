@@ -8,7 +8,6 @@ import './Titlebar.less';
 export interface BaseProps {
   /**
    * An optional CSS class which should be added.
-   * @type {String}
    */
   className?: string;
   /**

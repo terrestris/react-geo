@@ -86,7 +86,7 @@ export interface BaseProps {
    * The map the features should be rendered on. If not given, the features
    * will be rendered in the table only.
    */
-  map: OlMap;
+  map?: OlMap;
   /**
    * Callback function, that will be called on rowclick.
    */
@@ -269,7 +269,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * Invoked immediately after updating occurs. This method is not called for
    * the initial render.
    *
-   * @param {Object} prevProps The previous props.
+   * @param prevProps The previous props.
    */
   componentDidUpdate(prevProps: FeatureGridProps) {
     const {
