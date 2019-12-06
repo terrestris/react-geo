@@ -24,9 +24,9 @@ export class TestUtil {
   /**
    * Mounts the given component.
    *
-   * @param {Component} Component The Component to render.
-   * @param {Object} [props] The props to be used.
-   * @param {Object} [options] The options to be set.
+   * @param Component The Component to render.
+   * @param props The props to be used.
+   * @param options The options to be set.
    */
   static mountComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
     return mount(<Component {...props}/>, options);

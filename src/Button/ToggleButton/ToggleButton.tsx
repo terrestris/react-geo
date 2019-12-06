@@ -213,7 +213,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
   /**
    * Called on click.
    *
-   * @param {ClickEvent} evt The ClickEvent.
+   * @param evt The ClickEvent.
    * @method
    */
   onClick(evt: any) {

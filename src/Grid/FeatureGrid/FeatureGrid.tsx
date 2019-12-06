@@ -269,7 +269,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * Invoked immediately after updating occurs. This method is not called for
    * the initial render.
    *
-   * @param {Object} prevProps The previous props.
+   * @param prevProps The previous props.
    */
   componentDidUpdate(prevProps: FeatureGridProps) {
     const {

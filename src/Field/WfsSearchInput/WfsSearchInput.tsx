@@ -192,7 +192,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
   /**
    * Create the WfsSearchInput.
    *
-   * @param {Object} props The initial props.
+   * @param props The initial props.
    * @constructs WfsSearchInput
    */
   constructor(props: WfsSearchInputProps) {
@@ -334,7 +334,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
    * If an additional function `onFetchSuccess` is provided, it will be called
    * as callback.
    *
-   * @param {String} error The errorstring.
+   * @param error The errorstring.
    */
   onFetchError(error: string) {
     const {
