@@ -44,10 +44,6 @@ export interface BaseProps {
    * An optional CSS class which should be added.
    */
   className?: string;
-  /**
-   * The children to show in the Window.
-   */
-  children: React.ReactChildren;
 }
 
 interface WindowState {

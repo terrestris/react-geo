@@ -458,7 +458,9 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     this.props.onToggle(pressed);
 
-    this._digitizeFeatures = this._digitizeLayer.getSource().getFeaturesCollection();
+    if (this._digitizeLayer) {
+      this._digitizeFeatures = this._digitizeLayer.getSource().getFeaturesCollection();
+    }
 
     if (pressed) {
       if (drawStyle) {
@@ -786,13 +788,12 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     this._digitizeLayer.getSource().removeFeature(feat);
     this.props.map.renderSync();
   }
-
   /**
    * Listener for `select` event of OL select interaction in `Copy` mode.
    * Creates a clone of selected feature and calls utility method to move it
    * beside the original to avoid overlapping.
    *
-   * @param {ol.interaction.Select.Event} evt The interaction event.
+   * @param evt The interaction event.
    */
   onFeatureCopy = evt => {
     const {

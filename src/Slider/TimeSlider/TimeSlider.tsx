@@ -7,7 +7,7 @@ const isArray = require('lodash/isArray');
 const isObject = require('lodash/isObject');
 import { SliderMarks, SliderValue, SliderProps } from 'antd/lib/slider';
 
-import { CSS_PREFIX } from '../constants';
+import { CSS_PREFIX } from '../../constants';
 
 interface DefaultProps {
   /**
@@ -49,7 +49,7 @@ export interface BaseProps {
    * Tick mark of Slider, type of key must be TimeStamp ISOString, and must in
    * closed interval min, max，each mark can declare its own style.
    */
-  marks: SliderMarks;
+  marks?: SliderMarks;
 }
 
 export type TimeSliderProps = BaseProps & Partial<DefaultProps> & SliderProps;
@@ -123,8 +123,8 @@ class TimeSlider extends React.Component<TimeSliderProps> {
    * @param marks The marks prop.
    * @return The marks prop with converted keys.
    */
-  convertMarks(marks: SliderMarks) {
-    let convertedMarks;
+  convertMarks(marks: SliderMarks): SliderMarks {
+    let convertedMarks: SliderMarks;
     if (isObject(marks)) {
       convertedMarks = {};
       Object.keys(marks).forEach(key => {

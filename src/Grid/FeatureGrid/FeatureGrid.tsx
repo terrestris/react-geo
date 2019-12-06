@@ -86,7 +86,7 @@ export interface BaseProps {
    * The map the features should be rendered on. If not given, the features
    * will be rendered in the table only.
    */
-  map: OlMap;
+  map?: OlMap;
   /**
    * Callback function, that will be called on rowclick.
    */

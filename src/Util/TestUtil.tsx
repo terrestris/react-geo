@@ -150,7 +150,6 @@ export class TestUtil {
 
   /**
    * Returns a point feature with a random position.
-   * @type {Object}
    */
   static generatePointFeature = (props = {
     ATTR_1: Math.random() * 100,

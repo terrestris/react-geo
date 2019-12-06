@@ -16,7 +16,7 @@ const _isEqual = require('lodash/isEqual');
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
-import LayerTreeNode from '../LayerTreeNode/LayerTreeNode';
+import LayerTreeNode from './LayerTreeNode/LayerTreeNode';
 
 import { CSS_PREFIX } from '../constants';
 import {
@@ -70,8 +70,8 @@ export interface BaseProps {
 interface LayerTreeState {
   layerGroup: OlLayerGroup;
   layerGroupRevision: null;
-  treeNodes: [];
-  checkedKeys: [];
+  treeNodes: LayerTreeNode[];
+  checkedKeys: React.ReactText[];
   mapResolution: -1;
 }
 
@@ -89,22 +89,18 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   className = `${CSS_PREFIX}layertree`;
 
   /**
    *  An array of ol.EventsKey as returned by on() or once().
-   * @type {Array<ol.EventsKey>}
    * @private
    */
   olListenerKeys = [];
 
   /**
    * The default properties.
-   *
-   * @type {Object}
    */
   static defaultProps: DefaultProps = {
     draggable: true,
@@ -354,8 +350,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * will be rendered. Note: This can be any renderable element collection! If
    * no function is given (the default) the layer name will be passed.
    *
-   * @param {ol.layer.Base} layer The layer attached to the tree node.
-   * @return {Element} The title composition to render.
+   * @param layer The layer attached to the tree node.
+   * @return The title composition to render.
    */
   getTreeNodeTitle(layer: OlLayerBase) {
     if (_isFunction(this.props.nodeTitleRenderer)) {
@@ -368,12 +364,11 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   /**
    * Creates a treeNode from a given layer.
    *
-   * @param {ol.layer.Base} layer The given layer.
-   * @return {LayerTreeNode} The corresponding LayerTreeNode Element.
+   * @param layer The given layer.
+   * @return The corresponding LayerTreeNode Element.
    */
   treeNodeFromLayer(layer: OlLayerBase) {
-    let childNodes;
-    let treeNode;
+    let childNodes: LayerTreeNode[];
 
     if (layer instanceof OlLayerGroup) {
       if (!layer.getVisible()) {
@@ -382,7 +377,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       }
       let childLayers = layer.getLayers().getArray()
         .filter(this.props.filterFunction);
-      childNodes = childLayers.map((childLayer) => {
+      childNodes = childLayers.map((childLayer: OlLayerBase) => {
         return this.treeNodeFromLayer(childLayer);
       });
       childNodes.reverse();
@@ -393,25 +388,25 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       }
     }
 
-    treeNode = <LayerTreeNode
-      title={this.getTreeNodeTitle(layer)}
-      key={layer.ol_uid.toString()}
-      inResolutionRange={MapUtil.layerInResolutionRange(layer, this.props.map)}
-    >
-      {childNodes}
-    </LayerTreeNode>;
-
-    return treeNode;
+    return (
+      <LayerTreeNode
+        title={this.getTreeNodeTitle(layer)}
+        key={layer.ol_uid.toString()}
+        inResolutionRange={MapUtil.layerInResolutionRange(layer, this.props.map)}
+      >
+        {childNodes}
+      </LayerTreeNode>
+    );
   }
 
   /**
    * Determines if the target has already registered the given listener for the
    * given eventtype.
    *
-   * @param {Object} target The event target.
-   * @param {String} type The events type (name).
-   * @param {function} listener The function.
-   * @return {Boolean} True if the listener is allready contained in
+   * @param target The event target.
+   * @param type The events type (name).
+   * @param listener The function.
+   * @return True if the listener is allready contained in
    *                   this.olListenerKeys.
    */
   hasListener = (target, type, listener) => {
@@ -425,7 +420,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   /**
    * Reacts to the layer change:visible event and calls setCheckedState.
    *
-   * @param {ol.Object.Event} evt The change:visible event
+   * @param evt The change:visible event
    */
   onLayerChangeVisible = () => {
     const checkedKeys = this.getVisibleOlUids();
@@ -439,7 +434,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   /**
    * Get the flat array of ol_uids from visible non groupLayers.
    *
-   * @return {Array<String>} The visible ol_uids.
+   * @return The visible ol_uids.
    */
   getVisibleOlUids = () => {
     const layers = MapUtil.getAllLayers(this.state.layerGroup, (layer) => {
@@ -451,8 +446,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   /**
    * Sets the visibility of a layer due to its checked state.
    *
-   * @param {Array<String>} checkedKeys Contains all checkedKeys.
-   * @param {e} checked The ant-tree event object for this event. See ant docs.
+   * @param checkedKeys Contains all checkedKeys.
+   * @param checked The ant-tree event object for this event. See ant docs.
    */
   onCheck(checkedKeys: string[], e: AntTreeNodeCheckedEvent) {
     const { checked } = e;
@@ -465,8 +460,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   /**
    * Sets the layer visibility. Calls itself recursively for groupLayers.
    *
-   * @param {ol.layer.Base} layer The layer.
-   * @param {Boolean} visiblity The visiblity.
+   * @param layer The layer.
+   * @param visiblity The visiblity.
    */
   setLayerVisibility(layer: OlLayerBase, visibility: boolean) {
     if (!(layer instanceof OlLayerBase) || !_isBoolean(visibility)) {
@@ -486,7 +481,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * The callback method for the drop event. Layers will get reordered in the map
    * and the tree.
    *
-   * @param {Object} e The ant-tree event object for this event. See ant docs.
+   * @param e The ant-tree event object for this event. See ant docs.
    */
   onDrop(e: AntTreeNodeDropEvent) {
     const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
@@ -550,7 +545,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       ...passThroughProps
     } = this.props;
 
-    let ddListeners;
+    let ddListeners: any;
     if (passThroughProps.draggable) {
       ddListeners = {
         onDrop: this.onDrop.bind(this)

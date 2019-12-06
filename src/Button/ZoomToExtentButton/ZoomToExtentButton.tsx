@@ -11,7 +11,6 @@ interface DefaultProps {
   /**
    * Options for fitting to the given extent. See
    * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
-   * @type {Object}
    */
   fitOptions: {
     size?: [number, number];

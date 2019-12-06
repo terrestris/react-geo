@@ -128,7 +128,7 @@ interface BaseProps {
    */
   featurePrefix?: string;
   /**
-   * The feature type names. Required.
+   * The feature type names.
    */
   featureTypes: string[];
   /**

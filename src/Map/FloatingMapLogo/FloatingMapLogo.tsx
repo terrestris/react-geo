@@ -8,16 +8,16 @@ export interface WindowLocale {
 
 interface DefaultProps {
   /**
-   * The imageSrc.
-   */
-  imageSrc: string;
-  /**
    * Whether the map-logo is absolutely postioned or not
    */
   absolutelyPositioned: boolean;
 }
 
 interface BaseProps {
+  /**
+   * The imageSrc.
+   */
+  imageSrc: string;
   /**
    * An optional CSS class which should be added.
    */
@@ -54,7 +54,6 @@ class FloatingMapLogo extends React.Component<FloatingMapLogoProps> {
    * The default properties.
    */
   static defaultProps: DefaultProps = {
-    imageSrc: 'logo.png',
     absolutelyPositioned: false
   };
 

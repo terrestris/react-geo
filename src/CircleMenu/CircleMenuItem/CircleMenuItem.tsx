@@ -37,7 +37,6 @@ export class CircleMenuItem extends React.Component<CircleMenuItemProps> {
 
   /**
    * The className added to this component.
-   * @type {String}
    * @private
    */
   _className = `${CSS_PREFIX}circlemenuitem`;
@@ -76,7 +75,9 @@ export class CircleMenuItem extends React.Component<CircleMenuItemProps> {
       rotationAngle,
       radius
     } = this.props;
-    this._ref.style.transform = `rotate(${rotationAngle}deg) translate(${radius}px) rotate(-${rotationAngle}deg)`;
+    if (this._ref) {
+      this._ref.style.transform = `rotate(${rotationAngle}deg) translate(${radius}px) rotate(-${rotationAngle}deg)`;
+    }
   }
 
   /**

@@ -32,14 +32,14 @@ interface DefaultProps {
    * Optional text to be shown in panel title
    */
   titleText: string;
+  /**
+   * Array containing layers (e.g. `Capability.Layer.Layer` of ol capabilities
+   * parser)
+   */
+  wmsLayers: Array<OlLayerTile | OlLayerImage>;
 }
 
 interface BaseProps {
-    /**
-     * Array containing layers (e.g. `Capability.Layer.Layer` of ol capabilities
-     * parser)
-     */
-    wmsLayers: Array<OlLayerTile | OlLayerImage>;
     /**
      * Optional instance of OlMap which is used if onLayerAddToMap is not provided
      */
@@ -90,7 +90,8 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
   /**
    * The defaultProps.
    */
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
+    wmsLayers: [],
     addAllLayersText: 'Add all layers',
     addSelectedLayersText: 'Add selected layers',
     cancelText: 'Cancel',
