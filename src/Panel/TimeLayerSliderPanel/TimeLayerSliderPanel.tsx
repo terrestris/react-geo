@@ -17,12 +17,22 @@ import {
   DatePicker,
   Popover
 } from 'antd';
-const { RangePicker } = DatePicker;
+const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
 
 import './TimeLayerSliderPanel.less';
 
 type timeRange = [moment.Moment, moment.Moment];
+
+export interface Tooltips {
+  hours: string;
+  days: string;
+  weeks: string;
+  months: string;
+  years: string;
+  setToNow: string;
+  dataRange: string;
+}
 
 export interface DefaultTimeLayerSliderPanelProps {
   className: string;
@@ -30,7 +40,7 @@ export interface DefaultTimeLayerSliderPanelProps {
   timeAwareLayers: any[];
   value: moment.Moment;
   dateFormat: string;
-  tooltips: object;
+  tooltips: Tooltips;
 }
 
 export interface TimeLayerSliderPanelProps extends Partial<DefaultTimeLayerSliderPanelProps> {
@@ -123,7 +133,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
   }
 
   componentDidUpdate(prevProps: TimeLayerSliderPanelProps) {
-    // TODO this deep check may impact performance..
+    // TODO: this deep check may impact performance..
     if (!(_isEqual(prevProps.timeAwareLayers, this.props.timeAwareLayers))) {
       // update slider properties if some another layer set was chosen
       this.wrapTimeSlider();
@@ -179,7 +189,6 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
     });
     // make sure an initial value is set
     this.wmsTimeHandler(this.state.value);
-    // @ts-ignore
     this._TimeLayerAwareSlider = timeLayerAware(TimeSlider, this._wmsTimeLayers);
   }
 
@@ -415,7 +424,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
 
         <Popover
           placement="topRight"
-          title={tooltips['dataRange']}
+          title={tooltips.dataRange}
           trigger="click"
           content={
             <RangePicker
@@ -436,7 +445,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
               type="primary"
               icon="refresh"
               onClick={this.setSliderToNow}
-              tooltip={tooltips['setToNow']}
+              tooltip={tooltips.setToNow}
             /> : null
         }
         <this._TimeLayerAwareSlider
@@ -473,11 +482,11 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
           <Option value="10">10x</Option>
           <Option value="100">100x</Option>
           <Option value="300">300x</Option>
-          <Option value="hours">{tooltips['hours']}</Option>
-          <Option value="days">{tooltips['days']}</Option>
-          <Option value="weeks">{tooltips['weeks']}</Option>
-          <Option value="months">{tooltips['months']}</Option>
-          <Option value="years">{tooltips['years']}</Option>
+          <Option value="hours">{tooltips.hours}</Option>
+          <Option value="days">{tooltips.days}</Option>
+          <Option value="weeks">{tooltips.weeks}</Option>
+          <Option value="months">{tooltips.months}</Option>
+          <Option value="years">{tooltips.years}</Option>
         </Select>
       </div>
     );

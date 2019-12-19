@@ -56,10 +56,6 @@ class TimeLayerSliderPanelExample extends React.Component {
     this.map.setTarget(this.mapDivId);
   }
 
-  threeHoursAgo() {
-    return new Date(Math.round(Date.now() / 3600000) * 3600000 - 3600000 * 3);
-  }
-
   render() {
 
     const tooltips = {
@@ -83,7 +79,7 @@ class TimeLayerSliderPanelExample extends React.Component {
 
         <TimeLayerSliderPanel
           map={this.map}
-          initStartDate={moment(this.threeHoursAgo())}
+          initStartDate={moment().subtract(3, 'hours')}
           initEndDate={moment()}
           timeAwareLayers={this.layers}
           tooltips={tooltips}

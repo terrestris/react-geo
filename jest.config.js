@@ -21,7 +21,7 @@ module.exports = {
     '<rootDir>/dist/'
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(ol|antd|(rc-*[a-z]*)|css-animation)/)'
+    'node_modules/(?!(ol|antd|(rc-[a-z-]*)|css-animation)/)'
   ],
   setupFiles: [
     '<rootDir>/jest/__mocks__/shim.js',
