@@ -1,0 +1,59 @@
+.time-layer-slider {
+  bottom: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  border-bottom: 1px solid lightgray;
+
+  button {
+    margin-left: 5px;
+  }
+
+  .timeslider {
+    flex: 1;
+    margin: 10px;
+
+    &.ant-slider-with-marks {
+      margin: 10px 60px 20px 60px;
+    }
+  }
+
+  :not(.timeslider-in-future) {
+    .ant-slider-handle {
+      background-color: #4baeff;
+    }
+  }
+
+  .playback {
+    border-radius: 2px 0 0 2px;
+  }
+
+  .ant-select-selection {
+    background-color: white;
+    width: 150px;
+    margin-right: 5px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .time-value {
+    text-align: center;
+    width: 100px;
+    padding: 0 10px;
+    font-weight: bold;
+  }
+
+  &.no-layers-available {
+    pointer-events: none;
+    opacity: .8;
+    color: rgba(0, 0, 0, 0.35);
+    .ant-slider-mark span,
+    .ant-select {
+     color: rgba(0, 0, 0, 0.35);
+    }
+    button {
+      opacity: .5;
+    }
+  }
+}

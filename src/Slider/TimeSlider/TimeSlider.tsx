@@ -52,7 +52,8 @@ export interface BaseProps {
   marks?: SliderMarks;
 }
 
-export type TimeSliderProps = BaseProps & Partial<DefaultProps> & SliderProps;
+export type TimeSliderProps = BaseProps & Partial<DefaultProps> &
+  Omit<SliderProps, 'value' | 'defaultValue' | 'min' | 'max' | 'onChange'>;
 
 /**
  * Customized slider that uses ISO 8601 time strings as input.
