@@ -35,7 +35,7 @@ class TimeLayerSliderPanelExample extends React.Component {
           params: {'LAYERS': 'nexrad-n0r-wmst'}
         })
       })
-    ]
+    ];
 
     this.map = new OlMap({
       layers: [
