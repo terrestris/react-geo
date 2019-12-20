@@ -38,7 +38,7 @@
     "no-construct": true,
     "no-debugger": false,
     "no-duplicate-variable": true,
-    "no-empty": true,
+    "no-empty": [true, "allow-empty-functions"],
     "no-eval": true,
     "no-shadowed-variable": true,
     "no-string-literal": true,

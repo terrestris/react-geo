@@ -29,6 +29,7 @@ class TimeLayerSliderPanelExample extends React.Component {
         extent: extent,
         type: 'WMSTime',
         timeFormat: 'YYYY-MM-DDTHH:mm:ss.sssZ',
+        roundToFullHours: true,
         source: new OlSourceTileWMS({
           attributions: ['Iowa State University'],
           url: '//mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi',
@@ -57,7 +58,6 @@ class TimeLayerSliderPanelExample extends React.Component {
   }
 
   render() {
-
     const tooltips = {
       setToNow: 'Set to now',
       hours: 'Hours',
@@ -76,13 +76,13 @@ class TimeLayerSliderPanelExample extends React.Component {
             height: '400px'
           }}
         />
-
         <TimeLayerSliderPanel
           map={this.map}
           initStartDate={moment().subtract(3, 'hours')}
           initEndDate={moment()}
           timeAwareLayers={this.layers}
           tooltips={tooltips}
+          autoPlaySpeedOptions={[0.5, 1, 2, 3, 4, 5, 600]}
         />
       </div>
     )

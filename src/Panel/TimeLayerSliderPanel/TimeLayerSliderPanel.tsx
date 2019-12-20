@@ -1,6 +1,9 @@
 import * as React from 'react';
 
 import moment from 'moment';
+import OlLayer from 'ol/layer/Layer';
+import OlMap from 'ol/Map';
+// import _get from 'lodash/get';
 
 const _isFinite = require('lodash/isFinite');
 const _isEqual = require('lodash/isEqual');
@@ -34,20 +37,19 @@ export interface Tooltips {
   dataRange: string;
 }
 
+export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
+
 export interface DefaultTimeLayerSliderPanelProps {
   className: string;
   onChange: (arg: moment.Moment) => void;
-  import OlLayer from 'ol/layer/OlLayer';
-  (…)
   timeAwareLayers: OlLayer[];
   value: moment.Moment;
   dateFormat: string;
   tooltips: Tooltips;
+  autoPlaySpeedOptions: number[];
 }
 
 export interface TimeLayerSliderPanelProps extends Partial<DefaultTimeLayerSliderPanelProps> {
-  import OlMap from 'ol/Map';
-  (…)
   map: OlMap;
   initStartDate: moment.Moment;
   initEndDate: moment.Moment;
@@ -55,18 +57,11 @@ export interface TimeLayerSliderPanelProps extends Partial<DefaultTimeLayerSlide
 
 export interface TimeLayerSliderPanelState {
   value: moment.Moment;
-  playbackSpeed: string;
+  playbackSpeed: number | PlaybackSpeedType;
   autoPlayActive: boolean;
   startDate: moment.Moment;
   endDate: moment.Moment;
 }
-
-/**
- * mapStateToProps - mapping state to props of Map Component.
- *
- * @param {Object} state current state
- * @return {Object} mapped props
- */
 
 /**
  * The panel combining all time slider related parts.
@@ -85,7 +80,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
    */
   public static defaultProps: DefaultTimeLayerSliderPanelProps = {
     className: '',
-    onChange: () => {/* empty */},
+    onChange: () => {},
     timeAwareLayers: [],
     value: moment(moment.now()),
     dateFormat: 'YYYY-MM-DD',
@@ -97,7 +92,8 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       months: 'Months',
       years: 'Years',
       dataRange: 'Set data range'
-    }
+    },
+    autoPlaySpeedOptions: [ 0.5, 1, 2, 5, 10, 100, 300 ]
   };
 
   /**
@@ -108,7 +104,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
 
     this.state = {
       value: moment().milliseconds(0),
-      playbackSpeed: '1',
+      playbackSpeed: 1,
       autoPlayActive: false,
       startDate: moment().milliseconds(0),
       endDate: moment().milliseconds(0),
@@ -136,12 +132,14 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
   }
 
   componentDidUpdate(prevProps: TimeLayerSliderPanelProps) {
-    // TODO: this deep check may impact performance..
-    if (!(_isEqual(prevProps.timeAwareLayers, this.props.timeAwareLayers))) {
-      // update slider properties if layers were updated
-      this.wrapTimeSlider();
-      this.findRangeForLayers();
-    }
+    prevProps.timeAwareLayers.forEach((pl: any, i: number) => {
+      const tpl = this.props.timeAwareLayers[i];
+      if (!(_isEqual(pl.ol_uid, tpl.ol_uid))) {
+        // update slider properties if layers were updated
+        this.wrapTimeSlider();
+        this.findRangeForLayers();
+      }
+    });
   }
 
   /**
@@ -154,10 +152,11 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       value,
       autoPlayActive,
       startDate,
-      endDate
+      endDate,
     } = this.state;
     const {
-      timeAwareLayers
+      timeAwareLayers,
+      tooltips
     } = this.props;
 
     if (nextState.value !== value) {
@@ -173,6 +172,9 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       return true;
     }
     if (!(_isEqual(nextProps.timeAwareLayers, timeAwareLayers))) {
+      return true;
+    }
+    if (!(_isEqual(nextProps.tooltips, tooltips))) {
       return true;
     }
     return false;
@@ -242,7 +244,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
   /**
    * Handler for the time slider change behaviour
    */
-  timeSliderCustomHandler = (value: any) => {
+  timeSliderCustomHandler = (value: object) => {
     const currentMoment = moment(value).milliseconds(0);
     const newValue = currentMoment.clone();
     this.setState({
@@ -270,10 +272,10 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         if (!moment.isMoment(time)) {
           time = moment(time);
         }
-        time.set('minute', 0);
-        time.set('second', 0);
         const timeFormat = config.layer.get('timeFormat');
-        if (timeFormat.toLowerCase().indexOf('hh') > 0) {
+        if (timeFormat.toLowerCase().indexOf('hh') > 0 && config.layer.get('roundToFullHours')) {
+          time.set('minute', 0);
+          time.set('second', 0);
           params.TIME = time.toISOString();
         } else {
           params.TIME = time.format(timeFormat);
@@ -308,7 +310,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         }
 
         let newValue;
-        if (_isFinite(parseFloat(playbackSpeed))) {
+        if (_isFinite(playbackSpeed)) {
           newValue = value.clone().add(playbackSpeed, 'seconds');
         } else {
           newValue = value.clone().add(1, playbackSpeed as moment.DurationInputArg2);
@@ -332,8 +334,14 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
    * handle playback speed change
    */
   onPlaybackSpeedChange = (val: string) => {
+    let valueToSet;
+    if (_isFinite(parseFloat(val))) {
+      valueToSet = parseFloat(val);
+    } else {
+      valueToSet = val;
+    }
     this.setState({
-      playbackSpeed: val
+      playbackSpeed: valueToSet
     }, () => {
       if (this.state.autoPlayActive) {
         this.autoPlay(true);
@@ -387,7 +395,8 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       className,
       timeAwareLayers,
       dateFormat,
-      tooltips
+      tooltips,
+      autoPlaySpeedOptions
     } = this.props;
     const {
       autoPlayActive,
@@ -422,9 +431,12 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       label: mid.format(dateFormat)
     };
 
+    const speedOptions = autoPlaySpeedOptions.map(function(val: number) {
+      return <Option key={val} value={val}>{val}</Option>;
+    });
+
     return (
       <div className={`time-layer-slider ${disabledCls}`.trim()}>
-
         <Popover
           placement="topRight"
           title={tooltips.dataRange}
@@ -478,13 +490,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
           className={extraCls + ' speed-picker'}
           onChange={this.onPlaybackSpeedChange}
         >
-          <Option value="0.5">0.5x</Option>
-          <Option value="1">1x</Option>
-          <Option value="2">2x</Option>
-          <Option value="5">5x</Option>
-          <Option value="10">10x</Option>
-          <Option value="100">100x</Option>
-          <Option value="300">300x</Option>
+          {speedOptions}
           <Option value="hours">{tooltips.hours}</Option>
           <Option value="days">{tooltips.days}</Option>
           <Option value="weeks">{tooltips.weeks}</Option>

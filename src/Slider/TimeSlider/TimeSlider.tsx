@@ -5,7 +5,7 @@ import { Slider } from 'antd';
 
 const isArray = require('lodash/isArray');
 const isObject = require('lodash/isObject');
-import { SliderMarks, SliderValue } from 'antd/lib/slider';
+import { SliderMarks, SliderValue, SliderProps } from 'antd/lib/slider';
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -52,7 +52,8 @@ export interface BaseProps {
   marks?: SliderMarks;
 }
 
-export type TimeSliderProps = BaseProps & Partial<DefaultProps>;
+export type TimeSliderProps = BaseProps & Partial<DefaultProps> &
+  Omit<SliderProps, 'value' | 'defaultValue' | 'min' | 'max' | 'onChange'>;
 
 /**
  * Customized slider that uses ISO 8601 time strings as input.
