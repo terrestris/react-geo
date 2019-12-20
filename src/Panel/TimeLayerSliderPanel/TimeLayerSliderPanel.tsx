@@ -37,7 +37,9 @@ export interface Tooltips {
 export interface DefaultTimeLayerSliderPanelProps {
   className: string;
   onChange: (arg: moment.Moment) => void;
-  timeAwareLayers: any[];
+  import OlLayer from 'ol/layer/OlLayer';
+  (…)
+  timeAwareLayers: OlLayer[];
   value: moment.Moment;
   dateFormat: string;
   tooltips: Tooltips;
