@@ -1,4 +1,4 @@
-This example demonstrates the use of TimeLayerSliderPanel  
+This example demonstrates the usage of the TimeLayerSliderPanel  
 (Data: IEM generated CONUS composite of NWS NEXRAD WSR-88D level III base reflectivity, Iowa State University)
 
 ```jsx
