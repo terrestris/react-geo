@@ -12,7 +12,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import { transformExtent } from 'ol/proj';
-import {getCenter} from 'ol/extent';
+import { getCenter } from 'ol/extent';
 
 import TimeLayerSliderPanel from '@terrestris/react-geo/Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
 
