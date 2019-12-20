@@ -67,7 +67,7 @@ web-mapping application based on `react-geo`.
 
 ## Development requirements
 
-* Node.js 8 or later
+* Node.js 10.13.0 or later
 * npm 6.8.0 or later
 * Git 2.11 or later
 
