@@ -46,7 +46,9 @@ export interface DefaultTimeLayerSliderPanelProps {
 }
 
 export interface TimeLayerSliderPanelProps extends Partial<DefaultTimeLayerSliderPanelProps> {
-  map: any;
+  import OlMap from 'ol/Map';
+  (…)
+  map: OlMap;
   initStartDate: moment.Moment;
   initEndDate: moment.Moment;
 }
