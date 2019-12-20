@@ -81,7 +81,6 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
    * The default props of LayerSetBaseMapChooser
    *
    * @static
-   * @type {DefaultLayerSetBaseMapChooserProps}
    * @memberof LayerSetBaseMapChooser
    */
   public static defaultProps: DefaultTimeLayerSliderPanelProps = {
