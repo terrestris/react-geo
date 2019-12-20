@@ -24,7 +24,7 @@ class TimeLayerSliderPanelExample extends React.Component {
 
     this.mapDivId = `map-${Math.random()}`;
     var extent = transformExtent([-126, 24, -66, 50], 'EPSG:4326', 'EPSG:3857');
-    this.layers =  [
+    this.layers = [
       new OlLayerTile({
         extent: extent,
         type: 'WMSTime',
