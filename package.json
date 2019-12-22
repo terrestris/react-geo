@@ -141,7 +141,7 @@
     "ol": "^6.1.1",
     "react": "^16.11.0",
     "react-docgen-typescript": "^1.15.1",
-    "react-styleguidist": "^10.2.0",
+    "react-styleguidist": "^10.3.2",
     "react-test-renderer": "^16.9.0",
     "regenerator-runtime": "^0.13.3",
     "rimraf": "^3.0.0",
