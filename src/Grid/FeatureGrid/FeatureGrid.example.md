@@ -121,7 +121,7 @@ import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 import FeatureGrid from '@terrestris/react-geo/Grid/FeatureGrid/FeatureGrid';
 
 // Credits to Maps Icons Collection https://mapicons.mapsmarker.com.
-const mapMarker = require('../../../assets/bus-map-marker.png');
+import mapMarker from '../../../assets/bus-map-marker.png';
 
 class RemoteFeatureGrid extends React.Component {
 

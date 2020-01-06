@@ -22,14 +22,6 @@ module.exports = {
         style: true
       },
       'import-antd'
-    ],
-    [
-      'import',
-      {
-        libraryName: '@turf/turf',
-        libraryDirectory: '../'
-      },
-      'import-turf'
     ]
   ]
 };
