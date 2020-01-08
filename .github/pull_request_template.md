@@ -1,5 +1,5 @@
 <!-- Please choose one of the categories and choose the corresponding label, too. -->
-## BREAKING CHANGE | FEATURE | BUGFIX | REFACTORING | DEVSETUP | DOCUMENTATION
+## BREAKING CHANGE | FEATURE | BUGFIX | REFACTORING | DEVSETUP | DOCUMENTATION | DEPENDENCY UPDATE
 
 ### Description:
 <!-- Please describe what this PR is about. -->
