@@ -8,6 +8,7 @@ import GeoLocationButton from './Button/GeoLocationButton/GeoLocationButton';
 import DigitizeButton from './Button/DigitizeButton/DigitizeButton';
 import ZoomButton from './Button/ZoomButton/ZoomButton';
 import ZoomToExtentButton from './Button/ZoomToExtentButton/ZoomToExtentButton';
+import CoordinateInfo from './CoordinateInfo/CoordinateInfo';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch';
 import WfsSearch from './Field/WfsSearch/WfsSearch';
@@ -52,6 +53,7 @@ export {
   DigitizeButton,
   ZoomButton,
   ZoomToExtentButton,
+  CoordinateInfo,
   LayerSwitcher,
   LayerTree,
   LayerTreeNode,
