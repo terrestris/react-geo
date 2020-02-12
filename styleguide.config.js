@@ -60,6 +60,9 @@ module.exports = {
       name: 'Containers',
       components: 'src/Container/**/*.tsx'
     }, {
+      name: 'CoordinateInfo',
+      components: 'src/CoordinateInfo/**/*.tsx'
+    }, {
       name: 'Fields',
       components: 'src/Field/**/*.tsx'
     }, {
