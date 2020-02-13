@@ -5,7 +5,8 @@ import {
   Statistic,
   Button,
   Icon,
-  Spin
+  Spin,
+  Tooltip
 } from 'antd';
 
 import OlMap from 'ol/Map';
@@ -68,10 +69,6 @@ class CoordinateInfoExample extends React.Component {
           }}
         />
         <CoordinateInfo
-          style={{
-            position: 'relative',
-            height: '500px'
-          }}
           map={this.map}
           queryLayers={[queryLayer]}
           resultRenderer={(opts) => {
@@ -97,17 +94,21 @@ class CoordinateInfoExample extends React.Component {
                         value={clickCoord.join(', ')}
                       />
                     </Spin>
-                    <Button
-                      style={{ marginTop: 16 }}
-                      type="primary"
-                      onClick={() => {
-                        copy(clickCoord);
-                      }}
+                    <Tooltip
+                      title="Copy to clipboard"
                     >
-                      <Icon
-                        type="copy"
-                      />
-                    </Button>
+                      <Button
+                        style={{ marginTop: 16 }}
+                        type="primary"
+                        onClick={() => {
+                          copy(clickCoord.join(', '));
+                        }}
+                      >
+                        <Icon
+                          type="copy"
+                        />
+                      </Button>
+                    </Tooltip>
                   </div>
                   <div
                     style={{
@@ -124,17 +125,21 @@ class CoordinateInfoExample extends React.Component {
                         value={features[Object.keys(features)[0]][0].get('STATE_NAME')}
                       />
                     </Spin>
-                    <Button
-                      style={{ marginTop: 16 }}
-                      type="primary"
-                      onClick={() => {
-                        copy(clickCoord);
-                      }}
+                    <Tooltip
+                      title="Copy to clipboard"
                     >
-                      <Icon
-                        type="copy"
-                      />
-                    </Button>
+                      <Button
+                        style={{ marginTop: 16 }}
+                        type="primary"
+                        onClick={() => {
+                          copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
+                        }}
+                      >
+                        <Icon
+                          type="copy"
+                        />
+                      </Button>
+                    </Tooltip>
                   </div>
                 </div> :
                 <span>Click on a state to get details about the clicked coordinate.</span>
