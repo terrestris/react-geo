@@ -8,6 +8,7 @@ import OlSourceImageWMS from 'ol/source/ImageWMS';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
+import OlFeature from 'ol/Feature';
 
 import _cloneDeep from 'lodash/cloneDeep';
 
@@ -15,6 +16,7 @@ import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import './CoordinateInfo.less';
+import { FeatureCollection } from 'geojson';
 
 const format = new OlFormatGeoJSON();
 
@@ -42,7 +44,9 @@ interface DefaultProps {
    hitTolerance: number;
 
    /**
-    * The children component that should be rendered.
+    * The children component that should be rendered. The render prop function
+    * receives the state of the component (this is the clicked coordinate, the
+    * list of GFI features if any and the loading state).
     */
    resultRenderer: (childrenProps: CoordinateInfoState) => React.ReactNode;
 }
@@ -99,7 +103,6 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       loading: false
     };
 
-    this.onPointerMove = this.onPointerMove.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
     this.layerFilter = this.layerFilter.bind(this);
   }
@@ -109,7 +112,6 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       map
     } = this.props;
 
-    map.on('pointermove', this.onPointerMove);
     map.on('click', this.onMapClick);
   }
 
@@ -118,31 +120,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       map
     } = this.props;
 
-    map.un('pointermove', this.onPointerMove);
     map.un('click', this.onMapClick);
-  }
-
-  onPointerMove(olEvt: OlMapBrowserEvent) {
-    if (olEvt.dragging) {
-      return;
-    }
-
-    const {
-      map,
-      hitTolerance
-    } = this.props;
-
-    const pixel = map.getEventPixel(olEvt.originalEvent);
-    const hit = map.forEachLayerAtPixel(
-      pixel,
-      () => true,
-      {
-        layerFilter: this.layerFilter,
-        hitTolerance: hitTolerance
-      }
-    );
-
-    map.getTargetElement().style.cursor = hit ? 'pointer' : '';
   }
 
   onMapClick(olEvt: OlMapBrowserEvent) {
@@ -161,7 +139,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
 
     let featureInfoUrls = [];
 
-    map.forEachLayerAtPixel(pixel, (layer: OlLayerBase, val) => {
+    map.forEachLayerAtPixel(pixel, (layer: OlLayerBase) => {
       const layerSource = layer.getSource();
       const featureInfoUrl = layerSource.getFeatureInfoUrl(
         coordinate,
@@ -188,7 +166,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     const combinedFeatureInfoUrls = UrlUtil.bundleOgcRequests(featureInfoUrls, true);
 
     let promises = [];
-    Object.keys(combinedFeatureInfoUrls).forEach(key => {
+    Object.keys(combinedFeatureInfoUrls).forEach((key: string) => {
       promises.push(fetch(combinedFeatureInfoUrls[key]));
     });
 
@@ -199,19 +177,19 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     });
 
     Promise.all(promises)
-      .then(responses => {
+      .then((responses: Response[]) => {
         this.setState({
           clickCoordinate: coordinate
         });
         const jsons = responses.map(response => response.json());
         return Promise.all(jsons);
       })
-      .then(featureCollections => {
+      .then((featureCollections: FeatureCollection[]) => {
         let features = {};
 
-        featureCollections.forEach((featureCollection) => {
+        featureCollections.forEach((featureCollection: FeatureCollection) => {
           const fc = format.readFeatures(featureCollection);
-          fc.forEach(feature => {
+          fc.forEach((feature: OlFeature) => {
             const featureTypeName = feature.getId().split('.')[0];
 
             if (!features[featureTypeName]) {
@@ -225,7 +203,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
           features: features
         });
       })
-      .catch(error => {
+      .catch((error: Error) => {
         Logger.error(error);
       })
       .finally(() => {
