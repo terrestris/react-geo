@@ -12,7 +12,6 @@ import OlFeature from 'ol/Feature';
 
 import _cloneDeep from 'lodash/cloneDeep';
 
-import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import './CoordinateInfo.less';
@@ -136,7 +135,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     const pixel = map.getEventPixel(olEvt.originalEvent);
     const coordinate = olEvt.coordinate;
 
-    let featureInfoUrls = [];
+    let promises = [];
 
     map.forEachLayerAtPixel(pixel, (layer: OlLayerBase) => {
       const layerSource = layer.getSource();
@@ -150,7 +149,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
         }
       );
 
-      featureInfoUrls.push(featureInfoUrl);
+      promises.push(fetch(featureInfoUrl));
 
       if (!drillDown) {
         return true;
@@ -160,13 +159,6 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     }, {
       layerFilter: this.layerFilter,
       hitTolerance: hitTolerance
-    });
-
-    const combinedFeatureInfoUrls = UrlUtil.bundleOgcRequests(featureInfoUrls, true);
-
-    let promises = [];
-    Object.keys(combinedFeatureInfoUrls).forEach((key: string) => {
-      promises.push(fetch(combinedFeatureInfoUrls[key]));
     });
 
     map.getTargetElement().style.cursor = 'wait';
