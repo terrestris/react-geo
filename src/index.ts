@@ -21,6 +21,7 @@ import Legend from './Legend/Legend';
 import FloatingMapLogo from './Map/FloatingMapLogo/FloatingMapLogo';
 import MapComponent from './Map/MapComponent/MapComponent';
 import Panel from './Panel/Panel/Panel';
+import TimeLayerSliderPanel from './Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
 import Titlebar from './Panel/Titlebar/Titlebar';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider/LayerTransparencySlider';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid';
@@ -61,11 +62,12 @@ export {
   FloatingMapLogo,
   ScaleCombo,
   Panel,
+  TimeLayerSliderPanel,
+  Titlebar,
   LayerTransparencySlider,
   AgFeatureGrid,
   FeatureGrid,
   PropertyGrid,
-  Titlebar,
   Toolbar,
   UploadButton,
   UserChip,
