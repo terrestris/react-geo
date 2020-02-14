@@ -6,7 +6,7 @@ import OlLayerBaseImage from 'ol/layer/BaseImage';
 import OlLayerBaseTile from 'ol/layer/BaseTile';
 import OlSourceImageWMS from 'ol/source/ImageWMS';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlFormatGML2 from 'ol/format/GML2';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlFeature from 'ol/Feature';
 
@@ -16,9 +16,8 @@ import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import './CoordinateInfo.less';
-import { FeatureCollection } from 'geojson';
 
-const format = new OlFormatGeoJSON();
+const format = new OlFormatGML2();
 
 interface DefaultProps {
   /**
@@ -146,7 +145,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
         viewResolution,
         viewProjection,
         {
-          'INFO_FORMAT': 'application/json',
+          'INFO_FORMAT': 'application/vnd.ogc.gml',
           'FEATURE_COUNT': featureCount
         }
       );
@@ -181,13 +180,13 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
         this.setState({
           clickCoordinate: coordinate
         });
-        const jsons = responses.map(response => response.json());
-        return Promise.all(jsons);
+        const textResponses = responses.map(response => response.text());
+        return Promise.all(textResponses);
       })
-      .then((featureCollections: FeatureCollection[]) => {
+      .then((textResponses: string[]) => {
         let features = {};
 
-        featureCollections.forEach((featureCollection: FeatureCollection) => {
+        textResponses.forEach((featureCollection: string) => {
           const fc = format.readFeatures(featureCollection);
           fc.forEach((feature: OlFeature) => {
             const featureTypeName = feature.getId().split('.')[0];
