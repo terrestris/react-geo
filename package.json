@@ -144,6 +144,6 @@
     "url-loader": "^3.0.0",
     "webpack": "^4.41.5",
     "whatwg-fetch": "^3.0.0",
-    "xmldom": "^0.2.1"
+    "xmldom": "^0.3.0"
   }
 }
