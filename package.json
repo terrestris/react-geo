@@ -80,7 +80,7 @@
     "@ag-grid-community/core": "^22.1.1",
     "@ag-grid-community/react": "^22.1.2",
     "@terrestris/base-util": "^0.2.2",
-    "@terrestris/ol-util": "^4.0.0",
+    "@terrestris/ol-util": "^4.0.1",
     "@types/lodash": "^4.14.149",
     "@types/moment": "^2.13.0",
     "@types/node": "^13.1.4",
