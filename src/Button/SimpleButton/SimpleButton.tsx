@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
+import { ButtonProps } from 'antd/lib/button';
+import { TooltipPlacement, AbstractTooltipProps } from 'antd/lib/tooltip';
+
 import Icon from 'react-fa/lib/Icon';
 
-import './SimpleButton.less';
-
 import { CSS_PREFIX } from '../../constants';
-import { TooltipPlacement, AbstractTooltipProps } from 'antd/lib/tooltip';
-import { ButtonProps } from 'antd/lib/button';
+
+import './SimpleButton.less';
 
 interface DefaultProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';

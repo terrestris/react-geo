@@ -7,7 +7,9 @@ import ToggleButton from '@terrestris/react-geo/Button/ToggleButton/ToggleButton
 
 <ToggleButton
   onToggle={()=>{}}
-/>
+>
+  Toggle me
+</ToggleButton>
 ```
 
 A ToggleButton initially pressed:
@@ -18,7 +20,9 @@ import ToggleButton from '@terrestris/react-geo/Button/ToggleButton/ToggleButton
 <ToggleButton
   pressed={true}
   onToggle={()=>{}}
-/>
+>
+  Toggle me
+</ToggleButton>
 ```
 
 A ToggleButton with an icon and a pressedIcon:

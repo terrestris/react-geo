@@ -4,8 +4,10 @@ import {
   AutoComplete,
   Spin
 } from 'antd';
-import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
+import { AutoCompleteProps } from 'antd/lib/auto-complete';
+import SelectOptionProps from 'antd/lib/select';
+import { OptionProps } from 'antd/lib/mentions';
 
 import OlMap from 'ol/Map';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
@@ -17,7 +19,8 @@ import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 
 import { CSS_PREFIX } from '../../constants';
-import { OptionProps } from 'antd/lib/select';
+
+import './WfsSearch.less';
 
 interface DefaultProps {
   /**
@@ -90,7 +93,7 @@ interface DefaultProps {
    * The default will display the property `name` if existing or the
    * property defined in `props.idProperty` (default is to `id`).
    */
-  renderOption: (feature: any, props: WfsSearchProps) => React.ReactElement<OptionProps>;
+  renderOption: (feature: any, props: WfsSearchProps) => React.ReactElement<SelectOptionProps>;
   /**
    * An onSelect function which gets called with the selected feature as it is
    * returned by server.
@@ -98,10 +101,6 @@ interface DefaultProps {
    * zoom to its extend.
    */
   onSelect: (feature: any, olMap: OlMap) => void;
-  /**
-   *
-   */
-  style: any;
 }
 
 interface BaseProps {
@@ -214,7 +213,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
      * @return The AutoComplete.Option that will be
      * rendered for each feature.
      */
-    renderOption: (feature: any, props: any): React.ReactElement<OptionProps> => {
+    renderOption: (feature: any, props: any): React.ReactElement<SelectOptionProps> => {
       const {
         displayValue,
         idProperty
@@ -252,9 +251,6 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
           });
         }
       }
-    },
-    style: {
-      width: 200
     }
   };
 
@@ -406,7 +402,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
    * @param value The value of the selected option.
    * @param option The selected option.
    */
-  onMenuItemSelected(value?: string, option?: React.ReactElement<OptionProps>) {
+  onMenuItemSelected(value: string, option: OptionProps) {
     const {
       map,
       idProperty
@@ -448,6 +444,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
       srsName,
       wfsFormatOptions,
       displayValue,
+      idProperty,
       ...passThroughProps
     } = this.props;
 
@@ -468,9 +465,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
         {...passThroughProps}
       >
         {
-          data.map(d => {
-            return renderOption(d, this.props);
-          })
+          data.map(d => renderOption(d, this.props))
         }
       </AutoComplete>
     );

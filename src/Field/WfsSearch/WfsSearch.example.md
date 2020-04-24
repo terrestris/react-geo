@@ -50,9 +50,6 @@ class WfsSearchExample extends React.Component {
                 'osm:osm-country-borders': ['name']
               }}
               map={this.map}
-              style={{
-                width: '80%'
-              }}
             />
           </label>
         </div>

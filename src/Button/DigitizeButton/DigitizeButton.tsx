@@ -1119,7 +1119,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
               <TextArea
                 value={this.state.textLabel}
                 onChange={this.onLabelChange}
-                autosize
+                autoSize
               />
             </Modal>
             : null

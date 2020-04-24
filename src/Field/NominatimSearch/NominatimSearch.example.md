@@ -44,9 +44,6 @@ class NominatimSearchExample extends React.Component {
           <label>The NominatimSearch<br />
             <NominatimSearch
               map={this.map}
-              style={{
-                width: '80%'
-              }}
             />
           </label>
         </div>

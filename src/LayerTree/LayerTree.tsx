@@ -21,8 +21,7 @@ import LayerTreeNode from './LayerTreeNode/LayerTreeNode';
 import { CSS_PREFIX } from '../constants';
 import {
   TreeProps,
-  AntTreeNodeCheckedEvent,
-  AntTreeNodeExpandedEvent
+  AntTreeNodeCheckedEvent
 } from 'antd/lib/tree';
 import { AntTreeNodeDropEvent } from 'antd/lib/tree/Tree';
 
@@ -522,11 +521,13 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * Call rebuildTreeNodes onExpand to avoid sync issues.
    *
    */
-  onExpand = (expandedKeys: string[], expandEvent: AntTreeNodeExpandedEvent) => {
+  onExpand = (expandedKeys: string[], expandEvent: any) => {
     const {
       onExpand
     } = this.props;
+
     this.rebuildTreeNodes();
+
     if (onExpand) {
       onExpand(expandedKeys, expandEvent);
     }

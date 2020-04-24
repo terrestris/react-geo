@@ -181,7 +181,7 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
         dataSource={dataSource}
         columns={columns}
         pagination={false}
-        useFixedHeader
+        scroll={{ y: 240 }}
         {...passThroughProps}
       />
     );
