@@ -25,6 +25,7 @@ module.exports = {
   ],
   setupFiles: [
     '<rootDir>/jest/__mocks__/shim.js',
+    '<rootDir>/jest/__mocks__/matchMediaMock.js',
     '<rootDir>/jest/setup.js'
   ],
   transform: {
