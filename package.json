@@ -83,7 +83,7 @@
     "@terrestris/ol-util": "^4.0.1",
     "@types/lodash": "^4.14.149",
     "@types/moment": "^2.13.0",
-    "@types/node": "^13.1.4",
+    "@types/node": "^14.0.10",
     "@types/react-dom": "^16.9.3",
     "@types/react-rnd": "^8.0.0",
     "lodash": "^4.17.15",
