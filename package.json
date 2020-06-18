@@ -76,9 +76,9 @@
     "react": "^16.3"
   },
   "dependencies": {
-    "@ag-grid-community/client-side-row-model": "^22.1.1",
-    "@ag-grid-community/core": "^22.1.1",
-    "@ag-grid-community/react": "^22.1.2",
+    "@ag-grid-community/client-side-row-model": "^23.2.1",
+    "@ag-grid-community/core": "^23.2.1",
+    "@ag-grid-community/react": "^23.2.1",
     "@terrestris/base-util": "^0.2.3",
     "@terrestris/ol-util": "^4.0.1",
     "@types/lodash": "^4.14.155",
