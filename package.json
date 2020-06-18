@@ -108,7 +108,6 @@
     "@types/enzyme": "^3.10.4",
     "@types/jest": "^26.0.0",
     "@types/react": "^16.9.38",
-    "acorn": "^6.4.0",
     "antd": "^3.26.6",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^26.0.1",
