@@ -79,7 +79,7 @@
     "@ag-grid-community/client-side-row-model": "^22.1.1",
     "@ag-grid-community/core": "^22.1.1",
     "@ag-grid-community/react": "^22.1.2",
-    "@terrestris/base-util": "^0.2.2",
+    "@terrestris/base-util": "^0.2.3",
     "@terrestris/ol-util": "^4.0.1",
     "@types/lodash": "^4.14.155",
     "@types/moment": "^2.13.0",
