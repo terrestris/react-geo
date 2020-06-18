@@ -371,7 +371,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
 
     if (layer instanceof OlLayerGroup) {
       if (!layer.getVisible()) {
-        Logger.warn('Your map configuration contains layerGroups that are' +
+        Logger.warn('Your map configuration contains layerGroups that are ' +
           'invisible. This might lead to buggy behaviour.');
       }
       let childLayers = layer.getLayers().getArray()
