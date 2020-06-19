@@ -3,7 +3,6 @@ import * as React from 'react';
 import moment from 'moment';
 import OlLayer from 'ol/layer/Layer';
 import OlMap from 'ol/Map';
-// import _get from 'lodash/get';
 
 const _isFinite = require('lodash/isFinite');
 const _isEqual = require('lodash/isEqual');
@@ -435,6 +434,8 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       return <Option key={val} value={val}>{val}</Option>;
     });
 
+    const TimeLayerAwareSlider = this._TimeLayerAwareSlider;
+
     return (
       <div className={`time-layer-slider ${disabledCls}`.trim()}>
         <Popover
@@ -463,7 +464,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
               tooltip={tooltips.setToNow}
             /> : null
         }
-        <this._TimeLayerAwareSlider
+        <TimeLayerAwareSlider
           className={`${extraCls} timeslider ${futureClass}`.trim()}
           formatString={dateFormat}
           defaultValue={startDateString}

@@ -39,7 +39,9 @@ module.exports = {
         {
           loader: 'less-loader',
           options: {
-            javascriptEnabled: true
+            lessOptions: {
+              javascriptEnabled: true
+            }
           }
         }
       ]
@@ -67,10 +69,7 @@ module.exports = {
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin({
-      async: false,
-      watch: path.join(__dirname, './src'),
-      tsconfig: path.join(__dirname, './tsconfig.json'),
-      tslint: path.join(__dirname, './tslint.json'),
+      async: false
     })
   ]
   // Uncomment the following lines if you're working with a linked
