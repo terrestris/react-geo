@@ -8,8 +8,7 @@ module.exports = {
     "markdown"
   ],
   "env": {
-    "browser": true,
-    "node": true
+    "browser": true
   },
   "parser": "babel-eslint",
   "globals": {

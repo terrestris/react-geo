@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "coverage",
+    "webpack",
+    "jest",
+    "browser",
+    "browser-build.config.js"
+  ]
+}
