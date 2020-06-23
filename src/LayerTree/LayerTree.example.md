@@ -106,7 +106,7 @@ class LayerTreeExample extends React.Component {
           />
         </div>
       </div>
-    )
+    );
   }
 }
 

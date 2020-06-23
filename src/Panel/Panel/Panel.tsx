@@ -315,7 +315,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
       this._rnd.getSelfElement().focus();
       onEscape(evt);
     }
-  }
+  };
 
   /**
    * The render function.
@@ -342,7 +342,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
       ...rndOpts
     } = this.props;
 
-    let toolsClone = tools.map(tool => React.cloneElement(tool));
+    const toolsClone = tools.map(tool => React.cloneElement(tool));
 
     const finalClassName = className
       ? `${className} ${this.className}`

@@ -46,7 +46,7 @@ class LayerTransparencySlider extends React.Component<LayerTransparencySliderPro
       layer
     } = this.props;
     // 1 = fully opaque/visible.
-    let opacity = layer.getOpacity();
+    const opacity = layer.getOpacity();
     let transparency = (1 - opacity) * 100;
     // Remove any digits.
     transparency = Math.round(transparency);

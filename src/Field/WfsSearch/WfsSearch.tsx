@@ -46,11 +46,11 @@ interface DefaultProps {
   attributeDetails: {
     [featureType: string]: {
       [attributeName: string]: {
-        matchCase: boolean,
-        type: string,
-        exactSearch: boolean
-      }
-    }
+        matchCase: boolean;
+        type: string;
+        exactSearch: boolean;
+      };
+    };
   };
   /**
    * SRS name. No srsName attribute will be set on geometries when this is not
@@ -117,7 +117,7 @@ interface BaseProps {
    * An object mapping feature types to an array of attributes that should be searched through.
    */
   searchAttributes: {
-    [featurType: string]: string[]
+    [featureType: string]: string[];
   };
   /**
    * The namespace URI used for features.

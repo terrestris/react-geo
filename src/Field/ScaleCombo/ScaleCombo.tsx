@@ -200,7 +200,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     this.setState({
       zoomLevel: roundZoom
     });
-  }
+  };
 
   /**
    * @function pushScaleOption: Helper function to create a {@link Option} scale component
@@ -212,13 +212,13 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    *
    */
   pushScale = (scales: string[], resolution: number, view: OlView) => {
-    let scale = MapUtil.getScaleForResolution(resolution, view.getProjection().getUnits());
+    const scale = MapUtil.getScaleForResolution(resolution, view.getProjection().getUnits());
     const roundScale = MapUtil.roundScale(scale);
     if (scales.includes(roundScale) ) {
       return;
     }
     scales.push(roundScale);
-  }
+  };
 
   /**
    * Generates the scales to add as {@link Option} to the SelectField based on
@@ -241,19 +241,19 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
       return [];
     }
 
-    let scales = [];
-    let view = map.getView();
+    const scales = [];
+    const view = map.getView();
     // use existing resolutions array if exists
-    let resolutions = view.getResolutions();
+    const resolutions = view.getResolutions();
     if (_isEmpty(resolutions)) {
       for (let currentZoomLevel = view.getMaxZoom(); currentZoomLevel >= view.getMinZoom(); currentZoomLevel--) {
-        let resolution = view.getResolutionForZoom(currentZoomLevel);
+        const resolution = view.getResolutionForZoom(currentZoomLevel);
         if (resolutionsFilter(resolution)) {
           this.pushScale(scales, resolution, view);
         }
       }
     } else {
-      let reversedResolutions = _reverse(_clone(resolutions));
+      const reversedResolutions = _reverse(_clone(resolutions));
       reversedResolutions
         .filter(resolutionsFilter)
         .forEach((resolution) => {
@@ -262,7 +262,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     }
 
     return scales;
-  }
+  };
 
   /**
    * Determine option element for provided zoom level out of array of valid options.
@@ -276,7 +276,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
       return undefined;
     }
     return this.state.scales[this.state.scales.length - 1 - zoom].toString();
-  }
+  };
 
   /**
    * The render function.

@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import * as React from 'react';
 import LayerTreeNode from './LayerTreeNode';
 import Tree from 'rc-tree';

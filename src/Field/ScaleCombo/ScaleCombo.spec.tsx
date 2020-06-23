@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import * as React from 'react';
 
 import { Select } from 'antd';
@@ -100,7 +99,7 @@ describe('<ScaleCombo />', () => {
       expect(scales).toBeInstanceOf(Array);
       expect(scales).toHaveLength(testResolutions.length);
 
-      let roundScale = (Math.round(MapUtil.getScaleForResolution(
+      const roundScale = (Math.round(MapUtil.getScaleForResolution(
         testResolutions[testResolutions.length - 1] ,'m')));
 
       expect(scales[0]).toBe(roundScale);
@@ -135,7 +134,7 @@ describe('<ScaleCombo />', () => {
       expect(scales).toBeInstanceOf(Array);
       expect(scales).toHaveLength(expectedLength);
 
-      let roundScale = MapUtil.roundScale(MapUtil.getScaleForResolution(
+      const roundScale = MapUtil.roundScale(MapUtil.getScaleForResolution(
         testResolutions[testResolutions.length - 2] ,'m'));
 
       expect(scales[1]).toBe(roundScale);

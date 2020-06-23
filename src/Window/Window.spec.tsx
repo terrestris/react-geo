@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import Window from './Window';
 import TestUtil from '../Util/TestUtil';
 

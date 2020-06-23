@@ -6,8 +6,8 @@ import { CSS_PREFIX } from '../../constants';
 import { SliderValue, SliderProps } from 'antd/lib/slider';
 
 type ArrayTwoOrMore<T> = {
-  0: T
-  1: T
+  0: T;
+  1: T;
 } & Array<T>;
 
 interface DefaultProps {

@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
 import OlLayerVector from 'ol/layer/Vector';
@@ -133,7 +132,7 @@ describe('<MeasureButton />', () => {
 
         const instance = wrapper.instance();
 
-        expect(instance._measureLayer).toBeDefined;
+        expect(instance._measureLayer).toBeDefined();
         expect(instance._measureLayer).toBeInstanceOf(OlLayerVector);
       });
     });
@@ -149,7 +148,7 @@ describe('<MeasureButton />', () => {
 
         const instance = wrapper.instance();
 
-        expect(instance._drawInteraction).toBeDefined;
+        expect(instance._drawInteraction).toBeDefined();
         expect(instance._drawInteraction).toBeInstanceOf(OlInteractionDraw);
         expect(instance._drawInteraction.getActive()).toBeTruthy();
       });
@@ -298,7 +297,7 @@ describe('<MeasureButton />', () => {
 
       it ('unsets the feature', () => {
         instance.onDrawEnd(mockEvt);
-        expect(instance._feature).toBeNull;
+        expect(instance._feature).toBeNull();
       });
 
       it ('calls createMeasureTooltip method', () => {

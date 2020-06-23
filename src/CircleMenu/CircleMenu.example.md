@@ -8,8 +8,7 @@ import * as React from 'react';
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
-const OlLayerVector = require('ol/layer/Vector').default;
-// import OlLayerVector from 'ol/layer/Vector';
+import OlLayerVector from 'ol/layer/Vector';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceVector from 'ol/source/Vector';
 import OlFeature from 'ol/Feature';
@@ -131,7 +130,7 @@ class CircleMenuExample extends React.Component {
             null
         }
       </div>
-    )
+    );
   }
 }
 

@@ -85,7 +85,7 @@ class TimeLayerSliderPanelExample extends React.Component {
           autoPlaySpeedOptions={[0.5, 1, 2, 3, 4, 5, 600]}
         />
       </div>
-    )
+    );
   }
 }
 

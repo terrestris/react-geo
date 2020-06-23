@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
@@ -135,6 +134,7 @@ describe('<DigitizeButton />', () => {
         });
       });
 
+      // eslint-disable-next-line max-len
       it ('calls a createDrawInteraction method if button was pressed and valid drawType was provided', () => {
         const wrapper = setupWrapper();
         const createDrawInteraction = jest.spyOn(wrapper.instance(), 'createDrawInteraction');
@@ -145,6 +145,7 @@ describe('<DigitizeButton />', () => {
         createDrawInteraction.mockRestore();
       });
 
+      // eslint-disable-next-line max-len
       it ('calls a createSelectOrModifyInteraction method if button was pressed and valid editType was provided', () => {
         const wrapper = setupWrapper();
         wrapper.setProps({
@@ -159,6 +160,7 @@ describe('<DigitizeButton />', () => {
         createSelectOrModifyInteraction.mockRestore();
       });
 
+      // eslint-disable-next-line max-len
       it ('removes all draw/select interactions created by component from the map if the button was untoggled', () => {
         const wrapper = setupWrapper();
 
@@ -183,6 +185,7 @@ describe('<DigitizeButton />', () => {
         expect(map.listeners_.pointermove).toBeUndefined();
       });
 
+      // eslint-disable-next-line max-len
       it ('unregisters `add` listener on digitize feature collection if drawType is Text and button was untoggled', () => {
         const wrapper = setupWrapper();
         wrapper.setProps({
@@ -208,6 +211,7 @@ describe('<DigitizeButton />', () => {
         expect(instance._digitizeFeatures.listeners_.add.length).toBe(1);
       });
 
+      // eslint-disable-next-line max-len
       it ('unregisters `select` listener on select interaction if editType is Delete and button was untoggled', () => {
         const wrapper = setupWrapper();
         wrapper.setProps({
@@ -233,6 +237,7 @@ describe('<DigitizeButton />', () => {
         expect(instance._selectInteraction.listeners_.select).toBeUndefined();
       });
 
+      // eslint-disable-next-line max-len
       it ('unregisters `select` listener on select interaction if editType is Copy and button was untoggled', () => {
         const wrapper = setupWrapper();
         wrapper.setProps({
@@ -353,6 +358,7 @@ describe('<DigitizeButton />', () => {
 
     describe('#createSelectOrModifyInteraction', () => {
 
+      // eslint-disable-next-line max-len
       it ('creates OL select or modify interaction depending on provided editType and sets its value(s) to state', () => {
         const wrapper = setupWrapper();
 

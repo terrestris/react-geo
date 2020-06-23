@@ -1,5 +1,3 @@
-/*eslint-env jest*/
-
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
@@ -86,7 +84,7 @@ describe('<WfsSearch />', () => {
 
   describe('#onMenuItemSelected', () => {
     it('calls this.props.onSelect with the selected item', () => {
-      //SETUP
+      // SETUP
       const data = [{
         id: '752526',
         properties: {
@@ -101,7 +99,7 @@ describe('<WfsSearch />', () => {
           zoom: 4
         })
       });
-      //SETUP END
+      // SETUP END
 
       const selectSpy = jest.fn();
       const wrapper = TestUtil.mountComponent(WfsSearch, {

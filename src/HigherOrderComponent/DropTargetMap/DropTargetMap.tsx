@@ -56,7 +56,7 @@ export function onDropAware(WrappedComponent: React.ComponentType<MapComponentPr
         onDragOver={this.onDragOver}
         {...this.props}
       />;
-    }
+    };
 
   };
 

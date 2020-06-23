@@ -1,5 +1,3 @@
-/*eslint-env jest*/
-
 import testImage from  '../../assets/user.png';
 import TestUtil from '../Util/TestUtil';
 
@@ -23,7 +21,7 @@ describe('<UserChip />', () => {
 
   it('determines initials from given user name', () => {
     wrapper.setProps({userName: 'Shinji Kagawa'});
-    let test = wrapper.instance().getInitials();
+    const test = wrapper.instance().getInitials();
     expect(test).toBe('SK');
   });
 
@@ -31,7 +29,7 @@ describe('<UserChip />', () => {
     const props = {
       imageSrc: testImage
     };
-    const wrapper = TestUtil.mountComponent(UserChip, props);
+    wrapper = TestUtil.mountComponent(UserChip, props);
     expect(wrapper.find('img').props().src).toContain(testImage);
   });
 
@@ -52,7 +50,7 @@ describe('<UserChip />', () => {
         backgroundColor: 'yellow'
       }
     };
-    const wrapper = TestUtil.mountComponent(UserChip, props);
+    wrapper = TestUtil.mountComponent(UserChip, props);
     expect(wrapper.props().style.backgroundColor).toBe('yellow');
   });
 

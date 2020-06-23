@@ -77,7 +77,7 @@ class ZoomButtonExample extends React.Component {
           </ZoomButton>
         </div>
       </div>
-    )
+    );
   }
 }
 

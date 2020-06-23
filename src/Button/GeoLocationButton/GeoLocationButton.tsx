@@ -136,7 +136,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
         src
       })
     })];
-  }
+  };
 
   _positions: OlGeomLineString;
 
@@ -215,7 +215,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
 
       // force the rotation change to be less than 180°
       if (Math.abs(headingDiff) > Math.PI) {
-        var sign = (headingDiff >= 0) ? 1 : -1;
+        const sign = (headingDiff >= 0) ? 1 : -1;
         headingDiff = -sign * (2 * Math.PI - Math.abs(headingDiff));
       }
       heading = prevHeading + headingDiff;
@@ -233,11 +233,11 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
       heading,
       speed
     });
-  }
+  };
 
   onGeolocationError = (error: any) => {
     this.props.onError(error);
-  }
+  };
 
   /**
    * Called when the button is toggled, this method ensures that everything
@@ -289,19 +289,19 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
     // add listeners
     this._geoLocationInteraction.on('change', this.onGeolocationChange);
     this._geoLocationInteraction.on('error', this.onGeolocationError);
-  }
+  };
 
   // recenters the view by putting the given coordinates at 3/4 from the top or
   // the screen
   getCenterWithHeading = (position, rotation, resolution) => {
-    var size = this.props.map.getSize();
-    var height = size[1];
+    const size = this.props.map.getSize();
+    const height = size[1];
 
     return [
       position[0] - Math.sin(rotation) * height * resolution * 1 / 4,
       position[1] + Math.cos(rotation) * height * resolution * 1 / 4
     ];
-  }
+  };
 
   updateView = () => {
     const view = this.props.map.getView();
@@ -324,7 +324,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
         this._markerFeature.setGeometry(pointGeometry);
       }
     }
-  }
+  };
 
   /**
    * The render function.

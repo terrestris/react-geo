@@ -40,23 +40,23 @@ interface DefaultProps {
 }
 
 interface BaseProps {
-    /**
-     * Optional instance of OlMap which is used if onLayerAddToMap is not provided
-     */
-    map: OlMap;
-    /**
-     * Optional function being called when onAddSelectedLayers or onAddAllLayers
-     * is triggered
-     */
-    onLayerAddToMap?: (layers: Array<OlLayerTile | OlLayerImage>) => void;
-    /**
-     * Optional function that is called if cancel button is clicked
-     */
-    onCancel?: () => void;
-    /**
-     * Optional function that is called if selection has changed.
-     */
-    onSelectionChange?: (selection: any[]) => void;
+  /**
+   * Optional instance of OlMap which is used if onLayerAddToMap is not provided
+   */
+  map: OlMap;
+  /**
+   * Optional function being called when onAddSelectedLayers or onAddAllLayers
+   * is triggered
+   */
+  onLayerAddToMap?: (layers: Array<OlLayerTile | OlLayerImage>) => void;
+  /**
+   * Optional function that is called if cancel button is clicked
+   */
+  onCancel?: () => void;
+  /**
+   * Optional function that is called if selection has changed.
+   */
+  onSelectionChange?: (selection: any[]) => void;
 }
 
 interface AddWmsLayerState {
@@ -114,7 +114,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
     }
 
     this.setState({selectedWmsLayers});
-  }
+  };
 
   /**
    * onAddSelectedLayers - function called if button with key useSelectedBtn is
@@ -147,7 +147,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
     } else {
       Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
     }
-  }
+  };
 
   /**
    * onAddAllLayers - pass all wmsLayers of props to onLayerAddToMap function
@@ -171,7 +171,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
     } else {
       Logger.warn('Neither map nor onLayerAddToMap given in props. Will do nothing.');
     }
-  }
+  };
 
   /**
    * The render function.

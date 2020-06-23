@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
 import GeoLocationButton from './GeoLocationButton';

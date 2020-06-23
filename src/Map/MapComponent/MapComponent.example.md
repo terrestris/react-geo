@@ -74,7 +74,7 @@ class MapComponentExample extends React.Component {
           }}
         />
       </MapProvider>
-    )
+    );
   }
 }
 

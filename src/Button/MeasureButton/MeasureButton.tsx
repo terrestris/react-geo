@@ -437,7 +437,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
    *
    * @param evt The generic change event.
    */
-  onDrawInteractionGeometryChange(/*evt*/) {
+  onDrawInteractionGeometryChange(/* evt*/) {
     this.updateMeasureTooltip();
   }
 

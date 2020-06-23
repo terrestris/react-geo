@@ -12,7 +12,7 @@ import { CSS_PREFIX } from '../../constants';
 import './PropertyGrid.less';
 
 type AttributeNames = {
-  [key: string]: string
+  [key: string]: string;
 };
 
 interface DefaultProps {
@@ -114,14 +114,14 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
    * @param attributeNameColumnWidthInPercent Column width (in percent)
    */
   generatePropertyGrid({feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent}: {
-    feature: OlFeature,
-    attributeFilter: string[],
-    attributeNames: AttributeNames,
-    attributeNameColumnWidthInPercent: number
+    feature: OlFeature;
+    attributeFilter: string[];
+    attributeNames: AttributeNames;
+    attributeNameColumnWidthInPercent: number;
   }): {
-    dataSource: any,
-    columns: ColumnProps<any>[]
-  } {
+      dataSource: any;
+      columns: ColumnProps<any>[];
+    } {
     if (!attributeFilter) {
       attributeFilter = feature.getKeys().filter((attrName: string) => attrName !== 'geometry');
     }

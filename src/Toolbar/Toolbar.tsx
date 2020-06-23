@@ -12,10 +12,10 @@ interface DefaultProps {
 
 // non default props
 export interface BaseProps extends Partial<DefaultProps> {
-    /**
+  /**
      * An optional CSS class which should be added.
      */
-    className?: string;
+  className?: string;
 }
 
 export type ToolbarProps = BaseProps & Partial<DefaultProps> & React.HTMLAttributes<HTMLDivElement>;

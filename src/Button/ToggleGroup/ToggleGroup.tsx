@@ -123,7 +123,7 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
     } else {
       this.setState({selectedName: childProps.name});
     }
-  }
+  };
 
   /**
    * The render function.

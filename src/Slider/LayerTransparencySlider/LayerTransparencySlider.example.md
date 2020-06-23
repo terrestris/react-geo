@@ -54,7 +54,7 @@ class LayerTransparencySliderExample extends React.Component {
           />
         </div>
       </div>
-    )
+    );
   }
 }
 

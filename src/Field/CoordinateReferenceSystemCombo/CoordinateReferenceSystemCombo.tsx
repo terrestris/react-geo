@@ -33,7 +33,7 @@ interface BaseProps {
    * An array of predefined crs definitions having at least value (name of
    * CRS) and code (e.g. EPSG-code of CRS) property
    */
-  predefinedCrsDefinitions?: {value: string, code: string}[];
+  predefinedCrsDefinitions?: {value: string; code: string}[];
 }
 
 interface CRSComboState {
@@ -94,7 +94,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
 
     return fetch(`${crsApiUrl}?${UrlUtil.objectToRequestString(queryParameters)}`)
       .then(response => response.json());
-  }
+  };
 
   /**
    * This function gets called when the EPSG.io fetch returns an error.
@@ -119,7 +119,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
     } else {
       return [];
     }
-  }
+  };
 
   /**
    * This function gets called when the EPSG.io fetch returns an error.
@@ -148,7 +148,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
     } else {
       this.setState({ value });
     }
-  }
+  };
 
   /**
    * Handles selection of a CRS item in Autocomplete
@@ -172,7 +172,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
       value: selected
     });
     onSelect(selected);
-  }
+  };
 
   /**
    * Tranforms CRS object returned by EPSG.io to antd  Option component

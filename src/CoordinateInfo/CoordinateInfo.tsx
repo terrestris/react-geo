@@ -33,32 +33,32 @@ interface DefaultProps {
    * Whether the GFI control should requests all layers at a given coordinate
    * or just the uppermost one.
    */
-   drillDown: boolean;
+  drillDown: boolean;
 
-   /**
-    * Hit-detection tolerance in pixels. Pixels inside the radius around the
-    * given position will be checked for features.
-    */
-   hitTolerance: number;
+  /**
+   * Hit-detection tolerance in pixels. Pixels inside the radius around the
+   * given position will be checked for features.
+   */
+  hitTolerance: number;
 
-   /**
-    * The children component that should be rendered. The render prop function
-    * receives the state of the component (this is the clicked coordinate, the
-    * list of GFI features if any and the loading state).
-    */
-   resultRenderer: (childrenProps: CoordinateInfoState) => React.ReactNode;
+  /**
+   * The children component that should be rendered. The render prop function
+   * receives the state of the component (this is the clicked coordinate, the
+   * list of GFI features if any and the loading state).
+   */
+  resultRenderer: (childrenProps: CoordinateInfoState) => React.ReactNode;
 }
 
 interface BaseProps {
-    /**
-     * The ol map.
-     */
-    map: OlMap;
+  /**
+   * The ol map.
+   */
+  map: OlMap;
 }
 
 interface CoordinateInfoState {
   clickCoordinate: [number, number] | null;
-  features: object;
+  features: any;
   loading: boolean;
 }
 
@@ -135,7 +135,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     const pixel = map.getEventPixel(olEvt.originalEvent);
     const coordinate = olEvt.coordinate;
 
-    let promises = [];
+    const promises = [];
 
     map.forEachLayerAtPixel(pixel, (layer: OlLayerBase) => {
       const layerSource = layer.getSource();
@@ -176,7 +176,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
         return Promise.all(textResponses);
       })
       .then((textResponses: string[]) => {
-        let features = {};
+        const features = {};
 
         textResponses.forEach((featureCollection: string) => {
           const fc = format.readFeatures(featureCollection);

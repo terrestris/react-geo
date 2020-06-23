@@ -114,7 +114,7 @@ class AgFeatureGridExample extends React.Component {
           }}
         />
       </div>
-    )
+    );
   }
 }
 

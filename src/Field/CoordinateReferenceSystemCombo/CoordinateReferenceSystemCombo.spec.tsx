@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
 import CoordinateReferenceSystemCombo from '../CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
@@ -13,6 +12,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     results: [{
       code: '31466',
       bbox: [53.81,5.86,49.11,7.5],
+      // eslint-disable-next-line max-len
       proj4: '+proj=tmerc +lat_0=0 +lon_0=6 +k=1 +x_0=2500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs',
       name: 'DHDN / 3-degree Gauss-Kruger zone 2'
     }, {

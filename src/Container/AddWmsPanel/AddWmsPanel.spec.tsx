@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 

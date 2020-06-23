@@ -1,6 +1,3 @@
-/*eslint-env jest*/
-
-
 import TestUtil from '../../Util/TestUtil';
 import LayerTransparencySlider from './LayerTransparencySlider';
 
@@ -30,7 +27,7 @@ describe('<LayerTransparencySlider />', () => {
     };
 
     const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
-    let transparency = wrapper.instance().getLayerTransparency();
+    const transparency = wrapper.instance().getLayerTransparency();
     expect(transparency).toBe(91);
   });
 

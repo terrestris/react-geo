@@ -67,7 +67,7 @@ class LayerSwitcherExample extends React.Component {
           layers={this.layers}
         />
       </div>
-    )
+    );
   }
 }
 

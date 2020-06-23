@@ -20,14 +20,14 @@ class LoadingTitleBar extends React.Component {
   }
 
   loadingChange() {
-    const { loading } = this.state
+    const { loading } = this.state;
     this.setState({
       loading: !loading
-    })
+    });
   }
 
   render() {
-    const { loading } = this.state
+    const { loading } = this.state;
     return(
       <div>
         <LoadingPanel
@@ -40,7 +40,7 @@ class LoadingTitleBar extends React.Component {
           start/stop loading
         </SimpleButton>
       </div>
-    )
+    );
   }
 }
 <LoadingTitleBar />
@@ -106,13 +106,13 @@ class LoadingTreeExample extends React.Component {
   loadingStart() {
     this.setState({
       loading: true
-    })
+    });
   }
 
   loadingEnd() {
     this.setState({
       loading: false
-    })
+    });
   }
 
   componentDidMount() {
@@ -136,7 +136,7 @@ class LoadingTreeExample extends React.Component {
           map={this.map}
         />
       </div>
-    )
+    );
   }
 }
 <LoadingTreeExample />

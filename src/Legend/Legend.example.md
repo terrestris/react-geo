@@ -94,7 +94,7 @@ class LegendExample extends React.Component {
           <Legend layer={this.places} />
         </div>
       </div>
-    )
+    );
   }
 }
 
