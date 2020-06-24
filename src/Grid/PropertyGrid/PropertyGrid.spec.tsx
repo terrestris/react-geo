@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 

@@ -11,11 +11,11 @@ const _isArray = require('lodash/isArray');
  *   a WMS source that will end up as URL parameters.
  * @return The key for the time parameter, in the actual spelling.
  */
-const findTimeParam = (params: Object) => {
+const findTimeParam = (params: any) => {
   const keys = Object.keys(params);
   let foundKey = 'TIME'; // fallback
   keys.some(key => {
-    let lcKey = key && key.toLowerCase && key.toLowerCase();
+    const lcKey = key && key.toLowerCase && key.toLowerCase();
     if (lcKey === 'time') {
       foundKey = key;
       return true;
@@ -32,7 +32,7 @@ const findTimeParam = (params: Object) => {
  * @param layers An array of layer configurations.
  * @return A time layer aware component.
  */
-export function timeLayerAware<P extends object>(WrappedComponent: React.ComponentType<P>, layers: OlLayerBase[]) {
+export function timeLayerAware<P extends any>(WrappedComponent: React.ComponentType<P>, layers: OlLayerBase[]) {
 
   return class TimeLayerAware extends React.Component<Omit<P, 'onChange'>> {
 
@@ -52,7 +52,7 @@ export function timeLayerAware<P extends object>(WrappedComponent: React.Compone
           config.customHandler(newValues);
         }
       });
-    }
+    };
 
     /**
      * Injects the onChange property.
@@ -63,7 +63,7 @@ export function timeLayerAware<P extends object>(WrappedComponent: React.Compone
         onChange={this.timeChanged}
         {...this.props as P}
       />;
-    }
+    };
 
   };
 

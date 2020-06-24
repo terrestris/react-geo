@@ -20,10 +20,10 @@ interface DefaultProps {
 }
 
 interface BaseProps {
-    /**
+  /**
      * Object containing layer information
      */
-    wmsLayer: OlLayerTile | OlLayerImage;
+  wmsLayer: OlLayerTile | OlLayerImage;
 }
 
 interface AddWmsLayerEntryState {
@@ -94,16 +94,16 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
           {layerTextSpan}
           {
             copyright
-            ? <Icon className="add-wms-add-info-icon" name="copyright" />
-            : null
+              ? <Icon className="add-wms-add-info-icon" name="copyright" />
+              : null
           }
           {
             queryable
-            ? <Tooltip title={layerQueryableText}>
+              ? <Tooltip title={layerQueryableText}>
                 <Icon className="add-wms-add-info-icon" name="info" />
               </Tooltip>
-            : null
-            }
+              : null
+          }
         </div>
       </Checkbox>
     );

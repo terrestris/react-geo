@@ -491,7 +491,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         map.un('pointermove', this.onPointerMove);
       }
     }
-  }
+  };
 
   /**
    * Creates digitize vector layer and adds this to the map.
@@ -513,7 +513,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
     digitizeLayer.setStyle(this.getDigitizeStyleFunction);
     this._digitizeLayer = digitizeLayer;
-  }
+  };
 
   /**
    * The styling function for the digitize vector layer, which considers
@@ -591,7 +591,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         break;
       }
     }
-  }
+  };
 
   /**
    * The OL style for selected digitized features.
@@ -641,7 +641,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         color: selectFillColor
       })
     });
-  }
+  };
 
   /**
    * Creates a correctly configured OL draw interaction depending on given
@@ -664,7 +664,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     let type = drawType;
 
     // check whether the digitizeLayer is in map and set it from state if not
-    let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
+    const digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
     if (!digitizeLayer) {
       map.addLayer(this._digitizeLayer);
     }
@@ -698,7 +698,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     this._interactions = [drawInteraction];
     drawInteraction.setActive(pressed);
-  }
+  };
 
   /**
    * Creates a correctly configured OL select and/or modify and/or translate
@@ -731,7 +731,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       this._selectInteraction.on('select', onFeatureSelect);
     }
 
-    let interactions = [this._selectInteraction];
+    const interactions = [this._selectInteraction];
 
     if (editType === DigitizeButton.EDIT_EDIT_TYPE) {
       const edit = new OlInteractionModify({
@@ -761,7 +761,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     map.on('pointermove', this.onPointerMove);
 
     this._interactions = interactions;
-  }
+  };
 
   /**
    * Listener for `select` event of OL select interaction in `Delete` mode.
@@ -787,7 +787,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     this._selectInteraction.getFeatures().remove(feat);
     this._digitizeLayer.getSource().removeFeature(feat);
     this.props.map.renderSync();
-  }
+  };
   /**
    * Listener for `select` event of OL select interaction in `Copy` mode.
    * Creates a clone of selected feature and calls utility method to move it
@@ -829,7 +829,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       50,
       this.getDigitizeStyleFunction(feat)
     );
-  }
+  };
 
   /**
    * Checks if a labeled feature is being modified. If yes, opens prompt to
@@ -865,7 +865,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         textLabel
       });
     }
-  }
+  };
 
   /**
    * Called on modifyend of the ol.interaction.Modify.
@@ -880,7 +880,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (_isFunction(onModifyEnd)) {
       onModifyEnd(evt);
     }
-  }
+  };
 
   /**
    * Called on translatestart of the ol.interaction.Translate.
@@ -895,7 +895,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (_isFunction(onTranslateStart)) {
       onTranslateStart(evt);
     }
-  }
+  };
 
   /**
    * Called on translateend of the ol.interaction.Translate.
@@ -910,7 +910,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (_isFunction(onTranslateEnd)) {
       onTranslateEnd(evt);
     }
-  }
+  };
 
   /**
    * Called on translating of the ol.interaction.Translate.
@@ -925,7 +925,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (_isFunction(onTranslating)) {
       onTranslating(evt);
     }
-  }
+  };
 
   /**
    * Changes state for showLabelPrompt to make modal for label input visible.
@@ -940,7 +940,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     });
     this._digitizeTextFeature = evt.element;
     this._digitizeTextFeature.set('isLabel', true);
-  }
+  };
 
   /**
    * Callback function after `Ok` button of label input modal was clicked.
@@ -956,7 +956,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }, () => {
       this.setTextOnFeature(this._digitizeTextFeature, onModalLabelOk);
     });
-  }
+  };
 
   /**
    * Callback function after `Cancel` button of label input modal was clicked.
@@ -980,7 +980,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         onModalLabelCancel(event);
       }
     });
-  }
+  };
 
   /**
    * Sets formatted label on feature.
@@ -1012,7 +1012,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         onModalOkCbk(feat, label);
       }
     });
-  }
+  };
 
   /**
    * Called if label input field value was changed. Updates state value for
@@ -1025,7 +1025,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     this.setState({
       textLabel: evt.target.value
     });
-  }
+  };
 
   /**
    * Sets the cursor to `pointer` if the pointer enters a non-oqaque pixel of
@@ -1053,7 +1053,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     });
 
     map.getTargetElement().style.cursor = hit ? 'pointer' : '';
-  }
+  };
 
   /**
    * The render function.

@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import OlSourceVector from 'ol/source/Vector';
 import OlLayerVector from 'ol/layer/Vector';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
@@ -172,7 +171,7 @@ describe('<AgFeatureGrid />', () => {
 
     wrapper.instance().zoomToFeatures(features);
 
-    let featGeometries = [];
+    const featGeometries = [];
     features.forEach(feature => {
       featGeometries.push(feature.getGeometry());
     });

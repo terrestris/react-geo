@@ -394,7 +394,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
 
     this._source = source;
     this._layer = layer;
-  }
+  };
 
   /**
    * Adds map event callbacks to highlight and select features in the map (if
@@ -417,7 +417,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     if (selectable) {
       map.on('singleclick', this.onMapSingleClick);
     }
-  }
+  };
 
   /**
    * Highlights the feature beneath the cursor on the map and in the grid.
@@ -490,7 +490,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       }
       feature.setStyle(highlightStyle);
     });
-  }
+  };
 
   /**
    * Selects the selected feature in the map and in the grid.
@@ -532,7 +532,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
         }
       }
     });
-  }
+  };
 
   /**
    * Removes the vector layer from the given map (if any).
@@ -547,7 +547,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     }
 
     map.removeLayer(this._layer);
-  }
+  };
 
   /**
    * Unbinds the pointermove and click event handlers from the map (if given).
@@ -567,7 +567,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     if (selectable) {
       map.un('singleclick', this.onMapSingleClick);
     }
-  }
+  };
 
   /**
    * Returns the column definitions out of the attributes of the first
@@ -583,7 +583,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       selectable
     } = this.props;
 
-    let columns = [];
+    const columns = [];
     const feature = features[0];
 
     if (!(feature instanceof OlFeature)) {
@@ -632,7 +632,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     });
 
     return columns;
-  }
+  };
 
   /**
    * Returns the table row data from all of the given features.
@@ -644,7 +644,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       features
     } = this.props;
 
-    let data = [];
+    const data = [];
 
     features.forEach(feature => {
       const properties = feature.getProperties();
@@ -662,7 +662,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     });
 
     return data;
-  }
+  };
 
   /**
    * Returns the correspondig feature for the given table row key.
@@ -679,7 +679,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     const feature = features.filter(f => keyFunction(f) === key);
 
     return feature[0];
-  }
+  };
 
   /**
    * Returns the correspondig rowNode for the given feature id.
@@ -705,7 +705,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     });
 
     return rowNode;
-  }
+  };
 
   /**
    * Returns the currently selected row keys.
@@ -724,7 +724,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     const selectedRows = grid.api.getSelectedRows();
 
     return selectedRows.map(row => row.key);
-  }
+  };
 
   /**
    * Called on row click and zooms the the corresponding feature's extent.
@@ -744,7 +744,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     } else {
       this.zoomToFeatures([feature]);
     }
-  }
+  };
 
   /**
    * Called on row mouseover and hightlights the corresponding feature's
@@ -765,7 +765,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     }
 
     this.highlightFeatures([feature]);
-  }
+  };
 
   /**
    * Called on mouseout and unhightlights any highlighted feature.
@@ -785,7 +785,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     }
 
     this.unhighlightFeatures([feature]);
-  }
+  };
 
   /**
    * Fits the map's view to the extent of the passed features.
@@ -801,7 +801,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       return;
     }
 
-    let featGeometries = [];
+    const featGeometries = [];
     features.forEach(feature => {
       featGeometries.push(feature.getGeometry());
     });
@@ -810,7 +810,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       const geomCollection = new OlGeomGeometryCollection(featGeometries);
       map.getView().fit(geomCollection.getExtent());
     }
-  }
+  };
 
   /**
    * Highlights the given features in the map.
@@ -828,7 +828,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     }
 
     highlightFeatures.forEach(feature => feature.setStyle(highlightStyle));
-  }
+  };
 
   /**
    * Unhighlights the given features in the map.
@@ -855,7 +855,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
         feature.setStyle(null);
       }
     });
-  }
+  };
 
   /**
    * Sets the select style to the given features in the map.
@@ -877,7 +877,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
         feature.setStyle(selectStyle);
       }
     });
-  }
+  };
 
   /**
    * Resets the style of all features.
@@ -893,7 +893,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     }
 
     features.forEach(feature => feature.setStyle(null));
-  }
+  };
 
   /**
    * Called if the selection changes.
@@ -931,7 +931,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
 
     this.resetFeatureStyles();
     this.selectFeatures(selectedFeatures);
-  }
+  };
 
   /**
    *
@@ -993,7 +993,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     let rowClassNameFn;
     if (_isFunction(rowClassName)) {
       rowClassNameFn = node => {
-        const determinedRowClass = (rowClassName as Function)(node.data);
+        const determinedRowClass = (rowClassName as ((record: any) => string))(node.data);
         return `${this._rowClassName} ${determinedRowClass}`;
       };
     } else {

@@ -45,12 +45,6 @@ class FloatingMapLogo extends React.Component<FloatingMapLogoProps> {
   className = `${CSS_PREFIX}floatingmaplogo`;
 
   /**
-   * The properties.
-   */
-  static propTypes = {
-  };
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {

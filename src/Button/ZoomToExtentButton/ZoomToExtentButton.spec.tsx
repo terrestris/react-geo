@@ -1,5 +1,3 @@
-/*eslint-env jest*/
-
 import TestUtil from '../../Util/TestUtil';
 import { getCenter, containsExtent } from 'ol/extent';
 import OlGeomPolygon from 'ol/geom/Polygon';

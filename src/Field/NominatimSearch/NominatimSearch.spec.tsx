@@ -1,5 +1,3 @@
-/*eslint-env jest*/
-
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
@@ -98,7 +96,7 @@ describe('<NominatimSearch />', () => {
 
   describe('#onMenuItemSelected', () => {
     it('calls this.props.onSelect with the selected item', () => {
-      //SETUP
+      // SETUP
       const dataSource = [{
         place_id: 752526,
         display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland'
@@ -111,7 +109,7 @@ describe('<NominatimSearch />', () => {
           zoom: 4
         })
       });
-      //SETUP END
+      // SETUP END
 
       const selectSpy = jest.fn();
       const wrapper = TestUtil.mountComponent(NominatimSearch, {
@@ -131,7 +129,7 @@ describe('<NominatimSearch />', () => {
 
   describe('#onSelect', () => {
     it('zooms to the boundingbox of the selected entry', () => {
-      //SETUP
+      // SETUP
       const bbox = ['52.7076346', '52.7476346', '7.7702617', '7.8102617'];
       const transformedExtent = [
         parseFloat(bbox[2]),
@@ -151,7 +149,7 @@ describe('<NominatimSearch />', () => {
           zoom: 4
         })
       });
-      //SETUP END
+      // SETUP END
 
       const wrapper = TestUtil.mountComponent(NominatimSearch, {map});
       const fitSpy = jest.spyOn(map.getView(), 'fit');

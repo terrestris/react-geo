@@ -34,7 +34,7 @@ export function isVisibleComponent<P>(
      * @return Whether the component should be visible or not.
      */
     isVisibleComponent = (componentName: string) => {
-      let activeModules = this.props.activeModules || [];
+      const activeModules = this.props.activeModules || [];
 
       return activeModules.some((activeModule: any) => {
         if (!activeModule.name) {
@@ -43,7 +43,7 @@ export function isVisibleComponent<P>(
           return activeModule.name === componentName;
         }
       });
-    }
+    };
 
     /**
      * The render function.

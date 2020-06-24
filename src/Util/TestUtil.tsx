@@ -30,7 +30,7 @@ export class TestUtil {
    */
   static mountComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
     return mount(<Component {...props}/>, options);
-  }
+  };
 
   /**
    * Creates and applies a map <div> element to the body.
@@ -38,8 +38,8 @@ export class TestUtil {
    * @return {Element} The mounted <div> element.
    */
   static mountMapDiv = () => {
-    var div = document.createElement('div');
-    var style = div.style;
+    const div = document.createElement('div');
+    const style = div.style;
 
     style.position = 'absolute';
     style.left = '-1000px';
@@ -51,7 +51,7 @@ export class TestUtil {
     document.body.appendChild(div);
 
     return div;
-  }
+  };
 
   /**
    * Removes the map div element from the body.
@@ -61,12 +61,12 @@ export class TestUtil {
     if (!div) {
       return;
     }
-    let parent = div.parentNode;
+    const parent = div.parentNode;
     if (parent) {
       parent.removeChild(div);
     }
     div = null;
-  }
+  };
 
   /**
    * Creates an ol map.
@@ -75,10 +75,10 @@ export class TestUtil {
    * @return The ol map.
    */
   static createMap = (mapOpts?: any) => {
-    let source = new OlSourceVector();
-    let layer = new OlLayerVector({source: source});
-    let targetDiv = TestUtil.mountMapDiv();
-    let defaultMapOpts = {
+    const source = new OlSourceVector();
+    const layer = new OlLayerVector({source: source});
+    const targetDiv = TestUtil.mountMapDiv();
+    const defaultMapOpts = {
       target: targetDiv,
       layers: [layer],
       view: new OlView({
@@ -90,12 +90,12 @@ export class TestUtil {
 
     Object.assign(defaultMapOpts, mapOpts);
 
-    let map = new OlMap(defaultMapOpts);
+    const map = new OlMap(defaultMapOpts);
 
     map.renderSync();
 
     return map;
-  }
+  };
 
   /**
    * Removes the map.
@@ -105,7 +105,7 @@ export class TestUtil {
       map.dispose();
     }
     TestUtil.unmountMapDiv();
-  }
+  };
 
   /**
    * Simulates a browser pointer event on the map viewport.
@@ -119,11 +119,11 @@ export class TestUtil {
    * @param [dragging] Whether the map is being dragged or not.
    */
   static simulatePointerEvent = ({map, type, x, y, opt_shiftKey, dragging}:
-    {map: any, type: string, x: number, y: number, opt_shiftKey?: boolean, dragging?: boolean}) => {
-    let viewport = map.getViewport();
+  {map: any; type: string; x: number; y: number; opt_shiftKey?: boolean; dragging?: boolean}) => {
+    const viewport = map.getViewport();
     // Calculated in case body has top < 0 (test runner with small window).
-    let position = viewport.getBoundingClientRect();
-    let shiftKey = opt_shiftKey !== undefined ? opt_shiftKey : false;
+    const position = viewport.getBoundingClientRect();
+    const shiftKey = opt_shiftKey !== undefined ? opt_shiftKey : false;
     const event = new PointerEvent(type, {
       clientX: position.left + x + TestUtil.mapDivWidth / 2,
       clientY: position.top + y + TestUtil.mapDivHeight / 2,
@@ -131,7 +131,7 @@ export class TestUtil {
     });
     const olEvt = OlMapBrowserPointerEvent(type, map, event, dragging);
     map.handleMapBrowserEvent(olEvt);
-  }
+  };
 
   /**
    * Creates and returns an empty vector layer.
@@ -140,13 +140,13 @@ export class TestUtil {
    * @return {ol.layer.Vector} The layer.
    */
   static createVectorLayer = (properties: any) => {
-    let source = new OlSourceVector();
-    let layer = new OlLayerVector({source: source});
+    const source = new OlSourceVector();
+    const layer = new OlLayerVector({source: source});
 
     layer.setProperties(properties);
 
     return layer;
-  }
+  };
 
   /**
    * Returns a point feature with a random position.
@@ -168,7 +168,7 @@ export class TestUtil {
     feat.setProperties(props);
 
     return feat;
-  }
+  };
 
 }
 

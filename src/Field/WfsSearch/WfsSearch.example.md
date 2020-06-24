@@ -63,7 +63,7 @@ class WfsSearchExample extends React.Component {
           }}
         />
       </div>
-    )
+    );
   }
 }
 

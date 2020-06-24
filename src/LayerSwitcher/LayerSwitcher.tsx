@@ -13,8 +13,8 @@ import MapComponent from '../Map/MapComponent/MapComponent';
 import './LayerSwitcher.less';
 
 type ArrayTwoOrMore<T> = {
-  0: T
-  1: T
+  0: T;
+  1: T;
 } & Array<T>;
 
 /**
@@ -146,7 +146,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       });
     }
     return layerClone;
-  }
+  };
 
   /**
    * (Re-)adds the layers to the preview map and sets the visibleLayerIndex.
@@ -157,7 +157,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       layers
     } = this.props;
     if (layers.length < 2) {
-      Logger.warn(`LayerSwitcher requires two or more layers.`);
+      Logger.warn('LayerSwitcher requires two or more layers.');
     }
     this._map.getLayers().clear();
     this._layerClones = layers.map((layer, index) => {
@@ -168,7 +168,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       this._map.addLayer(layerClone);
       return layerClone;
     });
-  }
+  };
 
   /**
    * Sets the visiblity of the layers in the props.map and this._map.
@@ -197,7 +197,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
         l.setVisible(false);
       }
     });
-  }
+  };
 
   /**
    * Constructs this._map
@@ -210,7 +210,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       view: map.getView(),
       controls: []
     });
-  }
+  };
 
   /**
    * Clickhandler for the overview switch.
@@ -224,7 +224,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       }
     });
     this.updateLayerVisibility();
-  }
+  };
 
   /**
    * The render function.

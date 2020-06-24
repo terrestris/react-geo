@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import * as React from 'react';
 import TestUtil from '../../Util/TestUtil';
 import { loadify } from './LoadifiedComponent';

@@ -12,26 +12,26 @@ import { CSS_PREFIX } from '../constants';
 
 // non default props
 export interface BaseProps {
-    /**
-     * An optional CSS class which should be added.
-     */
-    className?: string;
-    /**
-     * The image src.
-     */
-    imageSrc?: string;
-    /**
-     * The react element representing the user menu
-     */
-    userMenu?: React.ReactNode;
-    /**
-     * The user name.
-     */
-    userName?: React.ReactNode;
-    /**
-     * The style object
-     */
-    style?: any;
+  /**
+   * An optional CSS class which should be added.
+   */
+  className?: string;
+  /**
+   * The image src.
+   */
+  imageSrc?: string;
+  /**
+   * The react element representing the user menu
+   */
+  userMenu?: React.ReactNode;
+  /**
+   * The user name.
+   */
+  userName?: React.ReactNode;
+  /**
+   * The style object
+   */
+  style?: any;
 }
 
 export type UserChipProps = BaseProps & AvatarProps;
@@ -79,7 +79,7 @@ class UserChip extends React.Component<UserChipProps> {
     }
 
     const splittedName = (userName as string).split(' ');
-    let initals = [];
+    const initals = [];
     splittedName.forEach((part) =>  {
       initals.push(part[0].toUpperCase());
     });

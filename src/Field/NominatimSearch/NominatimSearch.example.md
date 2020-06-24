@@ -57,7 +57,7 @@ class NominatimSearchExample extends React.Component {
           }}
         />
       </div>
-    )
+    );
   }
 }
 

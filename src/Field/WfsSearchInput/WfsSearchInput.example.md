@@ -23,7 +23,7 @@ class WfsSearchInputExample extends React.Component {
 
     this.state = {
       data: []
-    }
+    };
 
     this.mapDivId = `map-${Math.random()}`;
 
@@ -111,7 +111,7 @@ class WfsSearchInputExample extends React.Component {
           }}
         />
       </div>
-    )
+    );
   }
 }
 

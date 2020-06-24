@@ -50,10 +50,12 @@ export interface BaseProps {
    * An optional CSS class which should be added.
    */
   className?: string;
+
   /**
    * A LayerGroup the Tree should handle.
    */
   layerGroup?: OlLayerGroup;
+
   /**
    * The OpenLayers map the tree interacts with.
    */
@@ -207,7 +209,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @param groupLayer A grouplayer.
    */
   treeNodesFromLayerGroup(groupLayer: OlLayerGroup) {
-    let layerArray = groupLayer.getLayers().getArray()
+    const layerArray = groupLayer.getLayers().getArray()
       .filter(this.props.filterFunction);
     const treeNodes = layerArray.map((layer) => {
       return this.treeNodeFromLayer(layer);
@@ -258,7 +260,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       this.registerAddRemoveListeners(evt.element);
     }
     this.rebuildTreeNodes();
-  }
+  };
 
   /**
    * Listens to the collections remove event of a collection.
@@ -274,7 +276,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       });
     }
     this.rebuildTreeNodes();
-  }
+  };
 
   /**
    * Listens to the LayerGroups change:layers event.
@@ -291,7 +293,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       this.registerAddRemoveListeners(evt.target);
     }
     this.rebuildTreeNodes();
-  }
+  };
 
   /**
    * Unregisters the Events of a given layer.
@@ -319,7 +321,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       }
       return true;
     });
-  }
+  };
 
   /**
    * Rebuilds the treeNodes and its checked states.
@@ -342,7 +344,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       checkedKeys,
       mapResolution: evt ? evt.target.getView().getResolution() : -1
     });
-  }
+  };
 
   /**
    * Returns the title to render in the LayerTreeNode. If a nodeTitleRenderer
@@ -375,7 +377,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
         Logger.warn('Your map configuration contains layerGroups that are' +
           'invisible. This might lead to buggy behaviour.');
       }
-      let childLayers = layer.getLayers().getArray()
+      const childLayers = layer.getLayers().getArray()
         .filter(this.props.filterFunction);
       childNodes = childLayers.map((childLayer: OlLayerBase) => {
         return this.treeNodeFromLayer(childLayer);
@@ -414,7 +416,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
         && listenerKey.type === type
         && listenerKey.listener === listener;
     });
-  }
+  };
 
   /**
    * Reacts to the layer change:visible event and calls setCheckedState.
@@ -428,7 +430,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     }, () => {
       this.rebuildTreeNodes();
     });
-  }
+  };
 
   /**
    * Get the flat array of ol_uids from visible non groupLayers.
@@ -440,7 +442,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       return !(layer instanceof OlLayerGroup) && layer.getVisible();
     }).filter(this.props.filterFunction);
     return layers.map(l => l.ol_uid.toString());
-  }
+  };
 
   /**
    * Sets the visibility of a layer due to its checked state.
@@ -530,7 +532,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     if (onExpand) {
       onExpand(expandedKeys, expandEvent);
     }
-  }
+  };
 
   /**
    * The render function.

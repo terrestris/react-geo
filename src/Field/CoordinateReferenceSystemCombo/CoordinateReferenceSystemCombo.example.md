@@ -9,8 +9,7 @@ import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
-const register = require('ol/proj/proj4').register;
-// import { register } from 'ol/proj/proj4';
+import { register } from 'ol/proj/proj4';
 import {
   fromLonLat,
   getTransform,

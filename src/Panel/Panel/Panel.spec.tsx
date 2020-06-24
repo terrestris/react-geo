@@ -1,5 +1,3 @@
-/*eslint-env jest*/
-
 import TestUtil from '../../Util/TestUtil';
 
 import Panel from './Panel';
@@ -39,7 +37,7 @@ describe('<Panel />', () => {
     });
 
     it('calls onEscape method if provided in props', () => {
-      let mockEvt = {
+      const mockEvt = {
         key: 'invalid_key'
       };
 

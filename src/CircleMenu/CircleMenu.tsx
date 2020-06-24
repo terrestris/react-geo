@@ -30,8 +30,8 @@ interface BaseProps {
 }
 
 export type CircleMenuProps = BaseProps
-  & Partial<DefaultProps>
-  & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+& Partial<DefaultProps>
+& React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 /**
  * The CircleMenu.
@@ -106,7 +106,7 @@ export class CircleMenu extends React.Component<CircleMenuProps> {
         {child}
       </CircleMenuItem>
     );
-  }
+  };
 
   /**
    * The render function.
@@ -141,8 +141,8 @@ export class CircleMenu extends React.Component<CircleMenuProps> {
       >
         {
           Array.isArray(children)
-          ? children.map(this.childrenMapper)
-          : this.childrenMapper(children)
+            ? children.map(this.childrenMapper)
+            : this.childrenMapper(children)
         }
       </div>
     );

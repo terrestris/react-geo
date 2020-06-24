@@ -53,7 +53,7 @@ export interface BaseProps {
 }
 
 export type TimeSliderProps = BaseProps & Partial<DefaultProps> &
-  Omit<SliderProps, 'value' | 'defaultValue' | 'min' | 'max' | 'onChange'>;
+Omit<SliderProps, 'value' | 'defaultValue' | 'min' | 'max' | 'onChange'>;
 
 /**
  * Customized slider that uses ISO 8601 time strings as input.

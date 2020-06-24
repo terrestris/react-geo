@@ -162,11 +162,6 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   _layer: OlLayerVector = null;
 
   /**
-   * The properties.
-   */
-  static propTypes: any = {};
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {
@@ -353,7 +348,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
 
     this._source = source;
     this._layer = layer;
-  }
+  };
 
   /**
    * Adds map event callbacks to highlight and select features in the map (if
@@ -376,7 +371,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     if (selectable) {
       map.on('singleclick', this.onMapSingleClick);
     }
-  }
+  };
 
   /**
    * Highlights the feature beneath the cursor on the map and in the grid.
@@ -422,7 +417,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       }
       feature.setStyle(highlightStyle);
     });
-  }
+  };
 
   /**
    * Selects the selected feature in the map and in the grid.
@@ -459,7 +454,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     this.setState({
       selectedRowKeys: rowKeys
     });
-  }
+  };
 
   /**
    * Removes the vector layer from the given map (if any).
@@ -474,7 +469,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     }
 
     map.removeLayer(this._layer);
-  }
+  };
 
   /**
    * Unbinds the pointermove and click event handlers from the map (if given).
@@ -494,7 +489,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     if (selectable) {
       map.un('singleclick', this.onMapSingleClick);
     }
-  }
+  };
 
   /**
    * Returns the column definitions out of the attributes of the first
@@ -509,7 +504,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       columnDefs
     } = this.props;
 
-    let columns = [];
+    const columns = [];
     const feature = features[0];
 
     if (!(feature instanceof OlFeature)) {
@@ -536,7 +531,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     });
 
     return columns;
-  }
+  };
 
   /**
    * Returns the table row data from all of the given features.
@@ -548,7 +543,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       features
     } = this.props;
 
-    let data = [];
+    const data = [];
 
     features.forEach(feature => {
       const properties = feature.getProperties();
@@ -566,7 +561,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     });
 
     return data;
-  }
+  };
 
   /**
    * Returns the correspondig feature for the given table row key.
@@ -583,7 +578,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     const feature = features.filter(f => keyFunction(f) === key);
 
     return feature[0];
-  }
+  };
 
   /**
    * Called on row click and zooms the the corresponding feature's extent.
@@ -602,7 +597,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     }
 
     this.zoomToFeatures([feature]);
-  }
+  };
 
   /**
    * Called on row mouseover and hightlights the corresponding feature's
@@ -622,7 +617,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     }
 
     this.highlightFeatures([feature]);
-  }
+  };
 
   /**
    * Called on mouseout and unhightlights any highlighted feature.
@@ -641,7 +636,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     }
 
     this.unhighlightFeatures([feature]);
-  }
+  };
 
   /**
    * Fits the map's view to the extent of the passed features.
@@ -657,7 +652,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       return;
     }
 
-    let featGeometries = [];
+    const featGeometries = [];
     features.forEach(feature => {
       featGeometries.push(feature.getGeometry());
     });
@@ -666,7 +661,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       const geomCollection = new OlGeomGeometryCollection(featGeometries);
       map.getView().fit(geomCollection.getExtent());
     }
-  }
+  };
 
   /**
    * Highlights the given features in the map.
@@ -684,7 +679,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     }
 
     highlightFeatures.forEach(feature => feature.setStyle(highlightStyle));
-  }
+  };
 
   /**
    * Unhighlights the given features in the map.
@@ -713,7 +708,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
         feature.setStyle(null);
       }
     });
-  }
+  };
 
   /**
    * Sets the select style to the given features in the map.
@@ -731,7 +726,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     }
 
     features.forEach(feature => feature.setStyle(selectStyle));
-  }
+  };
 
   /**
    * Resets the style of all features.
@@ -747,7 +742,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     }
 
     features.forEach(feature => feature.setStyle(null));
-  }
+  };
 
   /**
    * Called if the selection changes.
@@ -768,7 +763,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     this.resetFeatureStyles();
     this.selectFeatures(selectedFeatures);
     this.setState({ selectedRowKeys });
-  }
+  };
 
   /**
    * The render method.
@@ -809,7 +804,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
 
     let rowClassNameFn: (record: any) => string;
     if (_isFunction(rowClassName)) {
-      rowClassNameFn = record => `${this._rowClassName} ${(rowClassName as Function)(record)}`;
+      rowClassNameFn = record => `${this._rowClassName} ${(rowClassName as ((record: any) => string))(record)}`;
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`

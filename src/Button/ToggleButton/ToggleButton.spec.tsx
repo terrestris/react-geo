@@ -1,5 +1,3 @@
-/*eslint-env jest*/
-
 import TestUtil from '../../Util/TestUtil';
 
 import ToggleButton from './ToggleButton';
@@ -64,6 +62,7 @@ describe('<ToggleButton />', () => {
     expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
   });
 
+  // eslint-disable-next-line max-len
   it('calls the given toggle callback method if the pressed prop has changed initially to true', () => {
     const onToggle = jest.fn();
     const props = {
@@ -98,6 +97,7 @@ describe('<ToggleButton />', () => {
     expect(onToggle).toHaveBeenCalledWith(true, null);
   });
 
+  // eslint-disable-next-line max-len
   it('calls the given toggle callback method if the pressed prop has changed to false (from being false by default)', () => {
     const onToggle = jest.fn();
     const props = {

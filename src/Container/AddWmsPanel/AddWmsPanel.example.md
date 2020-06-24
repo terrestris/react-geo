@@ -41,7 +41,7 @@ class AddWmsPanelExample extends React.Component {
 
     this.state = {
       layers: []
-    }
+    };
   }
 
   componentDidMount() {

@@ -194,7 +194,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
     // make sure an initial value is set
     this.wmsTimeHandler(this.state.value);
     this._TimeLayerAwareSlider = timeLayerAware(TimeSlider, this._wmsTimeLayers);
-  }
+  };
 
   /**
    * Updates slider time range depending on chosen layer set.
@@ -212,10 +212,8 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       return;
     }
 
-    let newStartDate: moment.Moment;
-    let newEndDate: moment.Moment;
-    let startDatesFromLayers: moment.Moment[] = [];
-    let endDatesFromLayers: moment.Moment[] = [];
+    const startDatesFromLayers: moment.Moment[] = [];
+    const endDatesFromLayers: moment.Moment[] = [];
 
     this._wmsTimeLayers.forEach((l: any) => {
       const layerStartDate = l.layer.get('startDate');
@@ -235,15 +233,17 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         endDatesFromLayers.push(edm);
       }
     });
-    newStartDate = startDatesFromLayers.length > 0 ? moment.min(startDatesFromLayers) : startDate;
-    newEndDate = endDatesFromLayers.length > 0 ? moment.max(endDatesFromLayers) : endDate;
+
+    const newStartDate = startDatesFromLayers.length > 0 ? moment.min(startDatesFromLayers) : startDate;
+    const newEndDate = endDatesFromLayers.length > 0 ? moment.max(endDatesFromLayers) : endDate;
+
     this.updateDataRange([newStartDate, newEndDate]);
-  }
+  };
 
   /**
    * Handler for the time slider change behaviour
    */
-  timeSliderCustomHandler = (value: object) => {
+  timeSliderCustomHandler = (value: any) => {
     const currentMoment = moment(value).milliseconds(0);
     const newValue = currentMoment.clone();
     this.setState({
@@ -252,7 +252,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
     if (this.props.onChange) {
       this.props.onChange(newValue);
     }
-  }
+  };
 
   /**
    * makes sure that the appended time parameter in GetMap calls
@@ -282,7 +282,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         config.layer.getSource().updateParams(params);
       }
     });
-  }
+  };
 
   /**
    * start or stop auto playback
@@ -346,7 +346,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         this.autoPlay(true);
       }
     });
-  }
+  };
 
   /**
    * Sets the slider to the current time of the user
@@ -360,7 +360,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       this.timeSliderCustomHandler(now);
       this.wmsTimeHandler(now);
     });
-  }
+  };
 
   /**
    *
@@ -500,7 +500,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         </Select>
       </div>
     );
-  }
+  };
 }
 
 export default TimeLayerSliderPanel;

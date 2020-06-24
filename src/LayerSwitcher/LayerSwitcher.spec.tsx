@@ -1,5 +1,3 @@
-/*eslint-env jest*/
-
 import TestUtil from '../Util/TestUtil';
 
 import LayerSwitcher from './LayerSwitcher';
@@ -32,7 +30,7 @@ describe('<LayerSwitcher />', () => {
     map = TestUtil.createMap();
     map.addLayer(layers[0]);
     map.addLayer(layers[1]);
-    let props = {
+    const props = {
       map: map,
       layers: layers
     };
@@ -54,12 +52,12 @@ describe('<LayerSwitcher />', () => {
   });
 
   it('contains map element', () => {
-    let mapElement = wrapper.find('div#layer-switcher-map');
+    const mapElement = wrapper.find('div#layer-switcher-map');
     expect(mapElement).not.toBeUndefined();
   });
 
   it('adds a custom className', () => {
-    let props = {
+    const props = {
       className: 'peter',
       map: map,
       layers: layers
@@ -71,7 +69,7 @@ describe('<LayerSwitcher />', () => {
   });
 
   it('passes style prop', () => {
-    let props = {
+    const props = {
       style: {
         backgroundColor: 'yellow',
         position: 'inherit'

@@ -1,7 +1,6 @@
-/*eslint-env jest*/
 import TestUtil from '../../Util/TestUtil';
 
-import { CircleMenuItem } from './CircleMenuItem.tsx';
+import { CircleMenuItem } from './CircleMenuItem';
 
 describe('<CircleMenuItem />', () => {
   it('is defined', () => {
@@ -58,6 +57,7 @@ describe('<CircleMenuItem />', () => {
         setTimeout(resolve, duration + 100);
       })
         .then(() => {
+          // eslint-disable-next-line max-len
           expect(instance._ref.style.transform).toBe(`rotate(${rotationAngle}deg) translate(${radius}px) rotate(-${rotationAngle}deg)`);
         });
     });

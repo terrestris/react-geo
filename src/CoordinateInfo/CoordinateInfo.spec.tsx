@@ -1,5 +1,3 @@
-/*eslint-env jest*/
-
 import TestUtil from '../Util/TestUtil';
 
 import CoordinateInfo from '../CoordinateInfo/CoordinateInfo';

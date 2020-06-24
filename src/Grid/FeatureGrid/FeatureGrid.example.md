@@ -89,7 +89,7 @@ class FeatureGridExample extends React.Component {
           }}
         />
       </div>
-    )
+    );
   }
 }
 
@@ -383,7 +383,7 @@ class RemoteFeatureGridExample extends React.Component {
           }}
         />
       </div>
-    )
+    );
   }
 }
 

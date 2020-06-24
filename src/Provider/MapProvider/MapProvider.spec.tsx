@@ -1,6 +1,4 @@
-/*eslint-env jest*/
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 
 import { mount } from 'enzyme';
 
@@ -12,9 +10,6 @@ import { mappify } from '../../HigherOrderComponent/MappifiedComponent/Mappified
 describe('MapProvider', () => {
   /* eslint-disable require-jsdoc */
   class MockComponent extends React.Component {
-    static propTypes = {
-      map: PropTypes.object.isRequired
-    };
     render() {
       return (
         <div>Mockety-mock</div>

@@ -1,4 +1,3 @@
-/*eslint-env jest*/
 import * as React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
@@ -32,7 +31,7 @@ describe('<ToggleGroup />', () => {
   });
 
   it('renders children when passed in', () => {
-    let props = {
+    const props = {
       children: [
         <ToggleButton key="1" name="Shinji" onToggle={()=>{}} />,
         <ToggleButton key="2" name="Kagawa" onToggle={()=>{}} />,
@@ -45,8 +44,8 @@ describe('<ToggleGroup />', () => {
   });
 
   it('calls the given onChange callback if a children is pressed', () => {
-    let changeSpy = jest.fn();
-    let props = {
+    const changeSpy = jest.fn();
+    const props = {
       onChange: changeSpy,
       children: [
         <ToggleButton key="1" name="Shinji" onToggle={()=>{}} />
@@ -60,8 +59,8 @@ describe('<ToggleGroup />', () => {
   });
 
   it('sets the selected name on click', () => {
-    let changeSpy = jest.fn();
-    let props = {
+    const changeSpy = jest.fn();
+    const props = {
       onChange: changeSpy,
       children: [
         <ToggleButton key="1" name="Shinji" onToggle={()=>{}} />,
@@ -79,8 +78,8 @@ describe('<ToggleGroup />', () => {
   });
 
   it('allows to deselect an already pressed button', () => {
-    let changeSpy = jest.fn();
-    let props = {
+    const changeSpy = jest.fn();
+    const props = {
       allowDeselect: false,
       onChange: changeSpy,
       children: [

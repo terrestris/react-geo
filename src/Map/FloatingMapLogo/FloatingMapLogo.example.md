@@ -50,7 +50,7 @@ class FloatingMapLogoExample extends React.Component {
           imageSrc={logo}
         />
       </div>
-    )
+    );
   }
 }
 

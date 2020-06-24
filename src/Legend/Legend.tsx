@@ -114,7 +114,7 @@ export class Legend extends React.Component<LegendProps, LegendState> {
    * The render function.
    */
   render() {
-    let {
+    const {
       className,
       layer,
       extraParams,

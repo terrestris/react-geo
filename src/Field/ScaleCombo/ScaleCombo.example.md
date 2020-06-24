@@ -55,7 +55,7 @@ class ScaleComboExample extends React.Component {
           }}
         />
       </div>
-    )
+    );
   }
 }
 
