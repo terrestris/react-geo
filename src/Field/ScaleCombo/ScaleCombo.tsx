@@ -17,15 +17,13 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../../constants';
 
+import './ScaleCombo.less';
+
 interface DefaultProps {
   /**
    * A filter function to filter resolutions no options should be created
    */
   resolutionsFilter: (item: any, index?: number, resolutions?: number[]) => boolean;
-  /**
-   * The style object
-   */
-  style: any;
   /**
    * Set to false to not listen to the map moveend event.
    */
@@ -97,9 +95,6 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    */
   static defaultProps = {
     resolutionsFilter: () => true,
-    style: {
-      width: 100
-    },
     scales: [],
     syncWithMap: true
   };
@@ -154,7 +149,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     this.state = {
       zoomLevel: props.zoomLevel || props.map.getView().getZoom(),
       onZoomLevelSelect: props.onZoomLevelSelect || defaultOnZoomLevelSelect,
-      scales: props.scales || this.getOptionsFromMap()
+      scales: props.scales.length > 0 ? props.scales : this.getOptionsFromMap()
     };
 
     if (props.syncWithMap) {
@@ -226,16 +221,12 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    *
    * @return The array of scales.
    */
-  getOptionsFromMap = () => {
+  getOptionsFromMap() {
     const {
       map,
       resolutionsFilter
     } = this.props;
 
-    if (!_isEmpty(this.state.scales)) {
-      Logger.debug('Array with scales found. Returning');
-      return [];
-    }
     if (!map) {
       Logger.warn('Map component not found. Could not initialize options array.');
       return [];
@@ -245,6 +236,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     const view = map.getView();
     // use existing resolutions array if exists
     const resolutions = view.getResolutions();
+
     if (_isEmpty(resolutions)) {
       for (let currentZoomLevel = view.getMaxZoom(); currentZoomLevel >= view.getMinZoom(); currentZoomLevel--) {
         const resolution = view.getResolutionForZoom(currentZoomLevel);
@@ -262,7 +254,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     }
 
     return scales;
-  };
+  }
 
   /**
    * Determine option element for provided zoom level out of array of valid options.
@@ -283,8 +275,15 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    */
   render() {
     const {
-      style,
-      className
+      map,
+      className,
+      onZoomLevelSelect: onZoomLevelSelectProp,
+      resolutions,
+      resolutionsFilter,
+      scales: scalesProp,
+      syncWithMap,
+      zoomLevel: zoomLevelProp,
+      ...passThroughProps
     } = this.props;
 
     const {
@@ -298,12 +297,14 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
       : this.className;
 
     const options = scales.map(roundScale => {
-      return <Option
-        key={roundScale}
-        value={roundScale.toString()}
-      >
-        {`1:${roundScale.toLocaleString()}`}
-      </Option>;
+      return (
+        <Option
+          key={roundScale}
+          value={roundScale.toString()}
+        >
+          {`1:${roundScale.toLocaleString()}`}
+        </Option>
+      );
     });
 
     return (
@@ -313,8 +314,8 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
         filterOption={(input, option) => option.key.toString().startsWith(input)}
         value={this.determineOptionKeyForZoomLevel(zoomLevel)}
         size="small"
-        style={style}
         className={finalClassName}
+        {...passThroughProps}
       >
         {options}
       </Select>

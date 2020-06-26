@@ -119,7 +119,11 @@ describe('<NominatimSearch />', () => {
       wrapper.setState({
         dataSource: dataSource
       });
-      wrapper.instance().onMenuItemSelected('752526');
+      wrapper.instance().onMenuItemSelected('752526', {
+        value: '752526',
+        children: '752526',
+        key: '752526'
+      });
       expect(selectSpy).toHaveBeenCalled();
       expect(selectSpy).toHaveBeenCalledWith(dataSource[0], map);
 

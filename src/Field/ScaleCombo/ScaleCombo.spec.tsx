@@ -1,13 +1,7 @@
-import * as React from 'react';
-
-import { Select } from 'antd';
-const Option = Select.Option;
-
 import TestUtil from '../../Util/TestUtil';
 
 import ScaleCombo from './ScaleCombo';
 
-import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 describe('<ScaleCombo />', () => {
@@ -46,20 +40,17 @@ describe('<ScaleCombo />', () => {
       expect(wrapper.instance().getOptionsFromMap).not.toBeUndefined();
     });
 
-    it('creates options array from scaled primarily', () => {
+    it('creates options array from resolutions set on the map', () => {
       const map = TestUtil.createMap();
 
-      const logSpy = jest.spyOn(Logger, 'debug');
-      const scaleArray = [
-        <Option key={'100'} value={'100'}>1:100</Option>
-      ];
-      const wrapper = TestUtil.mountComponent(ScaleCombo, {
-        map,
-        scales: scaleArray
+      const getOptionsFromMapSpy = jest.spyOn(ScaleCombo.prototype, 'getOptionsFromMap');
+
+      TestUtil.mountComponent(ScaleCombo, {
+        map
       });
-      wrapper.instance().getOptionsFromMap();
-      expect(logSpy).toHaveBeenCalled();
-      logSpy.mockRestore();
+
+      expect(getOptionsFromMapSpy).toHaveBeenCalledTimes(1);
+      getOptionsFromMapSpy.mockRestore();
 
       TestUtil.removeMap(map);
     });

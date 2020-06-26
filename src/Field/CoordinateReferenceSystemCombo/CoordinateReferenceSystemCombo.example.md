@@ -21,16 +21,24 @@ import CoordinateReferenceSystemCombo from '@terrestris/react-geo/Field/Coordina
 
 const predefinedCrsDefinitions = [{
   code: '25832',
-  value: 'ETRS89 / UTM zone 32N'
+  value: 'ETRS89 / UTM zone 32N',
+  proj4def: '+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+  bbox: [83.92, 6, 38.76, 12]
 }, {
   code: '31466',
-  value: 'DHDN / 3-degree Gauss-Kruger zone 2'
+  value: 'DHDN / 3-degree Gauss-Kruger zone 2',
+  proj4def: '+proj=tmerc +lat_0=0 +lon_0=6 +k=1 +x_0=2500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs',
+  bbox: [53.81, 5.86, 49.11, 7.5]
 }, {
   code: '31467',
-  value: 'DHDN / 3-degree Gauss-Kruger zone 3'
+  value: 'DHDN / 3-degree Gauss-Kruger zone 3',
+  proj4def: '+proj=tmerc +lat_0=0 +lon_0=9 +k=1 +x_0=3500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs',
+  bbox: [55.09, 7.5, 47.27, 10.51]
 }, {
   code: '4326',
-  value: 'WGS 84'
+  value: 'WGS 84',
+  proj4def: '+proj=longlat +datum=WGS84 +no_defs',
+  bbox: [90, -180, -90, 180]
 }];
 
 class CoordinateReferenceSystemComboExample extends React.Component {
@@ -135,6 +143,7 @@ class CoordinateReferenceSystemComboExample extends React.Component {
           {/* A CoordinateReferenceSystemCombo having predefinedCrsDefinitions*/}
           <CoordinateReferenceSystemCombo
             predefinedCrsDefinitions={predefinedCrsDefinitions}
+            onSelect={this.setProjection.bind(this)}
           />
         </div>
       </div>

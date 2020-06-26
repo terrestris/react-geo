@@ -44,7 +44,6 @@ class ScaleComboExample extends React.Component {
           <label>ScaleCombo:<br />
             <ScaleCombo
               map={this.map}
-              style={{'margin': '5px', 'width': '300px'}}
             />
           </label>
         </div>
