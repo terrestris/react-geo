@@ -15,20 +15,20 @@ const onChange = (pressed, evt) => {
 >
   <ToggleButton
     name="one"
-    icon="frown-o"
-    pressedIcon="smile-o"
+    iconName="frown-o"
+    pressedIconName="smile-o"
     onToggle={()=>{}}
   />
   <ToggleButton
     name="two"
-    icon="frown-o"
-    pressedIcon="smile-o"
+    iconName="frown-o"
+    pressedIconName="smile-o"
     onToggle={()=>{}}
   />
   <ToggleButton
     name="three"
-    icon="frown-o"
-    pressedIcon="smile-o"
+    iconName="frown-o"
+    pressedIconName="smile-o"
     onToggle={()=>{}}
   />
 </ToggleGroup>

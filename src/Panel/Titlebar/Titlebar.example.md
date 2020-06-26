@@ -27,7 +27,7 @@ import Titlebar from '@terrestris/react-geo/Panel/Titlebar/Titlebar';
 <Titlebar
   tools={[
     <SimpleButton
-      icon="globe"
+      iconName="globe"
       tooltip="globe-tool"
       key="globe-tool"
       size="small"

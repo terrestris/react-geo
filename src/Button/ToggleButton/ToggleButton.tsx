@@ -14,6 +14,7 @@ import './ToggleButton.less';
 import { CSS_PREFIX } from '../../constants';
 import { AbstractTooltipProps, TooltipPlacement } from 'antd/lib/tooltip';
 import { SimpleButtonProps } from '../SimpleButton/SimpleButton';
+import logger from '@terrestris/base-util/dist/Logger';
 
 interface DefaultProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
@@ -32,22 +33,20 @@ interface DefaultProps {
    * The toggle handler
    */
   onToggle: (pressed: boolean, lastClickEvt: any) => void;
-  /**
-   * The font awesome icon name.
-   */
-  icon: string;
 }
 
 interface BaseProps {
   className?: string;
   /**
-   * The classname of an icon of an iconFont. Use either this or icon.
+   * The icon to render for the pressed state. See
+   * https://ant.design/components/icon/.
    */
-  fontIcon?: string;
+  pressedIcon?: React.ReactNode;
   /**
-   * The font awesome icon name.
+   * The name of the fa icon for the pressed state. Set either the icon node or
+   * the name of the icon.
    */
-  pressedIcon?: string;
+  pressedIconName?: string;
   /**
    * The tooltip to be shown on hover.
    */
@@ -91,7 +90,6 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
    */
   static defaultProps: DefaultProps = {
     type: 'primary',
-    icon: '',
     pressed: false,
     tooltipProps: {
       mouseEnterDelay: 1.5
@@ -239,10 +237,15 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
    */
   render() {
     const {
+      overallPressed
+    } = this.state;
+
+    const {
       className,
       icon,
+      iconName,
       pressedIcon,
-      fontIcon,
+      pressedIconName,
       pressed,
       onToggle,
       tooltip,
@@ -260,12 +263,37 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
       ? `${className} ${this._className}`
       : this._className;
 
-    let iconName = icon;
     let pressedClass = '';
-    if (this.state.overallPressed) {
-      iconName = pressedIcon || icon;
+    if (overallPressed) {
       pressedClass = ` ${this.pressedClass} `;
     }
+
+    if (icon && iconName) {
+      logger.warn('Provide either an icon node or the name of a fa icon. ' +
+        'If both are provided the fa icon will be rendered.');
+    }
+
+    let iconToRender;
+    if (icon) {
+      iconToRender = icon;
+    }
+    if (iconName) {
+      iconToRender = <Icon name={iconName}/>;
+    }
+
+    if (pressedIcon && pressedIconName) {
+      logger.warn('Provide either a pressed icon node or the name of a fa ' +
+       'icon. If both are provided the fa icon will be rendered.');
+    }
+
+    let pressedIconToRender;
+    if (pressedIcon) {
+      pressedIconToRender = pressedIcon;
+    }
+    if (pressedIconName) {
+      pressedIconToRender = <Icon name={pressedIconName}/>;
+    }
+
     return (
       <Tooltip
         title={tooltip}
@@ -275,12 +303,12 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
         <Button
           className={`${finalClassName}${pressedClass}`}
           onClick={this.onClick.bind(this)}
+          icon={overallPressed ?
+            pressedIconToRender :
+            iconToRender
+          }
           {...filteredAntBtnProps}
         >
-          <Icon
-            name={iconName}
-            className={fontIcon}
-          />
           {antBtnProps.children}
         </Button>
       </Tooltip>

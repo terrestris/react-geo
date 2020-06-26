@@ -6,9 +6,9 @@ import Toolbar from '@terrestris/react-geo/Toolbar/Toolbar';
 
 <div>
   <Toolbar>
-    <SimpleButton type="primary" shape="circle" icon="search" />
-    <SimpleButton type="primary" shape="circle" icon="search" />
-    <SimpleButton type="primary" shape="circle" icon="search" />
+    <SimpleButton type="primary" shape="circle" iconName="search" />
+    <SimpleButton type="primary" shape="circle" iconName="search" />
+    <SimpleButton type="primary" shape="circle" iconName="search" />
   </Toolbar>
 
   <hr
@@ -20,9 +20,9 @@ import Toolbar from '@terrestris/react-geo/Toolbar/Toolbar';
   <Toolbar alignment="vertical" style={{
     position: 'unset'
   }}>
-    <SimpleButton type="primary" shape="circle" icon="info" />
-    <SimpleButton type="primary" shape="circle" icon="info" />
-    <SimpleButton type="primary" shape="circle" icon="info" />
+    <SimpleButton type="primary" shape="circle" iconName="info" />
+    <SimpleButton type="primary" shape="circle" iconName="info" />
+    <SimpleButton type="primary" shape="circle" iconName="info" />
   </Toolbar>
 </div>
 ```

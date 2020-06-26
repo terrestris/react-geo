@@ -17,14 +17,14 @@ describe('<SimpleButton />', () => {
 
     wrapper.setProps({
       type: 'secondary',
-      icon: 'bath',
+      iconName: 'bath',
       shape: 'circle',
       size: 'small',
       disabled: true
     });
 
     expect(wrapper.props().type).toBe('secondary');
-    expect(wrapper.props().icon).toBe('bath');
+    expect(wrapper.props().iconName).toBe('bath');
     expect(wrapper.props().shape).toBe('circle');
     expect(wrapper.props().size).toBe('small');
     expect(wrapper.props().disabled).toBe(true);

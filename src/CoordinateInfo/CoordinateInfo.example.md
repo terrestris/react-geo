@@ -4,10 +4,11 @@ import * as React from 'react';
 import {
   Statistic,
   Button,
-  Icon,
   Spin,
   Tooltip
 } from 'antd';
+
+import CopyOutlined from '@ant-design/icons/CopyOutlined';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
@@ -103,11 +104,8 @@ class CoordinateInfoExample extends React.Component {
                         onClick={() => {
                           copy(clickCoord.join(', '));
                         }}
-                      >
-                        <Icon
-                          type="copy"
-                        />
-                      </Button>
+                        icon={<CopyOutlined />}
+                      />
                     </Tooltip>
                   </div>
                   <div
@@ -134,11 +132,8 @@ class CoordinateInfoExample extends React.Component {
                         onClick={() => {
                           copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
                         }}
-                      >
-                        <Icon
-                          type="copy"
-                        />
-                      </Button>
+                        icon={<CopyOutlined />}
+                      />
                     </Tooltip>
                   </div>
                 </div> :

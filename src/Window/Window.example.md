@@ -62,7 +62,7 @@ class WindowExample extends React.Component {
               tools={[
                 <SimpleButton
                   key="closeButton"
-                  icon="close"
+                  iconName="close"
                   size="small"
                   tooltip="Close"
                   onClick={this.onClickSimple.bind(this)}

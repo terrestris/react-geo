@@ -9,7 +9,7 @@ import UploadButton from '@terrestris/react-geo/Button/UploadButton/UploadButton
   onChange={e => {
     alert('You uploaded ' + e.target.files[0].name);
   }}
-  icon="upload"
+  iconName="upload"
 />
 ```
 
