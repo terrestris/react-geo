@@ -13,6 +13,8 @@ import { transformExtent } from 'ol/proj';
 import { CSS_PREFIX } from '../../constants';
 import { OptionProps } from 'antd/lib/select';
 
+import './NominatimSearch.less';
+
 interface DefaultProps {
   /**
    * The Nominatim Base URL. See https://wiki.openstreetmap.org/wiki/Nominatim
@@ -66,10 +68,6 @@ interface DefaultProps {
    * returned by nominatim.
    */
   onSelect: (item: any, olMap: OlMap) => void;
-  /**
-   * The style object passed to the AutoComplete.
-   */
-  style: any;
 }
 
 interface BaseProps {
@@ -128,7 +126,10 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
      */
     renderOption: (item: any): React.ReactElement<OptionProps> => {
       return (
-        <Option key={item.place_id}>
+        <Option
+          key={item.place_id}
+          value={item.display_name}
+        >
           {item.display_name}
         </Option>
       );
@@ -160,9 +161,6 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
           duration: 500
         });
       }
-    },
-    style: {
-      width: 200
     }
   };
 
@@ -260,11 +258,12 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
   /**
    * The function describes what to do when an item is selected.
    *
-   * @param key The key of the selected option.
+   * @param value The value of the selected option.
+   * @param value The values of the selected option.
    */
-  onMenuItemSelected(key: string) {
+  onMenuItemSelected(value: string, option: OptionProps) {
     const selected = this.state.dataSource.find(
-      (i: any) => i.place_id.toString() === key.toString()
+      (i: any) => i.place_id.toString() === option.key.toString()
     );
     this.props.onSelect(selected, this.props.map);
   }
@@ -286,6 +285,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
       map,
       onSelect,
       renderOption,
+      minChars,
       ...passThroughProps
     } = this.props;
 
@@ -298,11 +298,14 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
         className={finalClassName}
         allowClear={true}
         placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
-        dataSource={this.state.dataSource.map(renderOption.bind(this))}
         onChange={this.onUpdateInput}
         onSelect={this.onMenuItemSelected}
         {...passThroughProps}
-      />
+      >
+        {
+          this.state.dataSource.map(renderOption)
+        }
+      </AutoComplete>
     );
   }
 }

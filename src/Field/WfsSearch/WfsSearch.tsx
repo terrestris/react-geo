@@ -19,6 +19,8 @@ import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil'
 import { CSS_PREFIX } from '../../constants';
 import { OptionProps } from 'antd/lib/select';
 
+import './WfsSearch.less';
+
 interface DefaultProps {
   /**
    * A nested object mapping feature types to an object of attribute details,
@@ -98,10 +100,6 @@ interface DefaultProps {
    * zoom to its extend.
    */
   onSelect: (feature: any, olMap: OlMap) => void;
-  /**
-   *
-   */
-  style: any;
 }
 
 interface BaseProps {
@@ -252,9 +250,6 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
           });
         }
       }
-    },
-    style: {
-      width: 200
     }
   };
 
@@ -406,7 +401,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
    * @param value The value of the selected option.
    * @param option The selected option.
    */
-  onMenuItemSelected(value?: string, option?: React.ReactElement<OptionProps>) {
+  onMenuItemSelected(value: string, option: OptionProps) {
     const {
       map,
       idProperty
@@ -448,6 +443,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
       srsName,
       wfsFormatOptions,
       displayValue,
+      idProperty,
       ...passThroughProps
     } = this.props;
 
@@ -468,9 +464,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
         {...passThroughProps}
       >
         {
-          data.map(d => {
-            return renderOption(d, this.props);
-          })
+          data.map(d => renderOption(d, this.props))
         }
       </AutoComplete>
     );

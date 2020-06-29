@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
+import { OptionProps } from 'antd/lib/select';
+
 const Option = AutoComplete.Option;
 
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
+
+import './CoordinateReferenceSystemCombo.less';
 
 interface DefaultProps {
   /**
@@ -153,9 +157,10 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
   /**
    * Handles selection of a CRS item in Autocomplete
    *
-   * @param code EPSG code
+   * @param value The EPSG code.
+   * @param option The values of the selected option.
    */
-  onCrsItemSelect = (code: string) => {
+  onCrsItemSelect = (value: string, option: OptionProps) => {
     const {
       onSelect,
       predefinedCrsDefinitions
@@ -167,10 +172,12 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
 
     const crsObjects = predefinedCrsDefinitions || crsDefinitions;
 
-    const selected = crsObjects.filter(i => i.code === code)[0];
+    const selected = crsObjects.filter(i => i.code === option.key)[0];
+
     this.setState({
       value: selected
     });
+
     onSelect(selected);
   };
 
@@ -182,9 +189,14 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
    * @return Option component to render
    */
   transformCrsObjectsToOptions(crsObject: any) {
+    const value = `${crsObject.value} (EPSG:${crsObject.code})`;
+
     return (
-      <Option key={crsObject.code}>
-        {`${crsObject.value} (EPSG:${crsObject.code})`}
+      <Option
+        key={crsObject.code}
+        value={value}
+      >
+        {value}
       </Option>
     );
   }
@@ -197,6 +209,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
       className,
       emptyTextPlaceholderText,
       onSelect,
+      crsApiUrl,
       predefinedCrsDefinitions,
       ...passThroughOpts
     } = this.props;
@@ -213,12 +226,14 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
       <AutoComplete
         className={finalClassName}
         allowClear={true}
-        dataSource={crsObjects.map(this.transformCrsObjectsToOptions)}
         onSelect={this.onCrsItemSelect}
         onChange={this.handleSearch}
         placeholder={emptyTextPlaceholderText}
         {...passThroughOpts}
       >
+        {
+          crsObjects.map(this.transformCrsObjectsToOptions)
+        }
       </AutoComplete>
     );
   }

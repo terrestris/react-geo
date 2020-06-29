@@ -7,12 +7,12 @@ In the example below you see three components wrapped by the use of
 it won't be rendered.
 
 ```jsx
-import Button from 'antd/lib/button';
+import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 
 import { isVisibleComponent } from '@terrestris/react-geo/HigherOrderComponent/VisibleComponent/VisibleComponent';
 
 // Enhance (any) Component by wrapping it using isVisibleComponent().
-const VisibleButton = isVisibleComponent(Button);
+const VisibleButton = isVisibleComponent(SimpleButton);
 
 // The activeModules is a whitelist of components (identified by it's names) to
 // render.
@@ -28,21 +28,21 @@ const activeModules = [{
     activeModules={activeModules}
     type="primary"
     shape="circle"
-    icon="search"
+    iconName="search"
   />
   <VisibleButton
     name="notVisibleButtonName"
     activeModules={activeModules}
     type="primary"
     shape="circle"
-    icon="search"
+    iconName="search"
   />
   <VisibleButton
     name="anotherVisibleButtonName"
     activeModules={activeModules}
     type="primary"
     shape="circle"
-    icon="poweroff"
+    iconName="poweroff"
   />
 </div>
 ```

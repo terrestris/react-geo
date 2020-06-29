@@ -156,9 +156,9 @@ export class Panel extends React.Component<PanelProps, PanelState> {
   };
 
   /**
-   * Create the SimpleButton.
+   * Create the Panel.
    *
-   * @constructs SimpleButton
+   * @constructs Panel
    */
   constructor(props: PanelProps) {
     super(props);
@@ -353,7 +353,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
 
     if (collapsible) {
       toolsClone.unshift(<SimpleButton
-        icon="compress"
+        iconName="compress"
         key="collapse-tool"
         onClick={this.toggleCollapse.bind(this)}
         tooltip={collapseTooltip}

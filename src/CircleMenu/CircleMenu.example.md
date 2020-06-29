@@ -121,11 +121,11 @@ class CircleMenuExample extends React.Component {
               diameter={80}
               animationDuration={500}
             >
-              <SimpleButton icon="pencil" shape="circle" />
-              <SimpleButton icon="line-chart" shape="circle" />
-              <SimpleButton icon="link" shape="circle" />
-              <SimpleButton icon="thumbs-o-up" shape="circle" />
-              <SimpleButton icon="bullhorn" shape="circle" />
+              <SimpleButton iconName="pencil" shape="circle" />
+              <SimpleButton iconName="line-chart" shape="circle" />
+              <SimpleButton iconName="link" shape="circle" />
+              <SimpleButton iconName="thumbs-o-up" shape="circle" />
+              <SimpleButton iconName="bullhorn" shape="circle" />
             </CircleMenu> :
             null
         }

@@ -23,7 +23,6 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import './FeatureGrid.less';
 import { ColumnProps, TableProps } from 'antd/lib/table';
-import StoreTable from 'antd/lib/table/Table';
 
 interface DefaultProps {
   /**
@@ -118,12 +117,6 @@ export type FeatureGridProps = BaseProps & Partial<DefaultProps> & TableProps<an
  * @extends React.Component
  */
 export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridState> {
-
-  /**
-   * The reference of this grid.
-   * @private
-   */
-  _ref: StoreTable<any>;
 
   /**
    * The class name to add to this component.
@@ -824,7 +817,6 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
         })}
         rowClassName={rowClassNameFn}
         rowSelection={selectable ? rowSelection : null}
-        ref={ref => this._ref = ref}
         {...passThroughProps}
       >
         {children}

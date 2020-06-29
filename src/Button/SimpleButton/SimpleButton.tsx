@@ -1,12 +1,17 @@
 import * as React from 'react';
+
 import { Button, Tooltip } from 'antd';
-import Icon from 'react-fa/lib/Icon';
 
-import './SimpleButton.less';
-
-import { CSS_PREFIX } from '../../constants';
 import { TooltipPlacement, AbstractTooltipProps } from 'antd/lib/tooltip';
 import { ButtonProps } from 'antd/lib/button';
+
+import Icon from 'react-fa/lib/Icon';
+
+import { CSS_PREFIX } from '../../constants';
+
+import logger from '@terrestris/base-util/dist/Logger';
+
+import './SimpleButton.less';
 
 interface DefaultProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
@@ -22,13 +27,13 @@ interface DefaultProps {
 interface BaseProps {
   className?: string;
   /**
-   * The font awesome icon name.
+   * The icon to render. See https://ant.design/components/icon/.
    */
-  icon?: string;
+  icon?: React.ReactNode;
   /**
-   * The classname of an icon of an iconFont. Use either this or icon.
+   * The name of the fa icon. Set either the icon node or the name of the icon.
    */
-  fontIcon?: string;
+  iconName?: string;
   /**
    * The tooltip to be shown on hover.
    */
@@ -72,7 +77,7 @@ class SimpleButton extends React.Component<SimpleButtonProps> {
     const {
       className,
       icon,
-      fontIcon,
+      iconName,
       tooltip,
       tooltipPlacement,
       tooltipProps,
@@ -83,6 +88,19 @@ class SimpleButton extends React.Component<SimpleButtonProps> {
       ? `${className} ${this.className}`
       : this.className;
 
+    if (icon && iconName) {
+      logger.warn('Provide either an icon node or the name of a fa icon. ' +
+        'If both are provided the fa icon will be rendered.');
+    }
+
+    let iconToRender;
+    if (icon) {
+      iconToRender = icon;
+    }
+    if (iconName) {
+      iconToRender = <Icon name={iconName}/>;
+    }
+
     return (
       <Tooltip
         title={tooltip}
@@ -91,15 +109,9 @@ class SimpleButton extends React.Component<SimpleButtonProps> {
       >
         <Button
           className={finalClassName}
+          icon={iconToRender}
           {...antBtnProps}
         >
-          {
-            icon || fontIcon ?
-              <Icon
-                name={icon ? icon : ''}
-                className={fontIcon}
-              /> : null
-          }
           {antBtnProps.children}
         </Button>
       </Tooltip>

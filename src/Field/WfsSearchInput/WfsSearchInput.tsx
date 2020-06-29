@@ -1,10 +1,12 @@
 import * as React from 'react';
 
 import {
-  Input,
-  Icon
+  Input
 } from 'antd';
 import { InputProps } from 'antd/lib/input';
+
+import LoadingOutlined from '@ant-design/icons/LoadingOutlined';
+import CloseCircleOutlined from '@ant-design/icons/CloseCircleOutlined';
 
 import OlMap from 'ol/Map';
 
@@ -15,6 +17,8 @@ import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 
 import { CSS_PREFIX } from '../../constants';
+
+import './WfsSearchInput.less';
 
 interface DefaultProps {
   /**
@@ -408,10 +412,13 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
         className={finalClassName}
         ref={inputRef => {this._inputRef = inputRef; }}
         suffix={
-          <Icon
-            type={fetching ? 'loading' : 'close-circle'}
-            onClick={this.resetSearch.bind(this)}
-          />
+          fetching ?
+            <LoadingOutlined
+              onClick={this.resetSearch.bind(this)}
+            /> :
+            <CloseCircleOutlined
+              onClick={this.resetSearch.bind(this)}
+            />
         }
         onPressEnter={this.onUpdateInput}
         onKeyUp={this.onUpdateInput}

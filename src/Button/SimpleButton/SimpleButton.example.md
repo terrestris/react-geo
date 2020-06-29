@@ -6,7 +6,9 @@ Just a SimpleButton without any configuration:
 ```jsx
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 
-<SimpleButton />
+<SimpleButton>
+  Click me
+</SimpleButton>
 ```
 
 A SimpleButton with a `tooltip` and a `tooltipPlacement`:
@@ -17,7 +19,9 @@ import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton
 <SimpleButton
   tooltip="bottom tooltip"
   tooltipPlacement="bottom"
-/>
+>
+  Click me
+</SimpleButton>
 ```
 
 A SimpleButton with an icon. Just use the font-awesome name:
@@ -26,7 +30,7 @@ A SimpleButton with an icon. Just use the font-awesome name:
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 
 <SimpleButton
-  icon="bullhorn"
+  iconName="bullhorn"
 />
 ```
 
@@ -36,7 +40,7 @@ A round SimpleButton using shape config:
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 
 <SimpleButton
-  icon="bullhorn"
+  iconName="bullhorn"
   shape="circle"
 />
 ```

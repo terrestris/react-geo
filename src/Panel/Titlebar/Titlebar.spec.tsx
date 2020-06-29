@@ -40,7 +40,7 @@ describe('<Titlebar />', () => {
       children: 'Testtitle',
       tools: [
         <SimpleButton
-          icon="times"
+          iconName="times"
           key="close-tool"
           size="small"
         />

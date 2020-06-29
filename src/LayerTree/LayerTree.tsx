@@ -21,9 +21,13 @@ import LayerTreeNode from './LayerTreeNode/LayerTreeNode';
 import { CSS_PREFIX } from '../constants';
 import {
   TreeProps,
-  AntTreeNodeCheckedEvent,
-  AntTreeNodeExpandedEvent
+  AntTreeNodeCheckedEvent
 } from 'antd/lib/tree';
+
+import {
+  EventDataNode
+} from 'rc-tree/lib/interface';
+
 import { AntTreeNodeDropEvent } from 'antd/lib/tree/Tree';
 
 interface DefaultProps extends TreeProps {
@@ -524,13 +528,19 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * Call rebuildTreeNodes onExpand to avoid sync issues.
    *
    */
-  onExpand = (expandedKeys: string[], expandEvent: AntTreeNodeExpandedEvent) => {
+  onExpand = (expandedKeys: string[], info: {
+    node: EventDataNode;
+    expanded: boolean;
+    nativeEvent: MouseEvent;
+  }) => {
     const {
       onExpand
     } = this.props;
+
     this.rebuildTreeNodes();
+
     if (onExpand) {
-      onExpand(expandedKeys, expandEvent);
+      onExpand(expandedKeys, info);
     }
   };
 
@@ -562,9 +572,9 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
         className={finalClassName}
         checkedKeys={this.state.checkedKeys}
         onCheck={this.onCheck.bind(this)}
+        onExpand={this.onExpand}
         {...ddListeners}
         {...passThroughProps}
-        onExpand={this.onExpand}
       >
         {this.state.treeNodes}
       </Tree>

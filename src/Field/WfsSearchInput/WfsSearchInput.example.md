@@ -72,9 +72,6 @@ class WfsSearchInputExample extends React.Component {
                 'osm:osm-country-borders': ['name']
               }}
               map={this.map}
-              style={{
-                width: '80%'
-              }}
               onFetchSuccess={this.onFetchSuccess.bind(this)}
               onClearClick={this.onClearClick.bind(this)}
             />
