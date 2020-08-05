@@ -3,7 +3,7 @@ import OlLayerBase from 'ol/layer/Base';
 import { Slider } from 'antd';
 
 import { CSS_PREFIX } from '../../constants';
-import { SliderValue, SliderProps } from 'antd/lib/slider';
+import { SliderSingleProps } from 'antd/lib/slider';
 
 type ArrayTwoOrMore<T> = {
   0: T;
@@ -14,7 +14,7 @@ interface DefaultProps {
   /**
    * The default value(s).
    */
-  defaultValue: SliderValue;
+  defaultValue: number;
 }
 
 /**
@@ -34,7 +34,7 @@ export interface BaseProps {
   className?: string;
 }
 
-export type MultiLayerSliderProps = BaseProps & Partial<DefaultProps> & SliderProps;
+export type MultiLayerSliderProps = BaseProps & Partial<DefaultProps> & SliderSingleProps;
 
 /**
  * Slider that changes opacity on a set of layers.

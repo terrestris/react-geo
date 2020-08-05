@@ -6,7 +6,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlLayerVector from 'ol/layer/Vector';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
-import OlMapBrowserPointerEvent from 'ol/MapBrowserPointerEvent';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
 type Wrapper =  ShallowWrapper | ReactWrapper;
 
@@ -129,7 +129,7 @@ export class TestUtil {
       clientY: position.top + y + TestUtil.mapDivHeight / 2,
       shiftKey
     });
-    const olEvt = OlMapBrowserPointerEvent(type, map, event, dragging);
+    const olEvt = OlMapBrowserEvent(type, map, event, dragging);
     map.handleMapBrowserEvent(olEvt);
   };
 
