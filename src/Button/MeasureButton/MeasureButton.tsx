@@ -10,7 +10,6 @@ import OlStyleStyle from 'ol/style/Style';
 import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
-import OlCoordinate from 'ol/coordinate';
 import OlInteractionDraw from 'ol/interaction/Draw';
 import { unByKey } from 'ol/Observable';
 import OlOverlay from 'ol/Overlay';
@@ -545,7 +544,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
    *
    * @param coordinate The coordinate for the tooltip.
    */
-  addMeasureStopTooltip(coordinate: OlCoordinate) {
+  addMeasureStopTooltip(coordinate: Array<number>) {
     const {
       measureType,
       decimalPlacesInTooltips,
