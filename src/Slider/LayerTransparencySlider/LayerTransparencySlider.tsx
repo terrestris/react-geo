@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Slider } from 'antd';
 import OlLayerBase from 'ol/layer/Base';
-import { SliderProps } from 'antd/lib/slider';
+import { SliderSingleProps } from 'antd/lib/slider';
 
 export interface BaseProps {
   /**
@@ -10,7 +10,7 @@ export interface BaseProps {
   layer: OlLayerBase;
 }
 
-export type LayerTransparencySliderProps = BaseProps & SliderProps;
+export type LayerTransparencySliderProps = BaseProps & SliderSingleProps;
 
 /**
  * The LayerTransparencySlider.

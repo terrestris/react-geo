@@ -5,7 +5,7 @@ import { Slider } from 'antd';
 
 const isArray = require('lodash/isArray');
 const isObject = require('lodash/isObject');
-import { SliderMarks, SliderValue, SliderProps } from 'antd/lib/slider';
+import { SliderMarks, SliderBaseProps } from 'antd/lib/slider';
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -17,7 +17,7 @@ interface DefaultProps {
   /**
    * The default value(s).
    */
-  defaultValue: string[] | string;
+  defaultValue: string | [string, string];
   /**
    * The minimum value.
    */
@@ -29,11 +29,11 @@ interface DefaultProps {
   /**
    * Called when the value changes.
    */
-  onChange: (val: string | string[]) => void;
+  onChange: (val: string | [string, string]) => void;
   /**
    * The current value(s).
    */
-  value: string[] | string;
+  value: string | [string, string];
   /**
    * The moment.js compliant format string for the slider tooltip.
    */
@@ -53,7 +53,7 @@ export interface BaseProps {
 }
 
 export type TimeSliderProps = BaseProps & Partial<DefaultProps> &
-Omit<SliderProps, 'value' | 'defaultValue' | 'min' | 'max' | 'onChange'>;
+Omit<SliderBaseProps, 'min' | 'max' | 'marks' | 'className'>;
 
 /**
  * Customized slider that uses ISO 8601 time strings as input.
@@ -109,13 +109,13 @@ class TimeSlider extends React.Component<TimeSliderProps> {
    * @param val the input value(s)
    * @return The converted value(s)
    */
-  convert(val: string[] | string): SliderValue | undefined {
+  convert(val: string[] | string): number | [number, number] | undefined {
     if (val === undefined) {
       return val as undefined;
     }
     return isArray(val) ?
-      (val as Array<string>).map(iso => moment(iso).unix()) as SliderValue :
-      moment(val).unix() as SliderValue;
+      (val as Array<string>).map(iso => moment(iso).unix()) as [number, number]:
+      moment(val).unix() as number;
   }
 
   /**
@@ -180,16 +180,26 @@ class TimeSlider extends React.Component<TimeSliderProps> {
 
     const convertedMarks = this.convertMarks(marks);
 
+    let defaultVal;
+    let val;
+    if (useRange) {
+      defaultVal = this.convert(defaultValue) as [number, number];
+      val = this.convert(value) as [number, number];
+    } else {
+      defaultVal = this.convert(defaultValue) as number;
+      val = this.convert(value) as number;
+    }
+
     return (
       <Slider
         className={finalClassName}
-        defaultValue={this.convert(defaultValue)}
+        defaultValue={defaultVal}
         range={useRange}
         min={moment(min).unix()}
         max={moment(max).unix()}
         tipFormatter={this.formatTimestamp.bind(this)}
         onChange={this.valueUpdated.bind(this)}
-        value={this.convert(value)}
+        value={val}
         marks={convertedMarks}
         {...passThroughProps}
       />
