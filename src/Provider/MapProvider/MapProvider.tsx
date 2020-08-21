@@ -1,6 +1,7 @@
 import * as React from 'react';
 import OlMap from 'ol/Map';
 import * as PropTypes from 'prop-types';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 /**
  *
@@ -39,6 +40,10 @@ class MapProvider extends React.Component<MapProviderProps, MapProviderState> {
    * @param props The initial props.
    */
   constructor(props: MapProviderProps) {
+
+    Logger.warn('MapProvider is deprecated and might be removed in an upcoming major release. ' +
+      'Please consider to use the MapContext.');
+
     super(props);
 
     this.state = {

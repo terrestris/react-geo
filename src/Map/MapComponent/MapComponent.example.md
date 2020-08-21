@@ -2,6 +2,8 @@ This example shows the usage of the MapComponent in combination with the MapProv
 It makes use of the `mappify` HOC function to supply the provided map to the MapComponent
 and the NominatimSearch.
 
+**THE HOC IS DEPREACTED. PLEASE CONSIDER USING THE MAPCONTEXT WITH `useMap`**
+
 This way you can share the same mapobject across the whole application without passing
 it as prop to the whole rendertree.
 

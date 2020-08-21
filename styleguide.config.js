@@ -60,6 +60,9 @@ module.exports = {
       name: 'Containers',
       components: 'src/Container/**/*.tsx'
     }, {
+      name: 'Context',
+      components: 'src/Context/**/*.tsx'
+    }, {
       name: 'CoordinateInfo',
       components: 'src/CoordinateInfo/**/*.tsx'
     }, {
@@ -69,9 +72,12 @@ module.exports = {
       name: 'Grids',
       components: 'src/Grid/**/*.tsx'
     }, {
+      name: 'Hooks',
+      components: 'src/Hook/**/*.ts'
+    }, {
       name: 'HigherOrderComponents',
       components: 'src/HigherOrderComponent/**/*.tsx'
-    },{
+    }, {
       name: 'LayerSwitcher',
       components: 'src/LayerSwitcher/**/*.tsx'
     }, {
