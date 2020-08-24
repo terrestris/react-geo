@@ -14,7 +14,6 @@ import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
 
-const mapDivId = `map-${Math.random()}`;
 const layer = new OlLayerTile({
   source: new OlSourceOsm()
 });
@@ -48,15 +47,15 @@ function ComponentToUseTheMap() {
       }}
     />
   );
-};
+}
 
 function UseMapExample() {
   return(
     <MapContext.Provider value={openlayersMap}>
-      <ComponentToUseTheMap/>
+      <ComponentToUseTheMap />
     </MapContext.Provider>
   );
-};
+}
 
 <UseMapExample />
 ```

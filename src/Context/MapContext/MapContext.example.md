@@ -48,7 +48,7 @@ class MapContextExample extends React.Component {
       <MapContext.Provider value={this.map}>
         <MapContext.Consumer>
           {(map) => {
-           return <MapComponent
+            return <MapComponent
               map={map}
               style={{
                 height: '400px'
@@ -58,7 +58,7 @@ class MapContextExample extends React.Component {
         </MapContext.Consumer>
       </MapContext.Provider>
     );
-  };
+  }
 }
 
 <MapContextExample />
