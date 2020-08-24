@@ -42,6 +42,9 @@ import timeLayerAware from './HigherOrderComponent/TimeLayerAware/TimeLayerAware
 import onDropAware from './HigherOrderComponent/DropTargetMap/DropTargetMap';
 import { loadify } from './HigherOrderComponent/LoadifiedComponent/LoadifiedComponent';
 
+import MapContext from './Context/MapContext/MapContext';
+import { useMap } from './Hook/useMap';
+
 export {
   AddWmsLayerEntry,
   AddWmsPanel,
@@ -80,6 +83,8 @@ export {
   MultiLayerSlider,
   MapProvider,
   MapComponent,
+  MapContext,
+  useMap,
   mappify,
   isVisibleComponent,
   timeLayerAware,
