@@ -26,7 +26,7 @@ interface DefaultProps {
   tooltipProps: AbstractTooltipProps;
   /**
    * The initial pressed state of the ToggleButton
-   * Note: If ToggleButton is set inside a ToggleGroup, this prop will be controlled by selectedName prop on
+   * Note: If a ToggleButton is inside a ToggleGroup, the pressed state will be controlled by the selectedName property of the
    * ToggleGroup. Setting in in Toggle button will not work.
    */
   pressed: boolean;
