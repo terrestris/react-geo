@@ -31,7 +31,7 @@ interface BaseProps {
    * The value fo the `name` attribute of the children to select/press
    * initially.
    * Note: This prop will have full control over the pressed prop on its children. Setting select/pressed on the
-   * children props directly, will have no effect.
+   * children props directly will have no effect.
    */
   selectedName?: string;
   /**
