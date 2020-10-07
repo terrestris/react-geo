@@ -26,7 +26,10 @@ module.exports = {
     '**/*.d.ts'
   ],
   theme: {
-    sidebarWidth: 350
+    sidebarWidth: 350,
+    mq: {
+      small: '@media (max-width: 600px)',
+    }
   },
   getExampleFilename(componentPath) {
     return componentPath.replace(/\.tsx?$/, '.example.md');
@@ -45,11 +48,14 @@ module.exports = {
     'whatwg-fetch',
     'ol/ol.css'
   ],
+  pagePerSection: true,
   sections: [{
     name: 'Introduction',
-    content: 'README.md'
+    content: 'README.md',
+    sectionDepth: 1,
   }, {
     name: 'Components',
+    sectionDepth: 3,
     sections: [{
       name: 'Buttons',
       components: 'src/Button/**/*.tsx'
@@ -71,7 +77,7 @@ module.exports = {
     }, {
       name: 'HigherOrderComponents',
       components: 'src/HigherOrderComponent/**/*.tsx'
-    },{
+    }, {
       name: 'LayerSwitcher',
       components: 'src/LayerSwitcher/**/*.tsx'
     }, {
