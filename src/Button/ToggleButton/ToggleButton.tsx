@@ -27,7 +27,7 @@ interface DefaultProps {
   /**
    * The initial pressed state of the ToggleButton
    * Note: If a ToggleButton is inside a ToggleGroup, the pressed state will be controlled by the selectedName property of the
-   * ToggleGroup. Setting in in Toggle button will not work.
+   * ToggleGroup and this property will be ignored.
    */
   pressed: boolean;
   /**
