@@ -216,7 +216,7 @@ describe('<ToggleButton />', () => {
     expect(wrapper.state('overallPressed')).toBe(true);
   });
 
-  it('can be rendered if iconName has been set and not text or icon is set with the property pressed set to true', () => {
+  it('can be rendered if iconName is set and no text or icon is set with the property pressed set to true', () => {
     const wrapper = TestUtil.mountComponent(ToggleButton);
     wrapper.setProps({
       iconName: 'some-icon-name',
