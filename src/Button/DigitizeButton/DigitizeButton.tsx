@@ -248,16 +248,28 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   _digitizeTextFeature = null;
 
   /**
-   * Reference to OL select interaction which will be used in edit mode.
+   * The draw interaction.
+   * @private
+   */
+  _drawInteraction?: OlInteraction;
+
+  /**
+   * The select interaction.
    * @private
    */
   _selectInteraction = null;
 
   /**
-   * The interactions.
+   * The modify interaction.
    * @private
    */
-  _interactions?: OlInteraction[] = [];
+  _modifyInteraction?: OlInteraction;
+
+  /**
+   * The translate interaction.
+   * @private
+   */
+  _translateInteraction?: OlInteraction;
 
   /**
    * Name of point draw type.
@@ -421,11 +433,15 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   }
 
   /**
-   * `componentDidMount` method of the DigitizeButton. Just calls
-   * `createDigitizeLayer` method.
+   * `componentDidMount` method of the DigitizeButton.
    */
   componentDidMount() {
     this.createDigitizeLayer();
+
+    this.createDrawInteraction();
+    this.createSelectInteraction();
+    this.createModifyInteraction();
+    this.createTranslateInteraction();
   }
 
   /**
@@ -436,7 +452,10 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       map
     } = this.props;
 
-    this._interactions.forEach(i => map.removeInteraction(i));
+    map.removeInteraction(this._drawInteraction);
+    map.removeInteraction(this._selectInteraction);
+    map.removeInteraction(this._modifyInteraction);
+    map.removeInteraction(this._translateInteraction);
   }
 
   /**
@@ -452,46 +471,30 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       map,
       drawType,
       editType,
-      drawStyle,
-      onFeatureSelect
     } = this.props;
 
-    this.props.onToggle(pressed);
-
-    if (this._digitizeLayer) {
-      this._digitizeFeatures = this._digitizeLayer.getSource().getFeaturesCollection();
-    }
-
-    if (pressed) {
-      if (drawStyle) {
-        this._digitizeLayer.setStyle(this.getDigitizeStyleFunction);
+    if (drawType) {
+      this._drawInteraction.setActive(pressed);
+    } else if (editType) {
+      if (this._selectInteraction) {
+        this._selectInteraction.setActive(pressed);
       }
-      if (drawType) {
-        this.createDrawInteraction(pressed);
-      } else if (editType) {
-        this.createSelectOrModifyInteraction();
+      if (this._modifyInteraction) {
+        this._modifyInteraction.setActive(pressed);
       }
-    } else {
-      this._interactions.forEach(i => map.removeInteraction(i));
-      if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
-        this._digitizeFeatures.un('add', this.handleTextAdding);
+      if (this._translateInteraction) {
+        this._translateInteraction.setActive(pressed);
+      }
+
+      if (pressed) {
+        map.on('pointermove', this.onPointerMove);
       } else {
-        if (this._selectInteraction) {
-          this._selectInteraction.getFeatures().clear();
-        }
-        if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
-          this._selectInteraction.un('select', this.onFeatureRemove);
-        }
-        if (editType === DigitizeButton.COPY_EDIT_TYPE) {
-          this._selectInteraction.un('select', this.onFeatureCopy);
-        }
-        if (_isFunction(onFeatureSelect) && editType === DigitizeButton.EDIT_EDIT_TYPE) {
-          this._selectInteraction.un('select', onFeatureSelect);
-        }
         map.un('pointermove', this.onPointerMove);
       }
     }
-  }
+
+    this.props.onToggle(pressed);
+  };
 
   /**
    * Creates digitize vector layer and adds this to the map.
@@ -501,7 +504,9 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       digitizeLayerName,
       map
     } = this.props;
+
     let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
+
     if (!digitizeLayer) {
       digitizeLayer = new OlLayerVector({
         name: digitizeLayerName,
@@ -511,9 +516,13 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       });
       map.addLayer(digitizeLayer);
     }
+
     digitizeLayer.setStyle(this.getDigitizeStyleFunction);
+
     this._digitizeLayer = digitizeLayer;
-  }
+
+    this._digitizeFeatures = digitizeLayer.getSource().getFeaturesCollection();
+  };
 
   /**
    * The styling function for the digitize vector layer, which considers
@@ -591,7 +600,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         break;
       }
     }
-  }
+  };
 
   /**
    * The OL style for selected digitized features.
@@ -641,7 +650,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         color: selectFillColor
       })
     });
-  }
+  };
 
   /**
    * Creates a correctly configured OL draw interaction depending on given
@@ -650,76 +659,101 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param pressed Whether the digitize button is pressed or not.
    * Will be used to handle active state of the draw interaction.
    */
-  createDrawInteraction = pressed => {
+  createDrawInteraction = () => {
     const {
       drawType,
       map,
       onDrawEnd,
       onDrawStart,
-      digitizeLayerName,
+      // digitizeLayerName,
       drawInteractionConfig
     } = this.props;
 
     let geometryFunction;
-    let type = drawType;
 
-    // check whether the digitizeLayer is in map and set it from state if not
-    let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
-    if (!digitizeLayer) {
-      map.addLayer(this._digitizeLayer);
+    if (!drawType) {
+      return;
     }
 
-    if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
-      geometryFunction = createBox();
-      type = DigitizeButton.CIRCLE_DRAW_TYPE as DrawType;
-    } else if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
-      type = DigitizeButton.POINT_DRAW_TYPE as DrawType;
-      this._digitizeFeatures.on('add', this.handleTextAdding);
+    const drawInteractionName = `react-geo-draw-interaction-${drawType}`;
+    let drawInteraction = MapUtil.getInteractionsByName(map, drawInteractionName)[0];
+
+    if (!drawInteraction) {
+      let type = drawType;
+
+      if (drawType === DigitizeButton.RECTANGLE_DRAW_TYPE) {
+        geometryFunction = createBox();
+        type = DigitizeButton.CIRCLE_DRAW_TYPE as DrawType;
+      } else if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
+        type = DigitizeButton.POINT_DRAW_TYPE as DrawType;
+      }
+
+      drawInteraction = new OlInteractionDraw({
+        source: this._digitizeLayer.getSource(),
+        type: type,
+        geometryFunction: geometryFunction,
+        style: this.getDigitizeStyleFunction,
+        freehandCondition: never,
+        ...drawInteractionConfig
+      });
+
+      drawInteraction.set('name', drawInteractionName);
+
+      if (drawType === DigitizeButton.TEXT_DRAW_TYPE) {
+        drawInteraction.on('drawend', this.handleTextAdding);
+      }
+
+      if (onDrawEnd) {
+        drawInteraction.on('drawend', onDrawEnd);
+      }
+
+      if (onDrawStart) {
+        drawInteraction.on('drawstart', onDrawStart);
+      }
+
+      drawInteraction.setActive(false);
+
+      map.addInteraction(drawInteraction);
     }
 
-    const drawInteraction = new OlInteractionDraw({
-      source: this._digitizeLayer.getSource(),
-      type: type,
-      geometryFunction: geometryFunction,
-      style: this.getDigitizeStyleFunction,
-      freehandCondition: never,
-      ...drawInteractionConfig
-    });
-
-    if (onDrawEnd) {
-      drawInteraction.on('drawend', onDrawEnd);
-    }
-
-    if (onDrawStart) {
-      drawInteraction.on('drawstart', onDrawStart);
-    }
-
-    map.addInteraction(drawInteraction);
-
-    this._interactions = [drawInteraction];
-    drawInteraction.setActive(pressed);
-  }
+    this._drawInteraction = drawInteraction;
+  };
 
   /**
    * Creates a correctly configured OL select and/or modify and/or translate
    * interaction(s) depending on given editType and adds this/these to the map.
    */
-  createSelectOrModifyInteraction = () => {
+  createSelectInteraction = () => {
     const {
       editType,
       map,
       selectInteractionConfig,
-      modifyInteractionConfig,
-      translateInteractionConfig,
       onFeatureSelect
     } = this.props;
 
-    this._selectInteraction = new OlInteractionSelect({
-      condition: singleClick,
-      hitTolerance: DigitizeButton.HIT_TOLERANCE,
-      style: this.getSelectedStyleFunction,
-      ...selectInteractionConfig
-    });
+    if (!editType) {
+      return;
+    }
+
+    const selectInteractionName = `react-geo-select-interaction-${editType}`;
+    let selectInteraction = MapUtil.getInteractionsByName(map, selectInteractionName)[0];
+
+    if (!selectInteraction) {
+      selectInteraction = new OlInteractionSelect({
+        condition: singleClick,
+        hitTolerance: DigitizeButton.HIT_TOLERANCE,
+        style: this.getSelectedStyleFunction,
+        ...selectInteractionConfig
+      });
+
+      selectInteraction.set('name', selectInteractionName);
+
+      selectInteraction.setActive(false);
+
+      map.addInteraction(selectInteraction);
+    }
+
+    this._selectInteraction = selectInteraction;
 
     if (editType === DigitizeButton.DELETE_EDIT_TYPE) {
       this._selectInteraction.on('select', this.onFeatureRemove);
@@ -730,38 +764,82 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (_isFunction(onFeatureSelect) && editType === DigitizeButton.EDIT_EDIT_TYPE) {
       this._selectInteraction.on('select', onFeatureSelect);
     }
+  };
 
-    let interactions = [this._selectInteraction];
+  /**
+   *
+   */
+  createModifyInteraction = () => {
+    const {
+      editType,
+      map,
+      modifyInteractionConfig,
+    } = this.props;
 
-    if (editType === DigitizeButton.EDIT_EDIT_TYPE) {
-      const edit = new OlInteractionModify({
+    if (!editType || editType !== DigitizeButton.EDIT_EDIT_TYPE) {
+      return;
+    }
+
+    const modifyInteractionName = `react-geo-modify-interaction-${editType}`;
+    let modifyInteraction = MapUtil.getInteractionsByName(map, modifyInteractionName)[0];
+
+    if (!modifyInteraction) {
+      modifyInteraction = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
         deleteCondition: singleClick,
         style: this.getSelectedStyleFunction,
         ...modifyInteractionConfig
       });
 
-      edit.on('modifystart', this.onModifyStart);
-      edit.on('modifyend', this.onModifyEnd);
+      modifyInteraction.set('name', modifyInteractionName);
 
-      const translate = new OlInteractionTranslate({
+      modifyInteraction.on('modifystart', this.onModifyStart);
+      modifyInteraction.on('modifyend', this.onModifyEnd);
+
+      modifyInteraction.setActive(false);
+
+      map.addInteraction(modifyInteraction);
+    }
+
+    this._modifyInteraction = modifyInteraction;
+  };
+
+  /**
+   *
+   */
+  createTranslateInteraction = () => {
+    const {
+      editType,
+      map,
+      translateInteractionConfig
+    } = this.props;
+
+    if (!editType || editType !== DigitizeButton.EDIT_EDIT_TYPE) {
+      return;
+    }
+
+    const translateInteractionName = `react-geo-translate-interaction-${editType}`;
+    let translateInteraction = MapUtil.getInteractionsByName(map, translateInteractionName)[0];
+
+    if (!translateInteraction) {
+      translateInteraction = new OlInteractionTranslate({
         features: this._selectInteraction.getFeatures(),
         ...translateInteractionConfig
       });
 
-      translate.on('translatestart', this.onTranslateStart);
-      translate.on('translateend', this.onTranslateEnd);
-      translate.on('translating', this.onTranslating);
+      translateInteraction.set('name', translateInteractionName);
 
-      interactions.push(edit, translate);
+      translateInteraction.on('translatestart', this.onTranslateStart);
+      translateInteraction.on('translateend', this.onTranslateEnd);
+      translateInteraction.on('translating', this.onTranslating);
+
+      translateInteraction.setActive(false);
+
+      map.addInteraction(translateInteraction);
     }
 
-    interactions.forEach(i => map.addInteraction(i));
-
-    map.on('pointermove', this.onPointerMove);
-
-    this._interactions = interactions;
-  }
+    this._translateInteraction = translateInteraction;
+  };
 
   /**
    * Listener for `select` event of OL select interaction in `Delete` mode.
@@ -784,10 +862,13 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
 
     const feat = evt.selected[0];
+
     this._selectInteraction.getFeatures().remove(feat);
     this._digitizeLayer.getSource().removeFeature(feat);
+
     this.props.map.renderSync();
-  }
+  };
+
   /**
    * Listener for `select` event of OL select interaction in `Copy` mode.
    * Creates a clone of selected feature and calls utility method to move it
@@ -819,6 +900,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     const copy = feat.clone();
 
     copy.setStyle(this.getDigitizeStyleFunction(feat));
+
     this._digitizeFeatures.push(copy);
 
     AnimateUtil.moveFeature(
@@ -829,7 +911,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       50,
       this.getDigitizeStyleFunction(feat)
     );
-  }
+  };
 
   /**
    * Checks if a labeled feature is being modified. If yes, opens prompt to
@@ -865,7 +947,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         textLabel
       });
     }
-  }
+  };
 
   /**
    * Called on modifyend of the ol.interaction.Modify.
@@ -880,7 +962,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (_isFunction(onModifyEnd)) {
       onModifyEnd(evt);
     }
-  }
+  };
 
   /**
    * Called on translatestart of the ol.interaction.Translate.
@@ -895,7 +977,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (_isFunction(onTranslateStart)) {
       onTranslateStart(evt);
     }
-  }
+  };
 
   /**
    * Called on translateend of the ol.interaction.Translate.
@@ -910,7 +992,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (_isFunction(onTranslateEnd)) {
       onTranslateEnd(evt);
     }
-  }
+  };
 
   /**
    * Called on translating of the ol.interaction.Translate.
@@ -925,7 +1007,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (_isFunction(onTranslating)) {
       onTranslating(evt);
     }
-  }
+  };
 
   /**
    * Changes state for showLabelPrompt to make modal for label input visible.
@@ -938,9 +1020,10 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     this.setState({
       showLabelPrompt: true
     });
-    this._digitizeTextFeature = evt.element;
+
+    this._digitizeTextFeature = evt.feature;
     this._digitizeTextFeature.set('isLabel', true);
-  }
+  };
 
   /**
    * Callback function after `Ok` button of label input modal was clicked.
@@ -956,7 +1039,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }, () => {
       this.setTextOnFeature(this._digitizeTextFeature, onModalLabelOk);
     });
-  }
+  };
 
   /**
    * Callback function after `Cancel` button of label input modal was clicked.
@@ -972,15 +1055,11 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       showLabelPrompt: false,
       textLabel: ''
     }, () => {
-      if (!(this._interactions.length > 1)) {
-        this._digitizeFeatures.remove(this._digitizeTextFeature);
-        this._digitizeTextFeature = null;
-      }
       if (_isFunction(onModalLabelCancel)) {
         onModalLabelCancel(event);
       }
     });
-  }
+  };
 
   /**
    * Sets formatted label on feature.
@@ -1012,7 +1091,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         onModalOkCbk(feat, label);
       }
     });
-  }
+  };
 
   /**
    * Called if label input field value was changed. Updates state value for
@@ -1025,7 +1104,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     this.setState({
       textLabel: evt.target.value
     });
-  }
+  };
 
   /**
    * Sets the cursor to `pointer` if the pointer enters a non-oqaque pixel of
@@ -1053,7 +1132,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     });
 
     map.getTargetElement().style.cursor = hit ? 'pointer' : '';
-  }
+  };
 
   /**
    * The render function.
@@ -1119,7 +1198,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
               <TextArea
                 value={this.state.textLabel}
                 onChange={this.onLabelChange}
-                autosize
+                autoSize
               />
             </Modal>
             : null
