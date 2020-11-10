@@ -853,10 +853,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onFeatureSelect
     } = this.props;
 
-    if (_isFunction(onFeatureRemove)) {
-      onFeatureRemove(evt);
-    }
-
     if (_isFunction(onFeatureSelect)) {
       onFeatureSelect(evt);
     }
@@ -865,6 +861,10 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     this._selectInteraction.getFeatures().remove(feat);
     this._digitizeLayer.getSource().removeFeature(feat);
+
+    if (_isFunction(onFeatureRemove)) {
+      onFeatureRemove(evt);
+    }
 
     this.props.map.renderSync();
   };
