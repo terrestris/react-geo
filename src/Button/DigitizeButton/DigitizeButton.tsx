@@ -257,7 +257,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * The select interaction.
    * @private
    */
-  _selectInteraction = null;
+  _selectInteraction?: OlInteraction;
 
   /**
    * The modify interaction.
