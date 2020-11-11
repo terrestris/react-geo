@@ -5,6 +5,8 @@ import Logger from '@terrestris/base-util/dist/Logger';
 import OlSourceVector from 'ol/source/Vector';
 import OlInteractionDraw from 'ol/interaction/Draw';
 import OlInteractionSelect from 'ol/interaction/Select';
+import OlInteractionModify from 'ol/interaction/Modify';
+import OlInteractionTranslate from 'ol/interaction/Translate';
 import OlStyleStyle from 'ol/style/Style';
 import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
@@ -38,12 +40,17 @@ describe('<DigitizeButton />', () => {
    *
    * @return {Object} The wrapped component.
    */
-  const setupWrapper = () => {
+  const setupWrapper = (shallow: boolean = false) => {
     const defaultProps = {
       map: map,
       drawType: 'Point'
     };
-    return TestUtil.mountComponent(DigitizeButton, defaultProps);
+
+    if (shallow) {
+      return TestUtil.shallowComponent(DigitizeButton, defaultProps);
+    } else {
+      return TestUtil.mountComponent(DigitizeButton, defaultProps);
+    }
   };
 
   /**
@@ -63,23 +70,6 @@ describe('<DigitizeButton />', () => {
       })
     });
   };
-
-  /**
-   * Returns a mock OlInteractionSelect .
-   *
-   * @return {Object} The mocked interaction.
-   */
-  const getMockSelectInteraction = () => {
-    return new OlInteractionSelect({
-      style: new OlStyleStyle({
-        stroke: new OlStyleStroke({
-          color: 'red',
-          width: 2
-        })
-      })
-    });
-  };
-
 
   describe('#Basics', () => {
 
@@ -135,42 +125,86 @@ describe('<DigitizeButton />', () => {
         });
       });
 
-      it ('calls a createDrawInteraction method if button was pressed and valid drawType was provided', () => {
-        const wrapper = setupWrapper();
+      it ('creates a draw interaction on mount', () => {
+        const wrapper = setupWrapper(true);
         const createDrawInteraction = jest.spyOn(wrapper.instance(), 'createDrawInteraction');
 
-        wrapper.instance().onToggle(true);
+        expect(createDrawInteraction).toHaveBeenCalledTimes(0);
+
+        wrapper.instance().componentDidMount();
         expect(createDrawInteraction).toHaveBeenCalledTimes(1);
+
+        expect(wrapper.instance()._drawInteraction).toBeInstanceOf(OlInteractionDraw);
+        expect(wrapper.instance()._drawInteraction.getActive()).toBeFalsy();
 
         createDrawInteraction.mockRestore();
       });
 
-      it ('calls a createSelectOrModifyInteraction method if button was pressed and valid editType was provided', () => {
-        const wrapper = setupWrapper();
+      it ('creates a select interaction on mount', () => {
+        const wrapper = setupWrapper(true);
         wrapper.setProps({
           drawType: null,
           editType: 'Edit'
         });
-        const createSelectOrModifyInteraction = jest.spyOn(wrapper.instance(), 'createSelectOrModifyInteraction');
+        const createSelectInteraction = jest.spyOn(wrapper.instance(), 'createSelectInteraction');
 
-        wrapper.instance().onToggle(true);
-        expect(createSelectOrModifyInteraction).toHaveBeenCalledTimes(1);
+        expect(createSelectInteraction).toHaveBeenCalledTimes(0);
 
-        createSelectOrModifyInteraction.mockRestore();
+        wrapper.instance().componentDidMount();
+        expect(createSelectInteraction).toHaveBeenCalledTimes(1);
+
+        expect(wrapper.instance()._selectInteraction).toBeInstanceOf(OlInteractionSelect);
+        expect(wrapper.instance()._selectInteraction.getActive()).toBeFalsy();
+
+        createSelectInteraction.mockRestore();
       });
 
-      it ('removes all draw/select interactions created by component from the map if the button was untoggled', () => {
-        const wrapper = setupWrapper();
+      it ('creates a modify interaction on mount', () => {
+        const wrapper = setupWrapper(true);
+        wrapper.setProps({
+          drawType: null,
+          editType: 'Edit'
+        });
+        const createModifyInteraction = jest.spyOn(wrapper.instance(), 'createModifyInteraction');
 
-        const mockInteraction = getMockDrawPointInteraction();
+        expect(createModifyInteraction).toHaveBeenCalledTimes(0);
+
+        wrapper.instance().componentDidMount();
+        expect(createModifyInteraction).toHaveBeenCalledTimes(1);
+
+        expect(wrapper.instance()._modifyInteraction).toBeInstanceOf(OlInteractionModify);
+        expect(wrapper.instance()._modifyInteraction.getActive()).toBeFalsy();
+
+        createModifyInteraction.mockRestore();
+      });
+
+      it ('creates a translate interaction on mount', () => {
+        const wrapper = setupWrapper(true);
+        wrapper.setProps({
+          drawType: null,
+          editType: 'Edit'
+        });
+        const createTranslateInteraction = jest.spyOn(wrapper.instance(), 'createTranslateInteraction');
+
+        expect(createTranslateInteraction).toHaveBeenCalledTimes(0);
+
+        wrapper.instance().componentDidMount();
+        expect(createTranslateInteraction).toHaveBeenCalledTimes(1);
+
+        expect(wrapper.instance()._translateInteraction).toBeInstanceOf(OlInteractionTranslate);
+        expect(wrapper.instance()._translateInteraction.getActive()).toBeFalsy();
+
+        createTranslateInteraction.mockRestore();
+      });
+
+      it ('removes all interactions and map listeners from the map on unmount', () => {
+        const wrapper = setupWrapper();
 
         const defaultMapInteractionsLength = map.getInteractions().getLength();
         map.addInteraction(getMockDrawPointInteraction());
         map.on('pointermove', wrapper.instance().onPointerMove);
 
-        wrapper.setState({
-          interactions: [mockInteraction]
-        });
+        wrapper.instance().componentDidMount();
 
         expect(map.getInteractions().getLength()).toBe(defaultMapInteractionsLength + 1);
         // Warning: using of private properties such `listeners_` could be
@@ -178,84 +212,45 @@ describe('<DigitizeButton />', () => {
         // appropriate value.
         expect(map.listeners_.pointermove).toBeDefined();
 
-        wrapper.instance().onToggle(false);
+        wrapper.instance().componentWillUnmount();
 
         expect(map.listeners_.pointermove).toBeUndefined();
+
+        expect(map.getInteractions().getLength()).toBe(defaultMapInteractionsLength);
       });
 
-      it ('unregisters `add` listener on digitize feature collection if drawType is Text and button was untoggled', () => {
+      it ('activates the draw interaction on toggle', () => {
         const wrapper = setupWrapper();
-        wrapper.setProps({
-          drawType: 'Text'
-        });
-        const mockInteraction = getMockDrawPointInteraction();
-
         const instance = wrapper.instance();
-        instance.createDigitizeLayer();
-        instance._digitizeFeatures = instance._digitizeLayer.getSource().getFeaturesCollection();
 
-        map.addInteraction(mockInteraction);
-        instance._digitizeFeatures.on('add', wrapper.instance().handleTextAdding);
+        expect(instance._drawInteraction.getActive()).toBeFalsy();
 
-        expect(instance._digitizeFeatures.listeners_.add.length).toBe(2);
+        instance.onToggle(true);
 
-        wrapper.setState({
-          interactions: [mockInteraction]
-        });
-
-        instance.onToggle(false);
-
-        expect(instance._digitizeFeatures.listeners_.add.length).toBe(1);
+        expect(instance._drawInteraction.getActive()).toBeTruthy();
       });
 
-      it ('unregisters `select` listener on select interaction if editType is Delete and button was untoggled', () => {
+      it ('activates the edit interactions on toggle', () => {
         const wrapper = setupWrapper();
+
         wrapper.setProps({
           drawType: null,
-          editType: 'Delete'
+          editType: 'Edit'
         });
-        const mockInteraction = getMockSelectInteraction();
 
         const instance = wrapper.instance();
-        instance._selectInteraction = mockInteraction;
 
-        map.addInteraction(mockInteraction);
-        instance._selectInteraction.on('select', wrapper.instance().onFeatureRemove);
+        instance.componentDidMount();
 
-        expect(instance._selectInteraction.listeners_.select.length).toBe(1);
+        expect(instance._selectInteraction.getActive()).toBeFalsy();
+        expect(instance._modifyInteraction.getActive()).toBeFalsy();
+        expect(instance._translateInteraction.getActive()).toBeFalsy();
 
-        wrapper.setState({
-          interactions: [mockInteraction]
-        });
+        instance.onToggle(true);
 
-        instance.onToggle(false);
-
-        expect(instance._selectInteraction.listeners_.select).toBeUndefined();
-      });
-
-      it ('unregisters `select` listener on select interaction if editType is Copy and button was untoggled', () => {
-        const wrapper = setupWrapper();
-        wrapper.setProps({
-          drawType: null,
-          editType: 'Copy'
-        });
-        const mockInteraction = getMockSelectInteraction();
-
-        const instance = wrapper.instance();
-        instance._selectInteraction = mockInteraction;
-
-        map.addInteraction(mockInteraction);
-        instance._selectInteraction.on('select', wrapper.instance().onFeatureCopy);
-
-        expect(instance._selectInteraction.listeners_.select.length).toBe(1);
-
-        wrapper.setState({
-          interactions: [mockInteraction]
-        });
-
-        instance.onToggle(false);
-
-        expect(instance._selectInteraction.listeners_.select).toBeUndefined();
+        expect(instance._selectInteraction.getActive()).toBeTruthy();
+        expect(instance._modifyInteraction.getActive()).toBeTruthy();
+        expect(instance._translateInteraction.getActive()).toBeTruthy();
       });
     });
 
@@ -331,56 +326,48 @@ describe('<DigitizeButton />', () => {
           drawType: 'Rectangle'
         });
 
-        wrapper.instance().createDrawInteraction(true);
+        wrapper.instance().createDrawInteraction();
 
-        expect(wrapper.instance()._interactions.length).toBe(1);
-        expect(wrapper.instance()._interactions[0].type_).toBe('Circle');
+        expect(wrapper.instance()._drawInteraction.type_).toBe('Circle');
 
-        wrapper.setState({
-          interactions: []
-        });
         wrapper.setProps({
           drawType: 'Text'
         });
 
-        wrapper.instance()._digitizeFeatures = new OlCollection();
-        wrapper.instance().createDrawInteraction(true);
+        wrapper.instance().createDrawInteraction();
 
-        expect(wrapper.instance()._interactions.length).toBe(1);
-        expect(wrapper.instance()._interactions[0].type_).toBe('Point');
+        expect(wrapper.instance()._drawInteraction.type_).toBe('Point');
       });
     });
 
     describe('#createSelectOrModifyInteraction', () => {
 
-      it ('creates OL select or modify interaction depending on provided editType and sets its value(s) to state', () => {
+      // eslint-disable-next-line max-len
+      it ('creates OL select/modify/translate interaction depending on provided editType and sets its value(s) to state', () => {
         const wrapper = setupWrapper();
 
         wrapper.setProps({
           drawType: null,
-          editType: 'Delete'
-        });
-
-        expect(wrapper.instance()._selectInteraction).toBeNull();
-
-        wrapper.instance().createSelectOrModifyInteraction();
-
-        expect(wrapper.instance()._selectInteraction).toBeDefined();
-        expect(wrapper.instance()._selectInteraction.listeners_.select).toBeDefined();
-
-        expect(wrapper.instance()._interactions.length).toBe(1);
-
-        wrapper.setState({
-          interactions: null
-        });
-
-        wrapper.setProps({
           editType: 'Edit'
         });
 
-        wrapper.instance().createSelectOrModifyInteraction();
+        expect(wrapper.instance()._selectInteraction).toBeUndefined();
 
-        expect(wrapper.instance()._interactions.length).toBe(3);
+        wrapper.instance().createSelectInteraction();
+
+        expect(wrapper.instance()._selectInteraction).toBeInstanceOf(OlInteractionSelect);
+
+        expect(wrapper.instance()._modifyInteraction).toBeUndefined();
+
+        wrapper.instance().createModifyInteraction();
+
+        expect(wrapper.instance()._modifyInteraction).toBeInstanceOf(OlInteractionModify);
+
+        expect(wrapper.instance()._translateInteraction).toBeUndefined();
+
+        wrapper.instance().createTranslateInteraction();
+
+        expect(wrapper.instance()._translateInteraction).toBeInstanceOf(OlInteractionTranslate);
       });
     });
 
@@ -388,13 +375,17 @@ describe('<DigitizeButton />', () => {
 
       it ('removes selected feature from the map', () => {
         const wrapper = setupWrapper();
+        wrapper.setProps({
+          drawType: null,
+          editType: 'Edit'
+        });
         const feat = new OlFeature();
         const mockEvt = {
           selected: [feat]
         };
 
         wrapper.instance().createDigitizeLayer();
-        wrapper.instance().createSelectOrModifyInteraction();
+        wrapper.instance().createSelectInteraction();
 
         wrapper.instance()._digitizeLayer.getSource().addFeature(feat);
         wrapper.instance()._selectInteraction.getFeatures().push(feat);
@@ -457,12 +448,12 @@ describe('<DigitizeButton />', () => {
         const wrapper = setupWrapper();
         const feat = new OlFeature();
         const mockEvt = {
-          element: feat
+          feature: feat
         };
 
         wrapper.instance().handleTextAdding(mockEvt);
 
-        expect(wrapper.instance()._digitizeTextFeature).toEqual(mockEvt.element);
+        expect(wrapper.instance()._digitizeTextFeature).toEqual(mockEvt.feature);
         expect(wrapper.instance()._digitizeTextFeature.get('isLabel')).toBeTruthy();
         expect(wrapper.state().showLabelPrompt).toBeTruthy();
       });
@@ -514,8 +505,6 @@ describe('<DigitizeButton />', () => {
         wrapper.instance().onModalLabelCancel();
 
         expect(wrapper.state().showLabelPrompt).toBeFalsy();
-        expect(wrapper.instance()._digitizeFeatures.getLength()).toBe(0);
-        expect(wrapper.instance()._digitizeTextFeature).toBeNull();
       });
     });
 
