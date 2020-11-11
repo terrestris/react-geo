@@ -511,11 +511,13 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     if (!digitizeLayer) {
       digitizeLayer = new OlLayerVector({
-        name: digitizeLayerName,
         source: new OlSourceVector({
-          features: new OlCollection(),
+          features: new OlCollection()
         })
       });
+
+      digitizeLayer.set('name', digitizeLayerName);
+
       map.addLayer(digitizeLayer);
     }
 
