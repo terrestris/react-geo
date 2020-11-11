@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { mount, ShallowWrapper, ReactWrapper, MountRendererProps } from 'enzyme';
+import { mount, shallow, ShallowWrapper, ReactWrapper, MountRendererProps } from 'enzyme';
 import OlView from 'ol/View';
 import OlMap from 'ol/Map';
 import OlSourceVector from 'ol/source/Vector';
@@ -30,6 +30,17 @@ export class TestUtil {
    */
   static mountComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
     return mount(<Component {...props}/>, options);
+  };
+
+  /**
+   * Mounts the given component (shallowly).
+   *
+   * @param Component The Component to render.
+   * @param props The props to be used.
+   * @param options The options to be set.
+   */
+  static shallowComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
+    return shallow(<Component {...props}/>, options);
   };
 
   /**
