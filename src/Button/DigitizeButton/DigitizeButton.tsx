@@ -456,6 +456,8 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     map.removeInteraction(this._selectInteraction);
     map.removeInteraction(this._modifyInteraction);
     map.removeInteraction(this._translateInteraction);
+
+    map.un('pointermove', this.onPointerMove);
   }
 
   /**
@@ -665,7 +667,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       map,
       onDrawEnd,
       onDrawStart,
-      // digitizeLayerName,
       drawInteractionConfig
     } = this.props;
 
