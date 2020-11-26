@@ -19,7 +19,7 @@ jobs:
       with:
         node-version: 14.x
 
-    - name: Cache Node.js modules
+    - name: Cache Node.js modules 💾
       uses: actions/cache@v2
       with:
         path: ~/.npm
@@ -28,10 +28,10 @@ jobs:
           ${{ runner.OS }}-node-
           ${{ runner.OS }}-
 
-    - name: Install dependencies
+    - name: Install dependencies ⏬
       run: npm install
 
-    - name: Build styleguide
+    - name: Build styleguide 🏗️
       run: npm run build:styleguide
 
     - name: Get react-geo version

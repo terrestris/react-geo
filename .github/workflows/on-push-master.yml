@@ -18,7 +18,7 @@ jobs:
       with:
         node-version: 14.x
 
-    - name: Cache Node.js modules
+    - name: Cache Node.js modules 💾
       uses: actions/cache@v2
       with:
         path: ~/.npm
@@ -27,8 +27,8 @@ jobs:
           ${{ runner.OS }}-node-
           ${{ runner.OS }}-
 
-    - name: Install dependencies
+    - name: Install dependencies ⏬
       run: npm install
 
-    - name: Build artifacts
+    - name: Build artifacts 🏗️
       run: npm run coveralls
