@@ -30,7 +30,10 @@ jobs:
     - name: Install dependencies ⏬
       run: npm install
 
-    - name: Run coveralls ⭐
-      run: |
-        npm test
-        npm run coveralls
+    - name: Generate coverage 🧪
+      run: npm test
+
+    - name: Publish to coveralls ⭐
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
