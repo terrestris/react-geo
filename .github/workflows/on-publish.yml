@@ -1,0 +1,55 @@
+name: Update gh-pages
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+
+    - name: Use Node.js 14.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+
+    - name: Cache Node.js modules 💾
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
+
+    - name: Install dependencies ⏬
+      run: npm install
+
+    - name: Build styleguide 🏗️
+      run: npm run build:styleguide
+
+    - name: Get react-geo version
+      run: |
+        echo "VERSION=$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
+
+    - name: Deploy (to docs/v$VERSION) 🚀
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: build
+        TARGET_FOLDER: docs/v$VERSION
+
+    - name: Deploy (to docs/latest) 🚀
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: build
+        TARGET_FOLDER: docs/latest
