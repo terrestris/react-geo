@@ -30,5 +30,7 @@ jobs:
     - name: Install dependencies ⏬
       run: npm install
 
-    - name: Build artifacts 🏗️
-      run: npm run coveralls
+    - name: Run coveralls ⭐
+      run: |
+        npm test
+        npm run coveralls
