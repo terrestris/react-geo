@@ -7,6 +7,7 @@ It replaces the old `MapProvider` and `mappify` HOC.
 import * as React from 'react';
 
 import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
+import LayerTree from '@terrestris/react-geo/LayerTree/LayerTree';
 import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext';
 import { useMap } from '@terrestris/react-geo/Hook/useMap';
 import OlMap from 'ol/Map';
@@ -15,7 +16,8 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
 
 const layer = new OlLayerTile({
-  source: new OlSourceOsm()
+  source: new OlSourceOsm(),
+  name: 'OSM'
 });
 const openlayersMap = new OlMap({
   target: null,
@@ -49,10 +51,21 @@ function ComponentToUseTheMap() {
   );
 }
 
+function LayerTreeToUseTheMap() {
+  const map = useMap();
+
+  return(
+    <LayerTree
+      map={map}
+    />
+  );
+}
+
 function UseMapExample() {
   return(
     <MapContext.Provider value={openlayersMap}>
       <ComponentToUseTheMap />
+      <LayerTreeToUseTheMap />
     </MapContext.Provider>
   );
 }
