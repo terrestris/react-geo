@@ -223,6 +223,6 @@ describe('<ToggleButton />', () => {
       pressedIconName: undefined,
       pressed: true
     });
-    expect(wrapper).not.toBeUndefined();
+    expect(wrapper.find('button')).toBeDefined();
   });
 });
