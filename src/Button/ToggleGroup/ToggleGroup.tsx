@@ -30,6 +30,8 @@ interface BaseProps {
   /**
    * The value fo the `name` attribute of the children to select/press
    * initially.
+   * Note: This prop will have full control over the pressed prop on its children. Setting select/pressed on the
+   * children props directly will have no effect.
    */
   selectedName?: string;
   /**
@@ -119,9 +121,9 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
     }
     // Allow deselect.
     if (this.props.allowDeselect && (childProps.name === this.state.selectedName)) {
-      this.setState({selectedName: null});
+      this.setState({ selectedName: null });
     } else {
-      this.setState({selectedName: childProps.name});
+      this.setState({ selectedName: childProps.name });
     }
   };
 
@@ -129,7 +131,7 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
    * The render function.
    */
   render() {
-    const {orientation, children} = this.props;
+    const { orientation, children } = this.props;
     const className = this.props.className
       ? `${this.props.className} ${this._className}`
       : this._className;

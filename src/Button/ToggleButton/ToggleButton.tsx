@@ -27,6 +27,8 @@ interface DefaultProps {
   tooltipProps: AbstractTooltipProps;
   /**
    * The initial pressed state of the ToggleButton
+   * Note: If a ToggleButton is inside a ToggleGroup, the pressed state will be controlled by the selectedName property
+   * of the ToggleGroup and this property will be ignored.
    */
   pressed: boolean;
   /**
@@ -227,7 +229,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
         // when used with ToggleGroup. Since the ToggleGroup changes the
         // pressed prop for its child components the click event dose not need to
         // change the pressed property.
-        this.setState({overallPressed: !this.state.overallPressed});
+        this.setState({ overallPressed: !this.state.overallPressed });
       }
     });
   }
