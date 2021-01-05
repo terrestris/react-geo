@@ -131,7 +131,7 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
     if (extent) {
       view.fit(extent, finalFitOptions);
     }
-    else if (!extent && (center && zoom)) {
+    else if (center && zoom) {
       view.setCenter(center);
       view.setZoom(zoom);
     }
