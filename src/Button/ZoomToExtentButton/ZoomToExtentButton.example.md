@@ -75,6 +75,13 @@ class ZoomToExtentButtonExample extends React.Component {
         >
           Zoom to extent (slow animation)
         </ZoomToExtentButton>
+        <ZoomToExtentButton
+          map={this.map}
+          center={fromLonLat([36.40570, 10.81566])}
+          zoom={8}
+        >
+          Zoom to extent providing center and zoom (standard, animated)
+        </ZoomToExtentButton>
       </div>
     );
   }
