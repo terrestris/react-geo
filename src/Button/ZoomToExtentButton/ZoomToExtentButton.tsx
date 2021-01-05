@@ -35,16 +35,16 @@ interface DefaultProps {
    * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
    * instance of ol.geom.SimpleGeometry that the map should zoom to.
    */
-  extent: number[] | OlSimpleGeometry;
+  extent?: number[] | OlSimpleGeometry;
   /**
    * The center `[x,y]` in the maps coordinate system or an
    * instance of ol.coordinate that the map should zoom to if no extent is given.
    */
-  center: OlCoordinate;
+  center?: OlCoordinate;
   /**
-   *  The zoom level 'x' the map should zoom to  if no extent is given.
+   *  The zoom level 'x' the map should zoom to if no extent is given.
    */
-  zoom: number;
+  zoom?: number;
 }
 
 interface BaseProps {
