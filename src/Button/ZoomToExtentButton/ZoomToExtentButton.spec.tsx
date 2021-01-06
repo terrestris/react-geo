@@ -85,12 +85,14 @@ describe('<ZoomToExtentButton />', () => {
       setTimeout(resolve, 1200);
     });
 
-    expect.assertions(2);
+    expect.assertions(3);
     return promise.then(() => {
       const newExtent = map.getView().calculateExtent();
       const newCenter = getCenter(newExtent);
+      const newZoom = map.getView().getZoom();
       expect(newCenter).toEqual(mockExtentCenter);
       expect(containsExtent(newExtent, mockExtent)).toBe(true);
+      expect(newZoom).toEqual(mockZoom);
     });
   });
 });

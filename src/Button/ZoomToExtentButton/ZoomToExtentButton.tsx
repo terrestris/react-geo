@@ -40,7 +40,7 @@ interface DefaultProps {
    * The center `[x,y]` in the maps coordinate system or an
    * instance of ol.coordinate that the map should zoom to if no extent is given.
    */
-  center?: OlCoordinate;
+  center?: number[] | OlCoordinate;
   /**
    *  The zoom level 'x' the map should zoom to if no extent is given.
    */
@@ -110,8 +110,9 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
     if (!view) { // no view, no zooming
       return;
     }
-    if (!extent && (!center && !zoom)) {
-      logger.warn('Provide either an extent or a center and a zoom.');
+    if (!extent && (!center || !zoom)) {
+      logger.error('zoomToExtentButton: You need to provide either an extent or a center and a zoom.');
+      return;
     }
     if (view.getAnimating()) {
       view.cancelAnimations();
