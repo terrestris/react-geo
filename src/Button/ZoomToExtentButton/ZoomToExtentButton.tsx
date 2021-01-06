@@ -9,6 +9,7 @@ import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 
 import logger from '@terrestris/base-util/dist/Logger';
+import _isFinite from 'lodash/isFinite';
 
 interface DefaultProps {
   /**
@@ -110,7 +111,7 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
     if (!view) { // no view, no zooming
       return;
     }
-    if (!extent && (!center || !zoom)) {
+    if (!extent && (!center || !_isFinite(zoom))) {
       logger.error('zoomToExtentButton: You need to provide either an extent or a center and a zoom.');
       return;
     }
@@ -125,14 +126,14 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
       ...fitOptions
     };
 
-    if (extent && (center && zoom)) {
-      logger.warn('Provide either an extent or a center and a zoom.' +
-      'If both are provided the extent will be used.');
+    if (extent && (center && _isFinite(zoom))) {
+      logger.warn('zoomToExtentButton: Both extent and center / zoom are provided. ' +
+      'Extent will be used in favor of center / zoom');
     }
     if (extent) {
       view.fit(extent, finalFitOptions);
     }
-    else if (center && zoom) {
+    else if (center && _isFinite(zoom)) {
       view.setCenter(center);
       view.setZoom(zoom);
     }
