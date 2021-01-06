@@ -10,6 +10,8 @@ import { CSS_PREFIX } from '../../constants';
 
 import logger from '@terrestris/base-util/dist/Logger';
 
+const _isFinite = require('lodash/isFinite');
+
 interface DefaultProps {
   /**
    * Options for fitting to the given extent. See
@@ -110,7 +112,7 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
     if (!view) { // no view, no zooming
       return;
     }
-    if (!extent && (!center || !zoom)) {
+    if (!extent && (!center || !_isFinite(zoom))) {
       logger.error('zoomToExtentButton: You need to provide either an extent or a center and a zoom.');
       return;
     }
@@ -125,14 +127,14 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
       ...fitOptions
     };
 
-    if (extent && (center && zoom)) {
+    if (extent && (center && _isFinite(zoom))) {
       logger.warn('Provide either an extent or a center and a zoom.' +
       'If both are provided the extent will be used.');
     }
     if (extent) {
       view.fit(extent, finalFitOptions);
     }
-    else if (center && zoom) {
+    else if (center && _isFinite(zoom)) {
       view.setCenter(center);
       view.setZoom(zoom);
     }
