@@ -9,8 +9,7 @@ import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 
 import logger from '@terrestris/base-util/dist/Logger';
-
-const _isFinite = require('lodash/isFinite');
+import _isFinite from 'lodash/isFinite';
 
 interface DefaultProps {
   /**
