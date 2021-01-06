@@ -13,6 +13,7 @@ describe('<ZoomToExtentButton />', () => {
   const mockGeometryCenter = [5000, 5000];
   const mockExtent = [0, 0, 10000, 10000];
   const mockExtentCenter = [5000, 5000];
+  const mockZoom = 7;
 
   beforeEach(() => {
     map = TestUtil.createMap();
@@ -70,5 +71,28 @@ describe('<ZoomToExtentButton />', () => {
       expect(containsExtent(newExtent, mockExtent)).toBe(true);
     });
 
+  });
+
+  it('zooms to extent when clicked providing center and zoom', () => {
+    const wrapper = TestUtil.mountComponent(ZoomToExtentButton, {
+      map,
+      center: mockExtentCenter,
+      zoom: mockZoom
+    });
+    wrapper.instance().onClick();
+
+    const promise = new Promise(resolve => {
+      setTimeout(resolve, 1200);
+    });
+
+    expect.assertions(3);
+    return promise.then(() => {
+      const newExtent = map.getView().calculateExtent();
+      const newCenter = getCenter(newExtent);
+      const newZoom = map.getView().getZoom();
+      expect(newCenter).toEqual(mockExtentCenter);
+      expect(containsExtent(newExtent, mockExtent)).toBe(true);
+      expect(newZoom).toEqual(mockZoom);
+    });
   });
 });

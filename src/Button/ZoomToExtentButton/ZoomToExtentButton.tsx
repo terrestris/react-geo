@@ -2,10 +2,13 @@ import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
+import OlCoordinate from 'ol/coordinate';
 import { easeOut } from 'ol/easing';
 
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
+
+import logger from '@terrestris/base-util/dist/Logger';
 
 interface DefaultProps {
   /**
@@ -28,6 +31,20 @@ interface DefaultProps {
    * Default is false.
    */
   constrainViewResolution: boolean;
+  /**
+   * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
+   * instance of ol.geom.SimpleGeometry that the map should zoom to.
+   */
+  extent?: number[] | OlSimpleGeometry;
+  /**
+   * The center `[x,y]` in the maps coordinate system or an
+   * instance of ol.coordinate that the map should zoom to if no extent is given.
+   */
+  center?: number[] | OlCoordinate;
+  /**
+   *  The zoom level 'x' the map should zoom to if no extent is given.
+   */
+  zoom?: number;
 }
 
 interface BaseProps {
@@ -39,11 +56,6 @@ interface BaseProps {
    * Instance of OL map this component is bound to.
    */
   map: OlMap;
-  /**
-   * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
-   * instance of ol.geom.SimpleGeometry that the map should zoom to.
-   */
-  extent: number[] | OlSimpleGeometry;
 }
 
 export type ZoomToExtentButtonProps = BaseProps & Partial<DefaultProps> & SimpleButtonProps;
@@ -71,7 +83,10 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
       duration: 250,
       easing: easeOut
     },
-    constrainViewResolution: false
+    constrainViewResolution: false,
+    extent: undefined,
+    center: undefined,
+    zoom: undefined
   };
 
   /**
@@ -84,13 +99,19 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
       map,
       extent,
       constrainViewResolution,
-      fitOptions
+      fitOptions,
+      center,
+      zoom
     } = this.props;
     const view = map.getView();
 
     const {fitOptions: defaultFitOptions} = ZoomToExtentButton.defaultProps;
 
     if (!view) { // no view, no zooming
+      return;
+    }
+    if (!extent && (!center || !zoom)) {
+      logger.error('zoomToExtentButton: You need to provide either an extent or a center and a zoom.');
       return;
     }
     if (view.getAnimating()) {
@@ -104,7 +125,17 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
       ...fitOptions
     };
 
-    view.fit(extent, finalFitOptions);
+    if (extent && (center && zoom)) {
+      logger.warn('Provide either an extent or a center and a zoom.' +
+      'If both are provided the extent will be used.');
+    }
+    if (extent) {
+      view.fit(extent, finalFitOptions);
+    }
+    else if (center && zoom) {
+      view.setCenter(center);
+      view.setZoom(zoom);
+    }
   }
 
   /**
