@@ -127,8 +127,8 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
     };
 
     if (extent && (center && _isFinite(zoom))) {
-      logger.warn('Provide either an extent or a center and a zoom.' +
-      'If both are provided the extent will be used.');
+      logger.warn('zoomToExtentButton: Both extent and center / zoom are provided. ' +
+      'Extent will be used in favor of center / zoom');
     }
     if (extent) {
       view.fit(extent, finalFitOptions);
