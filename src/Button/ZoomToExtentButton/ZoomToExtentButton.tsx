@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
-import OlCoordinate from 'ol/coordinate';
+import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import { easeOut } from 'ol/easing';
 
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
