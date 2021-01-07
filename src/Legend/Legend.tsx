@@ -22,6 +22,15 @@ export interface BaseProps {
    * be transformed to "&HEIGHT=400" an added to the GetLegendGraphic request.
    */
   extraParams?: any;
+  /**
+   * Optional method that should be called when the image retrieval errors
+   */
+  onError?: () => void;
+  /**
+   * Optional error message that should be displayed when image retrieval
+   * errors. Will remove the browsers default broken image
+   */
+  errorMsg?: string;
 }
 
 interface LegendState {
@@ -29,6 +38,10 @@ interface LegendState {
    * The legend url.
    */
   legendUrl: string;
+  /**
+   * Flag indicating if loading of the image source lead to an error
+   */
+  legendError: boolean;
 }
 
 export type LegendProps = BaseProps & React.HTMLAttributes<HTMLDivElement>;
@@ -60,7 +73,8 @@ export class Legend extends React.Component<LegendProps, LegendState> {
     } = props;
 
     this.state = {
-      legendUrl: this.getLegendUrl(layer, extraParams)
+      legendUrl: this.getLegendUrl(layer, extraParams),
+      legendError: false
     };
   }
 
@@ -106,8 +120,14 @@ export class Legend extends React.Component<LegendProps, LegendState> {
   /**
    * onError handler for the rendered img.
    */
-  onError() {
+  onError(e) {
     Logger.warn(`Image error for legend of "${this.props.layer.get('name')}".`);
+    this.setState({
+      legendError: true
+    });
+    if (this.props.onError) {
+      this.props.onError(e);
+    }
   }
 
   /**
@@ -118,6 +138,7 @@ export class Legend extends React.Component<LegendProps, LegendState> {
       className,
       layer,
       extraParams,
+      errorMsg,
       ...passThroughProps
     } = this.props;
 
@@ -134,11 +155,19 @@ export class Legend extends React.Component<LegendProps, LegendState> {
         className={finalClassName}
         {...passThroughProps}
       >
-        <img
-          src={this.state.legendUrl}
-          alt={alt}
-          onError={this.onError.bind(this)}
-        />
+        {this.state.legendError ?
+          <div
+            className='legend-load-error'
+          >
+            {errorMsg}
+          </div>
+          :
+          <img
+            src={this.state.legendUrl}
+            alt={alt}
+            onError={this.onError.bind(this)}
+          />
+        }
       </div>
     );
   }
