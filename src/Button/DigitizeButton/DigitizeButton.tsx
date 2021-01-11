@@ -476,7 +476,9 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     } = this.props;
 
     if (drawType) {
-      this._drawInteraction.setActive(pressed);
+      if (this._drawInteraction) {
+        this._drawInteraction.setActive(pressed);
+      }
     } else if (editType) {
       if (this._selectInteraction) {
         this._selectInteraction.setActive(pressed);
