@@ -68,6 +68,24 @@ interface DefaultProps {
    * returned by nominatim.
    */
   onSelect: (item: any, olMap: OlMap) => void;
+  /**
+   * Indicate if we should render the input and results. When setting to false,
+   * you need to handle user input and result yourself
+   */
+  visible?: boolean;
+  /**
+   * The searchTerm may be given as prop. This is useful when setting
+   * `visible` to `false`.
+   */
+  searchTerm?: string;
+  /**
+   * A callback function which gets called with the successfully fetched data.
+   */
+  onFetchSuccess?: (data: any) => void;
+  /**
+   * A callback function which gets called if data fetching has failed.
+   */
+  onFetchError?: (data: any) => void;
 }
 
 interface BaseProps {
@@ -118,6 +136,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
     limit: 10,
     countrycodes: 'de',
     minChars: 3,
+    visible: true,
     /**
      * Create an AutoComplete.Option from the given data.
      *
@@ -178,6 +197,17 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
     };
     this.onUpdateInput = this.onUpdateInput.bind(this);
     this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
+  }
+
+  /**
+   * Trigger search when searchTerm prop has changed
+   *
+   * @param prevProps Previous props
+   */
+  componentDidUpdate(prevProps) {
+    if (this.props.searchTerm !== prevProps.searchTerm) {
+      this.onUpdateInput(this.props.searchTerm);
+    }
   }
 
   /**
@@ -242,6 +272,10 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
   onFetchSuccess(response: any) {
     this.setState({
       dataSource: response
+    }, () => {
+      if (this.props.onFetchSuccess) {
+        this.props.onFetchSuccess(response);
+      }
     });
   }
 
@@ -253,6 +287,9 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    */
   onFetchError(error: string) {
     Logger.error(`Error while requesting Nominatim: ${error}`);
+    if (this.props.onFetchError) {
+      this.props.onFetchError(error);
+    }
   }
 
   /**
@@ -286,8 +323,13 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
       onSelect,
       renderOption,
       minChars,
+      visible,
       ...passThroughProps
     } = this.props;
+
+    if (visible === false) {
+      return null;
+    }
 
     const finalClassName = className
       ? `${className} ${this.className}`
