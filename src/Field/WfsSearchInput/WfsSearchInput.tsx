@@ -10,7 +10,6 @@ import CloseCircleOutlined from '@ant-design/icons/CloseCircleOutlined';
 
 import OlMap from 'ol/Map';
 
-const isFunction = require('lodash/isFunction');
 const debounce = require('lodash/debounce');
 
 import Logger from '@terrestris/base-util/dist/Logger';
@@ -76,6 +75,16 @@ interface DefaultProps {
    * Delay in ms before actually sending requests.
    */
   delay: number;
+  /**
+   * Indicate if we should render the input and results. When setting to false,
+   * you need to handle user input and results yourself
+   */
+  visible?: boolean;
+  /**
+   * The searchTerm may be given as prop. This is useful when setting
+   * `visible` to `false`.
+   */
+  searchTerm?: string;
 }
 
 interface BaseProps {
@@ -190,7 +199,8 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
     minChars: 3,
     additionalFetchOptions: {},
     attributeDetails: {},
-    delay: 300
+    delay: 300,
+    visible: true
   };
 
   /**
@@ -209,6 +219,22 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
     this.onUpdateInput = this.onUpdateInput.bind(this);
     // delay requests invoking
     this.doSearch = debounce(this.doSearch, this.props.delay);
+  }
+
+  /**
+   * Trigger search when searchTerm prop has changed
+   *
+   * @param prevProps Previous props
+   */
+  componentDidUpdate(prevProps) {
+    if (this.props.searchTerm !== prevProps.searchTerm) {
+      const evt = {
+        target: {
+          value: this.props.searchTerm
+        }
+      };
+      this.onUpdateInput(evt);
+    }
   }
 
   /**
@@ -235,7 +261,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
       value = evt.target.value;
     }
 
-    if (isFunction(onBeforeSearch)) {
+    if (onBeforeSearch) {
       value = onBeforeSearch(value);
     }
 
@@ -326,7 +352,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
       data,
       fetching: false
     }, () => {
-      if (isFunction(onFetchSuccess)) {
+      if (onFetchSuccess) {
         onFetchSuccess(data);
       }
     });
@@ -348,7 +374,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
     this.setState({
       fetching: false
     }, () => {
-      if (isFunction(onFetchError)) {
+      if (onFetchError) {
         onFetchError(error);
       }
     });
@@ -365,7 +391,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
     this.setState({
       data: []
     }, () => {
-      if (isFunction(onClearClick)) {
+      if (onClearClick) {
         onClearClick();
       }
     });
@@ -396,12 +422,17 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
       attributeDetails,
       srsName,
       wfsFormatOptions,
+      visible,
       onFetchSuccess,
       onFetchError,
       onClearClick,
       onBeforeSearch,
       ...passThroughProps
     } = this.props;
+
+    if (visible === false) {
+      return null;
+    }
 
     const finalClassName = className
       ? `${className} ${this.className}`
