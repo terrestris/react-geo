@@ -76,7 +76,7 @@
     "react": "^16.9"
   },
   "dependencies": {
-    "@ag-grid-community/client-side-row-model": "^23.2.1",
+    "@ag-grid-community/client-side-row-model": "^25.0.1",
     "@ag-grid-community/core": "^23.2.1",
     "@ag-grid-community/react": "^23.2.1",
     "@ant-design/icons": "^4.2.1",
