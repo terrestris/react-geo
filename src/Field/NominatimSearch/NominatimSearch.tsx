@@ -14,6 +14,7 @@ import { CSS_PREFIX } from '../../constants';
 import { OptionProps } from 'antd/lib/select';
 
 import './NominatimSearch.less';
+import { Extent } from 'ol/extent';
 
 interface DefaultProps {
   /**
@@ -162,16 +163,13 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
     onSelect: (selected: any, olMap: OlMap) => {
       if (selected && selected.boundingbox) {
         const olView = olMap.getView();
+        const bbox: number[] = selected.boundingbox.map(parseFloat);
         let extent = [
-          selected.boundingbox[2],
-          selected.boundingbox[0],
-          selected.boundingbox[3],
-          selected.boundingbox[1]
-        ];
-
-        extent = extent.map(function(coord: string) {
-          return parseFloat(coord);
-        });
+          bbox[2],
+          bbox[0],
+          bbox[3],
+          bbox[1]
+        ] as Extent;
 
         extent = transformExtent(extent, 'EPSG:4326',
           olView.getProjection().getCode());
@@ -296,11 +294,10 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    * The function describes what to do when an item is selected.
    *
    * @param value The value of the selected option.
-   * @param value The values of the selected option.
    */
-  onMenuItemSelected(value: string, option: OptionProps) {
+  onMenuItemSelected(value: string) {
     const selected = this.state.dataSource.find(
-      (i: any) => i.place_id.toString() === option.key.toString()
+      (i: any) => i.place_id.toString() === value
     );
     this.props.onSelect(selected, this.props.map);
   }
@@ -340,8 +337,8 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
         className={finalClassName}
         allowClear={true}
         placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
-        onChange={this.onUpdateInput}
-        onSelect={this.onMenuItemSelected}
+        onChange={(v: string) => this.onUpdateInput(v)}
+        onSelect={(v: string) => this.onMenuItemSelected(v)}
         {...passThroughProps}
       >
         {

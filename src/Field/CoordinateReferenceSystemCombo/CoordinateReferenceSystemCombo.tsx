@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
-import { OptionProps } from 'antd/lib/select';
 
 const Option = AutoComplete.Option;
 
@@ -11,6 +10,11 @@ import Logger from '@terrestris/base-util/dist/Logger';
 import { CSS_PREFIX } from '../../constants';
 
 import './CoordinateReferenceSystemCombo.less';
+
+interface CrsDefinition {
+  value: string;
+  code: string;
+}
 
 interface DefaultProps {
   /**
@@ -37,11 +41,11 @@ interface BaseProps {
    * An array of predefined crs definitions having at least value (name of
    * CRS) and code (e.g. EPSG-code of CRS) property
    */
-  predefinedCrsDefinitions?: {value: string; code: string}[];
+  predefinedCrsDefinitions?: CrsDefinition[];
 }
 
 interface CRSComboState {
-  crsDefinitions: any[];
+  crsDefinitions: CrsDefinition[];
   value: string;
 }
 
@@ -79,8 +83,6 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
       crsDefinitions: [],
       value: null
     };
-
-    this.onCrsItemSelect = this.onCrsItemSelect.bind(this);
   }
 
   /**
@@ -116,7 +118,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
    *  https://github.com/klokantech/epsg.io#api-for-results
    * @return Array of CRS definitons used in CoordinateReferenceSystemCombo
    */
-  transformResults = (json: any) => {
+  transformResults = (json: any): CrsDefinition[] => {
     const results = json.results;
     if (results && results.length > 0) {
       return results.map(obj => ({code: obj.code, value: obj.name, proj4def: obj.proj4, bbox: obj.bbox}));
@@ -131,7 +133,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
    *
    * @param value The search value.
    */
-  handleSearch = (value?: string) => {
+  handleSearch = async (value: string) => {
     const {
       predefinedCrsDefinitions
     } = this.props;
@@ -145,10 +147,14 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
     }
 
     if (!predefinedCrsDefinitions) {
-      this.fetchCrs(value)
-        .then(this.transformResults)
-        .then(crsDefinitions => this.setState({crsDefinitions}))
-        .catch(this.onFetchError);
+      try {
+        const result = await this.fetchCrs(value);
+        this.setState({
+          crsDefinitions: this.transformResults(result)
+        });
+      } catch (e) {
+        this.onFetchError(e);
+      }
     } else {
       this.setState({ value });
     }
@@ -158,9 +164,8 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
    * Handles selection of a CRS item in Autocomplete
    *
    * @param value The EPSG code.
-   * @param option The values of the selected option.
    */
-  onCrsItemSelect = (value: string, option: OptionProps) => {
+  onCrsItemSelect = (value: string) => {
     const {
       onSelect,
       predefinedCrsDefinitions
@@ -172,10 +177,10 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
 
     const crsObjects = predefinedCrsDefinitions || crsDefinitions;
 
-    const selected = crsObjects.filter(i => i.code === option.key)[0];
+    const selected = crsObjects.filter(i => i.code === value)[0];
 
     this.setState({
-      value: selected
+      value: selected.value
     });
 
     onSelect(selected);
@@ -184,17 +189,17 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
   /**
    * Tranforms CRS object returned by EPSG.io to antd  Option component
    *
-   * @param crsObj Single plain CRS object returned by EPSG.io
+   * @param crsObject Single plain CRS object returned by EPSG.io
    *
    * @return Option component to render
    */
-  transformCrsObjectsToOptions(crsObject: any) {
+  transformCrsObjectsToOptions(crsObject: CrsDefinition) {
     const value = `${crsObject.value} (EPSG:${crsObject.code})`;
 
     return (
       <Option
         key={crsObject.code}
-        value={value}
+        value={crsObject.code}
       >
         {value}
       </Option>
@@ -226,8 +231,8 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
       <AutoComplete
         className={finalClassName}
         allowClear={true}
-        onSelect={this.onCrsItemSelect}
-        onChange={this.handleSearch}
+        onSelect={(v: string) => this.onCrsItemSelect(v)}
+        onChange={(v: string) => this.handleSearch(v)}
         placeholder={emptyTextPlaceholderText}
         {...passThroughOpts}
       >

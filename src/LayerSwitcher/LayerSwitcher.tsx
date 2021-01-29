@@ -1,5 +1,5 @@
 import * as React from 'react';
-const _isEqual = require('lodash/isEqual');
+import _isEqual from 'lodash/isEqual';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import OlMap from 'ol/Map';
@@ -12,10 +12,7 @@ import MapComponent from '../Map/MapComponent/MapComponent';
 
 import './LayerSwitcher.less';
 
-type ArrayTwoOrMore<T> = {
-  0: T;
-  1: T;
-} & Array<T>;
+type ArrayTwoOrMore<T> = [T, T] & T[];
 
 /**
  * @export
@@ -132,7 +129,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    */
   cloneLayer = (layer: OlLayerTile | OlLayerGroup) => {
     let layerClone: OlLayerTile | OlLayerGroup;
-    if (layer.getLayers) {
+    if (layer instanceof OlLayerGroup) {
       layerClone = new OlLayerGroup({
         layers: layer.getLayers().getArray().map(this.cloneLayer),
         originalLayer: layer,
