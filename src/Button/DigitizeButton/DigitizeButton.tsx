@@ -93,6 +93,14 @@ interface DefaultProps {
    */
   translateInteractionConfig: any;
   /**
+   * Should the user be prompted for the deletion of a feature before its removal?
+   */
+  promptforDeletion: boolean;
+  /**
+   * Message to show when prompting user about the delition of a feature
+   */
+  modalDeletionPromptMessage: string;
+  /**
    * A custom onToogle function that will be called if button is toggled.
    */
   onToggle: (event: any) => void;
@@ -207,6 +215,8 @@ interface BaseProps {
 interface DigitizeButtonState {
   showLabelPrompt: boolean;
   textLabel: string;
+  selectedFeatureForDeletion: OlFeature
+  showDeletionPrompt: boolean;
 }
 
 export type DigitizeButtonProps = BaseProps & Partial<DefaultProps> & ToggleButtonProps;
@@ -410,6 +420,8 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     selectInteractionConfig: {},
     modifyInteractionConfig: {},
     translateInteractionConfig: {},
+    promptforDeletion: false,
+    modalDeletionPromptMessage: 'Are you sure you want to delete the selected feature?',
     onToggle: () => undefined
   };
 
@@ -423,12 +435,14 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     if (!props.drawType && !props.editType) {
       Logger.warn('Neither "drawType" nor "editType" was provided. Digitize ' +
-      'button won\'t work properly!');
+        'button won\'t work properly!');
     }
 
     this.state = {
       showLabelPrompt: false,
-      textLabel: ''
+      textLabel: '',
+      showDeletionPrompt: false,
+      selectedFeatureForDeletion: undefined
     };
   }
 
@@ -874,6 +888,13 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     this.props.map.renderSync();
   };
 
+  onFeatureRemoveAfterPrompt = (featureToRemove) => {
+    this._selectInteraction.getFeatures().remove(featureToRemove);
+    this._digitizeLayer.getSource().removeFeature(featureToRemove);
+
+    this.props.map.renderSync();
+  };
+
   /**
    * Listener for `select` event of OL select interaction in `Copy` mode.
    * Creates a clone of selected feature and calls utility method to move it
@@ -1066,6 +1087,31 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     });
   };
 
+  onModalFeatureDeletionOk = () => {
+    onDeleteFeatureAfterPrompt(selectedFeature);
+    this.setState({
+      showDeletionPrompt: false
+    }, () => {
+
+      this.setTextOnFeature(this._digitizeTextFeature, onModalLabelOk);
+    });
+  };
+
+  onModalFeatureDeletionCancel = () => {
+    const {
+      digitizeLayerName,
+      map
+    } = this.props;
+
+    const digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
+    const source = digitizeLayer.getSource();
+    source.addFeature(this.state.selectedFeatureForDeletion);
+    this.setState({
+      showDeletionPrompt: false,
+      selectedFeatureForDeletion: undefined
+    })
+  };
+
   /**
    * Sets formatted label on feature.
    * Calls `onModalLabelOk` callback function if provided.
@@ -1189,25 +1235,29 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
           className={finalClassName}
           {...passThroughProps}
         />
-        {
-          this.state.showLabelPrompt ?
-            <Modal
-              title={modalPromptTitle}
-              okText={modalPromptOkButtonText}
-              cancelText={modalPromptCancelButtonText}
-              visible={this.state.showLabelPrompt}
-              closable={false}
-              onOk={this.onModalLabelOk}
-              onCancel={this.onModalLabelCancel}
-            >
+        {(this.state.showLabelPrompt || this.state.showDeletionPrompt) && (
+          <Modal
+            title={modalPromptTitle}
+            okText={modalPromptOkButtonText}
+            cancelText={modalPromptCancelButtonText}
+            visible={this.state.showLabelPrompt || this.state.showDeletionPrompt}
+            closable={false}
+            onOk={this.onModalLabelOk}
+            onCancel={this.onModalLabelCancel}
+          >
+            {this.state.showLabelPrompt && (
               <TextArea
                 value={this.state.textLabel}
                 onChange={this.onLabelChange}
                 autoSize
               />
-            </Modal>
-            : null
-        }
+            )}
+            {this.state.showDeletionPrompt && (
+              <p>{modalDeletionPromptMessage}</p>
+            )}
+
+          </Modal>
+        )}
       </span>
     );
   }
