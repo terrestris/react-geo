@@ -23,10 +23,6 @@ const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
 
 import './TimeLayerSliderPanel.less';
-import { TimeLayerAwareConfig } from '../../HigherOrderComponent/TimeLayerAware/TimeLayerAware';
-import ImageWMS from 'ol/source/ImageWMS';
-import TileWMS from 'ol/source/TileWMS';
-import { getUid } from 'ol';
 
 type timeRange = [moment.Moment, moment.Moment];
 
@@ -45,7 +41,7 @@ export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 export interface DefaultTimeLayerSliderPanelProps {
   className: string;
   onChange: (arg: moment.Moment) => void;
-  timeAwareLayers: OlLayer<ImageWMS|TileWMS>[];
+  timeAwareLayers: OlLayer[];
   value: moment.Moment;
   dateFormat: string;
   tooltips: Tooltips;
@@ -72,7 +68,7 @@ export interface TimeLayerSliderPanelState {
 export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelProps, TimeLayerSliderPanelState> {
 
   private _TimeLayerAwareSlider: any;
-  private _wmsTimeLayers: TimeLayerAwareConfig[];
+  private _wmsTimeLayers: any[];
   private _interval: number;
 
   /**
@@ -135,9 +131,9 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
   }
 
   componentDidUpdate(prevProps: TimeLayerSliderPanelProps) {
-    prevProps.timeAwareLayers.forEach((pl, i: number) => {
+    prevProps.timeAwareLayers.forEach((pl: any, i: number) => {
       const tpl = this.props.timeAwareLayers[i];
-      if (!(_isEqual(getUid(pl), getUid(tpl)))) {
+      if (!(_isEqual(pl.ol_uid, tpl.ol_uid))) {
         // update slider properties if layers were updated
         this.wrapTimeSlider();
         this.findRangeForLayers();

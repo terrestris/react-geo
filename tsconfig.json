@@ -20,11 +20,7 @@
     "sourceMap": true,
     "strictNullChecks": false,
     "suppressImplicitAnyIndexErrors": true,
-    "target": "es5",
-    "paths": {
-      "ol": ["node_modules/@hanreev/types-ol/ol"],
-      "ol/*": ["node_modules/@hanreev/types-ol/ol/*"]
-    }
+    "target": "es5"
   },
   "exclude": [
     "node_modules",

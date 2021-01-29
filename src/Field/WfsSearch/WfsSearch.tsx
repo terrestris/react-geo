@@ -20,7 +20,6 @@ import { CSS_PREFIX } from '../../constants';
 import { OptionProps } from 'antd/lib/select';
 
 import './WfsSearch.less';
-import SimpleGeometry from 'ol/geom/SimpleGeometry';
 
 interface DefaultProps {
   /**
@@ -243,7 +242,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
         const olView = olMap.getView();
         const geoJsonFormat = new OlFormatGeoJSON();
         const olFeature = geoJsonFormat.readFeature(feature);
-        const geometry = olFeature.getGeometry() as SimpleGeometry;
+        const geometry = olFeature.getGeometry();
 
         if (geometry) {
           olView.fit(geometry, {

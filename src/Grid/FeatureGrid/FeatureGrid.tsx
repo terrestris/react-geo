@@ -11,8 +11,8 @@ import OlFeature from 'ol/Feature';
 import OlSourceVector from 'ol/source/Vector';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerVector from 'ol/layer/Vector';
-import OlGeometry from 'ol/geom/Geometry';
-import OlGeometryCollection from 'ol/geom/GeometryCollection';
+import OlGeomGeometry from 'ol/geom/Geometry';
+import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
 const _isEqual = require('lodash/isEqual');
@@ -23,13 +23,12 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import './FeatureGrid.less';
 import { ColumnProps, TableProps } from 'antd/lib/table';
-import { getUid } from 'ol';
 
 interface DefaultProps {
   /**
    * The features to show in the grid and the map (if set).
    */
-  features: OlFeature<OlGeometry>[];
+  features: OlFeature[];
   /**
    */
   attributeBlacklist?: string[];
@@ -60,7 +59,7 @@ interface DefaultProps {
    * Default is: feature => feature.ol_uid
    *
    */
-  keyFunction: (feature: OlFeature<OlGeometry>) => string;
+  keyFunction: (feature: OlFeature) => string;
   /**
    * Whether the map should center on the current feature's extent on init or
    * not.
@@ -90,19 +89,19 @@ export interface BaseProps {
   /**
    * Callback function, that will be called on rowclick.
    */
-  onRowClick?: (row: any, feature: OlFeature<OlGeometry>) => void;
+  onRowClick?: (row: any, feature: OlFeature) => void;
   /**
    * Callback function, that will be called on rowmouseover.
    */
-  onRowMouseOver?: (row: any, feature: OlFeature<OlGeometry>) => void;
+  onRowMouseOver?: (row: any, feature: OlFeature) => void;
   /**
    * Callback function, that will be called on rowmouseout.
    */
-  onRowMouseOut?: (row: any, feature: OlFeature<OlGeometry>) => void;
+  onRowMouseOut?: (row: any, feature: OlFeature) => void;
   /**
    * Callback function, that will be called if the selection changes.
    */
-  onRowSelectionChange?: (selectedRowKeys: Array<number | string>, selectedFeatures: OlFeature<OlGeometry>[]) => void;
+  onRowSelectionChange?: (selectedRowKeys: Array<number | string>, selectedFeatures: OlFeature[]) => void;
 }
 
 interface FeatureGridState {
@@ -147,7 +146,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * The source holding the features of the grid.
    * @private
    */
-  _source: OlSourceVector<OlGeometry> = null;
+  _source: OlSourceVector = null;
 
   /**
    * The layer representing the features of the grid.
@@ -220,7 +219,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     }),
     layerName: 'react-geo-feature-grid-layer',
     columnDefs: {},
-    keyFunction: getUid,
+    keyFunction: feature => feature.ol_uid,
     zoomToExtent: false,
     selectable: false
   };
@@ -372,7 +371,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    *
    * @param olEvt The ol event.
    */
-  onMapPointerMove = (olEvt: OlMapBrowserEvent<MouseEvent>) => {
+  onMapPointerMove = (olEvt: OlMapBrowserEvent) => {
     const {
       map,
       features,
@@ -402,7 +401,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       }
     });
 
-    selectedFeatures.forEach((feature: OlFeature<OlGeometry>) => {
+    selectedFeatures.forEach((feature: OlFeature) => {
       const key = _kebabCase(this.props.keyFunction(feature));
       const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
       const el = document.querySelectorAll(sel)[0];
@@ -418,7 +417,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    *
    * @param olEvt The ol event.
    */
-  onMapSingleClick = (olEvt: OlMapBrowserEvent<MouseEvent>) => {
+  onMapSingleClick = (olEvt: OlMapBrowserEvent) => {
     const {
       map,
       selectStyle
@@ -428,9 +427,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       selectedRowKeys
     } = this.state;
 
-    const selectedFeatures = (map.getFeaturesAtPixel(olEvt.pixel, {
+    const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
       layerFilter: (layerCand: OlLayerBase) => layerCand === this._layer
-    }) || []) as OlFeature<OlGeometry>[];
+    }) || [];
 
     let rowKeys = [...selectedRowKeys];
 
@@ -512,7 +511,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
         return;
       }
 
-      if (props[key] instanceof OlGeometry) {
+      if (props[key] instanceof OlGeomGeometry) {
         return;
       }
 
@@ -542,7 +541,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     features.forEach(feature => {
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
-        .filter(key => !(properties[key] instanceof OlGeometry))
+        .filter(key => !(properties[key] instanceof OlGeomGeometry))
         .reduce((obj, key) => {
           obj[key] = properties[key];
           return obj;
@@ -563,7 +562,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * @param key The row key to obtain the feature from.
    * @return The feature candidate.
    */
-  getFeatureFromRowKey = (key: number | string): OlFeature<OlGeometry> => {
+  getFeatureFromRowKey = (key: number | string): OlFeature => {
     const {
       features,
       keyFunction
@@ -637,7 +636,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    *
    * @param features The features to zoom to.
    */
-  zoomToFeatures = (features: OlFeature<OlGeometry>[]) => {
+  zoomToFeatures = (features: OlFeature[]) => {
     const {
       map
     } = this.props;
@@ -652,7 +651,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     });
 
     if (featGeometries.length > 0) {
-      const geomCollection = new OlGeometryCollection(featGeometries);
+      const geomCollection = new OlGeomGeometryCollection(featGeometries);
       map.getView().fit(geomCollection.getExtent());
     }
   };
@@ -662,7 +661,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    *
    * @param highlightFeatures The features to highlight.
    */
-  highlightFeatures = (highlightFeatures: OlFeature<OlGeometry>[]) => {
+  highlightFeatures = (highlightFeatures: OlFeature[]) => {
     const {
       map,
       highlightStyle
@@ -680,7 +679,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    *
    * @param unhighlightFeatures The features to unhighlight.
    */
-  unhighlightFeatures = (unhighlightFeatures: OlFeature<OlGeometry>[]) => {
+  unhighlightFeatures = (unhighlightFeatures: OlFeature[]) => {
     const {
       map,
       selectStyle
@@ -709,7 +708,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    *
    * @param features The features to select.
    */
-  selectFeatures = (features: OlFeature<OlGeometry>[]) => {
+  selectFeatures = (features: OlFeature[]) => {
     const {
       map,
       selectStyle
