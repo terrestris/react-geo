@@ -7,17 +7,17 @@ import OlLayerBaseTile from 'ol/layer/BaseTile';
 import OlFormatGML2 from 'ol/format/GML2';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlFeature from 'ol/Feature';
-import { Coordinate } from 'ol/coordinate';
-import Geometry from 'ol/geom/Geometry';
-import Source from 'ol/source/Source';
 
 import _cloneDeep from 'lodash/cloneDeep';
-import _isString from 'lodash/isString';
 
 import Logger from '@terrestris/base-util/dist/Logger';
-import { isWmsLayer } from '../Util/isWmsLayer';
 
 import './CoordinateInfo.less';
+import { Coordinate } from 'ol/coordinate';
+import Geometry from 'ol/geom/Geometry';
+import _isString from 'lodash/isString';
+import Source from 'ol/source/Source';
+import { isWmsLayer } from '../Util/isWmsLayer';
 
 const format = new OlFormatGML2();
 

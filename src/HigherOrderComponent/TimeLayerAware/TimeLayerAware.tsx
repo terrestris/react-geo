@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import _isArray from 'lodash/isArray';
-
 import Layer from 'ol/layer/Layer';
 import ImageWMS from 'ol/source/ImageWMS';
 import TileWMS from 'ol/source/TileWMS';

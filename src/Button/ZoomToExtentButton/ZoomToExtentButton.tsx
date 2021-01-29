@@ -1,18 +1,17 @@
 import * as React from 'react';
 
-import _isFinite from 'lodash/isFinite';
-
 import OlMap from 'ol/Map';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import { easeOut } from 'ol/easing';
-import { Extent } from 'ol/extent';
-import { FitOptions } from 'ol/View';
 
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
+import { FitOptions } from 'ol/View';
 
 import logger from '@terrestris/base-util/dist/Logger';
+import _isFinite from 'lodash/isFinite';
+import { Extent } from 'ol/extent';
 
 interface DefaultProps {
   /**

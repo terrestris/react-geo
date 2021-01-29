@@ -14,16 +14,16 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlGeometry from 'ol/geom/Geometry';
 import OlGeometryCollection from 'ol/geom/GeometryCollection';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
-import { getUid } from 'ol';
 
-import _isEqual from 'lodash/isEqual';
-import _isFunction from 'lodash/isFunction';
-import _kebabCase from 'lodash/kebabCase';
+const _isEqual = require('lodash/isEqual');
+const _isFunction = require('lodash/isFunction');
+const _kebabCase = require('lodash/kebabCase');
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import './FeatureGrid.less';
 import { ColumnProps, TableProps } from 'antd/lib/table';
+import { getUid } from 'ol';
 
 interface DefaultProps {
   /**

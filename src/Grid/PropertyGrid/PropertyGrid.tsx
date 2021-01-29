@@ -5,13 +5,13 @@ import { ColumnProps, TableProps } from 'antd/lib/table';
 
 import OlGeometry from 'ol/geom/Geometry';
 import OlFeature from 'ol/Feature';
-import { getUid } from 'ol';
 
-import _get from 'lodash/get';
+const _get = require('lodash/get');
 
 import { CSS_PREFIX } from '../../constants';
 
 import './PropertyGrid.less';
+import { getUid } from 'ol';
 
 type AttributeNames = {
   [key: string]: string;

@@ -9,8 +9,6 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlSourceVector from 'ol/source/Vector';
 import OlStyleStyle from 'ol/style/Style';
 import OlStyleIcon from 'ol/style/Icon';
-import Geometry from 'ol/geom/Geometry';
-import GeometryLayout from 'ol/geom/GeometryLayout';
 
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
@@ -21,6 +19,8 @@ import { CSS_PREFIX } from '../../constants';
 
 import mapMarker from './geolocation-marker.png';
 import mapMarkerHeading from './geolocation-marker-heading.png';
+import Geometry from 'ol/geom/Geometry';
+import GeometryLayout from 'ol/geom/GeometryLayout';
 
 interface DefaultProps {
   /**

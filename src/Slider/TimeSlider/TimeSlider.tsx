@@ -3,8 +3,8 @@ import moment from 'moment';
 
 import { Slider } from 'antd';
 
-import isArray from 'lodash/isArray';
-import isObject from 'lodash/isObject';
+const isArray = require('lodash/isArray');
+const isObject = require('lodash/isObject');
 import { SliderMarks, SliderBaseProps } from 'antd/lib/slider';
 
 import { CSS_PREFIX } from '../../constants';
