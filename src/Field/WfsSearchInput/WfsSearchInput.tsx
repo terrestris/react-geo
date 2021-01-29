@@ -10,7 +10,7 @@ import CloseCircleOutlined from '@ant-design/icons/CloseCircleOutlined';
 
 import OlMap from 'ol/Map';
 
-import debounce from 'lodash/debounce';
+const debounce = require('lodash/debounce');
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';

@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import _isEqual from 'lodash/isEqual';
+const _isEqual = require('lodash/isEqual');
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-import OlBaseLayer from 'ol/layer/Base';
+import OlLayer from 'ol/layer/Layer';
 
 import { CSS_PREFIX } from '../constants';
 
@@ -16,7 +16,7 @@ export interface BaseProps {
   /**
    * The layer you want to display the legend of.
    */
-  layer: OlBaseLayer;
+  layer: OlLayer;
   /**
    * An object containing additional request params like "{HEIGHT: 400}" will
    * be transformed to "&HEIGHT=400" an added to the GetLegendGraphic request.
@@ -105,7 +105,7 @@ export class Legend extends React.Component<LegendProps, LegendState> {
    * @param layer The layer to get the legend graphic request for.
    * @param extraParams The extra params.
    */
-  getLegendUrl(layer: OlBaseLayer, extraParams: any) {
+  getLegendUrl(layer: OlLayer, extraParams: any) {
     let legendUrl;
 
     if (layer.get('legendUrl')) {
