@@ -1,18 +1,15 @@
 import * as React from 'react';
 
 import moment from 'moment';
+
 import OlLayer from 'ol/layer/Layer';
 import OlMap from 'ol/Map';
+import ImageWMS from 'ol/source/ImageWMS';
+import TileWMS from 'ol/source/TileWMS';
+import { getUid } from 'ol';
 
-const _isFinite = require('lodash/isFinite');
-const _isEqual = require('lodash/isEqual');
-
-import {
-  TimeSlider,
-  timeLayerAware,
-  ToggleButton,
-  SimpleButton
-} from '../../index';
+import _isFinite from 'lodash/isFinite';
+import _isEqual from 'lodash/isEqual';
 
 import {
   Select,
@@ -22,11 +19,12 @@ import {
 const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
 
+import timeLayerAware, { TimeLayerAwareConfig } from '../../HigherOrderComponent/TimeLayerAware/TimeLayerAware';
+import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
+import SimpleButton from '../../Button/SimpleButton/SimpleButton';
+import ToggleButton from '../../Button/ToggleButton/ToggleButton';
+
 import './TimeLayerSliderPanel.less';
-import { TimeLayerAwareConfig } from '../../HigherOrderComponent/TimeLayerAware/TimeLayerAware';
-import ImageWMS from 'ol/source/ImageWMS';
-import TileWMS from 'ol/source/TileWMS';
-import { getUid } from 'ol';
 
 type timeRange = [moment.Moment, moment.Moment];
 

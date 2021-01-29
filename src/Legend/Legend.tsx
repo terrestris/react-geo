@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const _isEqual = require('lodash/isEqual');
+import _isEqual from 'lodash/isEqual';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';

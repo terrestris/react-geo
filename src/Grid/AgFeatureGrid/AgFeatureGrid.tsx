@@ -9,15 +9,16 @@ import OlFeature from 'ol/Feature';
 import OlSourceVector from 'ol/source/Vector';
 import OlLayerVector from 'ol/layer/Vector';
 import OlLayerBase from 'ol/layer/Base';
-import OlGeomGeometry from 'ol/geom/Geometry';
+import OlGeometry from 'ol/geom/Geometry';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
+import { getUid } from 'ol';
 
-const _isArray = require('lodash/isArray');
-const _differenceWith = require('lodash/differenceWith');
-const _isEqual = require('lodash/isEqual');
-const _isFunction = require('lodash/isFunction');
-const _kebabCase = require('lodash/kebabCase');
+import _isArray from 'lodash/isArray';
+import _differenceWith from 'lodash/differenceWith';
+import _isEqual from 'lodash/isEqual';
+import _isFunction from 'lodash/isFunction';
+import _kebabCase from 'lodash/kebabCase';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
@@ -34,8 +35,6 @@ import {
   CellMouseOutEvent,
   SelectionChangedEvent
 } from '@ag-grid-community/core';
-import Geometry from 'ol/geom/Geometry';
-import { getUid } from 'ol';
 
 interface DefaultProps {
   /**
@@ -51,7 +50,7 @@ interface DefaultProps {
   /**
    * The features to show in the grid and the map (if set).
    */
-  features: OlFeature<Geometry>[];
+  features: OlFeature<OlGeometry>[];
   /**
    */
   attributeBlacklist?: string[];
@@ -80,7 +79,7 @@ interface DefaultProps {
    * Receives the feature as property.
    * Default is: feature => feature.ol_uid
    */
-  keyFunction: (feature: OlFeature<Geometry>) => string;
+  keyFunction: (feature: OlFeature<OlGeometry>) => string;
   /**
    * Whether the map should center on the current feature's extent on init or
    * not.
@@ -121,23 +120,23 @@ interface BaseProps {
   /**
    * Callback function, that will be called on rowclick.
    */
-  onRowClick?: (row: any, feature: OlFeature<Geometry>, evt: RowClickedEvent) => void;
+  onRowClick?: (row: any, feature: OlFeature<OlGeometry>, evt: RowClickedEvent) => void;
   /**
    * Callback function, that will be called on rowmouseover.
    */
-  onRowMouseOver?: (row: any, feature: OlFeature<Geometry>, evt: CellMouseOverEvent) => void;
+  onRowMouseOver?: (row: any, feature: OlFeature<OlGeometry>, evt: CellMouseOverEvent) => void;
   /**
    * Callback function, that will be called on rowmouseout.
    */
-  onRowMouseOut?: (row: any, feature: OlFeature<Geometry>, evt: CellMouseOutEvent) => void;
+  onRowMouseOut?: (row: any, feature: OlFeature<OlGeometry>, evt: CellMouseOutEvent) => void;
   /**
    * Callback function, that will be called if the selection changes.
    */
   onRowSelectionChange?: (
     selectedRowsAfter: any[],
-    selectedFeatures: OlFeature<Geometry>[],
+    selectedFeatures: OlFeature<OlGeometry>[],
     deselectedRows: any[],
-    deselectedFeatures: OlFeature<Geometry>[],
+    deselectedFeatures: OlFeature<OlGeometry>[],
     evt: SelectionChangedEvent
   ) => void;
   /**
@@ -146,7 +145,7 @@ interface BaseProps {
    * selected in the map. The function receives the olEvt and the selected
    * features (if any).
    */
-  onMapSingleClick?: (olEvt: OlMapBrowserEvent<MouseEvent>, selectedFeatures: OlFeature<Geometry>[]) => void;
+  onMapSingleClick?: (olEvt: OlMapBrowserEvent<MouseEvent>, selectedFeatures: OlFeature<OlGeometry>[]) => void;
   /*
    * A Function that is called once the grid is ready.
    */
@@ -442,7 +441,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
 
     const selectedFeatures = (map.getFeaturesAtPixel(olEvt.pixel, {
       layerFilter: layerCand => layerCand === this._layer
-    }) || []) as OlFeature<Geometry>[];
+    }) || []) as OlFeature<OlGeometry>[];
 
     if (!grid || !grid.api) {
       return;
@@ -510,7 +509,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
 
     const selectedFeatures = (map.getFeaturesAtPixel(olEvt.pixel, {
       layerFilter: (layerCand: OlLayerBase) => layerCand === this._layer
-    }) || []) as OlFeature<Geometry>[];
+    }) || []) as OlFeature<OlGeometry>[];
 
     if (_isFunction(onMapSingleClick)) {
       onMapSingleClick(olEvt, selectedFeatures);
@@ -617,7 +616,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
         return;
       }
 
-      if (props[key] instanceof OlGeomGeometry) {
+      if (props[key] instanceof OlGeometry) {
         return;
       }
 
@@ -651,7 +650,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     features.forEach(feature => {
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
-        .filter(key => !(properties[key] instanceof OlGeomGeometry))
+        .filter(key => !(properties[key] instanceof OlGeometry))
         .reduce((obj, key) => {
           obj[key] = properties[key];
           return obj;
@@ -672,7 +671,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * @param key The row key to obtain the feature from.
    * @return The feature candidate.
    */
-  getFeatureFromRowKey = (key: string): OlFeature<Geometry> => {
+  getFeatureFromRowKey = (key: string): OlFeature<OlGeometry> => {
     const {
       features,
       keyFunction
@@ -794,7 +793,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    *
    * @param features The features to zoom to.
    */
-  zoomToFeatures = (features: OlFeature<Geometry>[]) => {
+  zoomToFeatures = (features: OlFeature<OlGeometry>[]) => {
     const {
       map
     } = this.props;
@@ -819,7 +818,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    *
    * @param highlightFeatures The features to highlight.
    */
-  highlightFeatures = (highlightFeatures: OlFeature<Geometry>[]) => {
+  highlightFeatures = (highlightFeatures: OlFeature<OlGeometry>[]) => {
     const {
       map,
       highlightStyle
@@ -837,7 +836,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    *
    * @param unhighlightFeatures The features to unhighlight.
    */
-  unhighlightFeatures = (unhighlightFeatures: OlFeature<Geometry>[]) => {
+  unhighlightFeatures = (unhighlightFeatures: OlFeature<OlGeometry>[]) => {
     const {
       map,
       selectStyle
@@ -864,7 +863,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    *
    * @param features The features to select.
    */
-  selectFeatures = (features: OlFeature<Geometry>[]) => {
+  selectFeatures = (features: OlFeature<OlGeometry>[]) => {
     const {
       map,
       selectStyle

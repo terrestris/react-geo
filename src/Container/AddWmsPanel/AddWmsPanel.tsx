@@ -4,7 +4,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlLayerImage  from 'ol/layer/Image';
 import OlMap from 'ol/Map';
 
-const _isFunction = require('lodash/isFunction');
+import _isFunction from 'lodash/isFunction';
 
 import Panel, { PanelProps } from '../../Panel/Panel/Panel';
 import Titlebar from '../../Panel/Titlebar/Titlebar';
