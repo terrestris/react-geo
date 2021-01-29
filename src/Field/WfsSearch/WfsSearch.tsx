@@ -6,21 +6,21 @@ import {
 } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
+import { OptionProps } from 'antd/lib/select';
 
 import OlMap from 'ol/Map';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import SimpleGeometry from 'ol/geom/SimpleGeometry';
 
-const _isFunction = require('lodash/isFunction');
-const _debounce = require('lodash/debounce');
+import _isFunction from 'lodash/isFunction';
+import _debounce from 'lodash/debounce';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 
 import { CSS_PREFIX } from '../../constants';
-import { OptionProps } from 'antd/lib/select';
 
 import './WfsSearch.less';
-import SimpleGeometry from 'ol/geom/SimpleGeometry';
 
 interface DefaultProps {
   /**

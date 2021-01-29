@@ -1,5 +1,5 @@
 import * as React from 'react';
-const _isEmpty = require('lodash/isEmpty');
+import _isEmpty from 'lodash/isEmpty';
 
 import { CSS_PREFIX } from '../../constants';
 

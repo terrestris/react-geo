@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import _isEmpty from 'lodash/isEmpty';
+
 import OlMap from 'ol/Map';
 import OlLayerVector from 'ol/layer/Vector';
 import OlSourceVector from 'ol/source/Vector';
@@ -15,18 +17,18 @@ import OlStyleCircle from 'ol/style/Circle';
 import OlInteractionDraw, { DrawEvent } from 'ol/interaction/Draw';
 import { unByKey } from 'ol/Observable';
 import OlOverlay from 'ol/Overlay';
-import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
-import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-
-import { CSS_PREFIX } from '../../constants';
-
-import './MeasureButton.less';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import GeometryType from 'ol/geom/GeometryType';
 import OverlayPositioning from 'ol/OverlayPositioning';
 
-const _isEmpty = require('lodash/isEmpty');
+import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
+
+import { CSS_PREFIX } from '../../constants';
+
+import './MeasureButton.less';
 
 interface DefaultProps {
   /**

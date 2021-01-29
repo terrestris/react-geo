@@ -1,12 +1,14 @@
 import * as React from 'react';
+
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerImage from 'ol/layer/Image';
+import { Attribution } from 'ol/source/Source';
+
 import { Checkbox, Tooltip } from 'antd';
 
 import { Icon } from 'react-fa';
 
 import './AddWmsLayerEntry.less';
-import { Attribution } from 'ol/source/Source';
 
 interface DefaultProps {
   /**

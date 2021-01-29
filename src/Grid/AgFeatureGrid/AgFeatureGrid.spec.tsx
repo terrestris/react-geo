@@ -2,7 +2,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlLayerVector from 'ol/layer/Vector';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 
-const differenceWith = require('lodash/differenceWith');
+import differenceWith from 'lodash/differenceWith';
 
 import TestUtil from '../../Util/TestUtil';
 

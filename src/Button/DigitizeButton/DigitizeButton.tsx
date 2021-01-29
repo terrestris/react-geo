@@ -18,8 +18,13 @@ import OlInteractionModify from 'ol/interaction/Modify';
 import OlInteractionTranslate from 'ol/interaction/Translate';
 import OlFeature from 'ol/Feature';
 import { never, singleClick } from 'ol/events/condition';
+import OlGeometry from 'ol/geom/Geometry';
+import { Select } from 'ol/interaction';
+import Draw from 'ol/interaction/Draw';
+import Modify from 'ol/interaction/Modify';
+import Translate from 'ol/interaction/Translate';
 
-const _isFunction = require('lodash/isFunction');
+import _isFunction from 'lodash/isFunction';
 
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
@@ -28,11 +33,6 @@ import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
-import Geometry from 'ol/geom/Geometry';
-import { Select } from 'ol/interaction';
-import Draw from 'ol/interaction/Draw';
-import Modify from 'ol/interaction/Modify';
-import Translate from 'ol/interaction/Translate';
 
 interface DefaultProps {
   /**
@@ -126,7 +126,7 @@ interface BaseProps {
   /**
    * Style object / style function for drawn feature.
    */
-  drawStyle?: OlStyleStyle | ((feature: OlFeature<Geometry>) => OlStyleStyle);
+  drawStyle?: OlStyleStyle | ((feature: OlFeature<OlGeometry>) => OlStyleStyle);
   /**
    * Listener function for the 'drawend' event of an ol.interaction.Draw.
    * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
@@ -620,7 +620,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param text Text for labeled feature (optional).
    * @return The style to use.
    */
-  getSelectedStyleFunction = (feature: OlFeature<Geometry>, res: number, text: string) => {
+  getSelectedStyleFunction = (feature: OlFeature<OlGeometry>, res: number, text: string) => {
     const {
       selectFillColor,
       selectStrokeColor
@@ -1077,7 +1077,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param feat The point feature to be styled with label.
    * @param onModalOkCbk Optional callback function.
    */
-  setTextOnFeature = (feat: OlFeature<Geometry>, onModalOkCbk: (feat: OlFeature<Geometry>, label: string) => void) => {
+  setTextOnFeature = (feat: OlFeature<OlGeometry>, onModalOkCbk: (feat: OlFeature<OlGeometry>, label: string) => void) => {
     const {
       maxLabelLineLength
     } = this.props;

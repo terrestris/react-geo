@@ -2,19 +2,18 @@ import * as React from 'react';
 import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
+import { OptionProps } from 'antd/lib/select';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 
 import OlMap from 'ol/Map';
-
 import { transformExtent } from 'ol/proj';
+import { Extent } from 'ol/extent';
 
 import { CSS_PREFIX } from '../../constants';
-import { OptionProps } from 'antd/lib/select';
 
 import './NominatimSearch.less';
-import { Extent } from 'ol/extent';
 
 interface DefaultProps {
   /**
