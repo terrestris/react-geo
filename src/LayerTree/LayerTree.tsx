@@ -377,10 +377,6 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     let childNodes: LayerTreeNode[];
 
     if (layer instanceof OlLayerGroup) {
-      if (!layer.getVisible()) {
-        Logger.warn('Your map configuration contains layerGroups that are' +
-          'invisible. This might lead to buggy behaviour.');
-      }
       const childLayers = layer.getLayers().getArray()
         .filter(this.props.filterFunction);
       childNodes = childLayers.map((childLayer: OlLayerBase) => {
@@ -474,12 +470,42 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       return;
     }
     if (layer instanceof OlLayerGroup) {
+      layer.setVisible(visibility);
       layer.getLayers().forEach((subLayer) => {
         this.setLayerVisibility(subLayer, visibility);
       });
     } else {
       layer.setVisible(visibility);
+      // if layer has a parent folder, make it visible too
+      if (visibility) {
+        const group = this.props.layerGroup ? this.props.layerGroup :
+          this.props.map.getLayerGroup();
+        this.setParentFoldersVisible(group, layer.ol_uid, group);
+      }
     }
+  }
+
+  /**
+   * Find the parent OlLayerGroup for the given layers ol_uid and make it
+   * visible. Traverse the tree to also set the parenting layer groups visible
+   *
+   * @param currentGroup The current group to search in
+   * @param olUid The ol_uid of the layer or folder that has been set visible
+   * @param currentGroup The main group to search in. Needed when searching for
+   * parents as we always have to start search from top
+   */
+  setParentFoldersVisible(currentGroup: OlLayerBase, olUid: string, masterGroup) {
+    const items = currentGroup.getLayers().getArray();
+    const groups = items.filter(l => l instanceof OlLayerGroup);
+    const match = items.find(i => i.ol_uid === olUid);
+    if (match) {
+      currentGroup.setVisible(true);
+      this.setParentFoldersVisible(masterGroup, currentGroup.ol_uid, masterGroup);
+      return;
+    }
+    groups.forEach(g => {
+      this.setParentFoldersVisible(g, olUid, masterGroup);
+    });
   }
 
   /**

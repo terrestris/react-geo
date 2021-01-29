@@ -14,9 +14,11 @@ import Logger from '@terrestris/base-util/dist/Logger';
 
 describe('<LayerTree />', () => {
   let layerGroup;
+  let layerSubGroup;
   let map;
   let layer1;
   let layer2;
+  let layer3;
 
   beforeEach(() => {
     const layerSource1 = new OlSourceTileWMS();
@@ -30,9 +32,19 @@ describe('<LayerTree />', () => {
       visible: false,
       source: layerSource2
     });
+    const layerSource3 = new OlSourceTileWMS();
+    layer3 = new OlLayerTile({
+      name: 'layer3',
+      visible: false,
+      source: layerSource3
+    });
+    layerSubGroup = new OlLayerGroup({
+      name: 'layerSubGroup',
+      layers: [layer3]
+    });
     layerGroup = new OlLayerGroup({
       name: 'layerGroup',
-      layers: [layer1, layer2]
+      layers: [layer1, layer2, layerSubGroup]
     });
 
     map = TestUtil.createMap();
@@ -82,7 +94,7 @@ describe('<LayerTree />', () => {
       layers: [subLayer]
     });
 
-    expect(wrapper.instance().olListenerKeys).toHaveLength(6);
+    expect(wrapper.instance().olListenerKeys).toHaveLength(10);
     wrapper.setProps({
       layerGroup: nestedLayerGroup
     });
@@ -197,7 +209,7 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('.ant-tree-treenode');
 
-      expect(treeNodes.length).toBe(1);
+      expect(treeNodes.length).toBe(2);
     });
 
     it('sets the right keys for the layers', () => {
@@ -231,23 +243,6 @@ describe('<LayerTree />', () => {
     });
 
     describe('#treeNodeFromLayer', () => {
-
-      it('logs an error if called with an invisible layergroup', () => {
-        const props = {
-          layerGroup,
-          map
-        };
-        layerGroup.setVisible(false);
-
-        const logSpy = jest.spyOn(Logger, 'warn');
-        const wrapper = TestUtil.mountComponent(LayerTree, props);
-        wrapper.instance().treeNodeFromLayer(layerGroup);
-
-        expect(logSpy).toHaveBeenCalled();
-
-        logSpy.mockRestore();
-        layerGroup.setVisible(true);
-      });
 
       it('returns a LayerTreeNode when called with a layer', () => {
         const props = {
@@ -294,16 +289,16 @@ describe('<LayerTree />', () => {
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      let treeNode = wrapper.find('.ant-tree-treenode').at(1);
+      let treeNode = wrapper.find('.ant-tree-treenode').at(2);
 
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);
       layer1.setVisible(false);
       wrapper.update();
-      treeNode = wrapper.find('.ant-tree-treenode').at(1);
+      treeNode = wrapper.find('.ant-tree-treenode').at(2);
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(0);
       layer1.setVisible(true);
       wrapper.update();
-      treeNode = wrapper.find('.ant-tree-treenode').at(1);
+      treeNode = wrapper.find('.ant-tree-treenode').at(2);
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);
     });
 
@@ -524,7 +519,7 @@ describe('<LayerTree />', () => {
       expect(layer1.getVisible()).toBe(true);
     });
 
-    it('sets the visibility only for the children when called with a layerGroup', () => {
+    it('sets the visibility for the children when called with a layerGroup', () => {
       const props = {
         layerGroup,
         map
@@ -534,7 +529,7 @@ describe('<LayerTree />', () => {
       layer2.setVisible(true);
 
       wrapper.instance().setLayerVisibility(layerGroup, false);
-      expect(layerGroup.getVisible()).toBe(true);
+      expect(layerGroup.getVisible()).toBe(false);
       expect(layer1.getVisible()).toBe(false);
       expect(layer2.getVisible()).toBe(false);
 
@@ -542,6 +537,47 @@ describe('<LayerTree />', () => {
       expect(layerGroup.getVisible()).toBe(true);
       expect(layer1.getVisible()).toBe(true);
       expect(layer2.getVisible()).toBe(true);
+    });
+
+    it('sets the parent layerGroups visible when layer has been made visible', () => {
+      const props = {
+        layerGroup,
+        map
+      };
+      const wrapper = TestUtil.mountComponent(LayerTree, props);
+      layerGroup.setVisible(false);
+      layerSubGroup.setVisible(false);
+      layer1.setVisible(false);
+      layer2.setVisible(false);
+      layer3.setVisible(false);
+
+
+      wrapper.instance().setLayerVisibility(layer2, true);
+      expect(layerGroup.getVisible()).toBe(true);
+      expect(layer1.getVisible()).toBe(false);
+      expect(layer2.getVisible()).toBe(true);
+      expect(layer3.getVisible()).toBe(false);
+      expect(layerSubGroup.getVisible()).toBe(false);
+
+      wrapper.instance().setLayerVisibility(layer1, true);
+      expect(layerGroup.getVisible()).toBe(true);
+      expect(layer1.getVisible()).toBe(true);
+      expect(layer2.getVisible()).toBe(true);
+      expect(layer3.getVisible()).toBe(false);
+      expect(layerSubGroup.getVisible()).toBe(false);
+
+      layerGroup.setVisible(false);
+      layerSubGroup.setVisible(false);
+      layer1.setVisible(false);
+      layer2.setVisible(false);
+      layer3.setVisible(false);
+
+      wrapper.instance().setLayerVisibility(layer3, true);
+      expect(layer1.getVisible()).toBe(false);
+      expect(layer2.getVisible()).toBe(false);
+      expect(layer3.getVisible()).toBe(true);
+      expect(layerSubGroup.getVisible()).toBe(true);
+      expect(layerGroup.getVisible()).toBe(true);
     });
 
   });
