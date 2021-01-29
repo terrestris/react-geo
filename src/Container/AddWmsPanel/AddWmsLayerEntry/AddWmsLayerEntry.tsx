@@ -6,6 +6,7 @@ import { Checkbox, Tooltip } from 'antd';
 import { Icon } from 'react-fa';
 
 import './AddWmsLayerEntry.less';
+import { Attribution } from 'ol/source/Source';
 
 interface DefaultProps {
   /**
@@ -27,7 +28,7 @@ interface BaseProps {
 }
 
 interface AddWmsLayerEntryState {
-  copyright: string;
+  copyright: Attribution;
   queryable: boolean;
 }
 
@@ -49,6 +50,7 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
    */
   constructor(props: AddWmsLayerEntryProps) {
     super(props);
+    // TODO: getAttributions is not @api and returns a function in v6.5
     this.state = {
       copyright: props.wmsLayer.getSource().getAttributions(),
       queryable: props.wmsLayer.get('queryable')

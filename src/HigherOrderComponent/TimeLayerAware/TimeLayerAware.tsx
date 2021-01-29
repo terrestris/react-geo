@@ -1,7 +1,15 @@
 import * as React from 'react';
-import OlLayerBase from 'ol/layer/Base';
 
-const _isArray = require('lodash/isArray');
+import _isArray from 'lodash/isArray';
+import Layer from 'ol/layer/Layer';
+import ImageWMS from 'ol/source/ImageWMS';
+import TileWMS from 'ol/source/TileWMS';
+
+export type TimeLayerAwareConfig = {
+  isWmsTime?: boolean;
+  layer: Layer<ImageWMS|TileWMS>;
+  customHandler?: (values: any) => void;
+};
 
 /**
  * Finds the key time in the passed object regardless of upper- or lowercase
@@ -32,7 +40,7 @@ const findTimeParam = (params: any) => {
  * @param layers An array of layer configurations.
  * @return A time layer aware component.
  */
-export function timeLayerAware<P extends any>(WrappedComponent: React.ComponentType<P>, layers: OlLayerBase[]) {
+export function timeLayerAware<P>(WrappedComponent: React.ComponentType<P>, layers: TimeLayerAwareConfig[]) {
 
   return class TimeLayerAware extends React.Component<Omit<P, 'onChange'>> {
 

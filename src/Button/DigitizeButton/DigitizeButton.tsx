@@ -12,7 +12,6 @@ import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
 import OlStyleText from 'ol/style/Text';
-import OlInteraction from 'ol/interaction/Interaction';
 import OlInteractionDraw, { createBox } from 'ol/interaction/Draw';
 import OlInteractionSelect from 'ol/interaction/Select';
 import OlInteractionModify from 'ol/interaction/Modify';
@@ -29,6 +28,11 @@ import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
+import Geometry from 'ol/geom/Geometry';
+import { Select } from 'ol/interaction';
+import Draw from 'ol/interaction/Draw';
+import Modify from 'ol/interaction/Modify';
+import Translate from 'ol/interaction/Translate';
 
 interface DefaultProps {
   /**
@@ -122,7 +126,7 @@ interface BaseProps {
   /**
    * Style object / style function for drawn feature.
    */
-  drawStyle?: OlStyleStyle | ((feature: OlFeature) => OlStyleStyle);
+  drawStyle?: OlStyleStyle | ((feature: OlFeature<Geometry>) => OlStyleStyle);
   /**
    * Listener function for the 'drawend' event of an ol.interaction.Draw.
    * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
@@ -251,25 +255,25 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * The draw interaction.
    * @private
    */
-  _drawInteraction?: OlInteraction;
+  _drawInteraction?: Draw;
 
   /**
    * The select interaction.
    * @private
    */
-  _selectInteraction?: OlInteraction;
+  _selectInteraction?: Select;
 
   /**
    * The modify interaction.
    * @private
    */
-  _modifyInteraction?: OlInteraction;
+  _modifyInteraction?: Modify;
 
   /**
    * The translate interaction.
    * @private
    */
-  _translateInteraction?: OlInteraction;
+  _translateInteraction?: Translate;
 
   /**
    * Name of point draw type.
@@ -616,7 +620,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param text Text for labeled feature (optional).
    * @return The style to use.
    */
-  getSelectedStyleFunction = (feature: OlFeature, res: number, text: React.ReactText) => {
+  getSelectedStyleFunction = (feature: OlFeature<Geometry>, res: number, text: string) => {
     const {
       selectFillColor,
       selectStrokeColor
@@ -1073,7 +1077,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param feat The point feature to be styled with label.
    * @param onModalOkCbk Optional callback function.
    */
-  setTextOnFeature = (feat: OlFeature, onModalOkCbk: (feat: OlFeature, label: string) => void) => {
+  setTextOnFeature = (feat: OlFeature<Geometry>, onModalOkCbk: (feat: OlFeature<Geometry>, label: string) => void) => {
     const {
       maxLabelLineLength
     } = this.props;

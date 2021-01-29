@@ -29,6 +29,8 @@ import {
 } from 'rc-tree/lib/interface';
 
 import { AntTreeNodeDropEvent } from 'antd/lib/tree/Tree';
+import { ReactElement } from 'react';
+import { getUid } from 'ol';
 
 interface DefaultProps extends TreeProps {
   /**
@@ -75,8 +77,8 @@ export interface BaseProps {
 
 interface LayerTreeState {
   layerGroup: OlLayerGroup;
-  layerGroupRevision: null;
-  treeNodes: LayerTreeNode[];
+  layerGroupRevision?: number;
+  treeNodes: ReactElement[];
   checkedKeys: React.ReactText[];
   mapResolution: -1;
 }
@@ -124,7 +126,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    */
   static getDerivedStateFromProps(nextProps: LayerTreeProps, prevState: LayerTreeState) {
     if (prevState.layerGroup && nextProps.layerGroup) {
-      if (!_isEqual(prevState.layerGroup.ol_uid, nextProps.layerGroup.ol_uid) ||
+      if (!_isEqual(getUid(prevState.layerGroup), getUid(nextProps.layerGroup)) ||
         !_isEqual(prevState.layerGroupRevision, nextProps.layerGroup.getRevision())) {
         return {
           layerGroup: nextProps.layerGroup,
@@ -186,7 +188,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     } = this.props;
 
     if (layerGroup && prevState.layerGroup) {
-      if (!_isEqual(prevState.layerGroup.ol_uid, layerGroup.ol_uid)) {
+      if (!_isEqual(getUid(prevState.layerGroup), getUid(layerGroup))) {
         unByKey(this.olListenerKeys);
         this.olListenerKeys = [];
 
@@ -373,8 +375,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @param layer The given layer.
    * @return The corresponding LayerTreeNode Element.
    */
-  treeNodeFromLayer(layer: OlLayerBase) {
-    let childNodes: LayerTreeNode[];
+  treeNodeFromLayer(layer: OlLayerBase): ReactElement {
+    let childNodes: ReactElement[];
 
     if (layer instanceof OlLayerGroup) {
       const childLayers = layer.getLayers().getArray()
@@ -393,7 +395,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     return (
       <LayerTreeNode
         title={this.getTreeNodeTitle(layer)}
-        key={layer.ol_uid.toString()}
+        key={getUid(layer)}
         inResolutionRange={MapUtil.layerInResolutionRange(layer, this.props.map)}
       >
         {childNodes}
@@ -441,7 +443,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     const layers = MapUtil.getAllLayers(this.state.layerGroup, (layer) => {
       return !(layer instanceof OlLayerGroup) && layer.getVisible();
     }).filter(this.props.filterFunction);
-    return layers.map(l => l.ol_uid.toString());
+    return layers.map(getUid);
   };
 
   /**
