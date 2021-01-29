@@ -419,6 +419,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
         onResize={this.onResize.bind(this)}
         onResizeStart={this.onResizeStart.bind(this)}
         onResizeStop={this.onResizeStop.bind(this)}
+        cancel='.react-geo-titlebar .controls'
         {...rndOpts}
       >
         {titleBar}
