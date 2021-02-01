@@ -31,7 +31,6 @@ import LayerTreeNode from './LayerTreeNode/LayerTreeNode';
 import { CSS_PREFIX } from '../constants';
 
 
-
 interface DefaultProps extends TreeProps {
   /**
    *

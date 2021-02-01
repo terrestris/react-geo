@@ -1077,7 +1077,8 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param feat The point feature to be styled with label.
    * @param onModalOkCbk Optional callback function.
    */
-  setTextOnFeature = (feat: OlFeature<OlGeometry>, onModalOkCbk: (feat: OlFeature<OlGeometry>, label: string) => void) => {
+  setTextOnFeature = (feat: OlFeature<OlGeometry>,
+    onModalOkCbk: (feat: OlFeature<OlGeometry>, label: string) => void) => {
     const {
       maxLabelLineLength
     } = this.props;
