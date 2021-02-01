@@ -11,8 +11,7 @@ import { CSS_PREFIX } from '../constants';
 import MapComponent from '../Map/MapComponent/MapComponent';
 
 import './LayerSwitcher.less';
-
-type ArrayTwoOrMore<T> = [T, T] & T[];
+import { ArrayTwoOrMore } from '../Util/ArrayTwoOrMore';
 
 /**
  * @export
