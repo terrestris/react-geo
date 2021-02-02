@@ -109,7 +109,7 @@
     "@types/enzyme": "^3.10.4",
     "@types/jest": "^26.0.0",
     "@types/react": "^16.9.38",
-    "@typescript-eslint/eslint-plugin": "^3.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.0",
     "@typescript-eslint/eslint-plugin-tslint": "^4.1.1",
     "@typescript-eslint/parser": "^3.4.0",
     "antd": "^4.5.1",
