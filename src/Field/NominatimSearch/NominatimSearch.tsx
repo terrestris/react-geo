@@ -18,6 +18,24 @@ import { CSS_PREFIX } from '../../constants';
 
 import './NominatimSearch.less';
 
+// See https://nominatim.org/release-docs/develop/api/Output/ for some more information
+export type NominatimPlace = {
+  place_id: number;
+  osm_type: string;
+  osm_id: number;
+  boundingbox: string[];
+  display_name: string;
+  category: string;
+  type: string;
+  importance: number;
+  icon?: string;
+  adress?: any;
+  extratags?: any;
+  namedetails?: any;
+  geojson: GeoJSON;
+  licence: string;
+};
+
 interface DefaultProps {
   /**
    * The Nominatim Base URL. See https://wiki.openstreetmap.org/wiki/Nominatim
@@ -107,24 +125,6 @@ interface BaseProps {
    */
   onClear?: () => void;
 }
-
-// See https://nominatim.org/release-docs/develop/api/Output/ for some more information
-type NominatimPlace = {
-  place_id: number;
-  osm_type: string;
-  osm_id: number;
-  boundingbox: string[];
-  display_name: string;
-  category: string;
-  type: string;
-  importance: number;
-  icon?: string;
-  adress?: any;
-  extratags?: any;
-  namedetails?: any;
-  geojson: GeoJSON;
-  licence: string;
-};
 
 interface NominatimSearchState {
   searchTerm: string;
