@@ -2,7 +2,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlLayerVector from 'ol/layer/Vector';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 
-import differenceWith from 'lodash/differenceWith';
+import _differenceWith from 'lodash/differenceWith';
 
 import TestUtil from '../../Util/TestUtil';
 
@@ -349,7 +349,7 @@ describe('<AgFeatureGrid />', () => {
       expect(selectedRows).toEqual(selectionAfter);
 
       // deselectedRows is the third passed parameter
-      const deselectedRows = differenceWith(selectionCurrent, selectionAfter, (a,b) => a.key === b.key);
+      const deselectedRows = _differenceWith(selectionCurrent, selectionAfter, (a,b) => a.key === b.key);
       const deselectedRowsIs = onRowSelectionChange.mock.calls[0][2];
       expect(deselectedRowsIs).toEqual(deselectedRows);
     });

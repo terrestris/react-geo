@@ -10,7 +10,7 @@ import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 
 import OlMap from 'ol/Map';
 import { transformExtent } from 'ol/proj';
-import { Extent } from 'ol/extent';
+import { Extent as OlExtent } from 'ol/extent';
 
 import { GeoJSON } from 'geojson';
 
@@ -29,7 +29,7 @@ export type NominatimPlace = {
   type: string;
   importance: number;
   icon?: string;
-  adress?: any;
+  address?: any;
   extratags?: any;
   namedetails?: any;
   geojson: GeoJSON;
@@ -189,7 +189,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
           bbox[0],
           bbox[3],
           bbox[1]
-        ] as Extent;
+        ] as OlExtent;
 
         extent = transformExtent(extent, 'EPSG:4326',
           olView.getProjection().getCode());

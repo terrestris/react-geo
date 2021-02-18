@@ -19,10 +19,6 @@ import OlInteractionTranslate from 'ol/interaction/Translate';
 import OlFeature from 'ol/Feature';
 import * as OlEventConditions from 'ol/events/condition';
 import OlGeometry from 'ol/geom/Geometry';
-import { Select as OlSelect } from 'ol/interaction';
-import OlDraw from 'ol/interaction/Draw';
-import OlModify from 'ol/interaction/Modify';
-import OlTranslate from 'ol/interaction/Translate';
 
 import _isFunction from 'lodash/isFunction';
 
@@ -255,25 +251,25 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * The draw interaction.
    * @private
    */
-  _drawInteraction?: OlDraw;
+  _drawInteraction?: OlInteractionDraw;
 
   /**
    * The select interaction.
    * @private
    */
-  _selectInteraction?: OlSelect;
+  _selectInteraction?: OlInteractionSelect;
 
   /**
    * The modify interaction.
    * @private
    */
-  _modifyInteraction?: OlModify;
+  _modifyInteraction?: OlInteractionModify;
 
   /**
    * The translate interaction.
    * @private
    */
-  _translateInteraction?: OlTranslate;
+  _translateInteraction?: OlInteractionTranslate;
 
   /**
    * Name of point draw type.
