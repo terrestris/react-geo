@@ -25,5 +25,5 @@ export function isWmsLayer(layer: OlBaseLayer): layer is OlLayer<OlImageWMS | Ol
 }
 
 export function isImageOrTileLayer(layer: OlBaseLayer): layer is ImageLayer | TileLayer {
-  return layer instanceof ImageLayer || layer instanceof TileLayer
+  return layer instanceof ImageLayer || layer instanceof TileLayer;
 }

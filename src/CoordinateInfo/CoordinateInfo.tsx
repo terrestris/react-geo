@@ -7,6 +7,9 @@ import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlFeature from 'ol/Feature';
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import OlGeometry from 'ol/geom/Geometry';
+import OlBaseLayer from 'ol/layer/Base';
+import OlImageLayer from 'ol/layer/Image';
+import OlTileLayer from 'ol/layer/Tile';
 
 import _cloneDeep from 'lodash/cloneDeep';
 import _isString from 'lodash/isString';
@@ -16,9 +19,6 @@ import Logger from '@terrestris/base-util/dist/Logger';
 import { isImageOrTileLayer, isWmsLayer } from '../Util/typeUtils';
 
 import './CoordinateInfo.less';
-import BaseLayer from 'ol/layer/Base';
-import ImageLayer from 'ol/layer/Image';
-import TileLayer from 'ol/layer/Tile';
 
 const format = new OlFormatGML2();
 
@@ -26,7 +26,7 @@ interface DefaultProps {
   /**
    * List of (WMS) layers that should be queried.
    */
-  queryLayers: Array<ImageLayer | TileLayer>;
+  queryLayers: Array<OlImageLayer | OlTileLayer>;
 
   /**
    * The number of max. features that should be returned by the GFI request.
@@ -211,7 +211,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       });
   }
 
-  layerFilter(layerCandidate: BaseLayer) {
+  layerFilter(layerCandidate: OlBaseLayer) {
     const {
       queryLayers
     } = this.props;
