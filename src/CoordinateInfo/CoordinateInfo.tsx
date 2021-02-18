@@ -2,23 +2,23 @@ import * as React from 'react';
 
 import OlMap from 'ol/Map';
 import OlLayer from 'ol/layer/Layer';
-import OlLayerBaseImage from 'ol/layer/BaseImage';
-import OlLayerBaseTile from 'ol/layer/BaseTile';
 import OlFormatGML2 from 'ol/format/GML2';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlFeature from 'ol/Feature';
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import OlGeometry from 'ol/geom/Geometry';
-import OlSource from 'ol/source/Source';
 
 import _cloneDeep from 'lodash/cloneDeep';
 import _isString from 'lodash/isString';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
-import { isWmsLayer } from '../Util/typeUtils';
+import { isImageOrTileLayer, isWmsLayer } from '../Util/typeUtils';
 
 import './CoordinateInfo.less';
+import BaseLayer from 'ol/layer/Base';
+import ImageLayer from 'ol/layer/Image';
+import TileLayer from 'ol/layer/Tile';
 
 const format = new OlFormatGML2();
 
@@ -26,7 +26,7 @@ interface DefaultProps {
   /**
    * List of (WMS) layers that should be queried.
    */
-  queryLayers: Array<OlLayerBaseImage | OlLayerBaseTile>;
+  queryLayers: Array<ImageLayer | TileLayer>;
 
   /**
    * The number of max. features that should be returned by the GFI request.
@@ -211,12 +211,12 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       });
   }
 
-  layerFilter(layerCandidate: OlLayer<OlSource>) {
+  layerFilter(layerCandidate: BaseLayer) {
     const {
       queryLayers
     } = this.props;
 
-    return isWmsLayer(layerCandidate) && queryLayers.includes(layerCandidate);
+    return isWmsLayer(layerCandidate) && isImageOrTileLayer(layerCandidate) && queryLayers.includes(layerCandidate);
   }
 
   render () {
