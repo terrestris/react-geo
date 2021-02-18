@@ -4,8 +4,8 @@ import moment from 'moment';
 
 import OlLayer from 'ol/layer/Layer';
 import OlMap from 'ol/Map';
-import ImageWMS from 'ol/source/ImageWMS';
-import TileWMS from 'ol/source/TileWMS';
+import OlImageWMS from 'ol/source/ImageWMS';
+import OlTileWMS from 'ol/source/TileWMS';
 import { getUid } from 'ol';
 
 import _isFinite from 'lodash/isFinite';
@@ -43,7 +43,7 @@ export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 export interface DefaultTimeLayerSliderPanelProps {
   className: string;
   onChange: (arg: moment.Moment) => void;
-  timeAwareLayers: OlLayer<ImageWMS|TileWMS>[];
+  timeAwareLayers: OlLayer<OlImageWMS|OlTileWMS>[];
   value: moment.Moment;
   dateFormat: string;
   tooltips: Tooltips;

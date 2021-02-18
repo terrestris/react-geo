@@ -9,8 +9,8 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlSourceVector from 'ol/source/Vector';
 import OlStyleStyle from 'ol/style/Style';
 import OlStyleIcon from 'ol/style/Icon';
-import Geometry from 'ol/geom/Geometry';
-import GeometryLayout from 'ol/geom/GeometryLayout';
+import OlGeometry from 'ol/geom/Geometry';
+import OlGeometryLayout from 'ol/geom/GeometryLayout';
 
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
@@ -127,7 +127,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
    * The styleFunction for the geoLocationLayer. Shows a marker with arrow when
    * heading is not 0.
    */
-  _styleFunction = (feature: OlFeature<Geometry>) => {
+  _styleFunction = (feature: OlFeature<OlGeometry>) => {
     const heading = feature.get('heading');
     const src = heading !== 0 ? mapMarkerHeading : mapMarker;
     const rotation = heading !== 0 ? heading * Math.PI / 180 : 0;
@@ -170,7 +170,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
     } = this.props;
     const allLayers = MapUtil.getAllLayers(map);
 
-    this._positions = new OlGeomLineString([], GeometryLayout.XYZM);
+    this._positions = new OlGeomLineString([], OlGeometryLayout.XYZM);
     this._geoLocationLayer.setStyle(this._styleFunction);
     if (!allLayers.includes(this._geoLocationLayer)) {
       map.addLayer(this._geoLocationLayer);

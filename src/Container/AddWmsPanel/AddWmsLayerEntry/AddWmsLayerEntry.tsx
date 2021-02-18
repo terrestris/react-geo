@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerImage from 'ol/layer/Image';
-import { Attribution } from 'ol/source/Source';
+import { Attribution as OlAttribution } from 'ol/source/Source';
 
 import { Checkbox, Tooltip } from 'antd';
 
@@ -30,7 +30,7 @@ interface BaseProps {
 }
 
 interface AddWmsLayerEntryState {
-  copyright: Attribution;
+  copyright: OlAttribution;
   queryable: boolean;
 }
 

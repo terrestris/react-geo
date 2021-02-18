@@ -7,9 +7,9 @@ import OlLayerBaseTile from 'ol/layer/BaseTile';
 import OlFormatGML2 from 'ol/format/GML2';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlFeature from 'ol/Feature';
-import { Coordinate } from 'ol/coordinate';
-import Geometry from 'ol/geom/Geometry';
-import Source from 'ol/source/Source';
+import { Coordinate as OlCoordinate } from 'ol/coordinate';
+import OlGeometry from 'ol/geom/Geometry';
+import OlSource from 'ol/source/Source';
 
 import _cloneDeep from 'lodash/cloneDeep';
 import _isString from 'lodash/isString';
@@ -60,7 +60,7 @@ interface BaseProps {
 }
 
 interface CoordinateInfoState {
-  clickCoordinate: Coordinate | null;
+  clickCoordinate: OlCoordinate | null;
   features: any;
   loading: boolean;
 }
@@ -183,7 +183,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
 
         textResponses.forEach((featureCollection: string) => {
           const fc = format.readFeatures(featureCollection);
-          fc.forEach((feature: OlFeature<Geometry>) => {
+          fc.forEach((feature: OlFeature<OlGeometry>) => {
             const id = feature.getId();
             const featureTypeName = _isString(id) ? id.split('.')[0] : id;
 
@@ -210,7 +210,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       });
   }
 
-  layerFilter(layerCandidate: OlLayer<Source>) {
+  layerFilter(layerCandidate: OlLayer<OlSource>) {
     const {
       queryLayers
     } = this.props;

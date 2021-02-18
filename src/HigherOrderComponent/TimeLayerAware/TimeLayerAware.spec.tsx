@@ -1,8 +1,8 @@
 import * as React from 'react';
 import moment from 'moment';
 
-import TileLayer from 'ol/layer/Tile.js';
-import TileWMS from 'ol/source/TileWMS';
+import OlTileLayer from 'ol/layer/Tile.js';
+import OlTileWMS from 'ol/source/TileWMS';
 
 import TestUtil from '../../Util/TestUtil';
 
@@ -26,16 +26,16 @@ describe('timeLayerAware', () => {
   /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
-    layer = new TileLayer({
-      source: new TileWMS({
+    layer = new OlTileLayer({
+      source: new OlTileWMS({
         params: {
           LAYERS: 'humpty:dumpty',
           TIME: 'overwrite me!'
         }
       })
     });
-    layerWithFunnyTimeSpelling = new TileLayer({
-      source: new TileWMS({
+    layerWithFunnyTimeSpelling = new OlTileLayer({
+      source: new OlTileWMS({
         params: {
           LAYERS: 'humpty:dumpty',
           tImE: 'overwrite me!'

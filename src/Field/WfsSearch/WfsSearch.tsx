@@ -10,7 +10,7 @@ import { OptionProps } from 'antd/lib/select';
 
 import OlMap from 'ol/Map';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
-import SimpleGeometry from 'ol/geom/SimpleGeometry';
+import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 
 import _isFunction from 'lodash/isFunction';
 import _debounce from 'lodash/debounce';
@@ -243,7 +243,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
         const olView = olMap.getView();
         const geoJsonFormat = new OlFormatGeoJSON();
         const olFeature = geoJsonFormat.readFeature(feature);
-        const geometry = olFeature.getGeometry() as SimpleGeometry;
+        const geometry = olFeature.getGeometry() as OlSimpleGeometry;
 
         if (geometry) {
           olView.fit(geometry, {

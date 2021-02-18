@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import _isArray from 'lodash/isArray';
 
-import Layer from 'ol/layer/Layer';
-import ImageWMS from 'ol/source/ImageWMS';
-import TileWMS from 'ol/source/TileWMS';
+import OlLayer from 'ol/layer/Layer';
+import OlImageWMS from 'ol/source/ImageWMS';
+import OlTileWMS from 'ol/source/TileWMS';
 
 export type TimeLayerAwareConfig = {
   isWmsTime?: boolean;
-  layer: Layer<ImageWMS|TileWMS>;
+  layer: OlLayer<OlImageWMS|OlTileWMS>;
   customHandler?: (values: any) => void;
 };
 

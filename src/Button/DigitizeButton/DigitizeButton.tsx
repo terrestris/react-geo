@@ -17,12 +17,12 @@ import OlInteractionSelect from 'ol/interaction/Select';
 import OlInteractionModify from 'ol/interaction/Modify';
 import OlInteractionTranslate from 'ol/interaction/Translate';
 import OlFeature from 'ol/Feature';
-import { never, singleClick } from 'ol/events/condition';
+import * as OlEventConditions from 'ol/events/condition';
 import OlGeometry from 'ol/geom/Geometry';
-import { Select } from 'ol/interaction';
-import Draw from 'ol/interaction/Draw';
-import Modify from 'ol/interaction/Modify';
-import Translate from 'ol/interaction/Translate';
+import { Select as OlSelect } from 'ol/interaction';
+import OlDraw from 'ol/interaction/Draw';
+import OlModify from 'ol/interaction/Modify';
+import OlTranslate from 'ol/interaction/Translate';
 
 import _isFunction from 'lodash/isFunction';
 
@@ -255,25 +255,25 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * The draw interaction.
    * @private
    */
-  _drawInteraction?: Draw;
+  _drawInteraction?: OlDraw;
 
   /**
    * The select interaction.
    * @private
    */
-  _selectInteraction?: Select;
+  _selectInteraction?: OlSelect;
 
   /**
    * The modify interaction.
    * @private
    */
-  _modifyInteraction?: Modify;
+  _modifyInteraction?: OlModify;
 
   /**
    * The translate interaction.
    * @private
    */
-  _translateInteraction?: Translate;
+  _translateInteraction?: OlTranslate;
 
   /**
    * Name of point draw type.
@@ -702,7 +702,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         type: type,
         geometryFunction: geometryFunction,
         style: this.getDigitizeStyleFunction,
-        freehandCondition: never,
+        freehandCondition: OlEventConditions.never,
         ...drawInteractionConfig
       });
 
@@ -749,7 +749,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     if (!selectInteraction) {
       selectInteraction = new OlInteractionSelect({
-        condition: singleClick,
+        condition: OlEventConditions.singleClick,
         hitTolerance: DigitizeButton.HIT_TOLERANCE,
         style: this.getSelectedStyleFunction,
         ...selectInteractionConfig
@@ -795,7 +795,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (!modifyInteraction) {
       modifyInteraction = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
-        deleteCondition: singleClick,
+        deleteCondition: OlEventConditions.singleClick,
         style: this.getSelectedStyleFunction,
         ...modifyInteractionConfig
       });
