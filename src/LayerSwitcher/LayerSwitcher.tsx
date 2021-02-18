@@ -9,9 +9,9 @@ import OlLayerTile from 'ol/layer/Tile';
 
 import { CSS_PREFIX } from '../constants';
 import MapComponent from '../Map/MapComponent/MapComponent';
+import { ArrayTwoOrMore, isLayerGroup } from '../Util/typeUtils';
 
 import './LayerSwitcher.less';
-import { ArrayTwoOrMore } from '../Util/ArrayTwoOrMore';
 
 /**
  * @export
@@ -128,7 +128,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    */
   cloneLayer = (layer: OlLayerTile | OlLayerGroup) => {
     let layerClone: OlLayerTile | OlLayerGroup;
-    if (layer instanceof OlLayerGroup) {
+    if (isLayerGroup(layer)) {
       layerClone = new OlLayerGroup({
         layers: layer.getLayers().getArray().map(this.cloneLayer),
         originalLayer: layer,

@@ -15,7 +15,8 @@ import _cloneDeep from 'lodash/cloneDeep';
 import _isString from 'lodash/isString';
 
 import Logger from '@terrestris/base-util/dist/Logger';
-import { isWmsLayer } from '../Util/isWmsLayer';
+
+import { isWmsLayer } from '../Util/typeUtils';
 
 import './CoordinateInfo.less';
 
