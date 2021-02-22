@@ -26,7 +26,7 @@ import _isEqual from 'lodash/isEqual';
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
-import LayerTreeNode from './LayerTreeNode/LayerTreeNode';
+import LayerTreeNode, { LayerTreeNodeProps } from './LayerTreeNode/LayerTreeNode';
 
 import { CSS_PREFIX } from '../constants';
 
@@ -77,7 +77,7 @@ export interface BaseProps {
 interface LayerTreeState {
   layerGroup: OlLayerGroup;
   layerGroupRevision?: number;
-  treeNodes: ReactElement[];
+  treeNodes: ReactElement<LayerTreeNodeProps>[];
   checkedKeys: React.ReactText[];
   mapResolution: -1;
 }
@@ -87,7 +87,7 @@ export type LayerTreeProps = BaseProps & Partial<DefaultProps> & TreeProps;
 /**
  * The LayerTree.
  *
- * Note. This component expects that all layerGroups are permanently visibile.
+ * Note. This component expects that all layerGroups are permanently visible.
  *
  * @class LayerTree
  * @extends React.Component
@@ -374,8 +374,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @param layer The given layer.
    * @return The corresponding LayerTreeNode Element.
    */
-  treeNodeFromLayer(layer: OlLayerBase): ReactElement {
-    let childNodes: ReactElement[];
+  treeNodeFromLayer(layer: OlLayerBase): ReactElement<LayerTreeNodeProps> {
+    let childNodes: ReactElement<LayerTreeNodeProps>[];
 
     if (layer instanceof OlLayerGroup) {
       const childLayers = layer.getLayers().getArray()

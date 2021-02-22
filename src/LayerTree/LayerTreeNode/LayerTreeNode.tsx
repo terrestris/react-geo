@@ -11,7 +11,7 @@ export interface BaseProps {
   inResolutionRange?: boolean;
 }
 
-export type LayerTreeNodeProps = BaseProps & Partial<AntTreeNodeProps>;
+export type LayerTreeNodeProps = BaseProps & AntTreeNodeProps;
 
 /**
  * Class representing a layer tree node
