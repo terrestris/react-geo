@@ -798,7 +798,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
 
     let rowClassNameFn: (record: any) => string;
     if (_isFunction(rowClassName)) {
-      rowClassNameFn = record => `${this._rowClassName} ${(rowClassName as ((record: any) => string))(record)}`;
+      rowClassNameFn = record => `${this._rowClassName} ${(rowClassName as ((r: any) => string))(record)}`;
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`

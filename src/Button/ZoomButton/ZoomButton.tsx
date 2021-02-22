@@ -5,7 +5,7 @@ import { easeOut } from 'ol/easing';
 
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
-import { AnimationOptions } from 'ol/View';
+import { AnimationOptions as OlViewAnimationOptions } from 'ol/View';
 
 interface DefaultProps {
   /**
@@ -22,7 +22,7 @@ interface DefaultProps {
    * milliseconds and an easing which starts fast and then slows down will be
    * used.
    */
-  animateOptions: AnimationOptions;
+  animateOptions: OlViewAnimationOptions;
 }
 
 interface BaseProps {
