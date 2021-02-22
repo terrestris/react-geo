@@ -1,14 +1,10 @@
 import * as React from 'react';
 import OlLayerBase from 'ol/layer/Base';
 import { Slider } from 'antd';
+import { SliderSingleProps } from 'antd/lib/slider';
+import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
 
 import { CSS_PREFIX } from '../../constants';
-import { SliderSingleProps } from 'antd/lib/slider';
-
-type ArrayTwoOrMore<T> = {
-  0: T;
-  1: T;
-} & Array<T>;
 
 interface DefaultProps {
   /**

@@ -82,7 +82,7 @@
     "@ag-grid-community/react": "^23.2.1",
     "@ant-design/icons": "^4.2.1",
     "@hanreev/types-ol": "^3.4.2",
-    "@terrestris/base-util": "^0.2.3",
+    "@terrestris/base-util": "^1.0.0",
     "@terrestris/ol-util": "^4.0.1",
     "@types/geojson": "^7946.0.7",
     "@types/lodash": "^4.14.155",

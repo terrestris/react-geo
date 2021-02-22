@@ -1,15 +1,15 @@
 import * as React from 'react';
 import _isEqual from 'lodash/isEqual';
 import Logger from '@terrestris/base-util/dist/Logger';
+import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
 
 import OlMap from 'ol/Map';
-
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 
 import { CSS_PREFIX } from '../constants';
 import MapComponent from '../Map/MapComponent/MapComponent';
-import { ArrayTwoOrMore, isLayerGroup } from '../Util/typeUtils';
+import { isLayerGroup } from '../Util/typeUtils';
 
 import './LayerSwitcher.less';
 
