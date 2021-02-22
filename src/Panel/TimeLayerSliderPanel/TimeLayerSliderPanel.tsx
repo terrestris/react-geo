@@ -1,18 +1,15 @@
 import * as React from 'react';
 
 import moment from 'moment';
+
 import OlLayer from 'ol/layer/Layer';
 import OlMap from 'ol/Map';
+import OlImageWMS from 'ol/source/ImageWMS';
+import OlTileWMS from 'ol/source/TileWMS';
+import { getUid } from 'ol';
 
-const _isFinite = require('lodash/isFinite');
-const _isEqual = require('lodash/isEqual');
-
-import {
-  TimeSlider,
-  timeLayerAware,
-  ToggleButton,
-  SimpleButton
-} from '../../index';
+import _isFinite from 'lodash/isFinite';
+import _isEqual from 'lodash/isEqual';
 
 import {
   Select,
@@ -21,6 +18,11 @@ import {
 } from 'antd';
 const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
+
+import timeLayerAware, { TimeLayerAwareConfig } from '../../HigherOrderComponent/TimeLayerAware/TimeLayerAware';
+import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
+import SimpleButton from '../../Button/SimpleButton/SimpleButton';
+import ToggleButton from '../../Button/ToggleButton/ToggleButton';
 
 import './TimeLayerSliderPanel.less';
 
@@ -41,7 +43,7 @@ export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 export interface DefaultTimeLayerSliderPanelProps {
   className: string;
   onChange: (arg: moment.Moment) => void;
-  timeAwareLayers: OlLayer[];
+  timeAwareLayers: OlLayer<OlImageWMS|OlTileWMS>[];
   value: moment.Moment;
   dateFormat: string;
   tooltips: Tooltips;
@@ -68,7 +70,7 @@ export interface TimeLayerSliderPanelState {
 export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelProps, TimeLayerSliderPanelState> {
 
   private _TimeLayerAwareSlider: any;
-  private _wmsTimeLayers: any[];
+  private _wmsTimeLayers: TimeLayerAwareConfig[];
   private _interval: number;
 
   /**
@@ -131,9 +133,9 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
   }
 
   componentDidUpdate(prevProps: TimeLayerSliderPanelProps) {
-    prevProps.timeAwareLayers.forEach((pl: any, i: number) => {
+    prevProps.timeAwareLayers.forEach((pl, i: number) => {
       const tpl = this.props.timeAwareLayers[i];
-      if (!(_isEqual(pl.ol_uid, tpl.ol_uid))) {
+      if (!(_isEqual(getUid(pl), getUid(tpl)))) {
         // update slider properties if layers were updated
         this.wrapTimeSlider();
         this.findRangeForLayers();

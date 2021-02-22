@@ -5,12 +5,12 @@ const Option = Select.Option;
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 
-const _isInteger = require('lodash/isInteger');
-const _isEmpty = require('lodash/isEmpty');
-const _isEqual = require('lodash/isEqual');
-const _isFunction = require('lodash/isFunction');
-const _reverse = require('lodash/reverse');
-const _clone = require('lodash/clone');
+import _isInteger from 'lodash/isInteger';
+import _isEmpty from 'lodash/isEmpty';
+import _isEqual from 'lodash/isEqual';
+import _isFunction from 'lodash/isFunction';
+import _reverse from 'lodash/reverse';
+import _clone from 'lodash/clone';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';

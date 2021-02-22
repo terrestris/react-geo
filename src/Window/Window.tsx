@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 
-const _uniqueId = require('lodash/uniqueId');
+import _uniqueId from 'lodash/uniqueId';
 
 import Panel, { PanelProps } from  '../Panel/Panel/Panel';
 import Logger from '@terrestris/base-util/dist/Logger';

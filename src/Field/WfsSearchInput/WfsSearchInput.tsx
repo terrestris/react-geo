@@ -10,7 +10,7 @@ import CloseCircleOutlined from '@ant-design/icons/CloseCircleOutlined';
 
 import OlMap from 'ol/Map';
 
-const debounce = require('lodash/debounce');
+import _debounce from 'lodash/debounce';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
@@ -218,7 +218,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
     };
     this.onUpdateInput = this.onUpdateInput.bind(this);
     // delay requests invoking
-    this.doSearch = debounce(this.doSearch, this.props.delay);
+    this.doSearch = _debounce(this.doSearch, this.props.delay);
   }
 
   /**

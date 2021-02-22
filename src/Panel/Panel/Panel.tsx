@@ -8,9 +8,9 @@ import {
 } from 'react-rnd';
 import { ResizeDirection } from 're-resizable';
 
-const _uniqueId = require('lodash/uniqueId');
-const _isNumber = require('lodash/isNumber');
-const _isFunction = require('lodash/isFunction');
+import _uniqueId from 'lodash/uniqueId';
+import _isNumber from 'lodash/isNumber';
+import _isFunction from 'lodash/isFunction';
 
 import Titlebar from '../Titlebar/Titlebar';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';

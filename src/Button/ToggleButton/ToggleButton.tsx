@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import { Icon } from 'react-fa';
 
-const _isFunction = require('lodash/isFunction');
+import _isFunction from 'lodash/isFunction';
 
 import './ToggleButton.less';
 

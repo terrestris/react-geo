@@ -3,9 +3,11 @@ import * as React from 'react';
 import { Table } from 'antd';
 import { ColumnProps, TableProps } from 'antd/lib/table';
 
+import OlGeometry from 'ol/geom/Geometry';
 import OlFeature from 'ol/Feature';
+import { getUid } from 'ol';
 
-const _get = require('lodash/get');
+import _get from 'lodash/get';
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -48,7 +50,7 @@ export interface BaseProps {
   /**
    * Feature for which the properties should be shown
    */
-  feature: OlFeature;
+  feature: OlFeature<OlGeometry>;
 }
 
 interface PropertyGridState {
@@ -114,7 +116,7 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
    * @param attributeNameColumnWidthInPercent Column width (in percent)
    */
   generatePropertyGrid({feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent}: {
-    feature: OlFeature;
+    feature: OlFeature<OlGeometry>;
     attributeFilter: string[];
     attributeNames: AttributeNames;
     attributeNameColumnWidthInPercent: number;
@@ -127,10 +129,11 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
     }
 
     const dataSource = attributeFilter.map((attr: any) => {
+      const fid = getUid(feature);
       const rowObj = {
         attributeName: (attributeNames && _get(attributeNames, attr)) ? _get(attributeNames, attr) : attr,
         attributeValue: feature.get(attr),
-        key: `ATTR_${attr}_fid_${feature.ol_uid}`
+        key: `ATTR_${attr}_fid_${fid}`
       };
       return rowObj;
     });

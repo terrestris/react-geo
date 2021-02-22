@@ -1,6 +1,9 @@
 import * as React from 'react';
+
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerImage from 'ol/layer/Image';
+import { Attribution as OlAttribution } from 'ol/source/Source';
+
 import { Checkbox, Tooltip } from 'antd';
 
 import { Icon } from 'react-fa';
@@ -27,7 +30,7 @@ interface BaseProps {
 }
 
 interface AddWmsLayerEntryState {
-  copyright: string;
+  copyright: OlAttribution;
   queryable: boolean;
 }
 
@@ -49,6 +52,7 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
    */
   constructor(props: AddWmsLayerEntryProps) {
     super(props);
+    // TODO: getAttributions is not @api and returns a function in v6.5
     this.state = {
       copyright: props.wmsLayer.getSource().getAttributions(),
       queryable: props.wmsLayer.get('queryable')
