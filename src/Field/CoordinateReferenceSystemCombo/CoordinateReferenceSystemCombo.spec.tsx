@@ -1,8 +1,13 @@
+import { render, screen, within } from '@testing-library/react';
+import * as React from 'react';
+import '@testing-library/jest-dom';
+import { enableFetchMocks } from 'jest-fetch-mock';
+import userEvent from '@testing-library/user-event';
+
 import TestUtil from '../../Util/TestUtil';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 import CoordinateReferenceSystemCombo from '../CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
-
-import Logger from '@terrestris/base-util/dist/Logger';
 
 describe('<CoordinateReferenceSystemCombo />', () => {
 
@@ -24,52 +29,85 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     }]
   };
 
+  beforeAll(() => {
+    enableFetchMocks();
+    fetch.mockResponse(JSON.stringify(resultMock));
+  });
+
   it('is defined', () => {
     expect(CoordinateReferenceSystemCombo).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
-    expect(wrapper).not.toBeUndefined();
+    render(<CoordinateReferenceSystemCombo data-testid="test-coordinate-reference-combo" />);
+    expect(screen.getByTestId('test-coordinate-reference-combo')).toBeVisible();
   });
 
   describe('#fetchCrs', () => {
     it('sends a request with searchTerm', () => {
-      const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
-      const searchVal = '25832';
-      const callback = jest.fn();
-      const fetchPromise = wrapper.instance().fetchCrs(searchVal, callback);
-      expect(fetchPromise).toBeInstanceOf(Promise);
+      const url = 'http://test.url';
+      render(<CoordinateReferenceSystemCombo crsApiUrl={url} />);
+
+      const combobox = screen.getByRole('combobox');
+      userEvent.type(combobox, '25832');
+
+      expect(fetch).toBeCalled();
+      expect(fetch).toBeCalledWith(`${url}?format=json&q=25832`);
     });
   });
 
-  describe('#transformResults', () => {
-    const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
-    it('appropriately transforms filled results', () => {
-      const transformedResults = wrapper.instance().transformResults(resultMock);
-      expect(transformedResults).toHaveLength(resultMock.results.length);
-      transformedResults.forEach((crsObj, idx) => {
-        expect(crsObj.code).toBe(resultMock.results[idx].code);
-        expect(crsObj.bbox).toBe(resultMock.results[idx].bbox);
-        expect(crsObj.proj4def).toBe(resultMock.results[idx].proj4);
-        expect(crsObj.value).toBe(resultMock.results[idx].name);
-      });
+  describe('#options', () => {
+    it('creates desired options', async () => {
+      render(<CoordinateReferenceSystemCombo />);
+
+      const combobox = screen.getByRole('combobox');
+
+      userEvent.type(combobox, 'a');
+
+      await TestUtil.actImmediate();
+
+      const dropdown = global.document.querySelector('.ant-select-dropdown');
+
+      for (const result of resultMock.results) {
+        const option = within(dropdown).getByTitle(`${result.name} (EPSG:${result.code})`);
+        // would be nicer to test for `toBeVisible`, but antd seems to be in the way
+        expect(option).toBeInTheDocument();
+      }
     });
 
-    it('appropriately transforms empty results', () => {
-      const transformedResults = wrapper.instance().transformResults({
-        success: 'ok',
+    it('does not options for empty results', async () => {
+      fetch.mockResponseOnce(JSON.stringify({
+        status: 'ok',
+        number_result: 0,
         results: []
-      });
-      expect(transformedResults).toHaveLength(0);
+      }));
+
+      render(<CoordinateReferenceSystemCombo />);
+
+      const combobox = screen.getByRole('combobox');
+
+      userEvent.type(combobox, 'a');
+
+      await TestUtil.actImmediate();
+
+      const dropdown = global.document.querySelector('.ant-select-dropdown');
+
+      expect(dropdown).toBeNull();
     });
   });
 
   describe('#onFetchError', () => {
-    it('logs error message', () => {
-      const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
+    it('logs error message', async () => {
+      fetch.mockRejectOnce('Peter');
+
       const loggerSpy = jest.spyOn(Logger, 'error');
-      wrapper.instance().onFetchError('Peter');
+
+      render(<CoordinateReferenceSystemCombo />);
+      const combobox = screen.getByRole('combobox');
+      userEvent.type(combobox, 'a');
+
+      await TestUtil.actImmediate();
+
       expect(loggerSpy).toHaveBeenCalled();
       expect(loggerSpy).toHaveBeenCalledWith('Error while requesting in CoordinateReferenceSystemCombo: Peter');
 
