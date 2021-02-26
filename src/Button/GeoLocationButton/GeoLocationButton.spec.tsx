@@ -1,4 +1,12 @@
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
+
+import * as React from 'react';
+import { transform } from 'ol/proj';
+
 import TestUtil from '../../Util/TestUtil';
+import { GeolocationMock } from '../../Util/GeolocationMock';
 
 import GeoLocationButton from './GeoLocationButton';
 
@@ -17,59 +25,91 @@ describe('<GeoLocationButton />', () => {
     });
 
     it('can be rendered', () => {
-      const wrapper = TestUtil.mountComponent(GeoLocationButton, {
-        map: map
-      });
-      expect(wrapper).not.toBeUndefined();
-    });
-
-    it('creates the geolocation interaction on the fly', function() {
-      const wrapper = TestUtil.mountComponent(GeoLocationButton, {
-        map: map,
-        showMarker: false
-      });
-      const instance = wrapper.instance();
-      expect(instance.geolocationInteraction).toBeUndefined();
+      render(<GeoLocationButton map={map} data-testid="test-geolocation-button" />);
+      expect(screen.getByTestId('test-geolocation-button')).toBeVisible();
     });
 
     it('can be pressed', () => {
-      const wrapper = TestUtil.mountComponent(GeoLocationButton, {
-        map: map,
-        showMarker: false
-      });
-      const instance = wrapper.instance();
-      instance.onToggle(true);
-      expect(instance._geoLocationInteraction).not.toBeUndefined();
+      const geolocationMock = new GeolocationMock();
+      const callback = jest.fn();
+
+      render(<GeoLocationButton
+        map={map}
+        showMarker={false}
+        onGeolocationChange={callback}
+        data-testid="test-geolocation-button"
+      />);
+
+      const button = screen.getByTestId('test-geolocation-button');
+      userEvent.click(button);
+
+      geolocationMock.fireListeners();
+      expect(callback).toBeCalled();
     });
 
     it('can be pressed twice', () => {
-      const wrapper = TestUtil.mountComponent(GeoLocationButton, {
-        map: map,
-        showMarker: false
-      });
-      const instance = wrapper.instance();
-      instance.onToggle(true);
-      instance.onToggle(false);
-      expect(instance._geoLocationInteraction).toBeNull();
+      const geolocationMock = new GeolocationMock();
+      const callback = jest.fn();
+
+      render(<GeoLocationButton
+        map={map}
+        showMarker={false}
+        onGeolocationChange={callback}
+        data-testid="test-geolocation-button"
+      />);
+
+      geolocationMock.fireListeners();
+
+      expect(callback).toBeCalledTimes(0);
+
+      const button = screen.getByTestId('test-geolocation-button');
+      userEvent.click(button);
+
+      geolocationMock.fireListeners();
+
+      expect(callback).toBeCalledTimes(1);
+
+      userEvent.click(button);
+
+      geolocationMock.fireListeners();
+
+      expect(callback).toBeCalledTimes(1);
     });
 
-    it('can use the geolocation interaction', () => {
-      const onChange = jest.fn();
-      const wrapper = TestUtil.mountComponent(GeoLocationButton, {
-        map: map,
-        showMarker: false,
-        onGeolocationChange: onChange
+    it('is called with the correct position', () => {
+      const geolocationMock = new GeolocationMock();
+      const callback = jest.fn();
+
+      render(<GeoLocationButton
+        map={map}
+        showMarker={false}
+        onGeolocationChange={callback}
+        data-testid="test-geolocation-button"
+      />);
+
+      const button = screen.getByTestId('test-geolocation-button');
+      userEvent.click(button);
+
+      const coordinates = [ 47.12, -64.99 ];
+
+      geolocationMock.fireListeners({
+        coords: {
+          longitude: coordinates[0],
+          latitude: coordinates[1],
+          accuracy: 7,
+          speed: 9,
+          heading: 0
+        }
       });
-      const instance = wrapper.instance();
-      instance.onToggle(true);
 
-      const getPosition = jest.fn();
-      getPosition.mockReturnValue([2, 3]);
-      instance._geoLocationInteraction.getPosition = getPosition;
+      const converted = transform(coordinates, 'EPSG:4326', map.getView().getProjection());
 
-      instance.onGeolocationChange();
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(callback).toBeCalledWith({
+        accuracy: 7,
+        heading: 0,
+        position: converted,
+        speed: 9
+      });
     });
-
   });
 });
