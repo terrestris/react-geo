@@ -3,8 +3,8 @@ import moment from 'moment';
 
 import { Slider } from 'antd';
 
-const isArray = require('lodash/isArray');
-const isObject = require('lodash/isObject');
+import _isArray from 'lodash/isArray';
+import _isObject from 'lodash/isObject';
 import { SliderMarks, SliderBaseProps } from 'antd/lib/slider';
 
 import { CSS_PREFIX } from '../../constants';
@@ -113,7 +113,7 @@ class TimeSlider extends React.Component<TimeSliderProps> {
     if (val === undefined) {
       return val as undefined;
     }
-    return isArray(val) ?
+    return _isArray(val) ?
       (val as Array<string>).map(iso => moment(iso).unix()) as [number, number]:
       moment(val).unix() as number;
   }
@@ -126,7 +126,7 @@ class TimeSlider extends React.Component<TimeSliderProps> {
    */
   convertMarks(marks: SliderMarks): SliderMarks {
     let convertedMarks: SliderMarks;
-    if (isObject(marks)) {
+    if (_isObject(marks)) {
       convertedMarks = {};
       Object.keys(marks).forEach(key => {
         const convertedKey = this.convert(key) as number;
@@ -151,7 +151,7 @@ class TimeSlider extends React.Component<TimeSliderProps> {
    * @param value the new value
    */
   valueUpdated(value: number | number[]) {
-    this.props.onChange(isArray(value) ?
+    this.props.onChange(_isArray(value) ?
       [moment(value[0] * 1000).toISOString(),
         moment(value[1] * 1000).toISOString()] :
       moment((value as number) * 1000).toISOString());

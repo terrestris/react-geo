@@ -1,18 +1,22 @@
 import * as React from 'react';
 
 import OlMap from 'ol/Map';
-import OlLayerBase from 'ol/layer/Base';
-import OlLayerBaseImage from 'ol/layer/BaseImage';
-import OlLayerBaseTile from 'ol/layer/BaseTile';
-import OlSourceImageWMS from 'ol/source/ImageWMS';
-import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlLayer from 'ol/layer/Layer';
 import OlFormatGML2 from 'ol/format/GML2';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlFeature from 'ol/Feature';
+import { Coordinate as OlCoordinate } from 'ol/coordinate';
+import OlGeometry from 'ol/geom/Geometry';
+import OlBaseLayer from 'ol/layer/Base';
+import OlImageLayer from 'ol/layer/Image';
+import OlTileLayer from 'ol/layer/Tile';
 
 import _cloneDeep from 'lodash/cloneDeep';
+import _isString from 'lodash/isString';
 
 import Logger from '@terrestris/base-util/dist/Logger';
+
+import { isImageOrTileLayer, isWmsLayer } from '../Util/typeUtils';
 
 import './CoordinateInfo.less';
 
@@ -22,7 +26,7 @@ interface DefaultProps {
   /**
    * List of (WMS) layers that should be queried.
    */
-  queryLayers: Array<OlLayerBaseImage | OlLayerBaseTile>;
+  queryLayers: Array<OlImageLayer | OlTileLayer>;
 
   /**
    * The number of max. features that should be returned by the GFI request.
@@ -57,7 +61,7 @@ interface BaseProps {
 }
 
 interface CoordinateInfoState {
-  clickCoordinate: [number, number] | null;
+  clickCoordinate: OlCoordinate | null;
   features: any;
   loading: boolean;
 }
@@ -121,7 +125,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     map.un('click', this.onMapClick);
   }
 
-  onMapClick(olEvt: OlMapBrowserEvent) {
+  onMapClick(olEvt: OlMapBrowserEvent<MouseEvent>) {
     const {
       map,
       featureCount,
@@ -137,7 +141,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
 
     const promises = [];
 
-    map.forEachLayerAtPixel(pixel, (layer: OlLayerBase) => {
+    map.forEachLayerAtPixel(pixel, (layer: OlLayer<any>) => {
       const layerSource = layer.getSource();
       const featureInfoUrl = layerSource.getFeatureInfoUrl(
         coordinate,
@@ -180,8 +184,9 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
 
         textResponses.forEach((featureCollection: string) => {
           const fc = format.readFeatures(featureCollection);
-          fc.forEach((feature: OlFeature) => {
-            const featureTypeName = feature.getId().split('.')[0];
+          fc.forEach((feature: OlFeature<OlGeometry>) => {
+            const id = feature.getId();
+            const featureTypeName = _isString(id) ? id.split('.')[0] : id;
 
             if (!features[featureTypeName]) {
               features[featureTypeName] = [];
@@ -206,15 +211,12 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       });
   }
 
-  layerFilter(layerCandidate: OlLayerBase) {
+  layerFilter(layerCandidate: OlBaseLayer) {
     const {
       queryLayers
     } = this.props;
 
-    const source = layerCandidate.getSource();
-    const isWms = source instanceof OlSourceImageWMS || source instanceof OlSourceTileWMS;
-
-    return isWms && queryLayers.includes(layerCandidate);
+    return isWmsLayer(layerCandidate) && isImageOrTileLayer(layerCandidate) && queryLayers.includes(layerCandidate);
   }
 
   render () {

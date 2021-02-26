@@ -12,15 +12,15 @@ import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
 import OlStyleText from 'ol/style/Text';
-import OlInteraction from 'ol/interaction/Interaction';
 import OlInteractionDraw, { createBox } from 'ol/interaction/Draw';
 import OlInteractionSelect from 'ol/interaction/Select';
 import OlInteractionModify from 'ol/interaction/Modify';
 import OlInteractionTranslate from 'ol/interaction/Translate';
 import OlFeature from 'ol/Feature';
-import { never, singleClick } from 'ol/events/condition';
+import * as OlEventConditions from 'ol/events/condition';
+import OlGeometry from 'ol/geom/Geometry';
 
-const _isFunction = require('lodash/isFunction');
+import _isFunction from 'lodash/isFunction';
 
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
@@ -122,7 +122,7 @@ interface BaseProps {
   /**
    * Style object / style function for drawn feature.
    */
-  drawStyle?: OlStyleStyle | ((feature: OlFeature) => OlStyleStyle);
+  drawStyle?: OlStyleStyle | ((feature: OlFeature<OlGeometry>) => OlStyleStyle);
   /**
    * Listener function for the 'drawend' event of an ol.interaction.Draw.
    * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-DrawEvent.html
@@ -251,25 +251,25 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * The draw interaction.
    * @private
    */
-  _drawInteraction?: OlInteraction;
+  _drawInteraction?: OlInteractionDraw;
 
   /**
    * The select interaction.
    * @private
    */
-  _selectInteraction?: OlInteraction;
+  _selectInteraction?: OlInteractionSelect;
 
   /**
    * The modify interaction.
    * @private
    */
-  _modifyInteraction?: OlInteraction;
+  _modifyInteraction?: OlInteractionModify;
 
   /**
    * The translate interaction.
    * @private
    */
-  _translateInteraction?: OlInteraction;
+  _translateInteraction?: OlInteractionTranslate;
 
   /**
    * Name of point draw type.
@@ -616,7 +616,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param text Text for labeled feature (optional).
    * @return The style to use.
    */
-  getSelectedStyleFunction = (feature: OlFeature, res: number, text: React.ReactText) => {
+  getSelectedStyleFunction = (feature: OlFeature<OlGeometry>, res: number, text: string) => {
     const {
       selectFillColor,
       selectStrokeColor
@@ -698,7 +698,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         type: type,
         geometryFunction: geometryFunction,
         style: this.getDigitizeStyleFunction,
-        freehandCondition: never,
+        freehandCondition: OlEventConditions.never,
         ...drawInteractionConfig
       });
 
@@ -745,7 +745,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     if (!selectInteraction) {
       selectInteraction = new OlInteractionSelect({
-        condition: singleClick,
+        condition: OlEventConditions.singleClick,
         hitTolerance: DigitizeButton.HIT_TOLERANCE,
         style: this.getSelectedStyleFunction,
         ...selectInteractionConfig
@@ -791,7 +791,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     if (!modifyInteraction) {
       modifyInteraction = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
-        deleteCondition: singleClick,
+        deleteCondition: OlEventConditions.singleClick,
         style: this.getSelectedStyleFunction,
         ...modifyInteractionConfig
       });
@@ -1070,10 +1070,11 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Sets formatted label on feature.
    * Calls `onModalLabelOk` callback function if provided.
    *
-   * @param feat The point feature to be styled with label.
+   * @param feature The point feature to be styled with label.
    * @param onModalOkCbk Optional callback function.
    */
-  setTextOnFeature = (feat: OlFeature, onModalOkCbk: (feat: OlFeature, label: string) => void) => {
+  setTextOnFeature = (feature: OlFeature<OlGeometry>,
+    onModalOkCbk: (feat: OlFeature<OlGeometry>, newLabel: string) => void) => {
     const {
       maxLabelLineLength
     } = this.props;
@@ -1088,12 +1089,12 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         textLabel, maxLabelLineLength, '\n'
       );
     }
-    feat.set('label', label);
+    feature.set('label', label);
     this.setState({
       textLabel: ''
     }, () => {
       if (_isFunction(onModalOkCbk)) {
-        onModalOkCbk(feat, label);
+        onModalOkCbk(feature, label);
       }
     });
   };

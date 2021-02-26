@@ -6,18 +6,19 @@ import {
 } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
+import { OptionProps } from 'antd/lib/select';
 
 import OlMap from 'ol/Map';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 
-const _isFunction = require('lodash/isFunction');
-const _debounce = require('lodash/debounce');
+import _isFunction from 'lodash/isFunction';
+import _debounce from 'lodash/debounce';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 
 import { CSS_PREFIX } from '../../constants';
-import { OptionProps } from 'antd/lib/select';
 
 import './WfsSearch.less';
 
@@ -242,7 +243,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
         const olView = olMap.getView();
         const geoJsonFormat = new OlFormatGeoJSON();
         const olFeature = geoJsonFormat.readFeature(feature);
-        const geometry = olFeature.getGeometry();
+        const geometry = olFeature.getGeometry() as OlSimpleGeometry;
 
         if (geometry) {
           olView.fit(geometry, {

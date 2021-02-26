@@ -1,31 +1,25 @@
 import * as React from 'react';
 
+import _isFinite from 'lodash/isFinite';
+
 import OlMap from 'ol/Map';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import { easeOut } from 'ol/easing';
+import { Extent as OlExtent } from 'ol/extent';
+import { FitOptions as OlViewFitOptions } from 'ol/View';
 
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 
 import logger from '@terrestris/base-util/dist/Logger';
-import _isFinite from 'lodash/isFinite';
 
 interface DefaultProps {
   /**
    * Options for fitting to the given extent. See
    * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
    */
-  fitOptions: {
-    size?: [number, number];
-    padding?: [number, number, number, number];
-    nearest?: boolean;
-    minResolution?: number;
-    maxZoom?: number;
-    duration?: number;
-    easing?: () => number;
-    callback?: () => void;
-  };
+  fitOptions: OlViewFitOptions;
   /**
    * If true, the view will always animate to the closest zoom level after an interaction.
    * False means intermediary zoom levels are allowed.
@@ -36,12 +30,12 @@ interface DefaultProps {
    * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
    * instance of ol.geom.SimpleGeometry that the map should zoom to.
    */
-  extent?: number[] | OlSimpleGeometry;
+  extent?: OlExtent | OlSimpleGeometry;
   /**
    * The center `[x,y]` in the maps coordinate system or an
    * instance of ol.coordinate that the map should zoom to if no extent is given.
    */
-  center?: number[] | OlCoordinate;
+  center?: OlCoordinate;
   /**
    *  The zoom level 'x' the map should zoom to if no extent is given.
    */

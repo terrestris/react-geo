@@ -1,24 +1,28 @@
 import * as React from 'react';
 
+import _isEmpty from 'lodash/isEmpty';
+
 import OlMap from 'ol/Map';
 import OlLayerVector from 'ol/layer/Vector';
 import OlSourceVector from 'ol/source/Vector';
 import OlCollection from 'ol/Collection';
 import OlMultiPolygon from 'ol/geom/MultiPolygon';
-import OlMultiLinestring from 'ol/geom/MultiLineString';
+import OlMultiLineString from 'ol/geom/MultiLineString';
 import OlStyleStyle from 'ol/style/Style';
 import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
-import OlInteractionDraw from 'ol/interaction/Draw';
+import OlInteractionDraw, { DrawEvent } from 'ol/interaction/Draw';
 import { unByKey } from 'ol/Observable';
 import OlOverlay from 'ol/Overlay';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
+import OlGeometryType from 'ol/geom/GeometryType';
+import OlOverlayPositioning from 'ol/OverlayPositioning';
 
-const _isEmpty = require('lodash/isEmpty');
-
-import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -289,15 +293,15 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       this._drawInteraction.setActive(pressed);
 
       this._eventKeys.drawstart = this._drawInteraction.on(
-        'drawstart', this.onDrawStart, this
+        'drawstart', e => this.onDrawStart(e)
       );
 
       this._eventKeys.drawend = this._drawInteraction.on(
-        'drawend', this.onDrawEnd, this
+        'drawend', e => this.onDrawEnd(e)
       );
 
       this._eventKeys.pointermove = map.on(
-        'pointermove', this.onMapPointerMove, this
+        'pointermove', e => this.onMapPointerMove(e)
       );
     }
   }
@@ -365,10 +369,9 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     } = this.props;
 
     const maxPoints = measureType === 'angle' ? 2 : undefined;
-    const drawType = measureType === 'polygon' ? 'MultiPolygon' : 'MultiLineString';
+    const drawType = measureType === 'polygon' ? OlGeometryType.MULTI_POLYGON : OlGeometryType.MULTI_LINE_STRING;
 
     const drawInteraction = new OlInteractionDraw({
-      name: 'react-geo_drawaction',
       source: this._measureLayer.getSource(),
       type: drawType,
       maxPoints: maxPoints,
@@ -398,7 +401,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
 
     map.addInteraction(drawInteraction);
 
-    drawInteraction.on('change:active', this.onDrawInteractionActiveChange, this);
+    drawInteraction.on('change:active', () => this.onDrawInteractionActiveChange());
 
     this._drawInteraction = drawInteraction;
 
@@ -445,7 +448,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
    *
    * @param evt The pointer event.
    */
-  onMapClick(evt: any) {
+  onMapClick(evt: OlMapBrowserEvent<MouseEvent>) {
     const {
       measureType,
       showMeasureInfoOnClickedPoints
@@ -465,7 +468,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
    *
    * @method
    */
-  onDrawStart(evt: any) {
+  onDrawStart(evt: DrawEvent) {
     const {
       showHelpTooltip,
       multipleDrawing,
@@ -478,7 +481,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     this._eventKeys.change = this._feature.getGeometry().on('change',
       this.onDrawInteractionGeometryChange);
 
-    this._eventKeys.click = map.on('click', this.onMapClick, this);
+    this._eventKeys.click = map.on('click', (e: OlMapBrowserEvent<MouseEvent>) => this.onMapClick(e));
 
     if (!multipleDrawing && source.getFeatures().length > 0) {
       this.cleanupTooltips();
@@ -498,7 +501,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
    *
    * @method
    */
-  onDrawEnd(evt: any) {
+  onDrawEnd(evt: DrawEvent) {
     const {
       measureType,
       multipleDrawing,
@@ -515,7 +518,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     }
 
     if (multipleDrawing) {
-      this.addMeasureStopTooltip(evt.feature.getGeometry().getLastCoordinate());
+      this.addMeasureStopTooltip((evt.feature.getGeometry() as OlMultiPolygon|OlMultiLineString).getLastCoordinate());
     }
 
     // Fix doubled label for lastPoint of line
@@ -559,7 +562,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
         geom = geom.getPolygons()[0];
       }
 
-      if (geom instanceof OlMultiLinestring) {
+      if (geom instanceof OlMultiLineString) {
         geom = geom.getLineStrings()[0];
       }
 
@@ -574,7 +577,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
         const tooltip = new OlOverlay({
           element: div,
           offset: [0, -15],
-          positioning: 'bottom-center'
+          positioning: OlOverlayPositioning.BOTTOM_CENTER
         });
         map.addOverlay(tooltip);
 
@@ -606,7 +609,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     this._measureTooltip = new OlOverlay({
       element: this._measureTooltipElement,
       offset: [0, -15],
-      positioning: 'bottom-center'
+      positioning: OlOverlayPositioning.BOTTOM_CENTER
     });
 
     map.addOverlay(this._measureTooltip);
@@ -631,7 +634,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     this._helpTooltip = new OlOverlay({
       element: this._helpTooltipElement,
       offset: [15, 0],
-      positioning: 'center-left'
+      positioning: OlOverlayPositioning.CENTER_LEFT
     });
 
     map.addOverlay(this._helpTooltip);
@@ -780,7 +783,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
         geom = geom.getPolygons()[0];
       }
 
-      if (geom instanceof OlMultiLinestring) {
+      if (geom instanceof OlMultiLineString) {
         geom = geom.getLineStrings()[0];
       }
 

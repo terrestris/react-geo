@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 
-const _isFunction = require('lodash/isFunction');
+import _isFunction from 'lodash/isFunction';
 
 import { CSS_PREFIX } from '../../constants';
 

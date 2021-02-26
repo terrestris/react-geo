@@ -2,18 +2,39 @@ import * as React from 'react';
 import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
+import { OptionProps } from 'antd/lib/select';
+import { OptionData } from 'rc-select/lib/interface';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 
 import OlMap from 'ol/Map';
-
 import { transformExtent } from 'ol/proj';
+import { Extent as OlExtent } from 'ol/extent';
+
+import { GeoJSON } from 'geojson';
 
 import { CSS_PREFIX } from '../../constants';
-import { OptionProps } from 'antd/lib/select';
 
 import './NominatimSearch.less';
+
+// See https://nominatim.org/release-docs/develop/api/Output/ for some more information
+export type NominatimPlace = {
+  place_id: number;
+  osm_type: string;
+  osm_id: number;
+  boundingbox: string[];
+  display_name: string;
+  category: string;
+  type: string;
+  importance: number;
+  icon?: string;
+  address?: any;
+  extratags?: any;
+  namedetails?: any;
+  geojson: GeoJSON;
+  licence: string;
+};
 
 interface DefaultProps {
   /**
@@ -62,12 +83,12 @@ interface DefaultProps {
    * A render function which gets called with the selected item as it is
    * returned by nominatim. It must return an `AutoComplete.Option`.
    */
-  renderOption: (item: any) => React.ReactElement<OptionProps>;
+  renderOption: (item: NominatimPlace) => React.ReactElement<OptionProps>;
   /**
    * An onSelect function which gets called with the selected item as it is
    * returned by nominatim.
    */
-  onSelect: (item: any, olMap: OlMap) => void;
+  onSelect: (item: NominatimPlace, olMap: OlMap) => void;
   /**
    * Indicate if we should render the input and results. When setting to false,
    * you need to handle user input and result yourself
@@ -81,11 +102,11 @@ interface DefaultProps {
   /**
    * A callback function which gets called with the successfully fetched data.
    */
-  onFetchSuccess?: (data: any) => void;
+  onFetchSuccess?: (data: NominatimPlace[]) => void;
   /**
    * A callback function which gets called if data fetching has failed.
    */
-  onFetchError?: (data: any) => void;
+  onFetchError?: (error: any) => void;
 }
 
 interface BaseProps {
@@ -107,7 +128,7 @@ interface BaseProps {
 
 interface NominatimSearchState {
   searchTerm: string;
-  dataSource: any;
+  dataSource: NominatimPlace[];
 }
 
 export type NominatimSearchProps = BaseProps & Partial<DefaultProps> & AutoCompleteProps;
@@ -143,7 +164,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
      * @param item The tuple as an object.
      * @return The returned option
      */
-    renderOption: (item: any): React.ReactElement<OptionProps> => {
+    renderOption: (item: NominatimPlace): React.ReactElement<OptionProps> => {
       return (
         <Option
           key={item.place_id}
@@ -159,19 +180,16 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
      *
      * @param selected The selected item as it is returned by nominatim.
      */
-    onSelect: (selected: any, olMap: OlMap) => {
+    onSelect: (selected: NominatimPlace, olMap: OlMap) => {
       if (selected && selected.boundingbox) {
         const olView = olMap.getView();
+        const bbox: number[] = selected.boundingbox.map(parseFloat);
         let extent = [
-          selected.boundingbox[2],
-          selected.boundingbox[0],
-          selected.boundingbox[3],
-          selected.boundingbox[1]
-        ];
-
-        extent = extent.map(function(coord: string) {
-          return parseFloat(coord);
-        });
+          bbox[2],
+          bbox[0],
+          bbox[3],
+          bbox[1]
+        ] as OlExtent;
 
         extent = transformExtent(extent, 'EPSG:4326',
           olView.getProjection().getCode());
@@ -296,11 +314,11 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    * The function describes what to do when an item is selected.
    *
    * @param value The value of the selected option.
-   * @param value The values of the selected option.
+   * @param option The selected OptionData
    */
-  onMenuItemSelected(value: string, option: OptionProps) {
+  onMenuItemSelected(value: string, option: OptionData) {
     const selected = this.state.dataSource.find(
-      (i: any) => i.place_id.toString() === option.key.toString()
+      i => i.place_id.toString() === option.key
     );
     this.props.onSelect(selected, this.props.map);
   }
@@ -340,8 +358,8 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
         className={finalClassName}
         allowClear={true}
         placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
-        onChange={this.onUpdateInput}
-        onSelect={this.onMenuItemSelected}
+        onChange={(v: string) => this.onUpdateInput(v)}
+        onSelect={(v: string, o: OptionData) => this.onMenuItemSelected(v, o)}
         {...passThroughProps}
       >
         {
