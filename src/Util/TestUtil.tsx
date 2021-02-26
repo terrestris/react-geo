@@ -7,6 +7,7 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
+import { act } from '@testing-library/react';
 
 type Wrapper =  ShallowWrapper | ReactWrapper;
 
@@ -181,6 +182,13 @@ export class TestUtil {
     return feat;
   };
 
+  static async actImmediate(): Promise<void> {
+    await act(() => {
+      return new Promise(resolve => {
+        (setImmediate || setTimeout)(resolve);
+      });
+    });
+  }
 }
 
 export default TestUtil;
