@@ -12,9 +12,9 @@ interface DefaultProps {
    */
   defaultValue: number;
   /**
-   * useTitleAsName
+   * layer property that will define the name shown on the lables. Defaults to 'name'.
    */
-  useLayerTitleAsName: boolean;
+  nameProperty: string;
 }
 
 /**
@@ -52,7 +52,7 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
 
   static defaultProps: DefaultProps = {
     defaultValue: 0,
-    useLayerTitleAsName: false
+    nameProperty: 'name'
   };
 
   /**
@@ -78,14 +78,14 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
   formatTip(value: number) {
     const {
       layers,
-      useLayerTitleAsName
+      nameProperty
     } = this.props;
     const layerIdx = this.getLayerIndexForSliderValue(value);
     let tip: string;
     if (layers[layerIdx]) {
       const opacity = Math.round(layers[layerIdx].get('opacity') * 100);
       const layer = layers[layerIdx];
-      const layername = useLayerTitleAsName ? layer.get('title') : layer.get('name') || 'Layer ' + layerIdx + 1;
+      const layername = layer.get(nameProperty) || `Layer ${layerIdx + 1}`;
       tip = `${layername} ${opacity}%`;
     }
     return tip;
@@ -150,11 +150,11 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
     const marks = {};
     const {
       layers,
-      useLayerTitleAsName
+      nameProperty
     } = this.props;
     const length = layers.length - 1;
     layers.forEach((layer, index) => {
-      const layername = useLayerTitleAsName ? layer.get('title') : layer.get('name') || 'Layer ' + index + 1;
+      const layername = layer.get(nameProperty) || `Layer ${index + 1}`;
       const idx = Math.round(100 / length * index);
       marks[idx] = layername;
     });
