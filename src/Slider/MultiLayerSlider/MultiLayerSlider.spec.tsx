@@ -80,9 +80,9 @@ describe('<MultiLayerSlider />', () => {
     // if nothing is defined, it should get the layer name 
     const wrapper = TestUtil.mountComponent(MultiLayerSlider, props);
 
-    const expectedMarksWithNameProperty = { '0': 'Layer Name 1', '100': 'Layer Name 3', '50': 'Layer Name 2' };
-    const expectedMarksWithTitleProperty = { '0': 'Layer Title 1', '100': 'Layer Title 3', '50': 'Layer Title 2' };
-    const expectedMarksWithoutProperty = { '0': 'Layer 1', '100': 'Layer 3', '50': 'Layer 2' };
+    const expectedMarksWithNameProperty = { '0': 'Layer Name 1', '50': 'Layer Name 2', '100': 'Layer Name 3' };
+    const expectedMarksWithTitleProperty = { '0': 'Layer Title 1', '50': 'Layer Title 2', '100': 'Layer Title 3' };
+    const expectedMarksWithoutProperty = { '0': 'Layer 1', '50': 'Layer 2', '100': 'Layer 3' };
 
     expect(wrapper.instance().getMarks()).toEqual(expectedMarksWithNameProperty);
     expect(wrapper.instance().formatTip(0)).toEqual('Layer Name 1 100%');
