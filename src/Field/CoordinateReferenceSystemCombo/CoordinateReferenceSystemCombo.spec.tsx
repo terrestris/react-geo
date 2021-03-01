@@ -28,6 +28,19 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     }]
   };
 
+  const transformedResults = [{
+    code: '31466',
+    bbox: [53.81,5.86,49.11,7.5],
+    // eslint-disable-next-line max-len
+    proj4def: '+proj=tmerc +lat_0=0 +lon_0=6 +k=1 +x_0=2500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs',
+    value: 'DHDN / 3-degree Gauss-Kruger zone 2'
+  }, {
+    code: '4326',
+    bbox: [90,-180,-90,180],
+    proj4def: '+proj=longlat +datum=WGS84 +no_defs',
+    value: 'WGS 84'
+  }];
+
   beforeAll(() => {
     enableFetchMocks();
     fetch.mockResponse(JSON.stringify(resultMock));
@@ -149,34 +162,51 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
   describe('#onCrsItemSelect', () => {
 
-    it('sets value property in state for given code', () => {
+    it('calls the onSelect callback with the correct value', async () => {
       const onSelect = jest.fn();
-      const props = {
-        onSelect: onSelect
-      };
-      const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo, props);
-      wrapper.setState({
-        crsDefinitions: resultMock.results
-      }, () => {
-        wrapper.instance().onCrsItemSelect('31466', resultMock.results[0]);
 
-        const stateAfter = wrapper.state();
-        expect(stateAfter.crsDefinitions[0]).toBe(resultMock.results[0]);
-      });
+      render(<CoordinateReferenceSystemCombo onSelect={onSelect}/>);
+
+      const combobox = screen.getByRole('combobox');
+
+      userEvent.type(combobox, 'a');
+
+      await TestUtil.actImmediate();
+
+      const dropdown = global.document.querySelector('.ant-select-dropdown');
+
+      const result = resultMock.results[0];
+      const expected = transformedResults[0];
+
+      const option = within(dropdown).getByTitle(`${result.name} (EPSG:${result.code})`);
+
+      userEvent.click(option);
+
+      expect(onSelect).toBeCalledWith(expected);
     });
 
-    it('calls onSelect function if given in props', () => {
+    it('sets the value of the combobox to the correct value', async () => {
       const onSelect = jest.fn();
-      const props = {
-        onSelect: onSelect
-      };
-      const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo, props);
-      wrapper.setState({
-        crsDefinitions: resultMock.results
-      }, () => {
-        wrapper.instance().onCrsItemSelect('31466', resultMock.results[0]);
-        expect(onSelect).toHaveBeenCalledTimes(1);
-      });
+
+      render(<CoordinateReferenceSystemCombo onSelect={onSelect}/>);
+
+      const combobox = screen.getByRole('combobox');
+
+      userEvent.type(combobox, 'a');
+
+      await TestUtil.actImmediate();
+
+      const dropdown = global.document.querySelector('.ant-select-dropdown');
+
+      const result = resultMock.results[0];
+
+      const option = within(dropdown).getByTitle(`${result.name} (EPSG:${result.code})`);
+
+      userEvent.click(option);
+
+      await TestUtil.actImmediate();
+
+      expect(combobox.value).toBe(`${result.name} (EPSG:${result.code})`);
     });
 
   });
