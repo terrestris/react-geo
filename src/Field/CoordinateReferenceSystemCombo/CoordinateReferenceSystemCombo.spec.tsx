@@ -56,7 +56,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     expect(container).toBeVisible();
   });
 
-  describe('#fetchCrs', () => {
+  describe('search', () => {
     it('sends a request with searchTerm', () => {
       const url = 'http://test.url';
       render(<CoordinateReferenceSystemCombo crsApiUrl={url} />);
@@ -69,8 +69,8 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     });
   });
 
-  describe('#options', () => {
-    it('creates desired options', async () => {
+  describe('shows correct options', () => {
+    it('creates options if result was not empty', async () => {
       render(<CoordinateReferenceSystemCombo />);
 
       const combobox = screen.getByRole('combobox');
@@ -79,7 +79,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       await TestUtil.actImmediate();
 
-      const dropdown = global.document.querySelector('.ant-select-dropdown');
+      const dropdown = document.querySelector('.ant-select-dropdown');
 
       for (const result of resultMock.results) {
         const option = within(dropdown).getByTitle(`${result.name} (EPSG:${result.code})`);
@@ -88,7 +88,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       }
     });
 
-    it('does not options for empty results', async () => {
+    it('does not show options for empty results', async () => {
       fetch.mockResponseOnce(JSON.stringify({
         status: 'ok',
         number_result: 0,
@@ -103,13 +103,13 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       await TestUtil.actImmediate();
 
-      const dropdown = global.document.querySelector('.ant-select-dropdown');
+      const dropdown = document.querySelector('.ant-select-dropdown');
 
       expect(dropdown).toBeNull();
     });
   });
 
-  describe('#onFetchError', () => {
+  describe('error handling', () => {
     it('logs error message', async () => {
       fetch.mockRejectOnce('Peter');
 
@@ -128,40 +128,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     });
   });
 
-  describe('#handleSearch', () => {
-    const value = 25832;
-    const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
-
-    it('resets state if value is empty', () => {
-      wrapper.setState({
-        value: value,
-        crsDefinitions: resultMock.results
-      }, () => {
-        wrapper.instance().handleSearch(null);
-        window.setTimeout(() => {
-          const stateAfter = wrapper.state();
-          expect(stateAfter.value).toBe(null);
-          expect(stateAfter.crsDefinitions).toHaveLength(0);
-        }, 50);
-      });
-    });
-
-    it('updates state if value is given', () => {
-      wrapper.setState({
-        value: value,
-        crsDefinitions: resultMock.results
-      }, () => {
-        wrapper.instance().handleSearch(value);
-        window.setTimeout(() => {
-          const stateAfter = wrapper.state();
-          expect(stateAfter.value).toBe(value);
-        }, 50);
-      });
-    });
-
-  });
-
-  describe('#onCrsItemSelect', () => {
+  describe('option clicks are handled correctly', () => {
 
     it('calls the onSelect callback with the correct value', async () => {
       const onSelect = jest.fn();
@@ -174,7 +141,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       await TestUtil.actImmediate();
 
-      const dropdown = global.document.querySelector('.ant-select-dropdown');
+      const dropdown = document.querySelector('.ant-select-dropdown');
 
       const result = resultMock.results[0];
       const expected = transformedResults[0];
@@ -182,6 +149,8 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       const option = within(dropdown).getByTitle(`${result.name} (EPSG:${result.code})`);
 
       userEvent.click(option);
+
+      await TestUtil.actImmediate();
 
       expect(onSelect).toBeCalledWith(expected);
     });
@@ -197,7 +166,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       await TestUtil.actImmediate();
 
-      const dropdown = global.document.querySelector('.ant-select-dropdown');
+      const dropdown = document.querySelector('.ant-select-dropdown');
 
       const result = resultMock.results[0];
 
@@ -210,19 +179,6 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       expect(combobox.value).toBe(`${result.name} (EPSG:${result.code})`);
     });
 
-  });
-
-  describe('#transformCrsObjectsToOptions', () => {
-    it('returns an AutoComplete.Option', () => {
-      const wrapper = TestUtil.mountComponent(CoordinateReferenceSystemCombo);
-      const item = {
-        code: '31466',
-        value: 'DHDN / 3-degree Gauss-Kruger zone 2'
-      };
-      const option = wrapper.instance().transformCrsObjectsToOptions(item);
-      expect(option.key).toBe(item.code);
-      expect(option.props.children).toBe(`${item.value} (EPSG:${item.code})`);
-    });
   });
 
 });
