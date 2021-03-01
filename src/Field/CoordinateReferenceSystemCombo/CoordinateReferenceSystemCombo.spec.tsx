@@ -52,8 +52,8 @@ describe('<CoordinateReferenceSystemCombo />', () => {
   });
 
   it('can be rendered', () => {
-    render(<CoordinateReferenceSystemCombo data-testid="test-coordinate-reference-combo" />);
-    expect(screen.getByTestId('test-coordinate-reference-combo')).toBeVisible();
+    const { container } = render(<CoordinateReferenceSystemCombo />);
+    expect(container).toBeVisible();
   });
 
   describe('#fetchCrs', () => {
