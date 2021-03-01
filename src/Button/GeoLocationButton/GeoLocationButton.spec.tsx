@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
@@ -25,22 +25,21 @@ describe('<GeoLocationButton />', () => {
     });
 
     it('can be rendered', () => {
-      render(<GeoLocationButton map={map} data-testid="test-geolocation-button" />);
-      expect(screen.getByTestId('test-geolocation-button')).toBeVisible();
+      const { container } = render(<GeoLocationButton map={map} />);
+      expect(container).toBeVisible();
     });
 
     it('can be pressed', () => {
       const geolocationMock = new GeolocationMock();
       const callback = jest.fn();
 
-      render(<GeoLocationButton
+      const { container } = render(<GeoLocationButton
         map={map}
         showMarker={false}
         onGeolocationChange={callback}
-        data-testid="test-geolocation-button"
       />);
 
-      const button = screen.getByTestId('test-geolocation-button');
+      const button = within(container).getByRole('button');
       userEvent.click(button);
 
       geolocationMock.fireListeners();
@@ -51,18 +50,17 @@ describe('<GeoLocationButton />', () => {
       const geolocationMock = new GeolocationMock();
       const callback = jest.fn();
 
-      render(<GeoLocationButton
+      const { container } = render(<GeoLocationButton
         map={map}
         showMarker={false}
         onGeolocationChange={callback}
-        data-testid="test-geolocation-button"
       />);
 
       geolocationMock.fireListeners();
 
       expect(callback).toBeCalledTimes(0);
 
-      const button = screen.getByTestId('test-geolocation-button');
+      const button = within(container).getByRole('button');
       userEvent.click(button);
 
       geolocationMock.fireListeners();
@@ -80,14 +78,13 @@ describe('<GeoLocationButton />', () => {
       const geolocationMock = new GeolocationMock();
       const callback = jest.fn();
 
-      render(<GeoLocationButton
+      const { container } = render(<GeoLocationButton
         map={map}
         showMarker={false}
         onGeolocationChange={callback}
-        data-testid="test-geolocation-button"
       />);
 
-      const button = screen.getByTestId('test-geolocation-button');
+      const button = within(container).getByRole('button');
       userEvent.click(button);
 
       const coordinates = [ 47.12, -64.99 ];
