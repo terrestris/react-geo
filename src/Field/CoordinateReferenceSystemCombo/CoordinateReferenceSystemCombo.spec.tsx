@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import '@testing-library/jest-dom';
 import { enableFetchMocks } from 'jest-fetch-mock';
@@ -8,6 +8,10 @@ import TestUtil from '../../Util/TestUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import CoordinateReferenceSystemCombo from '../CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
+import {
+  findAntdDropdownOptionByText,
+  queryAntdDropdownOption
+} from '../../Util/antdTestQueries';
 
 describe('<CoordinateReferenceSystemCombo />', () => {
 
@@ -56,12 +60,14 @@ describe('<CoordinateReferenceSystemCombo />', () => {
   });
 
   describe('search', () => {
-    it('sends a request with searchTerm', () => {
+    it('sends a request with searchTerm', async () => {
       const url = 'http://test.url';
       render(<CoordinateReferenceSystemCombo crsApiUrl={url} />);
 
       const combobox = screen.getByRole('combobox');
       userEvent.type(combobox, '25832');
+
+      await TestUtil.setTimeout(0);
 
       expect(fetch).toBeCalled();
       expect(fetch).toBeCalledWith(`${url}?format=json&q=25832`);
@@ -76,12 +82,8 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       userEvent.type(combobox, 'a');
 
-      await TestUtil.actImmediate();
-
-      const dropdown = document.querySelector('.ant-select-dropdown');
-
       for (const result of resultMock.results) {
-        const option = within(dropdown).getByTitle(`${result.name} (EPSG:${result.code})`);
+        const option = await findAntdDropdownOptionByText(`${result.name} (EPSG:${result.code})`);
         // would be nicer to test for `toBeVisible`, but antd seems to be in the way
         expect(option).toBeInTheDocument();
       }
@@ -100,11 +102,9 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       userEvent.type(combobox, 'a');
 
-      await TestUtil.actImmediate();
+      await TestUtil.setTimeout(50);
 
-      const dropdown = document.querySelector('.ant-select-dropdown');
-
-      expect(dropdown).toBeNull();
+      expect(queryAntdDropdownOption()).not.toBeInTheDocument();
     });
   });
 
@@ -118,9 +118,10 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       const combobox = screen.getByRole('combobox');
       userEvent.type(combobox, 'a');
 
-      await TestUtil.actImmediate();
+      await waitFor(() => {
+        expect(loggerSpy).toHaveBeenCalled();
+      });
 
-      expect(loggerSpy).toHaveBeenCalled();
       expect(loggerSpy).toHaveBeenCalledWith('Error while requesting in CoordinateReferenceSystemCombo: Peter');
 
       loggerSpy.mockRestore();
@@ -138,20 +139,16 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       userEvent.type(combobox, 'a');
 
-      await TestUtil.actImmediate();
-
-      const dropdown = document.querySelector('.ant-select-dropdown');
-
       const result = resultMock.results[0];
       const expected = transformedResults[0];
 
-      const option = within(dropdown).getByTitle(`${result.name} (EPSG:${result.code})`);
+      const option = await findAntdDropdownOptionByText(`${result.name} (EPSG:${result.code})`);
 
       userEvent.click(option);
 
-      await TestUtil.actImmediate();
-
-      expect(onSelect).toBeCalledWith(expected);
+      await waitFor(() => {
+        expect(onSelect).toBeCalledWith(expected);
+      });
     });
 
     it('sets the value of the combobox to the correct value', async () => {
@@ -163,19 +160,15 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       userEvent.type(combobox, 'a');
 
-      await TestUtil.actImmediate();
-
-      const dropdown = document.querySelector('.ant-select-dropdown');
-
       const result = resultMock.results[0];
 
-      const option = within(dropdown).getByTitle(`${result.name} (EPSG:${result.code})`);
+      const option = await findAntdDropdownOptionByText(`${result.name} (EPSG:${result.code})`);
 
       userEvent.click(option);
 
-      await TestUtil.actImmediate();
-
-      expect(combobox.value).toBe(`${result.name} (EPSG:${result.code})`);
+      await waitFor(() => {
+        expect(combobox).toHaveValue(`${result.name} (EPSG:${result.code})`);
+      });
     });
 
   });
