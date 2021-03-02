@@ -182,11 +182,9 @@ export class TestUtil {
     return feat;
   };
 
-  static async actImmediate(): Promise<void> {
-    await act(() => {
-      return new Promise(resolve => {
-        (setImmediate || setTimeout)(resolve);
-      });
+  static async setTimeout(time): Promise<void> {
+    return act(async () => {
+      return new Promise(resolve => setTimeout(resolve, time));
     });
   }
 }
