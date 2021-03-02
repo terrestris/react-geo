@@ -1,8 +1,10 @@
+import { render, screen } from '@testing-library/react';
+import * as React from 'react';
+import '@testing-library/jest-dom';
+
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlSourceTileJson from 'ol/source/TileJSON';
-
-import TestUtil from '../Util/TestUtil';
 
 import Legend from './Legend';
 
@@ -36,23 +38,25 @@ describe('<Legend />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<Legend layer={layer2} />);
+    expect(container).toBeVisible();
   });
 
   describe('Legend created with Layer', () => {
 
     it('takes the legendGraphic from layer.get("legendUrl") if configured', () => {
-      const wrapper = TestUtil.mountComponent(Legend, {layer: layer2});
-      const img = wrapper.find('img').getElement();
-      expect(img.props.src).toBe(layer2.get('legendUrl'));
+      render(<Legend layer={layer2} />);
+      const image = screen.getByRole('img');
+      expect(image).toBeVisible();
+      expect(image).toHaveAttribute('src', layer2.get('legendUrl'));
     });
 
     it('generates getLegendGraphicUrl if no "legendUrl" configured', () => {
-      const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
-      const img = wrapper.find('img').getElement();
+      render(<Legend layer={layer1} />);
+      const image = screen.getByRole('img');
       const legendUrl = MapUtil.getLegendGraphicUrl(layer1);
-      expect(img.props.src).toBe(legendUrl);
+      expect(image).toBeVisible();
+      expect(image).toHaveAttribute('src', legendUrl);
     });
 
     it('generates getLegendGraphicUrl if no "legendUrl" configured (extraParams)', () => {
@@ -61,19 +65,18 @@ describe('<Legend />', () => {
         WIDTH: 400,
         LANGUAGE: 'de'
       };
-      const wrapper = TestUtil.mountComponent(Legend, {
-        layer: layer1,
-        extraParams: extraParams
-      });
-      const img = wrapper.find('img').getElement();
+      render(<Legend layer={layer1} extraParams={extraParams} />);
+      const image = screen.getByRole('img');
       const legendUrl = MapUtil.getLegendGraphicUrl(layer1, extraParams);
-      expect(img.props.src).toBe(legendUrl);
+      expect(image).toBeVisible();
+      expect(image).toHaveAttribute('src', legendUrl);
     });
 
     it('creates an alt attribute corresponding to layername', () => {
-      const wrapper = TestUtil.mountComponent(Legend, {layer: layer1});
-      const img = wrapper.find('img').getElement();
-      expect(img.props.alt).toBe(`${layer1.get('name')} legend`);
+      render(<Legend layer={layer1} />);
+      const image = screen.getByRole('img');
+      expect(image).toBeVisible();
+      expect(image).toHaveAttribute('alt', `${layer1.get('name')} legend`);
     });
 
   });
