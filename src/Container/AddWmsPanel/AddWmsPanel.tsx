@@ -43,7 +43,7 @@ interface BaseProps {
   /**
    * Optional instance of OlMap which is used if onLayerAddToMap is not provided
    */
-  map: OlMap;
+  map?: OlMap;
   /**
    * Optional function being called when onAddSelectedLayers or onAddAllLayers
    * is triggered
@@ -56,11 +56,11 @@ interface BaseProps {
   /**
    * Optional function that is called if selection has changed.
    */
-  onSelectionChange?: (selection: any[]) => void;
+  onSelectionChange?: (selection: string[]) => void;
 }
 
 interface AddWmsLayerState {
-  selectedWmsLayers: Array<OlLayerTile | OlLayerImage>;
+  selectedWmsLayers: string[];
 }
 
 export type AddWmsPanelProps = BaseProps & Partial<DefaultProps> & PanelProps;
@@ -104,7 +104,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
    * @param selectedWmsLayers titles of selected WMS layers to set
    * in state
    */
-  onSelectedLayersChange = (selectedWmsLayers) => {
+  onSelectedLayersChange = (selectedWmsLayers: string[]) => {
     const {
       onSelectionChange
     } = this.props;
@@ -184,6 +184,8 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
       cancelText,
       addAllLayersText,
       addSelectedLayersText,
+      onLayerAddToMap,
+      onSelectionChange,
       ...passThroughProps
     } = this.props;
 
@@ -197,15 +199,20 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
           title={titleText}
           bounds="#main"
           className="add-wms-panel"
+          role="dialog"
           {...passThroughProps}
         >
-          <Checkbox.Group onChange={this.onSelectedLayersChange}>
-            {wmsLayers.map((layer, idx) =>
-              <AddWmsLayerEntry
-                wmsLayer={layer}
-                key={idx} />
-            )}
-          </Checkbox.Group>
+          <div role="list" >
+            <Checkbox.Group onChange={this.onSelectedLayersChange}>
+              {wmsLayers.map((layer, idx) =>
+                <div role="listitem" key={idx}>
+                  <AddWmsLayerEntry
+                    wmsLayer={layer}
+                  />
+                </div>
+              )}
+            </Checkbox.Group>
+          </div>
           <Titlebar tools={[
             <SimpleButton
               size="small"
