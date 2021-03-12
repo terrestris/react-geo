@@ -6,13 +6,21 @@ import * as React from 'react';
 import { transform } from 'ol/proj';
 
 import TestUtil from '../../Util/TestUtil';
-import { GeolocationMock } from '../../Util/GeolocationMock';
+import { disableGeolocationMock, enableGeolocationMock, fireGeolocationListeners } from '../../Util/geolocationMock';
 
 import GeoLocationButton from './GeoLocationButton';
 
 describe('<GeoLocationButton />', () => {
 
   let map;
+
+  beforeAll(() => {
+    enableGeolocationMock();
+  });
+
+  afterAll(() => {
+    disableGeolocationMock();
+  });
 
   beforeEach(() => {
     map = TestUtil.createMap();
@@ -30,7 +38,6 @@ describe('<GeoLocationButton />', () => {
     });
 
     it('can be pressed', () => {
-      const geolocationMock = new GeolocationMock();
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
@@ -42,12 +49,11 @@ describe('<GeoLocationButton />', () => {
       const button = within(container).getByRole('button');
       userEvent.click(button);
 
-      geolocationMock.fireListeners();
+      fireGeolocationListeners();
       expect(callback).toBeCalled();
     });
 
     it('can be pressed twice', () => {
-      const geolocationMock = new GeolocationMock();
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
@@ -56,26 +62,25 @@ describe('<GeoLocationButton />', () => {
         onGeolocationChange={callback}
       />);
 
-      geolocationMock.fireListeners();
+      fireGeolocationListeners();
 
       expect(callback).toBeCalledTimes(0);
 
       const button = within(container).getByRole('button');
       userEvent.click(button);
 
-      geolocationMock.fireListeners();
+      fireGeolocationListeners();
 
       expect(callback).toBeCalledTimes(1);
 
       userEvent.click(button);
 
-      geolocationMock.fireListeners();
+      fireGeolocationListeners();
 
       expect(callback).toBeCalledTimes(1);
     });
 
     it('is called with the correct position', () => {
-      const geolocationMock = new GeolocationMock();
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
@@ -89,7 +94,7 @@ describe('<GeoLocationButton />', () => {
 
       const coordinates = [ 47.12, -64.99 ];
 
-      geolocationMock.fireListeners({
+      fireGeolocationListeners({
         coords: {
           longitude: coordinates[0],
           latitude: coordinates[1],
