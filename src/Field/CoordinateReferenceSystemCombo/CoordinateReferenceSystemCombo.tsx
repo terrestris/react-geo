@@ -179,7 +179,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
 
     const crsObjects = predefinedCrsDefinitions || crsDefinitions;
 
-    const selected = crsObjects.filter(i => i.code === option.code)[0];
+    const selected = crsObjects.filter(i => i.code === option.key)[0];
 
     this.setState({
       value: selected.value
