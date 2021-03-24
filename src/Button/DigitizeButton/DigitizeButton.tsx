@@ -659,6 +659,22 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   };
 
   /**
+   *
+   * @return Function for drawEnd.
+   */
+  getOnDrawEnd() {
+    return this.props.onDrawEnd;
+  }
+
+  /**
+   *
+   * @return Function for drawStart.
+   */
+  getOnDrawStart() {
+    return this.props.onDrawStart;
+  }
+
+  /**
    * Creates a correctly configured OL draw interaction depending on given
    * drawType and adds this to the map.
    *
@@ -669,8 +685,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     const {
       drawType,
       map,
-      onDrawEnd,
-      onDrawStart,
       drawInteractionConfig
     } = this.props;
 
@@ -708,13 +722,19 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         drawInteraction.on('drawend', this.handleTextAdding);
       }
 
-      if (onDrawEnd) {
-        drawInteraction.on('drawend', onDrawEnd);
-      }
+      drawInteraction.on('drawend', (evt) => {
+        const onDrawEnd = this.getOnDrawEnd();
+        if (onDrawEnd) {
+          onDrawEnd(evt);
+        }
+      });
 
-      if (onDrawStart) {
-        drawInteraction.on('drawstart', onDrawStart);
-      }
+      drawInteraction.on('drawstart', (evt) => {
+        const onDrawStart = this.getOnDrawStart();
+        if (onDrawStart) {
+          onDrawStart(evt);
+        }
+      });
 
       drawInteraction.setActive(false);
 
