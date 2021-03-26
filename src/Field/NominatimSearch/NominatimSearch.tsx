@@ -131,7 +131,7 @@ interface NominatimSearchState {
   dataSource: NominatimPlace[];
 }
 
-export type NominatimSearchProps = BaseProps & Partial<DefaultProps> & AutoCompleteProps;
+export type NominatimSearchProps = BaseProps & Partial<DefaultProps> & Omit<AutoCompleteProps, 'onSelect'>;
 
 /**
  * The NominatimSearch.
