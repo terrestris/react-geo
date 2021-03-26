@@ -51,7 +51,7 @@ describe('<UserChip />', () => {
       }
     };
     wrapper = TestUtil.mountComponent(UserChip, props);
-    expect(wrapper.props().style.backgroundColor).toBe('yellow');
+    expect(wrapper.props()).toHaveStyle('backgroundColor: yellow');
   });
 
 });

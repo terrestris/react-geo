@@ -69,8 +69,8 @@ describe('<CircleMenu />', () => {
         setTimeout(resolve, animationDuration + 100);
       })
         .then(() => {
-          expect(instance._ref.style.width).toBe('1337px');
-          expect(instance._ref.style.height).toBe('1337px');
+          expect(instance._ref).toHaveStyle('width: 1337px');
+          expect(instance._ref).toHaveStyle('height: 1337px');
         });
     });
   });

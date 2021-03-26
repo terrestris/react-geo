@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import { render, screen, within } from '@testing-library/react';
 import * as React from 'react';
 import userEvent from '@testing-library/user-event';
