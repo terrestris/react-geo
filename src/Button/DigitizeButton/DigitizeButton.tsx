@@ -219,58 +219,6 @@ export type DigitizeButtonProps = BaseProps & Partial<DefaultProps> & ToggleButt
  *
  */
 class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButtonState> {
-
-  /**
-   * The className added to this component.
-   *
-   * @private
-   */
-  className = `${CSS_PREFIX}digitizebutton`;
-
-  /**
-   * Currently existing digitize features as collection.
-   *
-   * @private
-   */
-  _digitizeFeatures = null;
-
-  /**
-   * The layer used for the digitization.
-   *
-   * @private
-   */
-  _digitizeLayer = null;
-
-  /**
-   * Currently drawn feature which should be represent as label or postit.
-   * @private
-   */
-  _digitizeTextFeature = null;
-
-  /**
-   * The draw interaction.
-   * @private
-   */
-  _drawInteraction?: OlInteractionDraw;
-
-  /**
-   * The select interaction.
-   * @private
-   */
-  _selectInteraction?: OlInteractionSelect;
-
-  /**
-   * The modify interaction.
-   * @private
-   */
-  _modifyInteraction?: OlInteractionModify;
-
-  /**
-   * The translate interaction.
-   * @private
-   */
-  _translateInteraction?: OlInteractionTranslate;
-
   /**
    * Name of point draw type.
    * @private
@@ -414,6 +362,57 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   };
 
   /**
+   * The className added to this component.
+   *
+   * @private
+   */
+  className = `${CSS_PREFIX}digitizebutton`;
+
+  /**
+   * Currently existing digitize features as collection.
+   *
+   * @private
+   */
+  _digitizeFeatures = null;
+
+  /**
+   * The layer used for the digitization.
+   *
+   * @private
+   */
+  _digitizeLayer = null;
+
+  /**
+   * Currently drawn feature which should be represent as label or postit.
+   * @private
+   */
+  _digitizeTextFeature = null;
+
+  /**
+   * The draw interaction.
+   * @private
+   */
+  _drawInteraction?: OlInteractionDraw;
+
+  /**
+   * The select interaction.
+   * @private
+   */
+  _selectInteraction?: OlInteractionSelect;
+
+  /**
+   * The modify interaction.
+   * @private
+   */
+  _modifyInteraction?: OlInteractionModify;
+
+  /**
+   * The translate interaction.
+   * @private
+   */
+  _translateInteraction?: OlInteractionTranslate;
+
+  /**
    * Creates the DigitizeButton.
    *
    * @constructs DigitizeButton
@@ -423,7 +422,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     if (!props.drawType && !props.editType) {
       Logger.warn('Neither "drawType" nor "editType" was provided. Digitize ' +
-      'button won\'t work properly!');
+        'button won\'t work properly!');
     }
 
     this.state = {

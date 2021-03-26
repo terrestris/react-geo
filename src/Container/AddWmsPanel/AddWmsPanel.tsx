@@ -76,6 +76,17 @@ export type AddWmsPanelProps = BaseProps & Partial<DefaultProps> & PanelProps;
 export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerState> {
 
   /**
+   * The defaultProps.
+   */
+  static defaultProps: DefaultProps = {
+    wmsLayers: [],
+    addAllLayersText: 'Add all layers',
+    addSelectedLayersText: 'Add selected layers',
+    cancelText: 'Cancel',
+    titleText: 'Add WMS layer'
+  };
+
+  /**
    * Create an AddWmsPanel.
    * @constructs AddWmsPanel
    */
@@ -86,17 +97,6 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
       selectedWmsLayers: []
     };
   }
-
-  /**
-   * The defaultProps.
-   */
-  static defaultProps: DefaultProps = {
-    wmsLayers: [],
-    addAllLayersText: 'Add all layers',
-    addSelectedLayersText: 'Add selected layers',
-    cancelText: 'Cancel',
-    titleText: 'Add WMS layer'
-  };
 
   /**
    * onSelectedLayersChange - set state for selectedWmsLayers
@@ -191,7 +191,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
       selectedWmsLayers
     } =  this.state;
 
-    return(
+    return (
       wmsLayers && wmsLayers.length > 0  ?
         <Panel
           title={titleText}

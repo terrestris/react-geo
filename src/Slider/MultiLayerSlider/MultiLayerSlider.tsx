@@ -44,16 +44,16 @@ export type MultiLayerSliderProps = BaseProps & Partial<DefaultProps> & SliderSi
  */
 class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
 
+  static defaultProps: DefaultProps = {
+    defaultValue: 0,
+    nameProperty: 'name'
+  };
+
   /**
    * The className added to this component.
    * @private
    */
   className = `${CSS_PREFIX}multilayerslider`;
-
-  static defaultProps: DefaultProps = {
-    defaultValue: 0,
-    nameProperty: 'name'
-  };
 
   /**
    * The constructor.

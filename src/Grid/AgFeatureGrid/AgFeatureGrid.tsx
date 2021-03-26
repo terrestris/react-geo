@@ -168,48 +168,6 @@ export type AgFeatureGridProps = BaseProps & Partial<DefaultProps> & AgGridReact
 export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeatureGridState> {
 
   /**
-   * The reference of this grid.
-   * @private
-   */
-  _ref;
-
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}ag-feature-grid`;
-
-  /**
-   * The class name to add to each table row.
-   * @private
-   */
-  _rowClassName = `${CSS_PREFIX}ag-feature-grid-row`;
-
-  /**
-   * The prefix to use for each table row class.
-   * @private
-   */
-  _rowKeyClassNamePrefix = 'row-key-';
-
-  /**
-   * The hover class name.
-   * @private
-   */
-  _rowHoverClassName = 'ag-row-hover';
-
-  /**
-   * The source holding the features of the grid.
-   * @private
-   */
-  _source = null;
-
-  /**
-   * The layer representing the features of the grid.
-   * @private
-   */
-  _layer = null;
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {
@@ -280,6 +238,48 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     zoomToExtent: false,
     selectable: false
   };
+
+  /**
+   * The reference of this grid.
+   * @private
+   */
+  _ref;
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  _className = `${CSS_PREFIX}ag-feature-grid`;
+
+  /**
+   * The class name to add to each table row.
+   * @private
+   */
+  _rowClassName = `${CSS_PREFIX}ag-feature-grid-row`;
+
+  /**
+   * The prefix to use for each table row class.
+   * @private
+   */
+  _rowKeyClassNamePrefix = 'row-key-';
+
+  /**
+   * The hover class name.
+   * @private
+   */
+  _rowHoverClassName = 'ag-row-hover';
+
+  /**
+   * The source holding the features of the grid.
+   * @private
+   */
+  _source = null;
+
+  /**
+   * The layer representing the features of the grid.
+   * @private
+   */
+  _layer = null;
 
   /**
    * The constructor.

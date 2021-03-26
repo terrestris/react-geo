@@ -46,12 +46,6 @@ export type ZoomButtonProps = BaseProps & Partial<DefaultProps> & SimpleButtonPr
  */
 class ZoomButton extends React.Component<ZoomButtonProps> {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}zoominbutton`;
-
   static defaultProps: DefaultProps = {
     delta: 1,
     animate: true,
@@ -60,6 +54,12 @@ class ZoomButton extends React.Component<ZoomButtonProps> {
       easing: easeOut
     }
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  _className = `${CSS_PREFIX}zoominbutton`;
 
   /**
    * Called when the button is clicked.

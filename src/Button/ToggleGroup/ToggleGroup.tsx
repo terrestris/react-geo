@@ -59,12 +59,6 @@ export type ToggleGroupProps = BaseProps & Partial<DefaultProps>;
 class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
 
   /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}togglegroup`;
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {
@@ -78,6 +72,12 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
   static childContextTypes = {
     toggleGroup: PropTypes.object
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  _className = `${CSS_PREFIX}togglegroup`;
 
   /**
    * The constructor.

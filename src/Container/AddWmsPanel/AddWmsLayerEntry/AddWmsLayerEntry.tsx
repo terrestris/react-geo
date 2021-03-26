@@ -46,20 +46,6 @@ export type AddWmsLayerEntryProps = BaseProps & Partial<DefaultProps>;
 export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, AddWmsLayerEntryState> {
 
   /**
-   * Create the AddWmsLayerEntry.
-   *
-   * @constructs AddWmsLayerEntry
-   */
-  constructor(props: AddWmsLayerEntryProps) {
-    super(props);
-    // TODO: getAttributions is not @api and returns a function in v6.5
-    this.state = {
-      copyright: props.wmsLayer.getSource().getAttributions(),
-      queryable: props.wmsLayer.get('queryable')
-    };
-  }
-
-  /**
    * The defaultProps.
    */
   static defaultProps: DefaultProps = {
@@ -73,6 +59,20 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
       return abstractTextSpan;
     }
   };
+
+  /**
+   * Create the AddWmsLayerEntry.
+   *
+   * @constructs AddWmsLayerEntry
+   */
+  constructor(props: AddWmsLayerEntryProps) {
+    super(props);
+    // TODO: getAttributions is not @api and returns a function in v6.5
+    this.state = {
+      copyright: props.wmsLayer.getSource().getAttributions(),
+      queryable: props.wmsLayer.get('queryable')
+    };
+  }
 
   /**
    * The render function

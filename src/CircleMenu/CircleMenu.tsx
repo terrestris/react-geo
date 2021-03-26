@@ -41,6 +41,12 @@ export type CircleMenuProps = BaseProps
  */
 export class CircleMenu extends React.Component<CircleMenuProps> {
 
+  static defaultProps: DefaultProps = {
+    animationDuration: 300,
+    diameter: 100,
+    segmentAngles: [0, 360]
+  };
+
   /**
    * The className added to this component.
    * @private
@@ -52,12 +58,6 @@ export class CircleMenu extends React.Component<CircleMenuProps> {
    * @private
    */
   _ref = null;
-
-  static defaultProps: DefaultProps = {
-    animationDuration: 300,
-    diameter: 100,
-    segmentAngles: [0, 360]
-  };
 
   /**
    * A react lifecycle method called when the component did mount.

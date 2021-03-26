@@ -141,12 +141,6 @@ export type NominatimSearchProps = BaseProps & Partial<DefaultProps> & Omit<Auto
  */
 export class NominatimSearch extends React.Component<NominatimSearchProps, NominatimSearchState> {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}nominatimsearch`;
-
   static defaultProps: DefaultProps = {
     nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
     format: 'json',
@@ -200,6 +194,12 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
       }
     }
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  className = `${CSS_PREFIX}nominatimsearch`;
 
   /**
    * Create the NominatimSearch.

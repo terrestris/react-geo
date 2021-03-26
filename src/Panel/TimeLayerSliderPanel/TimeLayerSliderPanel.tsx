@@ -69,10 +69,6 @@ export interface TimeLayerSliderPanelState {
  */
 export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelProps, TimeLayerSliderPanelState> {
 
-  private _TimeLayerAwareSlider: any;
-  private _wmsTimeLayers: TimeLayerAwareConfig[];
-  private _interval: number;
-
   /**
    * The default props of LayerSetBaseMapChooser
    *
@@ -96,6 +92,10 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
     },
     autoPlaySpeedOptions: [ 0.5, 1, 2, 5, 10, 100, 300 ]
   };
+
+  private _TimeLayerAwareSlider: any;
+  private _wmsTimeLayers: TimeLayerAwareConfig[];
+  private _interval: number;
 
   /**
    * Constructs time panel.

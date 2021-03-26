@@ -35,6 +35,10 @@ export interface CircleMenuItemProps extends Partial<CircleMenuItemDefaultProps>
  */
 export class CircleMenuItem extends React.Component<CircleMenuItemProps> {
 
+  static defaultProps = {
+    animationDuration: 300
+  };
+
   /**
    * The className added to this component.
    * @private
@@ -46,10 +50,6 @@ export class CircleMenuItem extends React.Component<CircleMenuItemProps> {
    * @private
    */
   _ref = null;
-
-  static defaultProps = {
-    animationDuration: 300
-  };
 
   /**
    * A react lifecycle method called when the component did mount.

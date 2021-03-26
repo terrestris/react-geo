@@ -120,42 +120,6 @@ export type FeatureGridProps = BaseProps & Partial<DefaultProps> & TableProps<an
 export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridState> {
 
   /**
-   * The class name to add to this component.
-   * @private
-   */
-  _className = 'react-geo-feature-grid';
-
-  /**
-   * The class name to add to each table row.
-   * @private
-   */
-  _rowClassName = 'react-geo-feature-grid-row';
-
-  /**
-   * The prefix to use for each table row class.
-   * @private
-   */
-  _rowKeyClassNamePrefix = 'row-key-';
-
-  /**
-   * The hover class name.
-   * @private
-   */
-  _rowHoverClassName = 'row-hover';
-
-  /**
-   * The source holding the features of the grid.
-   * @private
-   */
-  _source: OlSourceVector<OlGeometry> = null;
-
-  /**
-   * The layer representing the features of the grid.
-   * @private
-   */
-  _layer: OlLayerVector = null;
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {
@@ -224,6 +188,42 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     zoomToExtent: false,
     selectable: false
   };
+
+  /**
+   * The class name to add to this component.
+   * @private
+   */
+  _className = 'react-geo-feature-grid';
+
+  /**
+   * The class name to add to each table row.
+   * @private
+   */
+  _rowClassName = 'react-geo-feature-grid-row';
+
+  /**
+   * The prefix to use for each table row class.
+   * @private
+   */
+  _rowKeyClassNamePrefix = 'row-key-';
+
+  /**
+   * The hover class name.
+   * @private
+   */
+  _rowHoverClassName = 'row-hover';
+
+  /**
+   * The source holding the features of the grid.
+   * @private
+   */
+  _source: OlSourceVector<OlGeometry> = null;
+
+  /**
+   * The layer representing the features of the grid.
+   * @private
+   */
+  _layer: OlLayerVector = null;
 
   /**
    * The constructor.

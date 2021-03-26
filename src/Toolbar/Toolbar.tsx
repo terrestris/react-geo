@@ -31,17 +31,17 @@ export type ToolbarProps = BaseProps & Partial<DefaultProps> & React.HTMLAttribu
 class Toolbar extends React.Component<ToolbarProps> {
 
   /**
-   * The className added to this component.
-   * @private
-   */
-  className: string = `${CSS_PREFIX}toolbar`;
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {
     alignment: 'horizontal'
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  className: string = `${CSS_PREFIX}toolbar`;
 
   /**
    * The render function

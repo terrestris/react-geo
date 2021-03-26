@@ -69,6 +69,15 @@ export type WindowProps = BaseProps & Partial<DefaultProps> & PanelProps;
  */
 export class Window extends React.Component<WindowProps, WindowState> {
 
+  static defaultProps: DefaultProps = {
+    parentId: 'app',
+    title: 'Window',
+    resizeOpts: true,
+    collapsible: true,
+    draggable: true,
+    id: _uniqueId('window-')
+  };
+
   /**
    * The parent Element of the Window.
    * @private
@@ -86,15 +95,6 @@ export class Window extends React.Component<WindowProps, WindowState> {
    * @private
    */
   className: string = `${CSS_PREFIX}window-portal`;
-
-  static defaultProps: DefaultProps = {
-    parentId: 'app',
-    title: 'Window',
-    resizeOpts: true,
-    collapsible: true,
-    draggable: true,
-    id: _uniqueId('window-')
-  };
 
   /**
    * Create a Window.

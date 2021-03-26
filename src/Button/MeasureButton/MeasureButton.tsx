@@ -129,6 +129,30 @@ export type MeasureButtonProps = BaseProps & Partial<DefaultProps> & ToggleButto
 class MeasureButton extends React.Component<MeasureButtonProps> {
 
   /**
+   * The default properties.
+   */
+  static defaultProps: DefaultProps = {
+    measureLayerName: 'react-geo_measure',
+    fillColor: 'rgba(255, 0, 0, 0.5)',
+    strokeColor: 'rgba(255, 0, 0, 0.8)',
+    showMeasureInfoOnClickedPoints: false,
+    showHelpTooltip: true,
+    decimalPlacesInTooltips: 2,
+    multipleDrawing: false,
+    continuePolygonMsg: 'Click to draw area',
+    continueLineMsg: 'Click to draw line',
+    continueAngleMsg: 'Click to draw angle',
+    clickToDrawText: 'Click to measure',
+    measureTooltipCssClasses: {
+      tooltip: `${CSS_PREFIX}measure-tooltip`,
+      tooltipDynamic: `${CSS_PREFIX}measure-tooltip-dynamic`,
+      tooltipStatic: `${CSS_PREFIX}measure-tooltip-static`
+    },
+    pressed: false,
+    onToggle: () => undefined
+  };
+
+  /**
    * The className added to this component.
    *
    * @private
@@ -220,30 +244,6 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
    * @private
    */
   _drawInteraction = null;
-
-  /**
-   * The default properties.
-   */
-  static defaultProps: DefaultProps = {
-    measureLayerName: 'react-geo_measure',
-    fillColor: 'rgba(255, 0, 0, 0.5)',
-    strokeColor: 'rgba(255, 0, 0, 0.8)',
-    showMeasureInfoOnClickedPoints: false,
-    showHelpTooltip: true,
-    decimalPlacesInTooltips: 2,
-    multipleDrawing: false,
-    continuePolygonMsg: 'Click to draw area',
-    continueLineMsg: 'Click to draw line',
-    continueAngleMsg: 'Click to draw angle',
-    clickToDrawText: 'Click to measure',
-    measureTooltipCssClasses: {
-      tooltip: `${CSS_PREFIX}measure-tooltip`,
-      tooltipDynamic: `${CSS_PREFIX}measure-tooltip-dynamic`,
-      tooltipStatic: `${CSS_PREFIX}measure-tooltip-static`
-    },
-    pressed: false,
-    onToggle: () => undefined
-  };
 
   /**
    * Creates the MeasureButton.
