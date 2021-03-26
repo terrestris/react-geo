@@ -77,7 +77,7 @@ describe('<MultiLayerSlider />', () => {
       layers: layers,
     };
 
-    // if nothing is defined, it should get the layer name 
+    // if nothing is defined, it should get the layer name
     const wrapper = TestUtil.mountComponent(MultiLayerSlider, props);
 
     const expectedMarksWithNameProperty = { '0': 'Layer Name 1', '50': 'Layer Name 2', '100': 'Layer Name 3' };
