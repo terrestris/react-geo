@@ -49,7 +49,7 @@ describe('<CircleMenuItem />', () => {
 
       expect.assertions(2);
 
-      expect(instance._ref.style.transform).toBe('rotate(0deg) translate(0px) rotate(0deg)');
+      expect(instance._ref).toHaveStyle('transform: rotate(0deg) translate(0px) rotate(0deg)');
 
       instance.applyTransformation();
 
@@ -58,7 +58,7 @@ describe('<CircleMenuItem />', () => {
       })
         .then(() => {
           // eslint-disable-next-line max-len
-          expect(instance._ref.style.transform).toBe(`rotate(${rotationAngle}deg) translate(${radius}px) rotate(-${rotationAngle}deg)`);
+          expect(instance._ref).toHaveStyle(`transform: rotate(${rotationAngle}deg) translate(${radius}px) rotate(-${rotationAngle}deg)`);
         });
     });
   });

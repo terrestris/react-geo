@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
-import '@testing-library/jest-dom';
 
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';

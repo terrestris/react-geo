@@ -42,10 +42,10 @@ describe('<FloatingMapLogo />', () => {
     };
     wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
     const imageElement = wrapper.find('img').getElement();
-    expect(imageElement.props.style.backgroundColor).toBe('yellow');
-    expect(imageElement.props.className).toContain(wrapper.instance().className);
-    expect(imageElement.props.className).toContain('peter');
-    expect(imageElement.props.style.position).toBe('inherit');
+    expect(imageElement.props).toHaveStyle('backgroundColor: yellow');
+    expect(imageElement.props).toHaveClass(wrapper.instance().className);
+    expect(imageElement.props).toHaveClass('peter');
+    expect(imageElement.props).toHaveStyle('position: inherit');
   });
 
   it('passes position prop', () => {
@@ -58,9 +58,9 @@ describe('<FloatingMapLogo />', () => {
     };
     wrapper = TestUtil.mountComponent(FloatingMapLogo, props);
     const imageElement = wrapper.find('img').getElement();
-    expect(imageElement.props.className).toBe(wrapper.instance().className);
-    expect(imageElement.props.style.position).toBe('absolute');
-    expect(imageElement.props.style.backgroundColor).toBe('yellow');
+    expect(imageElement.props).toHaveClass(wrapper.instance().className);
+    expect(imageElement.props).toHaveStyle('position: absolute');
+    expect(imageElement.props).toHaveStyle('backgroundColor: yellow');
   });
 
   it('delegates image height to child img element', () => {
