@@ -56,12 +56,12 @@ describe('<NominatimSearch />', () => {
       const expectations = [
         wrapper.props().nominatimBaseUrl,
         encodeURIComponent(wrapper.props().format),
-        encodeURIComponent(wrapper.props().viewbox),
+        encodeURIComponent(wrapper.props().viewBox),
         encodeURIComponent(wrapper.props().bounded),
-        encodeURIComponent(wrapper.props().polygon_geojson),
-        encodeURIComponent(wrapper.props().addressdetails),
+        encodeURIComponent(wrapper.props().polygonGeoJSON),
+        encodeURIComponent(wrapper.props().addressDetails),
         encodeURIComponent(wrapper.props().limit),
-        encodeURIComponent(wrapper.props().countrycodes),
+        encodeURIComponent(wrapper.props().countryCodes),
         encodeURIComponent(inputValue)
       ];
       expectations.forEach(expectation => {
@@ -75,7 +75,9 @@ describe('<NominatimSearch />', () => {
     it('sets the response as state.dataSource', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
       const response = [{
+        // eslint-disable-next-line camelcase
         place_id: 123,
+        // eslint-disable-next-line camelcase
         display_name: 'peter'
       }];
       wrapper.instance().onFetchSuccess(response);
@@ -98,7 +100,9 @@ describe('<NominatimSearch />', () => {
     it('calls this.props.onSelect with the selected item', () => {
       // SETUP
       const dataSource = [{
+        // eslint-disable-next-line camelcase
         place_id: 752526,
+        // eslint-disable-next-line camelcase
         display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland'
       }];
       const map = new OlMap({
@@ -142,6 +146,7 @@ describe('<NominatimSearch />', () => {
         parseFloat(bbox[1])
       ];
       const item = {
+        // eslint-disable-next-line camelcase
         place_id: '752526',
         boundingbox: bbox
       };
@@ -168,7 +173,9 @@ describe('<NominatimSearch />', () => {
     it('returns an AutoComplete.Option', () => {
       const wrapper = TestUtil.mountComponent(NominatimSearch);
       const item = {
+        // eslint-disable-next-line camelcase
         place_id: '752526',
+        // eslint-disable-next-line camelcase
         display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland'
       };
       const option = wrapper.props().renderOption(item);

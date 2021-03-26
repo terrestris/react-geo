@@ -20,10 +20,14 @@ import './NominatimSearch.less';
 
 // See https://nominatim.org/release-docs/develop/api/Output/ for some more information
 export type NominatimPlace = {
+  // eslint-disable-next-line camelcase
   place_id: number;
+  // eslint-disable-next-line camelcase
   osm_type: string;
+  // eslint-disable-next-line camelcase
   osm_id: number;
   boundingbox: string[];
+  // eslint-disable-next-line camelcase
   display_name: string;
   category: string;
   type: string;
@@ -48,7 +52,7 @@ interface DefaultProps {
   /**
    * The preferred area to find search results in [left],[top],[right],[bottom].
    */
-  viewbox: string;
+  viewBox: string;
   /**
    * Restrict the results to only items contained with the bounding box.
    * Restricting the results to the bounding box also enables searching by
@@ -60,11 +64,11 @@ interface DefaultProps {
   /**
    * Output geometry of results in geojson format.
    */
-  polygon_geojson: number;
+  polygonGeoJSON: number;
   /**
    * Include a breakdown of the address into elements.
    */
-  addressdetails: number;
+  addressDetails: number;
   /**
    * Limit the number of returned results.
    */
@@ -74,7 +78,7 @@ interface DefaultProps {
    * [countrycode] should be the ISO 3166-1alpha2 code, e.g. gb for the United
    * Kingdom, de for Germany, etc.
    */
-  countrycodes: string;
+  countryCodes: string;
   /**
    * The minimal amount of characters entered in the input to start a search.
    */
@@ -144,12 +148,12 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
   static defaultProps: DefaultProps = {
     nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
     format: 'json',
-    viewbox: '-180,90,180,-90',
+    viewBox: '-180,90,180,-90',
     bounded: 1,
-    polygon_geojson: 1,
-    addressdetails: 1,
+    polygonGeoJSON: 1,
+    addressDetails: 1,
     limit: 10,
-    countrycodes: 'de',
+    countryCodes: 'de',
     minChars: 3,
     visible: true,
     /**
@@ -264,12 +268,13 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
   doSearch() {
     const baseParams = {
       format: this.props.format,
-      viewbox: this.props.viewbox,
+      viewbox: this.props.viewBox,
       bounded: this.props.bounded,
-      polygon_geojson: this.props.polygon_geojson,
-      addressdetails: this.props.addressdetails,
+      // eslint-disable-next-line camelcase
+      polygon_geojson: this.props.polygonGeoJSON,
+      addressdetails: this.props.addressDetails,
       limit: this.props.limit,
-      countrycodes: this.props.countrycodes,
+      countrycodes: this.props.countryCodes,
       q: this.state.searchTerm
     };
 
@@ -331,12 +336,12 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
       className,
       nominatimBaseUrl,
       format,
-      viewbox,
+      viewBox,
       bounded,
-      polygon_geojson,
-      addressdetails,
+      polygonGeoJSON,
+      addressDetails,
       limit,
-      countrycodes,
+      countryCodes,
       map,
       onSelect,
       renderOption,

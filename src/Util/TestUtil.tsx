@@ -126,15 +126,15 @@ export class TestUtil {
    * @param type Event type.
    * @param x Horizontal offset from map center.
    * @param y Vertical offset from map center.
-   * @param [opt_shiftKey] Shift key is pressed
+   * @param [optShiftKey] Shift key is pressed
    * @param [dragging] Whether the map is being dragged or not.
    */
-  static simulatePointerEvent = ({map, type, x, y, opt_shiftKey, dragging}:
-  {map: any; type: string; x: number; y: number; opt_shiftKey?: boolean; dragging?: boolean}) => {
+  static simulatePointerEvent = ({map, type, x, y, optShiftKey, dragging}:
+  {map: any; type: string; x: number; y: number; optShiftKey?: boolean; dragging?: boolean}) => {
     const viewport = map.getViewport();
     // Calculated in case body has top < 0 (test runner with small window).
     const position = viewport.getBoundingClientRect();
-    const shiftKey = opt_shiftKey !== undefined ? opt_shiftKey : false;
+    const shiftKey = optShiftKey !== undefined ? optShiftKey : false;
     const event = new PointerEvent(type, {
       clientX: position.left + x + TestUtil.mapDivWidth / 2,
       clientY: position.top + y + TestUtil.mapDivHeight / 2,
