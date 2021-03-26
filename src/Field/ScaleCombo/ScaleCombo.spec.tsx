@@ -26,7 +26,7 @@ describe('<ScaleCombo />', () => {
       }
     };
     const wrapper = TestUtil.mountComponent(ScaleCombo, props);
-    expect(wrapper.props().style.backgroundColor).toBe('yellow');
+    expect(wrapper.getDOMNode()).toHaveStyle('backgroundColor: yellow');
 
     TestUtil.removeMap(map);
   });
