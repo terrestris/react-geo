@@ -78,8 +78,8 @@ describe('<LayerSwitcher />', () => {
       layers: layers
     };
     wrapper = TestUtil.mountComponent(LayerSwitcher, props);
-    expect(wrapper.props()).toHaveStyle('backgroundColor: yellow');
-    expect(wrapper.props()).toHaveStyle('position: inherit');
+    expect(wrapper.getDOMNode()).toHaveStyle('backgroundColor: yellow');
+    expect(wrapper.getDOMNode()).toHaveStyle('position: inherit');
   });
 
   it('sets all but one layer to invisible', () => {
