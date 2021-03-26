@@ -1,6 +1,7 @@
-import TestUtil from '../../Util/TestUtil';
-
 import ToggleButton from './ToggleButton';
+import { render, screen } from '@testing-library/react';
+import * as React from 'react';
+import userEvent from '@testing-library/user-event';
 
 describe('<ToggleButton />', () => {
 
@@ -9,90 +10,68 @@ describe('<ToggleButton />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(ToggleButton);
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<ToggleButton />);
+    expect(container).toBeVisible();
   });
 
   it('isn\'t pressed by default', () => {
-    const wrapper = TestUtil.mountComponent(ToggleButton);
-    const pressedClass = wrapper.instance().pressedClass;
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
+    render(<ToggleButton />);
+    const button = screen.getByRole('button');
+    expect(button).not.toHaveClass('btn-pressed');
   });
 
   it('sets the pressed class if pressed prop is set to true initially', () => {
-    const wrapper = TestUtil.mountComponent(ToggleButton, {
-      pressed: true
-    });
-    const pressedClass = wrapper.instance().pressedClass;
-
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+    render(<ToggleButton pressed={true}/>);
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass('btn-pressed');
   });
 
   it('ignores the onClick callback', () => {
     const onClick = jest.fn();
-    const wrapper = TestUtil.mountComponent(ToggleButton, {
-      onClick
-    });
 
-    wrapper.find('button').simulate('click');
+    render(<ToggleButton pressed={true} onClick={onClick} />);
+    const button = screen.getByRole('button');
+    userEvent.click(button);
 
-    expect(onClick).toHaveBeenCalledTimes(0);
+    expect(onClick).not.toHaveBeenCalled();
   });
 
   it('toggles the pressed class if the pressed prop has changed', () => {
-    const wrapper = TestUtil.mountComponent(ToggleButton);
-    const pressedClass = wrapper.instance().pressedClass;
+    const { rerender } = render(<ToggleButton />);
+    const button = screen.getByRole('button');
 
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
+    expect(button).not.toHaveClass('btn-pressed');
 
-    wrapper.setProps({
-      pressed: true
-    });
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+    rerender(<ToggleButton pressed={true} />);
+    expect(button).toHaveClass('btn-pressed');
 
     // Nothing should happen if the prop hasn't changed.
-    wrapper.setProps({
-      pressed: true
-    });
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+    rerender(<ToggleButton pressed={true} />);
+    expect(button).toHaveClass('btn-pressed');
 
-    wrapper.setProps({
-      pressed: false
-    });
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
+    rerender(<ToggleButton />);
+    expect(button).not.toHaveClass('btn-pressed');
   });
 
   // eslint-disable-next-line max-len
   it('calls the given toggle callback method if the pressed prop has changed initially to true', () => {
     const onToggle = jest.fn();
-    const props = {
-      onToggle
-    };
-    const wrapper = TestUtil.mountComponent(ToggleButton, props);
+    const { rerender } = render(<ToggleButton onToggle={onToggle}/>);
 
-    wrapper.setProps({
-      pressed: true
-    });
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(1);
     // If the prop has been changed, no click evt is available.
     expect(onToggle).toHaveBeenCalledWith(true, null);
 
-    wrapper.setProps({
-      pressed: false
-    });
+    rerender(<ToggleButton pressed={false} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, null);
 
     // Nothing should happen if the prop hasn't changed.
-    wrapper.setProps({
-      pressed: false
-    });
+    rerender(<ToggleButton pressed={false} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(2);
-    expect(onToggle).toHaveBeenCalledWith(false, null);
 
-    wrapper.setProps({
-      pressed: true
-    });
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(3);
     expect(onToggle).toHaveBeenCalledWith(true, null);
   });
@@ -100,64 +79,46 @@ describe('<ToggleButton />', () => {
   // eslint-disable-next-line max-len
   it('calls the given toggle callback method if the pressed prop has changed to false (from being false by default)', () => {
     const onToggle = jest.fn();
-    const props = {
-      onToggle
-    };
-    const wrapper = TestUtil.mountComponent(ToggleButton, props);
+    const { rerender } = render(<ToggleButton onToggle={onToggle}/>);
 
     // Nothing should happen if the prop hasn't changed.
     // (pressed property is false by default)
-    wrapper.setProps({
-      pressed: false
-    });
+    rerender(<ToggleButton pressed={false} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(0);
 
-    wrapper.setProps({
-      pressed: true
-    });
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(1);
     // If the prop has been changed, no click evt is available.
     expect(onToggle).toHaveBeenCalledWith(true, null);
 
     // Nothing should happen if the prop hasn't changed.
-    wrapper.setProps({
-      pressed: true
-    });
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(1);
-    expect(onToggle).toHaveBeenCalledWith(true, null);
 
-    wrapper.setProps({
-      pressed: false
-    });
+    rerender(<ToggleButton pressed={false} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, null);
   });
 
   it('cleans the last click event if not available', () => {
     const onToggle = jest.fn();
-    const props = {
-      onToggle
-    };
     const clickEvtMock = expect.objectContaining({
       type: 'click'
     });
-    const wrapper = TestUtil.mountComponent(ToggleButton, props);
+    const { rerender } = render(<ToggleButton onToggle={onToggle}/>);
+    const button = screen.getByRole('button');
 
-    wrapper.setProps({
-      pressed: true
-    });
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(1);
     // If the prop has been changed, no click evt is available.
     expect(onToggle).toHaveBeenCalledWith(true, null);
 
     // Pressed will now become false.
-    wrapper.find('button').simulate('click');
+    userEvent.click(button);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
 
-    wrapper.setProps({
-      pressed: true
-    });
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     // If the prop has been changed, no click evt is available.
     expect(onToggle).toHaveBeenCalledTimes(3);
     expect(onToggle).toHaveBeenCalledWith(true, null);
@@ -165,64 +126,46 @@ describe('<ToggleButton />', () => {
   });
 
   it('toggles the pressed class on click', () => {
-    const wrapper = TestUtil.mountComponent(ToggleButton);
-    const pressedClass = wrapper.instance().pressedClass;
+    render(<ToggleButton />);
+    const button = screen.getByRole('button');
 
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
+    expect(button).not.toHaveClass('btn-pressed');
 
-    wrapper.find('button').simulate('click');
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+    userEvent.click(button);
+    expect(button).toHaveClass('btn-pressed');
 
-    wrapper.find('button').simulate('click');
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(0);
+    userEvent.click(button);
+    expect(button).not.toHaveClass('btn-pressed');
 
-    wrapper.find('button').simulate('click');
-    expect(wrapper.find(`button.${pressedClass}`).length).toBe(1);
+    userEvent.click(button);
+    expect(button).toHaveClass('btn-pressed');
   });
 
   it('calls the given toggle callback method on click', () => {
     const onToggle = jest.fn();
-    const props = {
-      onToggle
-    };
     const clickEvtMock = expect.objectContaining({
       type: 'click'
     });
-    const wrapper = TestUtil.mountComponent(ToggleButton, props);
+    render(<ToggleButton onToggle={onToggle}/>);
+    const button = screen.getByRole('button');
 
-    wrapper.find('button').simulate('click');
+    userEvent.click(button);
     expect(onToggle).toHaveBeenCalledTimes(1);
     expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
 
-    wrapper.find('button').simulate('click');
+    userEvent.click(button);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
 
-    wrapper.find('button').simulate('click');
+    userEvent.click(button);
     expect(onToggle).toHaveBeenCalledTimes(3);
     expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
   });
 
-  it('toggles the pressed state of the component on click', () => {
-    const wrapper = TestUtil.mountComponent(ToggleButton);
-
-    wrapper.find('button').simulate('click');
-    expect(wrapper.state('overallPressed')).toBe(true);
-
-    wrapper.find('button').simulate('click');
-    expect(wrapper.state('overallPressed')).toBe(false);
-
-    wrapper.find('button').simulate('click');
-    expect(wrapper.state('overallPressed')).toBe(true);
-  });
-
   it('can be rendered if iconName is set and no text or icon is set with the property pressed set to true', () => {
-    const wrapper = TestUtil.mountComponent(ToggleButton);
-    wrapper.setProps({
-      iconName: 'some-icon-name',
-      pressedIconName: undefined,
-      pressed: true
-    });
-    expect(wrapper.find('button')).toBeDefined();
+    const { container } = render(
+      <ToggleButton iconName={'some-icon-name'} pressedIconName={undefined} pressed={true} />
+    );
+    expect(container).toBeVisible();
   });
 });

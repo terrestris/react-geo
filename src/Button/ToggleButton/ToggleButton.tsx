@@ -217,6 +217,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
    * @method
    */
   onClick(evt: any) {
+    evt.persist();
     this.setState({
       overallPressed: !this.state.overallPressed,
       lastClickEvt: evt,
