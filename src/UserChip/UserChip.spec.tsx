@@ -3,7 +3,6 @@ import testImage from  '../../assets/user.png';
 import UserChip from './UserChip';
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
-import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
 describe('<UserChip />', () => {
