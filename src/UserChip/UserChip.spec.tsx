@@ -18,7 +18,7 @@ describe('<UserChip />', () => {
 
   it('determines initials from given user name', () => {
     render(<UserChip userName="Shinji Kagawa" />);
-    const chip = screen.getByText('SK').parentElement;
+    const chip = screen.getByText('SK');
     expect(chip).toBeVisible();
   });
 
