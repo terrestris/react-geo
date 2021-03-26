@@ -1,57 +1,61 @@
 import testImage from  '../../assets/user.png';
-import TestUtil from '../Util/TestUtil';
 
 import UserChip from './UserChip';
+import { render, screen } from '@testing-library/react';
+import * as React from 'react';
+import userEvent from '@testing-library/user-event';
 
 describe('<UserChip />', () => {
-
-  let wrapper;
-
-  beforeEach(() => {
-    wrapper = TestUtil.mountComponent(UserChip);
-  });
 
   it('is defined', () => {
     expect(UserChip).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<UserChip />);
+    expect(container).toBeVisible();
   });
 
   it('determines initials from given user name', () => {
-    wrapper.setProps({userName: 'Shinji Kagawa'});
-    const test = wrapper.instance().getInitials();
-    expect(test).toBe('SK');
+    render(<UserChip userName="Shinji Kagawa" />);
+    const chip = screen.getByText('SK');
+    expect(chip).toBeVisible();
   });
 
   it('uses imageSrc if image is given', () => {
-    const props = {
-      imageSrc: testImage
-    };
-    wrapper = TestUtil.mountComponent(UserChip, props);
-    expect(wrapper.find('img').props().src).toContain(testImage);
+    render(<UserChip imageSrc={testImage} />);
+    const userImage = screen.getByRole('img');
+    expect(userImage).toBeVisible();
+    expect(userImage).toHaveAttribute('src', testImage);
   });
 
   it('uses initials if image is not given', () => {
-    wrapper.setProps({userName: 'Shinji Kagawa'});
-    expect(wrapper.find('img').length).toBe(0);
+    render(<UserChip userName="Shinji Kagawa" />);
+    const image = screen.queryByRole('img');
+    expect(image).not.toBeInTheDocument();
+  });
+
+  it('should render a dropdown', async () => {
+    render(<UserChip userName="Shinji Kagawa" userMenu={<div role="menu">Example menu</div>} />);
+    const chip = screen.getByText('SK').parentElement;
+    userEvent.click(chip);
+    const menu = screen.getByText('Example menu');
+    // `toBeVisible` does not work because antd seems to be in the way
+    expect(menu).toBeInTheDocument();
   });
 
   it('should not render a dropdown for invalid configuration', () => {
-    wrapper.setProps({userName: 'Shinji Kagawa'});
-    wrapper.setProps({userMenu: null});
-    expect(wrapper.find('ul.user-appinfo-menu').length).toBe(0);
+    render(<UserChip userName="Shinji Kagawa" userMenu={null} />);
+    const menu = screen.queryByRole('menu');
+    expect(menu).not.toBeInTheDocument();
   });
 
   it('should pass style prop', () => {
-    const props = {
-      style: {
-        backgroundColor: 'yellow'
-      }
-    };
-    wrapper = TestUtil.mountComponent(UserChip, props);
-    expect(wrapper.getDOMNode()).toHaveStyle('backgroundColor: yellow');
+    render(<UserChip userName="Shinji Kagawa" style={{ backgroundColor: 'yellow' }} />);
+    const chip = screen.getByText('Shinji Kagawa').parentElement;
+    expect(chip).toHaveStyle({
+      backgroundColor: 'yellow'
+    });
   });
 
 });
