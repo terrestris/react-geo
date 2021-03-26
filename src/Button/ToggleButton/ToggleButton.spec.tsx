@@ -18,13 +18,13 @@ describe('<ToggleButton />', () => {
   it('isn\'t pressed by default', () => {
     render(<ToggleButton />);
     const button = screen.getByRole('button');
-    expect(button).not.toHaveClass(`btn-pressed`);
+    expect(button).not.toHaveClass('btn-pressed');
   });
 
   it('sets the pressed class if pressed prop is set to true initially', () => {
     render(<ToggleButton pressed={true}/>);
     const button = screen.getByRole('button');
-    expect(button).toHaveClass(`btn-pressed`);
+    expect(button).toHaveClass('btn-pressed');
   });
 
   it('ignores the onClick callback', () => {
@@ -41,17 +41,17 @@ describe('<ToggleButton />', () => {
     const { rerender } = render(<ToggleButton />);
     const button = screen.getByRole('button');
 
-    expect(button).not.toHaveClass(`btn-pressed`);
+    expect(button).not.toHaveClass('btn-pressed');
 
-    rerender(<ToggleButton pressed={true} />)
-    expect(button).toHaveClass(`btn-pressed`);
+    rerender(<ToggleButton pressed={true} />);
+    expect(button).toHaveClass('btn-pressed');
 
     // Nothing should happen if the prop hasn't changed.
-    rerender(<ToggleButton pressed={true} />)
-    expect(button).toHaveClass(`btn-pressed`);
+    rerender(<ToggleButton pressed={true} />);
+    expect(button).toHaveClass('btn-pressed');
 
-    rerender(<ToggleButton />)
-    expect(button).not.toHaveClass(`btn-pressed`);
+    rerender(<ToggleButton />);
+    expect(button).not.toHaveClass('btn-pressed');
   });
 
   // eslint-disable-next-line max-len
@@ -59,20 +59,20 @@ describe('<ToggleButton />', () => {
     const onToggle = jest.fn();
     const { rerender } = render(<ToggleButton onToggle={onToggle}/>);
 
-    rerender(<ToggleButton pressed={true} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(1);
     // If the prop has been changed, no click evt is available.
     expect(onToggle).toHaveBeenCalledWith(true, null);
 
-    rerender(<ToggleButton pressed={false} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={false} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, null);
 
     // Nothing should happen if the prop hasn't changed.
-    rerender(<ToggleButton pressed={false} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={false} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(2);
 
-    rerender(<ToggleButton pressed={true} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(3);
     expect(onToggle).toHaveBeenCalledWith(true, null);
   });
@@ -84,19 +84,19 @@ describe('<ToggleButton />', () => {
 
     // Nothing should happen if the prop hasn't changed.
     // (pressed property is false by default)
-    rerender(<ToggleButton pressed={false} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={false} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(0);
 
-    rerender(<ToggleButton pressed={true} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(1);
     // If the prop has been changed, no click evt is available.
     expect(onToggle).toHaveBeenCalledWith(true, null);
 
     // Nothing should happen if the prop hasn't changed.
-    rerender(<ToggleButton pressed={true} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(1);
 
-    rerender(<ToggleButton pressed={false} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={false} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, null);
   });
@@ -109,7 +109,7 @@ describe('<ToggleButton />', () => {
     const { rerender } = render(<ToggleButton onToggle={onToggle}/>);
     const button = screen.getByRole('button');
 
-    rerender(<ToggleButton pressed={true} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     expect(onToggle).toHaveBeenCalledTimes(1);
     // If the prop has been changed, no click evt is available.
     expect(onToggle).toHaveBeenCalledWith(true, null);
@@ -119,7 +119,7 @@ describe('<ToggleButton />', () => {
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
 
-    rerender(<ToggleButton pressed={true} onToggle={onToggle} />)
+    rerender(<ToggleButton pressed={true} onToggle={onToggle} />);
     // If the prop has been changed, no click evt is available.
     expect(onToggle).toHaveBeenCalledTimes(3);
     expect(onToggle).toHaveBeenCalledWith(true, null);
@@ -166,7 +166,7 @@ describe('<ToggleButton />', () => {
   it('can be rendered if iconName is set and no text or icon is set with the property pressed set to true', () => {
     const { container } = render(
       <ToggleButton iconName={'some-icon-name'} pressedIconName={undefined} pressed={true} />
-      );
+    );
     expect(container).toBeVisible();
   });
 });
