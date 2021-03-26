@@ -120,7 +120,9 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       wrapper.setState({
         crsDefinitions: resultMock.results
       }, () => {
-        wrapper.instance().onCrsItemSelect('31466', resultMock.results[0]);
+        wrapper.instance().onCrsItemSelect('31466', {
+          key: resultMock.results[0].code
+        });
 
         const stateAfter = wrapper.state();
         expect(stateAfter.crsDefinitions[0]).toBe(resultMock.results[0]);
@@ -136,7 +138,9 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       wrapper.setState({
         crsDefinitions: resultMock.results
       }, () => {
-        wrapper.instance().onCrsItemSelect('31466', resultMock.results[0]);
+        wrapper.instance().onCrsItemSelect('31466', {
+          key: resultMock.results[0].code
+        });
         expect(onSelect).toHaveBeenCalledTimes(1);
       });
     });
