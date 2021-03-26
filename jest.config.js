@@ -25,7 +25,9 @@ module.exports = {
   ],
   setupFiles: [
     '<rootDir>/jest/__mocks__/shim.js',
-    '<rootDir>/jest/__mocks__/matchMediaMock.js',
+    '<rootDir>/jest/__mocks__/matchMediaMock.js'
+  ],
+  setupFilesAfterEnv: [
     '<rootDir>/jest/setup.js'
   ],
   transform: {
@@ -37,5 +39,5 @@ module.exports = {
     '!src/**/*example*.*'
   ],
   coverageDirectory: '<rootDir>/coverage',
-  testEnvironment: 'jest-environment-jsdom-fourteen'
+  testEnvironment: 'jest-environment-jsdom-sixteen'
 };

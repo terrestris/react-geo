@@ -8,13 +8,17 @@ module.exports = {
     "sourceType": "module"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "testing-library",
+    "jest-dom"
   ],
   "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended"
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:testing-library/recommended",
+    "plugin:jest-dom/recommended"
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": [
