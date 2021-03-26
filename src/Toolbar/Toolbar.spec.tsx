@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import TestUtil from '../Util/TestUtil';
+import { render, screen } from '@testing-library/react';
 
 import Toolbar from './Toolbar';
 
@@ -11,78 +10,58 @@ const testChildren = [
 ];
 
 describe('<Toolbar />', () => {
-  let wrapper;
-
-  beforeEach(() => {
-    wrapper = TestUtil.mountComponent(Toolbar);
-  });
 
   it('is defined', () => {
     expect(Toolbar).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<Toolbar />);
+    expect(container).toBeVisible();
   });
 
   it('contains div having class "horizontal-toolbar" by default', () => {
-    const rootDiv = wrapper.find('div.horizontal-toolbar');
-    expect(rootDiv).not.toBeUndefined();
-    expect(rootDiv.length).toBe(1);
+    render(<Toolbar />);
+    const toolBar = screen.getByRole('toolbar');
+    expect(toolBar).toHaveClass('horizontal-toolbar');
   });
 
 });
 
 describe('<Toolbar /> - CSS-class "vertical-toolbar"', () => {
-  let wrapper;
-
-  beforeEach(() => {
-    wrapper = TestUtil.mountComponent(Toolbar, {
-      alignment: 'vertical',
-      children: testChildren
-    });
-  });
-
-  it('can be rendered', () => {
-    expect(wrapper).not.toBeUndefined();
-  });
 
   it('contains div having class "vertical-toolbar"', () => {
-    const rootDiv = wrapper.find('div.vertical-toolbar');
-    expect(rootDiv).not.toBeUndefined();
-    expect(rootDiv.length).toBe(1);
+    render(<Toolbar alignment="vertical" />);
+    const toolBar = screen.getByRole('toolbar');
+    expect(toolBar).toHaveClass('vertical-toolbar');
   });
 
   it('contains three child elements', () => {
-    const rootDivChildren = wrapper.find('div.vertical-toolbar').children();
-    expect(rootDivChildren).toBeTruthy();
-    expect(rootDivChildren.getElements().length).toBe(3);
+    render(
+      <Toolbar alignment="vertical">
+        {testChildren}
+      </Toolbar>
+    );
+    const children = screen.getByRole('toolbar').children;
+    expect(children).toHaveLength(3);
   });
 });
 
 describe('<Toolbar /> - CSS-class "horizontal-toolbar"', () => {
-  let wrapper;
-
-  beforeEach(() => {
-    wrapper = TestUtil.mountComponent(Toolbar, {
-      alignment: 'horizontal',
-      children: testChildren
-    });
-  });
-
-  it('can be rendered', () => {
-    expect(wrapper).not.toBeUndefined();
-  });
 
   it('contains div having class "horizontal-toolbar"', () => {
-    const rootDiv = wrapper.find('div.horizontal-toolbar');
-    expect(rootDiv).not.toBeUndefined();
-    expect(rootDiv.length).toBe(1);
+    render(<Toolbar alignment="horizontal" />);
+    const toolBar = screen.getByRole('toolbar');
+    expect(toolBar).toHaveClass('horizontal-toolbar');
   });
 
   it('contains three child elements', () => {
-    const rootDivChildren = wrapper.find('div.horizontal-toolbar').children();
-    expect(rootDivChildren).toBeTruthy();
-    expect(rootDivChildren.getElements()).toHaveLength(3);
+    render(
+      <Toolbar alignment="horizontal">
+        {testChildren}
+      </Toolbar>
+    );
+    const children = screen.getByRole('toolbar').children;
+    expect(children).toHaveLength(3);
   });
 });

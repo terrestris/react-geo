@@ -61,6 +61,7 @@ class Toolbar extends React.Component<ToolbarProps> {
     return (
       <div
         className={`${finalClassName} ${alignment}-toolbar`}
+        role="toolbar"
         {...passThroughProps}
       >
         {children}
