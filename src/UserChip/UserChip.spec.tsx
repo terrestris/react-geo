@@ -31,8 +31,8 @@ describe('<UserChip />', () => {
 
   it('uses initials if image is not given', () => {
     render(<UserChip userName="Shinji Kagawa" />);
-    const items = screen.queryAllByRole('img');
-    expect(items).toHaveLength(0);
+    const image = screen.queryByRole('img');
+    expect(image).not.toBeInTheDocument();
   });
 
   it('should render a dropdown', async () => {
@@ -46,8 +46,8 @@ describe('<UserChip />', () => {
 
   it('should not render a dropdown for invalid configuration', () => {
     render(<UserChip userName="Shinji Kagawa" userMenu={null} />);
-    const menus = screen.queryAllByRole('menu');
-    expect(menus).toHaveLength(0);
+    const menu = screen.queryByRole('menu');
+    expect(menu).not.toBeInTheDocument();
   });
 
   it('should pass style prop', () => {
