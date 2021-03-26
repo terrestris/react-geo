@@ -61,17 +61,17 @@ export type CRSComboProps = BaseProps & Partial<DefaultProps> & AutoCompleteProp
  */
 class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSComboState> {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}coordinatereferencesystemcombo`;
-
   static defaultProps: DefaultProps = {
     emptyTextPlaceholderText: 'Please select a CRS',
     crsApiUrl: 'https://epsg.io/',
     onSelect: () => undefined
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  className = `${CSS_PREFIX}coordinatereferencesystemcombo`;
 
   /**
    * Create a CRS combo.

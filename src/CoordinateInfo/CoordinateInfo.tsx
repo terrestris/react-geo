@@ -224,7 +224,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       resultRenderer
     } = this.props;
 
-    return(
+    return (
       <>
         {resultRenderer(_cloneDeep(this.state))}
       </>

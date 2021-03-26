@@ -122,6 +122,21 @@ export type PanelProps = BaseProps & Partial<DefaultProps> & RndProps;
 export class Panel extends React.Component<PanelProps, PanelState> {
 
   /**
+   * The default properties.
+   */
+  static defaultProps: DefaultProps = {
+    draggable: false,
+    collapsible: false,
+    collapsed: false,
+    resizeOpts: false,
+    titleBarHeight: 37.5,
+    tools: [],
+    height: 'auto',
+    width: 'auto',
+    collapseTooltip: 'Collapse'
+  };
+
+  /**
    * The className added to this component.
    * @private
    */
@@ -139,21 +154,6 @@ export class Panel extends React.Component<PanelProps, PanelState> {
    *
    */
   _rnd: Rnd;
-
-  /**
-   * The default properties.
-   */
-  static defaultProps: DefaultProps = {
-    draggable: false,
-    collapsible: false,
-    collapsed: false,
-    resizeOpts: false,
-    titleBarHeight: 37.5,
-    tools: [],
-    height: 'auto',
-    width: 'auto',
-    collapseTooltip: 'Collapse'
-  };
 
   /**
    * Create the Panel.

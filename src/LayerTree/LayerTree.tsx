@@ -95,6 +95,15 @@ export type LayerTreeProps = BaseProps & Partial<DefaultProps> & TreeProps;
 class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
 
   /**
+   * The default properties.
+   */
+  static defaultProps: DefaultProps = {
+    draggable: true,
+    checkable: true,
+    filterFunction: () => true
+  };
+
+  /**
    * The className added to this component.
    * @private
    */
@@ -107,13 +116,21 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   olListenerKeys = [];
 
   /**
-   * The default properties.
+   * Create the LayerTree.
+   *
+   * @constructs LayerTree
    */
-  static defaultProps: DefaultProps = {
-    draggable: true,
-    checkable: true,
-    filterFunction: () => true
-  };
+  constructor(props: LayerTreeProps) {
+    super(props);
+
+    this.state = {
+      layerGroup: null,
+      layerGroupRevision: null,
+      treeNodes: [],
+      checkedKeys: [],
+      mapResolution: -1
+    };
+  }
 
   /**
    * Invoked after the component is instantiated as well as when it
@@ -134,23 +151,6 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       }
     }
     return null;
-  }
-
-  /**
-   * Create the LayerTree.
-   *
-   * @constructs LayerTree
-   */
-  constructor(props: LayerTreeProps) {
-    super(props);
-
-    this.state = {
-      layerGroup: null,
-      layerGroupRevision: null,
-      treeNodes: [],
-      checkedKeys: [],
-      mapResolution: -1
-    };
   }
 
   /**

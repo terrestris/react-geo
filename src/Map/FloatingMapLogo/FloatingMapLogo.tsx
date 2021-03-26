@@ -39,17 +39,17 @@ export type FloatingMapLogoProps = BaseProps & Partial<DefaultProps> & React.HTM
 class FloatingMapLogo extends React.Component<FloatingMapLogoProps> {
 
   /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}floatingmaplogo`;
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {
     absolutelyPositioned: false
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  className = `${CSS_PREFIX}floatingmaplogo`;
 
   /**
    * The render function.

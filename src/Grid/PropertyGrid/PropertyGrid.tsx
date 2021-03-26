@@ -68,17 +68,17 @@ export type PropertyGridProps = BaseProps & Partial<DefaultProps> & TableProps<a
  */
 class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState> {
 
-  /**
-   * The CSS-className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}propertygrid`;
-
   static defaultProps: DefaultProps = {
     attributeNameColumnTitle: 'Attribute name',
     attributeNameColumnWidthInPercent: 50,
     attributeValueColumnTitle: 'Attribute value',
   };
+
+  /**
+   * The CSS-className added to this component.
+   * @private
+   */
+  className = `${CSS_PREFIX}propertygrid`;
 
   /**
    * The constructor.
@@ -177,7 +177,7 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
       ? `${className} ${this.className}`
       : this.className;
 
-    return(
+    return (
       <Table
         className={finalClassName}
         rowKey={record => record.key}

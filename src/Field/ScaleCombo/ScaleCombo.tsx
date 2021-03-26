@@ -85,12 +85,6 @@ export type ScaleComboProps = BaseProps & Partial<DefaultProps>;
 class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
 
   /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}scalecombo`;
-
-  /**
    * The default props
    */
   static defaultProps = {
@@ -100,30 +94,10 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
   };
 
   /**
-   * Invoked after the component is instantiated as well as when it
-   * receives new props. It should return an object to update state, or null
-   * to indicate that the new props do not require any state updates.
-   *
-   * @param nextProps The next properties.
-   * @param prevState The previous state.
+   * The className added to this component.
+   * @private
    */
-  static getDerivedStateFromProps(nextProps: ScaleComboProps, prevState: ScaleComboState) {
-    if (_isInteger(nextProps.zoomLevel) &&
-        !_isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
-      return {
-        zoomLevel: nextProps.zoomLevel
-      };
-    }
-
-    if (_isFunction(nextProps.onZoomLevelSelect) &&
-        !_isEqual(nextProps.onZoomLevelSelect, prevState.onZoomLevelSelect)) {
-      return {
-        onZoomLevelSelect: nextProps.onZoomLevelSelect
-      };
-    }
-
-    return null;
-  }
+  className = `${CSS_PREFIX}scalecombo`;
 
   /**
    * Create a scale combo.
@@ -155,7 +129,32 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     if (props.syncWithMap) {
       props.map.on('moveend', this.zoomListener);
     }
+  }
 
+  /**
+   * Invoked after the component is instantiated as well as when it
+   * receives new props. It should return an object to update state, or null
+   * to indicate that the new props do not require any state updates.
+   *
+   * @param nextProps The next properties.
+   * @param prevState The previous state.
+   */
+  static getDerivedStateFromProps(nextProps: ScaleComboProps, prevState: ScaleComboState) {
+    if (_isInteger(nextProps.zoomLevel) &&
+        !_isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
+      return {
+        zoomLevel: nextProps.zoomLevel
+      };
+    }
+
+    if (_isFunction(nextProps.onZoomLevelSelect) &&
+        !_isEqual(nextProps.onZoomLevelSelect, prevState.onZoomLevelSelect)) {
+      return {
+        onZoomLevelSelect: nextProps.onZoomLevelSelect
+      };
+    }
+
+    return null;
   }
 
   /**

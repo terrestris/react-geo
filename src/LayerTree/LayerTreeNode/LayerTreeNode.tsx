@@ -37,7 +37,7 @@ class LayerTreeNode extends React.PureComponent<LayerTreeNodeProps> {
     addClassName += isFolder ? ' tree-folder' : ' tree-leaf';
     const finalClassname = `${CSS_PREFIX}layertree-node ${addClassName}`;
 
-    return(
+    return (
       <TreeNode
         className={finalClassname}
         {...passThroughProps}

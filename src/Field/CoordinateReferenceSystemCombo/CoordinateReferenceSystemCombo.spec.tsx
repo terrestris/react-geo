@@ -8,6 +8,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
   const resultMock = {
     status: 'ok',
+    // eslint-disable-next-line camelcase
     number_result: 1,
     results: [{
       code: '31466',

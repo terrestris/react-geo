@@ -77,17 +77,6 @@ export type ToggleButtonProps = BaseProps & Partial<DefaultProps> & SimpleButton
 class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState> {
 
   /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}togglebutton`;
-
-  /**
-   * The class to apply for a toggled/pressed button.
-   */
-  pressedClass = 'btn-pressed';
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {
@@ -105,6 +94,35 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
   static contextTypes = {
     toggleGroup: PropTypes.object
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  _className = `${CSS_PREFIX}togglebutton`;
+
+  /**
+   * The class to apply for a toggled/pressed button.
+   */
+  pressedClass = 'btn-pressed';
+
+  /**
+   * Creates the ToggleButton.
+   *
+   * @constructs ToggleButton
+   */
+  constructor(props: ToggleButtonProps) {
+    super(props);
+
+    // Instantiate the state.
+    // components state
+    this.state = {
+      pressed: props.pressed,
+      lastClickEvt: null,
+      overallPressed: props.pressed,
+      isClicked: false
+    };
+  }
 
   /**
    * Invoked right before calling the render method, both on the initial mount
@@ -125,24 +143,6 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
       };
     }
     return null;
-  }
-
-  /**
-   * Creates the ToggleButton.
-   *
-   * @constructs ToggleButton
-   */
-  constructor(props: ToggleButtonProps) {
-    super(props);
-
-    // Instantiate the state.
-    // components state
-    this.state = {
-      pressed: props.pressed,
-      lastClickEvt: null,
-      overallPressed: props.pressed,
-      isClicked: false
-    };
   }
 
   /**

@@ -99,6 +99,21 @@ export type GeoLocationButtonProps = BaseProps & Partial<DefaultProps> & ToggleB
 class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
 
   /**
+   * The default properties.
+   */
+  static defaultProps: DefaultProps = {
+    onGeolocationChange: () => undefined,
+    onError: () => undefined,
+    showMarker: true,
+    follow: false,
+    trackingOptions: {
+      maximumAge: 10000,
+      enableHighAccuracy: true,
+      timeout: 600000
+    }
+  };
+
+  /**
    * The className added to this component.
    *
    * @private
@@ -123,39 +138,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
     source: new OlSourceVector()
   });
 
-  /**
-   * The styleFunction for the geoLocationLayer. Shows a marker with arrow when
-   * heading is not 0.
-   */
-  _styleFunction = (feature: OlFeature<OlGeometry>) => {
-    const heading = feature.get('heading');
-    const src = heading !== 0 ? mapMarkerHeading : mapMarker;
-    const rotation = heading !== 0 ? heading * Math.PI / 180 : 0;
-
-    return [new OlStyleStyle({
-      image: new OlStyleIcon({
-        rotation,
-        src
-      })
-    })];
-  };
-
   _positions: OlGeomLineString;
-
-  /**
-   * The default properties.
-   */
-  static defaultProps: DefaultProps = {
-    onGeolocationChange: () => undefined,
-    onError: () => undefined,
-    showMarker: true,
-    follow: false,
-    trackingOptions: {
-      maximumAge: 10000,
-      enableHighAccuracy: true,
-      timeout: 600000
-    }
-  };
 
   /**
    * Creates the MeasureButton.
@@ -197,6 +180,23 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
       this._geoLocationLayer.getSource().addFeature(this._markerFeature);
     }
   }
+
+  /**
+   * The styleFunction for the geoLocationLayer. Shows a marker with arrow when
+   * heading is not 0.
+   */
+  _styleFunction = (feature: OlFeature<OlGeometry>) => {
+    const heading = feature.get('heading');
+    const src = heading !== 0 ? mapMarkerHeading : mapMarker;
+    const rotation = heading !== 0 ? heading * Math.PI / 180 : 0;
+
+    return [new OlStyleStyle({
+      image: new OlStyleIcon({
+        rotation,
+        src
+      })
+    })];
+  };
 
   /**
    * Callback of the interactions on change event.

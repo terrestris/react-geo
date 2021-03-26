@@ -63,12 +63,6 @@ Omit<SliderBaseProps, 'min' | 'max' | 'marks' | 'className'>;
  */
 class TimeSlider extends React.Component<TimeSliderProps> {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className: string = `${CSS_PREFIX}timeslider`;
-
   static defaultProps: DefaultProps = {
     useRange: false,
     defaultValue: moment().toISOString(),
@@ -78,6 +72,12 @@ class TimeSlider extends React.Component<TimeSliderProps> {
     value: moment().toISOString(),
     formatString: 'DD.MM. HH:mm'
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  className: string = `${CSS_PREFIX}timeslider`;
 
   /**
    * The constructor.

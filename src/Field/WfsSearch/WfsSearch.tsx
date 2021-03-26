@@ -190,12 +190,6 @@ export type WfsSearchProps = BaseProps & Partial<DefaultProps> & AutoCompletePro
  */
 export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}wfssearch`;
-
   static defaultProps: DefaultProps = {
     srsName: 'EPSG:3857',
     outputFormat: 'application/json',
@@ -253,6 +247,12 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
       }
     }
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  className = `${CSS_PREFIX}wfssearch`;
 
   /**
    * Create the WfsSearch.

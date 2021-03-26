@@ -181,6 +181,16 @@ export type WfsSearchInputProps = BaseProps & Partial<DefaultProps> & InputProps
  */
 export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSearchState> {
 
+  static defaultProps: DefaultProps = {
+    srsName: 'EPSG:3857',
+    outputFormat: 'application/json',
+    minChars: 3,
+    additionalFetchOptions: {},
+    attributeDetails: {},
+    delay: 300,
+    visible: true
+  };
+
   /**
    * The reference to the Input Element of the WfsSearch.
    * @private
@@ -192,16 +202,6 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
    * @private
    */
   className = `${CSS_PREFIX}wfssearchinput`;
-
-  static defaultProps: DefaultProps = {
-    srsName: 'EPSG:3857',
-    outputFormat: 'application/json',
-    minChars: 3,
-    additionalFetchOptions: {},
-    attributeDetails: {},
-    delay: 300,
-    visible: true
-  };
 
   /**
    * Create the WfsSearchInput.

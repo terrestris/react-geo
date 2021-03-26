@@ -65,12 +65,6 @@ export type ZoomToExtentButtonProps = BaseProps & Partial<DefaultProps> & Simple
 class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
 
   /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}zoomtoextentbutton`;
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {
@@ -85,12 +79,18 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
   };
 
   /**
+   * The className added to this component.
+   * @private
+   */
+  _className = `${CSS_PREFIX}zoomtoextentbutton`;
+
+  /**
    * Called when the button is clicked.
    *
    * @method
    */
   onClick() {
-    const{
+    const {
       map,
       extent,
       constrainViewResolution,

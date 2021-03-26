@@ -55,12 +55,6 @@ export type SimpleButtonProps = BaseProps & Partial<DefaultProps> & ButtonProps;
 class SimpleButton extends React.Component<SimpleButtonProps> {
 
   /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}simplebutton`;
-
-  /**
    * The default properties.
    */
   static defaultProps: DefaultProps = {
@@ -69,6 +63,12 @@ class SimpleButton extends React.Component<SimpleButtonProps> {
       mouseEnterDelay: 1.5
     }
   };
+
+  /**
+   * The className added to this component.
+   * @private
+   */
+  className = `${CSS_PREFIX}simplebutton`;
 
   /**
    * The render function.
