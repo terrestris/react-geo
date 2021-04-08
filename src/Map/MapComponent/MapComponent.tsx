@@ -83,12 +83,14 @@ export class MapComponent extends PureComponent<MapComponentProps> {
       map,
       mapDivId,
       children,
+      role = 'application',
       ...passThroughProps
     } = this.props;
 
     if (map) {
       mapDiv = <div
         className="map"
+        role={role}
         id={mapDivId}
         {...passThroughProps}
       >

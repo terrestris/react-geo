@@ -243,10 +243,12 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
         <div
           className="clip"
           onClick={this.onSwitcherClick}
+          role="button"
         >
           <MapComponent
             mapDivId="layer-switcher-map"
             map={this._map}
+            role="img"
           />
           {
             this.state.previewLayer &&
