@@ -35,8 +35,6 @@ describe('<LayerTransparencySlider />', () => {
     const slider = screen.getByRole('slider');
     userEvent.click(slider);
     userEvent.keyboard('{arrowright}'); // required to update opacity value
-    expect(slider).toBeVisible();
-    expect(slider).toHaveAttribute('aria-valuenow', '91');
     expect(layer.getOpacity()).toBe(0.08);
   });
 
