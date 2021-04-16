@@ -173,7 +173,7 @@ class RemoteFeatureGrid extends React.Component {
       MAXFEATURES: pagination.pageSize,
       STARTINDEX: (pagination.current - 1) * pagination.pageSize,
       OUTPUTFORMAT: 'application/json',
-      CQL_FILTER: 'BBOX(geometry, 814276,6697003,846762,6727578)'
+      CQL_FILTER: 'BBOX(the_geom, 342395,6206125,352395,6216125)'
     };
 
     const sortDir = sorter.order === 'ascend' ? ' A' : ' D';
@@ -374,7 +374,7 @@ class RemoteFeatureGridExample extends React.Component {
       <div>
         <RemoteFeatureGrid
           map={this.map}
-          url='https://ows.terrestris.de/geoserver/osm/wfs'
+          url='https://ows-demo.terrestris.de/geoserver/osm/wfs'
         />
         <div
           id={this.mapDivId}
