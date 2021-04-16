@@ -486,6 +486,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
           pressed={autoPlayActive}
           onToggle={this.autoPlay}
           tooltip={autoPlayActive ? 'Pause' : 'Autoplay'}
+          aria-label={autoPlayActive ? 'Pause' : 'Autoplay'}
           pressedIconName="pause-circle-o"
         />
         <Select

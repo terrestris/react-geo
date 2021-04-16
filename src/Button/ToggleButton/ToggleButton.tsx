@@ -276,7 +276,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
         'If both are provided the fa icon will be rendered.');
     }
 
-    let iconToRender;
+    let iconToRender: React.ReactNode;
     if (icon) {
       iconToRender = icon;
     }
@@ -289,7 +289,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
        'icon. If both are provided the fa icon will be rendered.');
     }
 
-    let pressedIconToRender;
+    let pressedIconToRender: React.ReactNode;
     if (pressedIcon) {
       pressedIconToRender = pressedIcon;
     }
@@ -305,6 +305,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
       >
         <Button
           className={`${finalClassName}${pressedClass}`}
+          aria-pressed={overallPressed}
           onClick={this.onClick.bind(this)}
           icon={overallPressed ?
             pressedIconToRender :
