@@ -20,9 +20,7 @@ module.exports = {
     ]
   },
   module: {
-    rules: [
-    // Compile .tsx?
-    {
+    rules: [{
       test: /\.(ts|tsx)$/,
       use: 'babel-loader'
     }, {
@@ -47,24 +45,16 @@ module.exports = {
       ]
     }, {
       test: /\.(jpe?g|png|gif|ico)$/i,
-      use: [{
-        loader: 'file-loader',
-        options: {
-          name: 'img/[name].[ext]'
-        }
-      }]
+      type: 'asset/resource',
+      generator: {
+        filename: 'img/[name].[ext]'
+      }
     }, {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      use: [{
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          mimetype: 'application/font-woff'
-        }
-      }]
+      type: 'asset/resource'
     }, {
       test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      use: 'file-loader'
+      type: 'asset/resource'
     }]
   },
   plugins: [
