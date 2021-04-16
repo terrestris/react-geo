@@ -33,14 +33,6 @@ import { CSS_PREFIX } from '../constants';
 
 interface DefaultProps extends TreeProps {
   /**
-   *
-   */
-  draggable: boolean;
-  /**
-   *
-   */
-  checkable: boolean;
-  /**
    * An optional array-filter function that is applied to every layer and
    * subLayer. Return false to exclude this layer from the layerTree or true
    * to include it.
