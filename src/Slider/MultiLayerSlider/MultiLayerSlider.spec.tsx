@@ -1,14 +1,24 @@
+import { render, screen, within } from '@testing-library/react';
+import * as React from 'react';
+import userEvent from '@testing-library/user-event';
+
 import TestUtil from '../../Util/TestUtil';
 import MultiLayerSlider from './MultiLayerSlider';
 
 describe('<MultiLayerSlider />', () => {
   let layers;
 
+  const repeatKeyboard = (key: string, repeats: number) => {
+    for (let i = 0; i < repeats; i++) {
+      userEvent.keyboard(key);
+    }
+  }
+
   beforeEach(() => {
     layers = [
-      TestUtil.createVectorLayer(),
-      TestUtil.createVectorLayer(),
-      TestUtil.createVectorLayer()
+      TestUtil.createVectorLayer({}),
+      TestUtil.createVectorLayer({}),
+      TestUtil.createVectorLayer({})
     ];
   });
 
@@ -17,51 +27,46 @@ describe('<MultiLayerSlider />', () => {
   });
 
   it('can be rendered', () => {
-    const props = {
-      layers: layers
-    };
-    const wrapper = TestUtil.mountComponent(MultiLayerSlider, props);
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<MultiLayerSlider layers={layers} />);
+    expect(container).toBeVisible();
   });
 
   it('sets the initial transparency of the layers', () => {
-    const props = {
-      layers: layers
-    };
-
-    TestUtil.mountComponent(MultiLayerSlider, props);
+    render(<MultiLayerSlider layers={layers} />);
+    const slider = screen.getByRole('slider');
+    expect(slider).toBeVisible();
     expect(layers[0].getOpacity()).toBe(1);
     expect(layers[1].getOpacity()).toBe(0);
     expect(layers[2].getOpacity()).toBe(0);
   });
 
   it('updates the opacity of the layer by setting a transparency value', () => {
-    const props = {
-      layers: layers
-    };
-    const wrapper = TestUtil.mountComponent(MultiLayerSlider, props);
+    render(<MultiLayerSlider layers={layers} />);
+    const slider = screen.getByRole('slider');
+    userEvent.click(slider);
+    repeatKeyboard('{arrowright}', 25);
 
-    wrapper.instance().valueUpdated(25);
     expect(layers[0].getOpacity()).toBe(0.5);
     expect(layers[1].getOpacity()).toBe(0.5);
     expect(layers[2].getOpacity()).toBe(0);
 
-    wrapper.instance().valueUpdated(50);
+    repeatKeyboard('{arrowright}', 25);
+
     expect(layers[0].getOpacity()).toBe(0);
     expect(layers[1].getOpacity()).toBe(1);
     expect(layers[2].getOpacity()).toBe(0);
 
-    wrapper.instance().valueUpdated(75);
+    repeatKeyboard('{arrowright}', 25);
     expect(layers[0].getOpacity()).toBe(0);
     expect(layers[1].getOpacity()).toBe(0.5);
     expect(layers[2].getOpacity()).toBe(0.5);
 
-    wrapper.instance().valueUpdated(100);
+    repeatKeyboard('{arrowright}', 25);
     expect(layers[0].getOpacity()).toBe(0);
     expect(layers[1].getOpacity()).toBe(0);
     expect(layers[2].getOpacity()).toBe(1);
 
-    wrapper.instance().valueUpdated(0);
+    repeatKeyboard('{arrowleft}', 100);
     expect(layers[0].getOpacity()).toBe(1);
     expect(layers[1].getOpacity()).toBe(0);
     expect(layers[2].getOpacity()).toBe(0);
