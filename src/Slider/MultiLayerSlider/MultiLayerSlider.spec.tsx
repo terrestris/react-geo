@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 import userEvent from '@testing-library/user-event';
 
@@ -12,7 +12,7 @@ describe('<MultiLayerSlider />', () => {
     for (let i = 0; i < repeats; i++) {
       userEvent.keyboard(key);
     }
-  }
+  };
 
   beforeEach(() => {
     layers = [
