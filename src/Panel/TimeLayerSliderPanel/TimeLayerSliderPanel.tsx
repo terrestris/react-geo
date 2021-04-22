@@ -186,7 +186,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
    */
   wrapTimeSlider = () => {
     this._wmsTimeLayers = [];
-    this.props.timeAwareLayers!.forEach((l: any) => {
+    this.props.timeAwareLayers?.forEach((l: any) => {
       if (l.get('type') === 'WMSTime') {
         this._wmsTimeLayers.push({
           layer: l
@@ -302,7 +302,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
           value,
           playbackSpeed
         } = this.state;
-        if (value >= endDate!) {
+        if (value >= endDate) {
           window.clearInterval(this._interval);
           this.setState({
             autoPlayActive: false
@@ -411,17 +411,17 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
     const startDateString = startDate ? startDate.toISOString() : undefined;
     const endDateString = endDate ? endDate.toISOString() : undefined;
     const valueString = value ? value.toISOString() : undefined;
-    const mid = startDate!.clone().add(endDate!.diff(startDate) / 2);
+    const mid = startDate?.clone().add(endDate?.diff(startDate) / 2);
     const marks = {};
     const futureClass = moment().isBefore(value) ? ' timeslider-in-future' : '';
     const extraCls = className ? className : '';
     const disabledCls = timeAwareLayers.length < 1 ? 'no-layers-available' : '';
 
     marks[startDateString] = {
-      label: startDate!.format(dateFormat)
+      label: startDate?.format(dateFormat)
     };
     marks[endDateString] = {
-      label: endDate!.format(dateFormat),
+      label: endDate?.format(dateFormat),
       style: {
         left: 'unset',
         right: 0,
@@ -429,7 +429,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       }
     };
     marks[mid.toISOString()] = {
-      label: mid.format(dateFormat)
+      label: mid?.format(dateFormat)
     };
 
     const speedOptions = autoPlaySpeedOptions.map(function(val: number) {
