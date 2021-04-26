@@ -55,6 +55,7 @@ export type ToggleGroupProps = BaseProps & Partial<DefaultProps>;
  *
  * @class The ToggleGroup
  * @extends React.Component
+ *
  */
 class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
 
@@ -93,6 +94,19 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
     this.state = {
       selectedName: props.selectedName
     };
+  }
+
+  /**
+   * Update selectedName in state if property was changed
+   *
+   * @param prevProps Previous props
+   */
+  componentDidUpdate(prevProps: ToggleGroupProps) {
+    if (prevProps.selectedName !== this.props.selectedName) {
+      this.setState({
+        selectedName: this.props.selectedName
+      });
+    }
   }
 
   /**
