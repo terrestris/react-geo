@@ -8,6 +8,7 @@ import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import { easeOut } from 'ol/easing';
 import { Extent as OlExtent } from 'ol/extent';
 import { FitOptions as OlViewFitOptions } from 'ol/View';
+import { transform, transformExtent, get as getProjection } from 'ol/proj';
 
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
@@ -92,13 +93,24 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
   onClick() {
     const {
       map,
-      extent,
       constrainViewResolution,
       fitOptions,
-      center,
       zoom
     } = this.props;
+    let {
+      extent,
+      center
+    } = this.props;
     const view = map.getView();
+    const projectionCode = view.getProjection().getCode();
+    if (getProjection(projectionCode) && projectionCode !== 'EPSG:3857') {
+      if (center) {
+        center = transform(center, 'EPSG:3857', projectionCode);
+      }
+      if (extent) {
+        extent = transformExtent(extent as OlExtent, 'EPSG:3857', projectionCode);
+      }
+    }
 
     const {fitOptions: defaultFitOptions} = ZoomToExtentButton.defaultProps;
 
