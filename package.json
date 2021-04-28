@@ -116,7 +116,7 @@
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/eslint-plugin-tslint": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
-    "antd": "^4.5.1",
+    "antd": "^4.15.1",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^26.2.1",
     "babel-loader": "^8.0.6",

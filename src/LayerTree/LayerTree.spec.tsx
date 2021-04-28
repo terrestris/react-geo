@@ -110,7 +110,8 @@ describe('<LayerTree />', () => {
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('.ant-tree-treenode');
-      expect(treeNodes).toHaveLength(layerGroup.getLayers().getLength());
+
+      expect(treeNodes).toHaveLength(4);
     });
 
     // TODO This test could be better if the TreeNodes where iterable, but they
@@ -209,7 +210,7 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('.ant-tree-treenode');
 
-      expect(treeNodes.length).toBe(2);
+      expect(treeNodes.length).toBe(3);
     });
 
     it('sets the right keys for the layers', () => {
@@ -289,16 +290,16 @@ describe('<LayerTree />', () => {
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      let treeNode = wrapper.find('.ant-tree-treenode').at(2);
+      let treeNode = wrapper.find('.ant-tree-treenode').at(3);
 
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);
       layer1.setVisible(false);
       wrapper.update();
-      treeNode = wrapper.find('.ant-tree-treenode').at(2);
+      treeNode = wrapper.find('.ant-tree-treenode').at(3);
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(0);
       layer1.setVisible(true);
       wrapper.update();
-      treeNode = wrapper.find('.ant-tree-treenode').at(2);
+      treeNode = wrapper.find('.ant-tree-treenode').at(3);
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);
     });
 
