@@ -274,6 +274,15 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
   }
 
   /**
+   * Ensures that component is properly cleaned up on unmount.
+   */
+  componentWillUnmount() {
+    if (this.props.pressed) {
+      this.onToggle(false);
+    }
+  }
+
+  /**
    * Called when the button is toggled, this method ensures that everything
    * is cleaned up when unpressed, and that measuring can start when pressed.
    *
