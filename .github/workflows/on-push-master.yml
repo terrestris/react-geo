@@ -28,7 +28,7 @@ jobs:
           ${{ runner.OS }}-
 
     - name: Install dependencies ⏬
-      run: npm install
+      run: npm ci
 
     - name: Generate coverage 🧪
       run: npm test
