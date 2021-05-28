@@ -67,8 +67,7 @@
     "build:declaration": "tsc --emitDeclarationOnly",
     "build:dist": "babel src --out-dir dist --copy-files --ignore spec.tsx,.md --extensions '.ts,.tsx' && npm run build:declaration",
     "build:all": "npm run build:styleguide && npm run build:dist",
-    "build": "npm run test -- --coverage && npm run build:all",
-    "release": "np --no-yarn"
+    "build": "npm run test -- --coverage && npm run build:all"
   },
   "peerDependencies": {
     "@types/react": "^16.0",
@@ -88,7 +87,7 @@
     "@types/lodash": "^4.14.155",
     "@types/moment": "^2.13.0",
     "@types/node": "^15.0.0",
-    "@types/react": "^16.9.38",
+    "@types/react": "^16.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-rnd": "^8.0.0",
     "lodash": "^4.17.15",
@@ -110,6 +109,8 @@
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
     "@babel/preset-typescript": "^7.10.1",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "@terrestris/eslint-config-typescript": "^1.0.0",
     "@types/enzyme": "^3.10.4",
     "@types/jest": "^26.0.0",
@@ -144,6 +145,7 @@
     "react-docgen-typescript": "^1.17.1",
     "react-styleguidist": "^11.0.8",
     "rimraf": "^3.0.2",
+    "semantic-release": "^17.4.3",
     "style-loader": "^2.0.0",
     "ts-loader": "^8.0.1",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
@@ -151,5 +153,19 @@
     "webpack": "^4.44.1",
     "whatwg-fetch": "^3.0.0",
     "xmldom": "^0.6.0"
+  },
+  "release": {
+    "branches": [
+      "master",
+      "next"
+    ],
+    "plugin": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      "@semantic-release/changelog",
+      "@semantic-release/git"
+    ]
   }
 }
