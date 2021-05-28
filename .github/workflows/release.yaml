@@ -17,8 +17,8 @@ jobs:
           node-version: 12
       - name: Install dependencies ⏬
         run: npm ci
-      - name: Build
-        run: npm run build 🏗️
+      - name: Build 🏗️
+        run: npm run build
       - name: Release 🚀
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
