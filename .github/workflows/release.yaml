@@ -15,11 +15,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Install dependencies
+      - name: Install dependencies ⏬
         run: npm ci
-      - name: Test
-        run: npm test
-      - name: Release
+      - name: Build
+        run: npm run build 🏗️
+      - name: Release 🚀
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
