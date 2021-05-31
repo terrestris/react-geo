@@ -1,0 +1,76 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: webpack
+    versions:
+    - 5.18.0
+    - 5.19.0
+    - 5.20.0
+    - 5.20.1
+    - 5.20.2
+    - 5.21.2
+    - 5.22.0
+    - 5.23.0
+    - 5.24.0
+    - 5.24.1
+    - 5.24.2
+    - 5.24.3
+    - 5.24.4
+    - 5.25.1
+    - 5.26.0
+    - 5.26.2
+    - 5.26.3
+    - 5.27.1
+    - 5.27.2
+    - 5.28.0
+    - 5.30.0
+    - 5.31.0
+    - 5.31.2
+    - 5.32.0
+    - 5.33.2
+    - 5.34.0
+    - 5.35.0
+    - 5.35.1
+  - dependency-name: ts-loader
+    versions:
+    - 9.0.0
+    - 9.0.2
+    - 9.1.0
+  - dependency-name: antd
+    versions:
+    - 4.11.2
+    - 4.12.0
+    - 4.12.2
+    - 4.12.3
+    - 4.13.0
+    - 4.13.1
+    - 4.14.0
+    - 4.14.1
+    - 4.15.0
+    - 4.15.1
+    - 4.15.2
+  - dependency-name: "@terrestris/ol-util"
+    versions:
+    - 4.1.1
+  - dependency-name: eslint-plugin-markdown
+    versions:
+    - 2.0.0
+    - 2.0.1
+  - dependency-name: "@ant-design/icons"
+    versions:
+    - 4.6.1
+  - dependency-name: typescript
+    versions:
+    - 4.2.2
+  - dependency-name: "@typescript-eslint/eslint-plugin"
+    versions:
+    - 4.0.0
+  - dependency-name: "@ag-grid-community/client-side-row-model"
+    versions:
+    - 25.0.1
