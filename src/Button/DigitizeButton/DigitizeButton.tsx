@@ -522,7 +522,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       map.addLayer(digitizeLayer);
     }
 
-    digitizeLayer.setStyle(this.getDigitizeStyleFunction);
+    digitizeLayer.setStyle(this.digitizeStyleFunction);
 
     this._digitizeLayer = digitizeLayer;
 
@@ -536,21 +536,23 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param feature The feature which is being styled.
    * @return The style to use.
    */
-  getDigitizeStyleFunction = feature => {
+  digitizeStyleFunction = feature => {
     const {
       drawStyle,
     } = this.props;
 
-    let styleObj;
-
     if (!feature.getGeometry()) {
-      return;
+      return null;
+    }
+
+    if (drawStyle) {
+      return _isFunction(drawStyle) ? drawStyle(feature) : drawStyle;
     }
 
     switch (feature.getGeometry().getType()) {
       case DigitizeButton.POINT_DRAW_TYPE: {
         if (!feature.get('isLabel')) {
-          styleObj = drawStyle || new OlStyleStyle({
+          return new OlStyleStyle({
             image: new OlStyleCircle({
               radius: 7,
               fill: new OlStyleFill({
@@ -562,7 +564,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
             })
           });
         } else {
-          styleObj = drawStyle || new OlStyleStyle({
+          return new OlStyleStyle({
             text: new OlStyleText({
               text: feature.get('label'),
               offsetX: 5,
@@ -577,20 +579,18 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
             })
           });
         }
-        return styleObj;
       }
       case DigitizeButton.LINESTRING_DRAW_TYPE: {
-        styleObj = drawStyle || new OlStyleStyle({
+        return new OlStyleStyle({
           stroke: new OlStyleStroke({
             color: DigitizeButton.DEFAULT_STROKE_COLOR,
             width: 2
           })
         });
-        return styleObj;
       }
       case DigitizeButton.POLYGON_DRAW_TYPE:
       case DigitizeButton.CIRCLE_DRAW_TYPE: {
-        styleObj = drawStyle || new OlStyleStyle({
+        return new OlStyleStyle({
           fill: new OlStyleFill({
             color: DigitizeButton.DEFAULT_FILL_COLOR
           }),
@@ -599,11 +599,9 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
             width: 2
           })
         });
-        return styleObj;
       }
-      default: {
-        break;
-      }
+      default:
+        return null;
     }
   };
 
@@ -615,7 +613,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param text Text for labeled feature (optional).
    * @return The style to use.
    */
-  getSelectedStyleFunction = (feature: OlFeature<OlGeometry>, res: number, text: string) => {
+  selectedStyleFunction = (feature: OlFeature<OlGeometry>, res: number, text: string) => {
     const {
       selectFillColor,
       selectStrokeColor
@@ -710,7 +708,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         source: this._digitizeLayer.getSource(),
         type: type,
         geometryFunction: geometryFunction,
-        style: this.getDigitizeStyleFunction,
+        style: this.digitizeStyleFunction,
         freehandCondition: OlEventConditions.never,
         ...drawInteractionConfig
       });
@@ -766,7 +764,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       selectInteraction = new OlInteractionSelect({
         condition: OlEventConditions.singleClick,
         hitTolerance: DigitizeButton.HIT_TOLERANCE,
-        style: this.getSelectedStyleFunction,
+        style: this.selectedStyleFunction,
         ...selectInteractionConfig
       });
 
@@ -811,7 +809,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       modifyInteraction = new OlInteractionModify({
         features: this._selectInteraction.getFeatures(),
         deleteCondition: OlEventConditions.singleClick,
-        style: this.getSelectedStyleFunction,
+        style: this.selectedStyleFunction,
         ...modifyInteractionConfig
       });
 
@@ -923,7 +921,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     const copy = feat.clone();
 
-    copy.setStyle(this.getDigitizeStyleFunction(feat));
+    copy.setStyle(this.digitizeStyleFunction);
 
     this._digitizeFeatures.push(copy);
 
@@ -933,7 +931,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       copy,
       500,
       50,
-      this.getDigitizeStyleFunction(feat)
+      this.digitizeStyleFunction(feat)
     );
   };
 
@@ -958,7 +956,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       this._digitizeTextFeature = feature;
       let textLabel = '';
 
-      const featureStyle = this.getDigitizeStyleFunction(feature);
+      const featureStyle = this.digitizeStyleFunction(feature);
 
       if (featureStyle && featureStyle.getText()) {
         textLabel = featureStyle.getText().getText();
