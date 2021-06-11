@@ -267,7 +267,7 @@ describe('<DigitizeButton />', () => {
       });
     });
 
-    describe('#getDigitizeStyleFunction', () => {
+    describe('#digitizeStyleFunction', () => {
 
       it ('returns a valid OlStyleStyle object depending on feature geometry type', () => {
         const wrapper = setupWrapper();
@@ -275,24 +275,24 @@ describe('<DigitizeButton />', () => {
         const lineFeature = new OlFeature(new OlGeomLineString([0, 0], [1, 1]));
         const polyFeature = new OlFeature(new OlGeomPolygon([0, 0], [0, 1], [1, 1], [0, 0]));
 
-        const pointStyle = wrapper.instance().getDigitizeStyleFunction(pointFeature);
+        const pointStyle = wrapper.instance().digitizeStyleFunction(pointFeature);
         expect(pointStyle instanceof OlStyleStyle).toBeTruthy();
         expect(typeof pointStyle).toBe('object');
         expect(pointStyle.getImage() instanceof OlStyleCircle).toBeTruthy();
 
         pointFeature.set('isLabel', true);
 
-        const labelStyle = wrapper.instance().getDigitizeStyleFunction(pointFeature);
+        const labelStyle = wrapper.instance().digitizeStyleFunction(pointFeature);
         expect(labelStyle instanceof OlStyleStyle).toBeTruthy();
         expect(typeof labelStyle).toBe('object');
         expect(labelStyle.getText() instanceof OlStyleText).toBeTruthy();
 
-        const lineStyle = wrapper.instance().getDigitizeStyleFunction(lineFeature);
+        const lineStyle = wrapper.instance().digitizeStyleFunction(lineFeature);
         expect(lineStyle instanceof OlStyleStyle).toBeTruthy();
         expect(typeof lineStyle).toBe('object');
         expect(lineStyle.getStroke() instanceof OlStyleStroke).toBeTruthy();
 
-        const polyStyle = wrapper.instance().getDigitizeStyleFunction(polyFeature);
+        const polyStyle = wrapper.instance().digitizeStyleFunction(polyFeature);
         expect(polyStyle instanceof OlStyleStyle).toBeTruthy();
         expect(typeof polyStyle).toBe('object');
         expect(polyStyle.getStroke() instanceof OlStyleStroke).toBeTruthy();
@@ -300,7 +300,7 @@ describe('<DigitizeButton />', () => {
       });
     });
 
-    describe('#getSelectedStyleFunction', () => {
+    describe('#selectedStyleFunction', () => {
 
       it ('returns a valid OlStyleStyle object to be used with selected features', () => {
         const wrapper = setupWrapper();
@@ -310,7 +310,7 @@ describe('<DigitizeButton />', () => {
           selectStrokeColor: '#0000ff'
         });
 
-        const expectedStyle = wrapper.instance().getSelectedStyleFunction(new OlFeature());
+        const expectedStyle = wrapper.instance().selectedStyleFunction(new OlFeature());
         expect(expectedStyle instanceof OlStyleStyle).toBeTruthy();
         expect(expectedStyle.getStroke().getColor()).toBe(wrapper.props().selectStrokeColor);
         expect(expectedStyle.getFill().getColor()).toBe(wrapper.props().selectFillColor);
