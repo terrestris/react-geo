@@ -291,7 +291,8 @@ class DigitizeButton extends React.Component {
      */
     drawStyle: PropTypes.oneOfType([
       PropTypes.instanceOf(OlStyleStyle),
-      PropTypes.func
+      PropTypes.func,
+      PropTypes.array
     ]),
 
     /**
@@ -518,7 +519,6 @@ class DigitizeButton extends React.Component {
       map,
       drawType,
       editType,
-      drawStyle,
       onFeatureSelect
     } = this.props;
 
@@ -532,9 +532,6 @@ class DigitizeButton extends React.Component {
     this._digitizeFeatures = digitizeLayer.getSource().getFeaturesCollection();
 
     if (pressed) {
-      if (drawStyle) {
-        digitizeLayer.setStyle(this.getDigitizeStyleFunction);
-      }
       if (drawType) {
         this.createDrawInteraction(pressed);
       } else if (editType) {
@@ -596,12 +593,18 @@ class DigitizeButton extends React.Component {
       drawStyle,
     } = this.props;
 
-    let styleObj;
+    if (!feature.getGeometry()) {
+      return null;
+    }
+
+    if (drawStyle) {
+      return isFunction(drawStyle) ? drawStyle(feature) : drawStyle;
+    }
 
     switch (feature.getGeometry().getType()) {
       case DigitizeButton.POINT_DRAW_TYPE: {
         if (!feature.get('isLabel')) {
-          styleObj = drawStyle || new OlStyleStyle({
+          return new OlStyleStyle({
             image: new OlStyleCircle({
               radius: 7,
               fill: new OlStyleFill({
@@ -613,7 +616,7 @@ class DigitizeButton extends React.Component {
             })
           });
         } else {
-          styleObj = drawStyle || new OlStyleStyle({
+          return new OlStyleStyle({
             text: new OlStyleText({
               text: feature.get('label'),
               offsetX: 5,
@@ -628,20 +631,18 @@ class DigitizeButton extends React.Component {
             })
           });
         }
-        return styleObj;
       }
       case DigitizeButton.LINESTRING_DRAW_TYPE: {
-        styleObj = drawStyle || new OlStyleStyle({
+        return new OlStyleStyle({
           stroke: new OlStyleStroke({
             color: DigitizeButton.DEFAULT_STROKE_COLOR,
             width: 2
           })
         });
-        return styleObj;
       }
       case DigitizeButton.POLYGON_DRAW_TYPE:
       case DigitizeButton.CIRCLE_DRAW_TYPE: {
-        styleObj = drawStyle || new OlStyleStyle({
+        return new OlStyleStyle({
           fill: new OlStyleFill({
             color: DigitizeButton.DEFAULT_FILL_COLOR
           }),
@@ -650,10 +651,9 @@ class DigitizeButton extends React.Component {
             width: 2
           })
         });
-        return styleObj;
       }
       default: {
-        break;
+        return null;
       }
     }
   }
