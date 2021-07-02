@@ -1,11 +1,17 @@
+import { render, screen, within } from '@testing-library/react';
+import * as React from 'react';
+import userEvent from '@testing-library/user-event';
+
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
+import TestUtil from '../../Util/TestUtil';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import AddWmsPanel from './AddWmsPanel';
-import SimpleButton from '../../Button/SimpleButton/SimpleButton';
-import TestUtil from '../../Util/TestUtil';
 
 describe('<AddWmsPanel />', () => {
+
+  let map;
 
   const testLayerName = 'OSM-WMS';
   const testLayerTitle = 'OSM-WMS - by terrestris';
@@ -40,78 +46,128 @@ describe('<AddWmsPanel />', () => {
     testLayer2
   ];
 
+  beforeEach(() => {
+    map = TestUtil.createMap();
+  });
+
   it('is defined', () => {
     expect(AddWmsPanel).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(AddWmsPanel, {
-      wmsLayers: testWmsLayers
-    });
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<AddWmsPanel wmsLayers={testWmsLayers} />);
+    expect(container).toBeVisible();
   });
 
-  it('updates state on onSelectedLayersChange', () => {
-    const wrapper = TestUtil.mountComponent(AddWmsPanel, {
-      wmsLayers: testWmsLayers
-    });
-    const titles = testWmsLayers.map(layer => layer.Title);
-    wrapper.instance().onSelectedLayersChange(titles);
-    const state = wrapper.state();
-    expect(state.selectedWmsLayers).toBe(titles);
+  it('shows a list of all available layers', () => {
+    render(<AddWmsPanel wmsLayers={testWmsLayers} />);
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toBeVisible();
+
+    const title = within(dialog).getByText(/add wms layer/i);
+    expect(title).toBeVisible();
+
+    const list = within(dialog).getByRole('list');
+    expect(list).toBeVisible();
+
+    const items = within(list).getAllByRole('listitem');
+    expect(items).toHaveLength(2);
+
+    expect(items[0]).toHaveTextContent(testLayerTitle);
+    expect(items[1]).toHaveTextContent(testLayerTitle2);
   });
 
-  it('passes all wmsLayers to onLayerAddToMap if onAddAllLayers is called', () => {
-    const onLayerAddToMapMock = jest.fn();
-    const wrapper = TestUtil.mountComponent(AddWmsPanel, {
-      wmsLayers: testWmsLayers,
-      onLayerAddToMap: onLayerAddToMapMock
-    });
-    wrapper.instance().onAddAllLayers();
-    expect(onLayerAddToMapMock).toHaveBeenCalledTimes(1);
-    expect(onLayerAddToMapMock).toHaveBeenCalledWith(testWmsLayers);
-  });
+  describe('`add all layers` button', () => {
+    it('adds all layers to the map', () => {
+      render(<AddWmsPanel map={map} wmsLayers={testWmsLayers} />);
 
-  it('passes filtered set of wmsLayers to onLayerAddToMap if onAddSelectedLayers is called', () => {
-    const selectedWmsLayers = [
-      testLayerTitle2
-    ];
-    const onLayerAddToMapMock = jest.fn();
-    const wrapper = TestUtil.mountComponent(AddWmsPanel, {
-      wmsLayers: testWmsLayers,
-      onLayerAddToMap: onLayerAddToMapMock
+      const addAllLayersButton = screen.getByRole('button', { name: /add all layers/i });
+      userEvent.click(addAllLayersButton);
+
+      const layers = MapUtil.getLayersByProperty(map, 'title', testLayerTitle);
+      expect(layers).toHaveLength(1);
+      expect(layers).toContain(testLayer);
+
+      const layers2 = MapUtil.getLayersByProperty(map, 'title', testLayerTitle2);
+      expect(layers2).toHaveLength(1);
+      expect(layers2).toContain(testLayer2);
     });
 
-    wrapper.setState({
-      selectedWmsLayers: selectedWmsLayers
-    }, () => {
-      wrapper.instance().onAddSelectedLayers();
+    it('passes all layers to `onLayerAddToMap` if provided', () => {
+      const callback = jest.fn();
+      render(<AddWmsPanel wmsLayers={testWmsLayers} onLayerAddToMap={callback} />);
 
-      expect(onLayerAddToMapMock).toHaveBeenCalledTimes(1);
-      const passedFunctionParameter = onLayerAddToMapMock.mock.calls[0][0];
-      expect(passedFunctionParameter.length).toBe(selectedWmsLayers.length);
+      const addAllLayersButton = screen.getByRole('button', { name: /add all layers/i });
+      userEvent.click(addAllLayersButton);
+
+      expect(callback).toBeCalledWith(testWmsLayers);
     });
   });
 
-  it('renders cancelBtn only if onCancel prop (as function) is provided', () => {
-    let wrapper = TestUtil.mountComponent(AddWmsPanel, {
-      wmsLayers: testWmsLayers
-    });
-    const buttonsWithoutCancel = wrapper.find(SimpleButton);
-    expect(buttonsWithoutCancel).toHaveLength(2);
-    buttonsWithoutCancel.forEach((btn) => {
-      expect(btn.key).not.toBe('cancelBtn');
-    });
-    wrapper.unmount();
+  describe('`add selected layers` button', () => {
+    it('fires `onSelectedChange`', () => {
+      const callback = jest.fn();
+      render(<AddWmsPanel wmsLayers={testWmsLayers} onSelectionChange={callback} />);
 
-    wrapper = TestUtil.mountComponent(AddWmsPanel, {
-      onCancel: jest.fn,
-      wmsLayers: testWmsLayers
+      const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
+
+      userEvent.click(checkbox);
+      expect(callback).toBeCalledWith([testLayerTitle]);
+
+      userEvent.click(checkbox);
+      expect(callback).toBeCalledWith([]);
     });
-    const buttonsWithCancel = wrapper.find(SimpleButton);
-    expect(buttonsWithCancel).toHaveLength(3);
-    const buttonWithCancel = buttonsWithCancel.get(2);
-    expect(buttonWithCancel.key).toBe('cancelBtn');
+
+    it('adds selected layers to the map', () => {
+      render(<AddWmsPanel map={map} wmsLayers={testWmsLayers} />);
+
+      const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
+
+      userEvent.click(checkbox);
+
+      const addSelectedLayersButton = screen.getByRole('button', { name: /add selected layers/i });
+      userEvent.click(addSelectedLayersButton);
+
+      const layers = MapUtil.getLayersByProperty(map, 'title', testLayerTitle);
+      expect(layers).toHaveLength(1);
+      expect(layers).toContain(testLayer);
+
+      const layers2 = MapUtil.getLayersByProperty(map, 'title', testLayerTitle2);
+      expect(layers2).toHaveLength(0);
+    });
+
+    it('passes selected layers to `onLayerAddToMap` if provided', () => {
+      const callback = jest.fn();
+      render(<AddWmsPanel wmsLayers={testWmsLayers} onLayerAddToMap={callback} />);
+
+      const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
+
+      userEvent.click(checkbox);
+
+      const addSelectedLayersButton = screen.getByRole('button', { name: /add selected layers/i });
+      userEvent.click(addSelectedLayersButton);
+
+      expect(callback).toBeCalledWith([testLayer]);
+    });
+  });
+
+  describe('cancel button', () => {
+    it('shows no cancel button if no `onCancel` method is provided', () => {
+      render(<AddWmsPanel wmsLayers={testWmsLayers} />);
+      const onCancelButton = screen.queryByRole('button', { name: /cancel/i });
+      expect(onCancelButton).not.toBeInTheDocument();
+    });
+
+    it('shows a cancel button if an `onCancel` method is provided and calls it if the button was clicked', () => {
+      const callback = jest.fn();
+      render(<AddWmsPanel wmsLayers={testWmsLayers} onCancel={callback} />);
+
+      const onCancelButton = screen.getByRole('button', { name: /cancel/i });
+      expect(onCancelButton).toBeInTheDocument();
+
+      userEvent.click(onCancelButton);
+      expect(callback).toBeCalled();
+    });
   });
 
 });

@@ -1,4 +1,6 @@
+import * as React from 'react';
 import TestUtil from '../Util/TestUtil';
+import { render } from '@testing-library/react';
 
 import CoordinateInfo from '../CoordinateInfo/CoordinateInfo';
 
@@ -14,7 +16,7 @@ describe('<CoordinateInfo />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(CoordinateInfo, {map});
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<CoordinateInfo map={map} />);
+    expect(container).toBeVisible();
   });
 });

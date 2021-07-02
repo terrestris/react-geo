@@ -1,3 +1,6 @@
+import { render, within } from '@testing-library/react';
+import * as React from 'react';
+import userEvent from '@testing-library/user-event';
 import TestUtil from '../Util/TestUtil';
 
 import LayerSwitcher from './LayerSwitcher';
@@ -5,12 +8,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceStamen from 'ol/source/Stamen';
 import OlSourceOsm from 'ol/source/OSM';
 
-const fakeEvent = {
-  stopPropagation: () => undefined
-};
-
 describe('<LayerSwitcher />', () => {
-  let wrapper;
   let map;
   let layers;
 
@@ -30,15 +28,10 @@ describe('<LayerSwitcher />', () => {
     map = TestUtil.createMap();
     map.addLayer(layers[0]);
     map.addLayer(layers[1]);
-    const props = {
-      map: map,
-      layers: layers
-    };
-    wrapper = TestUtil.mountComponent(LayerSwitcher, props);
   });
 
   afterEach(() => {
-    TestUtil.removeMap(map);
+    map.dispose();
     layers = null;
     map = null;
   });
@@ -48,41 +41,37 @@ describe('<LayerSwitcher />', () => {
   });
 
   it('can be rendered', () => {
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<LayerSwitcher layers={layers} map={map} />);
+    expect(container).toBeVisible();
   });
 
   it('contains map element', () => {
-    const mapElement = wrapper.find('div#layer-switcher-map');
-    expect(mapElement).not.toBeUndefined();
+    const { container } = render(<LayerSwitcher layers={layers} map={map} />);
+    const mapElement = within(container).getByRole('img');
+    expect(mapElement).toBeVisible();
   });
 
   it('adds a custom className', () => {
-    const props = {
-      className: 'peter',
-      map: map,
-      layers: layers
-    };
-    wrapper = TestUtil.mountComponent(LayerSwitcher, props);
-    const elementClass = wrapper.find('div').get(0).props.className;
-    expect(elementClass).toContain('peter');
-    expect(elementClass).toContain(wrapper.instance()._className);
+    const { container } = render(<LayerSwitcher layers={layers} map={map} className="peter" />);
+    expect(container.children[0]).toHaveClass('peter');
   });
 
   it('passes style prop', () => {
-    const props = {
-      style: {
-        backgroundColor: 'yellow',
-        position: 'inherit'
-      },
-      map: map,
-      layers: layers
-    };
-    wrapper = TestUtil.mountComponent(LayerSwitcher, props);
-    expect(wrapper.props().style.backgroundColor).toBe('yellow');
-    expect(wrapper.props().style.position).toBe('inherit');
+    const { container } = render(<LayerSwitcher layers={layers} map={map} style={{
+      backgroundColor: 'yellow',
+      position: 'inherit'
+    }} />);
+    const child = container.children[0];
+    expect(child).toHaveStyle({
+      backgroundColor: 'yellow'
+    });
+    expect(child).toHaveStyle({
+      position: 'inherit'
+    });
   });
 
   it('sets all but one layer to invisible', () => {
+    render(<LayerSwitcher layers={layers} map={map} />);
     const layer0visibile = layers[0].getVisible();
     const layer1visibile = layers[1].getVisible();
     expect(layer0visibile && layer1visibile).toBe(false);
@@ -90,10 +79,14 @@ describe('<LayerSwitcher />', () => {
   });
 
   it('switches the visible layer on click', () => {
-    const instance = wrapper.instance();
+    const { container } = render(<LayerSwitcher layers={layers} map={map} />);
+    const switcher = within(container).getByRole('button');
+
     const layer0visibile = layers[0].getVisible();
     const layer1visibile = layers[1].getVisible();
-    instance.onSwitcherClick(fakeEvent);
+
+    userEvent.click(switcher);
+
     expect(layers[0].getVisible()).toBe(!layer0visibile);
     expect(layers[1].getVisible()).toBe(!layer1visibile);
   });

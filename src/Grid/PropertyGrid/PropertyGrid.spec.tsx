@@ -41,7 +41,7 @@ describe('<PropertyGrid />', () => {
       feature: testFeature
     };
     const wrapper = TestUtil.mountComponent(PropertyGrid, props);
-    expect(wrapper.props().style.backgroundColor).toBe('yellow');
+    expect(wrapper.getDOMNode()).toHaveStyle('backgroundColor: yellow');
   });
 
   it('generates dataSource and column definition for unfiltered attribute list', () => {
