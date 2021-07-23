@@ -71,7 +71,7 @@ interface LayerTreeState {
   layerGroupRevision?: number;
   treeNodes: ReactElement<LayerTreeNodeProps>[];
   checkedKeys: React.ReactText[];
-  mapResolution: -1;
+  mapResolution: number;
 }
 
 export type LayerTreeProps = BaseProps & Partial<DefaultProps> & TreeProps;
@@ -224,6 +224,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     const collection = groupLayer.getLayers();
     const addEvtKey = collection.on('add', this.onCollectionAdd);
     const removeEvtKey = collection.on('remove', this.onCollectionRemove);
+    // @ts-ignore
     const changeEvtKey = groupLayer.on('change:layers', this.onChangeLayers);
 
     this.olListenerKeys.push(addEvtKey, removeEvtKey, changeEvtKey);
@@ -325,11 +326,14 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @param evt The OpenLayers MapEvent (passed by moveend)
    *
    */
-  rebuildTreeNodes = (evt?: any) => {
+  rebuildTreeNodes = (evt?: OlMapEvent) => {
     const { mapResolution } = this.state;
 
-    if (evt && evt instanceof OlMapEvent && evt.target && evt.target.getView) {
-      if (mapResolution === evt.target.getView().getResolution()) {
+    let newMapResolution: number = -1;
+
+    if (evt?.target instanceof OlMap) {
+      newMapResolution = evt.target.getView().getResolution();
+      if (mapResolution === newMapResolution) {
         // If map resolution didn't change => no redraw of tree nodes needed.
         return;
       }
@@ -339,7 +343,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     const checkedKeys = this.getVisibleOlUids();
     this.setState({
       checkedKeys,
-      mapResolution: evt ? evt.target.getView().getResolution() : -1
+      mapResolution: newMapResolution
     });
   };
 

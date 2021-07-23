@@ -223,7 +223,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * The layer representing the features of the grid.
    * @private
    */
-  _layer: OlLayerVector = null;
+  _layer: OlLayerVector<OlSourceVector<OlGeometry>> = null;
 
   /**
    * The constructor.
@@ -333,7 +333,9 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     });
 
     const layer = new OlLayerVector({
-      name: layerName,
+      properties: {
+        name: layerName
+      },
       source: source,
       style: featureStyle
     });

@@ -1,14 +1,11 @@
-import OlBaseLayer from '@hanreev/types-ol/ol/layer/Base';
-import OlLayerGroup from '@hanreev/types-ol/ol/layer/Group';
+import OlBaseLayer from 'ol/layer/Base';
 import OlLayer from 'ol/layer/Layer';
 import OlImageWMS from 'ol/source/ImageWMS';
 import OlTileWMS from 'ol/source/TileWMS';
-import ImageLayer from 'ol/layer/Image';
-import TileLayer from 'ol/layer/Tile';
+import OlImageLayer from 'ol/layer/Image';
+import OlTileLayer from 'ol/layer/Tile';
 
-export function isLayerGroup(layer: OlBaseLayer): layer is OlLayerGroup {
-  return 'getLayers' in layer;
-}
+export type WmsLayer = OlImageLayer<OlImageWMS> | OlTileLayer<OlTileWMS>;
 
 export function isWmsLayer(layer: OlBaseLayer): layer is OlLayer<OlImageWMS | OlTileWMS> {
   if (layer instanceof OlLayer) {
@@ -18,6 +15,6 @@ export function isWmsLayer(layer: OlBaseLayer): layer is OlLayer<OlImageWMS | Ol
   return false;
 }
 
-export function isImageOrTileLayer(layer: OlBaseLayer): layer is ImageLayer | TileLayer {
-  return layer instanceof ImageLayer || layer instanceof TileLayer;
+export function isImageOrTileLayer(layer: OlBaseLayer): layer is WmsLayer {
+  return layer instanceof OlImageLayer || layer instanceof OlTileLayer;
 }

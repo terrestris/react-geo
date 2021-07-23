@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Checkbox } from 'antd';
-import OlLayerTile from 'ol/layer/Tile';
-import OlLayerImage  from 'ol/layer/Image';
 import OlMap from 'ol/Map';
 
 import _isFunction from 'lodash/isFunction';
@@ -14,6 +12,7 @@ import Logger from '@terrestris/base-util/dist/Logger';
 import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry';
 
 import './AddWmsPanel.less';
+import { WmsLayer } from '../../Util/typeUtils';
 
 interface DefaultProps {
   /**
@@ -36,7 +35,7 @@ interface DefaultProps {
    * Array containing layers (e.g. `Capability.Layer.Layer` of ol capabilities
    * parser)
    */
-  wmsLayers: Array<OlLayerTile | OlLayerImage>;
+  wmsLayers: Array<WmsLayer>;
 }
 
 interface BaseProps {
@@ -48,7 +47,7 @@ interface BaseProps {
    * Optional function being called when onAddSelectedLayers or onAddAllLayers
    * is triggered
    */
-  onLayerAddToMap?: (layers: Array<OlLayerTile | OlLayerImage>) => void;
+  onLayerAddToMap?: (layers: Array<WmsLayer>) => void;
   /**
    * Optional function that is called if cancel button is clicked
    */

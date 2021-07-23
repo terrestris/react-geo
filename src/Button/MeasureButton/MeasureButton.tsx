@@ -332,7 +332,9 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
 
     if (!measureLayer) {
       measureLayer = new OlLayerVector({
-        name: measureLayerName,
+        properties: {
+          name: measureLayerName,
+        },
         source: new OlSourceVector({
           features: new OlCollection()
         }),
