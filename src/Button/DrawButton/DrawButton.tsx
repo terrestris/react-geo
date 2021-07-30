@@ -14,7 +14,6 @@ import OlVectorSource from 'ol/source/Vector';
 import OlGeometry from 'ol/geom/Geometry';
 import OlVectorLayer from 'ol/layer/Vector';
 
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
 
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
@@ -45,10 +44,6 @@ interface DefaultProps {
    *       specific cause.
    */
   drawInteractionConfig: OlDrawOptions;
-  /**
-   * A custom onToogle function that will be called if button is toggled.
-   */
-  onToggle: (pressed: boolean) => void;
 }
 
 type DrawType = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Text';
@@ -152,42 +147,37 @@ const DrawButton: React.FC<DrawButtonProps> = ({
       return undefined;
     }
 
-    const drawInteractionName = `react-geo-draw-interaction-${drawType}`;
-    let interaction = MapUtil.getInteractionsByName(map, drawInteractionName)[0];
+    let geometryFunction;
+    let type = drawType;
 
-    if (!interaction) {
-      let geometryFunction;
-      let type = drawType;
-
-      if (drawType === 'Rectangle') {
-        geometryFunction = createBox();
-        type = 'Circle';
-      } else if (drawType === 'Text') {
-        type = 'Point';
-      }
-
-      interaction = new OlInteractionDraw({
-        source: layer.getSource(),
-        type: type,
-        geometryFunction: geometryFunction,
-        style: drawStyle ?? DigitizeUtil.defaultDigitizeStyleFunction,
-        freehandCondition: OlEventConditions.never,
-        ...(drawInteractionConfig ?? {})
-      });
-
-      interaction.set('name', drawInteractionName);
-
-      interaction.setActive(false);
-
-      map.addInteraction(interaction);
+    if (drawType === 'Rectangle') {
+      geometryFunction = createBox();
+      type = 'Circle';
+    } else if (drawType === 'Text') {
+      type = 'Point';
     }
 
-    setDrawInteraction(interaction);
+    const newInteraction = new OlInteractionDraw({
+      source: layer.getSource(),
+      type: type,
+      geometryFunction: geometryFunction,
+      style: drawStyle ?? DigitizeUtil.defaultDigitizeStyleFunction,
+      freehandCondition: OlEventConditions.never,
+      ...(drawInteractionConfig ?? {})
+    });
+
+    newInteraction.set('name', `react-geo-draw-interaction-${drawType}`);
+
+    newInteraction.setActive(false);
+
+    map.addInteraction(newInteraction);
+
+    setDrawInteraction(newInteraction);
 
     let key;
 
     if (drawType === 'Text') {
-      key = interaction.on('drawend', evt => {
+      key = newInteraction.on('drawend', evt => {
         setShowLabelPrompt(true);
         evt.feature.set('isLabel', true);
         setDigitizeTextFeature(evt.feature);
@@ -196,7 +186,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 
     return () => {
       unByKey(key);
-      map.removeInteraction(interaction);
+      map.removeInteraction(newInteraction);
     }
   }, [drawType, layer, drawInteractionConfig, drawStyle, map]);
 
@@ -234,10 +224,11 @@ const DrawButton: React.FC<DrawButtonProps> = ({
    * removed from the map.
    *
    * @param pressed Whether the digitize button is pressed or not.
+   * @param lastClickEvent
    */
-  const onToggleInternal = (pressed: boolean) => {
+  const onToggleInternal = (pressed: boolean, lastClickEvent: any) => {
     drawInteraction.setActive(pressed);
-    onToggle?.(pressed);
+    onToggle?.(pressed, lastClickEvent);
   };
 
   /**
