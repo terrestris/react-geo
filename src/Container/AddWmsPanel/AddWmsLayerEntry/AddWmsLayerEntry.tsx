@@ -25,7 +25,7 @@ interface BaseProps {
   /**
      * Object containing layer information
      */
-  wmsLayer: WmsLayer
+  wmsLayer: WmsLayer;
 }
 
 interface AddWmsLayerEntryState {
