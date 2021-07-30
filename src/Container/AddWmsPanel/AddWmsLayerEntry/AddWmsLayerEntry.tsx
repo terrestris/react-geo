@@ -1,13 +1,12 @@
 import * as React from 'react';
 
-import OlLayerTile from 'ol/layer/Tile';
-import OlLayerImage from 'ol/layer/Image';
 import { Attribution as OlAttribution } from 'ol/source/Source';
 
 import { Checkbox, Tooltip } from 'antd';
 
 import { Icon } from 'react-fa';
 
+import { WmsLayer } from '../../../Util/typeUtils';
 import './AddWmsLayerEntry.less';
 
 interface DefaultProps {
@@ -15,7 +14,7 @@ interface DefaultProps {
    * Function returning a span with the textual representation of this layer
    * Default: Title of the layer and its abstract (if available)
    */
-  layerTextTemplateFn: (layer: OlLayerTile | OlLayerImage) => React.ReactNode;
+  layerTextTemplateFn: (layer: WmsLayer) => React.ReactNode;
   /**
    * Optional text to be shown in Tooltip for a layer that can be queried
    */
@@ -26,7 +25,7 @@ interface BaseProps {
   /**
      * Object containing layer information
      */
-  wmsLayer: OlLayerTile | OlLayerImage;
+  wmsLayer: WmsLayer;
 }
 
 interface AddWmsLayerEntryState {

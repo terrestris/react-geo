@@ -386,7 +386,9 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     });
 
     const layer = new OlLayerVector({
-      name: layerName,
+      properties: {
+        name: layerName,
+      },
       source: source,
       style: featureStyle
     });

@@ -6,10 +6,10 @@ import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
 import OlMap from 'ol/Map';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
+import OlTileSource from 'ol/source/Tile';
 
 import { CSS_PREFIX } from '../constants';
 import MapComponent from '../Map/MapComponent/MapComponent';
-import { isLayerGroup } from '../Util/typeUtils';
 
 import './LayerSwitcher.less';
 
@@ -26,7 +26,7 @@ export interface BaseProps {
   /**
    * The layers to be available in the switcher.
    */
-  layers: ArrayTwoOrMore<OlLayerTile | OlLayerGroup>;
+  layers: ArrayTwoOrMore<OlLayerTile<OlTileSource> | OlLayerGroup>;
   /**
    * The main map the layers should be synced with.
    */
@@ -34,7 +34,7 @@ export interface BaseProps {
 }
 
 interface LayerSwitcherState {
-  previewLayer: OlLayerTile | OlLayerGroup;
+  previewLayer: OlLayerTile<OlTileSource> | OlLayerGroup;
 }
 
 export type LayerSwitcherProps = BaseProps & React.HTMLAttributes<HTMLDivElement>;
@@ -67,7 +67,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    *
    * @private
    */
-  _layerClones: Array<OlLayerTile | OlLayerGroup> = [];
+  _layerClones: Array<OlLayerTile<OlTileSource> | OlLayerGroup> = [];
 
   /**
    * The className added to this component.
@@ -126,18 +126,22 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    * @param layer The layer to clone.
    * @returns The cloned layer.
    */
-  cloneLayer = (layer: OlLayerTile | OlLayerGroup) => {
-    let layerClone: OlLayerTile | OlLayerGroup;
-    if (isLayerGroup(layer)) {
+  cloneLayer = (layer: OlLayerTile<OlTileSource> | OlLayerGroup) => {
+    let layerClone: OlLayerTile<OlTileSource> | OlLayerGroup;
+    if (layer instanceof OlLayerGroup) {
       layerClone = new OlLayerGroup({
         layers: layer.getLayers().getArray().map(this.cloneLayer),
-        originalLayer: layer,
+        properties: {
+          originalLayer: layer
+        },
         ...layer.getProperties()
       });
     } else {
       layerClone = new OlLayerTile({
         source: layer.getSource(),
-        originalLayer: layer,
+        properties: {
+          originalLayer: layer
+        },
         ...layer.getProperties()
       });
     }
