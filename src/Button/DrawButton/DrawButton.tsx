@@ -261,9 +261,9 @@ const DrawButton: React.FC<DrawButtonProps> = ({
     onModalLabelCancel?.(event);
   };
 
-  const finalClassName = defaultClassName
+  const finalClassName = className
     ? `${defaultClassName} ${className}`
-    : className;
+    : defaultClassName;
 
   const btnWrapperClass = `${CSS_PREFIX}digitize-button-wrapper`;
 
