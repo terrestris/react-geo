@@ -149,7 +149,7 @@
     "np": "^7.0.0",
     "ol": "^6.6.1",
     "react": "^16.12.0",
-    "react-docgen-typescript": "^1.17.1",
+    "react-docgen-typescript": "^2.1.0",
     "react-styleguidist": "^11.0.8",
     "rimraf": "^3.0.2",
     "semantic-release": "^17.4.3",
