@@ -1,5 +1,5 @@
 import OlVectorLayer from 'ol/layer/Vector';
-import OlStyleStyle from 'ol/style/Style';
+import OlStyleStyle, { StyleLike as OlStyleLike } from 'ol/style/Style';
 import OlStyleCircle from 'ol/style/Circle';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
@@ -83,6 +83,17 @@ export class DigitizeUtil {
 
   static DIGITIZE_LAYER_NAME = 'react-geo_digitize';
 
+  static DEFAULT_SELECT_STYLE = DigitizeUtil.selectStyleFunction('rgba(154, 26, 56, 0.5)', 'rgba(154, 26, 56, 0.8)');
+
+  /**
+   * This function gets the standard react geo digitize layer and creates it if it does not exist.
+   * If another layer should be used, the layer property of the respective button should be used.
+   * By default the digitize layer is styled via {@link DigitizeUtil.defaultDigitizeStyleFunction},
+   * if another style is desired either use another layer or set the style of the digitize layer
+   * via `setStyle`.
+   *
+   * @param map
+   */
   static getDigitizeLayer(map: OlMap): OlVectorLayer<OlSourceVector<Geometry>> {
     let digitizeLayer = MapUtil.getLayerByName(map, DigitizeUtil.DIGITIZE_LAYER_NAME);
 
@@ -170,19 +181,16 @@ export class DigitizeUtil {
     }
   }
 
-  static selectStyleFunction (selectFillColor: string, selectStrokeColor: string) {
-    /**
-     * The OL style for selected digitized features.
-     *
-     * @param feature The selected feature.
-     * @param res resolution.
-     * @param text Text for labeled feature (optional).
-     * @return The style to use.
-     */
-    return (feature: OlFeature<OlGeometry>, res: number, text: string) => {
-      if (feature.get('label')) {
-        text = feature.get('label');
-      }
+  /**
+   * This functions creates a select style with some default values from fill and stroke colors.
+   * This can be used as a style function for an OpenLayers layer or feature.
+   *
+   * @param selectFillColor
+   * @param selectStrokeColor
+   */
+  static selectStyleFunction (selectFillColor: string, selectStrokeColor: string): OlStyleLike {
+    return (feature: OlFeature<OlGeometry>) => {
+      const text = feature.get('label') ?? '';
 
       return new OlStyleStyle({
         image: new OlStyleCircle({
@@ -195,7 +203,7 @@ export class DigitizeUtil {
           })
         }),
         text: new OlStyleText({
-          text: text ? text : '',
+          text: text,
           offsetX: 5,
           offsetY: 5,
           font: '12px sans-serif',

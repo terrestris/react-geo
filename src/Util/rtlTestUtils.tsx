@@ -1,5 +1,9 @@
-import { act, fireEvent } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import OlMap from 'ol/Map';
+import MapContext from '../Context/MapContext/MapContext';
+import MapComponent from '../Map/MapComponent/MapComponent';
+import * as React from 'react';
+import { ReactElement } from 'react';
 
 export async function actSetTimeout(time: number): Promise<void> {
   return act(async () => {
@@ -46,4 +50,22 @@ export function clickMap(map: OlMap, x: number, y: number) {
 export function doubleClickMap(map: OlMap, x: number, y: number) {
   clickMap(map, x, y);
   clickMap(map, x, y);
+}
+
+/**
+ * This function renders the given element inside a map context and initializes the map with size `[400, 400]`, ready
+ * to be used by the event functions in this file.
+ */
+export function renderInContext(map: OlMap, element: ReactElement) {
+  const result = render(
+    <MapContext.Provider value={map}>
+      <MapComponent map={map} />
+      {element}
+    </MapContext.Provider>
+  );
+
+  map.setSize([400, 400]);
+  map.renderSync();
+
+  return result;
 }

@@ -1,36 +1,20 @@
 import DrawButton from './DrawButton';
-import { render, screen,  within } from '@testing-library/react';
+import { screen,  within } from '@testing-library/react';
 import * as React from 'react';
-import MapContext from '../../Context/MapContext/MapContext';
 import userEvent from '@testing-library/user-event';
-
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import OlView from 'ol/View';
 import OlMap from 'ol/Map';
-import MapComponent from '../../Map/MapComponent/MapComponent';
-import { clickMap, doubleClickMap } from '../../Util/rtlTestUtils';
+import { clickMap, doubleClickMap, renderInContext } from '../../Util/rtlTestUtils';
 import LineString from 'ol/geom/LineString';
 import Polygon from 'ol/geom/Polygon';
-
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import { DigitizeUtil } from '../../Util/DigitizeUtil';
 
 describe('<DrawButton />', () => {
 
   let map;
-
-  function renderInContext(buttons) {
-    const result = render(
-      <MapContext.Provider value={map}>
-        <MapComponent map={map} />
-        {buttons}
-      </MapContext.Provider>
-    );
-
-    map.setSize([400, 400]);
-    map.renderSync();
-
-    return result;
-  }
 
   beforeEach(() => {
     map = new OlMap({
@@ -49,7 +33,7 @@ describe('<DrawButton />', () => {
     });
 
     it('can be rendered', () => {
-      const { container } = renderInContext(<DrawButton drawType={'Point'} />);
+      const { container } = renderInContext(map, <DrawButton drawType={'Point'} />);
 
       const button = within(container).getByRole('button');
       expect(button).toBeVisible();
@@ -58,11 +42,11 @@ describe('<DrawButton />', () => {
 
   describe('#Drawing', () => {
     it('draws points', () => {
-      renderInContext(<DrawButton drawType={'Point'} />);
+      renderInContext(map, <DrawButton drawType={'Point'} />);
 
       const button = screen.getByRole('button');
 
-      const digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       userEvent.click(button);
 
@@ -76,11 +60,11 @@ describe('<DrawButton />', () => {
     });
 
     it('draws lines', () => {
-      renderInContext(<DrawButton drawType={'LineString'} />);
+      renderInContext(map, <DrawButton drawType={'LineString'} />);
 
       const button = screen.getByRole('button');
 
-      const digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       userEvent.click(button);
 
@@ -98,11 +82,11 @@ describe('<DrawButton />', () => {
     });
 
     it('draws polygons', () => {
-      renderInContext(<DrawButton drawType={'Polygon'} />);
+      renderInContext(map, <DrawButton drawType={'Polygon'} />);
 
       const button = screen.getByRole('button');
 
-      const digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       userEvent.click(button);
 
@@ -127,11 +111,11 @@ describe('<DrawButton />', () => {
     });
 
     it('draws labels', async () => {
-      renderInContext(<DrawButton drawType={'Text'} />);
+      renderInContext(map, <DrawButton drawType={'Text'} />);
 
       const button = screen.getByRole('button');
 
-      const digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       userEvent.click(button);
 
@@ -159,11 +143,11 @@ describe('<DrawButton />', () => {
     });
 
     it('aborts drawing labels', async () => {
-      renderInContext(<DrawButton drawType={'Text'} />);
+      renderInContext(map, <DrawButton drawType={'Text'} />);
 
       const button = screen.getByRole('button');
 
-      const digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       userEvent.click(button);
 
@@ -186,11 +170,11 @@ describe('<DrawButton />', () => {
     });
 
     it('draws circles', () => {
-      renderInContext(<DrawButton drawType={'Circle'} />);
+      renderInContext(map, <DrawButton drawType={'Circle'} />);
 
       const button = screen.getByRole('button');
 
-      const digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       userEvent.click(button);
 
@@ -206,11 +190,11 @@ describe('<DrawButton />', () => {
     });
 
     it('draws rectangles', () => {
-      renderInContext(<DrawButton drawType={'Rectangle'} />);
+      renderInContext(map, <DrawButton drawType={'Rectangle'} />);
 
       const button = screen.getByRole('button');
 
-      const digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       userEvent.click(button);
 
@@ -231,11 +215,11 @@ describe('<DrawButton />', () => {
     });
 
     it('toggles off', () => {
-      renderInContext(<DrawButton drawType={'Point'} />);
+      renderInContext(map, <DrawButton drawType={'Point'} />);
 
       const button = screen.getByRole('button');
 
-      const digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       expect(digitizeLayer.getSource().getFeatures()).toHaveLength(0);
 
@@ -262,10 +246,7 @@ describe('<DrawButton />', () => {
       const startSpy = jest.fn();
       const endSpy = jest.fn();
 
-      renderInContext(<DrawButton drawType={'Polygon'} onDrawStart={startSpy} onDrawEnd={endSpy}/>);
-
-      map.setSize([400, 400]);
-      map.renderSync();
+      renderInContext(map, <DrawButton drawType={'Polygon'} onDrawStart={startSpy} onDrawEnd={endSpy}/>);
 
       const button = screen.getByRole('button');
 
@@ -296,18 +277,15 @@ describe('<DrawButton />', () => {
     });
 
     it('multiple draw buttons use the same digitize layer', () => {
-      renderInContext(<>
+      renderInContext(map, <>
         <DrawButton drawType={'Point'}>Point 1</DrawButton>
         <DrawButton drawType={'Point'}>Point 2</DrawButton>
       </>);
 
-      map.setSize([400, 400]);
-      map.renderSync();
-
       const button1 = screen.getByText('Point 1');
       const button2 = screen.getByText('Point 2');
 
-      const digitizeLayer = MapUtil.getLayerByName(map, 'react-geo_digitize');
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       userEvent.click(button1);
 
@@ -319,6 +297,28 @@ describe('<DrawButton />', () => {
       clickMap(map, 120, 120);
 
       expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
+    });
+
+    it('can use a custom layer', () => {
+      const layer = new VectorLayer({
+        source: new VectorSource()
+      });
+
+      map.addLayer(layer);
+
+      renderInContext(map, <DrawButton drawType={'Point'} digitizeLayer={layer} />);
+
+      const button = screen.getByRole('button');
+
+      userEvent.click(button);
+
+      clickMap(map, 100, 100);
+
+      expect(layer.getSource().getFeatures()).toHaveLength(1);
+
+      const defaultDigitizeLayer = DigitizeUtil.getDigitizeLayer(map);
+
+      expect(defaultDigitizeLayer.getSource().getFeatures()).toHaveLength(0);
     });
   });
 });

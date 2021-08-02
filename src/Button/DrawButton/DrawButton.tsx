@@ -187,7 +187,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
     return () => {
       unByKey(key);
       map.removeInteraction(newInteraction);
-    }
+    };
   }, [drawType, layer, drawInteractionConfig, drawStyle, map]);
 
   useEffect(() => {
@@ -218,12 +218,10 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   const [digitizeTextFeature, setDigitizeTextFeature] = useState<OlFeature<OlGeometry>>(null);
 
   /**
-   * Called when the digitize button is toggled. If the button state is pressed,
-   * the appropriate draw, modify or select interaction will be created.
-   * Otherwise, by untoggling, the same previously created interaction will be
-   * removed from the map.
+   * Called when the draw button is toggled. If the button state is pressed,
+   * the appropriate draw interaction will be activated.
    *
-   * @param pressed Whether the digitize button is pressed or not.
+   * @param pressed Whether the draw button is pressed or not.
    * @param lastClickEvent
    */
   const onToggleInternal = (pressed: boolean, lastClickEvent: any) => {
@@ -275,7 +273,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
         {...passThroughProps}
       />
       {
-        showLabelPrompt ?
+        showLabelPrompt &&
           <Modal
             title={modalPromptTitle}
             okText={modalPromptOkButtonText}
@@ -291,7 +289,6 @@ const DrawButton: React.FC<DrawButtonProps> = ({
               autoSize
             />
           </Modal>
-          : null
       }
     </span>);
 };
