@@ -135,7 +135,7 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^7.2.0",
     "eslint-plugin-jest-dom": "^3.6.5",
-    "eslint-plugin-markdown": "^1.0.0",
+    "eslint-plugin-markdown": "^2.2.0",
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-testing-library": "^3.10.2",
