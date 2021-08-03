@@ -7,7 +7,6 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
-import { act } from '@testing-library/react';
 
 type Wrapper =  ShallowWrapper | ReactWrapper;
 
@@ -131,7 +130,7 @@ export class TestUtil {
    * @param [dragging] Whether the map is being dragged or not.
    */
   static simulatePointerEvent = ({map, type, x, y, optShiftKey, dragging}:
-  {map: any; type: string; x: number; y: number; optShiftKey?: boolean; dragging?: boolean}) => {
+  {map: OlMap; type: string; x: number; y: number; optShiftKey?: boolean; dragging?: boolean}) => {
     const viewport = map.getViewport();
     // Calculated in case body has top < 0 (test runner with small window).
     const position = viewport.getBoundingClientRect();
@@ -181,12 +180,6 @@ export class TestUtil {
 
     return feat;
   };
-
-  static async setTimeout(time): Promise<void> {
-    return act(async () => {
-      return new Promise(resolve => setTimeout(resolve, time));
-    });
-  }
 }
 
 export default TestUtil;

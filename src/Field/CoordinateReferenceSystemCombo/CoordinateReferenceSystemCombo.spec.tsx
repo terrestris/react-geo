@@ -11,6 +11,7 @@ import {
   findAntdDropdownOptionByText,
   queryAntdDropdownOption
 } from '../../Util/antdTestQueries';
+import { actSetTimeout } from '../../Util/rtlTestUtils';
 
 describe('<CoordinateReferenceSystemCombo />', () => {
 
@@ -67,7 +68,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       const combobox = screen.getByRole('combobox');
       userEvent.type(combobox, '25832');
 
-      await TestUtil.setTimeout(0);
+      await actSetTimeout(0);
 
       expect(fetch).toBeCalled();
       expect(fetch).toBeCalledWith(`${url}?format=json&q=25832`);
@@ -102,7 +103,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       userEvent.type(combobox, 'a');
 
-      await TestUtil.setTimeout(50);
+      await actSetTimeout(50);
 
       expect(queryAntdDropdownOption()).not.toBeInTheDocument();
     });
