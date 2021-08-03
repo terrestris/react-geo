@@ -141,7 +141,7 @@
     "eslint-plugin-testing-library": "^3.10.2",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.2",
-    "jest": "^26.2.1",
+    "jest": "^27.0.6",
     "jest-canvas-mock": "^2.3.1",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-fetch-mock": "^3.0.3",
