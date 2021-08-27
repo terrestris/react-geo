@@ -1,7 +1,9 @@
+import { render, screen } from '@testing-library/react';
+import * as React from 'react';
+
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import AddWmsLayerEntry from './AddWmsLayerEntry';
-import TestUtil from '../../../Util/TestUtil';
 
 describe('<AddWmsLayerEntry />', () => {
 
@@ -24,30 +26,25 @@ describe('<AddWmsLayerEntry />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(AddWmsLayerEntry, {
-      wmsLayer: testLayer
-    });
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    expect(container).toBeVisible();
   });
 
   it('adds queryable icon if prop wmsLayer has queryable set to true', () => {
     testLayer.set('queryable', true);
 
-    const wrapper = TestUtil.mountComponent(AddWmsLayerEntry, {
-      wmsLayer: testLayer
-    });
-    const icons = wrapper.find('span.add-wms-add-info-icon');
-    expect(icons).toHaveLength(1);
-    expect(icons.getElement().props.className).toContain('fa-info');
+    render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    const icon = screen.getByLabelText('queryable-info');
+
+    expect(icon).toBeDefined();
+    expect(icon.className).toContain('fa-info');
 
     testLayer.set('queryable', false);
   });
 
   it('doesn\'t add queryable icon if prop wmsLayer has queryable set to false', () => {
-    const wrapper = TestUtil.mountComponent(AddWmsLayerEntry, {
-      wmsLayer: testLayer
-    });
-    const icons = wrapper.find('fa fa-info add-wms-add-info-icon');
+    render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    const icons = screen.queryAllByLabelText('queryable-info');
     expect(icons).toHaveLength(0);
   });
 
@@ -55,36 +52,29 @@ describe('<AddWmsLayerEntry />', () => {
     const wmsAttribution = 'Test - attribution';
     testLayer.getSource().setAttributions(wmsAttribution);
 
-    const wrapper = TestUtil.mountComponent(AddWmsLayerEntry, {
-      wmsLayer: testLayer
-    });
-    const icons = wrapper.find('span.add-wms-add-info-icon');
-    expect(icons).toHaveLength(1);
-    expect(icons.getElement().props.className).toContain('fa-copyright');
+    render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    const attributionIcons = screen.queryAllByLabelText('attribution-info');
+
+    expect(attributionIcons).toHaveLength(1);
+    expect(attributionIcons[0].className).toContain('fa-copyright');
+    testLayer.getSource().setAttributions(null);
   });
 
   it('doesn\'t add copyright icon if prop wmsLayer no has filled attribution', () => {
-    const wrapper = TestUtil.mountComponent(AddWmsLayerEntry, {
-      wmsLayer: testLayer
-    });
-    const icons = wrapper.find('fa fa-copyright add-wms-add-info-icon');
-    expect(icons).toHaveLength(0);
+    render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+
+    const attributionIcons = screen.queryAllByLabelText('attribution-info');
+    expect(attributionIcons).toHaveLength(0);
   });
 
   it('includes abstract in description text if abstract property is set for layer', () => {
     const abstract = 'abstract';
-    const expectedLine = `${testLayerTitle} - ${abstract}:`;
-
     testLayer.setProperties({
-      abstract: abstract
+      abstract
     });
 
-    const abstractProps  = {
-      wmsLayer: testLayer
-    };
-    const wrapper = TestUtil.mountComponent(AddWmsLayerEntry, abstractProps);
-    const icons = wrapper.find('div.add-wms-layer-entry');
-    expect(icons.getElement().props.children[0].props.children).toBe(expectedLine);
+    render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    screen.getByText('OSM-WMS - by terrestris - abstract:');
   });
 
 });

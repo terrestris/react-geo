@@ -92,18 +92,18 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
     const layerTextSpan = layerTextTemplateFn(wmsLayer);
 
     return (
-      <Checkbox value={title} className="add-wms-layer-checkbox-line">
+      <Checkbox name={title} className="add-wms-layer-checkbox-line">
         <div className="add-wms-layer-entry">
           {layerTextSpan}
           {
             copyright
-              ? <Icon className="add-wms-add-info-icon" name="copyright" />
+              ? <Icon className="add-wms-add-info-icon" name="copyright" aria-label="attribution-info" />
               : null
           }
           {
             queryable
               ? <Tooltip title={layerQueryableText}>
-                <Icon className="add-wms-add-info-icon" name="info" />
+                <Icon className="add-wms-add-info-icon" name="info" aria-label="queryable-info" />
               </Tooltip>
               : null
           }
