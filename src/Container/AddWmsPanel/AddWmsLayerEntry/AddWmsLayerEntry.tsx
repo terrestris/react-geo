@@ -92,7 +92,7 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
     const layerTextSpan = layerTextTemplateFn(wmsLayer);
 
     return (
-      <Checkbox name={title} className="add-wms-layer-checkbox-line">
+      <Checkbox value={title} className="add-wms-layer-checkbox-line">
         <div className="add-wms-layer-entry">
           {layerTextSpan}
           {
