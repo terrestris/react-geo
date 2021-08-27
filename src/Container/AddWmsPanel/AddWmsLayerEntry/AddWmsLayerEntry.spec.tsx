@@ -36,16 +36,16 @@ describe('<AddWmsLayerEntry />', () => {
     render(<AddWmsLayerEntry wmsLayer={testLayer} />);
     const icon = screen.getByLabelText('queryable-info');
 
-    expect(icon).toBeDefined();
-    expect(icon.className).toContain('fa-info');
+    expect(icon).toBeInTheDocument();
+    expect(icon).toHaveClass('fa-info');
 
     testLayer.set('queryable', false);
   });
 
   it('doesn\'t add queryable icon if prop wmsLayer has queryable set to false', () => {
     render(<AddWmsLayerEntry wmsLayer={testLayer} />);
-    const icons = screen.queryAllByLabelText('queryable-info');
-    expect(icons).toHaveLength(0);
+    const icon = screen.queryByLabelText('queryable-info');
+    expect(icon).not.toBeInTheDocument();
   });
 
   it('adds copyright icon if prop wmsLayer has filled wmsAttribution', () => {
@@ -55,16 +55,16 @@ describe('<AddWmsLayerEntry />', () => {
     render(<AddWmsLayerEntry wmsLayer={testLayer} />);
     const attributionIcons = screen.queryAllByLabelText('attribution-info');
 
-    expect(attributionIcons).toHaveLength(1);
-    expect(attributionIcons[0].className).toContain('fa-copyright');
+    expect(attributionIcons[0]).toBeInTheDocument();
+    expect(attributionIcons[0]).toHaveClass('fa-copyright');
     testLayer.getSource().setAttributions(null);
   });
 
   it('doesn\'t add copyright icon if prop wmsLayer no has filled attribution', () => {
     render(<AddWmsLayerEntry wmsLayer={testLayer} />);
 
-    const attributionIcons = screen.queryAllByLabelText('attribution-info');
-    expect(attributionIcons).toHaveLength(0);
+    const attributionIcon = screen.queryByLabelText('attribution-info');
+    expect(attributionIcon).not.toBeInTheDocument();
   });
 
   it('includes abstract in description text if abstract property is set for layer', () => {
