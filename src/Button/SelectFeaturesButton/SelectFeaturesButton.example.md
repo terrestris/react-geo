@@ -45,7 +45,7 @@ const SelectFeaturesButtonExample = () => {
         layer
       ],
       view: new OlView({
-        center: fromLonLat([37.40570, 8.81566]),
+        center: fromLonLat([8, 50]),
         zoom: 4
       })
     }));

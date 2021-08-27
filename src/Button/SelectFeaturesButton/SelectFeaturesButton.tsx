@@ -12,7 +12,7 @@ import { unByKey } from 'ol/Observable';
 import { CSS_PREFIX } from '../../constants';
 import * as React from 'react';
 
-interface SelectFeaturesButtonProps {
+interface OwnProps {
   /**
    * Select style of the selected features.
    */
@@ -46,12 +46,14 @@ interface SelectFeaturesButtonProps {
   hitTolerance?: number;
 }
 
+export type SelectFeaturesButtonProps = OwnProps & ToggleButtonProps;
+
 /**
  * The className added to this component.
  */
 const defaultClassName = `${CSS_PREFIX}selectbutton`;
 
-const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps & ToggleButtonProps> = ({
+const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
   selectStyle,
   selectInteractionConfig,
   className,
@@ -109,6 +111,7 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps & ToggleButtonPro
   const onToggleInternal = (pressed: boolean, lastClickEvt: any) => {
     selectInteraction.setActive(pressed);
     onToggle?.(pressed, lastClickEvt);
+    selectInteraction.getFeatures().clear();
   };
 
   const finalClassName = className
