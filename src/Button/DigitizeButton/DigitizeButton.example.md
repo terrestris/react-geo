@@ -1,5 +1,7 @@
 This demonstrates the use of DigitizeButton with different interactions.
 
+**Note:** The `DigitizeButton` is deprecated and might be removed in future versions. Please make use of the `DrawButton` instead.
+
 ```jsx
 import * as React from 'react';
 

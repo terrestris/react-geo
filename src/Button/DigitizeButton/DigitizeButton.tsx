@@ -216,7 +216,7 @@ export type DigitizeButtonProps = BaseProps & Partial<DefaultProps> & ToggleButt
  *
  * @class The DigitizeButton
  * @extends React.Component
- *
+ * @deprecated Please make use of the DrawButton component instead.
  */
 class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButtonState> {
   /**
