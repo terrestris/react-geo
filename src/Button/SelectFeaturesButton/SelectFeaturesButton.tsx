@@ -1,16 +1,18 @@
+import * as React from 'react';
+import { useEffect, useRef } from 'react';
+
 import OlInteractionSelect, { Options as OlSelectOptions, SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 import { StyleLike as OlStyleLike } from 'ol/style/Style';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import Geometry from 'ol/geom/Geometry';
-import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
-import { useEffect, useState } from 'react';
-import { useMap } from '../..';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlVectorSource from 'ol/source/Vector';
+import OlGeometry from 'ol/geom/Geometry';
 import * as OlEventConditions from 'ol/events/condition';
-import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import { unByKey } from 'ol/Observable';
+
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
+import { useMap } from '../../Hook/useMap';
+import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import { CSS_PREFIX } from '../../constants';
-import * as React from 'react';
 
 interface OwnProps {
   /**
@@ -39,7 +41,7 @@ interface OwnProps {
   /**
    * Array of layers the SelectFeaturesButton should operate on.
    */
-  layers: VectorLayer<VectorSource<Geometry>>[];
+  layers: OlVectorLayer<OlVectorSource<OlGeometry>>[];
   /**
    * Hit tolerance of the select action. Default: 5
    */
@@ -63,7 +65,7 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
   onToggle,
   ...passThroughProps
 }) => {
-  const [selectInteraction, setSelectInteraction] = useState<OlInteractionSelect>();
+  const selectInteractionRef = useRef<OlInteractionSelect>();
 
   const map = useMap();
 
@@ -74,7 +76,7 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
 
     const selectInteractionName = 'react-geo-select-interaction';
 
-    const newInteraction = new OlInteractionSelect({
+    const interaction = new OlInteractionSelect({
       condition: OlEventConditions.singleClick,
       hitTolerance: hitTolerance,
       style: selectStyle ?? DigitizeUtil.DEFAULT_SELECT_STYLE,
@@ -82,36 +84,27 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
       ...(selectInteractionConfig ?? {})
     });
 
-    newInteraction.set('name', selectInteractionName);
-    newInteraction.setActive(false);
+    interaction.set('name', selectInteractionName);
+    interaction.setActive(false);
 
-    map.addInteraction(newInteraction);
-
-    setSelectInteraction(newInteraction);
-
-    return () => {
-      map.removeInteraction(newInteraction);
-    };
-  }, [layers, selectStyle, selectInteractionConfig, map, hitTolerance]);
-
-  useEffect(() => {
-    if (!selectInteraction) {
-      return undefined;
-    }
-
-    const key = selectInteraction.on('select', (e) => {
+    const key = interaction.on('select', (e) => {
       onFeatureSelect?.(e);
     });
 
+    map.addInteraction(interaction);
+
+    selectInteractionRef.current = interaction;
+
     return () => {
       unByKey(key);
+      map.removeInteraction(interaction);
     };
-  }, [selectInteraction, onFeatureSelect]);
+  }, [layers, selectStyle, selectInteractionConfig, map, hitTolerance, onFeatureSelect]);
 
   const onToggleInternal = (pressed: boolean, lastClickEvt: any) => {
-    selectInteraction.setActive(pressed);
+    selectInteractionRef.current.setActive(pressed);
     onToggle?.(pressed, lastClickEvt);
-    selectInteraction.getFeatures().clear();
+    selectInteractionRef.current.getFeatures().clear();
   };
 
   const finalClassName = className

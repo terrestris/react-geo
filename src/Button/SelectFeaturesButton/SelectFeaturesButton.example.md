@@ -16,7 +16,6 @@ import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
 import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
 import SelectFeaturesButton from '@terrestris/react-geo/Button/SelectFeaturesButton/SelectFeaturesButton';
 
-
 import federalStates from '../../../assets/federal-states-ger.json';
 
 const format = new OlFormatGeoJSON();

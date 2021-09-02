@@ -1,31 +1,31 @@
+import * as React from 'react';
+import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
+import OlFeature from 'ol/Feature';
+import OlPoint from 'ol/geom/Point';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlVectorSource from 'ol/source/Vector';
+import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+
 import DrawButton from '../DrawButton/DrawButton';
 import { clickMap, renderInMapContext } from '../../Util/rtlTestUtils';
-import { screen, within } from '@testing-library/react';
-import * as React from 'react';
-import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
 import SelectFeaturesButton from './SelectFeaturesButton';
-import userEvent from '@testing-library/user-event';
-import { SelectEvent } from 'ol/interaction/Select';
 
 describe('<SelectFeaturesButton />', () => {
 
   const coord = [829729, 6708850];
   let map: OlMap;
-  let layer: VectorLayer<VectorSource<Point>>;
-  let feature: Feature<Point>;
+  let layer: OlVectorLayer<OlVectorSource<OlPoint>>;
+  let feature: OlFeature<OlPoint>;
 
   beforeEach(() => {
+    feature = new OlFeature(new OlPoint(coord));
 
-
-    feature = new Feature(new Point(coord));
-
-    layer = new VectorLayer({
-      source: new VectorSource({
+    layer = new OlVectorLayer({
+      source: new OlVectorSource({
         features: [feature]
       })
     });
@@ -76,7 +76,7 @@ describe('<SelectFeaturesButton />', () => {
       await clickMap(map, 200, 200);
 
       expect(selectSpy).toBeCalled();
-      const event: SelectEvent = selectSpy.mock.calls[0][0];
+      const event: OlSelectEvent = selectSpy.mock.calls[0][0];
       expect(event.selected).toEqual([feature]);
 
       mock.mockRestore();

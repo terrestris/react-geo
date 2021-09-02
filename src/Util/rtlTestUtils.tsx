@@ -68,24 +68,24 @@ export function doubleClickMap(map: OlMap, x: number, y: number) {
  * to be used by the event functions in this file.
  */
 export function renderInMapContext(map: OlMap, element: ReactElement, size: [number, number] = [400, 400]) {
-  const assemble = (element: ReactElement) => {
+  const assemble = (newElement: ReactElement) => {
     return <MapContext.Provider value={map}>
       <MapComponent map={map} />
-      {element}
+      {newElement}
     </MapContext.Provider>;
-  }
+  };
 
   const { rerender, ...results } = render(assemble(element));
 
   map.setSize([400, 400]);
   map.renderSync();
 
-  const rerenderInMapContext = (element: ReactElement) => {
-    rerender(assemble(element));
-  }
+  const rerenderInMapContext = (newElement: ReactElement) => {
+    rerender(assemble(newElement));
+  };
 
   return {
-    rerenderInContext: rerenderInMapContext,
+    rerenderInMapContext,
     ...results
   };
 }

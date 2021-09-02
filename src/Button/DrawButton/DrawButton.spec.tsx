@@ -322,7 +322,7 @@ describe('<DrawButton />', () => {
     });
 
     it('can change the type', () => {
-      const { rerenderInContext } = renderInMapContext(map, <DrawButton drawType={'Point'} />);
+      const { rerenderInMapContext } = renderInMapContext(map, <DrawButton drawType={'Point'} />);
 
       const button = screen.getByRole('button');
 
@@ -335,7 +335,7 @@ describe('<DrawButton />', () => {
       expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
       expect(digitizeLayer.getSource().getFeatures()[0].getGeometry().getType()).toBe('Point');
 
-      rerenderInContext(<DrawButton drawType={'LineString'} />);
+      rerenderInMapContext(<DrawButton drawType={'LineString'} />);
 
       clickMap(map, 120, 120);
       doubleClickMap(map, 140, 140);
