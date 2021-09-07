@@ -160,19 +160,5 @@
     "webpack": "^4.44.1",
     "whatwg-fetch": "^3.0.0",
     "xmldom": "^0.6.0"
-  },
-  "release": {
-    "branches": [
-      "master",
-      "next"
-    ],
-    "plugin": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/git",
-      "@semantic-release/github"
-    ]
   }
 }
