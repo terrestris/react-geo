@@ -1,3 +1,10 @@
+## [15.1.4](https://github.com/terrestris/react-geo/compare/v15.1.3...v15.1.4) (2021-09-07)
+
+
+### Bug Fixes
+
+* update structure to lockfileVersion 2 ([890e457](https://github.com/terrestris/react-geo/commit/890e457a79a8c5bebbe14516634dcbf60330eaf9))
+
 ## [15.1.3](https://github.com/terrestris/react-geo/compare/v15.1.2...v15.1.3) (2021-09-07)
 
 
