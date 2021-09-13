@@ -126,6 +126,7 @@ export class DigitizeUtil {
     }
 
     switch (feature.getGeometry().getType()) {
+      case 'MultiPoint':
       case 'Point': {
         if (!feature.get('isLabel')) {
           return new OlStyleStyle({
@@ -156,6 +157,7 @@ export class DigitizeUtil {
           });
         }
       }
+      case 'MultiLineString':
       case 'LineString': {
         return new OlStyleStyle({
           stroke: new OlStyleStroke({
@@ -164,6 +166,7 @@ export class DigitizeUtil {
           })
         });
       }
+      case 'MultiPolygon':
       case 'Polygon':
       case 'Circle': {
         return new OlStyleStyle({

@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import OlView from 'ol/View';
 import OlMap from 'ol/Map';
-import { clickMap, doubleClickMap, renderInContext } from '../../Util/rtlTestUtils';
+import { clickMap, doubleClickMap, renderInMapContext } from '../../Util/rtlTestUtils';
 import LineString from 'ol/geom/LineString';
 import Polygon from 'ol/geom/Polygon';
 import VectorLayer from 'ol/layer/Vector';
@@ -33,7 +33,7 @@ describe('<DrawButton />', () => {
     });
 
     it('can be rendered', () => {
-      const { container } = renderInContext(map, <DrawButton drawType={'Point'} />);
+      const { container } = renderInMapContext(map, <DrawButton drawType={'Point'} />);
 
       const button = within(container).getByRole('button');
       expect(button).toBeVisible();
@@ -42,7 +42,7 @@ describe('<DrawButton />', () => {
 
   describe('#Drawing', () => {
     it('draws points', () => {
-      renderInContext(map, <DrawButton drawType={'Point'} />);
+      renderInMapContext(map, <DrawButton drawType={'Point'} />);
 
       const button = screen.getByRole('button');
 
@@ -59,8 +59,8 @@ describe('<DrawButton />', () => {
       expect(feature.getGeometry().getType()).toBe('Point');
     });
 
-    it('draws lines', () => {
-      renderInContext(map, <DrawButton drawType={'LineString'} />);
+    it('draws lines',  () => {
+      renderInMapContext(map, <DrawButton drawType={'LineString'} />);
 
       const button = screen.getByRole('button');
 
@@ -82,7 +82,7 @@ describe('<DrawButton />', () => {
     });
 
     it('draws polygons', () => {
-      renderInContext(map, <DrawButton drawType={'Polygon'} />);
+      renderInMapContext(map, <DrawButton drawType={'Polygon'} />);
 
       const button = screen.getByRole('button');
 
@@ -111,7 +111,7 @@ describe('<DrawButton />', () => {
     });
 
     it('draws labels', async () => {
-      renderInContext(map, <DrawButton drawType={'Text'} />);
+      renderInMapContext(map, <DrawButton drawType={'Text'} />);
 
       const button = screen.getByRole('button');
 
@@ -143,7 +143,7 @@ describe('<DrawButton />', () => {
     });
 
     it('aborts drawing labels', async () => {
-      renderInContext(map, <DrawButton drawType={'Text'} />);
+      renderInMapContext(map, <DrawButton drawType={'Text'} />);
 
       const button = screen.getByRole('button');
 
@@ -169,8 +169,8 @@ describe('<DrawButton />', () => {
       expect(digitizeLayer.getSource().getFeatures()).toHaveLength(0);
     });
 
-    it('draws circles', () => {
-      renderInContext(map, <DrawButton drawType={'Circle'} />);
+    it('draws circles', async () => {
+      renderInMapContext(map, <DrawButton drawType={'Circle'} />);
 
       const button = screen.getByRole('button');
 
@@ -189,8 +189,8 @@ describe('<DrawButton />', () => {
       expect(feature.getGeometry().getType()).toBe('Circle');
     });
 
-    it('draws rectangles', () => {
-      renderInContext(map, <DrawButton drawType={'Rectangle'} />);
+    it('draws rectangles', async () => {
+      renderInMapContext(map, <DrawButton drawType={'Rectangle'} />);
 
       const button = screen.getByRole('button');
 
@@ -215,7 +215,7 @@ describe('<DrawButton />', () => {
     });
 
     it('toggles off', () => {
-      renderInContext(map, <DrawButton drawType={'Point'} />);
+      renderInMapContext(map, <DrawButton drawType={'Point'} />);
 
       const button = screen.getByRole('button');
 
@@ -246,7 +246,7 @@ describe('<DrawButton />', () => {
       const startSpy = jest.fn();
       const endSpy = jest.fn();
 
-      renderInContext(map, <DrawButton drawType={'Polygon'} onDrawStart={startSpy} onDrawEnd={endSpy}/>);
+      renderInMapContext(map, <DrawButton drawType={'Polygon'} onDrawStart={startSpy} onDrawEnd={endSpy}/>);
 
       const button = screen.getByRole('button');
 
@@ -277,7 +277,7 @@ describe('<DrawButton />', () => {
     });
 
     it('multiple draw buttons use the same digitize layer', () => {
-      renderInContext(map, <>
+      renderInMapContext(map, <>
         <DrawButton drawType={'Point'}>Point 1</DrawButton>
         <DrawButton drawType={'Point'}>Point 2</DrawButton>
       </>);
@@ -306,7 +306,7 @@ describe('<DrawButton />', () => {
 
       map.addLayer(layer);
 
-      renderInContext(map, <DrawButton drawType={'Point'} digitizeLayer={layer} />);
+      renderInMapContext(map, <DrawButton drawType={'Point'} digitizeLayer={layer} />);
 
       const button = screen.getByRole('button');
 
@@ -319,6 +319,29 @@ describe('<DrawButton />', () => {
       const defaultDigitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       expect(defaultDigitizeLayer.getSource().getFeatures()).toHaveLength(0);
+    });
+
+    it('can change the type', () => {
+      const { rerenderInMapContext } = renderInMapContext(map, <DrawButton drawType={'Point'} />);
+
+      const button = screen.getByRole('button');
+
+      userEvent.click(button);
+
+      clickMap(map, 100, 100);
+
+      const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
+
+      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource().getFeatures()[0].getGeometry().getType()).toBe('Point');
+
+      rerenderInMapContext(<DrawButton drawType={'LineString'} />);
+
+      clickMap(map, 120, 120);
+      doubleClickMap(map, 140, 140);
+
+      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
+      expect(digitizeLayer.getSource().getFeatures()[1].getGeometry().getType()).toBe('LineString');
     });
   });
 });
