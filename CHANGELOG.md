@@ -1,3 +1,15 @@
+# [15.2.0](https://github.com/terrestris/react-geo/compare/v15.1.4...v15.2.0) (2021-09-13)
+
+
+### Bug Fixes
+
+* **selectfeaturesbutton:** unselect on button toggle ([0cd5611](https://github.com/terrestris/react-geo/commit/0cd561154d177c8412338b3837e80bdd6766e0fc))
+
+
+### Features
+
+* **SelectFeaturesButton:** Adds a button to select features from vector layers. ([c6af71d](https://github.com/terrestris/react-geo/commit/c6af71d97f3baf10d0af5b9a75ca998dc1930e86))
+
 ## [15.1.4](https://github.com/terrestris/react-geo/compare/v15.1.3...v15.1.4) (2021-09-07)
 
 
