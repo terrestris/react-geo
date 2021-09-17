@@ -1,4 +1,5 @@
 import TestUtil from '../../Util/TestUtil';
+import { actSetTimeout } from '../../Util/rtlTestUtils';
 import OlMap from 'ol/Map';
 
 import { render, screen } from '@testing-library/react';
@@ -24,7 +25,7 @@ describe('<ZoomButton />', () => {
     expect(container).toBeVisible();
   });
 
-  it('zooms in when clicked', () => {
+  it('zooms in when clicked', async () => {
     render(
       <ZoomButton map={map}>Zoom test</ZoomButton>
     );
@@ -33,17 +34,12 @@ describe('<ZoomButton />', () => {
     const button = screen.getByText('Zoom test');
     userEvent.click(button);
 
-    const promise = new Promise(resolve => {
-      setTimeout(resolve, 300);
-    });
-
-    return promise.then(() => {
-      const newZoom = map.getView().getZoom();
-      expect(newZoom).toBe(initialZoom + 1);
-    });
+    await actSetTimeout(300);
+    const newZoom = map.getView().getZoom();
+    expect(newZoom).toBe(initialZoom + 1);
   });
 
-  it('can be configured to zoom out', () => {
+  it('can be configured to zoom out', async () => {
     render(
       <ZoomButton map={map} delta={-1}>Zoom test</ZoomButton>
     );
@@ -52,14 +48,9 @@ describe('<ZoomButton />', () => {
     const button = screen.getByText('Zoom test');
     userEvent.click(button);
 
-    const promise = new Promise(resolve => {
-      setTimeout(resolve, 300);
-    });
-
-    return promise.then(() => {
-      const newZoom = map.getView().getZoom();
-      expect(newZoom).toBe(initialZoom - 1);
-    });
+    await actSetTimeout(300);
+    const newZoom = map.getView().getZoom();
+    expect(newZoom).toBe(initialZoom - 1);
   });
 
   it('does not belch when map has no view', () => {
