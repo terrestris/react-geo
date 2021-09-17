@@ -1,3 +1,12 @@
+## [15.2.1](https://github.com/terrestris/react-geo/compare/v15.2.0...v15.2.1) (2021-09-17)
+
+
+### Bug Fixes
+
+* linting ([89872b2](https://github.com/terrestris/react-geo/commit/89872b2a284be4959ca70d4693494a13ae3436fe))
+* make use of actSetTimeout util ([0aefb8d](https://github.com/terrestris/react-geo/commit/0aefb8d38c77288eedbc88cbbd0782e63e718de9))
+* revert checkbox value prop change ([1c73dbc](https://github.com/terrestris/react-geo/commit/1c73dbc9fcf895f3c5d98c95bbc4a5c707d639e4))
+
 # [15.2.0](https://github.com/terrestris/react-geo/compare/v15.1.4...v15.2.0) (2021-09-13)
 
 
