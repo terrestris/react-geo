@@ -1,7 +1,7 @@
 This demonstrates the use of the SelectFeaturesButton.
 
 ```jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
@@ -10,6 +10,7 @@ import OlSourceOsm from 'ol/source/OSM';
 import OlVectorLayer from 'ol/layer/Vector';
 import OlVectorSource from 'ol/source/Vector';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import SelectEvent from 'ol/interaction/Select';
 import { fromLonLat } from 'ol/proj';
 
 import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
