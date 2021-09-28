@@ -21,7 +21,6 @@ const format = new OlFormatGeoJSON();
 const features = format.readFeatures(federalStates);
 
 const CopyButtonExample = () => {
-
   const [map, setMap] = useState();
 
   useEffect(() => {
