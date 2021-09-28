@@ -24,7 +24,8 @@ const features = format.readFeatures(federalStates);
 const SelectFeaturesButtonExample = () => {
     
   const [map, setMap] = useState();
-  const [layer, setLayer] = useState();
+  const [layers, setLayers] = useState();
+  const [feature, setFeature] = useState();
     
   useEffect(() => {
     const layer = new OlVectorLayer({
@@ -33,7 +34,7 @@ const SelectFeaturesButtonExample = () => {
       })    
     });
 
-    setLayer(layer);
+    setLayers([layer]);
 
     setMap(new OlMap({
       layers: [
@@ -48,8 +49,8 @@ const SelectFeaturesButtonExample = () => {
         zoom: 4
       })
     }));
-  }, [])
-    
+  }, []);
+
   if (!map) {
     return null;
   }
@@ -64,9 +65,12 @@ const SelectFeaturesButtonExample = () => {
           }}
         />
     
-        <SelectFeaturesButton layers={[layer]}>
+        <SelectFeaturesButton layers={layers} onFeatureSelect={e => setFeature(e.selected[0])}>
           Select feature
         </SelectFeaturesButton>
+        
+        { feature && feature.get('GEN') }
+
       </MapContext.Provider>
     </div>
   );

@@ -11,7 +11,7 @@ import OlVectorSource from 'ol/source/Vector';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 
 import DrawButton from '../DrawButton/DrawButton';
-import { clickMap, renderInMapContext } from '../../Util/rtlTestUtils';
+import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
 import SelectFeaturesButton from './SelectFeaturesButton';
 
 describe('<SelectFeaturesButton />', () => {
@@ -57,23 +57,17 @@ describe('<SelectFeaturesButton />', () => {
   });
 
   describe('#Selection', () => {
-    it('calls the listener', async () => {
+    it('calls the listener', () => {
+      const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
+
       const selectSpy = jest.fn();
 
       renderInMapContext(map, <SelectFeaturesButton layers={[layer]} onFeatureSelect={selectSpy} />);
 
-      map.renderSync();
-
       const button = screen.getByRole('button');
       userEvent.click(button);
 
-      const mock = jest.spyOn(map, 'forEachFeatureAtPixel').mockImplementation((pixel, callback) => {
-        if (pixel[0] === 200 && pixel[1] === 200) {
-          callback(feature, layer, null);
-        }
-      });
-
-      await clickMap(map, 200, 200);
+      clickMap(map, 200, 200);
 
       expect(selectSpy).toBeCalled();
       const event: OlSelectEvent = selectSpy.mock.calls[0][0];

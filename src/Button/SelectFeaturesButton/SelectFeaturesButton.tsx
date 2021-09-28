@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import OlInteractionSelect, { Options as OlSelectOptions, SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 import { StyleLike as OlStyleLike } from 'ol/style/Style';
 import OlVectorLayer from 'ol/layer/Vector';
 import OlVectorSource from 'ol/source/Vector';
 import OlGeometry from 'ol/geom/Geometry';
+import OlCollection from 'ol/Collection';
+import OlFeature from 'ol/Feature';
 import * as OlEventConditions from 'ol/events/condition';
 import { unByKey } from 'ol/Observable';
 
@@ -46,6 +48,10 @@ interface OwnProps {
    * Hit tolerance of the select action. Default: 5
    */
   hitTolerance?: number;
+  /**
+   * Clear the feature collection of the interaction after select. Default: false
+   */
+  clearAfterSelect?: boolean;
 }
 
 export type SelectFeaturesButtonProps = OwnProps & ToggleButtonProps;
@@ -63,9 +69,11 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
   hitTolerance = 5,
   layers,
   onToggle,
+  clearAfterSelect = false,
   ...passThroughProps
 }) => {
-  const selectInteractionRef = useRef<OlInteractionSelect>();
+  const [selectInteraction, setSelectInteraction] = useState<OlInteractionSelect>();
+  const featuresCollection = useRef<OlCollection<OlFeature<OlGeometry>>|null>(null);
 
   const map = useMap();
 
@@ -74,37 +82,56 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
       return undefined;
     }
 
+    if (featuresCollection.current === null) {
+      featuresCollection.current = new OlCollection();
+    }
+
     const selectInteractionName = 'react-geo-select-interaction';
 
-    const interaction = new OlInteractionSelect({
+    const newInteraction = new OlInteractionSelect({
       condition: OlEventConditions.singleClick,
+      features: featuresCollection.current,
       hitTolerance: hitTolerance,
       style: selectStyle ?? DigitizeUtil.DEFAULT_SELECT_STYLE,
       layers: layers,
       ...(selectInteractionConfig ?? {})
     });
 
-    interaction.set('name', selectInteractionName);
-    interaction.setActive(false);
+    newInteraction.set('name', selectInteractionName);
+    newInteraction.setActive(false);
 
-    const key = interaction.on('select', (e) => {
+    map.addInteraction(newInteraction);
+
+    setSelectInteraction(newInteraction);
+
+    return () => {
+      map.removeInteraction(newInteraction);
+    };
+  }, [layers, selectStyle, selectInteractionConfig, map, hitTolerance]);
+
+  useEffect(() => {
+    if (!selectInteraction) {
+      return undefined;
+    }
+
+    const key = selectInteraction.on('select', e => {
       onFeatureSelect?.(e);
+      if (clearAfterSelect) {
+        featuresCollection.current.clear();
+      }
     });
-
-    map.addInteraction(interaction);
-
-    selectInteractionRef.current = interaction;
 
     return () => {
       unByKey(key);
-      map.removeInteraction(interaction);
     };
-  }, [layers, selectStyle, selectInteractionConfig, map, hitTolerance, onFeatureSelect]);
+  }, [selectInteraction, onFeatureSelect, clearAfterSelect]);
 
   const onToggleInternal = (pressed: boolean, lastClickEvt: any) => {
-    selectInteractionRef.current.setActive(pressed);
+    selectInteraction.setActive(pressed);
     onToggle?.(pressed, lastClickEvt);
-    selectInteractionRef.current.getFeatures().clear();
+    if (!pressed) {
+      selectInteraction.getFeatures().clear();
+    }
   };
 
   const finalClassName = className
