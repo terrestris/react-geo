@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { enableFetchMocks } from 'jest-fetch-mock';
 import userEvent from '@testing-library/user-event';
@@ -145,7 +145,8 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const option = await findAntdDropdownOptionByText(`${result.name} (EPSG:${result.code})`);
 
-      userEvent.click(option);
+      // we have to use fireEvent directly instead of `userEvent.click()` because antd is in the way
+      fireEvent.click(option);
 
       await waitFor(() => {
         expect(onSelect).toBeCalledWith(expected);
@@ -165,7 +166,8 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const option = await findAntdDropdownOptionByText(`${result.name} (EPSG:${result.code})`);
 
-      userEvent.click(option);
+      // we have to use fireEvent directly instead of `userEvent.click()` because antd is in the way
+      fireEvent.click(option);
 
       await waitFor(() => {
         expect(combobox).toHaveValue(`${result.name} (EPSG:${result.code})`);
