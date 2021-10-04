@@ -1,3 +1,10 @@
+## [15.2.2](https://github.com/terrestris/react-geo/compare/v15.2.1...v15.2.2) (2021-10-04)
+
+
+### Bug Fixes
+
+* fix antd select dropdown clicks ([3e3d86e](https://github.com/terrestris/react-geo/commit/3e3d86ec0932a851859484389bd901962f6fa3a2))
+
 ## [15.2.1](https://github.com/terrestris/react-geo/compare/v15.2.0...v15.2.1) (2021-09-17)
 
 
