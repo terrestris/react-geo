@@ -9,9 +9,9 @@ import OlFeature from 'ol/Feature';
 
 import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import CopyButton from './CopyButton';
+import { DeleteButton } from './DeleteButton';
 
-describe('<CopyButton />', () => {
+describe('<DeleteButton />', () => {
 
   const coord = [829729, 6708850];
   let map: OlMap;
@@ -39,24 +39,24 @@ describe('<CopyButton />', () => {
   describe('#Basics', () => {
 
     it('is defined', () => {
-      expect(CopyButton).not.toBeUndefined();
+      expect(DeleteButton).not.toBeUndefined();
     });
 
     it('can be rendered', () => {
-      const { container } = renderInMapContext(map, <CopyButton />);
+      const { container } = renderInMapContext(map, <DeleteButton />);
 
       const button = within(container).getByRole('button');
       expect(button).toBeVisible();
     });
   });
 
-  describe('#Copying', () => {
-    it('copies the feature', () => {
+  describe('#Deleting', () => {
+    it('deletes the feature', () => {
       const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
 
       const layer = DigitizeUtil.getDigitizeLayer(map);
 
-      renderInMapContext(map, <CopyButton />);
+      renderInMapContext(map, <DeleteButton />);
 
       const button = screen.getByRole('button');
       userEvent.click(button);
@@ -65,13 +65,7 @@ describe('<CopyButton />', () => {
 
       clickMap(map, 200, 200);
 
-      expect(layer.getSource().getFeatures()).toHaveLength(2);
-
-      const [feat1, feat2] = layer.getSource().getFeatures();
-
-      expect(feat2.get('someProp')).toEqual('test');
-
-      expect(feat1.getGeometry().getType()).toEqual(feat2.getGeometry().getType());
+      expect(layer.getSource().getFeatures()).toHaveLength(0);
 
       mock.mockRestore();
     });
