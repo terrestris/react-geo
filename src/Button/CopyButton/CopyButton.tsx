@@ -6,6 +6,7 @@ import React, {
 import OlVectorSource from 'ol/source/Vector';
 import OlGeometry from 'ol/geom/Geometry';
 import OlVectorLayer from 'ol/layer/Vector';
+import { SelectEvent } from 'ol/interaction/Select';
 
 import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 
@@ -13,7 +14,6 @@ import { CSS_PREFIX } from '../../constants';
 import { useMap } from '../../Hook/useMap';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
-import { SelectEvent } from 'ol/interaction/Select';
 
 interface OwnProps {
   /**
