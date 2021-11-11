@@ -25,9 +25,7 @@ interface OwnProps {
 
 export type CopyButtonProps = OwnProps & Omit<SelectFeaturesButtonProps, 'layers'>;
 
-/**
- * The className added to this component.
- */
+// The class name for the component.
 const defaultClassName = `${CSS_PREFIX}copybutton`;
 
 const CopyButton: React.FC<CopyButtonProps> = ({
