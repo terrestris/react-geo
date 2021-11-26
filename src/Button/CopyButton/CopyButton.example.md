@@ -1,4 +1,4 @@
-This demonstrates the use of the SelectFeaturesButton.
+This demonstrates the use of the CopyButton.
 
 ```jsx
 import { useEffect, useState } from 'react';
@@ -7,48 +7,40 @@ import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
-import OlVectorLayer from 'ol/layer/Vector';
-import OlVectorSource from 'ol/source/Vector';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import { fromLonLat } from 'ol/proj';
 
 import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
 import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import SelectFeaturesButton from '@terrestris/react-geo/Button/SelectFeaturesButton/SelectFeaturesButton';
+import CopyButton from '@terrestris/react-geo/Button/CopyButton/CopyButton';
+import { DigitizeUtil } from '@terrestris/react-geo/Util/DigitizeUtil';
 
 import federalStates from '../../../assets/federal-states-ger.json';
 
 const format = new OlFormatGeoJSON();
 const features = format.readFeatures(federalStates);
 
-const SelectFeaturesButtonExample = () => {
-    
+const CopyButtonExample = () => {
   const [map, setMap] = useState();
-  const [layers, setLayers] = useState();
-  const [feature, setFeature] = useState();
-    
+
   useEffect(() => {
-    const layer = new OlVectorLayer({
-      source: new OlVectorSource({
-        features      
-      })    
-    });
-
-    setLayers([layer]);
-
-    setMap(new OlMap({
+    const newMap = new OlMap({
       layers: [
         new OlLayerTile({
           name: 'OSM',
           source: new OlSourceOsm()
-        }),
-        layer
+        })
       ],
       view: new OlView({
         center: fromLonLat([8, 50]),
         zoom: 4
       })
-    }));
+    });
+
+    const digitizeLayer = DigitizeUtil.getDigitizeLayer(newMap);
+    digitizeLayer.getSource().addFeatures(features);
+
+    setMap(newMap);
   }, []);
 
   if (!map) {
@@ -65,16 +57,13 @@ const SelectFeaturesButtonExample = () => {
           }}
         />
     
-        <SelectFeaturesButton layers={layers} onFeatureSelect={e => setFeature(e.selected[0])}>
-          Select feature
-        </SelectFeaturesButton>
-        
-        { feature && feature.get('GEN') }
-
+        <CopyButton>
+          Copy feature
+        </CopyButton>
       </MapContext.Provider>
     </div>
   );
 }
 
-<SelectFeaturesButtonExample />
+<CopyButtonExample />
 ```

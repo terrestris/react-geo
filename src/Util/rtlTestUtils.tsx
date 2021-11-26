@@ -4,6 +4,10 @@ import MapContext from '../Context/MapContext/MapContext';
 import MapComponent from '../Map/MapComponent/MapComponent';
 import * as React from 'react';
 import { ReactElement } from 'react';
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlVectorSource from 'ol/source/Vector';
 
 export async function actSetTimeout(time: number): Promise<void> {
   return act(async () => {
@@ -88,4 +92,17 @@ export function renderInMapContext(map: OlMap, element: ReactElement, size: [num
     rerenderInMapContext,
     ...results
   };
+}
+
+export function mockForEachFeatureAtPixel(
+  map: OlMap,
+  pixel: [number, number],
+  feature: OlFeature<OlGeometry>,
+  layer?: OlVectorLayer<OlVectorSource<OlGeometry>>
+): jest.SpyInstance {
+  return jest.spyOn(map, 'forEachFeatureAtPixel').mockImplementation((atPixel, callback) => {
+    if (pixel[0] === atPixel[0] && pixel[1] === atPixel[1]) {
+      callback(feature, layer, null);
+    }
+  });
 }
