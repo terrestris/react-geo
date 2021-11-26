@@ -1,7 +1,8 @@
 module.exports = {
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:markdown/recommended"
   ],
   "plugins": [
     "react",
@@ -40,5 +41,9 @@ module.exports = {
     "react": {
       "version": "16.0"
     }
-  }
+  },
+  overrides: [{
+     files: ["**/*.md"],
+     processor: "markdown/markdown"
+  }]
 };

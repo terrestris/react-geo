@@ -57,6 +57,9 @@ class MapProvider extends React.Component<MapProviderProps, MapProviderState> {
           map: map,
           ready: true
         });
+      })
+      .catch(err => {
+        Logger.error(`Promise<Map> failed to resolve, and instead threw '${err}`);
       });
   }
 

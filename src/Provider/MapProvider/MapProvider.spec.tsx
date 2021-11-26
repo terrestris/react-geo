@@ -6,6 +6,7 @@ import { TestUtil } from '../../Util/TestUtil';
 
 import MapProvider from './MapProvider';
 import { mappify } from '../../HigherOrderComponent/MappifiedComponent/MappifiedComponent';
+import { Map } from 'ol';
 
 describe('MapProvider', () => {
   /* eslint-disable require-jsdoc */
@@ -76,7 +77,7 @@ describe('MapProvider', () => {
 
     it('Does not render on rejected promise', () => {
       const errMsg = 'Some message: Humpty';
-      const failingPromise = new Promise((resolve, reject) => {
+      const failingPromise: Promise<Map> = new Promise((resolve, reject) => {
         reject(new Error(errMsg));
       });
 
