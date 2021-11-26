@@ -1,3 +1,11 @@
+# [15.3.0](https://github.com/terrestris/react-geo/compare/v15.2.2...v15.3.0) (2021-11-26)
+
+
+### Features
+
+* Add a CopyButton component ([a982a83](https://github.com/terrestris/react-geo/commit/a982a83fa43c46da9ce887dae16f34824e10f138))
+* **SelectFeaturesButton:** persist features collection and prop `clearAfterSelect` ([a1226ac](https://github.com/terrestris/react-geo/commit/a1226ac0d2501a3006a623308b210232dcab119d))
+
 ## [15.2.2](https://github.com/terrestris/react-geo/compare/v15.2.1...v15.2.2) (2021-10-04)
 
 
