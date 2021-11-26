@@ -1,12 +1,8 @@
 # react-geo  <a href="https://terrestris.github.io/react-geo/"><img align="left" src="./assets/logo.svg" width="70px" /></a>
 
-[![Build Status](https://travis-ci.org/terrestris/react-geo.svg?branch=master)](https://travis-ci.org/terrestris/react-geo)
 [![Coverage Status](https://coveralls.io/repos/github/terrestris/react-geo/badge.svg?branch=master)](https://coveralls.io/github/terrestris/react-geo?branch=master)
 [![license: 2-Clause BSD](https://img.shields.io/badge/license-2--Clause%20BSD-brightgreen.svg)](https://opensource.org/licenses/BSD-2-Clause)
 [![Known Vulnerabilities](https://snyk.io/test/github/terrestris/react-geo/badge.svg)](https://snyk.io/test/github/terrestris/react-geo)
-[![Dependabot badge](https://api.dependabot.com/badges/status?host=github&repo=terrestris/react-geo)](https://dependabot.com/)
-[![devDependencies Status](https://david-dm.org/terrestris/react-geo/dev-status.svg)](https://david-dm.org/terrestris/react-geo?type=dev)
-[![dependencies Status](https://david-dm.org/terrestris/react-geo/status.svg)](https://david-dm.org/terrestris/react-geo)
 
 A set of geo related components to use in combination with [react](https://github.com/facebook/react), [antd](https://github.com/ant-design/ant-design) and [ol](https://github.com/openlayers/openlayers).
 
