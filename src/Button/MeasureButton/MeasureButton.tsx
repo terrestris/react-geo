@@ -116,6 +116,8 @@ interface BaseProps {
    * Whether line, area or angle will be measured.
    */
   measureType: 'line' | 'polygon' | 'angle';
+  
+  geodesic: true;
 }
 
 export type MeasureButtonProps = BaseProps & Partial<DefaultProps> & ToggleButtonProps;
@@ -563,7 +565,8 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       measureType,
       decimalPlacesInTooltips,
       map,
-      measureTooltipCssClasses
+      measureTooltipCssClasses,
+      geodesic
     } = this.props;
 
     if (!_isEmpty(this._feature)) {
@@ -578,8 +581,8 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       }
 
       const value = measureType === 'line' ?
-        MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips) :
-        MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips);
+        MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips, geodesic) :
+        MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
 
       if (parseInt(value, 10) > 0) {
         const div = document.createElement('div');
@@ -779,7 +782,8 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     const {
       measureType,
       decimalPlacesInTooltips,
-      map
+      map,
+      geodesic
     } = this.props;
 
     if (!this._measureTooltipElement) {
@@ -801,11 +805,11 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       let measureTooltipCoord = geom.getLastCoordinate();
 
       if (measureType === 'polygon') {
-        output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips);
+        output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
         // attach area at interior point
         measureTooltipCoord = geom.getInteriorPoint().getCoordinates();
       } else if (measureType === 'line') {
-        output = MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips);
+        output = MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips, geodesic);
       } else if (measureType === 'angle') {
         output = MeasureUtil.formatAngle(geom, map, decimalPlacesInTooltips);
       }
