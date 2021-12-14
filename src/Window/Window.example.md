@@ -62,7 +62,7 @@ class WindowExample extends React.Component {
               tools={[
                 <SimpleButton
                   key="closeButton"
-                  iconName="close"
+                  iconName="times"
                   size="small"
                   tooltip="Close"
                   onClick={this.onClickSimple.bind(this)}
@@ -90,7 +90,7 @@ class WindowExample extends React.Component {
               tools={[
                 <SimpleButton
                   key="closeButton"
-                  icon="close"
+                  iconName="times" 
                   size="small"
                   tooltip="Close"
                   onClick={this.onClickEsc.bind(this)}

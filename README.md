@@ -17,7 +17,7 @@ Visit [https://terrestris.github.io/react-geo-ws/](https://terrestris.github.io/
 ## Installation
 
 ```javascript static
-npm i @terrestris/react-geo
+npm i @terrestris/react-geo --save
 ```
 
 ### Requirements

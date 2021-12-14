@@ -30,7 +30,7 @@ describe('<SimpleButton />', () => {
     expect(wrapper.props().disabled).toBe(true);
 
     expect(wrapper.find('button.ant-btn-secondary').length).toBe(1);
-    expect(wrapper.find('span.fa-bath').length).toBe(1);
+    expect(wrapper.find('svg.fa-bath').length).toBe(1);
     expect(wrapper.find('button.ant-btn-circle').length).toBe(1);
     expect(wrapper.find('button.ant-btn-sm').length).toBe(1);
     expect(wrapper.find('button', {disabled: true}).length).toBe(1);

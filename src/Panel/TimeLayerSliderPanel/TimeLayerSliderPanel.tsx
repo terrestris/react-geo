@@ -454,14 +454,14 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         >
           <SimpleButton
             className="change-datarange-button"
-            iconName="calendar-o"
+            iconName="calendar"
           />
         </Popover>
         {
           resetVisible ?
             <SimpleButton
               type="primary"
-              iconName="refresh"
+              iconName="sync"
               onClick={this.setSliderToNow}
               tooltip={tooltips.setToNow}
             /> : null
@@ -481,13 +481,13 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         </div>
         <ToggleButton
           type="primary"
-          iconName="play-circle-o"
+          iconName="play-circle"
           className={extraCls + ' playback'}
           pressed={autoPlayActive}
           onToggle={this.autoPlay}
           tooltip={autoPlayActive ? 'Pause' : 'Autoplay'}
           aria-label={autoPlayActive ? 'Pause' : 'Autoplay'}
-          pressedIconName="pause-circle-o"
+          pressedIconName="pause-circle"
         />
         <Select
           defaultValue={'1'}

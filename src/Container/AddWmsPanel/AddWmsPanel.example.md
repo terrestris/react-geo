@@ -81,16 +81,15 @@ class AddWmsPanelExample extends React.Component {
           <AddWmsPanel
             style={{
               position: 'relative',
-              height: '500px'
+              display: 'flex',
+              flexDirection: 'column'
             }}
             key="1"
             map={this.map}
             wmsLayers={layers}
             draggable={true}
-            width={500}
-            height={400}
             x={0}
-            y={100}
+            y={0}
           />
         </div>
       </div>

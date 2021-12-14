@@ -5,11 +5,14 @@ import { Button, Tooltip } from 'antd';
 import { TooltipPlacement, AbstractTooltipProps } from 'antd/lib/tooltip';
 import { ButtonProps } from 'antd/lib/button';
 
-import Icon from 'react-fa/lib/Icon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { CSS_PREFIX } from '../../constants';
 
 import logger from '@terrestris/base-util/dist/Logger';
+
+import  '../../Util/fontawesome';
 
 import './SimpleButton.less';
 
@@ -31,9 +34,14 @@ interface BaseProps {
    */
   icon?: React.ReactNode;
   /**
-   * The name of the fa icon. Set either the icon node or the name of the icon.
-   */
-  iconName?: string;
+   * The name of the font awesome icon. It could be:
+   * - an icon object, like `{ faCoffee }`.
+   * - a string, like `'coffee'`.
+   * - an array of strings, where the first element is a style prefix
+   *   and the second element is the icon name: `{ ['fab', 'apple'] }`
+   * For a list of possible icons, please see on https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free
+  */
+  iconName?: IconProp;
   /**
    * The tooltip to be shown on hover.
    */
@@ -98,7 +106,7 @@ class SimpleButton extends React.Component<SimpleButtonProps> {
       iconToRender = icon;
     }
     if (iconName) {
-      iconToRender = <Icon name={iconName}/>;
+      iconToRender = <FontAwesomeIcon icon={iconName}/>;
     }
 
     return (
