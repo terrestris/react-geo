@@ -117,6 +117,9 @@ interface BaseProps {
    */
   measureType: 'line' | 'polygon' | 'angle';
   
+  /**
+   * Whether the measure is using geodesic or cartesian mode. Geodesic is used by default.
+   */
   geodesic: true;
 }
 
