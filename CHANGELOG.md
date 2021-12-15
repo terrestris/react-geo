@@ -1,3 +1,11 @@
+# [15.4.0](https://github.com/terrestris/react-geo/compare/v15.3.0...v15.4.0) (2021-12-15)
+
+
+### Features
+
+* add geodesic option for measure tool, add comment on new option ([35cccb9](https://github.com/terrestris/react-geo/commit/35cccb921ec59fd5b1d3040c342fcd498f1c9849))
+* add geodesic option for measure tool, Fix ES Lint ([96224e6](https://github.com/terrestris/react-geo/commit/96224e6a83a2166954832c0fcc7825ca73f212fb))
+
 # [15.3.0](https://github.com/terrestris/react-geo/compare/v15.2.2...v15.3.0) (2021-11-26)
 
 
