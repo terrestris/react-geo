@@ -31,8 +31,8 @@ A ToggleButton with an icon and a pressedIcon:
 import ToggleButton from '@terrestris/react-geo/Button/ToggleButton/ToggleButton';
 
 <ToggleButton
-  iconName="frown-o"
-  pressedIconName="smile-o"
+  iconName="frown"
+  pressedIconName="smile"
   onToggle={()=>{}}
 />
 ```

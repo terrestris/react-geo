@@ -5,16 +5,21 @@ import {
   Button,
   Tooltip
 } from 'antd';
-import { Icon } from 'react-fa';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import _isFunction from 'lodash/isFunction';
 
-import './ToggleButton.less';
-
-import { CSS_PREFIX } from '../../constants';
 import { AbstractTooltipProps, TooltipPlacement } from 'antd/lib/tooltip';
 import { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import logger from '@terrestris/base-util/dist/Logger';
+
+import { CSS_PREFIX } from '../../constants';
+
+import  '../../Util/fontawesome';
+
+import './ToggleButton.less';
 
 interface DefaultProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
@@ -45,10 +50,14 @@ interface BaseProps {
    */
   pressedIcon?: React.ReactNode;
   /**
-   * The name of the fa icon for the pressed state. Set either the icon node or
-   * the name of the icon.
-   */
-  pressedIconName?: string;
+   * The name of the font awesome icon. It could be:
+   * - an icon object, like `{ faCoffee }`.
+   * - a string, like `'coffee'`.
+   * - an array of strings, where the first element is a style prefix
+   *   and the second element is the icon name: `{ ['fab', 'apple'] }`
+   * For a list of possible icons, please see on https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free
+  */
+  pressedIconName?: IconProp;
   /**
    * The tooltip to be shown on hover.
    */
@@ -281,7 +290,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
       iconToRender = icon;
     }
     if (iconName) {
-      iconToRender = <Icon name={iconName}/>;
+      iconToRender = <FontAwesomeIcon icon={iconName}/>;
     }
 
     if (pressedIcon && pressedIconName) {
@@ -294,7 +303,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
       pressedIconToRender = pressedIcon;
     }
     if (pressedIconName) {
-      pressedIconToRender = <Icon name={pressedIconName}/>;
+      pressedIconToRender = <FontAwesomeIcon icon={pressedIconName}/>;
     }
 
     return (

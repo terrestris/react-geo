@@ -105,12 +105,12 @@ import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
 
 <Panel
   style={{position: 'relative'}}
-  x={0}
-  y={0}
   title="Initial size (673 * 134)"
   resizeOpts={true}
   width={673}
   height={134}
+  x={1}
+  y={1}
 >
   Panel with initial size.
 </Panel>
