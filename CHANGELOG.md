@@ -1,3 +1,15 @@
+# [16.0.0](https://github.com/terrestris/react-geo/compare/v15.4.0...v16.0.0) (2021-12-17)
+
+
+### Features
+
+* Update React to version 17 and update all dependencies and components to become compatible with it as well ([5b9075e](https://github.com/terrestris/react-geo/commit/5b9075e1047da57f49bfc86cda8829fd5dc0459a))
+
+
+### BREAKING CHANGES
+
+* This updates the peerDependency of React to version 17
+
 # [15.4.0](https://github.com/terrestris/react-geo/compare/v15.3.0...v15.4.0) (2021-12-15)
 
 
