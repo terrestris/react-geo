@@ -1,3 +1,10 @@
+## [16.0.1](https://github.com/terrestris/react-geo/compare/v16.0.0...v16.0.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* prevents double labels on measure polygon features ([0335840](https://github.com/terrestris/react-geo/commit/033584023ddf3c49af8a12186314b5a3b270b137))
+
 # [16.0.0](https://github.com/terrestris/react-geo/compare/v15.4.0...v16.0.0) (2021-12-17)
 
 
