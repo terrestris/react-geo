@@ -537,7 +537,10 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     }
 
     // Fix doubled label for lastPoint of line
-    if ((multipleDrawing || showMeasureInfoOnClickedPoints) && measureType === 'line') {
+    if (
+      (multipleDrawing || showMeasureInfoOnClickedPoints) &&
+      (measureType === 'line' || measureType === 'polygon')
+    ) {
       this.removeMeasureTooltip();
     } else {
       this._measureTooltipElement.className =
@@ -551,7 +554,10 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     this._feature = null;
 
     // fix doubled label for last point of line
-    if ((multipleDrawing || showMeasureInfoOnClickedPoints) && measureType === 'line') {
+    if (
+      (multipleDrawing || showMeasureInfoOnClickedPoints) &&
+      (measureType === 'line' || measureType === 'polygon')
+    ) {
       this._measureTooltipElement = null;
       this.createMeasureTooltip();
     }
