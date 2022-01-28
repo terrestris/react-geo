@@ -26,7 +26,7 @@ interface OwnProps {
    * Note: The keys features, deleteCondition and style are handled internally
    *       and shouldn't be overwritten without any specific cause.
    */
-  modifyInteractionConfig: Omit<ModifyOptions, 'features'|'source'|'deleteCondition'|'style'>;
+  modifyInteractionConfig?: Omit<ModifyOptions, 'features'|'source'|'deleteCondition'|'style'>;
   /**
    * Additional configuration object to apply to the ol.interaction.Translate.
    * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-Translate.html
@@ -35,7 +35,7 @@ interface OwnProps {
    * Note: The key feature is handled internally and shouldn't be overwritten
    *       without any specific cause.
    */
-  translateInteractionConfig: Omit<TranslateOptions, 'features'|'layers'>;
+  translateInteractionConfig?: Omit<TranslateOptions, 'features'|'layers'>;
   /**
    * The vector layer which will be used for digitize features.
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
