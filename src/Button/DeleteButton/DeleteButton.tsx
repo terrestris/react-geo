@@ -1,13 +1,15 @@
-import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+
 import OlVectorLayer from 'ol/layer/Vector';
 import OlVectorSource from 'ol/source/Vector';
 import OlGeometry from 'ol/geom/Geometry';
+
 import { CSS_PREFIX } from '../../constants';
-import { useEffect, useState } from 'react';
-import { useMap } from '../..';
+import { useMap } from '../../Hook/useMap';
+import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import { SelectEvent } from 'ol/interaction/Select';
-import * as React from 'react';
+import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 
 interface OwnProps {
   /**
@@ -15,9 +17,16 @@ interface OwnProps {
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
    */
   digitizeLayer?: OlVectorLayer<OlVectorSource<OlGeometry>>;
+  /**
+   * Listener function for the 'select' event of the ol.interaction.Select
+   * if in `Delete` mode.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-SelectEvent.html
+   * for more information.
+   */
+  onFeatureRemove?: (event: OlSelectEvent) => void;
 }
 
-export type DeleteButtonProps = OwnProps & Omit<SelectFeaturesButtonProps, 'layers'>;
+export type DeleteButtonProps = OwnProps & Omit<SelectFeaturesButtonProps, 'layers'|'onFeatureSelect'|'featuresCollection'>;
 
 /**
  * The className added to this component.
@@ -26,8 +35,8 @@ const defaultClassName = `${CSS_PREFIX}deletebutton`;
 
 export const DeleteButton: React.FC<DeleteButtonProps> = ({
   className,
-  onFeatureSelect,
   digitizeLayer,
+  onFeatureRemove,
   ...passThroughProps
 }) => {
   const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]>(null);
@@ -46,8 +55,8 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
     }
   }, [map, digitizeLayer]);
 
-  const onSelectInternal = (event: SelectEvent) => {
-    onFeatureSelect?.(event);
+  const onFeatureSelect = (event: OlSelectEvent) => {
+    onFeatureRemove?.(event);
     const feat = event.selected[0];
     layers[0].getSource().removeFeature(feat);
   };
@@ -62,7 +71,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
 
   return <SelectFeaturesButton
     layers={layers}
-    onFeatureSelect={onSelectInternal}
+    onFeatureSelect={onFeatureSelect}
     className={finalClassName}
     clearAfterSelect={true}
     {...passThroughProps}

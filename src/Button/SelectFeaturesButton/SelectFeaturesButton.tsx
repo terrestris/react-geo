@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import OlInteractionSelect, { Options as OlSelectOptions, SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 import { StyleLike as OlStyleLike } from 'ol/style/Style';
@@ -29,7 +29,7 @@ interface OwnProps {
    * Note: The keys condition, hitTolerance and style are handled internally
    *       and shouldn't be overwritten without any specific cause.
    */
-  selectInteractionConfig?: OlSelectOptions;
+  selectInteractionConfig?: Omit<OlSelectOptions, 'condition'|'features'|'hitTolerance'|'style'|'layers'>;
   /**
    * The className which should be added.
    */
@@ -52,6 +52,10 @@ interface OwnProps {
    * Clear the feature collection of the interaction after select. Default: false
    */
   clearAfterSelect?: boolean;
+  /**
+   * A feature collection to use.
+   */
+  featuresCollection?: OlCollection<OlFeature<OlGeometry>>
 }
 
 export type SelectFeaturesButtonProps = OwnProps & ToggleButtonProps;
@@ -70,36 +74,38 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
   layers,
   onToggle,
   clearAfterSelect = false,
+  featuresCollection,
   ...passThroughProps
 }) => {
   const [selectInteraction, setSelectInteraction] = useState<OlInteractionSelect>();
-  const featuresCollection = useRef<OlCollection<OlFeature<OlGeometry>>|null>(null);
+  const [features, setFeatures] = useState<OlCollection<OlFeature<OlGeometry>>|null>(null);
 
   const map = useMap();
 
   useEffect(() => {
-    if (!map) {
+    if (featuresCollection) {
+      setFeatures(featuresCollection);
+    } else {
+      setFeatures(new OlCollection());
+    }
+  }, [featuresCollection]);
+
+  useEffect(() => {
+    if (!map || !features) {
       return undefined;
     }
 
-    if (featuresCollection.current === null) {
-      featuresCollection.current = new OlCollection();
-    }
-
-    const selectInteractionName = 'react-geo-select-interaction';
-
     const newInteraction = new OlInteractionSelect({
       condition: OlEventConditions.singleClick,
-      features: featuresCollection.current,
+      features,
       hitTolerance: hitTolerance,
       style: selectStyle ?? DigitizeUtil.DEFAULT_SELECT_STYLE,
       layers: layers,
       ...(selectInteractionConfig ?? {})
     });
 
-    newInteraction.set('name', selectInteractionName);
+    newInteraction.set('name', 'react-geo-select-interaction');
     newInteraction.setActive(false);
-
     map.addInteraction(newInteraction);
 
     setSelectInteraction(newInteraction);
@@ -107,7 +113,7 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
     return () => {
       map.removeInteraction(newInteraction);
     };
-  }, [layers, selectStyle, selectInteractionConfig, map, hitTolerance]);
+  }, [features, layers, selectStyle, selectInteractionConfig, map, hitTolerance]);
 
   useEffect(() => {
     if (!selectInteraction) {
@@ -117,7 +123,7 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
     const key = selectInteraction.on('select', e => {
       onFeatureSelect?.(e);
       if (clearAfterSelect) {
-        featuresCollection.current.clear();
+        features.clear();
       }
     });
 
