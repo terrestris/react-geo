@@ -55,7 +55,7 @@ interface OwnProps {
   /**
    * A feature collection to use.
    */
-  featuresCollection?: OlCollection<OlFeature<OlGeometry>>
+  featuresCollection?: OlCollection<OlFeature<OlGeometry>>;
 }
 
 export type SelectFeaturesButtonProps = OwnProps & ToggleButtonProps;
@@ -116,7 +116,7 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
   }, [features, layers, selectStyle, selectInteractionConfig, map, hitTolerance]);
 
   useEffect(() => {
-    if (!selectInteraction) {
+    if (!selectInteraction || !features) {
       return undefined;
     }
 
@@ -130,7 +130,7 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
     return () => {
       unByKey(key);
     };
-  }, [selectInteraction, onFeatureSelect, clearAfterSelect]);
+  }, [selectInteraction, features, onFeatureSelect, clearAfterSelect]);
 
   const onToggleInternal = (pressed: boolean, lastClickEvt: any) => {
     selectInteraction.setActive(pressed);

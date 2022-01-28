@@ -18,7 +18,7 @@ type OwnProps = {
    * If exceeded label will be divided into multiple lines. Optional.
    */
   maxLabelLineLength?: number;
-}
+};
 
 export type FeatureLabelModalProps = OwnProps & Omit<ModalProps, 'closable'|'visible'|'onOk'|'onCancel'>;
 
@@ -39,7 +39,7 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
     } else {
       setShowPrompt(false);
     }
-  }, [feature])
+  }, [feature]);
 
   const onOkInternal = () => {
     feature.set('label', maxLabelLineLength !== undefined ?
@@ -62,4 +62,4 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
       autoSize
     />
   </Modal>);
-}
+};

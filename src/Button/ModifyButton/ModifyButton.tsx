@@ -103,7 +103,8 @@ interface OwnProps {
   editLabel?: boolean;
 }
 
-export type ModifyButtonProps = OwnProps & Omit<SelectFeaturesButtonProps, 'layers'|'onFeatureSelect'|'featuresCollection'>;
+export type ModifyButtonProps = OwnProps & Omit<SelectFeaturesButtonProps,
+  'layers'|'onFeatureSelect'|'featuresCollection'>;
 
 /**
  * The className added to this component.
@@ -158,7 +159,7 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
       features,
       ...translateInteractionConfig
     });
-    newTranslateInteraction.set('name', 'react-geo-translate-interaction')
+    newTranslateInteraction.set('name', 'react-geo-translate-interaction');
     newTranslateInteraction.setActive(false);
 
     map.addInteraction(newTranslateInteraction);
@@ -178,7 +179,7 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
 
     return () => {
       map.removeInteraction(newModifyInteraction);
-      map.removeInteraction(translateInteraction);
+      map.removeInteraction(newTranslateInteraction);
     };
   }, [selectStyle, modifyInteractionConfig, translateInteractionConfig, features, map]);
 
@@ -216,7 +217,7 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
 
     const translatingKey = translateInteraction.on('translating', e => {
       onTranslating?.(e);
-    })
+    });
 
     return () => {
       unByKey(startKey);
@@ -229,7 +230,7 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
     modifyInteraction.setActive(pressed);
     translateInteraction.setActive(pressed);
     onToggle?.(pressed, lastClickEvent);
-  }
+  };
 
   const onFeatureSelect = (event: OlSelectEvent) => {
     if (editLabel) {
@@ -280,7 +281,7 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
         cancelText={modalPromptCancelButtonText}
         maxLabelLineLength={maxLabelLineLength}
         feature={editLabelFeature}
-        />
+      />
     </>;
   }
 };

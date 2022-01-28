@@ -7,14 +7,11 @@ import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
-import OlVectorLayer from 'ol/layer/Vector';
-import OlVectorSource from 'ol/source/Vector';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import {fromLonLat} from 'ol/proj';
 
 import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
 import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import SelectFeaturesButton from '@terrestris/react-geo/Button/SelectFeaturesButton/SelectFeaturesButton';
 import {ModifyButton} from '@terrestris/react-geo/Button/ModifyButton/ModifyButton';
 import {DigitizeUtil} from '@terrestris/react-geo/Util/DigitizeUtil';
 
@@ -28,8 +25,6 @@ const features = format.readFeatures(featuresJson);
 const ModifyButtonExample = () => {
 
   const [map, setMap] = useState();
-  const [layer, setLayer] = useState();
-  const [feature, setFeature] = useState();
 
   useEffect(() => {
     const newMap = new OlMap({
@@ -73,5 +68,5 @@ const ModifyButtonExample = () => {
   );
 }
 
-<ModifyButtonExample/>
+<ModifyButtonExample />
 ```

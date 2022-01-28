@@ -67,5 +67,5 @@ const CopyButtonExample = () => {
   );
 }
 
-<CopyButtonExample/>
+<CopyButtonExample />
 ```

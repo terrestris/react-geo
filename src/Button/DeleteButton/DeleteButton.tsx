@@ -26,7 +26,8 @@ interface OwnProps {
   onFeatureRemove?: (event: OlSelectEvent) => void;
 }
 
-export type DeleteButtonProps = OwnProps & Omit<SelectFeaturesButtonProps, 'layers'|'onFeatureSelect'|'featuresCollection'>;
+export type DeleteButtonProps = OwnProps & Omit<SelectFeaturesButtonProps,
+  'layers'|'onFeatureSelect'|'featuresCollection'>;
 
 /**
  * The className added to this component.

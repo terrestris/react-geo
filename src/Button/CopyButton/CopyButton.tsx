@@ -30,7 +30,8 @@ interface OwnProps {
   onFeatureCopy?: (event: OlSelectEvent) => void;
 }
 
-export type CopyButtonProps = OwnProps & Omit<SelectFeaturesButtonProps, 'layers'|'onFeatureSelect'|'featuresCollection'>;
+export type CopyButtonProps = OwnProps & Omit<SelectFeaturesButtonProps,
+  'layers'|'onFeatureSelect'|'featuresCollection'>;
 
 // The class name for the component.
 const defaultClassName = `${CSS_PREFIX}copybutton`;
