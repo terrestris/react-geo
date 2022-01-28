@@ -121,10 +121,10 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
     }
 
     const key = selectInteraction.on('select', e => {
-      onFeatureSelect?.(e);
       if (clearAfterSelect) {
         features.clear();
       }
+      onFeatureSelect?.(e);
     });
 
     return () => {
