@@ -1,24 +1,26 @@
 This demonstrates the use of the CopyButton.
 
 ```jsx
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
-import { fromLonLat } from 'ol/proj';
+import {fromLonLat} from 'ol/proj';
 
 import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
 import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
 import CopyButton from '@terrestris/react-geo/Button/CopyButton/CopyButton';
-import { DigitizeUtil } from '@terrestris/react-geo/Util/DigitizeUtil';
+import {DigitizeUtil} from '@terrestris/react-geo/Util/DigitizeUtil';
 
-import federalStates from '../../../assets/federal-states-ger.json';
+import featuresJson from '../../../assets/simple-geometries.json';
 
-const format = new OlFormatGeoJSON();
-const features = format.readFeatures(federalStates);
+const format = new OlFormatGeoJSON({
+  featureProjection: 'EPSG:3857'
+});
+const features = format.readFeatures(featuresJson);
 
 const CopyButtonExample = () => {
   const [map, setMap] = useState();
@@ -56,7 +58,7 @@ const CopyButtonExample = () => {
             height: '400px'
           }}
         />
-    
+
         <CopyButton>
           Copy feature
         </CopyButton>
@@ -65,5 +67,5 @@ const CopyButtonExample = () => {
   );
 }
 
-<CopyButtonExample />
+<CopyButtonExample/>
 ```

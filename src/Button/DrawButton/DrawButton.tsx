@@ -204,30 +204,18 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 
   /**
    * Called when the draw button is toggled. If the button state is pressed,
-   * the appropriate draw interaction will be activated.
-   *
-   * @param pressed Whether the draw button is pressed or not.
-   * @param lastClickEvent
+   * the draw interaction will be activated.
    */
   const onToggleInternal = (pressed: boolean, lastClickEvent: any) => {
     drawInteraction.setActive(pressed);
     onToggle?.(pressed, lastClickEvent);
   };
 
-  /**
-   * Callback function after `Ok` button of label input modal was clicked.
-   * Turns visibility of modal off and call `setTextOnFeature` method.
-   */
   const onModalLabelOkInternal = () => {
     onModalLabelOk?.(digitizeTextFeature);
     setDigitizeTextFeature(null);
   };
 
-  /**
-   * Callback function after `Cancel` button of label input modal was clicked.
-   * Turns visibility of modal off and removes last drawn feature from the
-   * digitize layer.
-   */
   const onModalLabelCancelInternal = () => {
     onModalLabelCancel?.();
     layer.getSource().removeFeature(digitizeTextFeature);

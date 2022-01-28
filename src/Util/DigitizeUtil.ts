@@ -18,12 +18,12 @@ export class DigitizeUtil {
   /**
    * Default fill color used in style object of drawn features.
    */
-  static DEFAULT_FILL_COLOR = 'rgba(154, 26, 56, 0.5)';
+  static DEFAULT_FILL_COLOR = 'rgba(0, 183, 43, 0.5)';
 
   /**
    * Default stroke color used in style object of drawn features.
    */
-  static DEFAULT_STROKE_COLOR = 'rgba(154, 26, 56, 0.8)';
+  static DEFAULT_STROKE_COLOR = 'rgba(0, 183, 43, 0.8)';
 
   /**
    * Default style for digitized points.
