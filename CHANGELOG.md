@@ -1,3 +1,17 @@
+# [16.1.0](https://github.com/terrestris/react-geo/compare/v16.0.1...v16.1.0) (2022-01-28)
+
+
+### Bug Fixes
+
+* **CopyButton:** cleanup example ([5f755d3](https://github.com/terrestris/react-geo/commit/5f755d361f3d3486bf4b5b69cb76904d36bda454))
+
+
+### Features
+
+* add DeleteButton ([722c79c](https://github.com/terrestris/react-geo/commit/722c79c5a66592218fc37e88b65b7ff80f3783b9))
+* **CopyButton:** Add a CopyButton component ([7688564](https://github.com/terrestris/react-geo/commit/76885649fc75af9d4a94dae2ce0e90a7d4d6c01b))
+* **SelectFeaturesButton:** persist features collection and prop `clearAfterSelect` ([d4a5c5c](https://github.com/terrestris/react-geo/commit/d4a5c5cf385dc7cf5bdd658aa69cf31038c6903e))
+
 ## [16.0.1](https://github.com/terrestris/react-geo/compare/v16.0.0...v16.0.1) (2022-01-19)
 
 
