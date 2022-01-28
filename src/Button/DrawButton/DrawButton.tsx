@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { Modal, Input } from 'antd';
-
-const TextArea = Input.TextArea;
-
 import { StyleLike as OlStyleLike } from 'ol/style/Style';
 import OlInteractionDraw, { createBox, DrawEvent as OlDrawEvent, Options as OlDrawOptions } from 'ol/interaction/Draw';
 import OlFeature from 'ol/Feature';
@@ -14,45 +10,15 @@ import OlVectorSource from 'ol/source/Vector';
 import OlGeometry from 'ol/geom/Geometry';
 import OlVectorLayer from 'ol/layer/Vector';
 
-import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
-
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import { CSS_PREFIX } from '../../constants';
 import { useMap } from '../../Hook/useMap';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
-
-interface DefaultProps {
-  /**
-   * Title for modal used for input of labels for digitize features.
-   */
-  modalPromptTitle: string;
-  /**
-   * Text string for `OK` button of the modal.
-   */
-  modalPromptOkButtonText: string;
-  /**
-   * Text string for `Cancel` button of the modal.
-   */
-  modalPromptCancelButtonText: string;
-  /**
-   * Additional configuration object to apply to the ol.interaction.Draw.
-   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-Draw.html
-   * for more information
-   *
-   * Note: The keys source, type, geometryFunction, style and freehandCondition
-   *       are handled internally and shouldn't be overwritten without any
-   *       specific cause.
-   */
-  drawInteractionConfig: OlDrawOptions;
-}
+import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
 
 type DrawType = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Text';
 
-interface BaseProps {
-  /**
-   * The className which should be added.
-   */
-  className?: string;
+interface OwnProps {
   /**
    * Whether the line, point, polygon, circle, rectangle or text shape should
    * be drawn.
@@ -82,7 +48,7 @@ interface BaseProps {
    * Callback function that will be called
    * when the cancel-button of the modal was clicked
    */
-  onModalLabelCancel?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onModalLabelCancel?: () => void;
   /**
    * Maximal length of feature label.
    * If exceeded label will be divided into multiple lines. Optional.
@@ -93,9 +59,31 @@ interface BaseProps {
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
    */
   digitizeLayer?: OlVectorLayer<OlVectorSource<OlGeometry>>;
+  /**
+   * Title for modal used for input of labels for digitize features.
+   */
+  modalPromptTitle?: string;
+  /**
+   * Text string for `OK` button of the modal.
+   */
+  modalPromptOkButtonText?: string;
+  /**
+   * Text string for `Cancel` button of the modal.
+   */
+  modalPromptCancelButtonText?: string;
+  /**
+   * Additional configuration object to apply to the ol.interaction.Draw.
+   * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Draw-Draw.html
+   * for more information
+   *
+   * Note: The keys source, type, geometryFunction, style and freehandCondition
+   *       are handled internally and shouldn't be overwritten without any
+   *       specific cause.
+   */
+  drawInteractionConfig?: Omit<OlDrawOptions, 'source'|'type'|'geometryFunction'|'style'|'freehandCondition'>;
 }
 
-export type DrawButtonProps = BaseProps & Partial<DefaultProps> & ToggleButtonProps;
+export type DrawButtonProps = OwnProps & ToggleButtonProps;
 
 /**
  * The className added to this component.
@@ -123,10 +111,13 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   ...passThroughProps
 }) => {
 
-  const [showLabelPrompt, setShowLabelPrompt] = useState<boolean>(false);
-  const [textLabel, setTextLabel] = useState<string>('');
   const [drawInteraction, setDrawInteraction] = useState<OlInteractionDraw>();
   const [layer, setLayer] = useState<OlVectorLayer<OlVectorSource<OlGeometry>>>(null);
+
+  /**
+   * Currently drawn feature which should be represent as label or postit.
+   */
+  const [digitizeTextFeature, setDigitizeTextFeature] = useState<OlFeature<OlGeometry>>(null);
 
   const map = useMap();
 
@@ -178,7 +169,6 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 
     if (drawType === 'Text') {
       key = newInteraction.on('drawend', evt => {
-        setShowLabelPrompt(true);
         evt.feature.set('isLabel', true);
         setDigitizeTextFeature(evt.feature);
       });
@@ -213,11 +203,6 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   }, [drawInteraction, onDrawStart, onDrawEnd]);
 
   /**
-   * Currently drawn feature which should be represent as label or postit.
-   */
-  const [digitizeTextFeature, setDigitizeTextFeature] = useState<OlFeature<OlGeometry>>(null);
-
-  /**
    * Called when the draw button is toggled. If the button state is pressed,
    * the appropriate draw interaction will be activated.
    *
@@ -234,17 +219,8 @@ const DrawButton: React.FC<DrawButtonProps> = ({
    * Turns visibility of modal off and call `setTextOnFeature` method.
    */
   const onModalLabelOkInternal = () => {
-    setShowLabelPrompt(false);
-
-    let label = textLabel;
-    if (maxLabelLineLength) {
-      label = StringUtil.stringDivider(
-        textLabel, maxLabelLineLength, '\n'
-      );
-    }
-    digitizeTextFeature.set('label', label);
-    setTextLabel('');
     onModalLabelOk?.(digitizeTextFeature);
+    setDigitizeTextFeature(null);
   };
 
   /**
@@ -252,11 +228,10 @@ const DrawButton: React.FC<DrawButtonProps> = ({
    * Turns visibility of modal off and removes last drawn feature from the
    * digitize layer.
    */
-  const onModalLabelCancelInternal = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    setShowLabelPrompt(false);
-    setTextLabel('');
+  const onModalLabelCancelInternal = () => {
+    onModalLabelCancel?.();
     layer.getSource().removeFeature(digitizeTextFeature);
-    onModalLabelCancel?.(event);
+    setDigitizeTextFeature(null);
   };
 
   const finalClassName = className
@@ -272,24 +247,15 @@ const DrawButton: React.FC<DrawButtonProps> = ({
         className={finalClassName}
         {...passThroughProps}
       />
-      {
-        showLabelPrompt &&
-          <Modal
-            title={modalPromptTitle}
-            okText={modalPromptOkButtonText}
-            cancelText={modalPromptCancelButtonText}
-            visible={showLabelPrompt}
-            closable={false}
-            onOk={onModalLabelOkInternal}
-            onCancel={onModalLabelCancelInternal}
-          >
-            <TextArea
-              value={textLabel}
-              onChange={e => setTextLabel(e.target.value)}
-              autoSize
-            />
-          </Modal>
-      }
+      <FeatureLabelModal
+        feature={digitizeTextFeature}
+        onOk={onModalLabelOkInternal}
+        onCancel={onModalLabelCancelInternal}
+        title={modalPromptTitle}
+        okText={modalPromptOkButtonText}
+        cancelText={modalPromptCancelButtonText}
+        maxLabelLineLength={maxLabelLineLength}
+      />
     </span>);
 };
 
