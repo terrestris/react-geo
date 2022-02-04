@@ -1,3 +1,20 @@
+# [16.2.0](https://github.com/terrestris/react-geo/compare/v16.1.0...v16.2.0) (2022-02-04)
+
+
+### Bug Fixes
+
+* remove unnecessary import ([ccf6712](https://github.com/terrestris/react-geo/commit/ccf6712bc8f753e2903df988ffb2119c707069fb))
+* **digitization:** add new example json and change default color ([1cb354f](https://github.com/terrestris/react-geo/commit/1cb354fb7a7bc6002f816982788ff2b72e864315))
+* **modifybutton:** add rudimentary tests ([20362b2](https://github.com/terrestris/react-geo/commit/20362b2b0bbee2b4e180af34877d5941de875080))
+* **selectfeaturesbutton:** change order of operations if clearAfterSelect ([c875baa](https://github.com/terrestris/react-geo/commit/c875baa4452d94e83ac516b2edfbba1aaf6256bc))
+
+
+### Features
+
+* **modifybutton:** add modify button ([706f54b](https://github.com/terrestris/react-geo/commit/706f54bae6c957b76bf5792ea2ce9f6d7471bb7e))
+* add some listeners ([0bac307](https://github.com/terrestris/react-geo/commit/0bac307f641e7478f3307145e77993bc0843765b))
+* make feature text modal an own component ([9ce529d](https://github.com/terrestris/react-geo/commit/9ce529dbae283f7c8543a2ddfbb87805a14d0269))
+
 # [16.1.0](https://github.com/terrestris/react-geo/compare/v16.0.1...v16.1.0) (2022-01-28)
 
 
