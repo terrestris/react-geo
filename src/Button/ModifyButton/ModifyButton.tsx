@@ -6,7 +6,6 @@ import { CSS_PREFIX } from '../../constants';
 import { useEffect, useState } from 'react';
 import { useMap } from '../..';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
-// import { SelectEvent } from 'ol/interaction/Select';
 import * as React from 'react';
 import Modify, { ModifyEvent, Options as ModifyOptions } from 'ol/interaction/Modify';
 import Translate, { Options as TranslateOptions, TranslateEvent } from 'ol/interaction/Translate';
