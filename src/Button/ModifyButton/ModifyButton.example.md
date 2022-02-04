@@ -1,4 +1,4 @@
-This demonstrates the use of the CopyButton.
+This demonstrates the use of the ModifyButton.
 
 ```jsx
 import {useEffect, useState} from 'react';
@@ -12,7 +12,7 @@ import {fromLonLat} from 'ol/proj';
 
 import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
 import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import CopyButton from '@terrestris/react-geo/Button/CopyButton/CopyButton';
+import {ModifyButton} from '@terrestris/react-geo/Button/ModifyButton/ModifyButton';
 import {DigitizeUtil} from '@terrestris/react-geo/Util/DigitizeUtil';
 
 import featuresJson from '../../../assets/simple-geometries.json';
@@ -22,7 +22,8 @@ const format = new OlFormatGeoJSON({
 });
 const features = format.readFeatures(featuresJson);
 
-const CopyButtonExample = () => {
+const ModifyButtonExample = () => {
+
   const [map, setMap] = useState();
 
   useEffect(() => {
@@ -59,13 +60,13 @@ const CopyButtonExample = () => {
           }}
         />
 
-        <CopyButton>
-          Copy feature
-        </CopyButton>
+        <ModifyButton>
+          Select feature
+        </ModifyButton>
       </MapContext.Provider>
     </div>
   );
 }
 
-<CopyButtonExample />
+<ModifyButtonExample />
 ```
