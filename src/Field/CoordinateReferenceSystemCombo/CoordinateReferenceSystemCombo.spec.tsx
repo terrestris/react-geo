@@ -1,9 +1,8 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { enableFetchMocks } from 'jest-fetch-mock';
+import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
 import userEvent from '@testing-library/user-event';
 
-import TestUtil from '../../Util/TestUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import CoordinateReferenceSystemCombo from '../CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
@@ -48,7 +47,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
   beforeAll(() => {
     enableFetchMocks();
-    fetch.mockResponse(JSON.stringify(resultMock));
+    (fetch as FetchMock).mockResponse(JSON.stringify(resultMock));
   });
 
   it('is defined', () => {
@@ -91,7 +90,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     });
 
     it('does not show options for empty results', async () => {
-      fetch.mockResponseOnce(JSON.stringify({
+      (fetch as FetchMock).mockResponseOnce(JSON.stringify({
         status: 'ok',
         'number_result': 0,
         results: []
@@ -111,7 +110,8 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
   describe('error handling', () => {
     it('logs error message', async () => {
-      fetch.mockRejectOnce('Peter');
+      const error = new Error('Peter');
+      (fetch as FetchMock).mockRejectOnce(error);
 
       const loggerSpy = jest.spyOn(Logger, 'error');
 
@@ -123,7 +123,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
         expect(loggerSpy).toHaveBeenCalled();
       });
 
-      expect(loggerSpy).toHaveBeenCalledWith('Error while requesting in CoordinateReferenceSystemCombo: Peter');
+      expect(loggerSpy).toHaveBeenCalledWith('Error while requesting in CoordinateReferenceSystemCombo', error);
 
       loggerSpy.mockRestore();
     });

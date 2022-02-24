@@ -57,7 +57,10 @@ class MapProvider extends React.Component<MapProviderProps, MapProviderState> {
           map: map,
           ready: true
         });
-      });
+      })
+      .catch(error => {
+        Logger.error(error);
+      })
   }
 
   /**

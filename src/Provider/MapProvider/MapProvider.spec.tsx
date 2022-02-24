@@ -6,6 +6,7 @@ import { TestUtil } from '../../Util/TestUtil';
 
 import MapProvider from './MapProvider';
 import { mappify } from '../../HigherOrderComponent/MappifiedComponent/MappifiedComponent';
+import OlMap from 'ol/Map';
 
 describe('MapProvider', () => {
   /* eslint-disable require-jsdoc */
@@ -26,37 +27,26 @@ describe('MapProvider', () => {
 
     it('provides a given map to its children (ol.Map)', () => {
       const map = TestUtil.createMap();
-      // We create the promise only to be able to return it below, we do not
-      // actually use it to instantiate MapProvider
-      const mapPromise = new Promise((resolve) => {
-        resolve(map);
-      });
-
       const wrapper = mount(
-        <MapProvider map={map}> {/* See, we use the map, not the promise*/}
+        <MapProvider map={map}>
           <MappifiedMockComponent />
         </MapProvider>
       );
 
-      // resolve our promise, so this async behaviour is testable.
-      setTimeout(() => {
-        mapPromise.resolve(map);
-      }, 50);
-
       expect.assertions(2);
-      return mapPromise.then(() => {
-        const isReady = wrapper.state('ready');
-        expect(isReady).toBe(true);
-        wrapper.update();
-        const mapFromMock = wrapper.find(MockComponent).prop('map');
-        expect(mapFromMock).toBe(map);
-      });
-
+      return Promise.resolve()
+        .then(() => {
+          const isReady = wrapper.state('ready');
+          expect(isReady).toBe(true);
+          wrapper.update();
+          const mapFromMock = wrapper.find(MockComponent).prop('map');
+          expect(mapFromMock).toBe(map);
+        });
     });
 
     it('provides a given map to its children (Promise)', () => {
       const map = TestUtil.createMap();
-      const mapPromise = new Promise((resolve) => {
+      const mapPromise = new Promise<OlMap>((resolve) => {
         resolve(map);
       });
       const wrapper = mount(
@@ -76,7 +66,7 @@ describe('MapProvider', () => {
 
     it('Does not render on rejected promise', () => {
       const errMsg = 'Some message: Humpty';
-      const failingPromise = new Promise((resolve, reject) => {
+      const failingPromise = new Promise<OlMap>((resolve, reject) => {
         reject(new Error(errMsg));
       });
 
