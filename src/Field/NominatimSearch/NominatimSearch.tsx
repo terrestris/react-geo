@@ -3,7 +3,6 @@ import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
 import { OptionProps } from 'antd/lib/select';
-import { OptionData } from 'rc-select/lib/interface';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
@@ -321,7 +320,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    * @param value The value of the selected option.
    * @param option The selected OptionData
    */
-  onMenuItemSelected(value: string, option: OptionData) {
+  onMenuItemSelected(value: string, option: any) {
     const selected = this.state.dataSource.find(
       i => i.place_id.toString() === option.key
     );
@@ -364,7 +363,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
         allowClear={true}
         placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
         onChange={(v: string) => this.onUpdateInput(v)}
-        onSelect={(v: string, o: OptionData) => this.onMenuItemSelected(v, o)}
+        onSelect={(v: string, o: any) => this.onMenuItemSelected(v, o)}
         {...passThroughProps}
       >
         {

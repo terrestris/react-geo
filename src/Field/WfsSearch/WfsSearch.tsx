@@ -445,6 +445,10 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
       wfsFormatOptions,
       displayValue,
       idProperty,
+      filterOption,
+      onDeselect,
+      filterSort,
+      options,
       ...passThroughProps
     } = this.props;
 

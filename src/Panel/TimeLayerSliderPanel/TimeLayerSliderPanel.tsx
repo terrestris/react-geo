@@ -43,7 +43,7 @@ export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 export interface DefaultTimeLayerSliderPanelProps {
   className: string;
   onChange: (arg: moment.Moment) => void;
-  timeAwareLayers: OlLayer<OlImageWMS|OlTileWMS>[];
+  timeAwareLayers: OlLayer<OlImageWMS|OlTileWMS, any>[];
   value: moment.Moment;
   dateFormat: string;
   tooltips: Tooltips;
