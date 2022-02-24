@@ -8,7 +8,7 @@ import OlTileWMS from 'ol/source/TileWMS';
 
 export type TimeLayerAwareConfig = {
   isWmsTime?: boolean;
-  layer: OlLayer<OlImageWMS|OlTileWMS>;
+  layer: OlLayer<OlImageWMS|OlTileWMS, any>;
   customHandler?: (values: any) => void;
 };
 

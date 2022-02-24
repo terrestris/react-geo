@@ -139,7 +139,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
 
     const promises = [];
 
-    map.forEachLayerAtPixel(pixel, (layer: OlLayer<any>) => {
+    map.forEachLayerAtPixel(pixel, (layer: OlLayer<any, any>) => {
       const layerSource = layer.getSource();
       const featureInfoUrl = layerSource.getFeatureInfoUrl(
         coordinate,

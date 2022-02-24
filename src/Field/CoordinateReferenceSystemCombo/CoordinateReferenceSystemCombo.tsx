@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
-import { OptionData } from 'rc-select/lib/interface';
 
-const Option = AutoComplete.Option;
+const { Option } = AutoComplete;
 
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
@@ -30,7 +29,7 @@ interface DefaultProps {
   /**
    * A function
    */
-  onSelect: (crsDefinition: any) => void;
+  onSelect: (crsDefinition: CrsDefinition) => void;
 }
 
 interface BaseProps {
@@ -108,8 +107,8 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
    * It logs the error to the console.
    *
    */
-  onFetchError(error: string) {
-    Logger.error(`Error while requesting in CoordinateReferenceSystemCombo: ${error}`);
+  onFetchError(error: Error) {
+    Logger.error(`Error while requesting in CoordinateReferenceSystemCombo`, error);
   }
 
   /**
@@ -167,7 +166,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
    * @param value The EPSG code.
    * @param option The selected OptionData
    */
-  onCrsItemSelect = (value: string, option: OptionData) => {
+  onCrsItemSelect = (value: string, option: any) => {
     const {
       onSelect,
       predefinedCrsDefinitions
@@ -233,7 +232,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
       <AutoComplete
         className={finalClassName}
         allowClear={true}
-        onSelect={(v: string, o: OptionData) => this.onCrsItemSelect(v, o)}
+        onSelect={(v: string, o: any) => this.onCrsItemSelect(v, o)}
         onChange={(v: string) => this.handleSearch(v)}
         placeholder={emptyTextPlaceholderText}
         {...passThroughOpts}
