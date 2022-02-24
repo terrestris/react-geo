@@ -573,6 +573,10 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     } = this.props;
 
     const columns: any[] = [];
+    if (features.length < 1) {
+      return;
+    }
+
     const feature = features[0];
 
     const props = feature.getProperties();

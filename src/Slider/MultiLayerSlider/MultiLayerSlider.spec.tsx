@@ -6,9 +6,9 @@ describe('<MultiLayerSlider />', () => {
 
   beforeEach(() => {
     layers = [
-      TestUtil.createVectorLayer(),
-      TestUtil.createVectorLayer(),
-      TestUtil.createVectorLayer()
+      TestUtil.createVectorLayer({}),
+      TestUtil.createVectorLayer({}),
+      TestUtil.createVectorLayer({})
     ];
   });
 
@@ -41,27 +41,27 @@ describe('<MultiLayerSlider />', () => {
     };
     const wrapper = TestUtil.mountComponent(MultiLayerSlider, props);
 
-    wrapper.instance().valueUpdated(25);
+    (wrapper.instance() as MultiLayerSlider).valueUpdated(25);
     expect(layers[0].getOpacity()).toBe(0.5);
     expect(layers[1].getOpacity()).toBe(0.5);
     expect(layers[2].getOpacity()).toBe(0);
 
-    wrapper.instance().valueUpdated(50);
+    (wrapper.instance() as MultiLayerSlider).valueUpdated(50);
     expect(layers[0].getOpacity()).toBe(0);
     expect(layers[1].getOpacity()).toBe(1);
     expect(layers[2].getOpacity()).toBe(0);
 
-    wrapper.instance().valueUpdated(75);
+    (wrapper.instance() as MultiLayerSlider).valueUpdated(75);
     expect(layers[0].getOpacity()).toBe(0);
     expect(layers[1].getOpacity()).toBe(0.5);
     expect(layers[2].getOpacity()).toBe(0.5);
 
-    wrapper.instance().valueUpdated(100);
+    (wrapper.instance() as MultiLayerSlider).valueUpdated(100);
     expect(layers[0].getOpacity()).toBe(0);
     expect(layers[1].getOpacity()).toBe(0);
     expect(layers[2].getOpacity()).toBe(1);
 
-    wrapper.instance().valueUpdated(0);
+    (wrapper.instance() as MultiLayerSlider).valueUpdated(0);
     expect(layers[0].getOpacity()).toBe(1);
     expect(layers[1].getOpacity()).toBe(0);
     expect(layers[2].getOpacity()).toBe(0);
@@ -84,20 +84,20 @@ describe('<MultiLayerSlider />', () => {
     const expectedMarksWithTitleProperty = { '0': 'Layer Title 1', '50': 'Layer Title 2', '100': 'Layer Title 3' };
     const expectedMarksWithoutProperty = { '0': 'Layer 1', '50': 'Layer 2', '100': 'Layer 3' };
 
-    expect(wrapper.instance().getMarks()).toEqual(expectedMarksWithNameProperty);
-    expect(wrapper.instance().formatTip(0)).toEqual('Layer Name 1 100%');
+    expect((wrapper.instance() as MultiLayerSlider).getMarks()).toEqual(expectedMarksWithNameProperty);
+    expect((wrapper.instance() as MultiLayerSlider).formatTip(0)).toEqual('Layer Name 1 100%');
 
     wrapper.setProps({ ...props, nameProperty: 'title' });
-    expect(wrapper.instance().getMarks()).toEqual(expectedMarksWithTitleProperty);
-    expect(wrapper.instance().formatTip(0)).toEqual('Layer Title 1 100%');
+    expect((wrapper.instance() as MultiLayerSlider).getMarks()).toEqual(expectedMarksWithTitleProperty);
+    expect((wrapper.instance() as MultiLayerSlider).formatTip(0)).toEqual('Layer Title 1 100%');
 
     wrapper.setProps({ ...props, nameProperty: 'name' });
-    expect(wrapper.instance().getMarks()).toEqual(expectedMarksWithNameProperty);
-    expect(wrapper.instance().formatTip(0)).toEqual('Layer Name 1 100%');
+    expect((wrapper.instance() as MultiLayerSlider).getMarks()).toEqual(expectedMarksWithNameProperty);
+    expect((wrapper.instance() as MultiLayerSlider).formatTip(0)).toEqual('Layer Name 1 100%');
 
     wrapper.setProps({ ...props, nameProperty: 'randomProp' });
-    expect(wrapper.instance().getMarks()).toEqual(expectedMarksWithoutProperty);
-    expect(wrapper.instance().formatTip(0)).toEqual('Layer 1 100%');
+    expect((wrapper.instance() as MultiLayerSlider).getMarks()).toEqual(expectedMarksWithoutProperty);
+    expect((wrapper.instance() as MultiLayerSlider).formatTip(0)).toEqual('Layer 1 100%');
 
   });
 });

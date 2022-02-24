@@ -503,6 +503,10 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
     } = this.props;
 
     const columns: any[] = [];
+    if (features.length < 1) {
+      return;
+    }
+
     const feature = features[0];
 
     const props = feature.getProperties();
@@ -532,14 +536,17 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    *
    * @return The table data.
    */
-  getTableData = () => {
+  getTableData = (): {
+    key: string;
+    [index: string]: any;
+  }[] => {
     const {
       features
     } = this.props;
 
     return features.map(feature => {
       const properties = feature.getProperties();
-      const filtered = Object.keys(properties)
+      const filtered: typeof properties = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
         .reduce((obj, key) => {
           obj[key] = properties[key];

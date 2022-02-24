@@ -3,7 +3,7 @@ import * as React from 'react';
 import TestUtil from '../../Util/TestUtil';
 
 import ToggleButton from '../ToggleButton/ToggleButton';
-import ToggleGroup from './ToggleGroup';
+import ToggleGroup, { ToggleGroupState } from './ToggleGroup';
 
 describe('<ToggleGroup />', () => {
 
@@ -71,10 +71,10 @@ describe('<ToggleGroup />', () => {
     const wrapper = TestUtil.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).first().simulate('click');
-    expect(wrapper.state().selectedName).toBe('Shinji');
+    expect((wrapper.state() as ToggleGroupState).selectedName).toBe('Shinji');
 
     wrapper.find(ToggleButton).at(2).simulate('click');
-    expect(wrapper.state().selectedName).toBe('香川 真司');
+    expect((wrapper.state() as ToggleGroupState).selectedName).toBe('香川 真司');
   });
 
   it('allows to deselect an already pressed button', () => {
@@ -91,17 +91,17 @@ describe('<ToggleGroup />', () => {
     const wrapper = TestUtil.mountComponent(ToggleGroup, props);
 
     wrapper.find(ToggleButton).first().simulate('click');
-    expect(wrapper.state().selectedName).toBe('Shinji');
+    expect((wrapper.state() as ToggleGroupState).selectedName).toBe('Shinji');
 
     wrapper.find(ToggleButton).first().simulate('click');
-    expect(wrapper.state().selectedName).toBe('Shinji');
+    expect((wrapper.state() as ToggleGroupState).selectedName).toBe('Shinji');
 
     wrapper.setProps({
       allowDeselect: true
     });
 
     wrapper.find(ToggleButton).first().simulate('click');
-    expect(wrapper.state().selectedName).toBe(null);
+    expect((wrapper.state() as ToggleGroupState).selectedName).toBe(undefined);
   });
 
 });

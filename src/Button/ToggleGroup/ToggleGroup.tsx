@@ -7,7 +7,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './ToggleGroup.less';
 
-interface ToggleGroupProps {
+export interface ToggleGroupProps {
   /**
    * The orientation of the children.
    */
@@ -41,7 +41,7 @@ interface ToggleGroupProps {
   children?: React.ReactElement[];
 }
 
-interface ToggleGroupState {
+export interface ToggleGroupState {
   selectedName?: string;
 }
 
