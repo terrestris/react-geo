@@ -43,7 +43,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({
   ...passThroughProps
 }) => {
 
-  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]>(null);
+  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]|null>(null);
 
   const map = useMap();
 
@@ -64,7 +64,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({
 
     const feat = event.selected[0];
 
-    if (!feat) {
+    if (!feat || !layers) {
       return;
     }
 

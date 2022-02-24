@@ -39,7 +39,7 @@ export type NominatimPlace = {
   licence: string;
 };
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * The Nominatim Base URL. See https://wiki.openstreetmap.org/wiki/Nominatim
    */
@@ -110,9 +110,6 @@ interface DefaultProps {
    * A callback function which gets called if data fetching has failed.
    */
   onFetchError?: (error: any) => void;
-}
-
-interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -134,7 +131,7 @@ interface NominatimSearchState {
   dataSource: NominatimPlace[];
 }
 
-export type NominatimSearchProps = BaseProps & Partial<DefaultProps> & Omit<AutoCompleteProps, 'onSelect'>;
+export type NominatimSearchProps = OwnProps & Omit<AutoCompleteProps, 'onSelect'>;
 
 /**
  * The NominatimSearch.
@@ -144,7 +141,7 @@ export type NominatimSearchProps = BaseProps & Partial<DefaultProps> & Omit<Auto
  */
 export class NominatimSearch extends React.Component<NominatimSearchProps, NominatimSearchState> {
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
     format: 'json',
     viewBox: '-180,90,180,-90',
@@ -324,7 +321,9 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
     const selected = this.state.dataSource.find(
       i => i.place_id.toString() === option.key
     );
-    this.props.onSelect(selected, this.props.map);
+    if (selected) {
+      this.props.onSelect(selected, this.props.map);
+    }
   }
 
   /**

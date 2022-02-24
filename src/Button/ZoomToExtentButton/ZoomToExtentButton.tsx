@@ -14,7 +14,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import logger from '@terrestris/base-util/dist/Logger';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * Options for fitting to the given extent. See
    * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
@@ -30,19 +30,16 @@ interface DefaultProps {
    * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
    * instance of ol.geom.SimpleGeometry that the map should zoom to.
    */
-  extent?: OlExtent | OlSimpleGeometry;
+  extent: OlExtent | OlSimpleGeometry;
   /**
    * The center `[x,y]` in the maps coordinate system or an
    * instance of ol.coordinate that the map should zoom to if no extent is given.
    */
-  center?: OlCoordinate;
+  center: OlCoordinate;
   /**
    *  The zoom level 'x' the map should zoom to if no extent is given.
    */
-  zoom?: number;
-}
-
-interface BaseProps {
+  zoom: number;
   /**
    * The className which should be added.
    */
@@ -53,7 +50,7 @@ interface BaseProps {
   map: OlMap;
 }
 
-export type ZoomToExtentButtonProps = BaseProps & Partial<DefaultProps> & SimpleButtonProps;
+export type ZoomToExtentButtonProps = OwnProps & SimpleButtonProps;
 
 /**
  * Class representing a zoom to extent button.
@@ -67,7 +64,7 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
   /**
    * The default properties.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     fitOptions: {
       duration: 250,
       easing: easeOut

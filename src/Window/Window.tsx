@@ -11,7 +11,7 @@ import { CSS_PREFIX } from '../constants';
 import './Window.less';
 import { ResizeEnable } from 'react-rnd';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * Id of the component
    */
@@ -37,9 +37,6 @@ interface DefaultProps {
    * Wheter the Window should be draggable or not.
    */
   draggable: boolean;
-}
-
-export interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -57,7 +54,7 @@ interface WindowState {
   id: string;
 }
 
-export type WindowProps = BaseProps & Partial<DefaultProps> & PanelProps;
+export type WindowProps = OwnProps & PanelProps;
 
 /**
  * Window component that creates a React portal that renders children into a DOM
@@ -69,7 +66,7 @@ export type WindowProps = BaseProps & Partial<DefaultProps> & PanelProps;
  */
 export class Window extends React.Component<WindowProps, WindowState> {
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     parentId: 'app',
     title: 'Window',
     resizeOpts: true,
@@ -82,13 +79,13 @@ export class Window extends React.Component<WindowProps, WindowState> {
    * The parent Element of the Window.
    * @private
    */
-  _parent: Element;
+  _parent: HTMLElement | null;
 
   /**
    * The Element of the Window.
    * @private
    */
-  _elementDiv: Element;
+  _elementDiv: HTMLDivElement;
 
   /**
    * The className added to this component.

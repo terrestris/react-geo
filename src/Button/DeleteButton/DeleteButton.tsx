@@ -40,7 +40,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   onFeatureRemove,
   ...passThroughProps
 }) => {
-  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]>(null);
+  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]|null>(null);
 
   const map = useMap();
 
@@ -56,6 +56,10 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
     }
   }, [map, digitizeLayer]);
 
+  if (!layers) {
+    return null;
+  }
+
   const onFeatureSelect = (event: OlSelectEvent) => {
     onFeatureRemove?.(event);
     const feat = event.selected[0];
@@ -65,10 +69,6 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   const finalClassName = className
     ? `${defaultClassName} ${className}`
     : defaultClassName;
-
-  if (!layers) {
-    return null;
-  }
 
   return <SelectFeaturesButton
     layers={layers}

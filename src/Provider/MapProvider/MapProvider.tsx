@@ -17,7 +17,7 @@ export interface MapProviderProps {
 }
 
 interface MapProviderState {
-  map?: OlMap;
+  map: OlMap | null;
   ready: boolean;
 }
 

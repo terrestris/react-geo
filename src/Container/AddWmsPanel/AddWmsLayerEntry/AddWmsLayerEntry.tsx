@@ -8,11 +8,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { WmsLayer } from '../../../Util/typeUtils';
 
-import  '../../../Util/fontawesome';
+import '../../../Util/fontawesome';
 
 import './AddWmsLayerEntry.less';
 
-interface DefaultProps {
+interface AddWmsLayerEntryProps {
   /**
    * Function returning a span with the textual representation of this layer
    * Default: Title of the layer and its abstract (if available)
@@ -22,21 +22,16 @@ interface DefaultProps {
    * Optional text to be shown in Tooltip for a layer that can be queried
    */
   layerQueryableText: string;
-}
-
-interface BaseProps {
   /**
-     * Object containing layer information
-     */
+   * Object containing layer information
+   */
   wmsLayer: WmsLayer;
 }
 
 interface AddWmsLayerEntryState {
-  copyright: OlAttribution;
+  copyright: OlAttribution | null;
   queryable: boolean;
 }
-
-export type AddWmsLayerEntryProps = BaseProps & Partial<DefaultProps>;
 
 /**
  * Class representing a layer parsed from capabilities document.
@@ -50,15 +45,14 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
   /**
    * The defaultProps.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     layerQueryableText: 'Layer is queryable',
     layerTextTemplateFn: (wmsLayer) => {
       const title = wmsLayer.get('title');
       const abstract = wmsLayer.get('abstract');
-      const abstractTextSpan = abstract ?
+      return abstract ?
         <span>{`${title} - ${abstract}:`}</span> :
         <span>{`${title}`}</span>;
-      return abstractTextSpan;
     }
   };
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Tree } from 'antd';
 import { AntTreeNodeDropEvent } from 'antd/lib/tree/Tree';
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import {
   TreeProps,
   AntTreeNodeCheckedEvent
@@ -19,19 +19,18 @@ import OlMapEvent from 'ol/MapEvent';
 import { unByKey } from 'ol/Observable';
 import { getUid } from 'ol';
 
-import _isBoolean from 'lodash/isBoolean';
 import _isFunction from 'lodash/isFunction';
 import _isEqual from 'lodash/isEqual';
 
-import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import LayerTreeNode, { LayerTreeNodeProps } from './LayerTreeNode/LayerTreeNode';
 
 import { CSS_PREFIX } from '../constants';
+import { EventsKey } from 'ol/events';
 
 
-interface DefaultProps extends TreeProps {
+interface OwnProps {
   /**
    * An optional array-filter function that is applied to every layer and
    * subLayer. Return false to exclude this layer from the layerTree or true
@@ -40,9 +39,6 @@ interface DefaultProps extends TreeProps {
    * Compare MDN Docs for Array.prototype.filter: https://mdn.io/array/filter
    */
   filterFunction: (value: any, index: number, array: any[]) => boolean;
-}
-
-export interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -67,14 +63,14 @@ export interface BaseProps {
 }
 
 interface LayerTreeState {
-  layerGroup: OlLayerGroup;
-  layerGroupRevision?: number;
+  layerGroup: OlLayerGroup | null;
+  layerGroupRevision: number;
   treeNodes: ReactElement<LayerTreeNodeProps>[];
   checkedKeys: React.ReactText[];
   mapResolution: number;
 }
 
-export type LayerTreeProps = BaseProps & Partial<DefaultProps> & TreeProps;
+export type LayerTreeProps = OwnProps & TreeProps;
 
 /**
  * The LayerTree.
@@ -89,7 +85,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   /**
    * The default properties.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     draggable: true,
     checkable: true,
     filterFunction: () => true
@@ -105,7 +101,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    *  An array of ol.EventsKey as returned by on() or once().
    * @private
    */
-  olListenerKeys = [];
+  olListenerKeys: EventsKey[] = [];
 
   /**
    * Create the LayerTree.
@@ -117,7 +113,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
 
     this.state = {
       layerGroup: null,
-      layerGroupRevision: null,
+      layerGroupRevision: 0,
       treeNodes: [],
       checkedKeys: [],
       mapResolution: -1
@@ -156,10 +152,12 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     const revision = this.props.layerGroup ? this.props.layerGroup.getRevision() : 0;
 
     this.setState({
-      layerGroup: layerGroup,
+      layerGroup,
       layerGroupRevision: revision
     }, () => {
-      this.registerAddRemoveListeners(this.state.layerGroup);
+      if (this.state.layerGroup) {
+        this.registerAddRemoveListeners(this.state.layerGroup);
+      }
       this.registerResolutionChangeHandler();
       this.rebuildTreeNodes();
     });
@@ -332,14 +330,17 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     let newMapResolution: number = -1;
 
     if (evt?.target instanceof OlMap) {
-      newMapResolution = evt.target.getView().getResolution();
+      newMapResolution = evt.target.getView().getResolution() ?? -1;
       if (mapResolution === newMapResolution) {
         // If map resolution didn't change => no redraw of tree nodes needed.
         return;
       }
     }
 
-    this.treeNodesFromLayerGroup(this.state.layerGroup);
+    if (this.state.layerGroup) {
+      this.treeNodesFromLayerGroup(this.state.layerGroup);
+    }
+
     const checkedKeys = this.getVisibleOlUids();
     this.setState({
       checkedKeys,
@@ -371,15 +372,14 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @return The corresponding LayerTreeNode Element.
    */
   treeNodeFromLayer(layer: OlLayerBase): ReactElement<LayerTreeNodeProps> {
-    let childNodes: ReactElement<LayerTreeNodeProps>[];
+    let childNodes: ReactNode = null;
 
     if (layer instanceof OlLayerGroup) {
       const childLayers = layer.getLayers().getArray()
         .filter(this.props.filterFunction);
       childNodes = childLayers.map((childLayer: OlLayerBase) => {
         return this.treeNodeFromLayer(childLayer);
-      });
-      childNodes.reverse();
+      }).reverse();
     } else {
       if (!this.hasListener(layer, 'change:visible', this.onLayerChangeVisible)) {
         const eventKey = layer.on('change:visible', this.onLayerChangeVisible);
@@ -445,10 +445,10 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * Sets the visibility of a layer due to its checked state.
    *
    * @param checkedKeys Contains all checkedKeys.
-   * @param checked The ant-tree event object for this event. See ant docs.
+   * @param e The ant-tree event object for this event. See ant docs.
    */
   onCheck(checkedKeys: string[], e: AntTreeNodeCheckedEvent) {
-    const { checked } = e;
+    const { checked = false } = e;
     const eventKey = e.node.props.eventKey;
     const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
 
@@ -462,10 +462,6 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @param visibility The visibility.
    */
   setLayerVisibility(layer: OlLayerBase, visibility: boolean) {
-    if (!(layer instanceof OlLayerBase) || !_isBoolean(visibility)) {
-      Logger.error('setLayerVisibility called without layer or visiblity.');
-      return;
-    }
     if (layer instanceof OlLayerGroup) {
       layer.setVisible(visibility);
       layer.getLayers().forEach((subLayer) => {

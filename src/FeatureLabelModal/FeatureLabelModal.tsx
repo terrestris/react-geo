@@ -10,7 +10,7 @@ import Geometry from 'ol/geom/Geometry';
 import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
 
 type OwnProps = {
-  feature: Feature<Geometry>|null;
+  feature: Feature<Geometry>;
   onOk: () => void;
   onCancel: () => void;
   /**
@@ -29,7 +29,7 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
   maxLabelLineLength,
   ...passThroughProps
 }) => {
-  const [label, setLabel] = useState<string>(null);
+  const [label, setLabel] = useState<string>('');
   const [showPrompt, setShowPrompt] = useState<boolean>(false);
 
   useEffect(() => {
@@ -49,7 +49,11 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
     onOk();
   };
 
-  return (showPrompt && <Modal
+  if (!showPrompt) {
+    return null;
+  }
+
+  return <Modal
     visible={showPrompt}
     closable={false}
     onOk={onOkInternal}
@@ -61,5 +65,5 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
       onChange={e => setLabel(e.target.value)}
       autoSize
     />
-  </Modal>);
+  </Modal>;
 };

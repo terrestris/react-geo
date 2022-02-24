@@ -81,11 +81,11 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
       nameProperty
     } = this.props;
     const layerIdx = this.getLayerIndexForSliderValue(value);
-    let tip: string;
+    let tip: string = '';
     if (layers[layerIdx]) {
       const opacity = Math.round(layers[layerIdx].get('opacity') * 100);
       const layer = layers[layerIdx];
-      const layername = layer.get(nameProperty) || `Layer ${layerIdx + 1}`;
+      const layername = nameProperty ? layer.get(nameProperty) : undefined ?? `Layer ${layerIdx + 1}`;
       tip = `${layername} ${opacity}%`;
     }
     return tip;
@@ -154,7 +154,7 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
     } = this.props;
     const length = layers.length - 1;
     layers.forEach((layer, index) => {
-      const layername = layer.get(nameProperty) || `Layer ${index + 1}`;
+      const layername = nameProperty ? layer.get(nameProperty) : undefined ?? `Layer ${index + 1}`;
       const idx = Math.round(100 / length * index);
       marks[idx] = layername;
     });

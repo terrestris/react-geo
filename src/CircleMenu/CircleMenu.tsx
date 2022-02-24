@@ -1,11 +1,13 @@
 import * as React from 'react';
 
+import _isNil from 'lodash/isNil';
+
 import CircleMenuItem from './CircleMenuItem/CircleMenuItem';
 import { CSS_PREFIX } from '../constants';
 
 import './CircleMenu.less';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * The duration of the animation in milliseconds. Pass 0 to avoid animation.
    */
@@ -18,9 +20,6 @@ interface DefaultProps {
    * Optional Segement of angles where to show the children.
    */
   segmentAngles: [number, number];
-}
-
-interface BaseProps {
   className?: string;
   style?: any;
   /**
@@ -29,9 +28,7 @@ interface BaseProps {
   position: [number, number];
 }
 
-export type CircleMenuProps = BaseProps
-& Partial<DefaultProps>
-& React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+export type CircleMenuProps = OwnProps & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 /**
  * The CircleMenu.
@@ -41,7 +38,7 @@ export type CircleMenuProps = BaseProps
  */
 export class CircleMenu extends React.Component<CircleMenuProps> {
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     animationDuration: 300,
     diameter: 100,
     segmentAngles: [0, 360]
@@ -57,7 +54,7 @@ export class CircleMenu extends React.Component<CircleMenuProps> {
    * Internal reference used to apply the transformation right on the div.
    * @private
    */
-  _ref = null;
+  _ref: HTMLDivElement | null = null;
 
   /**
    * A react lifecycle method called when the component did mount.
@@ -82,7 +79,7 @@ export class CircleMenu extends React.Component<CircleMenuProps> {
     if (this._ref) {
       this._ref.style.width = `${this.props.diameter}px`;
       this._ref.style.height = `${this.props.diameter}px`;
-      this._ref.style.opacity = 1;
+      this._ref.style.opacity = '1';
     }
   }
 
@@ -91,6 +88,9 @@ export class CircleMenu extends React.Component<CircleMenuProps> {
       diameter,
       segmentAngles,
     } = this.props;
+    if (!children || _isNil(idx)) {
+      return;
+    }
     const start = segmentAngles[0];
     const end = segmentAngles[1];
     const range = end - start;

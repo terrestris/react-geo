@@ -22,7 +22,7 @@ import { CSS_PREFIX } from '../../constants';
 import mapMarker from './geolocation-marker.png';
 import mapMarkerHeading from './geolocation-marker-heading.png';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * Will be called if geolocation fails.
    */
@@ -49,9 +49,7 @@ interface DefaultProps {
     enableHighAccuracy: boolean;
     timeout: number;
   };
-}
 
-interface BaseProps {
   /**
    * The className which should be added.
    */
@@ -60,35 +58,9 @@ interface BaseProps {
    * Instance of OL map this component is bound to.
    */
   map: OlMap;
-  /**
-   * Will be called if geolocation fails.
-   */
-  onError: (error: any) => void;
-  /**
-   * Will be called when position changes. Receives an object with the properties
-   * position, accuracy, heading and speed
-   */
-  onGeolocationChange: (geolocation: any) => void;
-  /**
-   * Whether to show a map marker at the current position.
-   */
-  showMarker: boolean;
-  /**
-   * Whether to follow the current position.
-   */
-  follow: boolean;
-  /**
-   * The openlayers tracking options. See also
-   * https://www.w3.org/TR/geolocation-API/#position_options_interface
-   */
-  trackingOptions: {
-    maximumAge: number;
-    enableHighAccuracy: boolean;
-    timeout: number;
-  };
 }
 
-export type GeoLocationButtonProps = BaseProps & Partial<DefaultProps> & ToggleButtonProps;
+export type GeoLocationButtonProps = OwnProps & Omit<ToggleButtonProps, 'onToggle'|'className'>;
 
 /**
  * The GeoLocationButton.
@@ -101,7 +73,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
   /**
    * The default properties.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     onGeolocationChange: () => undefined,
     onError: () => undefined,
     showMarker: true,
@@ -123,12 +95,12 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
   /**
    * The feature marking the current location.
    */
-  _markerFeature = undefined;
+  _markerFeature: OlFeature<OlGeometry> | null = null;
 
   /**
    * The OpenLayers geolocation interaction.
    */
-  _geoLocationInteraction = undefined;
+  _geoLocation: OlGeolocation | null = null;
 
   /**
    * The layer containing the markerFeature.
@@ -147,7 +119,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
    *
    * @constructs MeasureButton
    */
-  constructor(props: BaseProps) {
+  constructor(props: GeoLocationButtonProps) {
     super(props);
     const {
       map,
@@ -204,10 +176,14 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
    * Callback of the interactions on change event.
    */
   onGeolocationChange = () => {
-    const position = this._geoLocationInteraction.getPosition();
-    const accuracy = this._geoLocationInteraction.getAccuracy();
-    let heading = this._geoLocationInteraction.getHeading() || 0;
-    const speed = this._geoLocationInteraction.getSpeed() || 0;
+    if (!this._geoLocation) {
+      return;
+    }
+
+    const position = this._geoLocation.getPosition() ?? [0, 0];
+    const accuracy = this._geoLocation.getAccuracy();
+    let heading = this._geoLocation.getHeading() || 0;
+    const speed = this._geoLocation.getSpeed() || 0;
 
     const x = position[0];
     const y = position[1];
@@ -259,23 +235,23 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
     const view = map.getView();
 
     if (!pressed) {
-      if (this._geoLocationInteraction) {
-        this._geoLocationInteraction.un('change', this.onGeolocationChange);
-        this._geoLocationInteraction = null;
+      if (this._geoLocation) {
+        this._geoLocation.un('change', this.onGeolocationChange);
+        this._geoLocation = null;
       }
       if (this._markerFeature) {
-        this._markerFeature = undefined;
+        this._markerFeature = null;
         this._geoLocationLayer.getSource().clear();
       }
       return;
     }
 
     // Geolocation Control
-    this._geoLocationInteraction = new OlGeolocation({
+    this._geoLocation = new OlGeolocation({
       projection: view.getProjection(),
       trackingOptions: trackingOptions
     });
-    this._geoLocationInteraction.setTracking(true);
+    this._geoLocation.setTracking(true);
 
     if (showMarker) {
       if (!this._markerFeature) {
@@ -284,21 +260,21 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
       if (!this._geoLocationLayer.getSource().getFeatures().includes(this._markerFeature)) {
         this._geoLocationLayer.getSource().addFeature(this._markerFeature);
       }
-      const heading = this._geoLocationInteraction.getHeading() || 0;
-      const speed = this._geoLocationInteraction.getSpeed() || 0;
+      const heading = this._geoLocation.getHeading() || 0;
+      const speed = this._geoLocation.getSpeed() || 0;
       this._markerFeature.set('speed', speed);
       this._markerFeature.set('heading', heading);
     }
 
     // add listeners
-    this._geoLocationInteraction.on('change', this.onGeolocationChange);
-    this._geoLocationInteraction.on('error', this.onGeolocationError);
+    this._geoLocation.on('change', this.onGeolocationChange);
+    this._geoLocation.on('error', this.onGeolocationError);
   };
 
   // recenters the view by putting the given coordinates at 3/4 from the top or
   // the screen
   getCenterWithHeading = (position, rotation, resolution) => {
-    const size = this.props.map.getSize();
+    const size = this.props.map.getSize() ?? [0, 0];
     const height = size[1];
 
     return [
@@ -325,7 +301,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
       }
       if (this.props.showMarker) {
         const pointGeometry = new OlGeomPoint([c[0], c[1]]);
-        this._markerFeature.setGeometry(pointGeometry);
+        this._markerFeature?.setGeometry(pointGeometry);
       }
     }
   };

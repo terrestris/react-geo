@@ -14,6 +14,7 @@ import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 
 import _isFunction from 'lodash/isFunction';
 import _debounce from 'lodash/debounce';
+import _isNil from 'lodash/isNil';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
@@ -22,7 +23,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './WfsSearch.less';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * A nested object mapping feature types to an object of attribute details,
    * which are also mapped by search attribute name.
@@ -101,9 +102,6 @@ interface DefaultProps {
    * zoom to its extend.
    */
   onSelect: (feature: any, olMap: OlMap) => void;
-}
-
-interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -175,7 +173,7 @@ interface WfsSearchState {
   fetching: boolean;
 }
 
-export type WfsSearchProps = BaseProps & Partial<DefaultProps> & AutoCompleteProps;
+export type WfsSearchProps = OwnProps & AutoCompleteProps;
 
 /**
  * The WfsSearch field.
@@ -190,7 +188,7 @@ export type WfsSearchProps = BaseProps & Partial<DefaultProps> & AutoCompletePro
  */
 export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     srsName: 'EPSG:3857',
     outputFormat: 'application/json',
     minChars: 3,
@@ -280,7 +278,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
    *
    * @param value The inputValue. Undefined if clear btn is pressed.
    */
-  onUpdateInput(value?: string) {
+  onUpdateInput(value: string) {
     const {
       minChars,
       onChange,

@@ -24,15 +24,16 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import './FeatureGrid.less';
 import { ColumnProps, TableProps } from 'antd/lib/table';
+import _isNil from 'lodash/isNil';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * The features to show in the grid and the map (if set).
    */
   features: OlFeature<OlGeometry>[];
   /**
    */
-  attributeBlacklist?: string[];
+  attributeBlacklist: string[];
   /**
    * The default style to apply to the features.
    */
@@ -70,9 +71,6 @@ interface DefaultProps {
    * Whether rows and features should be selectable or not.
    */
   selectable: boolean;
-}
-
-export interface BaseProps {
   /**
    * A CSS class which should be added to the table.
    */
@@ -109,7 +107,7 @@ interface FeatureGridState {
   selectedRowKeys: string[];
 }
 
-export type FeatureGridProps = BaseProps & Partial<DefaultProps> & TableProps<any>;
+export type FeatureGridProps = OwnProps & TableProps<any>;
 
 /**
  * The FeatureGrid.
@@ -122,7 +120,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   /**
    * The default properties.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     features: [],
     attributeBlacklist: [],
     featureStyle: new OlStyle({
@@ -217,13 +215,13 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * The source holding the features of the grid.
    * @private
    */
-  _source: OlSourceVector<OlGeometry> = null;
+  _source: OlSourceVector<OlGeometry> | null = null;
 
   /**
    * The layer representing the features of the grid.
    * @private
    */
-  _layer: OlLayerVector<OlSourceVector<OlGeometry>> = null;
+  _layer: OlLayerVector<OlSourceVector<OlGeometry>> | null = null;
 
   /**
    * The constructor.
@@ -245,6 +243,10 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       features,
       zoomToExtent
     } = this.props;
+
+    if (!map) {
+      return;
+    }
 
     this.initVectorLayer(map);
     this.initMapEventHandlers(map);
@@ -268,7 +270,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       zoomToExtent
     } = this.props;
 
-    if (!(_isEqual(prevProps.map, map))) {
+    if (map && prevProps.map !== map) {
       this.initVectorLayer(map);
       this.initMapEventHandlers(map);
     }
@@ -320,10 +322,6 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       layerName
     } = this.props;
 
-    if (!(map instanceof OlMap)) {
-      return;
-    }
-
     if (MapUtil.getLayerByName(map, layerName)) {
       return;
     }
@@ -358,10 +356,6 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       selectable
     } = this.props;
 
-    if (!(map instanceof OlMap)) {
-      return;
-    }
-
     map.on('pointermove', this.onMapPointerMove);
 
     if (selectable) {
@@ -386,6 +380,10 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       selectedRowKeys
     } = this.state;
 
+    if (!map) {
+      return;
+    }
+
     const selectedFeatures = map.getFeaturesAtPixel(olEvt.pixel, {
       layerFilter: (layerCand: OlLayerBase) => layerCand === this._layer
     }) || [];
@@ -400,7 +398,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
-        feature.setStyle(null);
+        feature.setStyle(undefined);
       }
     });
 
@@ -430,6 +428,10 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       selectedRowKeys
     } = this.state;
 
+    if (!map) {
+      return;
+    }
+
     const selectedFeatures = (map.getFeaturesAtPixel(olEvt.pixel, {
       layerFilter: (layerCand: OlLayerBase) => layerCand === this._layer
     }) || []) as OlFeature<OlGeometry>[];
@@ -440,7 +442,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       const key = this.props.keyFunction(selectedFeature);
       if (rowKeys.includes(key)) {
         rowKeys = rowKeys.filter(rowKey => rowKey !== key);
-        selectedFeature.setStyle(null);
+        selectedFeature.setStyle(undefined);
       } else {
         rowKeys.push(key);
         selectedFeature.setStyle(selectStyle);
@@ -460,7 +462,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       map
     } = this.props;
 
-    if (!(map instanceof OlMap)) {
+    if (!map || !this._layer) {
       return;
     }
 
@@ -476,7 +478,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       selectable
     } = this.props;
 
-    if (!(map instanceof OlMap)) {
+    if (!map) {
       return;
     }
 
@@ -500,12 +502,8 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       columnDefs
     } = this.props;
 
-    const columns = [];
+    const columns: any[] = [];
     const feature = features[0];
-
-    if (!(feature instanceof OlFeature)) {
-      return columns;
-    }
 
     const props = feature.getProperties();
 
@@ -539,9 +537,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       features
     } = this.props;
 
-    const data = [];
-
-    features.forEach(feature => {
+    return features.map(feature => {
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
@@ -550,13 +546,11 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
           return obj;
         }, {});
 
-      data.push({
+      return {
         key: this.props.keyFunction(feature),
         ...filtered
-      });
+      };
     });
-
-    return data;
   };
 
   /**
@@ -644,14 +638,13 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       map
     } = this.props;
 
-    if (!(map instanceof OlMap)) {
+    if (!map) {
       return;
     }
 
-    const featGeometries = [];
-    features.forEach(feature => {
-      featGeometries.push(feature.getGeometry());
-    });
+    const featGeometries = features
+      .map(f => f.getGeometry())
+      .filter((f): f is OlGeometry => !_isNil(f));
 
     if (featGeometries.length > 0) {
       const geomCollection = new OlGeometryCollection(featGeometries);
@@ -670,7 +663,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       highlightStyle
     } = this.props;
 
-    if (!(map instanceof OlMap)) {
+    if (!map) {
       return;
     }
 
@@ -692,7 +685,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       selectedRowKeys
     } = this.state;
 
-    if (!(map instanceof OlMap)) {
+    if (!map) {
       return;
     }
 
@@ -701,7 +694,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
-        feature.setStyle(null);
+        feature.setStyle(undefined);
       }
     });
   };
@@ -717,7 +710,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       selectStyle
     } = this.props;
 
-    if (!(map instanceof OlMap)) {
+    if (!map) {
       return;
     }
 
@@ -733,11 +726,11 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       features
     } = this.props;
 
-    if (!(map instanceof OlMap)) {
+    if (!map) {
       return;
     }
 
-    features.forEach(feature => feature.setStyle(null));
+    features.forEach(feature => feature.setStyle(undefined));
   };
 
   /**
@@ -819,7 +812,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
           onMouseOut: () => this.onRowMouseOut(record)
         })}
         rowClassName={rowClassNameFn}
-        rowSelection={selectable ? rowSelection : null}
+        rowSelection={selectable ? rowSelection : undefined}
         {...passThroughProps}
       >
         {children}

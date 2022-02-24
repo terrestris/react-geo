@@ -19,7 +19,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './Panel.less';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * Whether to allow dragging or not. Default is false.
    */
@@ -69,9 +69,6 @@ interface DefaultProps {
    * }.
    */
   resizeOpts: ResizeEnable | boolean;
-}
-
-export interface BaseProps {
   id?: string;
   /**
    * The children to show in the Window.
@@ -111,7 +108,7 @@ interface PanelState {
   resizing: boolean;
 }
 
-export type PanelProps = BaseProps & Partial<DefaultProps> & RndProps;
+export type PanelProps = OwnProps & RndProps;
 
 /**
  * The Panel.
@@ -124,7 +121,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
   /**
    * The default properties.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     draggable: false,
     collapsible: false,
     collapsed: false,
@@ -153,7 +150,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
    *
    *
    */
-  _rnd: Rnd;
+  _rnd: Rnd | null;
 
   /**
    * Create the Panel.
@@ -223,7 +220,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
     this.setState({
       collapsed: !this.state.collapsed
     }, () => {
-      this._rnd.updateSize({
+      this._rnd?.updateSize({
         height: this.calculateHeight(),
         width: this.state.width
       });
@@ -312,7 +309,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
       onEscape
     } = this.props;
     if (evt && evt.key.startsWith(this._escapeKeyboardEventKey) && onEscape) {
-      this._rnd.getSelfElement().focus();
+      this._rnd?.getSelfElement()?.focus();
       onEscape(evt);
     }
   };
@@ -386,12 +383,12 @@ export class Panel extends React.Component<PanelProps, PanelState> {
       ? x
       : _isNumber(defaultWidth)
         ? window.innerWidth / 2 - (defaultWidth as number) / 2
-        : undefined;
+        : 0;
     const defY = y && _isNumber(y)
       ? y
       : _isNumber(defaultHeight)
         ? window.innerHeight / 2 - (defaultHeight as number) / 2
-        : undefined;
+        : 0;
 
     return (
       <Rnd

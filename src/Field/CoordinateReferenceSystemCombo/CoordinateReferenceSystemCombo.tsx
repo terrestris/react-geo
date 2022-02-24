@@ -16,7 +16,7 @@ interface CrsDefinition {
   code: string;
 }
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * The API to query for CRS definitions
    * default: https://epsg.io
@@ -30,9 +30,6 @@ interface DefaultProps {
    * A function
    */
   onSelect: (crsDefinition: CrsDefinition) => void;
-}
-
-interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -46,10 +43,10 @@ interface BaseProps {
 
 interface CRSComboState {
   crsDefinitions: CrsDefinition[];
-  value: string;
+  value: string|null;
 }
 
-export type CRSComboProps = BaseProps & Partial<DefaultProps> & AutoCompleteProps;
+export type CRSComboProps = OwnProps & AutoCompleteProps;
 
 /**
  * Class representing a combo to choose coordinate projection system via a
@@ -60,7 +57,7 @@ export type CRSComboProps = BaseProps & Partial<DefaultProps> & AutoCompleteProp
  */
 class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSComboState> {
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     emptyTextPlaceholderText: 'Please select a CRS',
     crsApiUrl: 'https://epsg.io/',
     onSelect: () => undefined

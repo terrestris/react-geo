@@ -21,7 +21,7 @@ import  '../../Util/fontawesome';
 
 import './ToggleButton.less';
 
-interface DefaultProps {
+interface OwnProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
   /**
    * Additional [antd tooltip](https://ant.design/components/tooltip/)
@@ -40,9 +40,7 @@ interface DefaultProps {
    * The toggle handler
    */
   onToggle: (pressed: boolean, lastClickEvt: any) => void;
-}
 
-interface BaseProps {
   className?: string;
   /**
    * The icon to render for the pressed state. See
@@ -75,7 +73,7 @@ interface ToggleButtonState {
   isClicked: boolean;
 }
 
-export type ToggleButtonProps = BaseProps & Partial<DefaultProps> & SimpleButtonProps;
+export type ToggleButtonProps = OwnProps & SimpleButtonProps;
 
 /**
  * The ToggleButton.
@@ -88,7 +86,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
   /**
    * The default properties.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     type: 'primary',
     pressed: false,
     tooltipProps: {
@@ -161,7 +159,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
    * state correctly (e.g. activating ol.Controls)
    */
   componentDidMount() {
-    if (this.props.onToggle && this.props.pressed === true) {
+    if (this.props.onToggle && this.props.pressed) {
       this.props.onToggle(true, null);
     }
   }
@@ -171,7 +169,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
    * for the initial render.
    * @method
    */
-  componentDidUpdate(prevProps: BaseProps, prevState: ToggleButtonState) {
+  componentDidUpdate(prevProps: ToggleButtonProps, prevState: ToggleButtonState) {
     const {
       onToggle
     } = this.props;
@@ -194,7 +192,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
      *        |__ NO: check if previous update action was a click
      *                |__ YES: ==> run the Toggle function fo the prop value
      */
-    let shouldToggle: boolean;
+    let shouldToggle: boolean = false;
     if (isClicked || prevState.pressed !== pressed || prevState.isClicked) {
       if (isClicked) {
         // button is clicked

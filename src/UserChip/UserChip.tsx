@@ -9,6 +9,7 @@ import { AvatarProps } from 'antd/lib/avatar';
 import './UserChip.less';
 
 import { CSS_PREFIX } from '../constants';
+import _isString from 'lodash/isString';
 
 // non default props
 export interface BaseProps {
@@ -74,16 +75,14 @@ class UserChip extends React.Component<UserChipProps> {
       userName
     } = this.props;
 
-    if (!(userName instanceof String || typeof userName === 'string')) {
+    if (!_isString(userName)) {
       return '??';
     }
 
-    const splittedName = (userName as string).split(' ');
-    const initals = [];
-    splittedName.forEach((part) =>  {
-      initals.push(part[0].toUpperCase());
-    });
-    return initals.join('');
+    return userName.split(' ')
+      .map(part => part[0] ?? '')
+      .join('')
+      .toUpperCase();
   }
 
   /**
