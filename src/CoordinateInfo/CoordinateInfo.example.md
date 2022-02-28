@@ -61,7 +61,7 @@ class CoordinateInfoExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <>
         <div
           id={this.mapDivId}

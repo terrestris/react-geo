@@ -69,7 +69,7 @@ class LayerTreeExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <div
           id={this.mapDivId}
@@ -102,7 +102,7 @@ class LayerTreeExample extends React.Component {
 
           <LayerTree
             map={this.map}
-            filterFunction={(layer) => layer.get('name') != 'OSM'}
+            filterFunction={(layer) => layer.get('name') !== 'OSM'}
           />
         </div>
       </div>

@@ -38,7 +38,7 @@ class NominatimSearchExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <div className="example-block">
           <label>The NominatimSearch<br />

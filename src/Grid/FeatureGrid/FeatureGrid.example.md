@@ -46,7 +46,7 @@ class FeatureGridExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <FeatureGrid
           features={features}
@@ -370,7 +370,7 @@ class RemoteFeatureGridExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <RemoteFeatureGrid
           map={this.map}

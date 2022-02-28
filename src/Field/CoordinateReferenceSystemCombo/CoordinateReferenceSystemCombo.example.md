@@ -93,11 +93,11 @@ class CoordinateReferenceSystemComboExample extends React.Component {
 
     register(proj4);
     const newProj = get(newProjCode);
-    const fromLonLat = getTransform('EPSG:4326', newProj);
+    const fromLL = getTransform('EPSG:4326', newProj);
 
     // very approximate calculation of projection extent
     const extent = applyTransform(
-      [bbox[1], bbox[2], bbox[3], bbox[0]], fromLonLat);
+      [bbox[1], bbox[2], bbox[3], bbox[0]], fromLL);
     newProj.setExtent(extent);
     const newView = new OlView({
       projection: newProj
@@ -107,7 +107,7 @@ class CoordinateReferenceSystemComboExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <div
           id={this.mapDivId}

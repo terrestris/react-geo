@@ -33,7 +33,7 @@ class WindowExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <SimpleButton
           onClick={this.onClickSimple.bind(this)}
@@ -90,7 +90,7 @@ class WindowExample extends React.Component {
               tools={[
                 <SimpleButton
                   key="closeButton"
-                  iconName="times" 
+                  iconName="times"
                   size="small"
                   tooltip="Close"
                   onClick={this.onClickEsc.bind(this)}

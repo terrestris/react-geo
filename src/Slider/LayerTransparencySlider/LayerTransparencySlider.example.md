@@ -40,13 +40,13 @@ class LayerTransparencySliderExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <div
           id={this.mapDivId}
           style={{
             height: '400px'
-          }}  
+          }}
         />
 
         <div>

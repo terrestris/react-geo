@@ -38,7 +38,7 @@ class FloatingMapLogoExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div
         id={this.mapDivId}
         style={{

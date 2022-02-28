@@ -44,7 +44,7 @@ class MapContextExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <MapContext.Provider value={this.map}>
         <MapContext.Consumer>
           {(map) => {
