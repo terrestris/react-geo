@@ -20,7 +20,7 @@ import './CoordinateInfo.less';
 
 const format = new OlFormatGML2();
 
-interface DefaultProps {
+interface CoordinateInfoProps {
   /**
    * List of (WMS) layers that should be queried.
    */
@@ -49,9 +49,6 @@ interface DefaultProps {
    * list of GFI features if any and the loading state).
    */
   resultRenderer: (childrenProps: CoordinateInfoState) => React.ReactNode;
-}
-
-interface BaseProps {
   /**
    * The ol map.
    */
@@ -63,8 +60,6 @@ interface CoordinateInfoState {
   features: any;
   loading: boolean;
 }
-
-export type CoordinateInfoProps = BaseProps & Partial<DefaultProps>;
 
 /**
  * Constructs a wrapper component for querying features from the clicked
@@ -78,7 +73,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
   /**
    * The defaultProps.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     queryLayers: [],
     featureCount: 1,
     drillDown: true,
@@ -137,7 +132,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     const pixel = map.getEventPixel(olEvt.originalEvent);
     const coordinate = olEvt.coordinate;
 
-    const promises = [];
+    const promises: Promise<any>[] = [];
 
     map.forEachLayerAtPixel(pixel, (layer: OlLayer<any, any>) => {
       const layerSource = layer.getSource();
@@ -184,7 +179,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
           const fc = format.readFeatures(featureCollection);
           fc.forEach((feature: OlFeature<OlGeometry>) => {
             const id = feature.getId();
-            const featureTypeName = _isString(id) ? id.split('.')[0] : id;
+            const featureTypeName = _isString(id) ? id.split('.')[0] : id?.toString() ?? '';
 
             if (!features[featureTypeName]) {
               features[featureTypeName] = [];

@@ -23,27 +23,37 @@ describe('<LayerTree />', () => {
   beforeEach(() => {
     const layerSource1 = new OlSourceTileWMS();
     layer1 = new OlLayerTile({
-      name: 'layer1',
+      properties: {
+        name: 'layer1'
+      },
       source: layerSource1
     });
     const layerSource2 = new OlSourceTileWMS();
     layer2 = new OlLayerTile({
-      name: 'layer2',
+      properties: {
+        name: 'layer2'
+      },
       visible: false,
       source: layerSource2
     });
     const layerSource3 = new OlSourceTileWMS();
     layer3 = new OlLayerTile({
-      name: 'layer3',
+      properties: {
+        name: 'layer3'
+      },
       visible: false,
       source: layerSource3
     });
     layerSubGroup = new OlLayerGroup({
-      name: 'layerSubGroup',
+      properties: {
+        name: 'layerSubGroup'
+      },
       layers: [layer3]
     });
     layerGroup = new OlLayerGroup({
-      name: 'layerGroup',
+      properties: {
+        name: 'layerGroup'
+      },
       layers: [layer1, layer2, layerSubGroup]
     });
 
@@ -483,29 +493,6 @@ describe('<LayerTree />', () => {
   });
 
   describe('#setLayerVisibility', () => {
-
-    it('logs an error if called with invalid arguments', () => {
-      const logSpy = jest.spyOn(Logger, 'error');
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-
-      wrapper.instance().setLayerVisibility();
-      expect(logSpy).toHaveBeenCalled();
-      logSpy.mockReset();
-
-      wrapper.instance().setLayerVisibility('peter');
-      expect(logSpy).toHaveBeenCalled();
-      logSpy.mockReset();
-
-      wrapper.instance().setLayerVisibility(layer1 , 'peter');
-      expect(logSpy).toHaveBeenCalled();
-
-      logSpy.mockRestore();
-    });
-
     it('sets the visibility of a single layer', () => {
       const props = {
         layerGroup,

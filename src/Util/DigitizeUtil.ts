@@ -120,12 +120,14 @@ export class DigitizeUtil {
    * @param feature The feature which is being styled.
    * @return The style to use.
    */
-  static defaultDigitizeStyleFunction(feature: OlFeature<OlGeometry>): OlStyle {
-    if (!feature.getGeometry()) {
-      return null;
+  static defaultDigitizeStyleFunction(feature: OlFeature<OlGeometry>): OlStyle | undefined {
+    const geom = feature.getGeometry();
+
+    if (!geom) {
+      return undefined;
     }
 
-    switch (feature.getGeometry().getType()) {
+    switch (geom.getType()) {
       case 'MultiPoint':
       case 'Point': {
         if (!feature.get('isLabel')) {
@@ -180,7 +182,7 @@ export class DigitizeUtil {
         });
       }
       default:
-        return null;
+        return undefined;
     }
   }
 

@@ -17,23 +17,20 @@ type AttributeNames = {
   [key: string]: string;
 };
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * Title of the attribute name column
    */
-  attributeNameColumnTitle?: string;
+  attributeNameColumnTitle: string;
   /**
    * Value in percent representing the width of the attribute name column
    * The width of attribute value column wil be calculated depending in this
    */
-  attributeNameColumnWidthInPercent?: number;
+  attributeNameColumnWidthInPercent: number;
   /**
    * Title of the attribute value column
    */
-  attributeValueColumnTitle?: string;
-}
-
-export interface BaseProps {
+  attributeValueColumnTitle: string;
   /**
    * A CSS class which should be added.
    */
@@ -58,7 +55,7 @@ interface PropertyGridState {
   columns: ColumnProps<any>[];
 }
 
-export type PropertyGridProps = BaseProps & Partial<DefaultProps> & TableProps<any>;
+export type PropertyGridProps = OwnProps & TableProps<any>;
 
 /**
  * Class representing a feature grid showing the attribute values of a simple feature.
@@ -68,7 +65,7 @@ export type PropertyGridProps = BaseProps & Partial<DefaultProps> & TableProps<a
  */
 class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState> {
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     attributeNameColumnTitle: 'Attribute name',
     attributeNameColumnWidthInPercent: 50,
     attributeValueColumnTitle: 'Attribute value',
@@ -117,8 +114,8 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
    */
   generatePropertyGrid({feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent}: {
     feature: OlFeature<OlGeometry>;
-    attributeFilter: string[];
-    attributeNames: AttributeNames;
+    attributeFilter?: string[];
+    attributeNames?: AttributeNames;
     attributeNameColumnWidthInPercent: number;
   }): {
       dataSource: any;
@@ -130,12 +127,11 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
 
     const dataSource = attributeFilter.map((attr: any) => {
       const fid = getUid(feature);
-      const rowObj = {
+      return {
         attributeName: (attributeNames && _get(attributeNames, attr)) ? _get(attributeNames, attr) : attr,
         attributeValue: feature.get(attr),
         key: `ATTR_${attr}_fid_${fid}`
       };
-      return rowObj;
     });
 
     const columns = [{

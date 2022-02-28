@@ -7,7 +7,7 @@ import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 import { AnimationOptions as OlViewAnimationOptions } from 'ol/View';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * Whether the zoom in shall be animated.
    */
@@ -23,9 +23,6 @@ interface DefaultProps {
    * used.
    */
   animateOptions: OlViewAnimationOptions;
-}
-
-interface BaseProps {
   /**
    * The className which should be added.
    */
@@ -36,7 +33,7 @@ interface BaseProps {
   map: OlMap;
 }
 
-export type ZoomButtonProps = BaseProps & Partial<DefaultProps> & SimpleButtonProps;
+export type ZoomButtonProps = OwnProps & SimpleButtonProps;
 
 /**
  * Class representing a zoom button.
@@ -46,7 +43,7 @@ export type ZoomButtonProps = BaseProps & Partial<DefaultProps> & SimpleButtonPr
  */
 class ZoomButton extends React.Component<ZoomButtonProps> {
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     delta: 1,
     animate: true,
     animateOptions: {
@@ -76,6 +73,7 @@ class ZoomButton extends React.Component<ZoomButtonProps> {
       },
       delta
     } = this.props;
+
     const view = map.getView();
     if (!view) { // no view, no zooming
       return;
@@ -84,6 +82,9 @@ class ZoomButton extends React.Component<ZoomButtonProps> {
       view.cancelAnimations();
     }
     const currentZoom = view.getZoom();
+    if (!currentZoom) {
+      return;
+    }
     const zoom = currentZoom + delta;
     if (animate) {
       const finalOptions = {

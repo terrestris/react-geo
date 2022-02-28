@@ -132,6 +132,10 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
     };
   }, [selectInteraction, features, onFeatureSelect, clearAfterSelect]);
 
+  if (!selectInteraction) {
+    return null;
+  }
+
   const onToggleInternal = (pressed: boolean, lastClickEvt: any) => {
     selectInteraction.setActive(pressed);
     onToggle?.(pressed, lastClickEvt);

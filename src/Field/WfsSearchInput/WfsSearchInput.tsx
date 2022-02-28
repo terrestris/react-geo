@@ -19,7 +19,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './WfsSearchInput.less';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * A nested object mapping feature types to an object of attribute details,
    * which are also mapped by search attribute name.
@@ -85,9 +85,6 @@ interface DefaultProps {
    * `visible` to `false`.
    */
   searchTerm?: string;
-}
-
-interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -166,7 +163,7 @@ interface WfsSearchState {
   fetching: boolean;
 }
 
-export type WfsSearchInputProps = BaseProps & Partial<DefaultProps> & InputProps;
+export type WfsSearchInputProps = OwnProps & InputProps;
 
 /**
  * The WfsSearchInput field.
@@ -181,7 +178,7 @@ export type WfsSearchInputProps = BaseProps & Partial<DefaultProps> & InputProps
  */
 export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSearchState> {
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     srsName: 'EPSG:3857',
     outputFormat: 'application/json',
     minChars: 3,

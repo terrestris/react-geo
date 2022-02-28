@@ -3,7 +3,7 @@ import OlVectorLayer from 'ol/layer/Vector';
 import OlVectorSource from 'ol/source/Vector';
 import OlGeometry from 'ol/geom/Geometry';
 import { CSS_PREFIX } from '../../constants';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useMap } from '../..';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import * as React from 'react';
@@ -131,14 +131,14 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
   editLabel = true,
   ...passThroughProps
 }) => {
-  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]>(null);
-  const [modifyInteraction, setModifyInteraction] = useState<Modify>(null);
-  const [translateInteraction, setTranslateInteraction] = useState<Translate>(null);
+  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]|null>(null);
+  const [modifyInteraction, setModifyInteraction] = useState<Modify|null>(null);
+  const [translateInteraction, setTranslateInteraction] = useState<Translate|null>(null);
   const [features, setFeatures] = useState<OlCollection<OlFeature<OlGeometry>>|null>(null);
 
   const map = useMap();
 
-  const [editLabelFeature, setEditLabelFeature] = useState<OlFeature<OlGeometry>>(null);
+  const [editLabelFeature, setEditLabelFeature] = useState<OlFeature<OlGeometry>|null>(null);
 
   useEffect(() => {
     if (!map) {
@@ -225,6 +225,10 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
     };
   }, [translateInteraction, onTranslateStart, onTranslateEnd, onTranslating]);
 
+  if (!layers || !features || !modifyInteraction || !translateInteraction) {
+    return null;
+  }
+
   const onToggleInternal = (pressed: boolean, lastClickEvent: any) => {
     modifyInteraction.setActive(pressed);
     translateInteraction.setActive(pressed);
@@ -238,23 +242,9 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
     }
   };
 
-  const onModalLabelOkInternal = () => {
-    onModalLabelOk?.(editLabelFeature);
-    setEditLabelFeature(null);
-  };
-
-  const onModalLabelCancelInternal = () => {
-    onModalLabelCancel?.();
-    setEditLabelFeature(null);
-  };
-
   const finalClassName = className
     ? `${defaultClassName} ${className}`
     : defaultClassName;
-
-  if (!layers) {
-    return null;
-  }
 
   const button = <SelectFeaturesButton
     layers={layers}
@@ -267,20 +257,35 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
     {...passThroughProps}
   />;
 
+  let modal: ReactNode = null;
+  if (editLabelFeature) {
+    const onModalLabelOkInternal = () => {
+      onModalLabelOk?.(editLabelFeature);
+      setEditLabelFeature(null);
+    };
+
+    const onModalLabelCancelInternal = () => {
+      onModalLabelCancel?.();
+      setEditLabelFeature(null);
+    };
+
+    modal = <FeatureLabelModal
+      onOk={onModalLabelOkInternal}
+      onCancel={onModalLabelCancelInternal}
+      title={modalPromptTitle}
+      okText={modalPromptOkButtonText}
+      cancelText={modalPromptCancelButtonText}
+      maxLabelLineLength={maxLabelLineLength}
+      feature={editLabelFeature}
+    />;
+  }
+
   if (!editLabel) {
     return button;
   } else {
     return <>
       {button}
-      <FeatureLabelModal
-        onOk={onModalLabelOkInternal}
-        onCancel={onModalLabelCancelInternal}
-        title={modalPromptTitle}
-        okText={modalPromptOkButtonText}
-        cancelText={modalPromptCancelButtonText}
-        maxLabelLineLength={maxLabelLineLength}
-        feature={editLabelFeature}
-      />
+      {modal}
     </>;
   }
 };

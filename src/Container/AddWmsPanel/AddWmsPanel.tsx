@@ -14,7 +14,7 @@ import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry';
 import './AddWmsPanel.less';
 import { WmsLayer } from '../../Util/typeUtils';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * Optional text to be shown in button to add all layers
    */
@@ -36,9 +36,6 @@ interface DefaultProps {
    * parser)
    */
   wmsLayers: Array<WmsLayer>;
-}
-
-interface BaseProps {
   /**
    * Optional instance of OlMap which is used if onLayerAddToMap is not provided
    */
@@ -62,7 +59,7 @@ interface AddWmsLayerState {
   selectedWmsLayers: string[];
 }
 
-export type AddWmsPanelProps = BaseProps & Partial<DefaultProps> & PanelProps;
+export type AddWmsPanelProps = OwnProps & PanelProps;
 
 /**
  * Panel containing a (checkable) list of AddWmsLayerEntry instances.
@@ -77,7 +74,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
   /**
    * The defaultProps.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     wmsLayers: [],
     addAllLayersText: 'Add all layers',
     addSelectedLayersText: 'Add selected layers',

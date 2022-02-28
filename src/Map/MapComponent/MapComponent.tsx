@@ -59,7 +59,7 @@ export class MapComponent extends PureComponent<MapComponentProps> {
       map
     } = this.props;
 
-    map.setTarget(null);
+    map.setTarget(undefined);
   }
 
   /**

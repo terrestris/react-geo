@@ -18,7 +18,7 @@ import './LayerSwitcher.less';
  * @interface LayerSwitcherProps
  * @extends {React.HTMLAttributes<HTMLDivElement>}
  */
-export interface BaseProps {
+export interface OwnProps {
   /**
    * An optional CSS class which will be added to the wrapping div Element.
    */
@@ -34,10 +34,10 @@ export interface BaseProps {
 }
 
 interface LayerSwitcherState {
-  previewLayer: OlLayerTile<OlTileSource> | OlLayerGroup;
+  previewLayer: OlLayerTile<OlTileSource> | OlLayerGroup | null;
 }
 
-export type LayerSwitcherProps = BaseProps & React.HTMLAttributes<HTMLDivElement>;
+export type LayerSwitcherProps = OwnProps & React.HTMLAttributes<HTMLDivElement>;
 
 /**
  * Class representing the LayerSwitcher.
@@ -53,20 +53,10 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    * The internal map of the LayerSwitcher
    * @private
    */
-  _map: OlMap = null;
+  _map: OlMap | null = null;
 
-  /**
-   *
-   *
-   * @private
-   */
-  _visibleLayerIndex: number = null;
+  _visibleLayerIndex: number;
 
-  /**
-   *
-   *
-   * @private
-   */
   _layerClones: Array<OlLayerTile<OlTileSource> | OlLayerGroup> = [];
 
   /**
@@ -102,9 +92,11 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    * @memberof LayerSwitcher
    */
   componentWillUnMount() {
-    this._map.getLayers().clear();
-    this._map.setTarget(null);
-    this._map = null;
+    if (this._map) {
+      this._map.getLayers().clear();
+      this._map.setTarget(undefined);
+      this._map = null;
+    }
   }
 
   /**
@@ -159,13 +151,13 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
     if (layers.length < 2) {
       Logger.warn('LayerSwitcher requires two or more layers.');
     }
-    this._map.getLayers().clear();
+    this._map?.getLayers().clear();
     this._layerClones = layers.map((layer, index) => {
       const layerClone = this.cloneLayer(layer);
       if (layerClone.getVisible()) {
         this._visibleLayerIndex = index;
       }
-      this._map.addLayer(layerClone);
+      this._map?.addLayer(layerClone);
       return layerClone;
     });
   };
@@ -218,7 +210,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    */
   onSwitcherClick = (evt: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     evt.stopPropagation();
-    this._map.getLayers().getArray().forEach((layer, index: number) => {
+    this._map?.getLayers().getArray().forEach((layer, index: number) => {
       if (layer.getVisible()) {
         this._visibleLayerIndex = index;
       }
@@ -238,6 +230,10 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
     const finalClassName = className
       ? `${className} ${this._className}`
       : this._className;
+
+    if (!this._map) {
+      return null;
+    }
 
     return (
       <div

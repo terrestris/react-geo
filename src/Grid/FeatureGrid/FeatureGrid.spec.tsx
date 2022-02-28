@@ -5,6 +5,8 @@ import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 import TestUtil from '../../Util/TestUtil';
 
 import FeatureGrid from './FeatureGrid';
+import OlGeometry from 'ol/geom/Geometry';
+import { MapBrowserEvent } from 'ol';
 
 describe('<FeatureGrid />', () => {
   let map;
@@ -41,31 +43,31 @@ describe('<FeatureGrid />', () => {
 
     expect(layerCand).toHaveLength(1);
     expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
-    expect(wrapper.instance()._source).toBeInstanceOf(OlSourceVector);
-    expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
+    expect((wrapper.instance() as FeatureGrid)._source).toBeInstanceOf(OlSourceVector);
+    expect((wrapper.instance() as FeatureGrid)._layer).toBeInstanceOf(OlLayerVector);
 
     const wrapperWithoutMap = TestUtil.mountComponent(FeatureGrid);
 
-    expect(wrapperWithoutMap.instance()._source).toBeNull();
-    expect(wrapperWithoutMap.instance()._layer).toBeNull();
+    expect((wrapperWithoutMap.instance() as FeatureGrid)._source).toBeNull();
+    expect((wrapperWithoutMap.instance() as FeatureGrid)._layer).toBeNull();
   });
 
   it('initializes a vector layer if it\'s not already added to the map only', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map});
 
-    wrapper.instance().initVectorLayer(map);
+    (wrapper.instance() as FeatureGrid).initVectorLayer(map);
 
     const layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === wrapper.prop('layerName'));
 
     expect(layerCand).toHaveLength(1);
     expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
-    expect(wrapper.instance()._source).toBeInstanceOf(OlSourceVector);
-    expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
+    expect((wrapper.instance() as FeatureGrid)._source).toBeInstanceOf(OlSourceVector);
+    expect((wrapper.instance() as FeatureGrid)._layer).toBeInstanceOf(OlLayerVector);
   });
 
   it('sets the given featureStyle to the featurelayer', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-    expect(wrapper.instance()._layer.getStyle()).toEqual(wrapper.prop('featureStyle'));
+    expect((wrapper.instance() as FeatureGrid)._layer?.getStyle()).toEqual(wrapper.prop('featureStyle'));
   });
 
   it('removes the vector layer from the map on unmount', () => {
@@ -85,8 +87,8 @@ describe('<FeatureGrid />', () => {
 
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, selectable: true});
 
-    const onPointerMove = wrapper.instance().onMapPointerMove;
-    const onMapSingleClick = wrapper.instance().onMapSingleClick;
+    const onPointerMove = (wrapper.instance() as FeatureGrid).onMapPointerMove;
+    const onMapSingleClick = (wrapper.instance() as FeatureGrid).onMapSingleClick;
 
     expect(mapOnSpy).toHaveBeenCalledTimes(2);
     expect(mapOnSpy).toHaveBeenCalledWith('pointermove', onPointerMove);
@@ -99,8 +101,8 @@ describe('<FeatureGrid />', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, selectable: true});
 
     const mapUnSpy = jest.spyOn(map, 'un');
-    const onPointerMove = wrapper.instance().onMapPointerMove;
-    const onMapSingleClick = wrapper.instance().onMapSingleClick;
+    const onPointerMove = (wrapper.instance() as FeatureGrid).onMapPointerMove;
+    const onMapSingleClick = (wrapper.instance() as FeatureGrid).onMapSingleClick;
 
     wrapper.unmount();
 
@@ -114,7 +116,7 @@ describe('<FeatureGrid />', () => {
   it('generates the column definition out of the given features and takes attributeBlacklist into account', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
 
-    const got = wrapper.instance().getColumnDefs();
+    const got = (wrapper.instance() as FeatureGrid).getColumnDefs();
 
     const exp = [{
       dataIndex: 'id',
@@ -132,7 +134,7 @@ describe('<FeatureGrid />', () => {
       attributeBlacklist: ['id']
     });
 
-    const gotBlacklisted = wrapper.instance().getColumnDefs();
+    const gotBlacklisted = (wrapper.instance() as FeatureGrid).getColumnDefs();
 
     const expBlacklisted = [{
       dataIndex: 'name',
@@ -146,7 +148,7 @@ describe('<FeatureGrid />', () => {
   it('generates the appropriate data to render', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
 
-    const got = wrapper.instance().getTableData();
+    const got = (wrapper.instance() as FeatureGrid).getTableData();
 
     const expRows = [{
       id: 1,
@@ -170,11 +172,13 @@ describe('<FeatureGrid />', () => {
 
     const mapViewFitSpy = jest.spyOn(map.getView(), 'fit');
 
-    wrapper.instance().zoomToFeatures(features);
+    (wrapper.instance() as FeatureGrid).zoomToFeatures(features);
 
-    const featGeometries = [];
+    const featGeometries: OlGeometry[] = [];
     features.forEach(feature => {
-      featGeometries.push(feature.getGeometry());
+      if (feature.getGeometry()) {
+        featGeometries.push(feature.getGeometry());
+      }
     });
 
     expect(mapViewFitSpy).toHaveBeenCalledWith(new OlGeomGeometryCollection(featGeometries).getExtent());
@@ -183,7 +187,7 @@ describe('<FeatureGrid />', () => {
   it('highlights all given features', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
 
-    wrapper.instance().highlightFeatures(features);
+    (wrapper.instance() as FeatureGrid).highlightFeatures(features);
 
     features.forEach(feature => {
       expect(feature.getStyle()).toEqual(wrapper.prop('highlightStyle'));
@@ -195,13 +199,13 @@ describe('<FeatureGrid />', () => {
     const selectedFeatureUid = features[0].ol_uid;
 
     wrapper.setState({selectedRowKeys: [selectedFeatureUid]});
-    wrapper.instance().unhighlightFeatures(features);
+    (wrapper.instance() as FeatureGrid).unhighlightFeatures(features);
 
     features.forEach(feature => {
       if (feature.ol_uid === selectedFeatureUid) {
         expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
       } else {
-        expect(feature.getStyle()).toBe(null);
+        expect(feature.getStyle()).toBe(undefined);
       }
     });
   });
@@ -209,7 +213,7 @@ describe('<FeatureGrid />', () => {
   it('selects all given features', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
 
-    wrapper.instance().selectFeatures(features);
+    (wrapper.instance() as FeatureGrid).selectFeatures(features);
 
     features.forEach(feature => {
       expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
@@ -219,10 +223,10 @@ describe('<FeatureGrid />', () => {
   it('resets all given features to default feature style', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
 
-    wrapper.instance().resetFeatureStyles(features);
+    (wrapper.instance() as FeatureGrid).resetFeatureStyles();
 
     features.forEach(feature => {
-      expect(feature.getStyle()).toBe(null);
+      expect(feature.getStyle()).toBe(undefined);
     });
   });
 
@@ -230,13 +234,13 @@ describe('<FeatureGrid />', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
     const selectedRowKeys = [features[0].ol_uid, features[1].ol_uid];
 
-    wrapper.instance().onSelectChange(selectedRowKeys);
+    (wrapper.instance() as FeatureGrid).onSelectChange(selectedRowKeys);
 
     features.forEach(feature => {
       if (selectedRowKeys.includes(feature.ol_uid)) {
         expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
       } else {
-        expect(feature.getStyle()).toBe(null);
+        expect(feature.getStyle()).toBe(undefined);
       }
     });
 
@@ -247,7 +251,7 @@ describe('<FeatureGrid />', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
     const rowKey = features[1].ol_uid;
 
-    expect(wrapper.instance().getFeatureFromRowKey(rowKey)).toEqual(features[1]);
+    expect((wrapper.instance() as FeatureGrid).getFeatureFromRowKey(rowKey)).toEqual(features[1]);
   });
 
   it('selects the feature on row click', () => {
@@ -256,9 +260,9 @@ describe('<FeatureGrid />', () => {
     const clickedRow = {
       key: features[0].ol_uid
     };
-    const zoomToFeaturesSpy = jest.spyOn(wrapper.instance(), 'zoomToFeatures');
+    const zoomToFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'zoomToFeatures');
 
-    wrapper.instance().onRowClick(clickedRow);
+    (wrapper.instance() as FeatureGrid).onRowClick(clickedRow);
 
     expect(onRowClickSpy).toHaveBeenCalled();
     expect(zoomToFeaturesSpy).toHaveBeenCalled();
@@ -273,9 +277,9 @@ describe('<FeatureGrid />', () => {
     const clickedRow = {
       key: features[0].ol_uid
     };
-    const highlightFeaturesSpy = jest.spyOn(wrapper.instance(), 'highlightFeatures');
+    const highlightFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'highlightFeatures');
 
-    wrapper.instance().onRowMouseOver(clickedRow);
+    (wrapper.instance() as FeatureGrid).onRowMouseOver(clickedRow);
 
     expect(onRowMouseOverSpy).toHaveBeenCalled();
     expect(highlightFeaturesSpy).toHaveBeenCalled();
@@ -290,9 +294,9 @@ describe('<FeatureGrid />', () => {
     const clickedRow = {
       key: features[0].ol_uid
     };
-    const unhighlightFeaturesSpy = jest.spyOn(wrapper.instance(), 'unhighlightFeatures');
+    const unhighlightFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'unhighlightFeatures');
 
-    wrapper.instance().onRowMouseOut(clickedRow);
+    (wrapper.instance() as FeatureGrid).onRowMouseOut(clickedRow);
 
     expect(onRowMouseOutSpy).toHaveBeenCalled();
     expect(unhighlightFeaturesSpy).toHaveBeenCalled();
@@ -304,26 +308,26 @@ describe('<FeatureGrid />', () => {
   it('handles the change of props', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid);
 
-    expect(wrapper.instance()._source).toBeNull();
-    expect(wrapper.instance()._layer).toBeNull();
+    expect((wrapper.instance() as FeatureGrid)._source).toBeNull();
+    expect((wrapper.instance() as FeatureGrid)._layer).toBeNull();
 
     wrapper.setProps({
       map: map
     });
 
-    expect(wrapper.instance()._source).toBeInstanceOf(OlSourceVector);
-    expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
+    expect((wrapper.instance() as FeatureGrid)._source).toBeInstanceOf(OlSourceVector);
+    expect((wrapper.instance() as FeatureGrid)._layer).toBeInstanceOf(OlLayerVector);
 
-    expect(wrapper.instance()._source.getFeatures()).toEqual([]);
+    expect((wrapper.instance() as FeatureGrid)._source?.getFeatures()).toEqual([]);
 
-    const zoomToFeaturesSpy = jest.spyOn(wrapper.instance(), 'zoomToFeatures');
+    const zoomToFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'zoomToFeatures');
 
     wrapper.setProps({
       features: features,
       zoomToExtent: true
     });
 
-    expect(wrapper.instance()._source.getFeatures()).toEqual(features);
+    expect((wrapper.instance() as FeatureGrid)._source?.getFeatures()).toEqual(features);
     expect(zoomToFeaturesSpy).toHaveBeenCalled();
 
     zoomToFeaturesSpy.mockRestore();
@@ -356,14 +360,14 @@ describe('<FeatureGrid />', () => {
 
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
 
-    wrapper.instance().onMapPointerMove({
+    (wrapper.instance() as FeatureGrid).onMapPointerMove({
       pixel: [19, 19]
-    });
+    } as unknown as MapBrowserEvent<MouseEvent>);
 
     expect(features[0].getStyle()).toEqual(wrapper.prop('highlightStyle'));
 
-    expect(features[1].getStyle()).toEqual(null);
-    expect(features[2].getStyle()).toEqual(null);
+    expect(features[1].getStyle()).toEqual(undefined);
+    expect(features[2].getStyle()).toEqual(undefined);
 
     getFeaturesAtPixelSpy.mockRestore();
   });
@@ -374,9 +378,9 @@ describe('<FeatureGrid />', () => {
 
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
 
-    wrapper.instance().onMapSingleClick({
+    (wrapper.instance() as FeatureGrid).onMapSingleClick({
       pixel: [19, 19]
-    });
+    } as unknown as MapBrowserEvent<MouseEvent>);
 
     expect(features[0].getStyle()).toEqual(wrapper.prop('selectStyle'));
 

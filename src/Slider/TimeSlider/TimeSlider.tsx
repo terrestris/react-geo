@@ -9,7 +9,7 @@ import { SliderMarks, SliderBaseProps } from 'antd/lib/slider';
 
 import { CSS_PREFIX } from '../../constants';
 
-interface DefaultProps {
+interface OwnProps {
   /**
    * Whether to allow range selection.
    */
@@ -38,9 +38,6 @@ interface DefaultProps {
    * The moment.js compliant format string for the slider tooltip.
    */
   formatString: string;
-}
-
-export interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -49,11 +46,10 @@ export interface BaseProps {
    * Tick mark of Slider, type of key must be TimeStamp ISOString, and must in
    * closed interval min, max，each mark can declare its own style.
    */
-  marks?: SliderMarks;
+  marks: SliderMarks;
 }
 
-export type TimeSliderProps = BaseProps & Partial<DefaultProps> &
-Omit<SliderBaseProps, 'min' | 'max' | 'marks' | 'className'>;
+export type TimeSliderProps = OwnProps & Omit<SliderBaseProps, 'min' | 'max' | 'marks' | 'className'>;
 
 /**
  * Customized slider that uses ISO 8601 time strings as input.
@@ -63,7 +59,7 @@ Omit<SliderBaseProps, 'min' | 'max' | 'marks' | 'className'>;
  */
 class TimeSlider extends React.Component<TimeSliderProps> {
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     useRange: false,
     defaultValue: moment().toISOString(),
     min: moment().subtract(1, 'hour').toISOString(),
@@ -125,9 +121,8 @@ class TimeSlider extends React.Component<TimeSliderProps> {
    * @return The marks prop with converted keys.
    */
   convertMarks(marks: SliderMarks): SliderMarks {
-    let convertedMarks: SliderMarks;
+    let convertedMarks: SliderMarks = {};
     if (_isObject(marks)) {
-      convertedMarks = {};
       Object.keys(marks).forEach(key => {
         const convertedKey = this.convert(key) as number;
         convertedMarks[convertedKey] = marks[key];

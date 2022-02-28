@@ -7,6 +7,7 @@ import OlView from 'ol/View';
 
 import _isInteger from 'lodash/isInteger';
 import _isEmpty from 'lodash/isEmpty';
+import _isNil from 'lodash/isNil';
 import _isEqual from 'lodash/isEqual';
 import _isFunction from 'lodash/isFunction';
 import _reverse from 'lodash/reverse';
@@ -19,7 +20,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './ScaleCombo.less';
 
-interface DefaultProps {
+interface ScaleComboProps {
   /**
    * A filter function to filter resolutions no options should be created
    */
@@ -32,9 +33,6 @@ interface DefaultProps {
    * The scales.
    */
   scales: number[];
-}
-
-interface BaseProps {
   /**
    * An optional CSS class which should be added.
    */
@@ -73,8 +71,6 @@ interface ScaleComboState {
    */
   scales: number[];
 }
-
-export type ScaleComboProps = BaseProps & Partial<DefaultProps>;
 
 /**
  * Class representing a scale combo to choose map scale via a dropdown menu.
@@ -236,7 +232,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     // use existing resolutions array if exists
     const resolutions = view.getResolutions();
 
-    if (_isEmpty(resolutions)) {
+    if (_isEmpty(resolutions) || _isNil(resolutions)) {
       for (let currentZoomLevel = view.getMaxZoom(); currentZoomLevel >= view.getMinZoom(); currentZoomLevel--) {
         const resolution = view.getResolutionForZoom(currentZoomLevel);
         if (resolutionsFilter(resolution)) {
@@ -310,8 +306,8 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
       <Select
         showSearch
         onChange={onZoomLevelSelect}
-        filterOption={(input, option) => option.key.toString().startsWith(input)}
-        value={this.determineOptionKeyForZoomLevel(zoomLevel)}
+        filterOption={(input, option) => option?.key?.toString().startsWith(input) ?? false}
+        value={this.determineOptionKeyForZoomLevel(zoomLevel ?? 0)}
         size="small"
         className={finalClassName}
         {...passThroughProps}

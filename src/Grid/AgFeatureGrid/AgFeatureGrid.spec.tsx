@@ -32,7 +32,7 @@ describe('<AgFeatureGrid />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(AgFeatureGrid);
+    const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map});
     expect(wrapper).not.toBeUndefined();
   });
 
@@ -45,11 +45,6 @@ describe('<AgFeatureGrid />', () => {
     expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
     expect(wrapper.instance()._source).toBeInstanceOf(OlSourceVector);
     expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
-
-    const wrapperWithoutMap = TestUtil.mountComponent(AgFeatureGrid);
-
-    expect(wrapperWithoutMap.instance()._source).toBeNull();
-    expect(wrapperWithoutMap.instance()._layer).toBeNull();
   });
 
   it('initializes a vector layer if it\'s not already added to the map only', () => {
@@ -205,7 +200,7 @@ describe('<AgFeatureGrid />', () => {
     wrapper.instance().resetFeatureStyles(features);
 
     features.forEach(feature => {
-      expect(feature.getStyle()).toBe(null);
+      expect(feature.getStyle()).toBe(undefined);
     });
   });
 
@@ -255,14 +250,7 @@ describe('<AgFeatureGrid />', () => {
   });
 
   it('handles the change of props', () => {
-    const wrapper = TestUtil.mountComponent(AgFeatureGrid);
-
-    expect(wrapper.instance()._source).toBeNull();
-    expect(wrapper.instance()._layer).toBeNull();
-
-    wrapper.setProps({
-      map: map
-    });
+    const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map: map});
 
     expect(wrapper.instance()._source).toBeInstanceOf(OlSourceVector);
     expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
@@ -272,6 +260,7 @@ describe('<AgFeatureGrid />', () => {
     const zoomToFeaturesSpy = jest.spyOn(wrapper.instance(), 'zoomToFeatures');
 
     wrapper.setProps({
+      map: map,
       features: features,
       zoomToExtent: true
     });

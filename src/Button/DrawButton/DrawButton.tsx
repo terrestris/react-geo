@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import { StyleLike as OlStyleLike } from 'ol/style/Style';
 import OlInteractionDraw, { createBox, DrawEvent as OlDrawEvent, Options as OlDrawOptions } from 'ol/interaction/Draw';
@@ -112,12 +112,12 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 }) => {
 
   const [drawInteraction, setDrawInteraction] = useState<OlInteractionDraw>();
-  const [layer, setLayer] = useState<OlVectorLayer<OlVectorSource<OlGeometry>>>(null);
+  const [layer, setLayer] = useState<OlVectorLayer<OlVectorSource<OlGeometry>> | null>(null);
 
   /**
    * Currently drawn feature which should be represent as label or postit.
    */
-  const [digitizeTextFeature, setDigitizeTextFeature] = useState<OlFeature<OlGeometry>>(null);
+  const [digitizeTextFeature, setDigitizeTextFeature] = useState<OlFeature<OlGeometry> | null>(null);
 
   const map = useMap();
 
@@ -185,22 +185,23 @@ const DrawButton: React.FC<DrawButtonProps> = ({
       return undefined;
     }
 
-    const keys = [];
-
-    keys.push(drawInteraction.on('drawend', (evt) => {
+    const endKey = drawInteraction.on('drawend', (evt) => {
       onDrawEnd?.(evt);
-    }));
+    });
 
-    keys.push(drawInteraction.on('drawstart', (evt) => {
+    const startKey = drawInteraction.on('drawstart', (evt) => {
       onDrawStart?.(evt);
-    }));
+    });
 
     return () => {
-      for (const key of keys) {
-        unByKey(key);
-      }
+      unByKey(startKey);
+      unByKey(endKey);
     };
   }, [drawInteraction, onDrawStart, onDrawEnd]);
+
+  if (!drawInteraction || !layer) {
+    return null;
+  }
 
   /**
    * Called when the draw button is toggled. If the button state is pressed,
@@ -211,22 +212,35 @@ const DrawButton: React.FC<DrawButtonProps> = ({
     onToggle?.(pressed, lastClickEvent);
   };
 
-  const onModalLabelOkInternal = () => {
-    onModalLabelOk?.(digitizeTextFeature);
-    setDigitizeTextFeature(null);
-  };
-
-  const onModalLabelCancelInternal = () => {
-    onModalLabelCancel?.();
-    layer.getSource().removeFeature(digitizeTextFeature);
-    setDigitizeTextFeature(null);
-  };
-
   const finalClassName = className
     ? `${defaultClassName} ${className}`
     : defaultClassName;
 
   const btnWrapperClass = `${CSS_PREFIX}digitize-button-wrapper`;
+
+  let modal: ReactNode = null;
+  if (digitizeTextFeature) {
+    const onModalLabelOkInternal = () => {
+      onModalLabelOk?.(digitizeTextFeature);
+      setDigitizeTextFeature(null);
+    };
+
+    const onModalLabelCancelInternal = () => {
+      onModalLabelCancel?.();
+      layer.getSource().removeFeature(digitizeTextFeature);
+      setDigitizeTextFeature(null);
+    };
+
+    modal = <FeatureLabelModal
+      feature={digitizeTextFeature}
+      onOk={onModalLabelOkInternal}
+      onCancel={onModalLabelCancelInternal}
+      title={modalPromptTitle}
+      okText={modalPromptOkButtonText}
+      cancelText={modalPromptCancelButtonText}
+      maxLabelLineLength={maxLabelLineLength}
+    />;
+  }
 
   return (
     <span className={btnWrapperClass}>
@@ -235,15 +249,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
         className={finalClassName}
         {...passThroughProps}
       />
-      <FeatureLabelModal
-        feature={digitizeTextFeature}
-        onOk={onModalLabelOkInternal}
-        onCancel={onModalLabelCancelInternal}
-        title={modalPromptTitle}
-        okText={modalPromptOkButtonText}
-        cancelText={modalPromptCancelButtonText}
-        maxLabelLineLength={maxLabelLineLength}
-      />
+      {modal}
     </span>);
 };
 

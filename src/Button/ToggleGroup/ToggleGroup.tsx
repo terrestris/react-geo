@@ -7,7 +7,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import './ToggleGroup.less';
 
-interface DefaultProps {
+export interface ToggleGroupProps {
   /**
    * The orientation of the children.
    */
@@ -16,9 +16,6 @@ interface DefaultProps {
    * Whether it's allowed to deselect a children or not.
    */
   allowDeselect: boolean;
-}
-
-interface BaseProps {
   /**
    * The className which should be added.
    */
@@ -44,11 +41,9 @@ interface BaseProps {
   children?: React.ReactElement[];
 }
 
-interface ToggleGroupState {
-  selectedName: string;
+export interface ToggleGroupState {
+  selectedName?: string;
 }
-
-export type ToggleGroupProps = BaseProps & Partial<DefaultProps>;
 
 /**
  * A group for toggle components (e.g. buttons)
@@ -62,7 +57,7 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
   /**
    * The default properties.
    */
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     orientation: 'vertical',
     allowDeselect: true
   };
@@ -135,7 +130,7 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
     }
     // Allow deselect.
     if (this.props.allowDeselect && (childProps.name === this.state.selectedName)) {
-      this.setState({ selectedName: null });
+      this.setState({ selectedName: undefined });
     } else {
       this.setState({ selectedName: childProps.name });
     }

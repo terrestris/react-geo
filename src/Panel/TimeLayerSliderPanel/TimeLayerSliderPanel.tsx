@@ -40,7 +40,7 @@ export interface Tooltips {
 
 export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 
-export interface DefaultTimeLayerSliderPanelProps {
+export interface TimeLayerSliderPanelProps {
   className: string;
   onChange: (arg: moment.Moment) => void;
   timeAwareLayers: OlLayer<OlImageWMS|OlTileWMS, any>[];
@@ -48,9 +48,6 @@ export interface DefaultTimeLayerSliderPanelProps {
   dateFormat: string;
   tooltips: Tooltips;
   autoPlaySpeedOptions: number[];
-}
-
-export interface TimeLayerSliderPanelProps extends Partial<DefaultTimeLayerSliderPanelProps> {
   map: OlMap;
   initStartDate: moment.Moment;
   initEndDate: moment.Moment;
@@ -75,7 +72,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
    * @static
    * @memberof LayerSetBaseMapChooser
    */
-  public static defaultProps: DefaultTimeLayerSliderPanelProps = {
+  public static defaultProps = {
     className: '',
     onChange: () => {},
     timeAwareLayers: [],
@@ -408,9 +405,9 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
 
     const resetVisible = true;
 
-    const startDateString = startDate ? startDate.toISOString() : undefined;
-    const endDateString = endDate ? endDate.toISOString() : undefined;
-    const valueString = value ? value.toISOString() : undefined;
+    const startDateString = startDate.toISOString();
+    const endDateString = endDate.toISOString();
+    const valueString = value.toISOString();
     const mid = startDate!.clone().add(endDate!.diff(startDate) / 2);
     const marks = {};
     const futureClass = moment().isBefore(value) ? ' timeslider-in-future' : '';

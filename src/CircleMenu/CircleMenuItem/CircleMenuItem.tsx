@@ -4,14 +4,12 @@ import { CSS_PREFIX } from '../../constants';
 
 import './CircleMenuItem.less';
 
-interface CircleMenuItemDefaultProps {
+
+export interface CircleMenuItemProps {
   /**
    * The duration of the animation in milliseconds. Pass 0 to avoid animation.
    */
   animationDuration: number;
-}
-
-export interface CircleMenuItemProps extends Partial<CircleMenuItemDefaultProps> {
   className?: string;
   /**
    * The radius of the CircleMenu in pixels.
@@ -49,7 +47,7 @@ export class CircleMenuItem extends React.Component<CircleMenuItemProps> {
    * Internal reference used to apply the transformation right on the div.
    * @private
    */
-  _ref = null;
+  _ref: HTMLDivElement | null = null;
 
   /**
    * A react lifecycle method called when the component did mount.
