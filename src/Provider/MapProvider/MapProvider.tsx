@@ -60,7 +60,7 @@ class MapProvider extends React.Component<MapProviderProps, MapProviderState> {
       })
       .catch(error => {
         Logger.error(error);
-      })
+      });
   }
 
   /**
