@@ -8,17 +8,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout sources
+    - name: Checkout sources 🔰
       uses: actions/checkout@v2
       with:
         persist-credentials: false
 
-    - name: Use Node.js 14.x
+    - name: Setup Node.js 16 👷🏻
       uses: actions/setup-node@v1
       with:
-        node-version: 14.x
+        node-version: 16
 
     - name: Cache Node.js modules 💾
       uses: actions/cache@v2

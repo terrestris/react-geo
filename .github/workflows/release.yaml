@@ -7,18 +7,22 @@ on:
 jobs:
   release:
     name: Release
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Setup Node.js
+      - name: Checkout sources 🔰
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js 16 👷🏻
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 16
+
       - name: Install dependencies ⏬
         run: npm ci
-      - name: Build 🏗️
+
+      - name: Build artifacts 🏗️
         run: npm run build
+
       - name: Release 🚀
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
