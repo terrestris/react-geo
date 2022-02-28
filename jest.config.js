@@ -30,6 +30,7 @@ module.exports = {
     '<rootDir>/jest/setup.js'
   ],
   transform: {
+    '^.+\\.jsx?$': '<rootDir>/node_modules/babel-jest',
     '^.+\\.tsx?$': '<rootDir>/node_modules/babel-jest'
   },
   collectCoverageFrom: [
