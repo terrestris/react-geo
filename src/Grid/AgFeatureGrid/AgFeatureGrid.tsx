@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/render-result-naming-convention */
 import * as React from 'react';
 
 import OlStyle from 'ol/style/Style';

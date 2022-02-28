@@ -6,6 +6,7 @@ const allAntdDropdownOptionQuery = (container) => {
 
 const allAntdDropdownOptionByTextQuery = (container, text: string) => {
   const dropdowns = Array.from(container.querySelectorAll('.ant-select-dropdown'));
+  // eslint-disable-next-line testing-library/prefer-screen-queries
   const options = dropdowns.map(dropdown => queryAllByTitle(dropdown, text))
     .reduce((acc, val) => val !== null ? acc.concat(val) : acc, []);
   return options;

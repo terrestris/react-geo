@@ -10,6 +10,8 @@ module.exports = {
   ],
   rules: {
     'no-underscore-dangle': 'off',
-    '@typescript-eslint/member-ordering': 'off'
+    '@typescript-eslint/member-ordering': 'off',
+    'testing-library/no-node-access': 'warn',
+    'testing-library/no-container': 'warn'
   }
 };

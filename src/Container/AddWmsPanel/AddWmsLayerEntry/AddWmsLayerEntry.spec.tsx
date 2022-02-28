@@ -32,16 +32,16 @@ describe('<AddWmsLayerEntry />', () => {
   it('adds queryable icon if prop wmsLayer has queryable set to true', () => {
     testLayer.set('queryable', true);
 
-    const dom = render(<AddWmsLayerEntry wmsLayer={testLayer} />);
-    const icon = dom.container.getElementsByClassName('queryable-info');
+    const { container } = render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    const icon = container.getElementsByClassName('queryable-info');
     const iconClassList = Object.keys(icon.item(0).classList).map(k => icon.item(0).classList[k]);
     expect(iconClassList).toContain('fa-info');
     testLayer.set('queryable', false);
   });
 
   it('doesn\'t add queryable icon if prop wmsLayer has queryable set to false', () => {
-    const dom = render(<AddWmsLayerEntry wmsLayer={testLayer} />);
-    const icon = dom.container.getElementsByClassName('queryable-info');
+    const { container } = render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    const icon = container.getElementsByClassName('queryable-info');
     expect(icon.length).toEqual(0);
   });
 
@@ -49,8 +49,8 @@ describe('<AddWmsLayerEntry />', () => {
     const wmsAttribution = 'Test - attribution';
     testLayer.getSource().setAttributions(wmsAttribution);
 
-    const dom = render(<AddWmsLayerEntry wmsLayer={testLayer} />);
-    const icon = dom.container.getElementsByClassName('attribution-info');
+    const { container } = render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    const icon = container.getElementsByClassName('attribution-info');
     const iconClassList = Object.keys(icon.item(0).classList).map(k => icon.item(0).classList[k]);
     expect(iconClassList).toContain('fa-copyright');
 
@@ -58,9 +58,9 @@ describe('<AddWmsLayerEntry />', () => {
   });
 
   it('doesn\'t add copyright icon if prop wmsLayer no has filled attribution', () => {
-    const dom = render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    const { container } = render(<AddWmsLayerEntry wmsLayer={testLayer} />);
 
-    const attributionIcon = dom.container.getElementsByClassName('attribution-info');
+    const attributionIcon = container.getElementsByClassName('attribution-info');
     expect(attributionIcon.length).toEqual(0);
   });
 
