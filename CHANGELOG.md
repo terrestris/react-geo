@@ -1,3 +1,10 @@
+## [16.2.1](https://github.com/terrestris/react-geo/compare/v16.2.0...v16.2.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* Resolve some GitHub check annotations ([ff48d6b](https://github.com/terrestris/react-geo/commit/ff48d6b6984696012f97182ba8c4067dbc77b7ac))
+
 # [16.2.0](https://github.com/terrestris/react-geo/compare/v16.1.0...v16.2.0) (2022-02-04)
 
 
