@@ -70,7 +70,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({
 
     const copy = feat.clone();
 
-    layers[0].getSource().addFeature(copy);
+    layers[0].getSource()?.addFeature(copy);
 
     AnimateUtil.moveFeature(
       map,

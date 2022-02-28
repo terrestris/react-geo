@@ -238,7 +238,7 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
   const onFeatureSelect = (event: OlSelectEvent) => {
     if (editLabel) {
       const labeled = event.selected.find(f => f.get('isLabel'));
-      setEditLabelFeature(labeled);
+      setEditLabelFeature(labeled || null);
     }
   };
 

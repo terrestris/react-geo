@@ -149,7 +149,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
     }
 
     const newInteraction = new OlInteractionDraw({
-      source: layer.getSource(),
+      source: layer.getSource() || undefined,
       type: type,
       geometryFunction: geometryFunction,
       style: drawStyle ?? DigitizeUtil.defaultDigitizeStyleFunction,
@@ -227,7 +227,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 
     const onModalLabelCancelInternal = () => {
       onModalLabelCancel?.();
-      layer.getSource().removeFeature(digitizeTextFeature);
+      layer.getSource()?.removeFeature(digitizeTextFeature);
       setDigitizeTextFeature(null);
     };
 
