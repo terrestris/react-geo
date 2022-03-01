@@ -1,6 +1,6 @@
 # react-geo  <a href="https://terrestris.github.io/react-geo/"><img align="left" src="./assets/logo.svg" width="70px" /></a>
 
-[![Coverage Status](https://coveralls.io/repos/github/terrestris/react-geo/badge.svg?branch=master)](https://coveralls.io/github/terrestris/react-geo?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/terrestris/react-geo/badge.svg?branch=main)](https://coveralls.io/github/terrestris/react-geo?branch=main)
 [![license: 2-Clause BSD](https://img.shields.io/badge/license-2--Clause%20BSD-brightgreen.svg)](https://opensource.org/licenses/BSD-2-Clause)
 [![Known Vulnerabilities](https://snyk.io/test/github/terrestris/react-geo/badge.svg)](https://snyk.io/test/github/terrestris/react-geo)
 
