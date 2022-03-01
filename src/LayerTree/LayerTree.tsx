@@ -484,20 +484,20 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    *
    * @param currentGroup The current group to search in
    * @param olUid The ol_uid of the layer or folder that has been set visible
-   * @param masterGroup The main group to search in. Needed when searching for
+   * @param mainGroup The main group to search in. Needed when searching for
    * parents as we always have to start search from top
    */
-  setParentFoldersVisible(currentGroup: OlLayerGroup, olUid: string, masterGroup: OlLayerGroup) {
+  setParentFoldersVisible(currentGroup: OlLayerGroup, olUid: string, mainGroup: OlLayerGroup) {
     const items = currentGroup.getLayers().getArray();
     const groups = items.filter(l => l instanceof OlLayerGroup) as OlLayerGroup[];
     const match = items.find(i => getUid(i) === olUid);
     if (match) {
       currentGroup.setVisible(true);
-      this.setParentFoldersVisible(masterGroup, getUid(currentGroup), masterGroup);
+      this.setParentFoldersVisible(mainGroup, getUid(currentGroup), mainGroup);
       return;
     }
     groups.forEach(g => {
-      this.setParentFoldersVisible(g, olUid, masterGroup);
+      this.setParentFoldersVisible(g, olUid, mainGroup);
     });
   }
 
