@@ -38,7 +38,7 @@ class ScaleComboExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <div className="example-block">
           <label>ScaleCombo:<br />

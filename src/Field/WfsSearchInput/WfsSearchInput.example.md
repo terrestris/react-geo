@@ -60,7 +60,7 @@ class WfsSearchInputExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <div className="example-block">
           <label>WFS Search Input:<br />

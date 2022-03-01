@@ -136,7 +136,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
 
     if (showMarker) {
       this._markerFeature = new OlFeature();
-      this._geoLocationLayer.getSource().addFeature(this._markerFeature);
+      this._geoLocationLayer.getSource()?.addFeature(this._markerFeature);
     }
   }
 
@@ -151,7 +151,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
 
     if (showMarker && !this._markerFeature) {
       this._markerFeature = new OlFeature();
-      this._geoLocationLayer.getSource().addFeature(this._markerFeature);
+      this._geoLocationLayer.getSource()?.addFeature(this._markerFeature);
     }
   }
 
@@ -241,7 +241,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
       }
       if (this._markerFeature) {
         this._markerFeature = null;
-        this._geoLocationLayer.getSource().clear();
+        this._geoLocationLayer.getSource()?.clear();
       }
       return;
     }
@@ -257,8 +257,8 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
       if (!this._markerFeature) {
         this._markerFeature = new OlFeature();
       }
-      if (!this._geoLocationLayer.getSource().getFeatures().includes(this._markerFeature)) {
-        this._geoLocationLayer.getSource().addFeature(this._markerFeature);
+      if (!this._geoLocationLayer.getSource()?.getFeatures().includes(this._markerFeature)) {
+        this._geoLocationLayer.getSource()?.addFeature(this._markerFeature);
       }
       const heading = this._geoLocation.getHeading() || 0;
       const speed = this._geoLocation.getSpeed() || 0;

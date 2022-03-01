@@ -28,7 +28,7 @@ class LoadingTitleBar extends React.Component {
 
   render() {
     const { loading } = this.state;
-    return(
+    return (
       <div>
         <LoadingPanel
           spinning={loading}
@@ -120,7 +120,7 @@ class LoadingTreeExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div
         id={this.mapDivId}
         style={{

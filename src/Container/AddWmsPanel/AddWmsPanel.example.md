@@ -64,7 +64,7 @@ class AddWmsPanelExample extends React.Component {
       layers
     } = this.state;
 
-    return(
+    return (
       <div>
         <div
           id={this.mapDivId}

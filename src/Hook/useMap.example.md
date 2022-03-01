@@ -40,7 +40,7 @@ function ComponentToUseTheMap() {
     map.setTarget('usemap-map');
   }, []);
 
-  return(
+  return (
     <MapComponent
       id={'usemap-map'}
       map={map}
@@ -54,7 +54,7 @@ function ComponentToUseTheMap() {
 function LayerTreeToUseTheMap() {
   const map = useMap();
 
-  return(
+  return (
     <LayerTree
       map={map}
     />
@@ -62,7 +62,7 @@ function LayerTreeToUseTheMap() {
 }
 
 function UseMapExample() {
-  return(
+  return (
     <MapContext.Provider value={openlayersMap}>
       <ComponentToUseTheMap />
       <LayerTreeToUseTheMap />

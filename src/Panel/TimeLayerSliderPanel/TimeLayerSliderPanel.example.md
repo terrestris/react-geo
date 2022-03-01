@@ -1,4 +1,4 @@
-This example demonstrates the usage of the TimeLayerSliderPanel  
+This example demonstrates the usage of the TimeLayerSliderPanel
 (Data: IEM generated CONUS composite of NWS NEXRAD WSR-88D level III base reflectivity, Iowa State University)
 
 ```jsx
@@ -68,7 +68,7 @@ class TimeLayerSliderPanelExample extends React.Component {
       dataRange: 'Set data range'
     };
 
-    return(
+    return (
       <div>
         <div
           id={this.mapDivId}

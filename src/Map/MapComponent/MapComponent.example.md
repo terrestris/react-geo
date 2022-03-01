@@ -65,7 +65,7 @@ class MapComponentExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <MapProvider map={this.mapPromise}>
         NominatimSearch:
         <Search />

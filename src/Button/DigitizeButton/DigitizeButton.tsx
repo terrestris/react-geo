@@ -21,6 +21,7 @@ import * as OlEventConditions from 'ol/events/condition';
 import OlGeometry from 'ol/geom/Geometry';
 
 import _isFunction from 'lodash/isFunction';
+import _isArray from 'lodash/isArray';
 
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
@@ -901,7 +902,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
 
     if (this._digitizeLayer) {
-      this._digitizeLayer.getSource().removeFeature(feat);
+      this._digitizeLayer.getSource()?.removeFeature(feat);
     }
 
     if (_isFunction(onFeatureRemove)) {
@@ -974,7 +975,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     if (feature.get('isLabel')) {
       this._digitizeTextFeature = feature;
-      let textLabel = '';
+      let textLabel: string | string[] = '';
 
       const featureStyle = this.digitizeStyleFunction(feature);
 
@@ -986,7 +987,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
       this.setState({
         showLabelPrompt: true,
-        textLabel
+        textLabel: _isArray(textLabel) ? textLabel.join(' ') : textLabel
       });
     }
   };

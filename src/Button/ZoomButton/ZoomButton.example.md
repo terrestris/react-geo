@@ -38,7 +38,7 @@ class ZoomButtonExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <div
           id={this.mapDivId}

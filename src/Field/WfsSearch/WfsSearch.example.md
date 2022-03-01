@@ -38,7 +38,7 @@ class WfsSearchExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <div className="example-block">
           <label>WFS Search:<br />

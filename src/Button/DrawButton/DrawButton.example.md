@@ -15,9 +15,9 @@ import ToggleGroup from '@terrestris/react-geo/Button/ToggleGroup/ToggleGroup';
 import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
 
 const DrawButtonExample = () => {
-    
+
   const [map, setMap] = useState();
-    
+
   useEffect(() => {
     setMap(new OlMap({
       layers: [
@@ -32,7 +32,7 @@ const DrawButtonExample = () => {
       })
     }));
   }, [])
-    
+
   if (!map) {
     return null;
   }
@@ -46,7 +46,6 @@ const DrawButtonExample = () => {
             height: '400px'
           }}
         />
-    
         <div>
           <span>Select a digitize type:</span>
           <ToggleGroup>

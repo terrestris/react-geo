@@ -71,7 +71,7 @@ class AgFeatureGridExample extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <AgFeatureGrid
           features={features}

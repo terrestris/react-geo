@@ -24,7 +24,6 @@ module.exports = {
     'node_modules/(?!(ol|antd|(rc-[a-z-]*)|@ant-design\/css-animation|(@ant-design\/icons)(-[a-z]+)*|@babel\/runtime)/)'
   ],
   setupFiles: [
-    '<rootDir>/jest/__mocks__/shim.js',
     '<rootDir>/jest/__mocks__/matchMediaMock.js'
   ],
   setupFilesAfterEnv: [
@@ -39,5 +38,5 @@ module.exports = {
     '!src/**/*example*.*'
   ],
   coverageDirectory: '<rootDir>/coverage',
-  testEnvironment: 'jest-environment-jsdom-sixteen'
+  testEnvironment: 'jsdom'
 };

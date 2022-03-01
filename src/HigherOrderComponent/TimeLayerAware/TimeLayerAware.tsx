@@ -48,14 +48,14 @@ export function timeLayerAware<P>(WrappedComponent: React.ComponentType<P>, laye
     timeChanged = newValues => {
       layers.forEach(config => {
         if (config.isWmsTime) {
-          const parms = config.layer.getSource().getParams();
+          const parms = config.layer.getSource()?.getParams();
           const timeParam = findTimeParam(parms);
           if (_isArray(newValues)) {
             parms[timeParam] = `${newValues[0]}/${newValues[1]}`;
           } else {
             parms[timeParam] = `${newValues}`;
           }
-          config.layer.getSource().updateParams(parms);
+          config.layer.getSource()?.updateParams(parms);
         }
         if (config.customHandler) {
           config.customHandler(newValues);

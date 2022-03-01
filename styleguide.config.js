@@ -44,7 +44,6 @@ module.exports = {
     '@terrestris/react-geo': path.resolve(__dirname, 'src')
   },
   require: [
-    '@babel/polyfill',
     'whatwg-fetch',
     'ol/ol.css'
   ],

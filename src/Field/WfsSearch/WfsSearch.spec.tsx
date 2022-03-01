@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/render-result-naming-convention */
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';

@@ -130,7 +130,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       });
     } else {
       layerClone = new OlLayerTile({
-        source: layer.getSource(),
+        source: layer.getSource() || undefined,
         properties: {
           originalLayer: layer
         },

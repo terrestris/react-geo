@@ -394,7 +394,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     const drawType = measureType === 'polygon' ? OlGeometryType.MULTI_POLYGON : OlGeometryType.MULTI_LINE_STRING;
 
     const drawInteraction = new OlInteractionDraw({
-      source: this._measureLayer.getSource(),
+      source: this._measureLayer.getSource() || undefined,
       type: drawType,
       maxPoints: maxPoints,
       style: new OlStyleStyle({
@@ -513,7 +513,9 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
 
     this._eventKeys.click = map.on('click', (e: OlMapBrowserEvent<MouseEvent>) => this.onMapClick(e));
 
-    if (!multipleDrawing && source.getFeatures().length > 0) {
+    const features = source?.getFeatures();
+
+    if (!multipleDrawing && features && features.length > 0) {
       this.cleanupTooltips();
       this.createMeasureTooltip();
 
@@ -521,7 +523,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
         this.createHelpTooltip();
       }
 
-      source.clear();
+      source?.clear();
     }
   }
 
@@ -755,7 +757,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     this.cleanupTooltips();
 
     if (this._measureLayer) {
-      this._measureLayer.getSource().clear();
+      this._measureLayer.getSource()?.clear();
     }
   }
 

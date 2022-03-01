@@ -56,7 +56,6 @@ const DeleteButtonExample = () => {
             height: '400px'
           }}
         />
-    
         <DeleteButton>
           Delete feature
         </DeleteButton>

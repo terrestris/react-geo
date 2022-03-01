@@ -260,7 +260,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
   wmsTimeHandler = (value?: any) => {
     this._wmsTimeLayers.forEach(config => {
       if (config.layer && config.layer.get('type') === 'WMSTime') {
-        const params = config.layer.getSource().getParams();
+        const params = config.layer.getSource()?.getParams();
         let time;
         if (Array.isArray(value)) {
           time = value[0];
@@ -278,7 +278,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         } else {
           params.TIME = time.format(timeFormat);
         }
-        config.layer.getSource().updateParams(params);
+        config.layer.getSource()?.updateParams(params);
       }
     });
   };

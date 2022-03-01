@@ -22,16 +22,16 @@ const format = new OlFormatGeoJSON();
 const features = format.readFeatures(federalStates);
 
 const SelectFeaturesButtonExample = () => {
-    
+
   const [map, setMap] = useState();
   const [layers, setLayers] = useState();
   const [feature, setFeature] = useState();
-    
+
   useEffect(() => {
     const layer = new OlVectorLayer({
       source: new OlVectorSource({
-        features      
-      })    
+        features
+      })
     });
 
     setLayers([layer]);
@@ -64,11 +64,11 @@ const SelectFeaturesButtonExample = () => {
             height: '400px'
           }}
         />
-    
+
         <SelectFeaturesButton layers={layers} onFeatureSelect={e => setFeature(e.selected[0])}>
           Select feature
         </SelectFeaturesButton>
-        
+
         { feature && feature.get('GEN') }
 
       </MapContext.Provider>
