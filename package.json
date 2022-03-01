@@ -122,7 +122,7 @@
     "@types/enzyme": "^3.10.4",
     "@types/jest": "^26.0.0",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/eslint-plugin-tslint": "^4.15.1",
+    "@typescript-eslint/eslint-plugin-tslint": "^5.13.0",
     "@typescript-eslint/parser": "^4.15.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "antd": "^4.17.3",
