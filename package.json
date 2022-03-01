@@ -143,7 +143,7 @@
     "eslint-plugin-markdown": "^1.0.0",
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "eslint-plugin-testing-library": "^3.10.2",
+    "eslint-plugin-testing-library": "^5.0.5",
     "fork-ts-checker-webpack-plugin": "^7.2.1",
     "jest": "^26.2.1",
     "jest-canvas-mock": "^2.3.1",
