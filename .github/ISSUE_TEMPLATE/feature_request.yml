@@ -11,7 +11,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for suggestion! 💞
+        Thank you for your suggestion! 💞
   - type: textarea
     attributes:
       label: Related issue
