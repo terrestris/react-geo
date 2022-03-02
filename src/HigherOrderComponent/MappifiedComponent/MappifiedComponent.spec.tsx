@@ -10,7 +10,6 @@ describe('mappify', () => {
   let EnhancedComponent;
   let map;
 
-  /* eslint-disable require-jsdoc */
   class MockComponent extends React.Component {
     render() {
       return (
@@ -18,7 +17,6 @@ describe('mappify', () => {
       );
     }
   }
-  /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
     map = TestUtil.createMap();

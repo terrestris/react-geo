@@ -8,7 +8,6 @@ import { isVisibleComponent } from './VisibleComponent';
 describe('isVisibleComponent', () => {
   let EnhancedComponent;
 
-  /* eslint-disable require-jsdoc */
   class MockComponent extends React.Component {
     render() {
       return (
@@ -16,7 +15,6 @@ describe('isVisibleComponent', () => {
       );
     }
   }
-  /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
     EnhancedComponent = isVisibleComponent(MockComponent);

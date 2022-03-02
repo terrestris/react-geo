@@ -5,7 +5,6 @@ import { loadify } from './LoadifiedComponent';
 describe('loadify', () => {
   let EnhancedComponent;
 
-  /* eslint-disable require-jsdoc */
   class MockComponent extends React.Component {
     render() {
       return (
@@ -13,7 +12,6 @@ describe('loadify', () => {
       );
     }
   }
-  /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
     EnhancedComponent = loadify(MockComponent);
