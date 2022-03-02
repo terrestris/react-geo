@@ -9,7 +9,6 @@ import FileUtil from '@terrestris/ol-util/dist/FileUtil/FileUtil';
 describe('onDropAware', () => {
   let EnhancedComponent;
 
-  /* eslint-disable require-jsdoc */
   class MockComponent extends React.Component {
     render() {
       return (
@@ -17,7 +16,6 @@ describe('onDropAware', () => {
       );
     }
   }
-  /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
     EnhancedComponent = onDropAware(MockComponent);

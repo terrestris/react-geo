@@ -15,7 +15,6 @@ describe('timeLayerAware', () => {
   let layerWithFunnyTimeSpelling;
   const customHandler = jest.fn();
 
-  /* eslint-disable require-jsdoc */
   class MockComponent extends React.Component {
     render() {
       return (
@@ -23,7 +22,6 @@ describe('timeLayerAware', () => {
       );
     }
   }
-  /* eslint-enable require-jsdoc */
 
   beforeEach(() => {
     layer = new OlTileLayer({

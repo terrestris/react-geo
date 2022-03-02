@@ -9,7 +9,6 @@ import { mappify } from '../../HigherOrderComponent/MappifiedComponent/Mappified
 import OlMap from 'ol/Map';
 
 describe('MapProvider', () => {
-  /* eslint-disable require-jsdoc */
   class MockComponent extends React.Component {
     render() {
       return (
@@ -17,7 +16,6 @@ describe('MapProvider', () => {
       );
     }
   }
-  /* eslint-enable require-jsdoc */
   const MappifiedMockComponent = mappify(MockComponent);
 
   describe('Basics', () => {
