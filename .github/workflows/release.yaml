@@ -1,9 +1,11 @@
 name: Release
+
 on:
   push:
     branches:
       - main
       - next
+
 jobs:
   release:
     name: Release
@@ -25,6 +27,6 @@ jobs:
 
       - name: Release 🚀
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
