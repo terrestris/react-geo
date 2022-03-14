@@ -526,9 +526,9 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       map
     } = this.props;
 
-    let digitizeLayer = digitizeLayerName ? MapUtil.getLayerByName(map, digitizeLayerName) : null;
+    let digitizeLayer = digitizeLayerName ? MapUtil.getLayerByName(map, digitizeLayerName) as OlLayerVector<OlSourceVector<OlGeometry>>: null;
 
-    if (!digitizeLayer) {
+    if (digitizeLayer == null) {
       digitizeLayer = new OlLayerVector({
         source: new OlSourceVector({
           features: new OlCollection()
@@ -544,7 +544,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     this._digitizeLayer = digitizeLayer;
 
-    this._digitizeFeatures = digitizeLayer.getSource().getFeaturesCollection();
+    this._digitizeFeatures = digitizeLayer.getSource()?.getFeaturesCollection() ?? null;
   };
 
   /**

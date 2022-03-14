@@ -335,7 +335,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       map
     } = this.props;
 
-    let measureLayer = MapUtil.getLayerByName(map, measureLayerName);
+    let measureLayer = MapUtil.getLayerByName(map, measureLayerName) as OlLayerVector<OlSourceVector<OlGeometry>>;
 
     if (!measureLayer) {
       measureLayer = new OlLayerVector({

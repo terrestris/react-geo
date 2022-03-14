@@ -5,7 +5,7 @@ import OlTileWMS from 'ol/source/TileWMS';
 import OlImageLayer from 'ol/layer/Image';
 import OlTileLayer from 'ol/layer/Tile';
 
-export type WmsLayer = OlImageLayer<OlImageWMS> | OlTileLayer<OlTileWMS>;
+export type WmsLayer = OlImageLayer<OlImageWMS> | OlTileLayer<OlTileWMS> | OlLayer<OlImageWMS | OlTileWMS>;
 
 export function isWmsLayer(layer: OlBaseLayer): layer is OlLayer<OlImageWMS | OlTileWMS, any> {
   if (layer instanceof OlLayer) {
