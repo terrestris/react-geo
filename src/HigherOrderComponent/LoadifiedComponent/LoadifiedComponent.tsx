@@ -72,3 +72,5 @@ export function loadify<P>(WrappedComponent: React.ComponentType<any>) {
     }
   };
 }
+
+export default loadify;

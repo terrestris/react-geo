@@ -289,3 +289,5 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
     </>;
   }
 };
+
+export default ModifyButton;
