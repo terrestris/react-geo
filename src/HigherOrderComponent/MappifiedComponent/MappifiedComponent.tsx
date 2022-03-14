@@ -61,3 +61,5 @@ export function mappify<P>(WrappedComponent: React.ComponentType<P>) {
     }
   };
 }
+
+export default mappify;

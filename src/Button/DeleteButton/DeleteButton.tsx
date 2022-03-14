@@ -78,3 +78,5 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
     {...passThroughProps}
   />;
 };
+
+export default DeleteButton;

@@ -1,19 +1,37 @@
-import AddWmsPanel from './Container/AddWmsPanel/AddWmsPanel';
-import AddWmsLayerEntry from './Container/AddWmsPanel/AddWmsLayerEntry/AddWmsLayerEntry';
+import CopyButton from './Button/CopyButton/CopyButton';
+import DeleteButton from './Button/DeleteButton/DeleteButton';
+import DigitizeButton from './Button/DigitizeButton/DigitizeButton';
+import DrawButton from './Button/DrawButton/DrawButton';
+import GeoLocationButton from './Button/GeoLocationButton/GeoLocationButton';
+import MeasureButton from './Button/MeasureButton/MeasureButton';
+import ModifyButton from './Button/ModifyButton/ModifyButton';
+import SelectFeaturesButton from './Button/SelectFeaturesButton/SelectFeaturesButton';
 import SimpleButton from './Button/SimpleButton/SimpleButton';
 import ToggleButton from './Button/ToggleButton/ToggleButton';
 import ToggleGroup from './Button/ToggleGroup/ToggleGroup';
-import MeasureButton from './Button/MeasureButton/MeasureButton';
-import GeoLocationButton from './Button/GeoLocationButton/GeoLocationButton';
-import DigitizeButton from './Button/DigitizeButton/DigitizeButton';
+import UploadButton from './Button/UploadButton/UploadButton';
 import ZoomButton from './Button/ZoomButton/ZoomButton';
 import ZoomToExtentButton from './Button/ZoomToExtentButton/ZoomToExtentButton';
+import CircleMenu from './CircleMenu/CircleMenu';
+import AddWmsLayerEntry from './Container/AddWmsPanel/AddWmsLayerEntry/AddWmsLayerEntry';
+import AddWmsPanel from './Container/AddWmsPanel/AddWmsPanel';
+import MapContext from './Context/MapContext/MapContext';
 import CoordinateInfo from './CoordinateInfo/CoordinateInfo';
+import FeatureLabelModal from './FeatureLabelModal/FeatureLabelModal';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch';
+import ScaleCombo from './Field/ScaleCombo/ScaleCombo';
 import WfsSearch from './Field/WfsSearch/WfsSearch';
 import WfsSearchInput from './Field/WfsSearchInput/WfsSearchInput';
-import ScaleCombo from './Field/ScaleCombo/ScaleCombo';
+import AgFeatureGrid from './Grid/AgFeatureGrid/AgFeatureGrid';
+import FeatureGrid from './Grid/FeatureGrid/FeatureGrid';
+import PropertyGrid from './Grid/PropertyGrid/PropertyGrid';
+import onDropAware from './HigherOrderComponent/DropTargetMap/DropTargetMap';
+import loadify from './HigherOrderComponent/LoadifiedComponent/LoadifiedComponent';
+import mappify from './HigherOrderComponent/MappifiedComponent/MappifiedComponent';
+import timeLayerAware from './HigherOrderComponent/TimeLayerAware/TimeLayerAware';
+import isVisibleComponent from './HigherOrderComponent/VisibleComponent/VisibleComponent';
+import useMap from './Hook/useMap';
 import LayerSwitcher from './LayerSwitcher/LayerSwitcher';
 import LayerTree from './LayerTree/LayerTree';
 import LayerTreeNode from './LayerTree/LayerTreeNode/LayerTreeNode';
@@ -23,71 +41,63 @@ import MapComponent from './Map/MapComponent/MapComponent';
 import Panel from './Panel/Panel/Panel';
 import TimeLayerSliderPanel from './Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
 import Titlebar from './Panel/Titlebar/Titlebar';
-import LayerTransparencySlider from './Slider/LayerTransparencySlider/LayerTransparencySlider';
-import FeatureGrid from './Grid/FeatureGrid/FeatureGrid';
-import AgFeatureGrid from './Grid/AgFeatureGrid/AgFeatureGrid';
-import PropertyGrid from './Grid/PropertyGrid/PropertyGrid';
-import TimeSlider from './Slider/TimeSlider/TimeSlider';
-import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider';
-import Toolbar from './Toolbar/Toolbar';
-import UploadButton from './Button/UploadButton/UploadButton';
-import UserChip from './UserChip/UserChip';
-import CircleMenu from './CircleMenu/CircleMenu';
-import Window from './Window/Window';
-
 import MapProvider from './Provider/MapProvider/MapProvider';
-import { isVisibleComponent } from './HigherOrderComponent/VisibleComponent/VisibleComponent';
-import { mappify } from './HigherOrderComponent/MappifiedComponent/MappifiedComponent';
-import timeLayerAware from './HigherOrderComponent/TimeLayerAware/TimeLayerAware';
-import onDropAware from './HigherOrderComponent/DropTargetMap/DropTargetMap';
-import { loadify } from './HigherOrderComponent/LoadifiedComponent/LoadifiedComponent';
-
-import MapContext from './Context/MapContext/MapContext';
-import { useMap } from './Hook/useMap';
+import LayerTransparencySlider from './Slider/LayerTransparencySlider/LayerTransparencySlider';
+import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider';
+import TimeSlider from './Slider/TimeSlider/TimeSlider';
+import Toolbar from './Toolbar/Toolbar';
+import UserChip from './UserChip/UserChip';
+import Window from './Window/Window';
 
 export {
   AddWmsLayerEntry,
   AddWmsPanel,
+  AgFeatureGrid,
   CircleMenu,
-  SimpleButton,
-  ToggleButton,
-  ToggleGroup,
-  MeasureButton,
-  GeoLocationButton,
-  DigitizeButton,
-  ZoomButton,
-  ZoomToExtentButton,
   CoordinateInfo,
+  CoordinateReferenceSystemCombo,
+  CopyButton,
+  DeleteButton,
+  DigitizeButton,
+  DrawButton,
+  FeatureGrid,
+  FeatureLabelModal,
+  FloatingMapLogo,
+  GeoLocationButton,
+  isVisibleComponent,
   LayerSwitcher,
+  LayerTransparencySlider,
   LayerTree,
   LayerTreeNode,
   Legend,
-  FloatingMapLogo,
-  ScaleCombo,
-  Panel,
-  TimeLayerSliderPanel,
-  Titlebar,
-  LayerTransparencySlider,
-  AgFeatureGrid,
-  FeatureGrid,
-  PropertyGrid,
-  Toolbar,
-  UploadButton,
-  UserChip,
-  Window,
-  CoordinateReferenceSystemCombo,
-  NominatimSearch,
-  WfsSearch,
-  WfsSearchInput,
-  TimeSlider,
-  MultiLayerSlider,
-  MapProvider,
+  loadify,
   MapComponent,
   MapContext,
-  useMap,
   mappify,
-  isVisibleComponent,
-  timeLayerAware,
+  MapProvider,
+  MeasureButton,
+  ModifyButton,
+  MultiLayerSlider,
+  NominatimSearch,
   onDropAware,
-  loadify
+  Panel,
+  PropertyGrid,
+  ScaleCombo,
+  SelectFeaturesButton,
+  SimpleButton,
+  timeLayerAware,
+  TimeLayerSliderPanel,
+  TimeSlider,
+  Titlebar,
+  ToggleButton,
+  ToggleGroup,
+  Toolbar,
+  UploadButton,
+  useMap,
+  UserChip,
+  WfsSearch,
+  WfsSearchInput,
+  Window,
+  ZoomButton,
+  ZoomToExtentButton
 };

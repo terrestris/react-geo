@@ -67,3 +67,5 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
     />
   </Modal>;
 };
+
+export default FeatureLabelModal;

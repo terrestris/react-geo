@@ -71,3 +71,5 @@ export function isVisibleComponent<P>(
     }
   };
 }
+
+export default isVisibleComponent;
