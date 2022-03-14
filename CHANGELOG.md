@@ -1,3 +1,11 @@
+## [16.2.3](https://github.com/terrestris/react-geo/compare/v16.2.2...v16.2.3) (2022-03-14)
+
+
+### Bug Fixes
+
+* Add missing default exports ([644a44d](https://github.com/terrestris/react-geo/commit/644a44d52483bf5dee01d7180473316b1929bae2))
+* Add missing exports and order entries ([4a28417](https://github.com/terrestris/react-geo/commit/4a28417724964962f9245cf5cfb5870440387950))
+
 ## [16.2.2](https://github.com/terrestris/react-geo/compare/v16.2.1...v16.2.2) (2022-03-01)
 
 
