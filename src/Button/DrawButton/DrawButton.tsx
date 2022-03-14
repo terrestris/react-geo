@@ -15,6 +15,7 @@ import { CSS_PREFIX } from '../../constants';
 import { useMap } from '../../Hook/useMap';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
+import { EventsKey } from 'ol/events';
 
 type DrawType = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Text';
 
@@ -165,7 +166,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 
     setDrawInteraction(newInteraction);
 
-    let key;
+    let key: EventsKey;
 
     if (drawType === 'Text') {
       key = newInteraction.on('drawend', evt => {

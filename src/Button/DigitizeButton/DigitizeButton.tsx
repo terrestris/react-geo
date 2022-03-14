@@ -13,12 +13,13 @@ import OlStyleFill from 'ol/style/Fill';
 import OlStyleCircle from 'ol/style/Circle';
 import OlStyleText from 'ol/style/Text';
 import OlInteractionDraw, { createBox, DrawEvent as OlDrawEvent} from 'ol/interaction/Draw';
-import OlInteractionSelect from 'ol/interaction/Select';
-import OlInteractionModify from 'ol/interaction/Modify';
-import OlInteractionTranslate from 'ol/interaction/Translate';
+import OlInteractionSelect, { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import OlInteractionModify, { ModifyEvent as OlModifyEvent } from 'ol/interaction/Modify';
+import OlInteractionTranslate, { TranslateEvent as OlTranslateEvent } from 'ol/interaction/Translate';
 import OlFeature from 'ol/Feature';
 import * as OlEventConditions from 'ol/events/condition';
 import OlGeometry from 'ol/geom/Geometry';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
 import _isFunction from 'lodash/isFunction';
 import _isArray from 'lodash/isArray';
@@ -30,6 +31,7 @@ import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
+import { ChangeEvent } from 'react';
 
 interface DefaultProps {
   /**
@@ -524,7 +526,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       map
     } = this.props;
 
-    let digitizeLayer = MapUtil.getLayerByName(map, digitizeLayerName);
+    let digitizeLayer = digitizeLayerName ? MapUtil.getLayerByName(map, digitizeLayerName) : null;
 
     if (!digitizeLayer) {
       digitizeLayer = new OlLayerVector({
@@ -552,20 +554,21 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param feature The feature which is being styled.
    * @return The style to use.
    */
-  digitizeStyleFunction = feature => {
+  digitizeStyleFunction = (feature: OlFeature<OlGeometry>) => {
     const {
       drawStyle,
     } = this.props;
 
-    if (!feature.getGeometry()) {
-      return null;
+    const geometry = feature.getGeometry();
+    if (!geometry) {
+      return undefined;
     }
 
     if (drawStyle) {
       return _isFunction(drawStyle) ? drawStyle(feature) : drawStyle;
     }
 
-    switch (feature.getGeometry().getType()) {
+    switch (geometry.getType()) {
       case DigitizeButton.POINT_DRAW_TYPE: {
         if (!feature.get('isLabel')) {
           return new OlStyleStyle({
@@ -617,7 +620,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         });
       }
       default:
-        return null;
+        return undefined;
     }
   };
 
@@ -690,9 +693,6 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
   /**
    * Creates a correctly configured OL draw interaction depending on given
    * drawType and adds this to the map.
-   *
-   * @param pressed Whether the digitize button is pressed or not.
-   * Will be used to handle active state of the draw interaction.
    */
   createDrawInteraction = () => {
     const {
@@ -708,7 +708,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
 
     const drawInteractionName = `react-geo-draw-interaction-${drawType}`;
-    let drawInteraction = MapUtil.getInteractionsByName(map, drawInteractionName)[0];
+    let drawInteraction = MapUtil.getInteractionsByName(map, drawInteractionName)[0] as OlInteractionDraw;
 
     if (!drawInteraction) {
       let type = drawType;
@@ -735,18 +735,12 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
         drawInteraction.on('drawend', this.handleTextAdding);
       }
 
-      drawInteraction.on('drawend', (evt) => {
-        const onDrawEnd = this.getOnDrawEnd();
-        if (onDrawEnd) {
-          onDrawEnd(evt);
-        }
+      drawInteraction.on('drawend', (evt: OlDrawEvent) => {
+        this.getOnDrawEnd()?.(evt);
       });
 
-      drawInteraction.on('drawstart', (evt) => {
-        const onDrawStart = this.getOnDrawStart();
-        if (onDrawStart) {
-          onDrawStart(evt);
-        }
+      drawInteraction.on('drawstart', (evt: OlDrawEvent) => {
+        this.getOnDrawStart()?.(evt);
       });
 
       drawInteraction.setActive(false);
@@ -774,7 +768,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
 
     const selectInteractionName = `react-geo-select-interaction-${editType}`;
-    let selectInteraction: OlInteractionSelect = MapUtil.getInteractionsByName(map, selectInteractionName)[0];
+    let selectInteraction = MapUtil.getInteractionsByName(map, selectInteractionName)[0] as OlInteractionSelect;
 
     if (!selectInteraction) {
       selectInteraction = new OlInteractionSelect({
@@ -819,7 +813,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
 
     const modifyInteractionName = `react-geo-modify-interaction-${editType}`;
-    let modifyInteraction = MapUtil.getInteractionsByName(map, modifyInteractionName)[0];
+    let modifyInteraction = MapUtil.getInteractionsByName(map, modifyInteractionName)[0] as OlInteractionModify;
 
     if (!modifyInteraction) {
       modifyInteraction = new OlInteractionModify({
@@ -857,7 +851,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
 
     const translateInteractionName = `react-geo-translate-interaction-${editType}`;
-    let translateInteraction = MapUtil.getInteractionsByName(map, translateInteractionName)[0];
+    let translateInteraction = MapUtil.getInteractionsByName(map, translateInteractionName)[0] as OlInteractionTranslate;
 
     if (!translateInteraction) {
       translateInteraction = new OlInteractionTranslate({
@@ -885,7 +879,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    *
    * @param evt The interaction event.
    */
-  onFeatureRemove = evt => {
+  onFeatureRemove = (evt: OlSelectEvent) => {
     const {
       onFeatureRemove,
       onFeatureSelect
@@ -919,7 +913,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    *
    * @param evt The interaction event.
    */
-  onFeatureCopy = evt => {
+  onFeatureCopy = (evt: OlSelectEvent) => {
     const {
       map,
       onFeatureCopy,
@@ -928,7 +922,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     const feat = evt.selected[0];
 
-    if (!feat || !this._digitizeFeatures) {
+    if (!feat || !this._digitizeFeatures || !this._digitizeLayer) {
       return;
     }
 
@@ -962,7 +956,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    *
    * @param evt The interaction event.
    */
-  onModifyStart = evt => {
+  onModifyStart = (evt: OlModifyEvent) => {
     const {
       onModifyStart
     } = this.props;
@@ -971,7 +965,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       onModifyStart(evt);
     }
 
-    const feature = evt.features.getArray()[0];
+    const feature = evt.features.getArray()[0] as OlFeature<OlGeometry>;
 
     if (feature.get('isLabel')) {
       this._digitizeTextFeature = feature;
@@ -997,7 +991,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    *
    * @param evt The interaction event.
    */
-  onModifyEnd = evt => {
+  onModifyEnd = (evt: OlModifyEvent) => {
     const {
       onModifyEnd
     } = this.props;
@@ -1012,7 +1006,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    *
    * @param evt The interaction event.
    */
-  onTranslateStart = evt => {
+  onTranslateStart = (evt: OlTranslateEvent) => {
     const {
       onTranslateStart
     } = this.props;
@@ -1027,7 +1021,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    *
    * @param evt The interaction event.
    */
-  onTranslateEnd = evt => {
+  onTranslateEnd = (evt: OlTranslateEvent) => {
     const {
       onTranslateEnd
     } = this.props;
@@ -1042,7 +1036,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    *
    * @param evt The interaction event.
    */
-  onTranslating = evt => {
+  onTranslating = (evt: OlTranslateEvent) => {
     const {
       onTranslating
     } = this.props;
@@ -1146,7 +1140,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param evt Input event containing new text value to be set as
    * textLabel.
    */
-  onLabelChange = evt => {
+  onLabelChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
     this.setState({
       textLabel: evt.target.value
     });
@@ -1158,7 +1152,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    *
    * @param evt The `pointermove` event.
    */
-  onPointerMove = evt => {
+  onPointerMove = (evt: OlMapBrowserEvent<PointerEvent>) => {
     if (evt.dragging) {
       return;
     }

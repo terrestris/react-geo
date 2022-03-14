@@ -64,7 +64,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({
 
     const feat = event.selected[0];
 
-    if (!feat || !layers) {
+    if (!feat || !layers || !map) {
       return;
     }
 

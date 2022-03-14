@@ -118,10 +118,9 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    * @param layer The layer to clone.
    * @returns The cloned layer.
    */
-  cloneLayer = (layer: OlLayerTile<OlTileSource> | OlLayerGroup) => {
-    let layerClone: OlLayerTile<OlTileSource> | OlLayerGroup;
+  cloneLayer (layer: OlLayerTile<OlTileSource> | OlLayerGroup): OlLayerTile<OlTileSource> | OlLayerGroup {
     if (layer instanceof OlLayerGroup) {
-      layerClone = new OlLayerGroup({
+      return new OlLayerGroup({
         layers: layer.getLayers().getArray().map(this.cloneLayer),
         properties: {
           originalLayer: layer
@@ -129,15 +128,14 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
         ...layer.getProperties()
       });
     } else {
-      layerClone = new OlLayerTile({
-        source: layer.getSource() || undefined,
+      return new OlLayerTile({
+        source: (layer as OlLayerTile<OlTileSource>).getSource() || undefined,
         properties: {
           originalLayer: layer
         },
         ...layer.getProperties()
       });
     }
-    return layerClone;
   };
 
   /**

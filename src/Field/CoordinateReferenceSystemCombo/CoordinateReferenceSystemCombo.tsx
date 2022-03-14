@@ -118,7 +118,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
   transformResults = (json: any): CrsDefinition[] => {
     const results = json.results;
     if (results && results.length > 0) {
-      return results.map(obj => ({code: obj.code, value: obj.name, proj4def: obj.proj4, bbox: obj.bbox}));
+      return results.map((obj: any) => ({code: obj.code, value: obj.name, proj4def: obj.proj4, bbox: obj.bbox}));
     } else {
       return [];
     }

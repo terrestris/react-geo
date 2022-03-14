@@ -462,10 +462,8 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
 
   /**
    * Called if the current geometry of the draw interaction has changed.
-   *
-   * @param evt The generic change event.
    */
-  onDrawInteractionGeometryChange(/* evt*/) {
+  onDrawInteractionGeometryChange() {
     this.updateMeasureTooltip();
   }
 
@@ -608,8 +606,8 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       }
 
       const value = measureType === 'line' ?
-        MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips, geodesic) :
-        MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
+        MeasureUtil.formatLength(geom as OlGeomLineString, map, decimalPlacesInTooltips, geodesic) :
+        MeasureUtil.formatArea(geom as OlGeomPolygon, map, decimalPlacesInTooltips, geodesic);
 
       if (parseInt(value, 10) > 0) {
         const div = document.createElement('div');
@@ -843,13 +841,15 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
         if (measureType === 'line') {
           output = MeasureUtil.formatLength(geom, map, decimalPlacesInTooltips, geodesic);
         } else if (measureType === 'angle') {
-          output = MeasureUtil.formatAngle(geom, map, decimalPlacesInTooltips);
+          output = MeasureUtil.formatAngle(geom, 0);
         }
       } else {
         return;
       }
 
-      this._measureTooltipElement.innerHTML = output;
+      if (output) {
+        this._measureTooltipElement.innerHTML = output;
+      }
       this._measureTooltip?.setPosition(measureTooltipCoord);
     }
   }

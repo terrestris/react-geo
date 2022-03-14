@@ -1,5 +1,6 @@
 /* eslint-disable testing-library/render-result-naming-convention */
 import * as React from 'react';
+import { ReactNode } from 'react';
 
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
@@ -34,7 +35,9 @@ import {
   RowClickedEvent,
   CellMouseOverEvent,
   CellMouseOutEvent,
-  SelectionChangedEvent
+  SelectionChangedEvent,
+  DetailGridInfo,
+  RowNode
 } from '@ag-grid-community/core';
 import _isNil from 'lodash/isNil';
 
@@ -152,8 +155,8 @@ interface OwnProps {
 }
 
 interface AgFeatureGridState {
-  grid: any;
-  selectedRows: any[];
+  grid: DetailGridInfo | null;
+  selectedRows: RowNode[];
 }
 
 export type AgFeatureGridProps = OwnProps & AgGridReactProps;
@@ -242,7 +245,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * The reference of this grid.
    * @private
    */
-  _ref;
+  _ref: AgGridReact | null;
 
   /**
    * The className added to this component.
@@ -440,13 +443,14 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       return;
     }
 
+    // @ts-ignore
     const rowRenderer = grid.api.rowRenderer;
 
     features.forEach(feature => {
       const key = this.props.keyFunction(feature);
 
       let rc: any;
-      rowRenderer.forEachRowComp((idx, rowComp) => {
+      rowRenderer.forEachRowComp((idx: number, rowComp: any) => {
         if (rowComp.getRowNode().data.key === key) {
           rc = rowComp;
         }
@@ -469,7 +473,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     selectedFeatures.forEach(feature => {
       const key = this.props.keyFunction(feature);
       let rc: any;
-      rowRenderer.forEachRowComp((idx, rowComp) => {
+      rowRenderer.forEachRowComp((idx: number, rowComp: any) => {
         if (rowComp.getRowNode().data.key === key) {
           rc = rowComp;
         }
@@ -673,12 +677,12 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * @param key The feature's key to obtain the row from.
    * @return he row candidate.
    */
-  getRowFromFeatureKey = (key: string) => {
+  getRowFromFeatureKey = (key: string): RowNode | undefined => {
     const {
       grid
     } = this.state;
 
-    let rowNode;
+    let rowNode: RowNode | undefined = undefined;
 
     if (!grid || !grid.api) {
       return;
@@ -912,7 +916,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    */
   onVisiblityChange() {
     if (this.state.grid) {
-      this.state.grid.api.sizeColumnsToFit();
+      this.state.grid.api?.sizeColumnsToFit();
     }
   }
 
@@ -952,15 +956,18 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     // row by using getRowFromFeatureKey instead.
     let rowClassNameFn;
     if (_isFunction(rowClassName)) {
-      rowClassNameFn = node => {
-        const determinedRowClass = (rowClassName as ((record: any) => string))(node.data);
+      rowClassNameFn = (node: ReactNode) => {
+        const determinedRowClass = rowClassName((node as { data: string }).data);
         return `${this._rowClassName} ${determinedRowClass}`;
       };
     } else {
       const finalRowClassName = rowClassName
         ? `${rowClassName} ${this._rowClassName}`
         : this._rowClassName;
-      rowClassNameFn = node => `${finalRowClassName} ${this._rowKeyClassNamePrefix}${_kebabCase(node.data.key)}`;
+      rowClassNameFn = (node: ReactNode) => {
+        const rowClassSuffix = _kebabCase((node as { data: { key: string } }).data.key);
+        return `${finalRowClassName} ${this._rowKeyClassNamePrefix}${rowClassSuffix}`;
+      };
     }
 
     return (

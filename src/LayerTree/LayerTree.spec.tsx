@@ -10,15 +10,17 @@ import TestUtil from '../Util/TestUtil';
 
 import LayerTree from './LayerTree';
 
-import Logger from '@terrestris/base-util/dist/Logger';
+import OlMap from 'ol/Map';
+import OlLayerBase from 'ol/layer/Base';
+import { getUid } from 'ol';
 
 describe('<LayerTree />', () => {
-  let layerGroup;
-  let layerSubGroup;
-  let map;
-  let layer1;
-  let layer2;
-  let layer3;
+  let layerGroup: OlLayerGroup;
+  let layerSubGroup: OlLayerGroup;
+  let map: OlMap;
+  let layer1: OlLayerBase;
+  let layer2: OlLayerBase;
+  let layer3: OlLayerBase;
 
   beforeEach(() => {
     const layerSource1 = new OlSourceTileWMS();
@@ -80,9 +82,10 @@ describe('<LayerTree />', () => {
   });
 
   it('unmount removes listeners', () => {
+    // @ts-ignore
     OlObservable.unByKey = jest.fn();
     const wrapper = TestUtil.mountComponent(LayerTree, {map});
-    const olListenerKeys = wrapper.instance().olListenerKeys;
+    const olListenerKeys = (wrapper.instance() as LayerTree).olListenerKeys;
     wrapper.unmount();
     expect(OlObservable.unByKey).toHaveBeenCalled();
     expect(OlObservable.unByKey).toHaveBeenCalledWith(olListenerKeys);
@@ -96,19 +99,23 @@ describe('<LayerTree />', () => {
     const wrapper = TestUtil.mountComponent(LayerTree, props);
 
     const subLayer = new OlLayerTile({
-      name: 'subLayer',
+      properties: {
+        name: 'subLayer'
+      },
       source: new OlSourceTileWMS()
     });
     const nestedLayerGroup = new OlLayerGroup({
-      name: 'nestedLayerGroup',
+      properties: {
+        name: 'nestedLayerGroup'
+      },
       layers: [subLayer]
     });
 
-    expect(wrapper.instance().olListenerKeys).toHaveLength(10);
+    expect((wrapper.instance() as LayerTree).olListenerKeys).toHaveLength(10);
     wrapper.setProps({
       layerGroup: nestedLayerGroup
     });
-    expect(wrapper.instance().olListenerKeys).toHaveLength(4);
+    expect((wrapper.instance() as LayerTree).olListenerKeys).toHaveLength(4);
   });
 
   describe('<LayerTreeNode> creation', () => {
@@ -155,11 +162,13 @@ describe('<LayerTree />', () => {
         map
       };
       const subLayer = new OlLayerTile({
-        name: 'subLayer',
+        properties: {
+          name: 'subLayer'
+        },
         source: new OlSourceTileWMS()
       });
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
+      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
       map.getLayerGroup().setLayers(new OlCollection([subLayer]));
       expect(rebuildSpy).toHaveBeenCalled();
       rebuildSpy.mockRestore();
@@ -172,7 +181,7 @@ describe('<LayerTree />', () => {
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('LayerTreeNode');
-      treeNodes.forEach((node, index) => {
+      treeNodes.forEach((node: any, index: number) => {
         const reverseIndex = treeNodes.length - (index + 1);
         const layer = layerGroup.getLayers().item(reverseIndex);
         expect(node.props().title).toBe(layer.get('name'));
@@ -180,7 +189,7 @@ describe('<LayerTree />', () => {
     });
 
     it('accepts a custom title renderer function', () => {
-      const nodeTitleRenderer = function(layer) {
+      const nodeTitleRenderer = function(layer: OlLayerBase) {
         return (
           <span className="span-1">
             <span className="sub-span-1">
@@ -198,7 +207,7 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('LayerTreeNode');
 
-      treeNodes.forEach((node, index) => {
+      treeNodes.forEach((node: any, index: number) => {
         const reverseIndex = treeNodes.length - (index + 1);
         const layer = layerGroup.getLayers().item(reverseIndex);
         expect(node.find('span.span-1').length).toBe(1);
@@ -209,7 +218,7 @@ describe('<LayerTree />', () => {
     });
 
     it('can filter layers if a filterFunction is given', () => {
-      const filterFunction = function(layer) {
+      const filterFunction = function(layer: OlLayerBase) {
         return layer.get('name') !== 'layer1';
       };
       const props = {
@@ -231,10 +240,10 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('LayerTreeNode');
 
-      treeNodes.forEach((node, index) => {
+      treeNodes.forEach((node: any, index: number) => {
         const reverseIndex = treeNodes.length - (index + 1);
         const layer = layerGroup.getLayers().item(reverseIndex);
-        expect(node.props().eventKey).toBe(layer.ol_uid.toString());
+        expect(node.props().eventKey).toBe(getUid(layer));
       });
     });
 
@@ -246,7 +255,7 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       const treeNodes = wrapper.find('LayerTreeNode');
 
-      treeNodes.forEach((node, index) => {
+      treeNodes.forEach((node: any, index: number) => {
         const reverseIndex = treeNodes.length - (index + 1);
         const layer = layerGroup.getLayers().item(reverseIndex);
         expect(layer.getVisible()).toBe(node.props().checked);
@@ -263,10 +272,10 @@ describe('<LayerTree />', () => {
         layerGroup.setVisible(false);
 
         const wrapper = TestUtil.mountComponent(LayerTree, props);
-        const treeNode = wrapper.instance().treeNodeFromLayer(layer1);
+        const treeNode = (wrapper.instance() as LayerTree).treeNodeFromLayer(layer1);
 
         expect(treeNode.props.title).toBe(layer1.get('name'));
-        expect(treeNode.key).toBe(layer1.ol_uid.toString());
+        expect(treeNode.key).toBe(getUid(layer1));
       });
     });
   });
@@ -281,7 +290,7 @@ describe('<LayerTree />', () => {
       const treeNodes = wrapper.find('LayerTreeNode');
 
 
-      treeNodes.forEach((node, index) => {
+      treeNodes.forEach((node: any, index: number) => {
         const reverseIndex = treeNodes.length - (index + 1);
         const layer = layerGroup.getLayers().item(reverseIndex);
         const checkBox = node.find('.ant-tree-checkbox');
@@ -314,7 +323,7 @@ describe('<LayerTree />', () => {
     });
 
     it('triggers tree rebuild on nodeTitleRenderer changes', () => {
-      const exampleNodeTitleRenderer = function(layer) {
+      const exampleNodeTitleRenderer = function(layer: OlLayerBase) {
         return (
           <span className="span-1">
             {layer.get('name')}
@@ -327,7 +336,7 @@ describe('<LayerTree />', () => {
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
+      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
 
       wrapper.setProps({
         nodeTitleRenderer: exampleNodeTitleRenderer
@@ -351,7 +360,7 @@ describe('<LayerTree />', () => {
         source: new OlSourceTileWMS()
       });
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
+      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
 
       layerGroup.getLayers().push(layer);
       expect(rebuildSpy).toHaveBeenCalled();
@@ -371,8 +380,8 @@ describe('<LayerTree />', () => {
         layers: [layer]
       });
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
-      const registerSpy = jest.spyOn(wrapper.instance(), 'registerAddRemoveListeners');
+      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
+      const registerSpy = jest.spyOn((wrapper.instance() as LayerTree), 'registerAddRemoveListeners');
 
       layerGroup.getLayers().push(group);
       expect(rebuildSpy).toHaveBeenCalled();
@@ -388,8 +397,8 @@ describe('<LayerTree />', () => {
         map
       };
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
-      const unregisterSpy = jest.spyOn(wrapper.instance(), 'unregisterEventsByLayer');
+      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
+      const unregisterSpy = jest.spyOn((wrapper.instance() as LayerTree), 'unregisterEventsByLayer');
 
       layerGroup.getLayers().remove(layer1);
       expect(rebuildSpy).toHaveBeenCalled();
@@ -411,14 +420,16 @@ describe('<LayerTree />', () => {
         source: new OlSourceTileWMS()
       });
       const nestedLayerGroup = new OlLayerGroup({
-        name: 'nestedLayerGroup',
+        properties: {
+          name: 'nestedLayerGroup'
+        },
         layers: [subLayer1, subLayer2]
       });
       layerGroup.getLayers().push(nestedLayerGroup);
 
       const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn(wrapper.instance(), 'rebuildTreeNodes');
-      const unregisterSpy = jest.spyOn(wrapper.instance(), 'unregisterEventsByLayer');
+      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
+      const unregisterSpy = jest.spyOn((wrapper.instance() as LayerTree), 'unregisterEventsByLayer');
 
       layerGroup.getLayers().remove(nestedLayerGroup);
       expect(rebuildSpy).toHaveBeenCalledTimes(1);
@@ -442,18 +453,21 @@ describe('<LayerTree />', () => {
           source: new OlSourceTileWMS()
         });
         const nestedLayerGroup = new OlLayerGroup({
-          name: 'nestedLayerGroup',
+          properties: {
+            name: 'nestedLayerGroup'
+          },
           layers: [subLayer1, subLayer2]
         });
         layerGroup.getLayers().push(nestedLayerGroup);
 
         const wrapper = TestUtil.mountComponent(LayerTree, props);
-        const oldOlListenerKey = wrapper.instance().olListenerKeys;
+        const oldOlListenerKey = (wrapper.instance() as LayerTree).olListenerKeys;
+        // @ts-ignore
         OlObservable.unByKey = jest.fn();
 
-        wrapper.instance().unregisterEventsByLayer(subLayer1);
+        (wrapper.instance() as LayerTree).unregisterEventsByLayer(subLayer1);
 
-        const newOlListenerKey = wrapper.instance().olListenerKeys;
+        const newOlListenerKey = (wrapper.instance() as LayerTree).olListenerKeys;
 
         expect(OlObservable.unByKey).toHaveBeenCalled();
         expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 1);
@@ -471,18 +485,21 @@ describe('<LayerTree />', () => {
           source: new OlSourceTileWMS()
         });
         const nestedLayerGroup = new OlLayerGroup({
-          name: 'nestedLayerGroup',
+          properties: {
+            name: 'nestedLayerGroup'
+          },
           layers: [subLayer1, subLayer2]
         });
         layerGroup.getLayers().push(nestedLayerGroup);
 
         const wrapper = TestUtil.mountComponent(LayerTree, props);
-        const oldOlListenerKey = wrapper.instance().olListenerKeys;
+        const oldOlListenerKey = (wrapper.instance() as LayerTree).olListenerKeys;
+        // @ts-ignore
         OlObservable.unByKey = jest.fn();
 
-        wrapper.instance().unregisterEventsByLayer(nestedLayerGroup);
+        (wrapper.instance() as LayerTree).unregisterEventsByLayer(nestedLayerGroup);
 
-        const newOlListenerKey = wrapper.instance().olListenerKeys;
+        const newOlListenerKey = (wrapper.instance() as LayerTree).olListenerKeys;
 
         expect(OlObservable.unByKey).toHaveBeenCalledTimes(2);
         expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 2);
@@ -501,9 +518,9 @@ describe('<LayerTree />', () => {
       const wrapper = TestUtil.mountComponent(LayerTree, props);
       layer1.setVisible(true);
 
-      wrapper.instance().setLayerVisibility(layer1, false);
+      (wrapper.instance() as LayerTree).setLayerVisibility(layer1, false);
       expect(layer1.getVisible()).toBe(false);
-      wrapper.instance().setLayerVisibility(layer1, true);
+      (wrapper.instance() as LayerTree).setLayerVisibility(layer1, true);
       expect(layer1.getVisible()).toBe(true);
     });
 
@@ -516,12 +533,12 @@ describe('<LayerTree />', () => {
       layer1.setVisible(true);
       layer2.setVisible(true);
 
-      wrapper.instance().setLayerVisibility(layerGroup, false);
+      (wrapper.instance() as LayerTree).setLayerVisibility(layerGroup, false);
       expect(layerGroup.getVisible()).toBe(false);
       expect(layer1.getVisible()).toBe(false);
       expect(layer2.getVisible()).toBe(false);
 
-      wrapper.instance().setLayerVisibility(layerGroup, true);
+      (wrapper.instance() as LayerTree).setLayerVisibility(layerGroup, true);
       expect(layerGroup.getVisible()).toBe(true);
       expect(layer1.getVisible()).toBe(true);
       expect(layer2.getVisible()).toBe(true);
@@ -540,14 +557,14 @@ describe('<LayerTree />', () => {
       layer3.setVisible(false);
 
 
-      wrapper.instance().setLayerVisibility(layer2, true);
+      (wrapper.instance() as LayerTree).setLayerVisibility(layer2, true);
       expect(layerGroup.getVisible()).toBe(true);
       expect(layer1.getVisible()).toBe(false);
       expect(layer2.getVisible()).toBe(true);
       expect(layer3.getVisible()).toBe(false);
       expect(layerSubGroup.getVisible()).toBe(false);
 
-      wrapper.instance().setLayerVisibility(layer1, true);
+      (wrapper.instance() as LayerTree).setLayerVisibility(layer1, true);
       expect(layerGroup.getVisible()).toBe(true);
       expect(layer1.getVisible()).toBe(true);
       expect(layer2.getVisible()).toBe(true);
@@ -560,7 +577,7 @@ describe('<LayerTree />', () => {
       layer2.setVisible(false);
       layer3.setVisible(false);
 
-      wrapper.instance().setLayerVisibility(layer3, true);
+      (wrapper.instance() as LayerTree).setLayerVisibility(layer3, true);
       expect(layer1.getVisible()).toBe(false);
       expect(layer2.getVisible()).toBe(false);
       expect(layer3.getVisible()).toBe(true);
