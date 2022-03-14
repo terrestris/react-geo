@@ -7,14 +7,10 @@ import OlTileLayer from 'ol/layer/Tile';
 
 export type WmsLayer = OlImageLayer<OlImageWMS> | OlTileLayer<OlTileWMS> | OlLayer<OlImageWMS | OlTileWMS>;
 
-export function isWmsLayer(layer: OlBaseLayer): layer is OlLayer<OlImageWMS | OlTileWMS, any> {
+export function isWmsLayer(layer: OlBaseLayer): layer is WmsLayer {
   if (layer instanceof OlLayer) {
     const source = layer.getSource();
     return source instanceof OlImageWMS || source instanceof OlTileWMS;
   }
   return false;
-}
-
-export function isImageOrTileLayer(layer: OlBaseLayer): layer is WmsLayer {
-  return layer instanceof OlImageLayer || layer instanceof OlTileLayer;
 }
