@@ -28,7 +28,7 @@ module.exports = {
   theme: {
     sidebarWidth: 350,
     mq: {
-      small: '@media (max-width: 600px)',
+      small: '@media (max-width: 600px)'
     }
   },
   getExampleFilename(componentPath) {
