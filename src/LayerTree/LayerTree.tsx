@@ -432,7 +432,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       return [];
     }
 
-    return MapUtil.getAllLayers(this.state.layerGroup, (layer: OlLayerBase) => {
+    return MapUtil.getAllLayers(this.state.layerGroup,
+      (layer: OlLayerBase) => {
         return !(layer instanceof OlLayerGroup) && layer.getVisible();
       })
       .filter(this.props.filterFunction)

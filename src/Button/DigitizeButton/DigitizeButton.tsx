@@ -526,7 +526,9 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       map
     } = this.props;
 
-    let digitizeLayer = digitizeLayerName ? MapUtil.getLayerByName(map, digitizeLayerName) as OlLayerVector<OlSourceVector<OlGeometry>>: null;
+    let digitizeLayer = digitizeLayerName ?
+      MapUtil.getLayerByName(map, digitizeLayerName) as OlLayerVector<OlSourceVector<OlGeometry>> :
+      null;
 
     if (digitizeLayer == null) {
       digitizeLayer = new OlLayerVector({
@@ -851,7 +853,8 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     }
 
     const translateInteractionName = `react-geo-translate-interaction-${editType}`;
-    let translateInteraction = MapUtil.getInteractionsByName(map, translateInteractionName)[0] as OlInteractionTranslate;
+    let translateInteraction =
+      MapUtil.getInteractionsByName(map, translateInteractionName)[0] as OlInteractionTranslate;
 
     if (!translateInteraction) {
       translateInteraction = new OlInteractionTranslate({

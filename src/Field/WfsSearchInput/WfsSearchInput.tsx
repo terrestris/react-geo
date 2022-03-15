@@ -328,7 +328,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
           });
           this.onFetchSuccess(await response.json());
         } catch (e) {
-          this.onFetchError(e.getMessage())
+          this.onFetchError(e.getMessage());
         }
       });
     } else {
