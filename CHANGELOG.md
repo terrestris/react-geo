@@ -1,3 +1,12 @@
+## [16.2.4](https://github.com/terrestris/react-geo/compare/v16.2.3...v16.2.4) (2022-03-18)
+
+
+### Bug Fixes
+
+* enable `noImplicitAny` ([d18624e](https://github.com/terrestris/react-geo/commit/d18624eb1ac9a2653c7ce6fe2f2c3d7142c8d60e))
+* remove unneeded type guard ([08d7479](https://github.com/terrestris/react-geo/commit/08d7479028c5567558b91dcc0cf1b1534fb837b4))
+* types from dependency updates ([8c79103](https://github.com/terrestris/react-geo/commit/8c79103bf6eb1d105a8137e0730ca485a97ba9f4))
+
 ## [16.2.3](https://github.com/terrestris/react-geo/compare/v16.2.2...v16.2.3) (2022-03-14)
 
 
