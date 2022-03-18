@@ -105,10 +105,7 @@ class TimeSlider extends React.Component<TimeSliderProps> {
    * @param val the input value(s)
    * @return The converted value(s)
    */
-  convert(val: string[] | string): number | [number, number] | undefined {
-    if (val === undefined) {
-      return val as undefined;
-    }
+  convert(val: string[] | string): number | [number, number] {
     return _isArray(val) ?
       (val as Array<string>).map(iso => moment(iso).unix()) as [number, number]:
       moment(val).unix() as number;
@@ -136,8 +133,8 @@ class TimeSlider extends React.Component<TimeSliderProps> {
    * @param unix unix timestamps
    * @return The formatted timestamps
    */
-  formatTimestamp(unix: number): string {
-    return moment(unix * 1000).format(this.props.formatString);
+  formatTimestamp(unix: number|undefined): string {
+    return unix ? moment(unix * 1000).format(this.props.formatString) : '';
   }
 
   /**
@@ -175,30 +172,37 @@ class TimeSlider extends React.Component<TimeSliderProps> {
 
     const convertedMarks = this.convertMarks(marks);
 
-    let defaultVal;
-    let val;
     if (useRange) {
-      defaultVal = this.convert(defaultValue) as [number, number];
-      val = this.convert(value) as [number, number];
+      return (
+        <Slider
+          className={finalClassName}
+          defaultValue={this.convert(defaultValue) as [number, number]}
+          range={true}
+          min={moment(min).unix()}
+          max={moment(max).unix()}
+          tipFormatter={val => this.formatTimestamp(val)}
+          onChange={val => this.valueUpdated(val)}
+          value={this.convert(value) as [number, number]}
+          marks={convertedMarks}
+          {...passThroughProps}
+        />
+      );
     } else {
-      defaultVal = this.convert(defaultValue) as number;
-      val = this.convert(value) as number;
+      return (
+        <Slider
+          className={finalClassName}
+          defaultValue={this.convert(defaultValue) as number}
+          range={false}
+          min={moment(min).unix()}
+          max={moment(max).unix()}
+          tipFormatter={val => this.formatTimestamp(val)}
+          onChange={val => this.valueUpdated(val)}
+          value={this.convert(value) as number}
+          marks={convertedMarks}
+          {...passThroughProps}
+        />
+      );
     }
-
-    return (
-      <Slider
-        className={finalClassName}
-        defaultValue={defaultVal}
-        range={useRange}
-        min={moment(min).unix()}
-        max={moment(max).unix()}
-        tipFormatter={this.formatTimestamp.bind(this)}
-        onChange={this.valueUpdated.bind(this)}
-        value={val}
-        marks={convertedMarks}
-        {...passThroughProps}
-      />
-    );
   }
 }
 

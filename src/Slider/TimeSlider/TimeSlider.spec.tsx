@@ -12,12 +12,6 @@ describe('<TimeSlider />', () => {
     expect(wrapper).not.toBeUndefined();
   });
 
-  it('does not fail to convert on undefined', () => {
-    const slider = TestUtil.mountComponent(TimeSlider, {}).instance();
-    const undef = slider.convert();
-    expect(undef).toBeUndefined();
-  });
-
   it('converts time millis properly', () => {
     const slider = TestUtil.mountComponent(TimeSlider, {}).instance();
     const time = moment(1500000000000);

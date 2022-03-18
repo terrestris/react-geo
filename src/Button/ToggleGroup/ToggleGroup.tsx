@@ -6,6 +6,7 @@ import _isFunction from 'lodash/isFunction';
 import { CSS_PREFIX } from '../../constants';
 
 import './ToggleGroup.less';
+import { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
 export interface ToggleGroupProps {
   /**
@@ -124,7 +125,7 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
    *
    * @param childProps The properties of the children.
    */
-  onChange = (childProps) => {
+  onChange = (childProps: ToggleButtonProps) => {
     if (_isFunction(this.props.onChange)) {
       this.props.onChange(childProps);
     }

@@ -45,7 +45,7 @@ export function timeLayerAware<P>(WrappedComponent: React.ComponentType<P>, laye
 
   return class TimeLayerAware extends React.Component<Omit<P, 'onChange'>> {
 
-    timeChanged = newValues => {
+    timeChanged = (newValues: any) => {
       layers.forEach(config => {
         if (config.isWmsTime) {
           const parms = config.layer.getSource()?.getParams();

@@ -15,6 +15,8 @@ import _debounce from 'lodash/debounce';
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 
+import { Feature } from 'geojson';
+
 import { CSS_PREFIX } from '../../constants';
 
 import './WfsSearchInput.less';
@@ -139,12 +141,12 @@ interface OwnProps {
    * Please note: if omitted only data fetch will be performed and no data
    * will be shown afterwards!
    */
-  onFetchSuccess?: (data: any) => void;
+  onFetchSuccess?: (features: Feature[]) => void;
   /**
    * An onFetchError callback function which gets called if data fetch is
    * failed.
    */
-  onFetchError?: (data: any) => void;
+  onFetchError?: (error: string) => void;
   /**
    * Optional callback function, that will be called if 'clear' button of
    * input field was clicked.
@@ -159,7 +161,7 @@ interface OwnProps {
 
 interface WfsSearchState {
   searchTerm: string;
-  data: any[];
+  data: Feature[];
   fetching: boolean;
 }
 
@@ -223,7 +225,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
    *
    * @param prevProps Previous props
    */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Readonly<WfsSearchInputProps>) {
     if (this.props.searchTerm !== prevProps.searchTerm) {
       const evt = {
         target: {
@@ -314,18 +316,20 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
     if (request) {
       this.setState({
         fetching: true
-      }, () => {
-        fetch(`${baseUrl}`, {
-          method: 'POST',
-          credentials: additionalFetchOptions.credentials
-            ? additionalFetchOptions.credentials
-            : 'same-origin',
-          body: new XMLSerializer().serializeToString(request),
-          ...additionalFetchOptions
-        })
-          .then(response => response.json())
-          .then(this.onFetchSuccess.bind(this))
-          .catch(this.onFetchError.bind(this));
+      }, async () => {
+        try {
+          const response = await fetch(`${baseUrl}`, {
+            method: 'POST',
+            credentials: additionalFetchOptions.credentials
+              ? additionalFetchOptions.credentials
+              : 'same-origin',
+            body: new XMLSerializer().serializeToString(request),
+            ...additionalFetchOptions
+          });
+          this.onFetchSuccess(await response.json());
+        } catch (e) {
+          this.onFetchError(e.getMessage());
+        }
       });
     } else {
       this.onFetchError('Missing GetFeature request parameters');
@@ -343,15 +347,18 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
     const {
       onFetchSuccess
     } = this.props;
-    const data = response.features ? response.features : [];
-    data.forEach(feature => feature.searchTerm = this.state.searchTerm);
+    const data: Feature[] = response.features ? response.features : [];
+    for (const feature of data) {
+      if (!feature.properties) {
+        feature.properties = {};
+      }
+      feature.properties.searchTerm = this.state.searchTerm;
+    }
     this.setState({
       data,
       fetching: false
     }, () => {
-      if (onFetchSuccess) {
-        onFetchSuccess(data);
-      }
+      onFetchSuccess?.(data);
     });
   }
 
@@ -371,9 +378,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
     this.setState({
       fetching: false
     }, () => {
-      if (onFetchError) {
-        onFetchError(error);
-      }
+      onFetchError?.(error);
     });
   }
 

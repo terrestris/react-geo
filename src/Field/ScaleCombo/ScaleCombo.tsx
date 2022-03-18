@@ -4,6 +4,7 @@ const Option = Select.Option;
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
+import OlMapEvent from 'ol/MapEvent';
 
 import _isInteger from 'lodash/isInteger';
 import _isEmpty from 'lodash/isEmpty';
@@ -19,6 +20,7 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import { CSS_PREFIX } from '../../constants';
 
 import './ScaleCombo.less';
+import _isNumber from 'lodash/isNumber';
 
 interface ScaleComboProps {
   /**
@@ -111,7 +113,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
     const defaultOnZoomLevelSelect = (selectedScale: string) => {
       const mapView = props.map.getView();
       const calculatedResolution = MapUtil.getResolutionForScale(
-        selectedScale, mapView.getProjection().getUnits()
+        parseInt(selectedScale, 10), mapView.getProjection().getUnits()
       );
       mapView.setResolution(calculatedResolution);
     };
@@ -180,11 +182,11 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    * @param evt The 'moveend' event
    * @private
    */
-  zoomListener = (evt) => {
-    const zoom = evt.target.getView().getZoom();
-    let roundZoom = Math.round(zoom);
-    if (!roundZoom) {
-      roundZoom = 0;
+  zoomListener = (evt: OlMapEvent) => {
+    const zoom = (evt.target as OlMap).getView().getZoom();
+    let roundZoom = 0;
+    if (_isNumber(zoom)) {
+      roundZoom = Math.round(zoom);
     }
 
     this.setState({
@@ -194,14 +196,14 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
 
   /**
    * @function pushScaleOption: Helper function to create a {@link Option} scale component
-   * based on a resolution and the {@link Ol.View}
+   * based on a resolution and the {@link OlView}
    *
    * @param scales The scales array to push the scale to.
    * @param resolution map cresolution to generate the option for
    * @param view The map view
    *
    */
-  pushScale = (scales: string[], resolution: number, view: OlView) => {
+  pushScale = (scales: number[], resolution: number, view: OlView) => {
     const scale = MapUtil.getScaleForResolution(resolution, view.getProjection().getUnits());
     const roundScale = MapUtil.roundScale(scale);
     if (scales.includes(roundScale) ) {
@@ -212,7 +214,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
 
   /**
    * Generates the scales to add as {@link Option} to the SelectField based on
-   * the given instance of {@link Ol.Map}.
+   * the given instance of {@link OlMap}.
    *
    * @return The array of scales.
    */
@@ -227,7 +229,7 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
       return [];
     }
 
-    const scales = [];
+    const scales: number[] = [];
     const view = map.getView();
     // use existing resolutions array if exists
     const resolutions = view.getResolutions();

@@ -4,9 +4,9 @@ import _isEqual from 'lodash/isEqual';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-import OlBaseLayer from 'ol/layer/Base';
 
 import { CSS_PREFIX } from '../constants';
+import { WmsLayer } from '../Util/typeUtils';
 
 export interface BaseProps {
   /**
@@ -16,7 +16,7 @@ export interface BaseProps {
   /**
    * The layer you want to display the legend of.
    */
-  layer: OlBaseLayer;
+  layer: WmsLayer;
   /**
    * An object containing additional request params like "{HEIGHT: 400}" will
    * be transformed to "&HEIGHT=400" an added to the GetLegendGraphic request.
@@ -25,7 +25,7 @@ export interface BaseProps {
   /**
    * Optional method that should be called when the image retrieval errors
    */
-  onError?: () => void;
+  onError?: (e: Error) => void;
   /**
    * Optional error message that should be displayed when image retrieval
    * errors. Will remove the browsers default broken image
@@ -105,7 +105,7 @@ export class Legend extends React.Component<LegendProps, LegendState> {
    * @param layer The layer to get the legend graphic request for.
    * @param extraParams The extra params.
    */
-  getLegendUrl(layer: OlBaseLayer, extraParams: any) {
+  getLegendUrl(layer: WmsLayer, extraParams: any) {
     let legendUrl;
 
     if (layer.get('legendUrl')) {
@@ -120,7 +120,7 @@ export class Legend extends React.Component<LegendProps, LegendState> {
   /**
    * onError handler for the rendered img.
    */
-  onError(e) {
+  onError(e: Error) {
     Logger.warn(`Image error for legend of "${this.props.layer.get('name')}".`);
     this.setState({
       legendError: true

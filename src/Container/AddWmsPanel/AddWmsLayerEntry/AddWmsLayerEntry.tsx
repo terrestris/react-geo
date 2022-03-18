@@ -47,7 +47,7 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
    */
   static defaultProps = {
     layerQueryableText: 'Layer is queryable',
-    layerTextTemplateFn: (wmsLayer) => {
+    layerTextTemplateFn: (wmsLayer: WmsLayer) => {
       const title = wmsLayer.get('title');
       const abstract = wmsLayer.get('abstract');
       return abstract ?

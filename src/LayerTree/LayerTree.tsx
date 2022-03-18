@@ -18,6 +18,7 @@ import OlCollection from 'ol/Collection';
 import OlMapEvent from 'ol/MapEvent';
 import { unByKey } from 'ol/Observable';
 import { getUid } from 'ol';
+import { EventsKey as OlEventsKey } from 'ol/events';
 
 import _isFunction from 'lodash/isFunction';
 import _isEqual from 'lodash/isEqual';
@@ -27,7 +28,6 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import LayerTreeNode, { LayerTreeNodeProps } from './LayerTreeNode/LayerTreeNode';
 
 import { CSS_PREFIX } from '../constants';
-import { EventsKey } from 'ol/events';
 
 
 interface OwnProps {
@@ -101,7 +101,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    *  An array of ol.EventsKey as returned by on() or once().
    * @private
    */
-  olListenerKeys: EventsKey[] = [];
+  olListenerKeys: OlEventsKey[] = [];
 
   /**
    * Create the LayerTree.
@@ -267,7 +267,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   onCollectionRemove = (evt: any) => {
     this.unregisterEventsByLayer(evt.element);
     if (evt.element instanceof OlLayerGroup) {
-      evt.element.getLayers().forEach((layer) => {
+      evt.element.getLayers().forEach((layer: OlLayerBase) => {
         this.unregisterEventsByLayer(layer);
       });
     }
@@ -283,7 +283,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   onChangeLayers = (evt: any) => {
     this.unregisterEventsByLayer(evt.oldValue);
     if (evt.oldValue instanceof OlCollection) {
-      evt.oldValue.forEach((layer) => this.unregisterEventsByLayer(layer));
+      evt.oldValue.forEach((layer: OlLayerBase) => this.unregisterEventsByLayer(layer));
     }
     if (evt.target instanceof OlLayerGroup) {
       this.registerAddRemoveListeners(evt.target);
@@ -381,7 +381,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
         return this.treeNodeFromLayer(childLayer);
       }).reverse();
     } else {
-      if (!this.hasListener(layer, 'change:visible', this.onLayerChangeVisible)) {
+      if (!this.hasListener({ target: layer, type: 'change:visible', listener: this.onLayerChangeVisible })) {
         const eventKey = layer.on('change:visible', this.onLayerChangeVisible);
         this.olListenerKeys.push(eventKey);
       }
@@ -401,24 +401,17 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   /**
    * Determines if the target has already registered the given listener for the
    * given eventtype.
-   *
-   * @param target The event target.
-   * @param type The events type (name).
-   * @param listener The function.
-   * @return True if the listener is already contained in this.olListenerKeys.
    */
-  hasListener = (target, type, listener) => {
+  hasListener = (key: OlEventsKey) => {
     return this.olListenerKeys.some((listenerKey) => {
-      return listenerKey.target === target
-        && listenerKey.type === type
-        && listenerKey.listener === listener;
+      return listenerKey.target === key.target
+        && listenerKey.type === key.type
+        && listenerKey.listener === key.listener;
     });
   };
 
   /**
    * Reacts to the layer change:visible event and calls setCheckedState.
-   *
-   * @param evt The change:visible event
    */
   onLayerChangeVisible = () => {
     const checkedKeys = this.getVisibleOlUids();
@@ -434,11 +427,17 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    *
    * @return The visible ol_uids.
    */
-  getVisibleOlUids = () => {
-    const layers = MapUtil.getAllLayers(this.state.layerGroup, (layer) => {
-      return !(layer instanceof OlLayerGroup) && layer.getVisible();
-    }).filter(this.props.filterFunction);
-    return layers.map(getUid);
+  getVisibleOlUids = (): string[] => {
+    if (!this.state.layerGroup) {
+      return [];
+    }
+
+    return MapUtil.getAllLayers(this.state.layerGroup,
+      (layer: OlLayerBase) => {
+        return !(layer instanceof OlLayerGroup) && layer.getVisible();
+      })
+      .filter(this.props.filterFunction)
+      .map(getUid);
   };
 
   /**
@@ -450,9 +449,10 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   onCheck(checkedKeys: string[], e: AntTreeNodeCheckedEvent) {
     const { checked = false } = e;
     const eventKey = e.node.props.eventKey;
-    const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
-
-    this.setLayerVisibility(layer, checked);
+    if (eventKey) {
+      const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
+      this.setLayerVisibility(layer, checked);
+    }
   }
 
   /**
@@ -508,6 +508,9 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @param e The ant-tree event object for this event. See ant docs.
    */
   onDrop(e: AntTreeNodeDropEvent) {
+    if (!e.dragNode.props.eventKey || !e.node.props.eventKey) {
+      return;
+    }
     const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
     const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
     const dragCollection = dragInfo.groupLayer.getLayers();

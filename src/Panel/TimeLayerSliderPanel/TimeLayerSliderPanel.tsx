@@ -172,10 +172,8 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
     if (!(_isEqual(nextProps.timeAwareLayers, timeAwareLayers))) {
       return true;
     }
-    if (!(_isEqual(nextProps.tooltips, tooltips))) {
-      return true;
-    }
-    return false;
+
+    return !(_isEqual(nextProps.tooltips, tooltips));
   }
 
   /**
@@ -331,15 +329,9 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
   /**
    * handle playback speed change
    */
-  onPlaybackSpeedChange = (val: string) => {
-    let valueToSet;
-    if (_isFinite(parseFloat(val))) {
-      valueToSet = parseFloat(val);
-    } else {
-      valueToSet = val;
-    }
+  onPlaybackSpeedChange = (val: number | PlaybackSpeedType) => {
     this.setState({
-      playbackSpeed: valueToSet
+      playbackSpeed: val
     }, () => {
       if (this.state.autoPlayActive) {
         this.autoPlay(true);
@@ -487,7 +479,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
           pressedIconName="pause-circle"
         />
         <Select
-          defaultValue={'1'}
+          defaultValue={1}
           className={extraCls + ' speed-picker'}
           onChange={this.onPlaybackSpeedChange}
         >

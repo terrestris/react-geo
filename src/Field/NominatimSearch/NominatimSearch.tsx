@@ -173,6 +173,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
      * selected item.
      *
      * @param selected The selected item as it is returned by nominatim.
+     * @param olMap The map
      */
     onSelect: (selected: NominatimPlace, olMap: OlMap) => {
       if (selected && selected.boundingbox) {
@@ -222,7 +223,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    *
    * @param prevProps Previous props
    */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Readonly<NominatimSearchProps>) {
     if (this.props.searchTerm !== prevProps.searchTerm) {
       this.onUpdateInput(this.props.searchTerm);
     }

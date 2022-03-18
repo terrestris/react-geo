@@ -273,30 +273,28 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
 
   // recenters the view by putting the given coordinates at 3/4 from the top or
   // the screen
-  getCenterWithHeading = (position, rotation, resolution) => {
+  getCenterWithHeading = (position: [number, number], rotation: number, resolution: number) => {
     const size = this.props.map.getSize() ?? [0, 0];
     const height = size[1];
 
     return [
-      position[0] - Math.sin(rotation) * height * resolution * 1 / 4,
-      position[1] + Math.cos(rotation) * height * resolution * 1 / 4
+      position[0] - Math.sin(rotation) * height * resolution / 4,
+      position[1] + Math.cos(rotation) * height * resolution / 4
     ];
   };
 
   updateView = () => {
     const view = this.props.map.getView();
     const deltaMean = 500; // the geolocation sampling period mean in ms
-    let previousM = 0;
     // use sampling period to get a smooth transition
     let m = Date.now() - deltaMean * 1.5;
-    m = Math.max(m, previousM);
+    m = Math.max(m, 0);
 
-    previousM = m;
     // interpolate position along positions LineString
     const c = this._positions.getCoordinateAtM(m, true);
     if (c) {
       if (this.props.follow) {
-        view.setCenter(this.getCenterWithHeading(c, -c[2], view.getResolution()));
+        view.setCenter(this.getCenterWithHeading([c[0], c[1]], -c[2], view.getResolution() ?? 0));
         view.setRotation(-c[2]);
       }
       if (this.props.showMarker) {
