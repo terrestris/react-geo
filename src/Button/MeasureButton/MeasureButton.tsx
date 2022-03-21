@@ -860,6 +860,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
   render() {
     const {
       className,
+      geodesic,
       map,
       measureType,
       measureLayerName,
