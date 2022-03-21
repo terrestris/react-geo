@@ -1,3 +1,12 @@
+## [16.2.5](https://github.com/terrestris/react-geo/compare/v16.2.4...v16.2.5) (2022-03-21)
+
+
+### Bug Fixes
+
+* desctructure geodesic prop in measure button ([2470d6f](https://github.com/terrestris/react-geo/commit/2470d6fff5e5c1d4222e5ab26333fda2a86c2bed))
+* listen to correct interaction event on translate end ([951540d](https://github.com/terrestris/react-geo/commit/951540d6f338e579415c722d705eafff7e087a70))
+* mark props of ToggleButton as partial in draw buttons ([158c658](https://github.com/terrestris/react-geo/commit/158c6587ee4ccfba117044dc517114b5f75be576))
+
 ## [16.2.4](https://github.com/terrestris/react-geo/compare/v16.2.3...v16.2.4) (2022-03-18)
 
 
