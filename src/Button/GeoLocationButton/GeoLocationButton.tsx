@@ -60,7 +60,7 @@ interface OwnProps {
   map: OlMap;
 }
 
-export type GeoLocationButtonProps = OwnProps & Omit<ToggleButtonProps, 'onToggle'|'className'>;
+export type GeoLocationButtonProps = OwnProps & Omit<Partial<ToggleButtonProps>, 'onToggle'|'className'>;
 
 /**
  * The GeoLocationButton.

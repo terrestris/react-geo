@@ -84,7 +84,7 @@ interface OwnProps {
   drawInteractionConfig?: Omit<OlDrawOptions, 'source'|'type'|'geometryFunction'|'style'|'freehandCondition'>;
 }
 
-export type DrawButtonProps = OwnProps & ToggleButtonProps;
+export type DrawButtonProps = OwnProps & Partial<ToggleButtonProps>;
 
 /**
  * The className added to this component.
@@ -95,20 +95,20 @@ const defaultClassName = `${CSS_PREFIX}drawbutton`;
  * The DrawButton.
  */
 const DrawButton: React.FC<DrawButtonProps> = ({
-  modalPromptTitle = 'Label',
-  modalPromptOkButtonText = 'Ok',
-  modalPromptCancelButtonText = 'Cancel',
-  drawInteractionConfig,
-  onToggle,
   className,
+  digitizeLayer,
+  drawInteractionConfig,
+  drawStyle,
   drawType,
+  maxLabelLineLength,
+  modalPromptCancelButtonText = 'Cancel',
+  modalPromptOkButtonText = 'Ok',
+  modalPromptTitle = 'Label',
   onDrawEnd,
   onDrawStart,
-  onModalLabelOk,
   onModalLabelCancel,
-  maxLabelLineLength,
-  digitizeLayer,
-  drawStyle,
+  onModalLabelOk,
+  onToggle,
   ...passThroughProps
 }) => {
 

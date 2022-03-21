@@ -20,6 +20,8 @@ import OlGeometryType from 'ol/geom/GeometryType';
 import OlOverlayPositioning from 'ol/OverlayPositioning';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
+import OlGeomPolygon from 'ol/geom/Polygon';
+import OlGeomLineString from 'ol/geom/LineString';
 import { EventsKey } from 'ol/events';
 
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
@@ -30,8 +32,6 @@ import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import { CSS_PREFIX } from '../../constants';
 
 import './MeasureButton.less';
-import OlGeomPolygon from 'ol/geom/Polygon';
-import OlGeomLineString from 'ol/geom/LineString';
 
 interface OwnProps {
   /**
@@ -125,7 +125,7 @@ interface OwnProps {
   geodesic: true;
 }
 
-export type MeasureButtonProps = OwnProps & ToggleButtonProps;
+export type MeasureButtonProps = OwnProps & Partial<ToggleButtonProps>;
 
 /**
  * The MeasureButton.
@@ -860,6 +860,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
   render() {
     const {
       className,
+      geodesic,
       map,
       measureType,
       measureLayerName,
