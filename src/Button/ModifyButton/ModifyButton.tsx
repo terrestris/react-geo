@@ -210,7 +210,7 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
       onTranslateStart?.(e);
     });
 
-    const endKey = translateInteraction.on('translatestart', e => {
+    const endKey = translateInteraction.on('translateend', e => {
       onTranslateEnd?.(e);
     });
 
