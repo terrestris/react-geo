@@ -58,7 +58,7 @@ interface OwnProps {
   featuresCollection?: OlCollection<OlFeature<OlGeometry>>;
 }
 
-export type SelectFeaturesButtonProps = OwnProps & ToggleButtonProps;
+export type SelectFeaturesButtonProps = OwnProps & Partial<ToggleButtonProps>;
 
 /**
  * The className added to this component.

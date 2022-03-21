@@ -211,7 +211,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
           }
         }
       }
-      if (shouldToggle && onToggle) {
+      if (shouldToggle) {
         onToggle(overallPressed, lastClickEvt);
       }
     }
