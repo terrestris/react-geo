@@ -150,7 +150,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
    *
    *
    */
-  _rnd: Rnd | null;
+  _rnd: Rnd | null = null;
 
   /**
    * Create the Panel.
@@ -239,7 +239,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
   onResize(
     evt: MouseEvent | TouchEvent,
     direction: ResizeDirection,
-    el: HTMLDivElement,
+    el: HTMLElement,
     delta: ResizableDelta,
     position: Position
   ) {
@@ -261,9 +261,9 @@ export class Panel extends React.Component<PanelProps, PanelState> {
    * @param el The element which gets resized.
    */
   onResizeStart(
-    evt: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+    evt: React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
     direction: ResizeDirection,
-    el: HTMLDivElement
+    el: HTMLElement
   ) {
     const { onResizeStart } = this.props;
     if (_isFunction(onResizeStart)) {
@@ -286,7 +286,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
   onResizeStop(
     evt: MouseEvent | TouchEvent,
     direction: ResizeDirection,
-    el: HTMLDivElement,
+    el: HTMLElement,
     delta: ResizableDelta,
     position: Position
   ) {

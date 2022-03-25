@@ -19,7 +19,7 @@ export function onDropAware(WrappedComponent: React.ComponentType<MapComponentPr
      * endings.
      * @param event The drop event.
      */
-    onDrop(event: DragEvent) {
+    onDrop(event: React.DragEvent<HTMLDivElement>) {
       const {
         map
       } = this.props;

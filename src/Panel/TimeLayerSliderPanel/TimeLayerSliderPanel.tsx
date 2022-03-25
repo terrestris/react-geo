@@ -26,8 +26,6 @@ import ToggleButton from '../../Button/ToggleButton/ToggleButton';
 
 import './TimeLayerSliderPanel.less';
 
-type timeRange = [moment.Moment, moment.Moment];
-
 export interface Tooltips {
   hours: string;
   days: string;
@@ -91,7 +89,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
   };
 
   private _TimeLayerAwareSlider: any;
-  private _wmsTimeLayers: TimeLayerAwareConfig[];
+  private _wmsTimeLayers: TimeLayerAwareConfig[] = [];
   private _interval: number;
 
   /**
@@ -356,7 +354,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
   /**
    *
    */
-  updateDataRange([startDate, endDate]: timeRange) {
+  updateDataRange([startDate, endDate]: [moment.Moment, moment.Moment]) {
     this.setState({
       startDate,
       endDate
@@ -437,7 +435,16 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
             <RangePicker
               showTime={{ format: 'HH:mm' }}
               defaultValue={[startDate, endDate]}
-              onOk={this.updateDataRange}
+              onOk={range => {
+                if (!range) {
+                  return;
+                }
+                const [start, end] = range;
+                if (!start || !end) {
+                  return;
+                }
+                this.updateDataRange([start, end]);
+              }}
             />
           }
         >

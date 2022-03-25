@@ -109,7 +109,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
       onSelectionChange(selectedWmsLayers);
     }
 
-    this.setState({selectedWmsLayers});
+    this.setState({ selectedWmsLayers });
   };
 
   /**
@@ -199,7 +199,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
           {...passThroughProps}
         >
           <div role="list" >
-            <Checkbox.Group onChange={this.onSelectedLayersChange}>
+            <Checkbox.Group onChange={value => this.onSelectedLayersChange(value.map(v => v as string))}>
               {wmsLayers.map((layer, idx) =>
                 <div role="listitem" key={idx}>
                   <AddWmsLayerEntry

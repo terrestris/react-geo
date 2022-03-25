@@ -21,6 +21,7 @@ import { CSS_PREFIX } from '../../constants';
 
 import mapMarker from './geolocation-marker.png';
 import mapMarkerHeading from './geolocation-marker-heading.png';
+import RenderFeature from 'ol/render/Feature';
 
 interface OwnProps {
   /**
@@ -159,7 +160,7 @@ class GeoLocationButton extends React.Component<GeoLocationButtonProps> {
    * The styleFunction for the geoLocationLayer. Shows a marker with arrow when
    * heading is not 0.
    */
-  _styleFunction = (feature: OlFeature<OlGeometry>) => {
+  _styleFunction = (feature: OlFeature<OlGeometry>|RenderFeature) => {
     const heading = feature.get('heading');
     const src = heading !== 0 ? mapMarkerHeading : mapMarker;
     const rotation = heading !== 0 ? heading * Math.PI / 180 : 0;

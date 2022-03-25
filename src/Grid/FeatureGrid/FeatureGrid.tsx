@@ -25,6 +25,8 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import './FeatureGrid.less';
 import { ColumnProps, TableProps } from 'antd/lib/table';
 import _isNil from 'lodash/isNil';
+import { Key } from 'react';
+import RenderFeature from 'ol/render/Feature';
 
 interface OwnProps {
   /**
@@ -104,7 +106,7 @@ interface OwnProps {
 }
 
 interface FeatureGridState {
-  selectedRowKeys: string[];
+  selectedRowKeys: Key[];
 }
 
 export type FeatureGridProps = OwnProps & TableProps<any>;
@@ -402,7 +404,10 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       }
     });
 
-    selectedFeatures.forEach((feature: OlFeature<OlGeometry>) => {
+    selectedFeatures.forEach((feature: OlFeature<OlGeometry>|RenderFeature) => {
+      if (feature instanceof RenderFeature) {
+        return;
+      }
       const key = _kebabCase(this.props.keyFunction(feature));
       const sel = `.${this._rowClassName}.${this._rowKeyClassNamePrefix}${key}`;
       const el = document.querySelectorAll(sel)[0];
@@ -745,7 +750,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    *
    * @param selectedRowKeys The list of currently selected row keys.
    */
-  onSelectChange = (selectedRowKeys: string[]) => {
+  onSelectChange = (selectedRowKeys: Key[]) => {
     const {
       onRowSelectionChange
     } = this.props;

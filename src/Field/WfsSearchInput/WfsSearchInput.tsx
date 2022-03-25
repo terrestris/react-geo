@@ -328,7 +328,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
           });
           this.onFetchSuccess(await response.json());
         } catch (e) {
-          this.onFetchError(e.getMessage());
+          this.onFetchError(e);
         }
       });
     } else {
@@ -370,7 +370,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
    *
    * @param error The errorstring.
    */
-  onFetchError(error: string) {
+  onFetchError(error: any) {
     const {
       onFetchError
     } = this.props;

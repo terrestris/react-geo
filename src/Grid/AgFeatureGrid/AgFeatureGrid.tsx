@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/render-result-naming-convention */
 import * as React from 'react';
-import { ReactNode } from 'react';
+import { Key, ReactNode } from 'react';
 
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
@@ -245,7 +245,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * The reference of this grid.
    * @private
    */
-  _ref: AgGridReact | null;
+  _ref: AgGridReact | null = null;
 
   /**
    * The className added to this component.
@@ -660,7 +660,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * @param key The row key to obtain the feature from.
    * @return The feature candidate.
    */
-  getFeatureFromRowKey = (key: string): OlFeature<OlGeometry> => {
+  getFeatureFromRowKey = (key: Key): OlFeature<OlGeometry> => {
     const {
       features,
       keyFunction
@@ -872,17 +872,21 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       selectedRows
     } = this.state;
 
-    let selectedRowsAfter: any[];
+    let selectedRowsAfter: RowNode[];
     if (!grid || !grid.api) {
       selectedRowsAfter = evt.api.getSelectedRows();
     } else {
       selectedRowsAfter = grid.api.getSelectedRows();
     }
 
-    const deselectedRows = _differenceWith(selectedRows, selectedRowsAfter, (a: any , b: any) => a.key === b.key);
+    const deselectedRows = _differenceWith(selectedRows, selectedRowsAfter, (a: RowNode , b: RowNode) => a.key === b.key);
 
-    const selectedFeatures = selectedRowsAfter.map(row => this.getFeatureFromRowKey(row.key));
-    const deselectedFeatures = deselectedRows.map(row => this.getFeatureFromRowKey(row.key));
+    const selectedFeatures = selectedRowsAfter.flatMap(row => {
+      return row.key ? [this.getFeatureFromRowKey(row.key)] : [];
+    });
+    const deselectedFeatures = deselectedRows.flatMap(row => {
+      return row.key ? [this.getFeatureFromRowKey(row.key)] : [];
+    });
 
     // update state
     this.setState({
