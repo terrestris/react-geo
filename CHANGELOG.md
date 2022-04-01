@@ -1,3 +1,10 @@
+## [16.2.6](https://github.com/terrestris/react-geo/compare/v16.2.5...v16.2.6) (2022-04-01)
+
+
+### Bug Fixes
+
+* **DigitizeButton:** prefer modify over translate ([63040f8](https://github.com/terrestris/react-geo/commit/63040f8337c291c3f1f3276dbf14cd8395e3fd45))
+
 ## [16.2.5](https://github.com/terrestris/react-geo/compare/v16.2.4...v16.2.5) (2022-03-21)
 
 
