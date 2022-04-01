@@ -1,3 +1,10 @@
+## [15.4.1](https://github.com/terrestris/react-geo/compare/v15.4.0...v15.4.1) (2022-04-01)
+
+
+### Bug Fixes
+
+* **DigitizeButton:** prefer modify over translate ([a815a0d](https://github.com/terrestris/react-geo/commit/a815a0d728180d618c6ac09038a02d46e77d25d8))
+
 # [15.4.0](https://github.com/terrestris/react-geo/compare/v15.3.0...v15.4.0) (2021-12-15)
 
 
