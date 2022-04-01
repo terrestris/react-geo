@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - next
+      - 15.x.x
 
 jobs:
   release:
