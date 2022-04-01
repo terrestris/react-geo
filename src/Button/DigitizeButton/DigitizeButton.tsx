@@ -439,8 +439,8 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
 
     this.createDrawInteraction();
     this.createSelectInteraction();
-    this.createModifyInteraction();
     this.createTranslateInteraction();
+    this.createModifyInteraction();
   }
 
   /**

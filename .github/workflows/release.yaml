@@ -2,8 +2,9 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - main
       - next
+      - 15.x.x
 jobs:
   release:
     name: Release
