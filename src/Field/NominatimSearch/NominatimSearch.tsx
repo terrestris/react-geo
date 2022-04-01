@@ -305,7 +305,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    *
    * @param error The errorstring.
    */
-  onFetchError(error: string) {
+  onFetchError(error: any) {
     Logger.error(`Error while requesting Nominatim: ${error}`);
     if (this.props.onFetchError) {
       this.props.onFetchError(error);

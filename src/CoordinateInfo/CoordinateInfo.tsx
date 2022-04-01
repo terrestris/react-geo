@@ -80,7 +80,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     hitTolerance: 5,
     resultRenderer: () => {
       return (
-        <div></div>
+        <div/>
       );
     }
   };
@@ -148,11 +148,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
 
       promises.push(fetch(featureInfoUrl));
 
-      if (!drillDown) {
-        return true;
-      }
-
-      return false;
+      return !drillDown;
     }, {
       layerFilter: this.layerFilter,
       hitTolerance: hitTolerance
@@ -192,7 +188,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
           features: features
         });
       })
-      .catch((error: Error) => {
+      .catch((error: any) => {
         Logger.error(error);
       })
       .finally(() => {

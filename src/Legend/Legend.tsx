@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { SyntheticEvent } from 'react';
 
 import _isEqual from 'lodash/isEqual';
 
@@ -26,7 +25,7 @@ export interface BaseProps {
   /**
    * Optional method that should be called when the image retrieval errors
    */
-  onError?: (e: SyntheticEvent) => void;
+  onError?: (e: any) => void;
   /**
    * Optional error message that should be displayed when image retrieval
    * errors. Will remove the browsers default broken image
@@ -121,7 +120,7 @@ export class Legend extends React.Component<LegendProps, LegendState> {
   /**
    * onError handler for the rendered img.
    */
-  onError(e: SyntheticEvent) {
+  onError(e: any) {
     Logger.warn(`Image error for legend of "${this.props.layer.get('name')}".`);
     this.setState({
       legendError: true

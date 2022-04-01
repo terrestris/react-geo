@@ -146,7 +146,7 @@ interface OwnProps {
    * An onFetchError callback function which gets called if data fetch is
    * failed.
    */
-  onFetchError?: (error: string) => void;
+  onFetchError?: (error: any) => void;
   /**
    * Optional callback function, that will be called if 'clear' button of
    * input field was clicked.
