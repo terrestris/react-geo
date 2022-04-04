@@ -170,21 +170,13 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       layers
     } = this.props;
     layers.forEach((l, i) => {
-      if (this._visibleLayerIndex === i) {
-        l.setVisible(true);
-      } else {
-        l.setVisible(false);
-      }
-    });
-    this._layerClones.forEach((l, i) => {
-      if (this._visibleLayerIndex === this._layerClones.length - 1 && i === 0) {
-        l.setVisible(true);
-        this.setState({ previewLayer: l });
-      } else if (this._visibleLayerIndex + 1 === i) {
-        l.setVisible(true);
-        this.setState({ previewLayer: l });
-      } else {
-        l.setVisible(false);
+      const clone = this._layerClones.find(lc => lc.get('name') === l.get('name'));
+      l.setVisible(this._visibleLayerIndex === i);
+      if (clone) {
+        clone.setVisible(this._visibleLayerIndex === i);
+        if (this._visibleLayerIndex === i) {
+          this.setState({ previewLayer: clone });
+        }
       }
     });
   };
@@ -210,7 +202,11 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
     evt.stopPropagation();
     this._map?.getLayers().getArray().forEach((layer, index: number) => {
       if (layer.getVisible()) {
-        this._visibleLayerIndex = index;
+        if (this._layerClones.length - 1 === index) {
+          this._visibleLayerIndex = 0;
+        } else {
+          this._visibleLayerIndex = index + 1;
+        }
       }
     });
     this.updateLayerVisibility();
