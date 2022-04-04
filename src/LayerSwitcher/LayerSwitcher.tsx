@@ -1,5 +1,6 @@
 import * as React from 'react';
 import _isEqual from 'lodash/isEqual';
+import _isNumber from 'lodash/isNumber';
 import Logger from '@terrestris/base-util/dist/Logger';
 import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
 
@@ -118,7 +119,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    * @param layer The layer to clone.
    * @returns The cloned layer.
    */
-  cloneLayer (layer: OlLayerTile<OlTileSource> | OlLayerGroup): OlLayerTile<OlTileSource> | OlLayerGroup {
+  cloneLayer(layer: OlLayerTile<OlTileSource> | OlLayerGroup): OlLayerTile<OlTileSource> | OlLayerGroup {
     if (layer instanceof OlLayerGroup) {
       return new OlLayerGroup({
         layers: layer.getLayers().getArray().map(this.cloneLayer),
@@ -158,6 +159,9 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       this._map?.addLayer(layerClone);
       return layerClone;
     });
+    if (!_isNumber(this._visibleLayerIndex)) {
+      Logger.warn('The initial visibility of at least one layer used with LayerSwitcher should be set to true.');
+    }
   };
 
   /**
