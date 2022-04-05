@@ -164,9 +164,6 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       this._map?.addLayer(layerClone);
       return layerClone;
     });
-    if (!_isNumber(this._visibleLayerIndex)) {
-      Logger.warn('The initial visibility of at least one layer used with LayerSwitcher should be set to true.');
-    }
   };
 
   /**
