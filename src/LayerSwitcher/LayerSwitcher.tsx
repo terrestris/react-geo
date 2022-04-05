@@ -56,7 +56,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    */
   _map: OlMap | null = null;
 
-  _visibleLayerIndex: number = 0;
+  _visibleLayerIndex: number = -1;
 
   _layerClones: Array<OlLayerTile<OlTileSource> | OlLayerGroup> = [];
 
@@ -164,7 +164,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       this._map?.addLayer(layerClone);
       return layerClone;
     });
-    if (!_isNumber(this._visibleLayerIndex)) {
+    if (this._visibleLayerIndex < 0) {
       Logger.warn('The initial visibility of at least one layer used with LayerSwitcher should be set to true.');
     }
   };
