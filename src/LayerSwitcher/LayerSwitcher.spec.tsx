@@ -2,6 +2,7 @@ import { render, within } from '@testing-library/react';
 import * as React from 'react';
 import userEvent from '@testing-library/user-event';
 import TestUtil from '../Util/TestUtil';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 import LayerSwitcher from './LayerSwitcher';
 import OlLayerTile from 'ol/layer/Tile';
@@ -15,11 +16,9 @@ describe('<LayerSwitcher />', () => {
   beforeEach(() => {
     layers = [
       new OlLayerTile({
-        name: 'OSM',
         source: new OlSourceOsm()
       }),
       new OlLayerTile({
-        name: 'Stamen',
         source: new OlSourceStamen({
           layer: 'watercolor'
         })
@@ -89,6 +88,17 @@ describe('<LayerSwitcher />', () => {
 
     expect(layers[0].getVisible()).toBe(!layer0visibile);
     expect(layers[1].getVisible()).toBe(!layer1visibile);
+  });
+
+  it('shows warning any of passed layers are visible', () => {
+    layers.forEach(l => l.setVisible(false));
+    const loggerSpy = jest.spyOn(Logger, 'warn');
+    render(<LayerSwitcher layers={layers} map={map} />);
+    expect(loggerSpy).toHaveBeenCalledTimes(1);
+    expect(loggerSpy).toHaveBeenCalledWith(
+      expect.stringContaining('The initial visibility of at least one layer used with LayerSwitcher should be set to true.')
+    );
+    loggerSpy.mockRestore();
   });
 
 });
