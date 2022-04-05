@@ -90,15 +90,10 @@ describe('<LayerSwitcher />', () => {
     expect(layers[1].getVisible()).toBe(!layer1visibile);
   });
 
-  it('shows warning any of passed layers are visible', () => {
+  it('assumes the first provided layer as visible if the initial visibility of all layers is false', () => {
     layers.forEach(l => l.setVisible(false));
-    const loggerSpy = jest.spyOn(Logger, 'warn');
     render(<LayerSwitcher layers={layers} map={map} />);
-    expect(loggerSpy).toHaveBeenCalledTimes(1);
-    expect(loggerSpy).toHaveBeenCalledWith(
-      expect.stringContaining('The initial visibility of at least one layer used with LayerSwitcher should be set to true.')
-    );
-    loggerSpy.mockRestore();
+    expect(layers[0].getVisible()).toBeTruthy();
   });
 
 });
