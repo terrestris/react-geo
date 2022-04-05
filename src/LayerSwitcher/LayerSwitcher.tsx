@@ -56,7 +56,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    */
   _map: OlMap | null = null;
 
-  _visibleLayerIndex: number;
+  _visibleLayerIndex: number = 0;
 
   _layerClones: Array<OlLayerTile<OlTileSource> | OlLayerGroup> = [];
 
@@ -122,7 +122,12 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
   cloneLayer(layer: OlLayerTile<OlTileSource> | OlLayerGroup): OlLayerTile<OlTileSource> | OlLayerGroup {
     if (layer instanceof OlLayerGroup) {
       return new OlLayerGroup({
-        layers: layer.getLayers().getArray().map(this.cloneLayer),
+        layers: layer.getLayers().getArray().map(l => {
+          if (!(l instanceof OlLayerTile) || !(l instanceof OlLayerGroup)) {
+            throw new Error('Layer of layergroup is of unclonable type')
+          }
+          return this.cloneLayer(l);
+        }),
         properties: {
           originalLayer: layer
         },

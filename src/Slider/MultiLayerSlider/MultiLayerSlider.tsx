@@ -5,6 +5,7 @@ import { SliderSingleProps } from 'antd/lib/slider';
 import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
 
 import { CSS_PREFIX } from '../../constants';
+import _isNumber from 'lodash/isNumber';
 
 interface DefaultProps {
   /**
@@ -75,7 +76,10 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
    * @param value The slider value
    * @return The formatted tip value
    */
-  formatTip(value: number) {
+  formatTip(value?: number) {
+    if (!_isNumber(value)) {
+      return '';
+    }
     const {
       layers,
       nameProperty

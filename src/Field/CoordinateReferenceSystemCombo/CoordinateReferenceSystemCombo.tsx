@@ -104,7 +104,7 @@ class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSC
    * It logs the error to the console.
    *
    */
-  onFetchError(error: Error) {
+  onFetchError(error: any) {
     Logger.error('Error while requesting in CoordinateReferenceSystemCombo', error);
   }
 

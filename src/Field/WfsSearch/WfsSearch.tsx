@@ -14,7 +14,6 @@ import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 
 import _isFunction from 'lodash/isFunction';
 import _debounce from 'lodash/debounce';
-import _isNil from 'lodash/isNil';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
@@ -387,7 +386,7 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
    *
    * @param error The errorstring.
    */
-  onFetchError(error: string) {
+  onFetchError(error: any) {
     Logger.error(`Error while requesting WFS GetFeature: ${error}`);
     this.setState({
       fetching: false

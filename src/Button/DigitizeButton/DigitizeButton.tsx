@@ -32,6 +32,7 @@ import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
 import { ChangeEvent } from 'react';
+import RenderFeature from 'ol/render/Feature';
 
 interface DefaultProps {
   /**
@@ -556,14 +557,18 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * @param feature The feature which is being styled.
    * @return The style to use.
    */
-  digitizeStyleFunction = (feature: OlFeature<OlGeometry>) => {
+  digitizeStyleFunction = (feature: OlFeature<OlGeometry>|RenderFeature) => {
     const {
       drawStyle,
     } = this.props;
 
+    if (feature instanceof RenderFeature) {
+      return;
+    }
+
     const geometry = feature.getGeometry();
     if (!geometry) {
-      return undefined;
+      return;
     }
 
     if (drawStyle) {
@@ -1088,7 +1093,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
    * Turns visibility of modal off and removes last drawn feature from the
    * digitize layer.
    */
-  onModalLabelCancel = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  onModalLabelCancel = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     const {
       onModalLabelCancel
     } = this.props;

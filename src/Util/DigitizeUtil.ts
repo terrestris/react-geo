@@ -13,6 +13,7 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
 import Geometry from 'ol/geom/Geometry';
+import RenderFeature from 'ol/render/Feature';
 
 export class DigitizeUtil {
   /**
@@ -120,7 +121,7 @@ export class DigitizeUtil {
    * @param feature The feature which is being styled.
    * @return The style to use.
    */
-  static defaultDigitizeStyleFunction(feature: OlFeature<OlGeometry>): OlStyle | undefined {
+  static defaultDigitizeStyleFunction(feature: OlFeature<OlGeometry>|RenderFeature): OlStyle | undefined {
     const geom = feature.getGeometry();
 
     if (!geom) {
@@ -194,7 +195,7 @@ export class DigitizeUtil {
    * @param selectStrokeColor
    */
   static selectStyleFunction (selectFillColor: string, selectStrokeColor: string): OlStyleLike {
-    return (feature: OlFeature<OlGeometry>) => {
+    return (feature: OlFeature<OlGeometry>|RenderFeature) => {
       const text = feature.get('label') ?? '';
 
       return new OlStyleStyle({
