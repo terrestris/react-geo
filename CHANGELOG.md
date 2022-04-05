@@ -1,3 +1,15 @@
+# [16.3.0](https://github.com/terrestris/react-geo/compare/v16.2.6...v16.3.0) (2022-04-05)
+
+
+### Bug Fixes
+
+* fix determination of currently visible layer ([a056715](https://github.com/terrestris/react-geo/commit/a05671554859b3e701a68b3915f3ea03f7fc8a20))
+
+
+### Features
+
+* warn if all passed layer are not visible ([d969fd7](https://github.com/terrestris/react-geo/commit/d969fd7e488e45cb2d615bcd83590915243fa598))
+
 ## [16.2.6](https://github.com/terrestris/react-geo/compare/v16.2.5...v16.2.6) (2022-04-01)
 
 
