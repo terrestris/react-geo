@@ -1,3 +1,15 @@
+# [16.4.0](https://github.com/terrestris/react-geo/compare/v16.3.0...v16.4.0) (2022-04-05)
+
+
+### Bug Fixes
+
+* adapt test for the case if all passed layers are invisible ([e55917b](https://github.com/terrestris/react-geo/commit/e55917b1a9df7a1c46526480210d4b93ed2a029c))
+
+
+### Features
+
+* enable even more strict options ([a72f3e7](https://github.com/terrestris/react-geo/commit/a72f3e71a90661ad32df501a132bb04733ce7c17))
+
 # [16.3.0](https://github.com/terrestris/react-geo/compare/v16.2.6...v16.3.0) (2022-04-05)
 
 
