@@ -29,6 +29,7 @@ import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
 interface DefaultProps {
   /**
@@ -806,7 +807,16 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     let modifyInteraction = MapUtil.getInteractionsByName(map, modifyInteractionName)[0];
 
     if (!modifyInteraction) {
+      const condition = modifyInteractionConfig?.condition ?? OlEventConditions.primaryAction;
+
       modifyInteraction = new OlInteractionModify({
+        condition: (evt: OlMapBrowserEvent<MouseEvent>) => {
+          if (condition(evt)) {
+            evt.stopPropagation();
+            return true;
+          }
+          return false;
+        },
         features: this._selectInteraction.getFeatures(),
         deleteCondition: OlEventConditions.singleClick,
         style: this.selectedStyleFunction,
