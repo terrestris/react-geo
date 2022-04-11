@@ -1,3 +1,10 @@
+## [15.4.2](https://github.com/terrestris/react-geo/compare/v15.4.1...v15.4.2) (2022-04-11)
+
+
+### Bug Fixes
+
+* **MeasureButton:** make property `geodesic` a boolean with default value `true` ([c508f45](https://github.com/terrestris/react-geo/commit/c508f453e06cb095a6aa19f18b90503fba48d589))
+
 ## [15.4.1](https://github.com/terrestris/react-geo/compare/v15.4.0...v15.4.1) (2022-04-01)
 
 
