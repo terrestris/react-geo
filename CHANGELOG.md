@@ -1,3 +1,11 @@
+## [16.4.2](https://github.com/terrestris/react-geo/compare/v16.4.1...v16.4.2) (2022-04-11)
+
+
+### Bug Fixes
+
+* **DigitizeButton:** do not propagate event to translate if modifying ([3748af7](https://github.com/terrestris/react-geo/commit/3748af744d98485dae4145203d0c5bcf63bc1e81))
+* **ModifyButton:** do not propagate event to translate if modifying ([2144457](https://github.com/terrestris/react-geo/commit/2144457d09d832066cfd2b9de0314c24f007259d))
+
 ## [16.4.1](https://github.com/terrestris/react-geo/compare/v16.4.0...v16.4.1) (2022-04-11)
 
 
