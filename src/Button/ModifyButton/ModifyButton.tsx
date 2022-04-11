@@ -10,11 +10,12 @@ import * as React from 'react';
 import Modify, { ModifyEvent, Options as ModifyOptions } from 'ol/interaction/Modify';
 import Translate, { Options as TranslateOptions, TranslateEvent } from 'ol/interaction/Translate';
 import OlFeature from 'ol/Feature';
-import { singleClick } from 'ol/events/condition';
+import { singleClick, primaryAction } from 'ol/events/condition';
 import { unByKey } from 'ol/Observable';
 import OlCollection from 'ol/Collection';
 import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
 interface OwnProps {
   /**
@@ -164,8 +165,17 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
     map.addInteraction(newTranslateInteraction);
     setTranslateInteraction(newTranslateInteraction);
 
+    const condition = modifyInteractionConfig?.condition ?? primaryAction;
+
     const newModifyInteraction = new Modify({
       features,
+      condition: (evt: OlMapBrowserEvent<MouseEvent>) => {
+        if (condition(evt)) {
+          evt.stopPropagation();
+          return true;
+        }
+        return false;
+      },
       deleteCondition: singleClick,
       style: selectStyle ?? DigitizeUtil.DEFAULT_SELECT_STYLE,
       ...modifyInteractionConfig
