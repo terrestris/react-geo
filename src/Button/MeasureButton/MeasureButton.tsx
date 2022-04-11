@@ -101,6 +101,10 @@ interface DefaultProps {
    * A custom onToogle function that will be called if button is toggled
    */
   onToggle: (pressed: boolean) => void;
+  /**
+   * Whether the measure is using geodesic or cartesian mode. Geodesic is used by default.
+   */
+  geodesic: boolean;
 }
 
 interface BaseProps {
@@ -116,10 +120,6 @@ interface BaseProps {
    * Whether line, area or angle will be measured.
    */
   measureType: 'line' | 'polygon' | 'angle';
-  /**
-   * Whether the measure is using geodesic or cartesian mode. Geodesic is used by default.
-   */
-  geodesic: true;
 }
 
 export type MeasureButtonProps = BaseProps & Partial<DefaultProps> & ToggleButtonProps;
@@ -153,7 +153,8 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       tooltipStatic: `${CSS_PREFIX}measure-tooltip-static`
     },
     pressed: false,
-    onToggle: () => undefined
+    onToggle: () => undefined,
+    geodesic: true
   };
 
   /**
