@@ -1,3 +1,10 @@
+## [16.4.3](https://github.com/terrestris/react-geo/compare/v16.4.2...v16.4.3) (2022-04-11)
+
+
+### Bug Fixes
+
+* re-add event propagation to DigitizeButton and ModifyButton ([27646c9](https://github.com/terrestris/react-geo/commit/27646c90532cf4ddb4a6c7b8ff05eac68cbba98f))
+
 ## [16.4.2](https://github.com/terrestris/react-geo/compare/v16.4.1...v16.4.2) (2022-04-11)
 
 
