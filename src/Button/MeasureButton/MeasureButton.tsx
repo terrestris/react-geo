@@ -106,7 +106,6 @@ interface OwnProps {
    * A custom onToogle function that will be called if button is toggled
    */
   onToggle: (pressed: boolean) => void;
-
   /**
    * The className which should be added.
    */
@@ -122,7 +121,7 @@ interface OwnProps {
   /**
    * Whether the measure is using geodesic or cartesian mode. Geodesic is used by default.
    */
-  geodesic: true;
+  geodesic: boolean;
 }
 
 export type MeasureButtonProps = OwnProps & Partial<ToggleButtonProps>;
@@ -156,7 +155,8 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       tooltipStatic: `${CSS_PREFIX}measure-tooltip-static`
     },
     pressed: false,
-    onToggle: () => undefined
+    onToggle: () => undefined,
+    geodesic: true
   };
 
   /**
