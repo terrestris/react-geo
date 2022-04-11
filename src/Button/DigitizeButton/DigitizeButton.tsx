@@ -823,16 +823,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
     let modifyInteraction = MapUtil.getInteractionsByName(map, modifyInteractionName)[0] as OlInteractionModify;
 
     if (!modifyInteraction) {
-      const condition = modifyInteractionConfig?.condition ?? OlEventConditions.primaryAction;
-
       modifyInteraction = new OlInteractionModify({
-        condition: (evt: OlMapBrowserEvent<MouseEvent>) => {
-          if (condition(evt)) {
-            evt.stopPropagation();
-            return true;
-          }
-          return false;
-        },
         features: this._selectInteraction.getFeatures(),
         deleteCondition: OlEventConditions.singleClick,
         style: this.selectedStyleFunction,
