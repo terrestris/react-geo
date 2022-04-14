@@ -10,7 +10,6 @@ describe('<AddWmsLayerEntry />', () => {
   const testLayerTitle = 'OSM-WMS - by terrestris';
   const testLayer = new OlLayerTile({
     visible: false,
-    title: testLayerTitle,
     source: new OlSourceTileWMS({
       url: 'https://ows.terrestris.de/osm/service?',
       params: {
@@ -19,6 +18,7 @@ describe('<AddWmsLayerEntry />', () => {
       }
     })
   });
+  testLayer.set('title', testLayerTitle);
 
   it('is defined', () => {
     expect(AddWmsLayerEntry).not.toBeUndefined();
