@@ -51,7 +51,7 @@ describe('<DeleteButton />', () => {
   });
 
   describe('#Deleting', () => {
-    it('deletes the feature', () => {
+    it('deletes the feature', async () => {
       const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
 
       const layer = DigitizeUtil.getDigitizeLayer(map);
@@ -59,7 +59,7 @@ describe('<DeleteButton />', () => {
       renderInMapContext(map, <DeleteButton />);
 
       const button = screen.getByRole('button');
-      userEvent.click(button);
+      await userEvent.click(button);
 
       expect(layer.getSource().getFeatures()).toHaveLength(1);
 

@@ -36,7 +36,7 @@ describe('<GeoLocationButton />', () => {
       expect(container).toBeVisible();
     });
 
-    it('can be pressed', () => {
+    it('can be pressed', async () => {
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
@@ -46,13 +46,13 @@ describe('<GeoLocationButton />', () => {
       />);
 
       const button = within(container).getByRole('button');
-      userEvent.click(button);
+      await userEvent.click(button);
 
       fireGeolocationListeners();
       expect(callback).toBeCalled();
     });
 
-    it('can be pressed twice', () => {
+    it('can be pressed twice', async () => {
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
@@ -66,20 +66,20 @@ describe('<GeoLocationButton />', () => {
       expect(callback).toBeCalledTimes(0);
 
       const button = within(container).getByRole('button');
-      userEvent.click(button);
+      await userEvent.click(button);
 
       fireGeolocationListeners();
 
       expect(callback).toBeCalledTimes(1);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       fireGeolocationListeners();
 
       expect(callback).toBeCalledTimes(1);
     });
 
-    it('is called with the correct position', () => {
+    it('is called with the correct position', async () => {
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
@@ -89,7 +89,7 @@ describe('<GeoLocationButton />', () => {
       />);
 
       const button = within(container).getByRole('button');
-      userEvent.click(button);
+      await userEvent.click(button);
 
       const coordinates = [ 47.12, -64.99 ];
 

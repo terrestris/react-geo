@@ -55,7 +55,7 @@ describe('<TimeLayerSliderPanel />', () => {
     expect(playButton).toBeVisible();
   });
 
-  it('autoplay can be toggled', () => {
+  it('autoplay can be toggled', async () => {
     render(<TimeLayerSliderPanel
       map={map}
       initStartDate={moment().subtract(3, 'hours')}
@@ -65,7 +65,7 @@ describe('<TimeLayerSliderPanel />', () => {
 
     const playButton = screen.getByLabelText('Autoplay');
     expect(playButton).toHaveAttribute('aria-pressed', 'false');
-    userEvent.click(playButton);
+    await userEvent.click(playButton);
     expect(playButton).toHaveAttribute('aria-pressed', 'true');
     expect(playButton).toBeVisible();
   });

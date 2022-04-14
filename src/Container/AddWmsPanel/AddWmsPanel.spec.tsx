@@ -78,11 +78,11 @@ describe('<AddWmsPanel />', () => {
   });
 
   describe('`add all layers` button', () => {
-    it('adds all layers to the map', () => {
+    it('adds all layers to the map', async () => {
       render(<AddWmsPanel map={map} wmsLayers={testWmsLayers} />);
 
       const addAllLayersButton = screen.getByRole('button', { name: /add all layers/i });
-      userEvent.click(addAllLayersButton);
+      await userEvent.click(addAllLayersButton);
 
       const layers = MapUtil.getLayersByProperty(map, 'title', testLayerTitle);
       expect(layers).toHaveLength(1);
@@ -93,40 +93,40 @@ describe('<AddWmsPanel />', () => {
       expect(layers2).toContain(testLayer2);
     });
 
-    it('passes all layers to `onLayerAddToMap` if provided', () => {
+    it('passes all layers to `onLayerAddToMap` if provided', async () => {
       const callback = jest.fn();
       render(<AddWmsPanel wmsLayers={testWmsLayers} onLayerAddToMap={callback} />);
 
       const addAllLayersButton = screen.getByRole('button', { name: /add all layers/i });
-      userEvent.click(addAllLayersButton);
+      await userEvent.click(addAllLayersButton);
 
       expect(callback).toBeCalledWith(testWmsLayers);
     });
   });
 
   describe('`add selected layers` button', () => {
-    it('fires `onSelectedChange`', () => {
+    it('fires `onSelectedChange`', async () => {
       const callback = jest.fn();
       render(<AddWmsPanel wmsLayers={testWmsLayers} onSelectionChange={callback} />);
 
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
 
-      userEvent.click(checkbox);
+      await userEvent.click(checkbox);
       expect(callback).toBeCalledWith([testLayerTitle]);
 
-      userEvent.click(checkbox);
+      await userEvent.click(checkbox);
       expect(callback).toBeCalledWith([]);
     });
 
-    it('adds selected layers to the map', () => {
+    it('adds selected layers to the map', async () => {
       render(<AddWmsPanel map={map} wmsLayers={testWmsLayers} />);
 
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
 
-      userEvent.click(checkbox);
+      await userEvent.click(checkbox);
 
       const addSelectedLayersButton = screen.getByRole('button', { name: /add selected layers/i });
-      userEvent.click(addSelectedLayersButton);
+      await userEvent.click(addSelectedLayersButton);
 
       const layers = MapUtil.getLayersByProperty(map, 'title', testLayerTitle);
       expect(layers).toHaveLength(1);
@@ -136,16 +136,16 @@ describe('<AddWmsPanel />', () => {
       expect(layers2).toHaveLength(0);
     });
 
-    it('passes selected layers to `onLayerAddToMap` if provided', () => {
+    it('passes selected layers to `onLayerAddToMap` if provided', async () => {
       const callback = jest.fn();
       render(<AddWmsPanel wmsLayers={testWmsLayers} onLayerAddToMap={callback} />);
 
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
 
-      userEvent.click(checkbox);
+      await userEvent.click(checkbox);
 
       const addSelectedLayersButton = screen.getByRole('button', { name: /add selected layers/i });
-      userEvent.click(addSelectedLayersButton);
+      await userEvent.click(addSelectedLayersButton);
 
       expect(callback).toBeCalledWith([testLayer]);
     });
@@ -158,14 +158,14 @@ describe('<AddWmsPanel />', () => {
       expect(onCancelButton).not.toBeInTheDocument();
     });
 
-    it('shows a cancel button if an `onCancel` method is provided and calls it if the button was clicked', () => {
+    it('shows a cancel button if an `onCancel` method is provided and calls it if the button was clicked', async () => {
       const callback = jest.fn();
       render(<AddWmsPanel wmsLayers={testWmsLayers} onCancel={callback} />);
 
       const onCancelButton = screen.getByRole('button', { name: /cancel/i });
       expect(onCancelButton).toBeInTheDocument();
 
-      userEvent.click(onCancelButton);
+      await userEvent.click(onCancelButton);
       expect(callback).toBeCalled();
     });
   });

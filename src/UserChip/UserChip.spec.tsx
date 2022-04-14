@@ -38,7 +38,7 @@ describe('<UserChip />', () => {
   it('should render a dropdown', async () => {
     render(<UserChip userName="Shinji Kagawa" userMenu={<div role="menu">Example menu</div>} />);
     const chip = screen.getByText('SK').parentElement;
-    userEvent.click(chip);
+    await userEvent.click(chip);
     const menu = screen.getByText('Example menu');
     // `toBeVisible` does not work because antd seems to be in the way
     expect(menu).toBeInTheDocument();

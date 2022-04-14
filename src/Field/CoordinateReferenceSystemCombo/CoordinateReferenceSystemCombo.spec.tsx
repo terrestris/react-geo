@@ -65,7 +65,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       render(<CoordinateReferenceSystemCombo crsApiUrl={url} />);
 
       const combobox = screen.getByRole('combobox');
-      userEvent.type(combobox, '25832');
+      await userEvent.type(combobox, '25832');
 
       await actSetTimeout(0);
 
@@ -80,7 +80,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const combobox = screen.getByRole('combobox');
 
-      userEvent.type(combobox, 'a');
+      await userEvent.type(combobox, 'a');
 
       for (const result of resultMock.results) {
         const option = await findAntdDropdownOptionByText(`${result.name} (EPSG:${result.code})`);
@@ -100,7 +100,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const combobox = screen.getByRole('combobox');
 
-      userEvent.type(combobox, 'a');
+      await userEvent.type(combobox, 'a');
 
       await actSetTimeout(50);
 
@@ -117,7 +117,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       render(<CoordinateReferenceSystemCombo />);
       const combobox = screen.getByRole('combobox');
-      userEvent.type(combobox, 'a');
+      await userEvent.type(combobox, 'a');
 
       await waitFor(() => {
         expect(loggerSpy).toHaveBeenCalled();
@@ -138,7 +138,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const combobox = screen.getByRole('combobox');
 
-      userEvent.type(combobox, 'a');
+      await userEvent.type(combobox, 'a');
 
       const result = resultMock.results[0];
       const expected = transformedResults[0];
@@ -160,7 +160,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const combobox = screen.getByRole('combobox');
 
-      userEvent.type(combobox, 'a');
+      await userEvent.type(combobox, 'a');
 
       const result = resultMock.results[0];
 
