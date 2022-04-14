@@ -19,12 +19,10 @@ class MapContextExample extends React.Component {
 
   constructor(props) {
     super(props);
-    this.mapDivId = 'mapcontext-example';
     const layer = new OlLayerTile({
       source: new OlSourceOsm()
     });
     const olMap = new OlMap({
-      target: null,
       view: new OlView({
         center: [
           135.1691495,
@@ -36,10 +34,6 @@ class MapContextExample extends React.Component {
       layers: [layer]
     });
     this.map = olMap;
-  }
-
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
   }
 
   render() {
