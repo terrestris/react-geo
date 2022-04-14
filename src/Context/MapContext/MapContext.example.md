@@ -5,7 +5,6 @@ It replaces the old `MapProvider` and `mappify` HOC.
 
 If you are using function-components head over to the `useMap` example in the "HOOKS" section.
 
-
 ```jsx
 import * as React from 'react';
 

@@ -5,10 +5,9 @@ import { Attribution as OlAttribution } from 'ol/source/Source';
 import { Checkbox, Tooltip } from 'antd';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopyright, faInfo } from '@fortawesome/free-solid-svg-icons';
 
 import { WmsLayer } from '../../../Util/typeUtils';
-
-import '../../../Util/fontawesome';
 
 import './AddWmsLayerEntry.less';
 
@@ -96,7 +95,7 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
             copyright ? (
               <FontAwesomeIcon
                 className="add-wms-add-info-icon attribution-info"
-                icon={['far', 'copyright']}
+                icon={faCopyright}
               />
             )
               : null
@@ -106,7 +105,7 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
               <Tooltip title={layerQueryableText}>
                 <FontAwesomeIcon
                   className="add-wms-add-info-icon queryable-info"
-                  icon="info"
+                  icon={faInfo}
                 />
               </Tooltip>
             )

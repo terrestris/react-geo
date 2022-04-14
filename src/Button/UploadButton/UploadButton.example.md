@@ -5,11 +5,18 @@ UploadButton:
 ```jsx
 import UploadButton from '@terrestris/react-geo/Button/UploadButton/UploadButton';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
+
 <UploadButton
   onChange={e => {
     alert('You uploaded ' + e.target.files[0].name);
   }}
-  iconName="upload"
+  icon={
+    <FontAwesomeIcon
+      icon={faUpload}
+    />
+  }
 />
 ```
 

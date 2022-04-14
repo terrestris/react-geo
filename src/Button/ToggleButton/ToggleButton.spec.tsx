@@ -162,9 +162,13 @@ describe('<ToggleButton />', () => {
     expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
   });
 
-  it('can be rendered if iconName is set and no text or icon is set with the property pressed set to true', () => {
+  it('can be rendered if icon is set and no text or icon is set with the property pressed set to true', () => {
     const { container } = render(
-      <ToggleButton iconName={'some-icon-name'} pressedIconName={undefined} pressed={true} />
+      <ToggleButton
+        icon={'some-icon-name'}
+        pressedIcon={undefined}
+        pressed={true}
+      />
     );
     expect(container).toBeVisible();
   });

@@ -11,6 +11,9 @@ import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton
 
 import { isVisibleComponent } from '@terrestris/react-geo/HigherOrderComponent/VisibleComponent/VisibleComponent';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faPowerOff } from '@fortawesome/free-solid-svg-icons';
+
 // Enhance (any) Component by wrapping it using isVisibleComponent().
 const VisibleButton = isVisibleComponent(SimpleButton);
 
@@ -28,21 +31,33 @@ const activeModules = [{
     activeModules={activeModules}
     type="primary"
     shape="circle"
-    iconName="search"
+    icon={
+      <FontAwesomeIcon
+        icon={faSearch}
+      />
+    }
   />
   <VisibleButton
     name="notVisibleButtonName"
     activeModules={activeModules}
     type="primary"
     shape="circle"
-    iconName="search"
+    icon={
+      <FontAwesomeIcon
+        icon={faSearch}
+      />
+    }
   />
   <VisibleButton
     name="anotherVisibleButtonName"
     activeModules={activeModules}
     type="primary"
     shape="circle"
-    iconName="poweroff"
+    icon={
+      <FontAwesomeIcon
+        icon={faPowerOff}
+      />
+    }
   />
 </div>
 ```

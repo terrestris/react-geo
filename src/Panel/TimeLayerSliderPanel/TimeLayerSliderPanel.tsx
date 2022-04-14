@@ -19,6 +19,9 @@ import {
 const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar, faPauseCircle, faPlayCircle, faSync } from '@fortawesome/free-solid-svg-icons';
+
 import timeLayerAware, { TimeLayerAwareConfig } from '../../HigherOrderComponent/TimeLayerAware/TimeLayerAware';
 import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
@@ -450,14 +453,22 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         >
           <SimpleButton
             className="change-datarange-button"
-            iconName="calendar"
+            icon={
+              <FontAwesomeIcon
+                icon={faCalendar}
+              />
+            }
           />
         </Popover>
         {
           resetVisible ?
             <SimpleButton
               type="primary"
-              iconName="sync"
+              icon={
+                <FontAwesomeIcon
+                  icon={faSync}
+                />
+              }
               onClick={this.setSliderToNow}
               tooltip={tooltips.setToNow}
             /> : null
@@ -477,13 +488,21 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         </div>
         <ToggleButton
           type="primary"
-          iconName="play-circle"
+          icon={
+            <FontAwesomeIcon
+              icon={faPlayCircle}
+            />
+          }
           className={extraCls + ' playback'}
           pressed={autoPlayActive}
           onToggle={this.autoPlay}
           tooltip={autoPlayActive ? 'Pause' : 'Autoplay'}
           aria-label={autoPlayActive ? 'Pause' : 'Autoplay'}
-          pressedIconName="pause-circle"
+          pressedIcon={
+            <FontAwesomeIcon
+              icon={faPauseCircle}
+            />
+          }
         />
         <Select
           defaultValue={1}

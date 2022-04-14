@@ -4,11 +4,38 @@ This is a example using a toolbar having vertically and horizontally aligned chi
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 import Toolbar from '@terrestris/react-geo/Toolbar/Toolbar';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faInfo } from '@fortawesome/free-solid-svg-icons';
+
 <div>
   <Toolbar>
-    <SimpleButton type="primary" shape="circle" iconName="search" />
-    <SimpleButton type="primary" shape="circle" iconName="search" />
-    <SimpleButton type="primary" shape="circle" iconName="search" />
+    <SimpleButton
+      type="primary"
+      shape="circle"
+      icon={
+        <FontAwesomeIcon
+          icon={faSearch}
+        />
+      }
+    />
+    <SimpleButton
+      type="primary"
+      shape="circle"
+      icon={
+        <FontAwesomeIcon
+          icon={faSearch}
+        />
+      }
+    />
+    <SimpleButton
+      type="primary"
+      shape="circle"
+      icon={
+        <FontAwesomeIcon
+          icon={faSearch}
+        />
+      }
+    />
   </Toolbar>
 
   <hr
@@ -17,12 +44,39 @@ import Toolbar from '@terrestris/react-geo/Toolbar/Toolbar';
     }}
   />
 
-  <Toolbar alignment="vertical" style={{
-    position: 'unset'
-  }}>
-    <SimpleButton type="primary" shape="circle" iconName="info" />
-    <SimpleButton type="primary" shape="circle" iconName="info" />
-    <SimpleButton type="primary" shape="circle" iconName="info" />
+  <Toolbar
+    alignment="vertical"
+    style={{
+      position: 'unset'
+    }}
+  >
+    <SimpleButton
+      type="primary"
+      shape="circle"
+      icon={
+        <FontAwesomeIcon
+          icon={faInfo}
+        />
+      }
+    />
+    <SimpleButton
+      type="primary"
+      shape="circle"
+      icon={
+        <FontAwesomeIcon
+          icon={faInfo}
+        />
+      }
+    />
+    <SimpleButton
+      type="primary"
+      shape="circle"
+      icon={
+        <FontAwesomeIcon
+          icon={faInfo}
+        />
+      }
+    />
   </Toolbar>
 </div>
 ```
