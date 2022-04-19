@@ -30,9 +30,20 @@ A ToggleButton with an icon and a pressedIcon:
 ```jsx
 import ToggleButton from '@terrestris/react-geo/Button/ToggleButton/ToggleButton';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFaceFrown, faFaceSmile } from '@fortawesome/free-solid-svg-icons';
+
 <ToggleButton
-  iconName="frown"
-  pressedIconName="smile"
+  icon={
+    <FontAwesomeIcon
+      icon={faFaceFrown}
+    />
+  }
+  pressedIcon={
+    <FontAwesomeIcon
+      icon={faFaceSmile}
+    />
+  }
   onToggle={()=>{}}
 />
 ```

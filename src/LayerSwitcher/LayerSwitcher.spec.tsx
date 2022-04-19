@@ -77,14 +77,14 @@ describe('<LayerSwitcher />', () => {
     expect(layer0visibile || layer1visibile).toBe(true);
   });
 
-  it('switches the visible layer on click', () => {
+  it('switches the visible layer on click', async () => {
     const { container } = render(<LayerSwitcher layers={layers} map={map} />);
     const switcher = within(container).getByRole('button');
 
     const layer0visibile = layers[0].getVisible();
     const layer1visibile = layers[1].getVisible();
 
-    userEvent.click(switcher);
+    await userEvent.click(switcher);
 
     expect(layers[0].getVisible()).toBe(!layer0visibile);
     expect(layers[1].getVisible()).toBe(!layer1visibile);

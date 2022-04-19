@@ -32,7 +32,7 @@ describe('<ZoomButton />', () => {
 
     const initialZoom = map.getView().getZoom();
     const button = screen.getByText('Zoom test');
-    userEvent.click(button);
+    await userEvent.click(button);
 
     await actSetTimeout(300);
     const newZoom = map.getView().getZoom();
@@ -46,7 +46,7 @@ describe('<ZoomButton />', () => {
 
     const initialZoom = map.getView().getZoom();
     const button = screen.getByText('Zoom test');
-    userEvent.click(button);
+    await userEvent.click(button);
 
     await actSetTimeout(300);
     const newZoom = map.getView().getZoom();
@@ -59,12 +59,12 @@ describe('<ZoomButton />', () => {
     );
     const button = screen.getByText('Zoom test');
 
-    expect(() => {
-      userEvent.click(button);
+    expect(async () => {
+      await userEvent.click(button);
     }).not.toThrow();
   });
 
-  it('cancels already running animations', () => {
+  it('cancels already running animations', async () => {
     render(
       <ZoomButton map={map} animateOptions={{ duration: 250 }}>Zoom test</ZoomButton>
     );
@@ -73,9 +73,9 @@ describe('<ZoomButton />', () => {
     const view = map.getView();
     view.cancelAnimations = jest.fn();
 
-    userEvent.click(button);
-    userEvent.click(button);
-    userEvent.click(button);
+    await userEvent.click(button);
+    await userEvent.click(button);
+    await userEvent.click(button);
 
     expect(view.cancelAnimations.mock.calls.length).toBe(2);
   });

@@ -6,18 +6,12 @@ import {
   Tooltip
 } from 'antd';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-
 import _isFunction from 'lodash/isFunction';
 
 import { AbstractTooltipProps, TooltipPlacement } from 'antd/lib/tooltip';
 import { SimpleButtonProps } from '../SimpleButton/SimpleButton';
-import logger from '@terrestris/base-util/dist/Logger';
 
 import { CSS_PREFIX } from '../../constants';
-
-import  '../../Util/fontawesome';
 
 import './ToggleButton.less';
 
@@ -47,15 +41,6 @@ interface OwnProps {
    * https://ant.design/components/icon/.
    */
   pressedIcon?: React.ReactNode;
-  /**
-   * The name of the font awesome icon. It could be:
-   * - an icon object, like `{ faCoffee }`.
-   * - a string, like `'coffee'`.
-   * - an array of strings, where the first element is a style prefix
-   *   and the second element is the icon name: `{ ['fab', 'apple'] }`
-   * For a list of possible icons, please see on https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free
-  */
-  pressedIconName?: IconProp;
   /**
    * The tooltip to be shown on hover.
    */
@@ -253,9 +238,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
     const {
       className,
       icon,
-      iconName,
       pressedIcon,
-      pressedIconName,
       pressed,
       onToggle,
       tooltip,
@@ -278,32 +261,6 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
       pressedClass = ` ${this.pressedClass} `;
     }
 
-    if (icon && iconName) {
-      logger.warn('Provide either an icon node or the name of a fa icon. ' +
-        'If both are provided the fa icon will be rendered.');
-    }
-
-    let iconToRender: React.ReactNode;
-    if (icon) {
-      iconToRender = icon;
-    }
-    if (iconName) {
-      iconToRender = <FontAwesomeIcon icon={iconName}/>;
-    }
-
-    if (pressedIcon && pressedIconName) {
-      logger.warn('Provide either a pressed icon node or the name of a fa ' +
-       'icon. If both are provided the fa icon will be rendered.');
-    }
-
-    let pressedIconToRender: React.ReactNode;
-    if (pressedIcon) {
-      pressedIconToRender = pressedIcon;
-    }
-    if (pressedIconName) {
-      pressedIconToRender = <FontAwesomeIcon icon={pressedIconName}/>;
-    }
-
     return (
       <Tooltip
         title={tooltip}
@@ -315,8 +272,8 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
           aria-pressed={overallPressed}
           onClick={this.onClick.bind(this)}
           icon={overallPressed ?
-            pressedIconToRender :
-            iconToRender
+            pressedIcon :
+            icon
           }
           {...filteredAntBtnProps}
         >

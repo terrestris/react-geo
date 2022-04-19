@@ -8,6 +8,9 @@ import * as React from 'react';
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 import Window from '@terrestris/react-geo/Window/Window';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+
 class WindowExample extends React.Component {
 
   constructor(props) {
@@ -62,7 +65,11 @@ class WindowExample extends React.Component {
               tools={[
                 <SimpleButton
                   key="closeButton"
-                  iconName="times"
+                  icon={
+                    <FontAwesomeIcon
+                      icon={faTimes}
+                    />
+                  }
                   size="small"
                   tooltip="Close"
                   onClick={this.onClickSimple.bind(this)}
@@ -90,7 +97,11 @@ class WindowExample extends React.Component {
               tools={[
                 <SimpleButton
                   key="closeButton"
-                  iconName="times"
+                  icon={
+                    <FontAwesomeIcon
+                      icon={faTimes}
+                    />
+                  }
                   size="small"
                   tooltip="Close"
                   onClick={this.onClickEsc.bind(this)}

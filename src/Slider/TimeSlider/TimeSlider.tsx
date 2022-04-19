@@ -122,7 +122,9 @@ class TimeSlider extends React.Component<TimeSliderProps> {
     if (_isObject(marks)) {
       Object.keys(marks).forEach(key => {
         const convertedKey = this.convert(key) as number;
-        convertedMarks[convertedKey] = marks[key];
+        if (convertedMarks) {
+          convertedMarks[convertedKey] = marks[key];
+        }
       });
     }
     return convertedMarks;

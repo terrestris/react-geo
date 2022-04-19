@@ -26,12 +26,12 @@ describe('<ToggleButton />', () => {
     expect(button).toHaveClass('btn-pressed');
   });
 
-  it('ignores the onClick callback', () => {
+  it('ignores the onClick callback', async () => {
     const onClick = jest.fn();
 
     render(<ToggleButton pressed={true} onClick={onClick} />);
     const button = screen.getByRole('button');
-    userEvent.click(button);
+    await userEvent.click(button);
 
     expect(onClick).not.toHaveBeenCalled();
   });
@@ -100,7 +100,7 @@ describe('<ToggleButton />', () => {
     expect(onToggle).toHaveBeenCalledWith(false, null);
   });
 
-  it('cleans the last click event if not available', () => {
+  it('cleans the last click event if not available', async () => {
     const onToggle = jest.fn();
     const clickEvtMock = expect.objectContaining({
       type: 'click'
@@ -114,7 +114,7 @@ describe('<ToggleButton />', () => {
     expect(onToggle).toHaveBeenCalledWith(true, null);
 
     // Pressed will now become false.
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
 
@@ -125,23 +125,23 @@ describe('<ToggleButton />', () => {
 
   });
 
-  it('toggles the pressed class on click', () => {
+  it('toggles the pressed class on click', async () => {
     render(<ToggleButton />);
     const button = screen.getByRole('button');
 
     expect(button).not.toHaveClass('btn-pressed');
 
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(button).toHaveClass('btn-pressed');
 
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(button).not.toHaveClass('btn-pressed');
 
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(button).toHaveClass('btn-pressed');
   });
 
-  it('calls the given toggle callback method on click', () => {
+  it('calls the given toggle callback method on click', async () => {
     const onToggle = jest.fn();
     const clickEvtMock = expect.objectContaining({
       type: 'click'
@@ -149,22 +149,26 @@ describe('<ToggleButton />', () => {
     render(<ToggleButton onToggle={onToggle}/>);
     const button = screen.getByRole('button');
 
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(onToggle).toHaveBeenCalledTimes(1);
     expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
 
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
 
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(onToggle).toHaveBeenCalledTimes(3);
     expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
   });
 
-  it('can be rendered if iconName is set and no text or icon is set with the property pressed set to true', () => {
+  it('can be rendered if icon is set and no text or icon is set with the property pressed set to true', () => {
     const { container } = render(
-      <ToggleButton iconName={'some-icon-name'} pressedIconName={undefined} pressed={true} />
+      <ToggleButton
+        icon={'some-icon-name'}
+        pressedIcon={undefined}
+        pressed={true}
+      />
     );
     expect(container).toBeVisible();
   });

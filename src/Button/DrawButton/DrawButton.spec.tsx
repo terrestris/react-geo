@@ -41,14 +41,14 @@ describe('<DrawButton />', () => {
   });
 
   describe('#Drawing', () => {
-    it('draws points', () => {
+    it('draws points', async () => {
       renderInMapContext(map, <DrawButton drawType={'Point'} />);
 
       const button = screen.getByRole('button');
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -59,14 +59,14 @@ describe('<DrawButton />', () => {
       expect(feature.getGeometry().getType()).toBe('Point');
     });
 
-    it('draws lines',  () => {
+    it('draws lines', async () => {
       renderInMapContext(map, <DrawButton drawType={'LineString'} />);
 
       const button = screen.getByRole('button');
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -81,14 +81,14 @@ describe('<DrawButton />', () => {
       expect((feature.getGeometry() as LineString).getCoordinates()).toHaveLength(2);
     });
 
-    it('draws polygons', () => {
+    it('draws polygons', async () => {
       renderInMapContext(map, <DrawButton drawType={'Polygon'} />);
 
       const button = screen.getByRole('button');
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -117,7 +117,7 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -126,11 +126,11 @@ describe('<DrawButton />', () => {
 
       const input = screen.getByRole('textbox');
 
-      userEvent.type(input, 'Label text.');
+      await userEvent.type(input, 'Label text.');
 
       const okButton = within(dialog).getByText('Ok');
 
-      userEvent.click(okButton);
+      await userEvent.click(okButton);
 
       expect(dialog).not.toBeVisible();
 
@@ -149,7 +149,7 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -158,11 +158,11 @@ describe('<DrawButton />', () => {
 
       const input = screen.getByRole('textbox');
 
-      userEvent.type(input, 'Label text.');
+      await userEvent.type(input, 'Label text.');
 
       const cancelButton = within(dialog).getByText('Cancel');
 
-      userEvent.click(cancelButton);
+      await userEvent.click(cancelButton);
 
       expect(dialog).not.toBeVisible();
 
@@ -176,7 +176,7 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -196,7 +196,7 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -214,7 +214,7 @@ describe('<DrawButton />', () => {
       expect(coordinates[0]).toHaveLength(5);
     });
 
-    it('toggles off', () => {
+    it('toggles off', async () => {
       renderInMapContext(map, <DrawButton drawType={'Point'} />);
 
       const button = screen.getByRole('button');
@@ -223,26 +223,26 @@ describe('<DrawButton />', () => {
 
       expect(digitizeLayer.getSource().getFeatures()).toHaveLength(0);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
       expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 120, 100);
 
       expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 120, 100);
 
       expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
     });
 
-    it('calls draw start and draw end listeners', () => {
+    it('calls draw start and draw end listeners', async () => {
       const startSpy = jest.fn();
       const endSpy = jest.fn();
 
@@ -250,7 +250,7 @@ describe('<DrawButton />', () => {
 
       const button = screen.getByRole('button');
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       expect(startSpy).not.toBeCalled();
       expect(endSpy).not.toBeCalled();
@@ -276,7 +276,7 @@ describe('<DrawButton />', () => {
       expect(geometry.getCoordinates()[0]).toHaveLength(5);
     });
 
-    it('multiple draw buttons use the same digitize layer', () => {
+    it('multiple draw buttons use the same digitize layer', async () => {
       renderInMapContext(map, <>
         <DrawButton drawType={'Point'}>Point 1</DrawButton>
         <DrawButton drawType={'Point'}>Point 2</DrawButton>
@@ -287,19 +287,19 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      userEvent.click(button1);
+      await userEvent.click(button1);
 
       clickMap(map, 100, 100);
 
-      userEvent.click(button1);
-      userEvent.click(button2);
+      await userEvent.click(button1);
+      await userEvent.click(button2);
 
       clickMap(map, 120, 120);
 
       expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
     });
 
-    it('can use a custom layer', () => {
+    it('can use a custom layer', async () => {
       const layer = new VectorLayer({
         source: new VectorSource()
       });
@@ -310,7 +310,7 @@ describe('<DrawButton />', () => {
 
       const button = screen.getByRole('button');
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -321,12 +321,12 @@ describe('<DrawButton />', () => {
       expect(defaultDigitizeLayer.getSource().getFeatures()).toHaveLength(0);
     });
 
-    it('can change the type', () => {
+    it('can change the type', async () => {
       const { rerenderInMapContext } = renderInMapContext(map, <DrawButton drawType={'Point'} />);
 
       const button = screen.getByRole('button');
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 

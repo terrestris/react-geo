@@ -57,7 +57,7 @@ describe('<SelectFeaturesButton />', () => {
   });
 
   describe('#Selection', () => {
-    it('calls the listener', () => {
+    it('calls the listener', async () => {
       const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
 
       const selectSpy = jest.fn();
@@ -65,7 +65,7 @@ describe('<SelectFeaturesButton />', () => {
       renderInMapContext(map, <SelectFeaturesButton layers={[layer]} onFeatureSelect={selectSpy} />);
 
       const button = screen.getByRole('button');
-      userEvent.click(button);
+      await userEvent.click(button);
 
       clickMap(map, 200, 200);
 

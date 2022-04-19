@@ -12,6 +12,9 @@ import _uniqueId from 'lodash/uniqueId';
 import _isNumber from 'lodash/isNumber';
 import _isFunction from 'lodash/isFunction';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCompress } from '@fortawesome/free-solid-svg-icons';
+
 import Titlebar from '../Titlebar/Titlebar';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 
@@ -350,7 +353,11 @@ export class Panel extends React.Component<PanelProps, PanelState> {
 
     if (collapsible) {
       toolsClone.unshift(<SimpleButton
-        iconName="compress"
+        icon={
+          <FontAwesomeIcon
+            icon={faCompress}
+          />
+        }
         key="collapse-tool"
         onClick={this.toggleCollapse.bind(this)}
         tooltip={collapseTooltip}

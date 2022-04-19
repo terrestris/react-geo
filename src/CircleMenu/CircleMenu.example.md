@@ -20,6 +20,9 @@ import OlStyleFill from 'ol/style/Fill';
 import CircleMenu from '@terrestris/react-geo/CircleMenu/CircleMenu';
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencil, faChartLine, faLink, faThumbsUp, faBullhorn } from '@fortawesome/free-solid-svg-icons';
+
 class CircleMenuExample extends React.Component {
 
   constructor(props) {
@@ -121,11 +124,46 @@ class CircleMenuExample extends React.Component {
               diameter={80}
               animationDuration={500}
             >
-              <SimpleButton iconName="pencil-alt" shape="circle" />
-              <SimpleButton iconName="chart-line" shape="circle" />
-              <SimpleButton iconName="link" shape="circle" />
-              <SimpleButton iconName="thumbs-up" shape="circle" />
-              <SimpleButton iconName="bullhorn" shape="circle" />
+              <SimpleButton
+                icon={
+                  <FontAwesomeIcon
+                    icon={faPencil}
+                  />
+                }
+                shape="circle"
+              />
+              <SimpleButton
+                icon={
+                  <FontAwesomeIcon
+                    icon={faChartLine}
+                  />
+                }
+                shape="circle"
+              />
+              <SimpleButton
+                icon={
+                  <FontAwesomeIcon
+                    icon={faLink}
+                  />
+                }
+                shape="circle"
+              />
+              <SimpleButton
+                icon={
+                  <FontAwesomeIcon
+                    icon={faThumbsUp}
+                  />
+                }
+                shape="circle"
+              />
+              <SimpleButton
+                icon={
+                  <FontAwesomeIcon
+                    icon={faBullhorn}
+                  />
+                }
+                shape="circle"
+              />
             </CircleMenu> :
             null
         }

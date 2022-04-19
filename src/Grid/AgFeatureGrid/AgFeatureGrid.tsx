@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/render-result-naming-convention */
 import * as React from 'react';
-import { Key, ReactNode } from 'react';
+import { Key } from 'react';
 
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
@@ -102,11 +102,6 @@ interface OwnProps {
    * A CSS class which should be added to the table.
    */
   className?: string;
-  /**
-   * A CSS class to add to each table row or a function that
-   * is evaluated for each record.
-   */
-  rowClassName?: string | ((record: any) => string);
   /**
    * The map the features should be rendered on. If not given, the features
    * will be rendered in the table only.
@@ -252,18 +247,6 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * @private
    */
   _className = `${CSS_PREFIX}ag-feature-grid`;
-
-  /**
-   * The class name to add to each table row.
-   * @private
-   */
-  _rowClassName = `${CSS_PREFIX}ag-feature-grid-row`;
-
-  /**
-   * The prefix to use for each table row class.
-   * @private
-   */
-  _rowKeyClassNamePrefix = 'row-key-';
 
   /**
    * The hover class name.
@@ -433,36 +416,23 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       grid
     } = this.state;
 
-    const selectedRowKeys = this.getSelectedRowKeys();
-
-    const selectedFeatures = (map.getFeaturesAtPixel(olEvt.pixel, {
-      layerFilter: layerCand => layerCand === this._layer
-    }) || []) as OlFeature<OlGeometry>[];
-
     if (!grid || !grid.api) {
       return;
     }
 
-    // @ts-ignore
-    const rowRenderer = grid.api.rowRenderer;
+    const selectedRowKeys = this.getSelectedRowKeys();
+
+    const highlightFeatures = (map.getFeaturesAtPixel(olEvt.pixel, {
+      layerFilter: layerCand => layerCand === this._layer
+    }) || []) as OlFeature<OlGeometry>[];
+
+    grid.api?.forEachNode((n) => {
+      n.setHighlighted(null);
+    });
 
     features.forEach(feature => {
       const key = this.props.keyFunction(feature);
 
-      let rc: any;
-      rowRenderer.forEachRowComp((idx: number, rowComp: any) => {
-        if (rowComp.getRowNode().data.key === key) {
-          rc = rowComp;
-        }
-      });
-
-      if (rc) {
-        const el = rc.getBodyRowElement();
-
-        if (el) {
-          el.classList.remove(this._rowHoverClassName);
-        }
-      }
       if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
@@ -470,23 +440,14 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       }
     });
 
-    selectedFeatures.forEach(feature => {
-      const key = this.props.keyFunction(feature);
-      let rc: any;
-      rowRenderer.forEachRowComp((idx: number, rowComp: any) => {
-        if (rowComp.getRowNode().data.key === key) {
-          rc = rowComp;
+    highlightFeatures.forEach(feat => {
+      const key = this.props.keyFunction(feat);
+      grid.api?.forEachNode((n) => {
+        if (n.data.key === key) {
+          n.setHighlighted(1);
+          feat.setStyle(highlightStyle);
         }
       });
-
-      if (rc) {
-        const el = rc.getBodyRowElement();
-
-        if (el) {
-          el.classList.add(this._rowHoverClassName);
-        }
-      }
-      feature.setStyle(highlightStyle);
     });
   };
 
@@ -933,7 +894,6 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       height,
       width,
       theme,
-      rowClassName,
       features,
       map,
       attributeBlacklist,
@@ -956,24 +916,6 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       ? `${className} ${this._className} ${theme}`
       : `${this._className} ${theme}`;
 
-    // TODO: Not sure, if this is still needed. One may want to get a specific
-    // row by using getRowFromFeatureKey instead.
-    let rowClassNameFn;
-    if (_isFunction(rowClassName)) {
-      rowClassNameFn = (node: ReactNode) => {
-        const determinedRowClass = rowClassName((node as { data: string }).data);
-        return `${this._rowClassName} ${determinedRowClass}`;
-      };
-    } else {
-      const finalRowClassName = rowClassName
-        ? `${rowClassName} ${this._rowClassName}`
-        : this._rowClassName;
-      rowClassNameFn = (node: ReactNode) => {
-        const rowClassSuffix = _kebabCase((node as { data: { key: string } }).data.key);
-        return `${finalRowClassName} ${this._rowKeyClassNamePrefix}${rowClassSuffix}`;
-      };
-    }
-
     return (
       <div
         className={finalClassName}
@@ -994,7 +936,6 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
           onCellMouseOver={this.onRowMouseOver.bind(this)}
           onCellMouseOut={this.onRowMouseOut.bind(this)}
           ref={ref => this._ref = ref}
-          getRowClass={rowClassNameFn}
           modules={[
             ClientSideRowModelModule
           ]}

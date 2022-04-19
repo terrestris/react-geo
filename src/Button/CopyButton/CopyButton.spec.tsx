@@ -51,7 +51,7 @@ describe('<CopyButton />', () => {
   });
 
   describe('#Copying', () => {
-    it('copies the feature', () => {
+    it('copies the feature', async () => {
       const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
 
       const layer = DigitizeUtil.getDigitizeLayer(map);
@@ -59,7 +59,7 @@ describe('<CopyButton />', () => {
       renderInMapContext(map, <CopyButton />);
 
       const button = screen.getByRole('button');
-      userEvent.click(button);
+      await userEvent.click(button);
 
       expect(layer.getSource().getFeatures()).toHaveLength(1);
 

@@ -24,13 +24,32 @@ import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton
 </SimpleButton>
 ```
 
-A SimpleButton with an icon. Just use the font-awesome name:
+A SimpleButton with a Font Awesome icon.
 
 ```jsx
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+
 <SimpleButton
-  iconName="bullhorn"
+  icon={
+    <FontAwesomeIcon
+      icon={faCoffee}
+    />
+  }
+/>
+```
+
+A SimpleButton with an antd icon.
+
+```jsx
+import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
+
+import { DownloadOutlined } from '@ant-design/icons';
+
+<SimpleButton
+  icon={<DownloadOutlined />}
 />
 ```
 
@@ -39,8 +58,10 @@ A round SimpleButton using shape config:
 ```jsx
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 
+import { DownloadOutlined } from '@ant-design/icons';
+
 <SimpleButton
-  iconName="bullhorn"
+  icon={<DownloadOutlined />}
   shape="circle"
 />
 ```
