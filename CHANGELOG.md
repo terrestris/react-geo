@@ -1,3 +1,24 @@
+# [17.0.0](https://github.com/terrestris/react-geo/compare/v16.4.3...v17.0.0) (2022-04-19)
+
+
+### Bug Fixes
+
+* Explicetely import required button icon components ([62bc33a](https://github.com/terrestris/react-geo/commit/62bc33a0eb88181777d2da140692bee51be03fb7))
+* Fix broken example ([c0d2de5](https://github.com/terrestris/react-geo/commit/c0d2de53d1bae398c18e1888834d537ddc9d9687))
+* Fix for NPE ([c26792c](https://github.com/terrestris/react-geo/commit/c26792cf909e1a484dc7353deedc7fd7e1b8611d))
+* Set prop via set() ([8adf094](https://github.com/terrestris/react-geo/commit/8adf094f4452ede515bde9491d9c54b6ed5a4e3b))
+
+
+### chore
+
+* Update to latest aggrid and remove private method access ([6100800](https://github.com/terrestris/react-geo/commit/6100800b44297be31132486c2be8b54652061e76))
+
+
+### BREAKING CHANGES
+
+* The prop `rowClassName` has been removed
+* The props iconName and pressedIconName have been removed from the Simple- and ToggleButton. The icon and pressedIcon props require an icon component now.
+
 ## [16.4.3](https://github.com/terrestris/react-geo/compare/v16.4.2...v16.4.3) (2022-04-11)
 
 
