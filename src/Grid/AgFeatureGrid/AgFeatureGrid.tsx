@@ -840,7 +840,8 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       selectedRowsAfter = grid.api.getSelectedRows();
     }
 
-    const deselectedRows = _differenceWith(selectedRows, selectedRowsAfter, (a: RowNode , b: RowNode) => a.key === b.key);
+    const deselectedRows = _differenceWith(selectedRows,
+      selectedRowsAfter, (a: RowNode , b: RowNode) => a.key === b.key);
 
     const selectedFeatures = selectedRowsAfter.flatMap(row => {
       return row.key ? [this.getFeatureFromRowKey(row.key)] : [];

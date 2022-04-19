@@ -135,7 +135,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       return new OlLayerGroup({
         layers: layer.getLayers().getArray().map(l => {
           if (!(l instanceof OlLayerTile) || !(l instanceof OlLayerGroup)) {
-            throw new Error('Layer of layergroup is of unclonable type')
+            throw new Error('Layer of layergroup is of unclonable type');
           }
           return this.cloneLayer(l);
         }),
