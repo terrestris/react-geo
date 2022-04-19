@@ -79,6 +79,12 @@ interface OwnProps {
    */
   countryCodes: string;
   /**
+   * Preferred language order for showing search results, overrides the value
+   * specified in the "Accept-Language" HTTP header. Either use a standard RFC2616
+   * accept-language string or a simple comma-separated list of language codes.
+   */
+  searchResultLanguage?: string;
+  /**
    * The minimal amount of characters entered in the input to start a search.
    */
   minChars: number;
@@ -262,25 +268,59 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
   /**
    * Perform the search.
    */
-  doSearch() {
+  async doSearch() {
+    const {
+      format,
+      viewBox,
+      bounded,
+      polygonGeoJSON,
+      nominatimBaseUrl,
+      addressDetails,
+      limit,
+      countryCodes,
+      searchResultLanguage
+    } = this.props;
+
+    const {
+      searchTerm
+    } = this.state;
+
     const baseParams = {
-      format: this.props.format,
-      viewbox: this.props.viewBox,
-      bounded: this.props.bounded,
+      format: format,
+      viewbox: viewBox,
+      bounded: bounded,
       // eslint-disable-next-line camelcase
-      polygon_geojson: this.props.polygonGeoJSON,
-      addressdetails: this.props.addressDetails,
-      limit: this.props.limit,
-      countrycodes: this.props.countryCodes,
-      q: this.state.searchTerm
+      polygon_geojson: polygonGeoJSON,
+      addressdetails: addressDetails,
+      limit: limit,
+      countrycodes: countryCodes,
+      q: searchTerm
     };
 
     const getRequestParams = UrlUtil.objectToRequestString(baseParams);
 
-    fetch(`${this.props.nominatimBaseUrl}${getRequestParams}`)
-      .then(response => response.json())
-      .then(this.onFetchSuccess.bind(this))
-      .catch(this.onFetchError.bind(this));
+    try {
+      let fetchOpts: RequestInit = {};
+      if (searchResultLanguage) {
+        fetchOpts = {
+          headers: {
+            'accept-language': searchResultLanguage
+          }
+        };
+      }
+
+      const response = await fetch(`${nominatimBaseUrl}${getRequestParams}`, fetchOpts);
+
+      if (!response.ok) {
+        throw new Error(`Return code: ${response.status}`);
+      }
+
+      const responseJson = await response.json();
+
+      this.onFetchSuccess(responseJson);
+    } catch (e) {
+      this.onFetchError(e);
+    }
   }
 
   /**
@@ -346,6 +386,7 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
       renderOption,
       minChars,
       visible,
+      searchResultLanguage,
       ...passThroughProps
     } = this.props;
 
