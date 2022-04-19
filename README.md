@@ -54,9 +54,9 @@ module: {
 
 For a comprehensive introduction into the usage of `react-geo` you might want to have a look at our [tutorial](https://terrestris.github.io/react-geo-ws/).
 
-## Base application
+## Starter application
 
-Also don't miss the [react-geo-baseclient](https://github.com/terrestris/react-geo-baseclient) as an example for a fully working
+Also don't miss the [create-react-geo-app (CRGA)](https://github.com/terrestris/create-react-geo-app) to quickly create a fully working
 web-mapping application based on `react-geo`.
 
 ## Contribution
