@@ -1,3 +1,15 @@
+# [17.1.0](https://github.com/terrestris/react-geo/compare/v17.0.0...v17.1.0) (2022-04-19)
+
+
+### Bug Fixes
+
+* Use correct URL for OWS WFS ([a45d021](https://github.com/terrestris/react-geo/commit/a45d0214f9c2ae1e02e6316116ac3530aebdd472))
+
+
+### Features
+
+* Add support for localized nominatim responses ([87b2c3e](https://github.com/terrestris/react-geo/commit/87b2c3ec2a623a4f0f48b507276544717ccd663e))
+
 # [17.0.0](https://github.com/terrestris/react-geo/compare/v16.4.3...v17.0.0) (2022-04-19)
 
 
