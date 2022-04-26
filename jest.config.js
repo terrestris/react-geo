@@ -1,5 +1,4 @@
 module.exports = {
-  testURL: 'http://localhost/',
   moduleFileExtensions: [
     'js',
     'ts',
@@ -38,5 +37,8 @@ module.exports = {
     '!src/**/*example*.*'
   ],
   coverageDirectory: '<rootDir>/coverage',
-  testEnvironment: 'jsdom'
+  testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    url: 'http://localhost/'
+  }
 };
