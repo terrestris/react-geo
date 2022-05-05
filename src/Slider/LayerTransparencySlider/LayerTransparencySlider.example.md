@@ -54,6 +54,7 @@ class LayerTransparencySliderExample extends React.Component {
 
           <LayerTransparencySlider
             layer={this.layer}
+            tipFormatter={val => `Transparency: ${val}%`}
           />
         </div>
       </div>
