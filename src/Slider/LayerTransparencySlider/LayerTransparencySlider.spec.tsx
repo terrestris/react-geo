@@ -41,4 +41,24 @@ describe('<LayerTransparencySlider />', () => {
     expect(layer.getOpacity()).toBe(0.09);
   });
 
+  it('uses default format in tooltip if no tipFormatter is provided', () => {
+    const props = {
+      layer: layer
+    };
+    const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
+
+    const formattedValue = wrapper.instance().tipFormatter(50);
+    expect(formattedValue).toBe('50%');
+  });
+  it('uses provided tipFormatter in tooltip', () => {
+    const props = {
+      layer: layer,
+      valueFormatter: val => `Format: ${val}`
+    };
+    const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
+
+    const formattedValue = wrapper.instance().tipFormatter(50);
+    expect(formattedValue).toBe('Format: 50');
+  });
+
 });
