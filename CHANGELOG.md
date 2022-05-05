@@ -1,3 +1,10 @@
+## [17.1.1](https://github.com/terrestris/react-geo/compare/v17.1.0...v17.1.1) (2022-05-05)
+
+
+### Bug Fixes
+
+* properly set map instance reference on layer clone ([af5809f](https://github.com/terrestris/react-geo/commit/af5809fdc0595ca9441dbb7e3bfca82bde43d6ad))
+
 # [17.1.0](https://github.com/terrestris/react-geo/compare/v17.0.0...v17.1.0) (2022-04-19)
 
 
