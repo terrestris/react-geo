@@ -8,6 +8,11 @@ export interface BaseProps {
    * The layer to handle.
    */
   layer: OlLayerBase;
+
+  /**
+   * Custom valueFormatter, will be used as slider tooltip.
+   */
+  valueFormatter?: (val: string | number | undefined) => string;
 }
 
 export type LayerTransparencySliderProps = BaseProps & SliderSingleProps;
@@ -53,6 +58,16 @@ class LayerTransparencySlider extends React.Component<LayerTransparencySliderPro
     return transparency;
   }
 
+  tipFormatter(value: number | undefined) {
+    const {
+      valueFormatter
+    } = this.props;
+    if (valueFormatter) {
+      return valueFormatter(value);
+    }
+    return `${value}%`;
+  }
+
   /**
    * The render function.
    */
@@ -64,7 +79,7 @@ class LayerTransparencySlider extends React.Component<LayerTransparencySliderPro
 
     return (
       <Slider
-        tipFormatter={value => `${value}%`}
+        tipFormatter={(value: number | undefined) => this.tipFormatter(value)}
         defaultValue={this.getLayerTransparency()}
         onChange={(value: number) => {
           this.setLayerTransparency(value);
