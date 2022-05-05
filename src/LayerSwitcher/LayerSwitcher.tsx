@@ -1,6 +1,5 @@
 import * as React from 'react';
 import _isEqual from 'lodash/isEqual';
-import _isNumber from 'lodash/isNumber';
 import Logger from '@terrestris/base-util/dist/Logger';
 import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
 
@@ -145,13 +144,16 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
         ...layer.getProperties()
       });
     } else {
-      return new OlLayerTile({
+      const clone = new OlLayerTile({
         source: (layer as OlLayerTile<OlTileSource>).getSource() || undefined,
         properties: {
           originalLayer: layer
         },
         ...layer.getProperties()
       });
+      // reset reference to the map instance of original layer
+      clone.setMap(null);
+      return clone;
     }
   };
 
