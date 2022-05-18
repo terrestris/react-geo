@@ -6,6 +6,7 @@ import { easeOut } from 'ol/easing';
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
 import { AnimationOptions as OlViewAnimationOptions } from 'ol/View';
+import _isNumber from 'lodash/isNumber';
 
 interface OwnProps {
   /**
@@ -82,7 +83,7 @@ class ZoomButton extends React.Component<ZoomButtonProps> {
       view.cancelAnimations();
     }
     const currentZoom = view.getZoom();
-    if (!currentZoom) {
+    if (!_isNumber(currentZoom)) {
       return;
     }
     const zoom = currentZoom + delta;
