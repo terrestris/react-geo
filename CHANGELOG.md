@@ -1,3 +1,10 @@
+## [17.1.2](https://github.com/terrestris/react-geo/compare/v17.1.1...v17.1.2) (2022-05-18)
+
+
+### Bug Fixes
+
+* fix check in ZoomButton ([#2565](https://github.com/terrestris/react-geo/issues/2565)) ([652b357](https://github.com/terrestris/react-geo/commit/652b3570aef55247c33137bef0e9d7046d9b1ff1))
+
 ## [17.1.1](https://github.com/terrestris/react-geo/compare/v17.1.0...v17.1.1) (2022-05-05)
 
 
