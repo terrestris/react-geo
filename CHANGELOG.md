@@ -1,3 +1,12 @@
+## [17.1.3](https://github.com/terrestris/react-geo/compare/v17.1.2...v17.1.3) (2022-05-23)
+
+
+### Bug Fixes
+
+* Clone features propertly before passing them to the result renderer ([9964d46](https://github.com/terrestris/react-geo/commit/9964d460c2679680932bdfbc76679a1f844cfe58))
+* Fix and export component types ([089e347](https://github.com/terrestris/react-geo/commit/089e3470409d03bc313ee070acdfa57f3ba68433))
+* Recalculate dataSource and columnDefs on changed props ([9aa1a23](https://github.com/terrestris/react-geo/commit/9aa1a23b1f7c4ec5a1a61f703d556c149a6b8026))
+
 ## [17.1.2](https://github.com/terrestris/react-geo/compare/v17.1.1...v17.1.2) (2022-05-18)
 
 
