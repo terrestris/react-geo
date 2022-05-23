@@ -20,7 +20,7 @@ import './CoordinateInfo.less';
 
 const format = new OlFormatGML2();
 
-interface CoordinateInfoProps {
+export interface CoordinateInfoProps {
   /**
    * List of (WMS) layers that should be queried.
    */
@@ -55,9 +55,11 @@ interface CoordinateInfoProps {
   map: OlMap;
 }
 
-interface CoordinateInfoState {
+export interface CoordinateInfoState {
   clickCoordinate: OlCoordinate | null;
-  features: any;
+  features: {
+    [layerName: string]: OlFeature[];
+  };
   loading: boolean;
 }
 
@@ -94,7 +96,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
 
     this.state = {
       clickCoordinate: null,
-      features: [],
+      features: {},
       loading: false
     };
 
