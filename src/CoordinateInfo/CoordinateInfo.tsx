@@ -9,7 +9,6 @@ import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import OlGeometry from 'ol/geom/Geometry';
 import OlBaseLayer from 'ol/layer/Base';
 
-import _cloneDeep from 'lodash/cloneDeep';
 import _isString from 'lodash/isString';
 
 import Logger from '@terrestris/base-util/dist/Logger';
@@ -20,7 +19,7 @@ import './CoordinateInfo.less';
 
 const format = new OlFormatGML2();
 
-interface CoordinateInfoProps {
+export interface CoordinateInfoProps {
   /**
    * List of (WMS) layers that should be queried.
    */
@@ -55,9 +54,11 @@ interface CoordinateInfoProps {
   map: OlMap;
 }
 
-interface CoordinateInfoState {
+export interface CoordinateInfoState {
   clickCoordinate: OlCoordinate | null;
-  features: any;
+  features: {
+    [layerName: string]: OlFeature[];
+  };
   loading: boolean;
 }
 
@@ -94,7 +95,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
 
     this.state = {
       clickCoordinate: null,
-      features: [],
+      features: {},
       loading: false
     };
 
@@ -213,9 +214,21 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       resultRenderer
     } = this.props;
 
+    const featuresClone: {[name: string]: OlFeature[]} = {};
+    Object.entries(this.state.features)
+      .forEach(([layerName, feats]) => {
+        featuresClone[layerName] = feats.map(feat => feat.clone());
+      });
+
     return (
       <>
-        {resultRenderer(_cloneDeep(this.state))}
+        {resultRenderer({
+          clickCoordinate: this.state.clickCoordinate ?
+            [...this.state.clickCoordinate] :
+            null,
+          loading: this.state.loading,
+          features: featuresClone
+        })}
       </>
     );
   }
