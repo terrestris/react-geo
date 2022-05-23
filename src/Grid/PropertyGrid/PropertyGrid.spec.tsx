@@ -49,10 +49,10 @@ describe('<PropertyGrid />', () => {
       feature: testFeature
     };
     const wrapper = TestUtil.mountComponent(PropertyGrid, props);
-    const state = wrapper.state();
+    const instance = wrapper.instance() as PropertyGrid;
 
-    const dataSource = state.dataSource;
-    const columns = state.columns;
+    const dataSource = instance.getDataSource();
+    const columns = instance.getColumns();
 
     // check dataSource
     expect(dataSource).toBeInstanceOf(Array);
@@ -79,10 +79,10 @@ describe('<PropertyGrid />', () => {
       attributeFilter
     };
     const wrapper = TestUtil.mountComponent(PropertyGrid, props);
-    const state = wrapper.state();
+    const instance = wrapper.instance() as PropertyGrid;
 
     // check dataSource
-    const dataSource = state.dataSource;
+    const dataSource = instance.getDataSource();
     expect(dataSource).toBeInstanceOf(Array);
     expect(dataSource).toHaveLength(attributeFilter.length);
     dataSource.forEach((dataSourceElement) => {
@@ -98,9 +98,9 @@ describe('<PropertyGrid />', () => {
       attributeNameColumnWidthInPercent
     };
     const wrapper = TestUtil.mountComponent(PropertyGrid, props);
-    const state = wrapper.state();
+    const instance = wrapper.instance() as PropertyGrid;
 
-    const columns = state.columns;
+    const columns = instance.getColumns();
 
     expect(columns).toBeInstanceOf(Array);
     expect(columns).toHaveLength(2);
@@ -118,10 +118,10 @@ describe('<PropertyGrid />', () => {
       attributeNames
     };
     const wrapper = TestUtil.mountComponent(PropertyGrid, props);
-    const state = wrapper.state();
+    const instance = wrapper.instance() as PropertyGrid;
 
     // check dataSource
-    const dataSource = state.dataSource;
+    const dataSource = instance.getDataSource();
     expect(dataSource).toBeInstanceOf(Array);
     dataSource.forEach((dataSourceElement) => {
       const key = dataSourceElement.key;

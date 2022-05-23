@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Table } from 'antd';
-import { ColumnProps, TableProps } from 'antd/lib/table';
+import { TableProps } from 'antd/lib/table';
 
 import OlGeometry from 'ol/geom/Geometry';
 import OlFeature from 'ol/Feature';
@@ -41,18 +41,12 @@ interface OwnProps {
   attributeFilter?: string[];
   /**
    * Object containing a mapping of attribute names in OL feature to custom ones
-   *
    */
   attributeNames?: AttributeNames;
   /**
    * Feature for which the properties should be shown
    */
   feature: OlFeature<OlGeometry>;
-}
-
-interface PropertyGridState {
-  dataSource: any[];
-  columns: ColumnProps<any>[];
 }
 
 export type PropertyGridProps = OwnProps & TableProps<any>;
@@ -63,12 +57,12 @@ export type PropertyGridProps = OwnProps & TableProps<any>;
  * @class PropertyGrid
  * @extends React.Component
  */
-class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState> {
+class PropertyGrid extends React.Component<PropertyGridProps> {
 
   static defaultProps = {
     attributeNameColumnTitle: 'Attribute name',
     attributeNameColumnWidthInPercent: 50,
-    attributeValueColumnTitle: 'Attribute value',
+    attributeValueColumnTitle: 'Attribute value'
   };
 
   /**
@@ -78,78 +72,47 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
   className = `${CSS_PREFIX}propertygrid`;
 
   /**
-   * The constructor.
-   *
-   * @param props The initial props.
+   * Generates the datasource out of the given feature.
    */
-  constructor(props: PropertyGridProps) {
-    super(props);
+  getDataSource() {
+    let attributeFilter = this.props.attributeFilter;
 
-    const {
-      feature,
-      attributeFilter,
-      attributeNames,
-      attributeNameColumnWidthInPercent
-    } = props;
-
-    const {
-      dataSource,
-      columns
-    } = this.generatePropertyGrid({feature, attributeFilter, attributeNames,
-      attributeNameColumnWidthInPercent});
-
-    this.state = {
-      dataSource,
-      columns
-    };
-  }
-
-  /**
-   * Initialize data store and column definitions of table
-   *
-   * @param feature feature to display
-   * @param attributeFilter Array of string values to filter the grid rows
-   * @param attributeNames Object containing mapping of attribute names names in feature to custom ones
-   * @param attributeNameColumnWidthInPercent Column width (in percent)
-   */
-  generatePropertyGrid({feature, attributeFilter, attributeNames, attributeNameColumnWidthInPercent}: {
-    feature: OlFeature<OlGeometry>;
-    attributeFilter?: string[];
-    attributeNames?: AttributeNames;
-    attributeNameColumnWidthInPercent: number;
-  }): {
-      dataSource: any;
-      columns: ColumnProps<any>[];
-    } {
     if (!attributeFilter) {
-      attributeFilter = feature.getKeys().filter((attrName: string) => attrName !== 'geometry');
+      attributeFilter = this.props.feature.getKeys().filter((attrName: string) => attrName !== 'geometry');
     }
 
     const dataSource = attributeFilter.map((attr: any) => {
-      const fid = getUid(feature);
+      const fid = getUid(this.props.feature);
+
       return {
-        attributeName: (attributeNames && _get(attributeNames, attr)) ? _get(attributeNames, attr) : attr,
-        attributeValue: feature.get(attr),
+        attributeName: (this.props.attributeNames && _get(this.props.attributeNames, attr)) ?
+          _get(this.props.attributeNames, attr) :
+          attr,
+        attributeValue: this.props.feature.get(attr),
         key: `ATTR_${attr}_fid_${fid}`
       };
     });
 
+    return dataSource;
+  }
+
+  /**
+   * Generates the column definition for the given feature.
+   */
+  getColumns() {
     const columns = [{
       title: this.props.attributeNameColumnTitle,
       dataIndex: 'attributeName',
       key: 'attributeName',
-      width: `${attributeNameColumnWidthInPercent}%`
+      width: `${this.props.attributeNameColumnWidthInPercent}%`
     }, {
       title: this.props.attributeValueColumnTitle,
       dataIndex: 'attributeValue',
       key: 'attributeValue',
-      width: `${100 - attributeNameColumnWidthInPercent}%`
+      width: `${100 - this.props.attributeNameColumnWidthInPercent}%`
     }];
 
-    return {
-      dataSource,
-      columns
-    };
+    return columns;
   }
 
   /**
@@ -164,11 +127,6 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
       ...passThroughProps
     } = this.props;
 
-    const {
-      columns,
-      dataSource
-    } = this.state;
-
     const finalClassName = className
       ? `${className} ${this.className}`
       : this.className;
@@ -177,12 +135,9 @@ class PropertyGrid extends React.Component<PropertyGridProps, PropertyGridState>
       <Table
         className={finalClassName}
         rowKey={record => record.key}
-        dataSource={dataSource}
-        columns={columns}
+        dataSource={this.getDataSource()}
+        columns={this.getColumns()}
         pagination={false}
-        scroll={{
-          y: 250
-        }}
         {...passThroughProps}
       />
     );
