@@ -3,8 +3,14 @@ import React, {
 } from 'react';
 
 import { useMap } from '../../Hook/useMap';
-import { print, downloadBlob } from '@camptocamp/inkmap';
+import {
+  downloadBlob,
+  queuePrint,
+  getJobStatus
+} from '@camptocamp/inkmap';
+import { Progress } from 'antd';
 import SimpleButton from '../SimpleButton/SimpleButton';
+// import OlLayer from 'ol/layer/Layer';
 
 interface OwnProps {
 }
@@ -16,23 +22,35 @@ const PrintButton: React.FC<PrintButtonProps> = ({
 }) => {
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [status, setStatus] = useState<string>('pending');
 
   const map = useMap();
 
-  const onPrintClick = (event: any) => {
+  console.log('status', status);
+
+  const onPrintClick = async (event: any) => {
     setLoading(true);
     // todo: get layer from map and map to configuration object
-    // const layers = map?.getAllLayers().map((l: OlLayerTile<OlSourceOsm>) => ({
-    //   type: 'WMS',
-    //   url: l.getSource()?.getUrls()[0]
-    // }));
+    // const layerSources = map?.getAllLayers().map((l: OlLayer) => l.getSource());
     const printConfig = {
-      ... baseConfig,
-      // layers: layers
+      ... baseConfig
+      // layers: layerSources
     };
-    print(printConfig)
-      .then(downloadBlob)
-      .then(setLoading(false));
+    const jobId = await queuePrint(printConfig);
+
+    getJobStatus(jobId).subscribe((printStatus: any) => {
+      // update the job progress
+      setProgress(printStatus.progress * 100);
+      setStatus(printStatus.status);
+      console.log('printStatus.status', printStatus.status);
+
+      // job is finished
+      if (printStatus.progress === 1) {
+        setLoading(false);
+        downloadBlob(printStatus.imageBlob, 'react-geo-image.png');
+      }
+    });
   };
 
   if (!map) {
@@ -69,11 +87,16 @@ const PrintButton: React.FC<PrintButtonProps> = ({
     "attributions": "bottom-right"
   };
 
-  return <SimpleButton
-    loading={loading}
-    onClick={onPrintClick}
-    {...passThroughProps}
-  />;
+  return (
+    <div>
+      <SimpleButton
+        loading={loading}
+        onClick={onPrintClick}
+        {...passThroughProps}
+      />
+      <Progress percent={progress} />
+    </div>
+  );
 
 };
 
