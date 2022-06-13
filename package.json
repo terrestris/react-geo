@@ -71,6 +71,7 @@
     "@ag-grid-community/core": "^27.1.0",
     "@ag-grid-community/react": "^27.1.0",
     "@ant-design/icons": "^4.7.0",
+    "@camptocamp/inkmap": "^1.2.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
