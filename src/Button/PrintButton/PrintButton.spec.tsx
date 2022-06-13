@@ -6,6 +6,8 @@ import OlView from 'ol/View';
 import OlMap from 'ol/Map';
 import OlPoint from 'ol/geom/Point';
 import OlFeature from 'ol/Feature';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceOsm from 'ol/source/OSM';
 
 import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
@@ -13,7 +15,7 @@ import PrintButton from './PrintButton';
 
 describe('<PrintButton />', () => {
 
-  const coord = [829729, 6708850];
+  const coordinates = [829729, 6708850];
   let map: OlMap;
   let feature: OlFeature<OlPoint>;
 
@@ -24,12 +26,15 @@ describe('<PrintButton />', () => {
     });
 
     map = new OlMap({
+      layers: [
+        new OlLayerTile({
+          source: new OlSourceOsm()
+        })
+      ],
       view: new OlView({
-        center: coord,
+        center: coordinates,
         zoom: 10
-      }),
-      controls: [],
-      layers: []
+      })
     });
 
     DigitizeUtil.getDigitizeLayer(map)

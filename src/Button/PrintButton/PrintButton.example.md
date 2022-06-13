@@ -20,7 +20,6 @@ const PrintButtonExample = () => {
     const newMap = new OlMap({
       layers: [
         new OlLayerTile({
-          name: 'OSM',
           source: new OlSourceOsm()
         })
       ],
