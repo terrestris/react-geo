@@ -7,6 +7,7 @@ import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
+import OlSourceTileWMS from 'ol/source/TileWMS';
 import { fromLonLat } from 'ol/proj';
 
 import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
@@ -21,6 +22,15 @@ const PrintButtonExample = () => {
       layers: [
         new OlLayerTile({
           source: new OlSourceOsm()
+        }),
+        new OlLayerTile({
+          name: 'True Color Composite',
+          opacity: 0.5,
+          source: new OlSourceTileWMS({
+            url: 'https://geoserver.mundialis.de/geoserver/wms',
+            params: {'LAYERS': '1_040302', 'TILED': true},
+            serverType: 'geoserver'
+          })
         })
       ],
       view: new OlView({
