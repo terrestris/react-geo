@@ -1,6 +1,7 @@
 const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   devServer: {
@@ -60,6 +61,14 @@ module.exports = {
   plugins: [
     new ForkTsCheckerWebpackPlugin({
       async: false
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'node_modules/@camptocamp/inkmap/dist/inkmap-worker.js',
+          to: 'build'
+        }
+      ]
     })
   ]
   // Uncomment the following lines if you're working with a linked
