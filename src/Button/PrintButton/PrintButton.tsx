@@ -12,14 +12,14 @@ import { Progress } from 'antd';
 import SimpleButton from '../SimpleButton/SimpleButton';
 import _isFinite from 'lodash/isFinite';
 
-import OlLayer from 'ol/layer/Layer';
 import {toLonLat} from 'ol/proj';
+import ImageWMS from 'ol/source/ImageWMS';
+import OlLayer from 'ol/layer/Layer';
 import OlMap from 'ol/Map';
 import OSM from 'ol/source/OSM';
-import WMTS from 'ol/source/WMTS';
 import TileWMS from 'ol/source/TileWMS';
-import ImageWMS from 'ol/source/ImageWMS';
 import VectorSource from 'ol/source/Vector';
+import WMTS from 'ol/source/WMTS';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
@@ -34,6 +34,12 @@ export type InkmapLayer = {
   attribution: string;
   layer?: string;
   tiled?: boolean;
+  projection?: string;
+  matrixSet?: string;
+  tileGrid?: any;
+  style?: string;
+  format?: string;
+  requestEncoding?: string;
 }
 
 export type ScaleBarSpec = {
@@ -74,11 +80,14 @@ const PrintButton: React.FC<PrintButtonProps> = ({
 
   const mapOlLayerToInkmap = (olLayer: OlLayer): InkmapLayer | null => {
     const source = olLayer.getSource();
+    const opacity = olLayer.getOpacity();
+    console.log('opacity', opacity);
+    console.log('typeof opacity', typeof opacity);
     if (source instanceof TileWMS) {
       return {
        type: 'WMS',
        url: source.getUrls()?.[0] ?? '',
-       opacity: olLayer.getOpacity(), // todo: fix opacity
+       opacity: opacity,
        attribution: source.getAttributions()?.toString() ?? '', // todo: ...
        layer: source.getParams()?.LAYERS,
        tiled: true
@@ -87,28 +96,40 @@ const PrintButton: React.FC<PrintButtonProps> = ({
       return {
         type: 'WMS',
         url: source.getUrl() ?? '',
-        opacity: olLayer.getOpacity(),
+        opacity: opacity,
         attribution: source.getAttributions()?.toString() ?? '', // todo: ...
-        layer: 'bla test q123',
+        layer: source.getParams()?.LAYERS,
         tiled: false
        };
     } else if (source instanceof WMTS) {
+      const olTileGrid = source.getTileGrid();
+      const resolutions = olTileGrid?.getResolutions();
+      const matrixIds = resolutions?.map((res, idx) => idx);
+
+      const tileGrid = {
+        resolutions: olTileGrid?.getResolutions(),
+        extent: olTileGrid?.getExtent(),
+        matrixIds: matrixIds
+      }
+
       return {
-        type: 'WMS',
+        type: 'WMTS',
+        requestEncoding: source.getRequestEncoding(),
         url: source.getUrls()?.[0] ?? '',
-        opacity: olLayer.getOpacity(),
+        layer: source.getLayer(),
+        projection: source.getProjection().getCode(),
+        matrixSet: source.getMatrixSet(),
+        tileGrid: tileGrid,
+        format: source.getFormat(),
+        opacity: opacity,
         attribution: source.getAttributions()?.toString() ?? '', // todo: ...
-        layer: 'bla test q123',
-        tiled: true
-        // todo!
        };
     } else if (source instanceof OSM) {
       return {
         type: 'XYZ',
         url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        opacity: olLayer.getOpacity(),
+        opacity: opacity,
         attribution: "© OpenStreetMap (www.openstreetmap.org)",
-        layer: 'bla test q123',
         tiled: true
        };
     } else if (source instanceof VectorSource) {
@@ -136,7 +157,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({
       .map(mapOlLayerToInkmap)
       .filter(l => l !== null) as InkmapLayer[]; // todo: remove cast
 
-    console.log('layers', layers);
+    console.log('configuredlayers', layers);
     const config: InkmapPrintSpec = {
       layers: layers,
       "size": [
@@ -184,7 +205,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({
         printStatus.sourceLoadErrors.forEach((element: any) => {
           errorMessage = `${errorMessage} - ${element.url} `;
         });
-        console.log('errorMessage', errorMessage);
+        console.error('errorMessage', errorMessage);
         // todo: display errors?
       }
     });
