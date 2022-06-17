@@ -1,10 +1,15 @@
 This demonstrates the use of the PrintButton.
 
 ```jsx
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useMemo} from 'react';
 
-import { fromLonLat, get as getProjection } from 'ol/proj';
+import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
+import {fromLonLat, get as getProjection} from 'ol/proj';
 import {getTopLeft, getWidth} from 'ol/extent';
+import {OSM, Vector as VectorSource} from 'ol/source';
+import {Vector as VectorLayer} from 'ol/layer';
+import Feature from 'ol/Feature';
+import GeoJSON from 'ol/format/GeoJSON';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';
@@ -13,22 +18,116 @@ import OlView from 'ol/View';
 import WMTS from 'ol/source/WMTS';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 
-import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
 import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
 import PrintButton from '@terrestris/react-geo/Button/PrintButton/PrintButton';
 
-const PrintButtonExample = () => {  
+import { Progress } from 'antd';
+
+const PrintButtonExample = () => {
   const [map, setMap] = useState();
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState('pending');
+
+  const geojson = useMemo(() => ({
+    'type': 'FeatureCollection',
+    'crs': {
+      'type': 'name',
+      'properties': {
+        'name': 'EPSG:3857',
+      },
+    },
+    'features': [
+      {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'LineString',
+          'coordinates': [
+            [4e6, 2e6],
+            [8e6, 4e6],
+          ],
+        },
+      },
+      {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'LineString',
+          'coordinates': [
+            [4e6, 2e6],
+            [8e6, -2e6],
+          ],
+        },
+      },
+      {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Polygon',
+          'coordinates': [
+            [
+              [2e6, 5e6],
+              [2e6, 6e6],
+              [2e6, 7e6],
+              [0e6, 5e6]
+            ],
+          ],
+        },
+      },
+    ]}
+  ));
+
+  const image = new CircleStyle({
+    radius: 5,
+    fill: null,
+    stroke: new Stroke({color: 'red', width: 1}),
+  });
+
+  const styles = {
+    'Point': new Style({
+      image: image,
+    }),
+    'LineString': new Style({
+      stroke: new Stroke({
+        color: 'green',
+        width: 1,
+      }),
+    }),
+    'Polygon': new Style({
+      stroke: new Stroke({
+        color: 'blue',
+        lineDash: [4],
+        width: 3,
+      }),
+      fill: new Fill({
+        color: 'rgba(0, 0, 255, 0.1)',
+      }),
+    }),
+    'Circle': new Style({
+      stroke: new Stroke({
+        color: 'red',
+        width: 2,
+      }),
+      fill: new Fill({
+        color: 'rgba(255,0,0,0.2)',
+      })
+    })
+  };
+
+  const styleFunction = function (feature) {
+    return styles[feature.getGeometry().getType()];
+  };
 
   useEffect(() => {
     const projection = getProjection('EPSG:3857');
     const projectionExtent = projection.getExtent();
 
+    const vectorSource = new VectorSource({
+      features: new GeoJSON().readFeatures(geojson),
+    });
+
     const newMap = new OlMap({
       layers: [
         new OlLayerTile({
           source: new OlSourceOsm(),
-          opacity: 0.5
         }),
         new OlLayerTile({
           name: 'True Color Composite',
@@ -40,7 +139,7 @@ const PrintButtonExample = () => {
           })
         }),
         new OlLayerTile({
-          opacity: 0.7,
+          opacity: 0.6,
           source: new WMTS({
             attributions:
               'Tiles © <a href="https://mrdata.usgs.gov/geology/state/"' +
@@ -76,8 +175,25 @@ const PrintButtonExample = () => {
               matrixIds: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
             }),
             style: 'default',
-            wrapX: true,
-          }),
+            wrapX: true
+          })
+        }),
+        new VectorLayer({
+          source: vectorSource,
+          style: [
+            new Style({
+              stroke: new Stroke({
+                color: '#0000FF', // 'blue', todo: parser does not support named colors
+                lineDash: [4],
+                width: 3
+              })
+            }),
+            new Style({
+              fill: new Fill({
+                color: 'rgba(0, 0, 255, 0.1)'
+              })
+            })
+          ]
         })
       ],
       view: new OlView({
@@ -102,10 +218,13 @@ const PrintButtonExample = () => {
             height: '400px'
           }}
         />
-        <PrintButton>
+        <PrintButton
+          onProgressChange={setProgress}
+        >
           Print map
         </PrintButton>
       </MapContext.Provider>
+      <Progress percent={progress} />
     </div>
   );
 }
