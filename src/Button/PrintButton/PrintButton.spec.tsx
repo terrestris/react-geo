@@ -21,7 +21,7 @@ describe('<PrintButton />', () => {
 
   beforeEach(() => {
     feature = new OlFeature<OlPoint>({
-      geometry: new OlPoint(coord),
+      geometry: new OlPoint(coordinates),
       someProp: 'test'
     });
 
