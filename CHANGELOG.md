@@ -1,3 +1,25 @@
+# [17.2.0](https://github.com/terrestris/react-geo/compare/v17.1.3...v17.2.0) (2022-06-22)
+
+
+### Bug Fixes
+
+* fix package lock file ([67d7568](https://github.com/terrestris/react-geo/commit/67d7568c02740b65719b0ea523388501db903f8e))
+* fix tests ([8f732f2](https://github.com/terrestris/react-geo/commit/8f732f29f9d9a214509adad8f8cdddcb8006ba00))
+* fix typecheck issues ([7826da2](https://github.com/terrestris/react-geo/commit/7826da230eeef945e97950336bb0db6407663506))
+* linting ([4cdbcb3](https://github.com/terrestris/react-geo/commit/4cdbcb35ab1d5bd7ea9598c888677369c7c9e329))
+* move inkmap mapping to ol-util ([35ff746](https://github.com/terrestris/react-geo/commit/35ff746e8e67a61cd1e403a36b88b75641630b87))
+* restore initial version of printbutton test ([a6dc0c0](https://github.com/terrestris/react-geo/commit/a6dc0c0d1948d6828e955c955e37e1f57617f20b))
+
+
+### Features
+
+* add progressbar to print example ([111e874](https://github.com/terrestris/react-geo/commit/111e874c100454229e221ff10058c16d44d47bc1))
+* add serviceWorker webpack config ([dd125fe](https://github.com/terrestris/react-geo/commit/dd125fe3a082783c89463e9cc6f812dd40d64b41))
+* introduce client-side print with inkmap ([ceeb03b](https://github.com/terrestris/react-geo/commit/ceeb03bc95ea861e7ffb09edcbe055aef7ea0a7a))
+* parse ol layers ([fa0ec7f](https://github.com/terrestris/react-geo/commit/fa0ec7f9e4de7b3a556ad036aab150fa658fe748))
+* parse vectorlayers and styles, cleanup ([b163de0](https://github.com/terrestris/react-geo/commit/b163de002348bc4e640860acaeaf31fbf727f868))
+* parse WMTS layers ([1691644](https://github.com/terrestris/react-geo/commit/1691644f5d4d92e240eb0bf4c3f3c99cff171285))
+
 ## [17.1.3](https://github.com/terrestris/react-geo/compare/v17.1.2...v17.1.3) (2022-05-23)
 
 
