@@ -296,13 +296,13 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
     } = this.props;
 
     const searchOpts = {
-      featureNS,
-      featurePrefix,
+      featureNS: featureNS ?? '',
+      featurePrefix: featurePrefix ?? '',
       featureTypes,
-      geometryName,
-      maxFeatures,
+      geometryName: geometryName ?? '',
+      maxFeatures: maxFeatures ?? 0,
       outputFormat,
-      propertyNames,
+      propertyNames: propertyNames ?? [],
       srsName,
       wfsFormatOptions,
       searchAttributes,
