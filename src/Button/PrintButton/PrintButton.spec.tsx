@@ -1,30 +1,21 @@
-import { screen,  within } from '@testing-library/react';
 import * as React from 'react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import OlView from 'ol/View';
+import PrintButton from './PrintButton';
+import { renderInMapContext } from '../../Util/rtlTestUtils';
+
 import OlMap from 'ol/Map';
-import OlPoint from 'ol/geom/Point';
-import OlFeature from 'ol/Feature';
+import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
-
-import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
-import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import PrintButton from './PrintButton';
 
 describe('<PrintButton />', () => {
 
   const coordinates = [829729, 6708850];
   let map: OlMap;
-  let feature: OlFeature<OlPoint>;
 
   beforeEach(() => {
-    feature = new OlFeature<OlPoint>({
-      geometry: new OlPoint(coordinates),
-      someProp: 'test'
-    });
-
     map = new OlMap({
       layers: [
         new OlLayerTile({
@@ -36,9 +27,6 @@ describe('<PrintButton />', () => {
         zoom: 10
       })
     });
-
-    DigitizeUtil.getDigitizeLayer(map)
-      .getSource().addFeature(feature);
   });
 
   describe('#Basics', () => {
@@ -49,36 +37,17 @@ describe('<PrintButton />', () => {
 
     it('can be rendered', () => {
       const { container } = renderInMapContext(map, <PrintButton />);
-
-      const button = within(container).getByRole('button');
-      expect(button).toBeVisible();
+      expect(container).toBeVisible();
     });
   });
 
-  describe('#Copying', () => {
-    it('copies the feature', async () => {
-      const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
+  describe('#Printing', () => {
 
-      const layer = DigitizeUtil.getDigitizeLayer(map);
-
-      renderInMapContext(map, <PrintButton />);
-
-      const button = screen.getByRole('button');
+    it('prints a png image', async () => {
+      renderInMapContext(map, <PrintButton>Print test</PrintButton>);
+      const button = screen.getByText('Print test');
       await userEvent.click(button);
-
-      expect(layer.getSource().getFeatures()).toHaveLength(1);
-
-      clickMap(map, 200, 200);
-
-      expect(layer.getSource().getFeatures()).toHaveLength(2);
-
-      const [feat1, feat2] = layer.getSource().getFeatures();
-
-      expect(feat2.get('someProp')).toEqual('test');
-
-      expect(feat1.getGeometry().getType()).toEqual(feat2.getGeometry().getType());
-
-      mock.mockRestore();
     });
+
   });
 });
