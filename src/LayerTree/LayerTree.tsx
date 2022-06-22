@@ -24,6 +24,7 @@ import _isFunction from 'lodash/isFunction';
 import _isEqual from 'lodash/isEqual';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import Logger from '@terrestris/base-util/dist/Logger';
 
 import LayerTreeNode, { LayerTreeNodeProps } from './LayerTreeNode/LayerTreeNode';
 
@@ -451,6 +452,10 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     const eventKey = e.node.props.eventKey;
     if (eventKey) {
       const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
+      if (!layer) {
+        Logger.error('layer is not defined');
+        return;
+      }
       this.setLayerVisibility(layer, checked);
     }
   }
@@ -512,9 +517,17 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       return;
     }
     const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
+    if (!dragLayer) {
+      Logger.error('dragLayer is not defined');
+      return;
+    }
     const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
     const dragCollection = dragInfo.groupLayer.getLayers();
     const dropLayer = MapUtil.getLayerByOlUid(this.props.map, e.node.props.eventKey);
+    if (!dropLayer) {
+      Logger.error('dropLayer is not defined');
+      return;
+    }
     const dropPos = e.node.props.pos.split('-');
     const location = e.dropPosition - Number(dropPos[dropPos.length - 1]);
 
