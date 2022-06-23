@@ -1,3 +1,10 @@
+## [17.2.1](https://github.com/terrestris/react-geo/compare/v17.2.0...v17.2.1) (2022-06-23)
+
+
+### Bug Fixes
+
+* move husky installation from postinstall to prepare phase ([9e16925](https://github.com/terrestris/react-geo/commit/9e169257ca50be3438c154d1961547017eb767d7))
+
 # [17.2.0](https://github.com/terrestris/react-geo/compare/v17.1.3...v17.2.0) (2022-06-22)
 
 
