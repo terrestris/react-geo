@@ -18,7 +18,10 @@ module.exports = {
       new TsconfigPathsPlugin({
         configFile: path.join(__dirname, './tsconfig.json')
       })
-    ]
+    ],
+    fallback: {
+      buffer: require.resolve('buffer/'),
+    }
   },
   module: {
     rules: [{
