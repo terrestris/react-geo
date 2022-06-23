@@ -1,3 +1,11 @@
+## [17.2.2](https://github.com/terrestris/react-geo/compare/v17.2.1...v17.2.2) (2022-06-23)
+
+
+### Bug Fixes
+
+* configure buffer polyfill ([b77b9ff](https://github.com/terrestris/react-geo/commit/b77b9fff26fd419717e2f689fa0c741d29e0c675))
+* make inkmap settings configurable ([0c91d62](https://github.com/terrestris/react-geo/commit/0c91d626e9a754a80eba7ce65575a8776a36bd51))
+
 ## [17.2.1](https://github.com/terrestris/react-geo/compare/v17.2.0...v17.2.1) (2022-06-23)
 
 
