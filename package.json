@@ -54,7 +54,7 @@
     "clean:dist": "rimraf ./dist/*",
     "clean:test": "rimraf ./coverage/*",
     "coveralls": "cat coverage/lcov.info | coveralls",
-    "postinstall": "husky install",
+    "prepare": "husky install",
     "lint": "npm run lint:styleguide && npm run lint:src",
     "lint:fix": "npm run lint:styleguide -- --fix && npm run lint:src -- --fix",
     "lint:src": "eslint -c .eslintrc.js --ext ts,tsx src/",
