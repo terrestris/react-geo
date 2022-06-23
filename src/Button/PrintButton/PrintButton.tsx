@@ -8,7 +8,9 @@ import {
   queuePrint,
   getJobStatus
 } from '@camptocamp/inkmap';
-import SimpleButton from '../SimpleButton/SimpleButton';
+import SimpleButton, {
+  SimpleButtonProps
+} from '../SimpleButton/SimpleButton';
 import _isFinite from 'lodash/isFinite';
 
 import Logger from '@terrestris/base-util/dist/Logger';
@@ -23,11 +25,20 @@ interface OwnProps {
   outputFileName?: string;
   dpi?: number;
   size?: InkmapPrintSpec['size'];
+  northArrow?: InkmapPrintSpec['northArrow'];
+  attributions?: InkmapPrintSpec['attributions'];
+  scaleBar?: InkmapPrintSpec['scaleBar'];
 }
 
-export type PrintButtonProps = OwnProps;
+export type PrintButtonProps = OwnProps & SimpleButtonProps;
 
 const PrintButton: React.FC<PrintButtonProps> = ({
+  attributions='bottom-right',
+  northArrow='top-right',
+  scaleBar={
+    position: 'bottom-left',
+    units: 'metric'
+  },
   dpi = 120,
   onProgressChange,
   outputFileName = 'react-geo-image.png',
@@ -48,12 +59,9 @@ const PrintButton: React.FC<PrintButtonProps> = ({
       ...printConfigByMap,
       size: size,
       dpi: dpi,
-      scaleBar: { // todo: make configurable
-        position: 'bottom-left',
-        units: 'metric'
-      },
-      northArrow: 'top-right', // todo: make configurable
-      attributions: 'bottom-right' // todo: make configurable
+      scaleBar: scaleBar,
+      northArrow: northArrow,
+      attributions: attributions
     };
     const jobId = await queuePrint(printConfig);
 
@@ -74,7 +82,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({
         // display errors
         let errorMessage = '';
         printStatus.sourceLoadErrors.forEach((element: any) => {
-          errorMessage = `${errorMessage} - ${element.url} `;
+          errorMessage = `${errorMessage} - ${element.url}`;
         });
         Logger.error('Inkmap error: ', errorMessage);
       }
