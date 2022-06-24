@@ -158,7 +158,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({
           // second page for legends
           doc.addPage('a4', 'l');
 
-          pdfSpec.layers.forEach((layer, idx) => {
+          pdfSpec.layers.forEach((layer: any, idx) => {
             const legendUrl = layer.legendUrl;
             const name = layer.layerName;
             const xPosition = 20 + (60 * idx); // todo: dynamic size
