@@ -59,6 +59,9 @@ const PrintButton: React.FC<PrintButtonProps> = ({
   const map = useMap();
 
   const printPng = async () => {
+    if (!map) {
+      return;
+    }
     setLoading(true);
     const printConfigByMap = await MapUtil.generatePrintConfig(map);
     const printConfig = {
@@ -96,13 +99,16 @@ const PrintButton: React.FC<PrintButtonProps> = ({
   }
 
   const printPdf = async () => {
+    if (!map) {
+      return;
+    }
     setLoading(true);
     const printConfigByMap = await MapUtil.generatePrintConfig(map);
     const mapWidth = 277; // mm
     const mapHeight = 170; // mm
 
     // Force map size to fit the PDF document
-    const pdfSpec: InkmapPrintSpec = {
+    const pdfSpec = {
       ...printConfigByMap,
       size: [mapWidth, mapHeight, 'mm'],
       dpi,
@@ -144,8 +150,11 @@ const PrintButton: React.FC<PrintButtonProps> = ({
         doc.setFontSize(10);
         doc.text(getAttributionsText(pdfSpec), 287, 200, { align: 'right' });
 
+        if (!pdfSpec) {
+          return;
+        }
 
-        if (pdfSpec.layers.some(l => l.legendUrl && l.legendUrl.length > 0)) {
+        if (pdfSpec?.layers?.some(l => l.legendUrl && l.legendUrl.length > 0)) {
           // second page for legends
           doc.addPage('a4', 'l');
 
@@ -189,9 +198,6 @@ const PrintButton: React.FC<PrintButtonProps> = ({
   }
 
   const onPrintClick = async () => {
-    if (!map) {
-      return;
-    }
     if (format === 'png') {
       await printPng();
     } else {
