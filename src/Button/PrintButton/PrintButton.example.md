@@ -13,6 +13,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';
+import OlSourceStamen from 'ol/source/Stamen';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
 import WMTS from 'ol/source/WMTS';
@@ -124,11 +125,24 @@ const PrintButtonExample = () => {
       features: new GeoJSON().readFeatures(geojson),
     });
 
+    const osm = new OlLayerTile({
+      source: new OlSourceOsm(),
+    });
+    osm.set('name', 'OpenStreetMap');
+    osm.set('legendUrl', '/assets/legend2.png');
+
+    const stamen = new OlLayerTile({
+      source: new OlSourceStamen({
+        layer: 'watercolor'
+      })
+    });
+    stamen.set('name', 'Stamen');
+    stamen.set('legendUrl', '/assets/legend2.png');
+
     const newMap = new OlMap({
       layers: [
-        new OlLayerTile({
-          source: new OlSourceOsm(),
-        }),
+        osm,
+        stamen,
         new OlLayerTile({
           name: 'True Color Composite',
           opacity: 0.5,
@@ -220,6 +234,7 @@ const PrintButtonExample = () => {
         />
         <PrintButton
           onProgressChange={setProgress}
+          format='pdf'
         >
           Print map
         </PrintButton>

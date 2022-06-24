@@ -5,6 +5,8 @@ export type WmsLayer = {
   attribution?: string;
   layer: string;
   tiled?: boolean;
+  legendUrl?: string;
+  layerName?: string;
 };
 
 export type WmtsLayer = {
@@ -18,6 +20,8 @@ export type WmtsLayer = {
   tileGrid?: any;
   format?: string;
   requestEncoding?: string;
+  legendUrl?: string;
+  layerName?: string;
 };
 
 export type GeoJsonLayer = {
@@ -25,6 +29,8 @@ export type GeoJsonLayer = {
   attribution?: string;
   style: any;
   geojson: any;
+  legendUrl?: string;
+  layerName?: string;
 };
 
 export type WfsLayer = {
@@ -33,6 +39,8 @@ export type WfsLayer = {
   attribution?: string;
   layer?: string;
   projection?: string;
+  legendUrl?: string;
+  layerName?: string;
 };
 
 export type OsmLayer = {
@@ -49,6 +57,8 @@ export type OsmLayer = {
   format?: string;
   requestEncoding?: string;
   geojson?: any;
+  legendUrl?: string;
+  layerName?: string;
 };
 
 export type InkmapLayer = WmsLayer | WmtsLayer | GeoJsonLayer | WfsLayer | OsmLayer;
