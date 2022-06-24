@@ -1,3 +1,16 @@
+# [17.3.0](https://github.com/terrestris/react-geo/compare/v17.2.2...v17.3.0) (2022-06-24)
+
+
+### Bug Fixes
+
+* temporarily disable layer type ([8e1c121](https://github.com/terrestris/react-geo/commit/8e1c121bdcfe0fcaa54dc534eb20e21d290488f3))
+* types ([d8ee43a](https://github.com/terrestris/react-geo/commit/d8ee43ad4d3a839e781fc401922d5620c6b031f7))
+
+
+### Features
+
+* pdf print ([579704a](https://github.com/terrestris/react-geo/commit/579704aec10ca934d4c6cad066fc27b3d751b329))
+
 ## [17.2.2](https://github.com/terrestris/react-geo/compare/v17.2.1...v17.2.2) (2022-06-23)
 
 
