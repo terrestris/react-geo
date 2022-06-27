@@ -98,25 +98,6 @@ const PrintButton: React.FC<PrintButtonProps> = ({
     });
   };
 
-  const readBlob = async (imageBlob: Blob): Promise<string | ArrayBuffer> => {
-    return new Promise((resolve, reject) => {
-      try {
-        const fileReader = new FileReader();
-        fileReader.onload = async (e) => {
-          const result = e.target?.result;
-          if (result) {
-            resolve(result) ;
-          } else {
-            reject('Could not read blob.');
-          }
-        };
-        fileReader.readAsDataURL(imageBlob) ;
-      } catch (e) {
-        reject(e);
-      }
-    });
-  };
-
   const printPdf = async () => {
     if (!map) {
       return;
@@ -194,7 +175,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({
                 // determine legend image dimensions
                 const response = await fetch(legendUrl);
                 const blob = await response.blob();
-                const base64 = await readBlob(blob);
+                const base64 = URL.createObjectURL(blob);
                 let img: HTMLImageElement = new Image();
                 img.src = base64.toString();
                 await img.decode();
