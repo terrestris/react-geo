@@ -96,7 +96,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({
         Logger.error('Inkmap error: ', errorMessage);
       }
     });
-  }
+  };
 
   const readBlob = async (imageBlob: Blob): Promise<string | ArrayBuffer> => {
     return new Promise((resolve, reject) => {
@@ -190,14 +190,11 @@ const PrintButton: React.FC<PrintButtonProps> = ({
             const name = layer.layerName;
 
             if (legendUrl && name) {
-              const legendUrl = layer.legendUrl;
-              const name = layer.layerName;
-
               try {
+                // determine legend image dimensions
                 const response = await fetch(legendUrl);
                 const blob = await response.blob();
                 const base64 = await readBlob(blob);
-                console.log('base64', base64);
                 let img: HTMLImageElement = new Image();
                 img.src = base64.toString();
                 await img.decode();
@@ -207,11 +204,8 @@ const PrintButton: React.FC<PrintButtonProps> = ({
                 doc.text(name, xPosition, 17, { align: 'left' });
                 const widthMm = img.width * 25.4 / dpi;
                 const heightMm = img.height * 25.4 / dpi;
-                console.log('width', widthMm);
-                console.log('height', heightMm);
                 doc.addImage(legendUrl, 'PNG', xPosition, 20, widthMm, heightMm);
                 xPosition += widthMm + 20;
-                console.log('xPosition', xPosition);
               } catch (error) {
                 Logger.error(error);
               }
@@ -223,9 +217,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({
         setLoading(false);
 
         // download the result
-        // todo: only one pdf
         doc.save(`${outputFileName}.${format}`);
-        // legendsDoc.save(`${outputFileName}-legend.${format}`);
       }
 
       if (printStatus.sourceLoadErrors.length > 0) {
@@ -237,7 +229,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({
         Logger.error('Inkmap error: ', errorMessage);
       }
     });
-  }
+  };
 
   const onPrintClick = async () => {
     if (format === 'png') {
