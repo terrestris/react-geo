@@ -129,7 +129,7 @@ const PrintButtonExample = () => {
       source: new OlSourceOsm(),
     });
     osm.set('name', 'OpenStreetMap');
-    osm.set('legendUrl', '/assets/legend2.png');
+    osm.set('legendUrl', '/assets/legend1.png');
 
     const stamen = new OlLayerTile({
       source: new OlSourceStamen({

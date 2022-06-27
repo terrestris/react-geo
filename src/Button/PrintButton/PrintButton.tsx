@@ -98,6 +98,25 @@ const PrintButton: React.FC<PrintButtonProps> = ({
     });
   }
 
+  const readBlob = async (imageBlob: Blob): Promise<string | ArrayBuffer> => {
+    return new Promise((resolve, reject) => {
+      try {
+        const fileReader = new FileReader();
+        fileReader.onload = async (e) => {
+          const result = e.target?.result;
+          if (result) {
+            resolve(result) ;
+          } else {
+            reject('Could not read blob.');
+          }
+        };
+        fileReader.readAsDataURL(imageBlob) ;
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
   const printPdf = async () => {
     if (!map) {
       return;
@@ -120,7 +139,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({
     // create a job, get a promise that resolves when the job is finished
     const jobId = await queuePrint(pdfSpec);
 
-    getJobStatus(jobId).subscribe((printStatus: any) => {
+    getJobStatus(jobId).subscribe(async (printStatus: any) => {
       // update the job progress
       const progressPercent = Math.round(printStatus.progress * 100);
       if (onProgressChange) {
@@ -158,23 +177,46 @@ const PrintButton: React.FC<PrintButtonProps> = ({
           // second page for legends
           doc.addPage('a4', 'l');
 
-          pdfSpec.layers.forEach((layer: any, idx) => {
-            const legendUrl = layer.legendUrl;
-            const name = layer.layerName;
-            const xPosition = 20 + (60 * idx); // todo: dynamic size
-            if (legendUrl && name) {
-              // todo: use actual legend image size
-              doc.setFont('arial', 'bold');
-              doc.setFontSize(12);
-              doc.text(name, xPosition, 17, { align: 'left' });
-              doc.addImage(legendUrl, 'PNG', xPosition, 20, 60, 60);
-            }
-          });
-
-          // add a title
+          // add a legend title
           doc.setFont('arial', 'bold');
           doc.setFontSize(20);
           doc.text(legendTitle, 148.5, 13, { align: 'center' });
+
+          let xPosition = 20;
+
+          for (let i = 0; i < pdfSpec.layers?.length; i++) {
+            const layer: any = pdfSpec.layers?.[i];
+            const legendUrl = layer.legendUrl;
+            const name = layer.layerName;
+
+            if (legendUrl && name) {
+              const legendUrl = layer.legendUrl;
+              const name = layer.layerName;
+
+              try {
+                const response = await fetch(legendUrl);
+                const blob = await response.blob();
+                const base64 = await readBlob(blob);
+                console.log('base64', base64);
+                let img: HTMLImageElement = new Image();
+                img.src = base64.toString();
+                await img.decode();
+
+                doc.setFont('arial', 'bold');
+                doc.setFontSize(12);
+                doc.text(name, xPosition, 17, { align: 'left' });
+                const widthMm = img.width * 25.4 / dpi;
+                const heightMm = img.height * 25.4 / dpi;
+                console.log('width', widthMm);
+                console.log('height', heightMm);
+                doc.addImage(legendUrl, 'PNG', xPosition, 20, widthMm, heightMm);
+                xPosition += widthMm + 20;
+                console.log('xPosition', xPosition);
+              } catch (error) {
+                Logger.error(error);
+              }
+            }
+          }
         }
 
         // job is finished
