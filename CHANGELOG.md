@@ -1,3 +1,12 @@
+## [17.3.1](https://github.com/terrestris/react-geo/compare/v17.3.0...v17.3.1) (2022-06-27)
+
+
+### Bug Fixes
+
+* linting issues ([5c89b0f](https://github.com/terrestris/react-geo/commit/5c89b0fc485d311376ba51917663e296694cb3ed))
+* simplify base64 image creation ([08b46ed](https://github.com/terrestris/react-geo/commit/08b46ed859cc7314bdb0ecf098121e9fbdc7ab80))
+* use actual image size when printing legends ([072f04d](https://github.com/terrestris/react-geo/commit/072f04dc31d3ed147b2a91420d32308385ccfaf1))
+
 # [17.3.0](https://github.com/terrestris/react-geo/compare/v17.2.2...v17.3.0) (2022-06-24)
 
 
