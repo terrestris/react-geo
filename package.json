@@ -76,7 +76,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
-    "@fortawesome/react-fontawesome": "^0.1.18",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@terrestris/base-util": "^1.0.1",
     "@terrestris/ol-util": "^7.2.0",
     "@types/geojson": "^7946.0.8",
