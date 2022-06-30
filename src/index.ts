@@ -48,12 +48,15 @@ import TimeSlider from './Slider/TimeSlider/TimeSlider';
 import Toolbar from './Toolbar/Toolbar';
 import UserChip from './UserChip/UserChip';
 import Window from './Window/Window';
+import SearchResultsPanel from './Panel/SearchResultsPanel/SearchResultsPanel';
+import ClickAwayListener from './Util/ClickAwayListener/ClickAwayListener';
 
 export {
   AddWmsLayerEntry,
   AddWmsPanel,
   AgFeatureGrid,
   CircleMenu,
+  ClickAwayListener,
   CoordinateInfo,
   CoordinateReferenceSystemCombo,
   CopyButton,
@@ -83,6 +86,7 @@ export {
   Panel,
   PropertyGrid,
   ScaleCombo,
+  SearchResultsPanel,
   SelectFeaturesButton,
   SimpleButton,
   timeLayerAware,
