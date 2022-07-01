@@ -1,3 +1,10 @@
+## [17.4.1](https://github.com/terrestris/react-geo/compare/v17.4.0...v17.4.1) (2022-07-01)
+
+
+### Bug Fixes
+
+* fix lodash import ([#2654](https://github.com/terrestris/react-geo/issues/2654)) ([a47121a](https://github.com/terrestris/react-geo/commit/a47121a1b81e05f4d07011b4516f19bf8255b692))
+
 # [17.4.0](https://github.com/terrestris/react-geo/compare/v17.3.1...v17.4.0) (2022-07-01)
 
 
