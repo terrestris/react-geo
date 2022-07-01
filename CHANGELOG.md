@@ -1,3 +1,10 @@
+# [17.4.0](https://github.com/terrestris/react-geo/compare/v17.3.1...v17.4.0) (2022-07-01)
+
+
+### Features
+
+* add grouped search results panel ([#2652](https://github.com/terrestris/react-geo/issues/2652)) ([9f0c9e2](https://github.com/terrestris/react-geo/commit/9f0c9e2560dabee1c1111ddbd8a02419f59e5710))
+
 ## [17.3.1](https://github.com/terrestris/react-geo/compare/v17.3.0...v17.3.1) (2022-06-27)
 
 
