@@ -9,7 +9,7 @@ import {
   List
 } from 'antd';
 
-import _isEmpty from 'lodash';
+import _isEmpty from 'lodash/isEmpty';
 import './SearchResultsPanel.less';
 import useMap from '../../Hook/useMap';
 import BaseLayer from 'ol/layer/Base';
