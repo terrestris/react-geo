@@ -23,31 +23,12 @@ For a full list of available components, their properties and examples see [here
 
 The `react-geo` package includes TypeScript declarations as `*.d.ts` files.
 
-### Webpack
+### Styling
 
-If you're using [webpack](https://www.npmjs.com/package/webpack) as bundler you need to configure a [less-loader](https://www.npmjs.com/package/less-loader) inside your webpack-config to enable `react-geo` specific styling (see [here](https://ant.design/docs/react/customize-theme) for further details):
+`react-geo` supports dynamic theming [via CSS variables](https://ant.design/docs/react/customize-theme-variable) and requires the following import inside your project.
 
-```javascript static
-module: {
-  rules: [{
-    test: /\.less|\.css$/,
-    loaders: [{
-      loader: 'style-loader'
-    }, {
-      loader: 'css-loader',
-    }, {
-      loader: 'less-loader',
-      options: {
-        lessOptions: {
-          modifyVars: {
-            // Your less variable overrides…
-          },
-          javascriptEnabled: true
-        }
-      }
-    }]
-  }]
-}
+```css
+@import '~antd/dist/antd.variable.min.css';
 ```
 
 ## Workshop
