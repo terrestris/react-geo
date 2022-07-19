@@ -1,3 +1,10 @@
+# [17.5.0](https://github.com/terrestris/react-geo/compare/v17.4.1...v17.5.0) (2022-07-19)
+
+
+### Features
+
+* add antd passThroughProps to SearchResultsPanel ([52065d2](https://github.com/terrestris/react-geo/commit/52065d242d244326025ed95cd0a35fd65307c75f))
+
 ## [17.4.1](https://github.com/terrestris/react-geo/compare/v17.4.0...v17.4.1) (2022-07-01)
 
 
