@@ -6,6 +6,7 @@ import OlMap from 'ol/Map';
 
 import {
   Collapse,
+  CollapseProps,
   List
 } from 'antd';
 
@@ -17,7 +18,7 @@ import BaseLayer from 'ol/layer/Base';
 const Panel = Collapse.Panel;
 const ListItem = List.Item;
 
-interface SearchResultsPanelProps {
+interface SearchResultsPanelProps extends Partial<CollapseProps>{
   features: {
     [title: string]: OlFeature[];
   };
@@ -31,7 +32,8 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
   const {
     features,
     numTotal,
-    searchTerms
+    searchTerms,
+    ...passThroughProps
   } = props;
 
   useEffect(() => {
@@ -45,7 +47,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
   useEffect(() => {
     return () => {
       map.removeLayer(highlightLayer as BaseLayer);
-    }
+    };
   }, [highlightLayer]);
 
   const highlightSearchTerms = (text: string) => {
@@ -135,6 +137,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     <div className="search-result-div">
       <Collapse
         defaultActiveKey={Object.keys(features)[0]}
+        {...passThroughProps}
       >
         {
           Object.keys(features).map((title: string) => {
