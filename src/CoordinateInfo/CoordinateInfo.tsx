@@ -15,8 +15,6 @@ import Logger from '@terrestris/base-util/dist/Logger';
 
 import { WmsLayer } from '../Util/typeUtils';
 
-import './CoordinateInfo.less';
-
 const format = new OlFormatGML2();
 
 export interface CoordinateInfoProps {

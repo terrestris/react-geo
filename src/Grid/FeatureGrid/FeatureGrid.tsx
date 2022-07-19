@@ -22,7 +22,6 @@ import _kebabCase from 'lodash/kebabCase';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
-import './FeatureGrid.less';
 import { ColumnProps, TableProps } from 'antd/lib/table';
 import _isNil from 'lodash/isNil';
 import { Key } from 'react';
