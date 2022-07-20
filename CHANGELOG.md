@@ -1,3 +1,16 @@
+# [18.0.0](https://github.com/terrestris/react-geo/compare/v17.5.0...v18.0.0) (2022-07-20)
+
+
+### Features
+
+* allow ordering searchResult categories ([b237b1b](https://github.com/terrestris/react-geo/commit/b237b1b55b52356124f125b02ed57c2adba9cf68))
+
+
+### BREAKING CHANGES
+
+* The property `features` was replaced with
+`searchResults` and its type was changed to `Category[]`.
+
 # [17.5.0](https://github.com/terrestris/react-geo/compare/v17.4.1...v17.5.0) (2022-07-19)
 
 
