@@ -18,10 +18,13 @@ import BaseLayer from 'ol/layer/Base';
 const Panel = Collapse.Panel;
 const ListItem = List.Item;
 
+interface Category {
+  title: string;
+  features: OlFeature[];
+}
+
 interface SearchResultsPanelProps extends Partial<CollapseProps>{
-  features: {
-    [title: string]: OlFeature[];
-  };
+  searchResults: Category[];
   numTotal: number;
   searchTerms: string[];
 }
@@ -30,7 +33,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
   const [highlightLayer, setHighlightLayer] = useState<OlLayerVector<OlSourceVector> | null>(null);
   const map = useMap() as OlMap;
   const {
-    features,
+    searchResults,
     numTotal,
     searchTerms,
     ...passThroughProps
@@ -76,31 +79,36 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
   };
 
   /**
-   * Renders content panel of related collapse element for each feature type and
+   * Renders content panel of related collapse element for each category and
    * its features.
    *
-   * @param title Title of the group
-   * @param list The list of features
+   * @param category The category to render
+   * @param categoryIdx The idx of the category in the searchResults list.
    */
-  const renderPanelForFeatureType = (title: string, list: OlFeature[]) => {
-    if (!list || _isEmpty(list)) {
+  const renderPanelForCategory = (category: Category, categoryIdx: number) => {
+    const {
+      features,
+      title
+    } = category;
+    if (!features || _isEmpty(features)) {
       return;
     }
 
     const header = (
       <div className="search-result-panel-header">
-        <span>{`${title} (${list.length})`}</span>
+        <span>{`${title} (${features.length})`}</span>
       </div>
     );
 
+    const categoryKey =getCategoryKey(category, categoryIdx);
     return (
       <Panel
         header={header}
-        key={title}
+        key={categoryKey}
       >
         <List
           size="small"
-          dataSource={list.map((feat, idx) => {
+          dataSource={features.map((feat, idx) => {
             let text: string = highlightSearchTerms(feat.get('title'));
             return {
               text,
@@ -129,6 +137,17 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     );
   };
 
+  /**
+   * Create a category key that is based on the category title and its position in searchResults.
+   *
+   * @param category The category to create the key for.
+   * @param idx The position of the category in searchResults.
+   * @returns The created key for the category.
+   */
+  const getCategoryKey = (category: Category, idx: number): string => {
+    return `${category.title}-${idx}`;
+  };
+
   if (numTotal === 0) {
     return null;
   }
@@ -136,13 +155,11 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
   return (
     <div className="search-result-div">
       <Collapse
-        defaultActiveKey={Object.keys(features)[0]}
+        defaultActiveKey={searchResults[0] ? getCategoryKey(searchResults[0], 0) : undefined}
         {...passThroughProps}
       >
         {
-          Object.keys(features).map((title: string) => {
-            return renderPanelForFeatureType(title, features[title]);
-          })
+          searchResults.map(renderPanelForCategory)
         }
       </Collapse>
     </div>
