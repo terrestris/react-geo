@@ -13,15 +13,6 @@ module.exports = {
   },
   plugins: [
     '@babel/plugin-syntax-dynamic-import',
-    '@babel/plugin-proposal-class-properties',
-    [
-      'import',
-      {
-        libraryName: 'antd',
-        libraryDirectory: 'es',
-        style: true
-      },
-      'import-antd'
-    ]
+    '@babel/plugin-proposal-class-properties'
   ]
 };

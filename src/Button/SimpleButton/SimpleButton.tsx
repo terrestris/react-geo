@@ -7,8 +7,6 @@ import { ButtonProps } from 'antd/lib/button';
 
 import { CSS_PREFIX } from '../../constants';
 
-import './SimpleButton.less';
-
 interface DefaultProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
   /**

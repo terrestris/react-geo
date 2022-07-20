@@ -1,8 +1,6 @@
-@import '../../style/variables.less';
-
 .react-geo-measure-tooltip {
   position: relative;
-  background: @measure-dynamic-tooltip-background-color;
+  background: var(--measure-dynamic-tooltip-background-color, rgba(0, 0, 0, 0.5););
   border-radius: 4px;
   color: white;
   padding: 4px 8px;
@@ -14,13 +12,13 @@
   font-weight: bold;
 }
 .react-geo-measure-tooltip-static {
-  background-color: @measure-static-tooltip-background-color;
+  background-color: var(--measure-static-tooltip-background-color, rgb(255, 204, 51));
   color: black;
   border: 1px solid white;
 }
 .react-geo-measure-tooltip-dynamic:before,
 .react-geo-measure-tooltip-static:before {
-  border-top: 6px solid @measure-dynamic-tooltip-background-color;
+  border-top: 6px solid var(--measure-dynamic-tooltip-background-color, rgba(0, 0, 0, 0.5));
   border-right: 6px solid transparent;
   border-left: 6px solid transparent;
   content: "";
@@ -30,5 +28,5 @@
   left: 50%;
 }
 .react-geo-measure-tooltip-static:before {
-  border-top-color: @measure-static-tooltip-background-color;
+  border-top-color: var(--measure-static-tooltip-background-color, rgb(255, 204, 51));
 }
