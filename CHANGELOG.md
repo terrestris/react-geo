@@ -1,3 +1,15 @@
+# [19.0.0](https://github.com/terrestris/react-geo/compare/v18.0.0...v19.0.0) (2022-07-20)
+
+
+### Features
+
+* allow dynamic theming via css variables ([be7db08](https://github.com/terrestris/react-geo/commit/be7db084ccb12ca968b35767f3b52e43c62d453f))
+
+
+### BREAKING CHANGES
+
+* applications need to import the antd/dist/antd.variable.min.css
+
 # [18.0.0](https://github.com/terrestris/react-geo/compare/v17.5.0...v18.0.0) (2022-07-20)
 
 
