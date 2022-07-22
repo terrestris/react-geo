@@ -29,7 +29,7 @@ interface SearchResultsPanelProps extends Partial<CollapseProps>{
   numTotal: number;
   searchTerms: string[];
   /** Creator function that creates actions for each item */
-  actionsCreator?: (item: any) => undefined|ReactNode[];
+  actionsCreator?: (item: any) => undefined | ReactNode[];
 }
 
 const SearchResultsPanel = (props: SearchResultsPanelProps) => {
