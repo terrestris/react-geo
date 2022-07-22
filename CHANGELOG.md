@@ -1,3 +1,10 @@
+# [19.1.0](https://github.com/terrestris/react-geo/compare/v19.0.0...v19.1.0) (2022-07-22)
+
+
+### Features
+
+* add new property actionsCreator to SearchResultsPanel ([#2696](https://github.com/terrestris/react-geo/issues/2696)) ([4a31f77](https://github.com/terrestris/react-geo/commit/4a31f7741747857e42015d83f231cf50bddd63aa))
+
 # [19.0.0](https://github.com/terrestris/react-geo/compare/v18.0.0...v19.0.0) (2022-07-20)
 
 
