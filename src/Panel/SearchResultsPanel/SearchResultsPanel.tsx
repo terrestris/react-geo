@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import OlLayerVector from 'ol/layer/Vector';
 import OlFeature from 'ol/Feature';
 import OlSourceVector from 'ol/source/Vector';
@@ -18,8 +18,9 @@ import BaseLayer from 'ol/layer/Base';
 const Panel = Collapse.Panel;
 const ListItem = List.Item;
 
-interface Category {
+export interface Category {
   title: string;
+  /** Each feature is expected to have at least the properties `title` and `geometry` */
   features: OlFeature[];
 }
 
@@ -27,6 +28,8 @@ interface SearchResultsPanelProps extends Partial<CollapseProps>{
   searchResults: Category[];
   numTotal: number;
   searchTerms: string[];
+  /** Creator function that creates actions for each item */
+  actionsCreator?: (item: any) => undefined | ReactNode[];
 }
 
 const SearchResultsPanel = (props: SearchResultsPanelProps) => {
@@ -36,6 +39,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     searchResults,
     numTotal,
     searchTerms,
+    actionsCreator = () => undefined,
     ...passThroughProps
   } = props;
 
@@ -125,6 +129,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
               onClick={() => map.getView().fit(item.feature.getGeometry(), {
                 nearest: true
               })}
+              actions={actionsCreator(item)}
             >
               <div
                 className="result-text"
