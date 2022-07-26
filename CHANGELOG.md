@@ -1,3 +1,10 @@
+## [19.1.1](https://github.com/terrestris/react-geo/compare/v19.1.0...v19.1.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* use broader peer dependency ([dff0b99](https://github.com/terrestris/react-geo/commit/dff0b9932fd3753434a8b26f155c80c9d2595dff))
+
 # [19.1.0](https://github.com/terrestris/react-geo/compare/v19.0.0...v19.1.0) (2022-07-22)
 
 
