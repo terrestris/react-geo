@@ -23,7 +23,7 @@ const ClickAwayListener = (props: ClickAwayProps) => {
   useEffect(() => {
     return () => {
       window.removeEventListener('click', handleClickAway);
-    }
+    };
   }, []);
 
   return (
