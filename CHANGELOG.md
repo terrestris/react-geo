@@ -1,3 +1,10 @@
+## [19.1.2](https://github.com/terrestris/react-geo/compare/v19.1.1...v19.1.2) (2022-08-01)
+
+
+### Bug Fixes
+
+* prepare update to ol 6.15 ([78dcd79](https://github.com/terrestris/react-geo/commit/78dcd7984b3b77e074ea6b269a5bdbff97806049))
+
 ## [19.1.1](https://github.com/terrestris/react-geo/compare/v19.1.0...v19.1.1) (2022-07-26)
 
 
