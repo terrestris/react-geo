@@ -140,13 +140,15 @@ const DrawButton: React.FC<DrawButtonProps> = ({
     }
 
     let geometryFunction;
-    let type = drawType;
+    let type: 'Point' | 'Circle' | 'LineString' | 'Polygon';
 
     if (drawType === 'Rectangle') {
       geometryFunction = createBox();
       type = 'Circle';
     } else if (drawType === 'Text') {
       type = 'Point';
+    } else {
+      type = drawType;
     }
 
     const newInteraction = new OlInteractionDraw({
