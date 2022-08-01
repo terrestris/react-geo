@@ -16,8 +16,6 @@ import OlInteractionDraw, { DrawEvent } from 'ol/interaction/Draw';
 import { unByKey } from 'ol/Observable';
 import OlOverlay from 'ol/Overlay';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
-import OlGeometryType from 'ol/geom/GeometryType';
-import OlOverlayPositioning from 'ol/OverlayPositioning';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
 import OlGeomPolygon from 'ol/geom/Polygon';
@@ -391,7 +389,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     }
 
     const maxPoints = measureType === 'angle' ? 2 : undefined;
-    const drawType = measureType === 'polygon' ? OlGeometryType.MULTI_POLYGON : OlGeometryType.MULTI_LINE_STRING;
+    const drawType = measureType === 'polygon' ? 'MultiPolygon' : 'MultiLineString';
 
     const drawInteraction = new OlInteractionDraw({
       source: this._measureLayer.getSource() || undefined,
@@ -618,7 +616,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
         const tooltip = new OlOverlay({
           element: div,
           offset: [0, -15],
-          positioning: OlOverlayPositioning.BOTTOM_CENTER
+          positioning: 'bottom-center'
         });
         map.addOverlay(tooltip);
 
@@ -652,7 +650,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     this._measureTooltip = new OlOverlay({
       element: this._measureTooltipElement,
       offset: [0, -15],
-      positioning: OlOverlayPositioning.BOTTOM_CENTER
+      positioning: 'bottom-center'
     });
 
     map.addOverlay(this._measureTooltip);
@@ -677,7 +675,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     this._helpTooltip = new OlOverlay({
       element: this._helpTooltipElement,
       offset: [15, 0],
-      positioning: OlOverlayPositioning.CENTER_LEFT
+      positioning: 'center-left'
     });
 
     map.addOverlay(this._helpTooltip);
