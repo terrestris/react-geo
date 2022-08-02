@@ -5,9 +5,6 @@ import _cloneDeep from 'lodash/cloneDeep';
 import './FloatingMapLogo.less';
 
 import { CSS_PREFIX } from '../../constants';
-// i18n
-export interface WindowLocale {
-}
 
 interface DefaultProps {
   /**
