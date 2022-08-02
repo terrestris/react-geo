@@ -115,7 +115,7 @@
     "@testing-library/user-event": "^14.1.0",
     "@types/enzyme": "^3.10.12",
     "@types/jest": "^28.1.6",
-    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.19.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "antd": "^4.22.3",
