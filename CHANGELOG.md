@@ -1,3 +1,10 @@
+# [19.2.0](https://github.com/terrestris/react-geo/compare/v19.1.2...v19.2.0) (2022-08-02)
+
+
+### Features
+
+* allow additional fetch opts for GFI per query layer ([955c6f9](https://github.com/terrestris/react-geo/commit/955c6f94db33f3a61a6aea399dd1040316c2a8cf))
+
 ## [19.1.2](https://github.com/terrestris/react-geo/compare/v19.1.1...v19.1.2) (2022-08-01)
 
 
