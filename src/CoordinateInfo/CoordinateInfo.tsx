@@ -8,6 +8,7 @@ import OlFeature from 'ol/Feature';
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import OlGeometry from 'ol/geom/Geometry';
 import OlBaseLayer from 'ol/layer/Base';
+import { getUid } from 'ol';
 
 import _isString from 'lodash/isString';
 
@@ -50,6 +51,13 @@ export interface CoordinateInfoProps {
    * The ol map.
    */
   map: OlMap;
+  /**
+   * Optional request options to apply (separated by each query layer, identified
+   * by its internal ol id).
+   */
+  fetchOpts: {
+    [uid: string]: RequestInit
+  };
 }
 
 export interface CoordinateInfoState {
@@ -81,7 +89,8 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       return (
         <div/>
       );
-    }
+    },
+    fetchOpts: {}
   };
 
   /**
@@ -122,7 +131,8 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       map,
       featureCount,
       drillDown,
-      hitTolerance
+      hitTolerance,
+      fetchOpts
     } = this.props;
 
     const mapView = map.getView();
@@ -145,7 +155,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
         }
       );
 
-      promises.push(fetch(featureInfoUrl));
+      promises.push(fetch(featureInfoUrl, fetchOpts[getUid(layer)]));
 
       return !drillDown;
     }, {
