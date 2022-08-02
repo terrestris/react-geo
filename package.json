@@ -118,7 +118,7 @@
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
-    "antd": "^4.19.5",
+    "antd": "^4.22.3",
     "babel-jest": "^28.0.0",
     "babel-loader": "^8.2.3",
     "babel-plugin-dynamic-import-node": "^2.3.3",
