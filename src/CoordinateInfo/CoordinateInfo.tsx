@@ -53,7 +53,7 @@ export interface CoordinateInfoProps {
   map: OlMap;
   /**
    * Optional request options to apply (separated by each query layer, identified
-   * its internal ol id).
+   * by its internal ol id).
    */
   fetchOpts: {
     [uid: string]: RequestInit
