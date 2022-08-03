@@ -138,6 +138,14 @@ git add file2
 git commit -m "Added a new feature"
 ```
 
+### Injecting a development version into another project
+
+`npm run watch:buildto` can be used to inject an updated version of `react-geo` into antother project. The script will also watch for further changes. Example usage:
+
+```sh
+npm run watch:buildto ../<YOUR_PROJECT>/node_modules/@terrestris/react-geo
+```
+
 ### Pushing changes to GitHub
 
 * Push your local branch to your fork:
