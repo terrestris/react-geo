@@ -1,10 +1,10 @@
 import * as React from 'react';
+
+import _cloneDeep from 'lodash/cloneDeep';
+
 import './FloatingMapLogo.less';
 
 import { CSS_PREFIX } from '../../constants';
-// i18n
-export interface WindowLocale {
-}
 
 interface DefaultProps {
   /**
@@ -67,8 +67,10 @@ class FloatingMapLogo extends React.Component<FloatingMapLogoProps> {
       ? `${className} ${this.className}`
       : this.className;
 
+    let imgStyle = style ? _cloneDeep(style) : {};
+
     if (absolutelyPositioned) {
-      Object.assign(style, {'position': 'absolute'});
+      Object.assign(imgStyle, {'position': 'absolute'});
     }
 
     return (
@@ -76,7 +78,7 @@ class FloatingMapLogo extends React.Component<FloatingMapLogoProps> {
         className={finalClassName}
         src={imageSrc}
         height={imageHeight}
-        style={style}
+        style={imgStyle}
       >
       </img>
     );

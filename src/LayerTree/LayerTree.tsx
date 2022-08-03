@@ -5,7 +5,8 @@ import { AntTreeNodeDropEvent } from 'antd/lib/tree/Tree';
 import { ReactElement, ReactNode } from 'react';
 import {
   TreeProps,
-  AntTreeNodeCheckedEvent
+  AntTreeNodeCheckedEvent,
+  DataNode
 } from 'antd/lib/tree';
 import {
   EventDataNode
@@ -564,7 +565,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    *
    */
   onExpand = (expandedKeys: string[], info: {
-    node: EventDataNode;
+    node: EventDataNode<DataNode>;
     expanded: boolean;
     nativeEvent: MouseEvent;
   }) => {
