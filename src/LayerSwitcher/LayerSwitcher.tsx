@@ -5,8 +5,12 @@ import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
 
 import OlMap from 'ol/Map';
 import OlLayerGroup from 'ol/layer/Group';
+import OlLayerLayer from 'ol/layer/Layer';
 import OlLayerTile from 'ol/layer/Tile';
-import OlTileSource from 'ol/source/Tile';
+import OlLayerImage from 'ol/layer/Image';
+import OlSourceImage from 'ol/source/Image';
+import OlSourceTile from 'ol/source/Tile';
+import OlSourceSource from 'ol/source/Source';
 
 import { CSS_PREFIX } from '../constants';
 import MapComponent from '../Map/MapComponent/MapComponent';
@@ -26,7 +30,7 @@ export interface OwnProps {
   /**
    * The layers to be available in the switcher.
    */
-  layers: ArrayTwoOrMore<OlLayerTile<OlTileSource> | OlLayerGroup>;
+  layers: ArrayTwoOrMore<OlLayerLayer<OlSourceSource> | OlLayerGroup>;
   /**
    * The main map the layers should be synced with.
    */
@@ -34,7 +38,7 @@ export interface OwnProps {
 }
 
 interface LayerSwitcherState {
-  previewLayer: OlLayerTile<OlTileSource> | OlLayerGroup | null;
+  previewLayer: OlLayerLayer<OlSourceSource> | OlLayerGroup | null;
 }
 
 export type LayerSwitcherProps = OwnProps & React.HTMLAttributes<HTMLDivElement>;
@@ -68,7 +72,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    * map of the LayerSwitcher.
    * @private
    */
-  _layerClones: Array<OlLayerTile<OlTileSource> | OlLayerGroup> = [];
+  _layerClones: Array<OlLayerLayer<OlSourceSource> | OlLayerGroup> = [];
 
   /**
    * The className added to this component.
@@ -129,11 +133,12 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
    * @param layer The layer to clone.
    * @returns The cloned layer.
    */
-  cloneLayer(layer: OlLayerTile<OlTileSource> | OlLayerGroup): OlLayerTile<OlTileSource> | OlLayerGroup {
+  cloneLayer(layer: OlLayerLayer<OlSourceSource> | OlLayerGroup): OlLayerLayer<OlSourceSource> | OlLayerGroup {
+    console.log('NEW VERSION');
     if (layer instanceof OlLayerGroup) {
       return new OlLayerGroup({
         layers: layer.getLayers().getArray().map(l => {
-          if (!(l instanceof OlLayerTile) || !(l instanceof OlLayerGroup)) {
+          if (!(l instanceof OlLayerLayer) || !(l instanceof OlLayerGroup)) {
             throw new Error('Layer of layergroup is of unclonable type');
           }
           return this.cloneLayer(l);
@@ -144,13 +149,24 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
         ...layer.getProperties()
       });
     } else {
-      const clone = new OlLayerTile({
-        source: (layer as OlLayerTile<OlTileSource>).getSource() || undefined,
-        properties: {
-          originalLayer: layer
-        },
-        ...layer.getProperties()
-      });
+      let clone;
+      if (layer instanceof OlLayerImage) {
+        clone = new OlLayerImage({
+          source: (layer as OlLayerImage<OlSourceImage>).getSource() || undefined,
+          properties: {
+            originalLayer: layer
+          },
+          ...layer.getProperties()
+        });
+      } else {
+        clone = new OlLayerTile({
+          source: (layer as OlLayerTile<OlSourceTile>).getSource() || undefined,
+          properties: {
+            originalLayer: layer
+          },
+          ...layer.getProperties()
+        });
+      }
       // reset reference to the map instance of original layer
       clone.setMap(null);
       return clone;
@@ -174,6 +190,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
       if (layerClone.getVisible()) {
         this._visibleLayerIndex = index;
       }
+      console.log('layerClone', layerClone);
       this._map?.addLayer(layerClone);
       return layerClone;
     });
@@ -215,7 +232,6 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
 
   /**
    * Clickhandler for the overview switch.
-   *
    */
   onSwitcherClick = (evt: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     evt.stopPropagation();
