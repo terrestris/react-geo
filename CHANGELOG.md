@@ -1,3 +1,10 @@
+## [19.2.2](https://github.com/terrestris/react-geo/compare/v19.2.1...v19.2.2) (2022-08-09)
+
+
+### Bug Fixes
+
+* update ol-util to 7.3.0 ([5a04baa](https://github.com/terrestris/react-geo/commit/5a04baa2c484e98c5ce8e363f9e4da28f2b0e6fa))
+
 ## [19.2.1](https://github.com/terrestris/react-geo/compare/v19.2.0...v19.2.1) (2022-08-09)
 
 
