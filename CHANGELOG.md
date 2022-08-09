@@ -1,3 +1,11 @@
+## [19.2.1](https://github.com/terrestris/react-geo/compare/v19.2.0...v19.2.1) (2022-08-09)
+
+
+### Bug Fixes
+
+* activate northArrow for demo ([19a8405](https://github.com/terrestris/react-geo/commit/19a8405184bc8d97a698d515a83144501c277ac4))
+* minor scalebar print fixes ([84afa36](https://github.com/terrestris/react-geo/commit/84afa364735517e8ee743302fb9ac56cddd410fb))
+
 # [19.2.0](https://github.com/terrestris/react-geo/compare/v19.1.2...v19.2.0) (2022-08-02)
 
 
