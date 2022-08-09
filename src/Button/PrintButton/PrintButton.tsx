@@ -9,12 +9,15 @@ import {
   downloadBlob,
   getAttributionsText,
   getJobStatus,
+  getScaleBar,
   queuePrint
 } from '@camptocamp/inkmap';
 import SimpleButton, {
   SimpleButtonProps
 } from '../SimpleButton/SimpleButton';
+
 import _isFinite from 'lodash/isFinite';
+import _isString from 'lodash/isString';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
@@ -107,13 +110,13 @@ const PrintButton: React.FC<PrintButtonProps> = ({
     const mapWidth = 277; // mm
     const mapHeight = 170; // mm
 
-    // Force map size to fit the PDF document
+    // force map size to fit the PDF document
     const pdfSpec = {
       ...printConfigByMap,
       size: [mapWidth, mapHeight, 'mm'],
       dpi,
-      scaleBar: scaleBar,
-      northArrow: northArrow,
+      scaleBar: _isString(scaleBar) ? scaleBar : false,
+      northArrow: northArrow ?? false,
       attributions: false
     };
 
@@ -147,8 +150,26 @@ const PrintButton: React.FC<PrintButtonProps> = ({
 
         // add attribution
         doc.setFont('arial', 'normal');
-        doc.setFontSize(10);
+        doc.setFontSize(9);
         doc.text(getAttributionsText(pdfSpec), 287, 200, { align: 'right' });
+
+        if (scaleBar && !_isString(scaleBar)) {
+          // add scalebar to pdf manually
+          const scalebar = getScaleBar(
+            pdfSpec,
+            [10, 'mm']
+          );
+
+          const scalebarSizeMm = scalebar.getRealWorldDimensions('mm');
+          doc.addImage(
+            scalebar.getImage(),
+            'PNG',
+            10 + 5,
+            mapHeight + 17 - scalebarSizeMm[1] - 5, // mapHeight + mapStart - scaleBarHeight - padding(5)
+            scalebarSizeMm[0],
+            scalebarSizeMm[1]
+          );
+        }
 
         if (!pdfSpec) {
           return;
@@ -182,10 +203,10 @@ const PrintButton: React.FC<PrintButtonProps> = ({
 
                 doc.setFont('arial', 'bold');
                 doc.setFontSize(12);
-                doc.text(name, xPosition, 17, { align: 'left' });
+                doc.text(name, xPosition, 20, { align: 'left' });
                 const widthMm = img.width * 25.4 / dpi;
                 const heightMm = img.height * 25.4 / dpi;
-                doc.addImage(legendUrl, 'PNG', xPosition, 20, widthMm, heightMm);
+                doc.addImage(legendUrl, 'PNG', xPosition, 23, widthMm, heightMm);
                 xPosition += widthMm + 20;
               } catch (error) {
                 Logger.error(error);
