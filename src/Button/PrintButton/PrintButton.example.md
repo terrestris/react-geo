@@ -235,7 +235,7 @@ const PrintButtonExample = () => {
         <PrintButton
           onProgressChange={setProgress}
           format='pdf'
-          northArrow={false}
+          northArrow={true}
           scaleBar={true}
         >
           Print map
