@@ -104,7 +104,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
       </div>
     );
 
-    const categoryKey =getCategoryKey(category, categoryIdx);
+    const categoryKey = getCategoryKey(category, categoryIdx);
     return (
       <Panel
         header={header}
@@ -127,7 +127,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
               onMouseOver={onMouseOver(item.feature)}
               onMouseOut={() => highlightLayer?.getSource()?.clear()}
               onClick={() => map.getView().fit(item.feature.getGeometry(), {
-                nearest: true
+                size: map.getSize()
               })}
               actions={actionsCreator(item)}
             >
