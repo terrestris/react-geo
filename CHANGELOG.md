@@ -1,3 +1,10 @@
+## [19.2.4](https://github.com/terrestris/react-geo/compare/v19.2.3...v19.2.4) (2022-08-10)
+
+
+### Bug Fixes
+
+* properly reference lint config file for vs code editor ([454365d](https://github.com/terrestris/react-geo/commit/454365d04f96935eec1b5f88220c50fe479b112f))
+
 ## [19.2.3](https://github.com/terrestris/react-geo/compare/v19.2.2...v19.2.3) (2022-08-10)
 
 
