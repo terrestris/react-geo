@@ -104,7 +104,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
       </div>
     );
 
-    const categoryKey =getCategoryKey(category, categoryIdx);
+    const categoryKey = getCategoryKey(category, categoryIdx);
     return (
       <Panel
         header={header}
