@@ -1,6 +1,6 @@
 {
   "eslint.options": {
-    "configFile": ".eslint-src.js"
+    "overrideConfigFile": ".eslintrc.js"
   },
   "typescript.tsdk": "node_modules/typescript/lib"
 }
