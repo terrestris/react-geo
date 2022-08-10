@@ -1,3 +1,11 @@
+## [19.2.3](https://github.com/terrestris/react-geo/compare/v19.2.2...v19.2.3) (2022-08-10)
+
+
+### Bug Fixes
+
+* add missing whitespace ([867168f](https://github.com/terrestris/react-geo/commit/867168f680139092c2fdb0562225fd4e21a951ad))
+* consider map size while fit geometry extent ([376d3ad](https://github.com/terrestris/react-geo/commit/376d3adc81a34708ffc1867a616f50a202ba0a74))
+
 ## [19.2.2](https://github.com/terrestris/react-geo/compare/v19.2.1...v19.2.2) (2022-08-09)
 
 
