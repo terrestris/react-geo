@@ -57,6 +57,9 @@ module.exports = {
     name: 'Components',
     sectionDepth: 3,
     sections: [{
+      name: 'BackgroundLayerChooser',
+      components: 'src/BackgroundLayerChooser/**/*.tsx'
+    }, {
       name: 'Buttons',
       components: 'src/Button/**/*.tsx'
     }, {
