@@ -9,6 +9,8 @@ import LoadingOutlined from '@ant-design/icons/LoadingOutlined';
 import CloseCircleOutlined from '@ant-design/icons/CloseCircleOutlined';
 
 import OlMap from 'ol/Map';
+import OlFormatGML32 from 'ol/format/GML32';
+import OlFormatGeoJson from 'ol/format/GeoJSON';
 
 import _debounce from 'lodash/debounce';
 
@@ -114,7 +116,7 @@ interface OwnProps {
    */
   featureTypes: string[];
   /**
-   * Maximum number of features to fetch.
+   * Maximum number of features to fetch. Default value is 1000.
    */
   maxFeatures?: number;
   /**
@@ -286,7 +288,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
       featurePrefix,
       featureTypes,
       geometryName,
-      maxFeatures,
+      maxFeatures = 1000,
       outputFormat,
       propertyNames,
       srsName,
@@ -300,7 +302,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
       featurePrefix: featurePrefix ?? '',
       featureTypes,
       geometryName: geometryName ?? '',
-      maxFeatures: maxFeatures ?? 0,
+      maxFeatures,
       outputFormat,
       propertyNames: propertyNames ?? [],
       srsName,
@@ -326,7 +328,18 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
             body: new XMLSerializer().serializeToString(request),
             ...additionalFetchOptions
           });
-          this.onFetchSuccess(await response.json());
+          let data;
+          if (outputFormat === 'application/json' ) {
+            data = response.json();
+          } else {
+            const xml = response.text();
+            // TODO: Add support for other GML formats
+            const gmlParser = new OlFormatGML32();
+            const geojsonParser = new OlFormatGeoJson();
+            const features = gmlParser.readFeatures(xml);
+            data = geojsonParser.writeFeaturesObject(features);
+          }
+          this.onFetchSuccess(data);
         } catch (e) {
           this.onFetchError(e);
         }
