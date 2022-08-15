@@ -1,3 +1,15 @@
+# [19.3.0](https://github.com/terrestris/react-geo/compare/v19.2.4...v19.3.0) (2022-08-15)
+
+
+### Bug Fixes
+
+* set default value for maxFeatures ([d2812f0](https://github.com/terrestris/react-geo/commit/d2812f0e88651ba889d1e05cc2a0c91a30e9820d))
+
+
+### Features
+
+* allow reading of GML32 responses ([c4cdca1](https://github.com/terrestris/react-geo/commit/c4cdca15949220e286ae64e43d5b86532691c8a9))
+
 ## [19.2.4](https://github.com/terrestris/react-geo/compare/v19.2.3...v19.2.4) (2022-08-10)
 
 
