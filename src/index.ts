@@ -51,7 +51,7 @@ import Window from './Window/Window';
 import SearchResultsPanel from './Panel/SearchResultsPanel/SearchResultsPanel';
 import ClickAwayListener from './Util/ClickAwayListener/ClickAwayListener';
 import BackgroundLayerChooser from './BackgroundLayerChooser/BackgroundLayerChooser';
-import BackgroundLayerPreview from './BackroundLayerPreview/BackgroundLayerPreview';
+import BackgroundLayerPreview from './BackgroundLayerPreview/BackgroundLayerPreview';
 
 export {
   AddWmsLayerEntry,

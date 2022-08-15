@@ -1,4 +1,4 @@
-The BackgroundlayerChooser
+The BackgroundLayerChooser
 
 ```jsx
 import * as React from 'react';
@@ -16,13 +16,13 @@ import { useMap } from '@terrestris/react-geo/Hook/useMap';
 
 const layers = [
   new OlLayerTile({
-    name: 'OSM',
     source: new OlSourceOsm(),
-    isBackgroundLayer: true
+    properties: {
+      name: 'OSM',
+      isBackgroundLayer: true
+    }
   }),
   new OlLayerTile({
-    name: 'BKG',
-    isBackgroundLayer: true,
     visible: false,
     source: new OlSourceTileWMS({
       url: 'https://sgx.geodatenzentrum.de/wms_topplus_open',
@@ -30,7 +30,11 @@ const layers = [
         'LAYERS': 'web',
         'TILED': true
       }
-    })
+    }),
+    properties: {
+      name: 'BKG',
+      isBackgroundLayer: true,
+    }
   })
 ];
 const openlayersMap = new OlMap({

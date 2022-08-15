@@ -65,10 +65,18 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    const setTrue = () => setLoading(true);
+    const setFalse = () => setLoading(false);
     // @ts-ignore
-    previewMap.on('loadstart', () => setLoading(true));
+    previewMap.on('loadstart', setTrue);
     // @ts-ignore
-    previewMap.on('loadend', () => setLoading(false));
+    previewMap.on('loadend', setFalse);
+    return () => {
+      // @ts-ignore
+      previewMap.un('loadstart', setTrue);
+      // @ts-ignore
+      previewMap.un('loadend', setFalse);
+    };
   }, [previewMap]);
 
   useEffect(() => {
@@ -87,7 +95,7 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
 
   const updateBgLayerVisibility = (evt: React.MouseEvent<HTMLDivElement>) => {
     const target = evt?.currentTarget;
-    const layerId = target.dataset.uid;
+    const layerId = target?.dataset?.uid;
 
     if (!layerId) {
       return;
@@ -129,7 +137,7 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
     >
       <Spin spinning={loading}>
         <MapComponent
-          mapDivId={'previewmap-' + uid}
+          mapDivId={`previewmap-${uid}`}
           style={{
             height,
             width

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import OlOverviewMap from 'ol/control/OverviewMap';
 import OlLayerBase from 'ol/layer/Base';
@@ -9,7 +9,7 @@ import OlLayerImage from 'ol/layer/Image';
 import { ObjectEvent } from 'ol/Object';
 import { getUid } from 'ol/util';
 
-import BackgroundLayerPreview from '../BackroundLayerPreview/BackgroundLayerPreview';
+import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPreview';
 
 import {
   LeftOutlined,
@@ -33,6 +33,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
 }) => {
 
   const map = useMap();
+  const mapTarget = useRef(null);
   const [zoom, setZoom] = useState(map?.getView()?.getZoom());
   const [center, setCenter] = useState(map?.getView()?.getCenter());
 
@@ -78,25 +79,22 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
         ovLayer = new OlLayerTile({
           source: selectedLayer.getSource()
         });
-      } else if (selectedLayer instanceof OlLayerImage){
+      } else if (selectedLayer instanceof OlLayerImage) {
         ovLayer = new OlLayerImage({
           source: selectedLayer.getSource()
         });
       }
-      if (ovLayer) {
-        const target = document.getElementById('overview-map');
-        if (target) {
-          const overViewControl = new OlOverviewMap({
-            collapsible: false,
-            target,
-            className: 'ol-overviewmap react-geo-bg-layer-chooser-overviewmap',
-            layers: [ovLayer],
-            view: new OlView({
-              projection: map.getView().getProjection()
-            })
-          });
-          map.addControl(overViewControl);
-        }
+      if (ovLayer && mapTarget.current) {
+        const overViewControl = new OlOverviewMap({
+          collapsible: false,
+          target: mapTarget.current,
+          className: 'ol-overviewmap react-geo-bg-layer-chooser-overviewmap',
+          layers: [ovLayer],
+          view: new OlView({
+            projection: map.getView().getProjection()
+          })
+        });
+        map.addControl(overViewControl);
       }
     }
   }, [selectedLayer]);
@@ -110,10 +108,13 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
     <div className={'bg-layer-chooser'}>
       {
         selectedLayer &&
-        <div className="layer-cards" style={{
-          maxWidth: layerOptionsVisible ? '100vw' : 0,
-          opacity: layerOptionsVisible ? 1 : 0
-        }}>
+        <div
+          className="layer-cards"
+          style={{
+            maxWidth: layerOptionsVisible ? '100vw' : 0,
+            opacity: layerOptionsVisible ? 1 : 0
+          }}
+        >
           {
             layers.map(layer => {
               return (
@@ -140,7 +141,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
       />
       <div className="bg-preview">
         <div className='overview-wrapper'>
-          <div id="overview-map" />
+          <div id="overview-map" ref={mapTarget} />
           <span className="layer-title">{selectedLayer?.get('name')}</span>
         </div>
       </div>
