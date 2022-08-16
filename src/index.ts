@@ -50,11 +50,15 @@ import UserChip from './UserChip/UserChip';
 import Window from './Window/Window';
 import SearchResultsPanel from './Panel/SearchResultsPanel/SearchResultsPanel';
 import ClickAwayListener from './Util/ClickAwayListener/ClickAwayListener';
+import BackgroundLayerChooser from './BackgroundLayerChooser/BackgroundLayerChooser';
+import BackgroundLayerPreview from './BackgroundLayerPreview/BackgroundLayerPreview';
 
 export {
   AddWmsLayerEntry,
   AddWmsPanel,
   AgFeatureGrid,
+  BackgroundLayerChooser,
+  BackgroundLayerPreview,
   CircleMenu,
   ClickAwayListener,
   CoordinateInfo,
