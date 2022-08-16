@@ -1,3 +1,15 @@
+# [19.4.0](https://github.com/terrestris/react-geo/compare/v19.3.0...v19.4.0) (2022-08-16)
+
+
+### Bug Fixes
+
+*  address notes from codereview ([b845268](https://github.com/terrestris/react-geo/commit/b845268fd0c4a6ff029e8185cd496998ecd0473f))
+
+
+### Features
+
+* introduce BackgroundLayerChooser ([6256a68](https://github.com/terrestris/react-geo/commit/6256a68b5d40087a4b14cbd611ca32394890010b))
+
 # [19.3.0](https://github.com/terrestris/react-geo/compare/v19.2.4...v19.3.0) (2022-08-15)
 
 
