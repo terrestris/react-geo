@@ -330,9 +330,9 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
           });
           let data;
           if (outputFormat === 'application/json' ) {
-            data = response.json();
+            data = await response.json();
           } else {
-            const xml = response.text();
+            const xml = await response.text();
             // TODO: Add support for other GML formats
             const gmlParser = new OlFormatGML32();
             const geojsonParser = new OlFormatGeoJson();
