@@ -1,3 +1,10 @@
+## [19.4.1](https://github.com/terrestris/react-geo/compare/v19.4.0...v19.4.1) (2022-09-26)
+
+
+### Bug Fixes
+
+* adds missing await ([c00c775](https://github.com/terrestris/react-geo/commit/c00c7756c6d755758e8344d7bc13c0e9a661f64d))
+
 # [19.4.0](https://github.com/terrestris/react-geo/compare/v19.3.0...v19.4.0) (2022-08-16)
 
 
