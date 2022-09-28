@@ -1,3 +1,10 @@
+## [19.4.2](https://github.com/terrestris/react-geo/compare/v19.4.1...v19.4.2) (2022-09-28)
+
+
+### Bug Fixes
+
+* replaces the instanceof check ([6cd0eab](https://github.com/terrestris/react-geo/commit/6cd0eab3910fed15f3d6443a04e770c7c64e3407))
+
 ## [19.4.1](https://github.com/terrestris/react-geo/compare/v19.4.0...v19.4.1) (2022-09-26)
 
 
