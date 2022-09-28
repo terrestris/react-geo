@@ -230,8 +230,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     this.olListenerKeys.push(addEvtKey, removeEvtKey, changeEvtKey);
 
     collection.forEach((layer) => {
-      if (layer instanceof OlLayerGroup) {
-        this.registerAddRemoveListeners(layer);
+      if ((layer as OlLayerGroup).getLayers) {
+        this.registerAddRemoveListeners((layer as OlLayerGroup));
       }
     });
   }
@@ -254,7 +254,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @param evt The add event.
    */
   onCollectionAdd = (evt: any) => {
-    if (evt.element instanceof OlLayerGroup) {
+    if ((evt.element as OlLayerGroup).getLayers) {
       this.registerAddRemoveListeners(evt.element);
     }
     this.rebuildTreeNodes();
@@ -268,7 +268,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    */
   onCollectionRemove = (evt: any) => {
     this.unregisterEventsByLayer(evt.element);
-    if (evt.element instanceof OlLayerGroup) {
+    if ((evt.element as OlLayerGroup).getLayers) {
       evt.element.getLayers().forEach((layer: OlLayerBase) => {
         this.unregisterEventsByLayer(layer);
       });
@@ -287,7 +287,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     if (evt.oldValue instanceof OlCollection) {
       evt.oldValue.forEach((layer: OlLayerBase) => this.unregisterEventsByLayer(layer));
     }
-    if (evt.target instanceof OlLayerGroup) {
+    if (evt.target.getLayers) {
       this.registerAddRemoveListeners(evt.target);
     }
     this.rebuildTreeNodes();
@@ -300,8 +300,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    */
   unregisterEventsByLayer = (layer: OlLayerBase) => {
     this.olListenerKeys = this.olListenerKeys.filter((key) => {
-      if (layer instanceof OlLayerGroup) {
-        const layers = layer.getLayers();
+      if ((layer as OlLayerGroup).getLayers) {
+        const layers = (layer as OlLayerGroup).getLayers();
         if (key.target === layers) {
           if ((key.type === 'add' && key.listener === this.onCollectionAdd) ||
             (key.type === 'remove' && key.listener === this.onCollectionRemove) ||
@@ -376,8 +376,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   treeNodeFromLayer(layer: OlLayerBase): ReactElement<LayerTreeNodeProps> {
     let childNodes: ReactNode = null;
 
-    if (layer instanceof OlLayerGroup) {
-      const childLayers = layer.getLayers().getArray()
+    if ((layer as OlLayerGroup).getLayers) {
+      const childLayers = (layer as OlLayerGroup).getLayers().getArray()
         .filter(this.props.filterFunction);
       childNodes = childLayers.map((childLayer: OlLayerBase) => {
         return this.treeNodeFromLayer(childLayer);
@@ -436,7 +436,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
 
     return MapUtil.getAllLayers(this.state.layerGroup,
       (layer: OlLayerBase) => {
-        return !(layer instanceof OlLayerGroup) && layer.getVisible();
+        return !((layer as OlLayerGroup).getLayers) && layer.getVisible();
       })
       .filter(this.props.filterFunction)
       .map(getUid);
@@ -468,9 +468,9 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
    * @param visibility The visibility.
    */
   setLayerVisibility(layer: OlLayerBase, visibility: boolean) {
-    if (layer instanceof OlLayerGroup) {
+    if ((layer as OlLayerGroup).getLayers) {
       layer.setVisible(visibility);
-      layer.getLayers().forEach((subLayer) => {
+      (layer as OlLayerGroup).getLayers().forEach((subLayer) => {
         this.setLayerVisibility(subLayer, visibility);
       });
     } else {
@@ -547,8 +547,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       }
       // drop on node
     } else if (location === 0) {
-      if (dropLayer instanceof OlLayerGroup) {
-        dropLayer.getLayers().push(dragLayer);
+      if ((dropLayer as OlLayerGroup).getLayers) {
+        (dropLayer as OlLayerGroup).getLayers().push(dragLayer);
       } else {
         dropCollection.insertAt(dropPosition + 1, dragLayer);
       }
