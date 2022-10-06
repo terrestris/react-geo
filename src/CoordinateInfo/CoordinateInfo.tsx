@@ -56,8 +56,18 @@ export interface CoordinateInfoProps {
    * by its internal ol id).
    */
   fetchOpts: {
-    [uid: string]: RequestInit
+    [uid: string]: RequestInit;
   };
+  /**
+   * Callback function that gets called if all features are fetched successfully
+   * via GetFeatureInfo.
+   */
+  onSuccess: (features: CoordinateInfoState) => void;
+  /**
+   * Callback function that gets called if an error occured while fetching the
+   * features via GetFeatureInfo.
+   */
+  onError: (error: any) => void;
 }
 
 export interface CoordinateInfoState {
@@ -90,7 +100,9 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
         <div/>
       );
     },
-    fetchOpts: {}
+    fetchOpts: {},
+    onSuccess: () => {},
+    onError: () => {}
   };
 
   /**
@@ -132,7 +144,9 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       featureCount,
       drillDown,
       hitTolerance,
-      fetchOpts
+      fetchOpts,
+      onSuccess,
+      onError
     } = this.props;
 
     const mapView = map.getView();
@@ -193,12 +207,17 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
             features[featureTypeName].push(feature);
           });
         });
+
         this.setState({
           features: features
+        }, () => {
+          onSuccess(this.getCoordinateInfoState());
         });
       })
       .catch((error: any) => {
         Logger.error(error);
+
+        onError(error);
       })
       .finally(() => {
         map.getTargetElement().style.cursor = '';
@@ -217,26 +236,32 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     return (queryLayers as OlBaseLayer[]).includes(layerCandidate);
   }
 
-  render () {
-    const {
-      resultRenderer
-    } = this.props;
-
+  getCoordinateInfoState(): CoordinateInfoState {
     const featuresClone: {[name: string]: OlFeature[]} = {};
     Object.entries(this.state.features)
       .forEach(([layerName, feats]) => {
         featuresClone[layerName] = feats.map(feat => feat.clone());
       });
 
+    const coordinateInfoState: CoordinateInfoState = {
+      clickCoordinate: this.state.clickCoordinate ?
+        [...this.state.clickCoordinate] :
+        null,
+      loading: this.state.loading,
+      features: featuresClone
+    };
+
+    return coordinateInfoState;
+  };
+
+  render () {
+    const {
+      resultRenderer
+    } = this.props;
+
     return (
       <>
-        {resultRenderer({
-          clickCoordinate: this.state.clickCoordinate ?
-            [...this.state.clickCoordinate] :
-            null,
-          loading: this.state.loading,
-          features: featuresClone
-        })}
+        {resultRenderer(this.getCoordinateInfoState())}
       </>
     );
   }
