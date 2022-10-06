@@ -1,3 +1,10 @@
+# [19.5.0](https://github.com/terrestris/react-geo/compare/v19.4.2...v19.5.0) (2022-10-06)
+
+
+### Features
+
+* add props onSuccess and onError ([c98382a](https://github.com/terrestris/react-geo/commit/c98382a50ed3403b12b3294dd70e20ce519b7a9c))
+
 ## [19.4.2](https://github.com/terrestris/react-geo/compare/v19.4.1...v19.4.2) (2022-09-28)
 
 
