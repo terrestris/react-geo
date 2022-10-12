@@ -30,6 +30,8 @@ interface SearchResultsPanelProps extends Partial<CollapseProps>{
   searchTerms: string[];
   /** Creator function that creates actions for each item */
   actionsCreator?: (item: any) => undefined | ReactNode[];
+  /** A renderer function returning a prefix component for each list item */
+  listPrefixRenderer?: (item: any) => undefined | JSX.Element;
 }
 
 const SearchResultsPanel = (props: SearchResultsPanelProps) => {
@@ -40,6 +42,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     numTotal,
     searchTerms,
     actionsCreator = () => undefined,
+    listPrefixRenderer = () => undefined,
     ...passThroughProps
   } = props;
 
@@ -131,6 +134,13 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
               })}
               actions={actionsCreator(item)}
             >
+              <div
+                className="result-prefix"
+              >
+                {
+                  listPrefixRenderer(item)
+                }
+              </div>
               <div
                 className="result-text"
                 dangerouslySetInnerHTML={{ __html: item.text }}
