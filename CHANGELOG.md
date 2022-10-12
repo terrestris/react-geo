@@ -1,3 +1,10 @@
+# [19.6.0](https://github.com/terrestris/react-geo/compare/v19.5.0...v19.6.0) (2022-10-12)
+
+
+### Features
+
+* add support for a custom list item prefix ([0c847c8](https://github.com/terrestris/react-geo/commit/0c847c84fd9420a3acc35d5ed914919fd740184e))
+
 # [19.5.0](https://github.com/terrestris/react-geo/compare/v19.4.2...v19.5.0) (2022-10-06)
 
 
