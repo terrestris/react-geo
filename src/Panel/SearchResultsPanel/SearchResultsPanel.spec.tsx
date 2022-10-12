@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { within } from '@testing-library/react';
+import { within, screen } from '@testing-library/react';
 
 import OlView from 'ol/View';
 import OlMap from 'ol/Map';
 import OlPoint from 'ol/geom/Point';
 import OlFeature from 'ol/Feature';
+
+import {
+  GlobalOutlined
+} from '@ant-design/icons';
 
 import { renderInMapContext } from '../../Util/rtlTestUtils';
 
@@ -83,6 +87,23 @@ describe('<SearchResultsPanel />', () => {
       const actionItems = within(container).getAllByText(actionContent);
       expect(actionItems).toHaveLength(searchResults.length);
     });
+  });
+
+  it('renders a list prefix if given', () => {
+    const { container } = renderInMapContext(map, <SearchResultsPanel
+      numTotal={searchResults.length}
+      searchResults={searchResults}
+      searchTerms={[]}
+      listPrefixRenderer={() => <GlobalOutlined />}
+    />);
+
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    const listPrefixItems = container.querySelectorAll('.result-prefix');
+    expect(listPrefixItems.length).toEqual(1);
+
+    // eslint-disable-next-line testing-library/no-node-access
+    const listPrefixItem = listPrefixItems.item(0).querySelectorAll('.anticon-global');
+    expect(listPrefixItem).toBeDefined();
   });
 
 });
