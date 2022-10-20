@@ -78,7 +78,8 @@ class LayerTreeExample extends React.Component {
           }}
         />
 
-        <span>{'Please note that the layers have resolution restrictions, please zoom in and out to see how the trees react to this.'}</span>
+        <span>{'Please note that the layers have resolution restrictions, please ' +
+        ' zoom in and out to see how the trees react to this.'}</span>
         <div className="example-block">
           <span>{'Autoconfigured with topmost LayerGroup of passed map:'}</span>
 
