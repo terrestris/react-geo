@@ -46,6 +46,7 @@ class WfsSearchExample extends React.Component {
               placeholder="Type a countryname in its own language…"
               baseUrl='https://ows-demo.terrestris.de/geoserver/osm/wfs'
               featureTypes={['osm:osm-country-borders']}
+              maxFeatures={3}
               searchAttributes={{
                 'osm:osm-country-borders': ['name']
               }}
