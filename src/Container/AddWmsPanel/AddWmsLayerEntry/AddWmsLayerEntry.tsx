@@ -22,6 +22,20 @@ interface AddWmsLayerEntryProps {
    */
   layerQueryableText: string;
   /**
+   * ARIA label for the icon which indicates that the layer has copyright / attribution
+   * information. This label increases the accessibility of the generated HTML. If not
+   * set explicitly, a generic English label will be added. Make sure to translate this
+   * to the page language if needed.
+   */
+  ariaLabelCopyright: string;
+  /**
+   * ARIA label for the icon which indicates that the layer is queryable. This label
+   * increases the accessibility of the generated HTML. If not set explicitly, a generic
+   * English label will be added. Make sure to translate this to the page language if
+   * needed.
+   */
+  ariaLabelQueryable: string;
+  /**
    * Object containing layer information
    */
   wmsLayer: WmsLayer;
@@ -46,6 +60,8 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
    */
   static defaultProps = {
     layerQueryableText: 'Layer is queryable',
+    ariaLabelCopyright: 'Icon indicating that attribution information for layer is available',
+    ariaLabelQueryable: 'Icon indicating that the layer is queryable',
     layerTextTemplateFn: (wmsLayer: WmsLayer) => {
       const title = wmsLayer.get('title');
       const abstract = wmsLayer.get('abstract');
@@ -76,7 +92,9 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
     const {
       wmsLayer,
       layerTextTemplateFn,
-      layerQueryableText
+      layerQueryableText,
+      ariaLabelCopyright,
+      ariaLabelQueryable
     } = this.props;
 
     const {
@@ -96,6 +114,7 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
               <FontAwesomeIcon
                 className="add-wms-add-info-icon attribution-info"
                 icon={faCopyright}
+                aria-label={ariaLabelCopyright}
               />
             )
               : null
@@ -106,6 +125,7 @@ export class AddWmsLayerEntry extends React.Component<AddWmsLayerEntryProps, Add
                 <FontAwesomeIcon
                   className="add-wms-add-info-icon queryable-info"
                   icon={faInfo}
+                  aria-label={ariaLabelQueryable}
                 />
               </Tooltip>
             )
