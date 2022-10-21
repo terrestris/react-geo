@@ -67,9 +67,9 @@
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
   "dependencies": {
-    "@ag-grid-community/client-side-row-model": "^27.1.0",
-    "@ag-grid-community/core": "^27.1.0",
-    "@ag-grid-community/react": "^27.1.0",
+    "@ag-grid-community/client-side-row-model": "^28.2.0",
+    "@ag-grid-community/core": "^28.2.0",
+    "@ag-grid-community/react": "^28.2.0",
     "@ant-design/icons": "^4.7.0",
     "@camptocamp/inkmap": "^1.2.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",

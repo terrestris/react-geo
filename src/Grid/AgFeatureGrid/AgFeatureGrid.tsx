@@ -20,7 +20,6 @@ import _isArray from 'lodash/isArray';
 import _differenceWith from 'lodash/differenceWith';
 import _isEqual from 'lodash/isEqual';
 import _isFunction from 'lodash/isFunction';
-import _kebabCase from 'lodash/kebabCase';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
@@ -32,12 +31,12 @@ import '@ag-grid-community/core/dist/styles/ag-theme-fresh.css';
 import { AgGridReact, AgGridReactProps } from '@ag-grid-community/react';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import {
-  RowClickedEvent,
-  CellMouseOverEvent,
   CellMouseOutEvent,
-  SelectionChangedEvent,
+  CellMouseOverEvent,
   DetailGridInfo,
-  RowNode
+  RowClickedEvent,
+  RowNode,
+  SelectionChangedEvent
 } from '@ag-grid-community/core';
 import _isNil from 'lodash/isNil';
 
@@ -247,12 +246,6 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * @private
    */
   _className = `${CSS_PREFIX}ag-feature-grid`;
-
-  /**
-   * The hover class name.
-   * @private
-   */
-  _rowHoverClassName = 'ag-row-hover';
 
   /**
    * The source holding the features of the grid.
