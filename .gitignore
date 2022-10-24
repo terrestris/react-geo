@@ -19,3 +19,6 @@ node_modules
 # when testing in FF, this file sometimes gets stored in the repository root.
 # See https://askubuntu.com/questions/144408/what-is-the-file-c-nppdf32log-debuglog-txt
 *debuglog.txt
+
+# ignore IntelliJ iml files
+*.iml
