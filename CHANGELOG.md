@@ -1,3 +1,10 @@
+# [19.7.0](https://github.com/terrestris/react-geo/compare/v19.6.0...v19.7.0) (2022-10-24)
+
+
+### Features
+
+* enhance the accesibility of some SVG icons ([b373bb3](https://github.com/terrestris/react-geo/commit/b373bb36265ffdb61a6d6de18f1b6cc04f3ccba0))
+
 # [19.6.0](https://github.com/terrestris/react-geo/compare/v19.5.0...v19.6.0) (2022-10-12)
 
 
