@@ -1,3 +1,11 @@
+# [19.8.0](https://github.com/terrestris/react-geo/compare/v19.7.0...v19.8.0) (2022-10-24)
+
+
+### Features
+
+* adds layer style properties to search results panel ([761fe4a](https://github.com/terrestris/react-geo/commit/761fe4a0eaf774cca6854f8500a20825b0b2e260))
+* uses openlayers style as property type ([49e07a2](https://github.com/terrestris/react-geo/commit/49e07a292fad2afa94df6ec126800a24a52c490a))
+
 # [19.7.0](https://github.com/terrestris/react-geo/compare/v19.6.0...v19.7.0) (2022-10-24)
 
 
