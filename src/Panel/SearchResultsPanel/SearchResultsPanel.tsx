@@ -14,6 +14,7 @@ import _isEmpty from 'lodash/isEmpty';
 import './SearchResultsPanel.less';
 import useMap from '../../Hook/useMap';
 import BaseLayer from 'ol/layer/Base';
+import OlStyle from 'ol/style/Style';
 
 const Panel = Collapse.Panel;
 const ListItem = List.Item;
@@ -32,6 +33,7 @@ interface SearchResultsPanelProps extends Partial<CollapseProps>{
   actionsCreator?: (item: any) => undefined | ReactNode[];
   /** A renderer function returning a prefix component for each list item */
   listPrefixRenderer?: (item: any) => undefined | JSX.Element;
+  layerStyle?: undefined | OlStyle;
 }
 
 const SearchResultsPanel = (props: SearchResultsPanelProps) => {
@@ -43,6 +45,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     searchTerms,
     actionsCreator = () => undefined,
     listPrefixRenderer = () => undefined,
+    layerStyle,
     ...passThroughProps
   } = props;
 
@@ -50,6 +53,11 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     const layer = new OlLayerVector({
       source: new OlSourceVector()
     });
+
+    if (layerStyle) {
+      layer.setStyle(layerStyle);
+    }
+
     setHighlightLayer(layer);
     map.addLayer(layer);
   }, []);
