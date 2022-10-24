@@ -14,9 +14,7 @@ import _isEmpty from 'lodash/isEmpty';
 import './SearchResultsPanel.less';
 import useMap from '../../Hook/useMap';
 import BaseLayer from 'ol/layer/Base';
-import Style from 'ol/style/Style';
-import Stroke from 'ol/style/Stroke';
-import Fill from 'ol/style/Fill';
+import OlStyle from 'ol/style/Style';
 
 const Panel = Collapse.Panel;
 const ListItem = List.Item;
@@ -27,12 +25,6 @@ export interface Category {
   features: OlFeature[];
 }
 
-export interface LayerStyle {
-  strokeColor: string;
-  strokeWidth?: number;
-  fillColor?: string;
-}
-
 interface SearchResultsPanelProps extends Partial<CollapseProps>{
   searchResults: Category[];
   numTotal: number;
@@ -41,7 +33,7 @@ interface SearchResultsPanelProps extends Partial<CollapseProps>{
   actionsCreator?: (item: any) => undefined | ReactNode[];
   /** A renderer function returning a prefix component for each list item */
   listPrefixRenderer?: (item: any) => undefined | JSX.Element;
-  layerStyle?: undefined | LayerStyle;
+  layerStyle?: undefined | OlStyle;
 }
 
 const SearchResultsPanel = (props: SearchResultsPanelProps) => {
@@ -63,18 +55,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     });
 
     if (layerStyle) {
-      const style = new Style({
-        stroke: new Stroke({
-          color: layerStyle.strokeColor,
-          width: layerStyle.strokeWidth ? layerStyle.strokeWidth : 2
-        }),
-        fill: new Fill({
-          color: layerStyle.fillColor
-            ? layerStyle.fillColor
-            : 'rgba(255,255,255, 0.5)'
-        })
-      });
-      layer.setStyle(style);
+      layer.setStyle(layerStyle);
     }
 
     setHighlightLayer(layer);
