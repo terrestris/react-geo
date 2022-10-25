@@ -250,6 +250,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
 
     return (
       <div
+        role="form"
         className={finalClassName}
         {...passThroughProps}
       >
