@@ -1,4 +1,4 @@
-import { render, within } from '@testing-library/react';
+import { render, within, screen } from '@testing-library/react';
 import * as React from 'react';
 import userEvent from '@testing-library/user-event';
 import TestUtil from '../Util/TestUtil';
@@ -51,20 +51,21 @@ describe('<LayerSwitcher />', () => {
   });
 
   it('adds a custom className', () => {
-    const { container } = render(<LayerSwitcher layers={layers} map={map} className="peter" />);
-    expect(container.children[0]).toHaveClass('peter');
+    render(<LayerSwitcher layers={layers} map={map} className="peter" />);
+    const firstChild = screen.getByRole('form');
+    expect(firstChild).toHaveClass('peter');
   });
 
   it('passes style prop', () => {
-    const { container } = render(<LayerSwitcher layers={layers} map={map} style={{
+    render(<LayerSwitcher layers={layers} map={map} style={{
       backgroundColor: 'yellow',
       position: 'inherit'
     }} />);
-    const child = container.children[0];
-    expect(child).toHaveStyle({
+    const firstChild = screen.getByRole('form');
+    expect(firstChild).toHaveStyle({
       backgroundColor: 'yellow'
     });
-    expect(child).toHaveStyle({
+    expect(firstChild).toHaveStyle({
       position: 'inherit'
     });
   });
