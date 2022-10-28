@@ -120,7 +120,7 @@
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "antd": "^4.22.3",
     "babel-jest": "^29.0.0",
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^9.0.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "buffer": "^6.0.3",
     "canvas": "^2.9.0",
