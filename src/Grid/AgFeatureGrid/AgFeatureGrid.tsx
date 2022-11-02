@@ -25,11 +25,9 @@ import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../../constants';
 
-import '@ag-grid-community/core/dist/styles/ag-grid.css';
-import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
-import '@ag-grid-community/core/dist/styles/ag-theme-fresh.css';
-import { AgGridReact, AgGridReactProps } from '@ag-grid-community/react';
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
+import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import {
   CellMouseOutEvent,
   CellMouseOverEvent,
@@ -37,7 +35,7 @@ import {
   RowClickedEvent,
   RowNode,
   SelectionChangedEvent
-} from '@ag-grid-community/core';
+} from 'ag-grid-community';
 import _isNil from 'lodash/isNil';
 
 interface OwnProps {
@@ -930,9 +928,6 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
           onCellMouseOver={this.onRowMouseOver.bind(this)}
           onCellMouseOut={this.onRowMouseOut.bind(this)}
           ref={ref => this._ref = ref}
-          modules={[
-            ClientSideRowModelModule
-          ]}
           {...passThroughProps}
         >
           {children}
