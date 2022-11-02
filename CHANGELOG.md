@@ -1,3 +1,10 @@
+## [19.8.1](https://github.com/terrestris/react-geo/compare/v19.8.0...v19.8.1) (2022-11-02)
+
+
+### Bug Fixes
+
+* adjusting imports due to major release of ag-grid ([56b58f9](https://github.com/terrestris/react-geo/commit/56b58f91839bf2eb956962b95c0ee24e779f5b71))
+
 # [19.8.0](https://github.com/terrestris/react-geo/compare/v19.7.0...v19.8.0) (2022-10-24)
 
 
