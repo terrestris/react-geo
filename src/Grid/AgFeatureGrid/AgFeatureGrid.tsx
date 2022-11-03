@@ -100,8 +100,7 @@ interface OwnProps {
    */
   className?: string;
   /**
-   * The map the features should be rendered on. If not given, the features
-   * will be rendered in the table only.
+   * The map the features should be rendered on.
    */
   map: OlMap;
   /**
