@@ -1,3 +1,10 @@
+## [19.8.2](https://github.com/terrestris/react-geo/compare/v19.8.1...v19.8.2) (2022-11-03)
+
+
+### Bug Fixes
+
+* catch some potential np ([70e7a53](https://github.com/terrestris/react-geo/commit/70e7a539219ddbb925bf165758a4c90bed20983d))
+
 ## [19.8.1](https://github.com/terrestris/react-geo/compare/v19.8.0...v19.8.1) (2022-11-02)
 
 
