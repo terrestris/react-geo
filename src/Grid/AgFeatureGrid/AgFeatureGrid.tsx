@@ -100,8 +100,7 @@ interface OwnProps {
    */
   className?: string;
   /**
-   * The map the features should be rendered on. If not given, the features
-   * will be rendered in the table only.
+   * The map the features should be rendered on.
    */
   map: OlMap;
   /**
@@ -279,12 +278,14 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       zoomToExtent
     } = this.props;
 
-    this.initVectorLayer(map);
-    this.initMapEventHandlers(map);
-
-    if (zoomToExtent) {
-      this.zoomToFeatures(features);
+    if (!_isNil(map)) {
+      this.initVectorLayer(map);
+      this.initMapEventHandlers(map);
+      if (zoomToExtent) {
+        this.zoomToFeatures(features);
+      }
     }
+
   }
 
   /**
@@ -301,9 +302,9 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       zoomToExtent
     } = this.props;
 
-    if (!(_isEqual(prevProps.map, map))) {
-      this.initVectorLayer(map);
-      this.initMapEventHandlers(map);
+    if (!(_isEqual(prevProps.map, map) && !_isNil(map))) {
+      this.initVectorLayer(map!);
+      this.initMapEventHandlers(map!);
     }
 
     if (!(_isEqual(prevProps.features, features))) {
@@ -312,7 +313,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
         this._source.addFeatures(features);
       }
 
-      if (zoomToExtent) {
+      if (zoomToExtent && !_isNil(map)) {
         this.zoomToFeatures(features);
       }
     }
@@ -332,8 +333,10 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * Called on lifecycle phase componentWillUnmount.
    */
   componentWillUnmount() {
-    this.deinitVectorLayer();
-    this.deinitMapEventHandlers();
+    if (!_isNil(this.props.map)) {
+      this.deinitVectorLayer();
+      this.deinitMapEventHandlers();
+    }
   }
 
   /**
@@ -407,7 +410,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       grid
     } = this.state;
 
-    if (!grid || !grid.api) {
+    if (!grid || !grid.api || _isNil(map)) {
       return;
     }
 
@@ -421,25 +424,29 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       n.setHighlighted(null);
     });
 
-    features.forEach(feature => {
-      const key = this.props.keyFunction(feature);
+    features
+      .filter((f): f is OlFeature => !_isNil(f))
+      .forEach(feature => {
+        const key = this.props.keyFunction(feature);
 
-      if (selectedRowKeys.includes(key)) {
-        feature.setStyle(selectStyle);
-      } else {
-        feature.setStyle(undefined);
-      }
-    });
-
-    highlightFeatures.forEach(feat => {
-      const key = this.props.keyFunction(feat);
-      grid.api?.forEachNode((n) => {
-        if (n.data.key === key) {
-          n.setHighlighted(1);
-          feat.setStyle(highlightStyle);
+        if (selectedRowKeys.includes(key)) {
+          feature.setStyle(selectStyle);
+        } else {
+          feature.setStyle(undefined);
         }
       });
-    });
+
+    highlightFeatures
+      .filter((f): f is OlFeature => !_isNil(f))
+      .forEach(feat => {
+        const key = this.props.keyFunction(feat);
+        grid.api?.forEachNode((n) => {
+          if (n.data.key === key) {
+            n.setHighlighted(1);
+            feat.setStyle(highlightStyle);
+          }
+        });
+      });
   };
 
   /**
@@ -453,6 +460,10 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       selectStyle,
       onMapSingleClick
     } = this.props;
+
+    if (_isNil(map)) {
+      return;
+    }
 
     const selectedRowKeys = this.getSelectedRowKeys();
 
@@ -492,7 +503,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       map
     } = this.props;
 
-    if (_isNil(this._layer)) {
+    if (_isNil(this._layer) || _isNil(map)) {
       return;
     }
 
@@ -508,11 +519,14 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       selectable
     } = this.props;
 
-    map.un('pointermove', this.onMapPointerMove);
+    if (!_isNil(map)) {
+      map.un('pointermove', this.onMapPointerMove);
 
-    if (selectable) {
-      map.un('singleclick', this.onMapSingleClick);
+      if (selectable) {
+        map.un('singleclick', this.onMapSingleClick);
+      }
     }
+
   };
 
   /**
@@ -607,7 +621,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
   };
 
   /**
-   * Returns the correspondig feature for the given table row key.
+   * Returns the corresponding feature for the given table row key.
    *
    * @param key The row key to obtain the feature from.
    * @return The feature candidate.
@@ -624,7 +638,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
   };
 
   /**
-   * Returns the correspondig rowNode for the given feature id.
+   * Returns the corresponding rowNode for the given feature id.
    *
    * @param key The feature's key to obtain the row from.
    * @return he row candidate.
@@ -739,6 +753,10 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       map
     } = this.props;
 
+    if (_isNil(map)) {
+      return;
+    }
+
     const featGeometries = features
       .map(f => f.getGeometry())
       .filter((f): f is OlGeometry => !_isNil(f));
@@ -759,7 +777,9 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       highlightStyle
     } = this.props;
 
-    highlightFeatures.forEach(feature => feature.setStyle(highlightStyle));
+    highlightFeatures
+      .filter((f): f is OlFeature => !_isNil(f))
+      .forEach(feature => feature.setStyle(highlightStyle));
   };
 
   /**
@@ -773,14 +793,16 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     } = this.props;
     const selectedRowKeys = this.getSelectedRowKeys();
 
-    unhighlightFeatures.forEach(feature => {
-      const key = this.props.keyFunction(feature);
-      if (selectedRowKeys && selectedRowKeys.includes(key)) {
-        feature.setStyle(selectStyle);
-      } else {
-        feature.setStyle(undefined);
-      }
-    });
+    unhighlightFeatures
+      .filter((f): f is OlFeature => !_isNil(f))
+      .forEach(feature => {
+        const key = this.props.keyFunction(feature);
+        if (selectedRowKeys && selectedRowKeys.includes(key)) {
+          feature.setStyle(selectStyle);
+        } else {
+          feature.setStyle(undefined);
+        }
+      });
   };
 
   /**
@@ -832,7 +854,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
     }
 
     const deselectedRows = _differenceWith(selectedRows,
-      selectedRowsAfter, (a: RowNode , b: RowNode) => a.key === b.key);
+      selectedRowsAfter, (a: RowNode, b: RowNode) => a.key === b.key);
 
     const selectedFeatures = selectedRowsAfter.flatMap(row => {
       return row.key ? [this.getFeatureFromRowKey(row.key)] : [];
