@@ -114,11 +114,11 @@ describe('<AgFeatureGrid />', () => {
     const got = wrapper.instance().getColumnDefs();
 
     const exp = [{
-      'field': 'id',
-      'headerName': 'id'
+      field: 'id',
+      headerName: 'id'
     }, {
-      'field': 'name',
-      'headerName': 'name'
+      field: 'name',
+      headerName: 'name'
     }];
 
     expect(got).toEqual(exp);

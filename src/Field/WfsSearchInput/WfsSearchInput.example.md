@@ -85,13 +85,14 @@ class WfsSearchInputExample extends React.Component {
                 enableColResize={true}
                 attributeBlacklist={['osm_id', 'admin_level', 'administrative']}
                 columnDefs={{
-                  'id': {
+                  id: {
                     headerName: 'ID'
                   },
-                  'name': {
+                  name: {
                     headerName: 'Country name'
                   },
-                  'admin_level': {
+                  // eslint-disable-next-line camelcase
+                  admin_level: {
                     headerName: 'Administrative level'
                   }
                 }}

@@ -36,7 +36,7 @@ describe('<PropertyGrid />', () => {
   it('passes style prop', () => {
     const props = {
       style: {
-        'backgroundColor': 'yellow'
+        backgroundColor: 'yellow'
       },
       feature: testFeature
     };

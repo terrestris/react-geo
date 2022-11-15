@@ -18,7 +18,7 @@ describe('<Legend />', () => {
       name: 'OSM-WMS',
       source: new OlSourceTileWMS({
         url: 'https://ows.terrestris.de/osm/service',
-        params: {'LAYERS': 'OSM-WMS', 'TILED': true},
+        params: {LAYERS: 'OSM-WMS', TILED: true},
         serverType: 'geoserver'
       })
     });

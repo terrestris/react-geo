@@ -31,39 +31,39 @@ const PrintButtonExample = () => {
   const [status, setStatus] = useState('pending');
 
   const geojson = useMemo(() => ({
-    'type': 'FeatureCollection',
-    'crs': {
-      'type': 'name',
-      'properties': {
-        'name': 'EPSG:3857',
+    type: 'FeatureCollection',
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:3857',
       },
     },
-    'features': [
+    features: [
       {
-        'type': 'Feature',
-        'geometry': {
-          'type': 'LineString',
-          'coordinates': [
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
             [4e6, 2e6],
             [8e6, 4e6],
           ],
         },
       },
       {
-        'type': 'Feature',
-        'geometry': {
-          'type': 'LineString',
-          'coordinates': [
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
             [4e6, 2e6],
             [8e6, -2e6],
           ],
         },
       },
       {
-        'type': 'Feature',
-        'geometry': {
-          'type': 'Polygon',
-          'coordinates': [
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
             [
               [2e6, 5e6],
               [2e6, 6e6],
@@ -72,7 +72,7 @@ const PrintButtonExample = () => {
             ],
           ],
         },
-      },
+      }
     ]}
   ));
 
@@ -83,16 +83,16 @@ const PrintButtonExample = () => {
   });
 
   const styles = {
-    'Point': new Style({
+    Point: new Style({
       image: image,
     }),
-    'LineString': new Style({
+    LineString: new Style({
       stroke: new Stroke({
         color: 'green',
         width: 1,
       }),
     }),
-    'Polygon': new Style({
+    Polygon: new Style({
       stroke: new Stroke({
         color: 'blue',
         lineDash: [4],
@@ -102,7 +102,7 @@ const PrintButtonExample = () => {
         color: 'rgba(0, 0, 255, 0.1)',
       }),
     }),
-    'Circle': new Style({
+    Circle: new Style({
       stroke: new Stroke({
         color: 'red',
         width: 2,
@@ -148,7 +148,7 @@ const PrintButtonExample = () => {
           opacity: 0.5,
           source: new OlSourceTileWMS({
             url: 'https://geoserver.mundialis.de/geoserver/wms',
-            params: {'LAYERS': '1_040302', 'TILED': true},
+            params: {LAYERS: '1_040302', TILED: true},
             serverType: 'geoserver'
           })
         }),

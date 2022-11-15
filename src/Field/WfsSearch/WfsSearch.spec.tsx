@@ -93,7 +93,7 @@ describe('<WfsSearch />', () => {
         }
       }];
       const map = new OlMap({
-        layers: [new OlLayerTile({name: 'OSM', source: new OlSourceOsm()})],
+        layers: [new OlLayerTile({ name: 'OSM', source: new OlSourceOsm() })],
         view: new OlView({
           projection: 'EPSG:4326',
           center: [37.40570, 8.81566],
@@ -110,7 +110,7 @@ describe('<WfsSearch />', () => {
       wrapper.setState({
         data: data
       });
-      wrapper.instance().onMenuItemSelected('Deutschland', {key: '752526'});
+      wrapper.instance().onMenuItemSelected('Deutschland', { key: '752526' });
       expect(selectSpy).toHaveBeenCalled();
       expect(selectSpy).toHaveBeenCalledWith(data[0], map);
 
@@ -133,7 +133,7 @@ describe('<WfsSearch />', () => {
         }
       };
       const map = new OlMap({
-        layers: [new OlLayerTile({name: 'OSM', source: new OlSourceOsm()})],
+        layers: [new OlLayerTile({ name: 'OSM', source: new OlSourceOsm() })],
         view: new OlView({
           projection: 'EPSG:4326',
           center: [37.40570, 8.81566],
@@ -143,7 +143,7 @@ describe('<WfsSearch />', () => {
       });
       // SETUP END
 
-      const wrapper = TestUtil.mountComponent(WfsSearch, {map});
+      const wrapper = TestUtil.mountComponent(WfsSearch, { map });
       const fitSpy = jest.spyOn(map.getView(), 'fit');
       wrapper.props().onSelect(feature, map);
 

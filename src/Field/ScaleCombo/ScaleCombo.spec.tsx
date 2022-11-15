@@ -22,7 +22,7 @@ describe('<ScaleCombo />', () => {
     const props = {
       map,
       style: {
-        'backgroundColor': 'yellow'
+        backgroundColor: 'yellow'
       }
     };
     const wrapper = TestUtil.mountComponent(ScaleCombo, props);
@@ -64,7 +64,7 @@ describe('<ScaleCombo />', () => {
 
       // Reset the scales array, as getOptionsFromMap() will be called in
       // constructor.
-      wrapper.setState({'scales': []});
+      wrapper.setState({scales: []});
 
       const scales = wrapper.instance().getOptionsFromMap();
       expect(scales).toBeInstanceOf(Array);
@@ -84,7 +84,7 @@ describe('<ScaleCombo />', () => {
 
       // Reset the scales array, as getOptionsFromMap() will be called in
       // constructor.
-      wrapper.setState({'scales': []});
+      wrapper.setState({scales: []});
 
       const scales = wrapper.instance().getOptionsFromMap();
       expect(scales).toBeInstanceOf(Array);
@@ -119,7 +119,7 @@ describe('<ScaleCombo />', () => {
 
       // Reset the scales array, as getOptionsFromMap() will be called in
       // constructor.
-      wrapper.setState({'scales': []});
+      wrapper.setState({scales: []});
 
       const scales = wrapper.instance().getOptionsFromMap();
       expect(scales).toBeInstanceOf(Array);

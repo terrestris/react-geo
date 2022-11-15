@@ -92,7 +92,8 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     it('does not show options for empty results', async () => {
       (fetch as FetchMock).mockResponseOnce(JSON.stringify({
         status: 'ok',
-        'number_result': 0,
+        // eslint-disable-next-line camelcase
+        number_result: 0,
         results: []
       }));
 

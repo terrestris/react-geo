@@ -16,8 +16,8 @@ describe('<AddWmsLayerEntry />', () => {
     source: new OlSourceTileWMS({
       url: 'https://ows.terrestris.de/osm/service?',
       params: {
-        'LAYERS': testLayerName,
-        'TILED': true
+        LAYERS: testLayerName,
+        TILED: true
       }
     })
   });
