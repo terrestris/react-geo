@@ -144,7 +144,7 @@
     "jest-fetch-mock": "^3.0.3",
     "less-loader": "^11.0.0",
     "np": "^7.0.0",
-    "ol": "^6.13.0",
+    "ol": "^7.1.0",
     "react": "^17.0.2",
     "react-docgen-typescript": "^2.2.2",
     "react-styleguidist": "^13.0.0",
@@ -159,7 +159,7 @@
   "peerDependencies": {
     "@types/react": ">=17",
     "antd": "^4.17",
-    "ol": "^6.9",
+    "ol": "^7.1",
     "react": ">=17"
   },
   "engines": {
