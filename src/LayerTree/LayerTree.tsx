@@ -12,6 +12,8 @@ import {
   EventDataNode
 } from 'rc-tree/lib/interface';
 
+import _isNumber from 'lodash/isNumber';
+
 import OlMap from 'ol/Map';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
@@ -523,6 +525,9 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       return;
     }
     const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
+    if (!dragInfo || !dragInfo?.groupLayer) {
+      return;
+    }
     const dragCollection = dragInfo.groupLayer.getLayers();
     const dropLayer = MapUtil.getLayerByOlUid(this.props.map, e.node.props.eventKey);
     if (!dropLayer) {
@@ -535,8 +540,15 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     dragCollection.remove(dragLayer);
 
     const dropInfo = MapUtil.getLayerPositionInfo(dropLayer, this.props.map);
+    if (!dropInfo || !dropInfo?.groupLayer) {
+      return;
+    }
     const dropPosition = dropInfo.position;
     const dropCollection = dropInfo.groupLayer.getLayers();
+
+    if (!_isNumber(dropPosition)) {
+      return;
+    }
 
     // drop before node
     if (location === -1) {

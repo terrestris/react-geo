@@ -47,8 +47,14 @@ class WfsSearchExample extends React.Component {
               baseUrl='https://ows-demo.terrestris.de/geoserver/osm/wfs'
               featureTypes={['osm:osm-country-borders']}
               maxFeatures={3}
-              searchAttributes={{
-                'osm:osm-country-borders': ['name']
+              attributeDetails={{
+                'osm:osm-country-borders': {
+                  name: {
+                    type: 'string',
+                    exactSearch: false,
+                    matchCase: false
+                  }
+                }
               }}
               map={this.map}
             />

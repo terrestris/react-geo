@@ -7,6 +7,7 @@ import OlVectorSource from 'ol/source/Vector';
 import OlGeometry from 'ol/geom/Geometry';
 import OlVectorLayer from 'ol/layer/Vector';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import OlStyle from 'ol/style/Style';
 
 import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 
@@ -77,7 +78,8 @@ const CopyButton: React.FC<CopyButtonProps> = ({
       layers[0],
       copy,
       500,
-      50
+      50,
+      layers[0].getStyle() as OlStyle
     );
   };
 
