@@ -153,6 +153,7 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
       if (React.isValidElement(child)) {
         // pass the press state through to child components
         return React.cloneElement(child, {
+          // @ts-ignore
           pressed: this.state.selectedName === child.props.name
         });
       } else {

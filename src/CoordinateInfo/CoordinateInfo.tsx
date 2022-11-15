@@ -1,20 +1,19 @@
 import * as React from 'react';
 
-import OlMap from 'ol/Map';
-import OlLayer from 'ol/layer/Layer';
-import OlFormatGML2 from 'ol/format/GML2';
-import OlMapBrowserEvent from 'ol/MapBrowserEvent';
-import OlFeature from 'ol/Feature';
+import { getUid } from 'ol';
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
+import OlFeature from 'ol/Feature';
+import OlFormatGML2 from 'ol/format/GML2';
 import OlGeometry from 'ol/geom/Geometry';
 import OlBaseLayer from 'ol/layer/Base';
-import { getUid } from 'ol';
+import OlMap from 'ol/Map';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
 import _isString from 'lodash/isString';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
-import { WmsLayer } from '../Util/typeUtils';
+import { WmsLayer, isWmsLayer } from '../Util/typeUtils';
 
 const format = new OlFormatGML2();
 
@@ -34,12 +33,6 @@ export interface CoordinateInfoProps {
    * or just the uppermost one.
    */
   drillDown: boolean;
-
-  /**
-   * Hit-detection tolerance in pixels. Pixels inside the radius around the
-   * given position will be checked for features.
-   */
-  hitTolerance: number;
 
   /**
    * The children component that should be rendered. The render prop function
@@ -94,15 +87,14 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     queryLayers: [],
     featureCount: 1,
     drillDown: true,
-    hitTolerance: 5,
     resultRenderer: () => {
       return (
-        <div/>
+        <div />
       );
     },
     fetchOpts: {},
-    onSuccess: () => {},
-    onError: () => {}
+    onSuccess: () => { },
+    onError: () => { }
   };
 
   /**
@@ -143,7 +135,6 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       map,
       featureCount,
       drillDown,
-      hitTolerance,
       fetchOpts,
       onSuccess,
       onError
@@ -157,24 +148,29 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
 
     const promises: Promise<any>[] = [];
 
-    map.forEachLayerAtPixel(pixel, (layer: OlLayer<any, any>) => {
-      const layerSource = layer.getSource();
+    const mapLayers =
+      map.getAllLayers()
+        .filter(this.layerFilter)
+        .filter(l => l.getData && l.getData(pixel) && isWmsLayer(l));
+    mapLayers.forEach(l => {
+      const layerSource = (l as WmsLayer).getSource();
+      if (!layerSource) {
+        return;
+      }
       const featureInfoUrl = layerSource.getFeatureInfoUrl(
         coordinate,
-        viewResolution,
+        viewResolution!,
         viewProjection,
         {
-          'INFO_FORMAT': 'application/vnd.ogc.gml',
-          'FEATURE_COUNT': featureCount
+          INFO_FORMAT: 'application/vnd.ogc.gml',
+          FEATURE_COUNT: featureCount
         }
       );
-
-      promises.push(fetch(featureInfoUrl, fetchOpts[getUid(layer)]));
+      if (featureInfoUrl) {
+        promises.push(fetch(featureInfoUrl, fetchOpts[getUid(l)]));
+      }
 
       return !drillDown;
-    }, {
-      layerFilter: this.layerFilter,
-      hitTolerance: hitTolerance
     });
 
     map.getTargetElement().style.cursor = 'wait';
@@ -237,7 +233,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
   }
 
   getCoordinateInfoState(): CoordinateInfoState {
-    const featuresClone: {[name: string]: OlFeature[]} = {};
+    const featuresClone: { [name: string]: OlFeature[] } = {};
     Object.entries(this.state.features)
       .forEach(([layerName, feats]) => {
         featuresClone[layerName] = feats.map(feat => feat.clone());
@@ -254,7 +250,7 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
     return coordinateInfoState;
   };
 
-  render () {
+  render() {
     const {
       resultRenderer
     } = this.props;
