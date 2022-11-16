@@ -1,3 +1,23 @@
+# [20.0.0](https://github.com/terrestris/react-geo/compare/v19.8.2...v20.0.0) (2022-11-16)
+
+
+### Bug Fixes
+
+* adaptaions after ol-util upgrade to v10.x ([4440810](https://github.com/terrestris/react-geo/commit/444081028805dbcfa4ef1cb97e8a5223c975656b))
+* fix typing of togglebutton clone ([67dd940](https://github.com/terrestris/react-geo/commit/67dd940aa0163cd8c6a6675218c27af9922a1dc5))
+* fix typings after ol7 upgrade ([2e04fca](https://github.com/terrestris/react-geo/commit/2e04fcaf648cbab1dd5b5f25dd246f74d21fcde5))
+* get rid of unnecessary quotes ([2500acb](https://github.com/terrestris/react-geo/commit/2500acb9550369f2a6a5576bebe227c0737fc30f))
+
+
+### chore
+
+* bump ol to v7.x ([a9022eb](https://github.com/terrestris/react-geo/commit/a9022eb9717a66fc278b425f136fd9ee0fe8eaa5))
+
+
+### BREAKING CHANGES
+
+* set peer dependency for openlayers package to v7.1
+
 ## [19.8.2](https://github.com/terrestris/react-geo/compare/v19.8.1...v19.8.2) (2022-11-03)
 
 
