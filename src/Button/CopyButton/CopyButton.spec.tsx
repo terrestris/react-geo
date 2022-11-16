@@ -22,7 +22,6 @@ describe('<CopyButton />', () => {
   let style: OlStyleStyle;
 
   beforeEach(() => {
-
     style = new OlStyleStyle({
       stroke: new OlStyleStroke({
         color: 'red',
