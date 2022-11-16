@@ -70,7 +70,7 @@ class FloatingMapLogo extends React.Component<FloatingMapLogoProps> {
     let imgStyle = style ? _cloneDeep(style) : {};
 
     if (absolutelyPositioned) {
-      Object.assign(imgStyle, {'position': 'absolute'});
+      Object.assign(imgStyle, {position: 'absolute'});
     }
 
     return (

@@ -27,8 +27,8 @@ const layers = [
     source: new OlSourceTileWMS({
       url: 'https://sgx.geodatenzentrum.de/wms_topplus_open',
       params: {
-        'LAYERS': 'web',
-        'TILED': true
+        LAYERS: 'web',
+        TILED: true
       }
     }),
     properties: {

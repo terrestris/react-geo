@@ -27,7 +27,7 @@ class MultiLayerSliderExample extends React.Component {
       name: 'Land/Water',
       source: new OlSourceTileWMS({
         url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {'LAYERS': '1_8A1104', 'TILED': true},
+        params: {LAYERS: '1_8A1104', TILED: true},
         serverType: 'geoserver'
       })
     });
@@ -35,7 +35,7 @@ class MultiLayerSliderExample extends React.Component {
       name: 'True Color Composite',
       source: new OlSourceTileWMS({
         url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {'LAYERS': '1_040302', 'TILED': true},
+        params: {LAYERS: '1_040302', TILED: true},
         serverType: 'geoserver'
       })
     });
@@ -43,7 +43,7 @@ class MultiLayerSliderExample extends React.Component {
       name: 'Color Infrared (vegetation)',
       source: new OlSourceTileWMS({
         url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {'LAYERS': '1_080403', 'TILED': true},
+        params: {LAYERS: '1_080403', TILED: true},
         serverType: 'geoserver'
       })
     });
@@ -51,7 +51,7 @@ class MultiLayerSliderExample extends React.Component {
       name: 'Atmospheric Penetration',
       source: new OlSourceTileWMS({
         url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {'LAYERS': '1_12118A', 'TILED': true},
+        params: {LAYERS: '1_12118A', TILED: true},
         serverType: 'geoserver'
       })
     });
@@ -59,7 +59,7 @@ class MultiLayerSliderExample extends React.Component {
       name: 'Vegetation',
       source: new OlSourceTileWMS({
         url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {'LAYERS': '1_118A04', 'TILED': true},
+        params: {LAYERS: '1_118A04', TILED: true},
         serverType: 'geoserver'
       })
     });

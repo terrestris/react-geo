@@ -23,7 +23,7 @@ class LegendExample extends React.Component {
       name: 'OSM-WMS',
       source: new OlSourceTileWMS({
         url: 'https://ows.terrestris.de/osm-gray/service',
-        params: {'LAYERS': 'OSM-WMS', 'TILED': true},
+        params: {LAYERS: 'OSM-WMS', TILED: true},
         serverType: 'geoserver'
       })
     });
@@ -32,7 +32,7 @@ class LegendExample extends React.Component {
       name: 'States (USA)',
       source: new OlSourceTileWMS({
         url: 'https://ahocevar.com/geoserver/wms',
-        params: {'LAYERS': 'usa:states', 'TILED': true},
+        params: {LAYERS: 'usa:states', TILED: true},
         serverType: 'geoserver'
       })
     });
@@ -42,7 +42,7 @@ class LegendExample extends React.Component {
       legendUrl: 'https://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg',
       source: new OlSourceTileWMS({
         url: 'https://ahocevar.com/geoserver/wms',
-        params: {'LAYERS': 'ne:ne_10m_populated_places', 'TILED': true, 'TRANSPARENT': 'true'},
+        params: {LAYERS: 'ne:ne_10m_populated_places', TILED: true, TRANSPARENT: 'true'},
         serverType: 'geoserver'
       })
     });

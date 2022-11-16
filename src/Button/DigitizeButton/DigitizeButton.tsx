@@ -954,7 +954,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
       copy,
       500,
       50,
-      this.digitizeStyleFunction(feat)
+      this.digitizeStyleFunction(feat) as OlStyleStyle
     );
   };
 

@@ -78,21 +78,21 @@ class AgFeatureGridExample extends React.Component {
           map={this.map}
           attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
           columnDefs={{
-            'GEN': {
+            GEN: {
               headerName: 'Name',
               cellRenderer: 'nameColumnRenderer',
               sortable: true,
               filter: true,
               resizable: true
             },
-            'SHAPE_LENG': {
+            SHAPE_LENG: {
               headerName: 'Length',
               cellRenderer: 'mathRoundRenderer',
               sortable: true,
               filter: true,
               resizable: true
             },
-            'SHAPE_AREA': {
+            SHAPE_AREA: {
               headerName: 'Area',
               cellRenderer: 'mathRoundRenderer',
               sortable: true,

@@ -150,10 +150,11 @@ class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
       : 'horizontal-toggle-group';
 
     const childrenWithProps = React.Children.map(children, child => {
-      if (React.isValidElement(child)) {
+      const item = child as React.ReactElement<ToggleButtonProps>;
+      if (React.isValidElement(item)) {
         // pass the press state through to child components
-        return React.cloneElement(child, {
-          pressed: this.state.selectedName === child.props.name
+        return React.cloneElement(item, {
+          pressed: this.state.selectedName === item.props.name
         });
       } else {
         return child;

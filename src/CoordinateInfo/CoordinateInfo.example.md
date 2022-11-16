@@ -26,8 +26,8 @@ const queryLayer = new OlLayerTile({
   source: new OlSourceTileWMS({
     url: 'https://ahocevar.com/geoserver/wms',
     params: {
-      'LAYERS': 'usa:states',
-      'TILED': true
+      LAYERS: 'usa:states',
+      TILED: true
     },
     serverType: 'geoserver',
     crossOrigin: 'anonymous'

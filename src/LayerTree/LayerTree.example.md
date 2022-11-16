@@ -31,7 +31,7 @@ class LayerTreeExample extends React.Component {
           source: new OlSourceTileWMS({
             url: 'https://ows.terrestris.de/osm/service',
             params: {
-              'LAYERS': 'OSM-Overlay-WMS'
+              LAYERS: 'OSM-Overlay-WMS'
             }
           })
         }),
@@ -42,7 +42,7 @@ class LayerTreeExample extends React.Component {
           source: new OlSourceTileWMS({
             url: 'https://ows.terrestris.de/osm/service',
             params: {
-              'LAYERS': 'SRTM30-Contour'
+              LAYERS: 'SRTM30-Contour'
             }
           })
         })

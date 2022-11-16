@@ -68,8 +68,14 @@ class WfsSearchInputExample extends React.Component {
               placeholder="Type a countryname in its own language…"
               baseUrl='https://ows-demo.terrestris.de/geoserver/osm/wfs'
               featureTypes={['osm:osm-country-borders']}
-              searchAttributes={{
-                'osm:osm-country-borders': ['name']
+              attributeDetails={{
+                'osm:osm-country-borders': {
+                  name: {
+                    type: 'string',
+                    exactSearch: false,
+                    matchCase: false
+                  }
+                }
               }}
               map={this.map}
               onFetchSuccess={this.onFetchSuccess.bind(this)}
@@ -85,13 +91,14 @@ class WfsSearchInputExample extends React.Component {
                 enableColResize={true}
                 attributeBlacklist={['osm_id', 'admin_level', 'administrative']}
                 columnDefs={{
-                  'id': {
+                  id: {
                     headerName: 'ID'
                   },
-                  'name': {
+                  name: {
                     headerName: 'Country name'
                   },
-                  'admin_level': {
+                  // eslint-disable-next-line camelcase
+                  admin_level: {
                     headerName: 'Administrative level'
                   }
                 }}

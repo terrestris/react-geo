@@ -15,7 +15,7 @@ import OlFormatGeoJson from 'ol/format/GeoJSON';
 import _debounce from 'lodash/debounce';
 
 import Logger from '@terrestris/base-util/dist/Logger';
-import WfsFilterUtil from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
+import WfsFilterUtil, { AttributeDetails } from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 
 import { Feature } from 'geojson';
 
@@ -47,15 +47,7 @@ interface OwnProps {
    *   }
    *   ```
    */
-  attributeDetails: {
-    [featureType: string]: {
-      [attributeName: string]: {
-        matchCase: boolean;
-        type: string;
-        exactSearch: boolean;
-      };
-    };
-  };
+  attributeDetails: AttributeDetails;
   /**
    * SRS name. No srsName attribute will be set on geometries when this is not
    * provided.
@@ -97,12 +89,7 @@ interface OwnProps {
    * The base URL. Please make sure that the WFS-Server supports CORS.
    */
   baseUrl: string;
-  /**
-   * An object mapping feature types to an array of attributes that should be searched through.
-   */
-  searchAttributes: {
-    [featureType: string]: string[];
-  };
+
   /**
    * The namespace URI used for features.
    */
@@ -293,7 +280,6 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
       propertyNames,
       srsName,
       wfsFormatOptions,
-      searchAttributes,
       attributeDetails
     } = this.props;
 
@@ -307,7 +293,6 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
       propertyNames: propertyNames ?? [],
       srsName,
       wfsFormatOptions,
-      searchAttributes,
       attributeDetails
     };
 
@@ -433,7 +418,6 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
       minChars,
       outputFormat,
       propertyNames,
-      searchAttributes,
       attributeDetails,
       srsName,
       wfsFormatOptions,

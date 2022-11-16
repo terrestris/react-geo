@@ -34,7 +34,7 @@ export function loadify<P>(WrappedComponent: React.ComponentType<any>) {
      *
      * @constructs Loadify
      */
-    constructor(props: P) {
+    constructor(props: P & Partial<SpinProps>) {
       super(props);
     }
 

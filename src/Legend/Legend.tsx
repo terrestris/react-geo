@@ -2,12 +2,15 @@ import * as React from 'react';
 
 import _isEqual from 'lodash/isEqual';
 
+import OlLayerImage from 'ol/layer/Image';
+import OlLayerTile from 'ol/layer/Tile';
+import OlSourceImageWMS from 'ol/source/ImageWMS';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../constants';
-import { WmsLayer } from '../Util/typeUtils';
-
 export interface BaseProps {
   /**
    * An optional CSS class which should be added.
@@ -16,7 +19,7 @@ export interface BaseProps {
   /**
    * The layer you want to display the legend of.
    */
-  layer: WmsLayer;
+  layer: OlLayerTile<OlSourceTileWMS> | OlLayerImage<OlSourceImageWMS>;
   /**
    * An object containing additional request params like "{HEIGHT: 400}" will
    * be transformed to "&HEIGHT=400" an added to the GetLegendGraphic request.
@@ -105,7 +108,7 @@ export class Legend extends React.Component<LegendProps, LegendState> {
    * @param layer The layer to get the legend graphic request for.
    * @param extraParams The extra params.
    */
-  getLegendUrl(layer: WmsLayer, extraParams: any) {
+  getLegendUrl(layer: OlLayerTile<OlSourceTileWMS> | OlLayerImage<OlSourceImageWMS>, extraParams: any) {
     let legendUrl;
 
     if (layer.get('legendUrl')) {

@@ -33,7 +33,7 @@ class TimeLayerSliderPanelExample extends React.Component {
         source: new OlSourceTileWMS({
           attributions: ['Iowa State University'],
           url: '//mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi',
-          params: {'LAYERS': 'nexrad-n0r-wmst'}
+          params: {LAYERS: 'nexrad-n0r-wmst'}
         })
       })
     ];

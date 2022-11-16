@@ -55,7 +55,7 @@ class FeatureGridExample extends React.Component {
           selectable={true}
           attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
           columnDefs={{
-            'GEN': {
+            GEN: {
               title: 'Name',
               render: nameColumnRenderer,
               sorter: (a, b) => {
@@ -72,11 +72,11 @@ class FeatureGridExample extends React.Component {
               },
               defaultSortOrder: 'ascend'
             },
-            'SHAPE_LENG': {
+            SHAPE_LENG: {
               title: 'Length',
               render: val => Math.round(val)
             },
-            'SHAPE_AREA': {
+            SHAPE_AREA: {
               title: 'Area',
               render: val => Math.round(val)
             }
@@ -305,7 +305,7 @@ class RemoteFeatureGrid extends React.Component {
         }}
         onChange={this.onTableChange.bind(this)}
         columnDefs={{
-          'name': {
+          name: {
             sorter: true,
             filterDropdown: (
               <div style={{

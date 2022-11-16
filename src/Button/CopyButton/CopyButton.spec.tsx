@@ -6,6 +6,9 @@ import OlView from 'ol/View';
 import OlMap from 'ol/Map';
 import OlPoint from 'ol/geom/Point';
 import OlFeature from 'ol/Feature';
+import OlStyleStyle from 'ol/style/Style';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyleFill from 'ol/style/Fill';
 
 import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
@@ -16,8 +19,18 @@ describe('<CopyButton />', () => {
   const coord = [829729, 6708850];
   let map: OlMap;
   let feature: OlFeature<OlPoint>;
+  let style: OlStyleStyle;
 
   beforeEach(() => {
+    style = new OlStyleStyle({
+      stroke: new OlStyleStroke({
+        color: 'red',
+        width: 2
+      }),
+      fill: new OlStyleFill({
+        color: 'green'
+      })
+    });
     feature = new OlFeature<OlPoint>({
       geometry: new OlPoint(coord),
       someProp: 'test'
@@ -55,6 +68,7 @@ describe('<CopyButton />', () => {
       const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
 
       const layer = DigitizeUtil.getDigitizeLayer(map);
+      layer.setStyle(style);
 
       renderInMapContext(map, <CopyButton />);
 

@@ -205,6 +205,9 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    */
   pushScale = (scales: number[], resolution: number, view: OlView) => {
     const scale = MapUtil.getScaleForResolution(resolution, view.getProjection().getUnits());
+    if (!scale) {
+      return;
+    }
     const roundScale = MapUtil.roundScale(scale);
     if (scales.includes(roundScale) ) {
       return;

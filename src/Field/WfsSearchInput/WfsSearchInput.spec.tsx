@@ -31,7 +31,7 @@ describe('<WfsSearchInput />', () => {
       expect(wrapper.state().searchTerm).toBe(evt.target.value);
     });
 
-    it ('calls onBeforeSearch callback if passed in props', () => {
+    it('calls onBeforeSearch callback if passed in props', () => {
       const wrapper = TestUtil.mountComponent(WfsSearchInput, {
       });
       wrapper.setProps({
@@ -53,8 +53,14 @@ describe('<WfsSearchInput />', () => {
         placeholder: 'Type a countryname in its own language…',
         baseUrl: 'https://ows-demo.terrestris.de/geoserver/osm/wfs',
         featureTypes: ['osm:osm-country-borders'],
-        searchAttributes: {
-          'osm:osm-country-borders': ['name']
+        attributeDetails: {
+          'osm:osm-country-borders': {
+            name: {
+              type: 'string',
+              exactSearch: false,
+              matchCase: false
+            }
+          }
         }
       });
       const doSearchSpy = jest.spyOn(wrapper.instance(), 'doSearch');
