@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Tree } from 'antd';
-import { AntTreeNodeDropEvent } from 'antd/lib/tree/Tree';
+import { AntTreeNodeDropEvent, AntTreeNodeSelectedEvent } from 'antd/lib/tree/Tree';
 import { ReactElement, ReactNode } from 'react';
 import {
   TreeProps,
@@ -464,6 +464,28 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   }
 
   /**
+   * Toggles the visibility of a layer when clicking the name.
+   *
+   * @param checkedKeys Contains all checkedKeys.
+   * @param e The ant-tree event object for this event. See ant docs.
+   */
+  onSelect = (checkedKeys: string[], e: AntTreeNodeSelectedEvent) => {
+    // @ts-ignore
+    const checked = !e.node.checked;
+    // @ts-ignore
+    e.node.checked = checked;
+    const eventKey = e.node.props.eventKey;
+    if (eventKey) {
+      const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
+      if (!layer) {
+        Logger.error('layer is not defined');
+        return;
+      }
+      this.setLayerVisibility(layer, checked);
+    }
+  };
+
+  /**
    * Sets the layer visibility. Calls itself recursively for groupLayers.
    *
    * @param layer The layer.
@@ -620,6 +642,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
         className={finalClassName}
         checkedKeys={this.state.checkedKeys}
         onCheck={this.onCheck.bind(this)}
+        onSelect={this.onSelect}
         onExpand={this.onExpand}
         {...ddListeners}
         {...passThroughProps}
