@@ -64,6 +64,8 @@ interface OwnProps {
    * the layer instance of the current tree node.
    */
   nodeTitleRenderer?: (layer: OlLayerBase) => React.ReactNode;
+
+  toggleOnClick?: boolean;
 }
 
 interface LayerTreeState {
@@ -92,7 +94,8 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
   static defaultProps = {
     draggable: true,
     checkable: true,
-    filterFunction: () => true
+    filterFunction: () => true,
+    toggleOnClick: false
   };
 
   /**
@@ -623,6 +626,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
       layerGroup,
       map,
       nodeTitleRenderer,
+      toggleOnClick,
       ...passThroughProps
     } = this.props;
 
@@ -642,7 +646,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
         className={finalClassName}
         checkedKeys={this.state.checkedKeys}
         onCheck={this.onCheck.bind(this)}
-        onSelect={this.onSelect}
+        onSelect={toggleOnClick ? this.onSelect : undefined}
         onExpand={this.onExpand}
         {...ddListeners}
         {...passThroughProps}
