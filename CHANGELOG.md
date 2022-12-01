@@ -1,3 +1,10 @@
+# [20.1.0](https://github.com/terrestris/react-geo/compare/v20.0.0...v20.1.0) (2022-12-01)
+
+
+### Features
+
+* toggle layer visibility when clicking on the name ([#3002](https://github.com/terrestris/react-geo/issues/3002)) ([568d0d2](https://github.com/terrestris/react-geo/commit/568d0d2fb35401004d640fa715420be288103b4e))
+
 # [20.0.0](https://github.com/terrestris/react-geo/compare/v19.8.2...v20.0.0) (2022-11-16)
 
 
