@@ -1,3 +1,10 @@
+## [20.1.1](https://github.com/terrestris/react-geo/compare/v20.1.0...v20.1.1) (2022-12-02)
+
+
+### Bug Fixes
+
+* make toggle on click configurable ([#3003](https://github.com/terrestris/react-geo/issues/3003)) ([df16322](https://github.com/terrestris/react-geo/commit/df16322d15ebcc77294bf3ec4b765fd29ff7d05f))
+
 # [20.1.0](https://github.com/terrestris/react-geo/compare/v20.0.0...v20.1.0) (2022-12-01)
 
 
