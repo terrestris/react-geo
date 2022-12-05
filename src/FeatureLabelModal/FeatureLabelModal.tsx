@@ -54,7 +54,7 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
   }
 
   return <Modal
-    visible={showPrompt}
+    open={showPrompt}
     closable={false}
     onOk={onOkInternal}
     onCancel={onCancel}
