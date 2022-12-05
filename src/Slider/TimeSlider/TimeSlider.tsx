@@ -182,7 +182,9 @@ class TimeSlider extends React.Component<TimeSliderProps> {
           range={true}
           min={moment(min).unix()}
           max={moment(max).unix()}
-          tipFormatter={val => this.formatTimestamp(val)}
+          tooltip={{
+            formatter: val => this.formatTimestamp(val)
+          }}
           onChange={val => this.valueUpdated(val)}
           value={this.convert(value) as [number, number]}
           marks={convertedMarks}
@@ -197,7 +199,9 @@ class TimeSlider extends React.Component<TimeSliderProps> {
           range={false}
           min={moment(min).unix()}
           max={moment(max).unix()}
-          tipFormatter={val => this.formatTimestamp(val)}
+          tooltip={{
+            formatter: val => this.formatTimestamp(val)
+          }}
           onChange={val => this.valueUpdated(val)}
           value={this.convert(value) as number}
           marks={convertedMarks}

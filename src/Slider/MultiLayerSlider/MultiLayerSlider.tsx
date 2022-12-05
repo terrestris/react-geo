@@ -187,7 +187,9 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
         defaultValue={defaultValue}
         min={0}
         max={100}
-        tipFormatter={this.formatTip.bind(this)}
+        tooltip={{
+          formatter: this.formatTip.bind(this)
+        }}
         onChange={this.valueUpdated.bind(this)}
         {...passThroughProps}
       />
