@@ -36,7 +36,13 @@ describe('<UserChip />', () => {
   });
 
   it('should render a dropdown', async () => {
-    render(<UserChip userName="Shinji Kagawa" userMenu={<div role="menu">Example menu</div>} />);
+    const exampleMenu = {
+      items: [{
+        label: <div role="menu">Example menu</div>,
+        key: 'example'
+      }]
+    };
+    render(<UserChip userName="Shinji Kagawa" userMenu={exampleMenu}/>);
     const chip = screen.getByText('SK').parentElement;
     await userEvent.click(chip);
     const menu = screen.getByText('Example menu');
@@ -45,7 +51,7 @@ describe('<UserChip />', () => {
   });
 
   it('should not render a dropdown for invalid configuration', () => {
-    render(<UserChip userName="Shinji Kagawa" userMenu={null} />);
+    render(<UserChip userName="Shinji Kagawa" userMenu={undefined} />);
     const menu = screen.queryByRole('menu');
     expect(menu).not.toBeInTheDocument();
   });
