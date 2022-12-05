@@ -7,7 +7,6 @@ interface DefaultProps {
 }
 
 interface BaseProps {
-  children?: React.ReactChildren;
   map: OlMap;
 }
 
