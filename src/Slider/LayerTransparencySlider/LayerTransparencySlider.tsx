@@ -64,7 +64,9 @@ class LayerTransparencySlider extends React.Component<LayerTransparencySliderPro
 
     return (
       <Slider
-        tipFormatter={value => `${value}%`}
+        tooltip={{
+          formatter: value => `${value}%`
+        }}
         defaultValue={this.getLayerTransparency()}
         onChange={(value: number) => {
           this.setLayerTransparency(value);

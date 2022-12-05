@@ -1238,7 +1238,7 @@ class DigitizeButton extends React.Component<DigitizeButtonProps, DigitizeButton
               title={modalPromptTitle}
               okText={modalPromptOkButtonText}
               cancelText={modalPromptCancelButtonText}
-              visible={this.state.showLabelPrompt}
+              open={this.state.showLabelPrompt}
               closable={false}
               onOk={this.onModalLabelOk}
               onCancel={this.onModalLabelCancel}

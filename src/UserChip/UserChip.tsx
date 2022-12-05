@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {
   Avatar,
-  Dropdown
+  Dropdown,
+  MenuProps
 } from 'antd';
 
 import { AvatarProps } from 'antd/lib/avatar';
@@ -22,9 +23,9 @@ export interface BaseProps {
    */
   imageSrc?: string;
   /**
-   * The react element representing the user menu
+   * The user menu
    */
-  userMenu?: React.ReactNode;
+  userMenu?: MenuProps;
   /**
    * The user name.
    */
@@ -136,10 +137,10 @@ class UserChip extends React.Component<UserChipProps> {
       userMenu
     } = this.props;
 
-    if (userMenu && React.isValidElement(userMenu)) {
+    if (userMenu?.items) {
       return (
         <Dropdown
-          overlay={userMenu}
+          menu={userMenu}
           trigger={['click']}
           getPopupContainer={() => {
             return document.getElementsByClassName(this._className)[0] as HTMLElement;
