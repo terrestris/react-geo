@@ -1,3 +1,18 @@
+# [21.0.0](https://github.com/terrestris/react-geo/compare/v20.1.1...v21.0.0) (2022-12-05)
+
+
+### Bug Fixes
+
+* adapt deprecated tooltip tip formatter config ([6cdcef4](https://github.com/terrestris/react-geo/commit/6cdcef4ebdaa865baf9c03952a5f610610ac8f5e))
+* fix deprecated menu config for dropdown ([8d293fd](https://github.com/terrestris/react-geo/commit/8d293fd65719222bc46959f7a091d5abd6774149))
+* replace deprecated property visible by open ([511e371](https://github.com/terrestris/react-geo/commit/511e3711f47e45ba22d595a88393c31d9cc42d75))
+
+
+### BREAKING CHANGES
+
+* Dropdown doesn't need a full antd Menu component any more.
+Instead of this, an object of type MenuProps is expected now.
+
 ## [20.1.1](https://github.com/terrestris/react-geo/compare/v20.1.0...v20.1.1) (2022-12-02)
 
 
