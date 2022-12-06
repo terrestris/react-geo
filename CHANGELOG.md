@@ -1,3 +1,10 @@
+## [21.0.1](https://github.com/terrestris/react-geo/compare/v21.0.0...v21.0.1) (2022-12-06)
+
+
+### Bug Fixes
+
+* remove unnecessary children prop ([89d51e6](https://github.com/terrestris/react-geo/commit/89d51e63ac687d8c169680595ba900caee48e7b6))
+
 # [21.0.0](https://github.com/terrestris/react-geo/compare/v20.1.1...v21.0.0) (2022-12-05)
 
 
