@@ -1,3 +1,17 @@
+# [22.0.0](https://github.com/terrestris/react-geo/compare/v21.0.1...v22.0.0) (2022-12-08)
+
+
+### Features
+
+* **print:** remove the print layout from code, use template functions ([43cfa51](https://github.com/terrestris/react-geo/commit/43cfa51925e30bbefde44a21bf4a37f9fa78763b))
+
+
+### BREAKING CHANGES
+
+* **print:** Printing PDFs now require a template
+
+When printing a PDF, a template needs to be provided. See the PrintButton example for details.
+
 ## [21.0.1](https://github.com/terrestris/react-geo/compare/v21.0.0...v21.0.1) (2022-12-06)
 
 
