@@ -36,7 +36,7 @@ describe('<PrintButton />', () => {
     });
 
     it('can be rendered', () => {
-      const { container } = renderInMapContext(map, <PrintButton mapSize={[0, 0]}/>);
+      const { container } = renderInMapContext(map, <PrintButton />);
       expect(container).toBeVisible();
     });
   });
@@ -44,7 +44,7 @@ describe('<PrintButton />', () => {
   describe('#Printing', () => {
 
     it('prints a png image', async () => {
-      renderInMapContext(map, <PrintButton mapSize={[0, 0]}>Print test</PrintButton>);
+      renderInMapContext(map, <PrintButton>Print test</PrintButton>);
       const button = screen.getByText('Print test');
       await userEvent.click(button);
     });

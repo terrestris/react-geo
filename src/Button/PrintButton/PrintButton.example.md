@@ -25,11 +25,6 @@ import PrintButton from '@terrestris/react-geo/Button/PrintButton/PrintButton';
 
 import { Progress } from 'antd';
 
-import A4Landscape from './A4Landscape.example.ts';
-import A4Portrait from './A4Portrait.example.ts';
-import A3Landscape from './A3Landscape.example.ts';
-import A3Portrait from './A3Portrait.example.ts';
-
 const PrintButtonExample = () => {
   const [map, setMap] = useState();
   const [progress, setProgress] = useState(0);
@@ -134,7 +129,7 @@ const PrintButtonExample = () => {
       source: new OlSourceOsm(),
     });
     osm.set('name', 'OpenStreetMap');
-    osm.set('legendUrl', 'https://terrestris.github.io/react-geo/assets/legend1.png');
+    osm.set('legendUrl', '/assets/legend1.png');
 
     const stamen = new OlLayerTile({
       source: new OlSourceStamen({
@@ -142,7 +137,7 @@ const PrintButtonExample = () => {
       })
     });
     stamen.set('name', 'Stamen');
-    stamen.set('legendUrl', 'https://terrestris.github.io/react-geo/assets/legend2.png');
+    stamen.set('legendUrl', '/assets/legend2.png');
 
     const newMap = new OlMap({
       layers: [
@@ -238,64 +233,12 @@ const PrintButtonExample = () => {
           }}
         />
         <PrintButton
-          style={{
-            margin: '10px 10px 0 0'
-          }}
           onProgressChange={setProgress}
-          title='A4 Landscape'
-          legendTitle='A4 Landscape Legend'
           format='pdf'
           northArrow={true}
           scaleBar={true}
-          pdfPrintFunc={A4Landscape}
-          mapSize={[277, 170, 'mm']}
         >
-          Print map A4 Landscape
-        </PrintButton>
-        <PrintButton
-          style={{
-            margin: '10px 10px 0 0'
-          }}
-          onProgressChange={setProgress}
-          title='A4 Portrait'
-          legendTitle='A4 Portrait Legend'
-          format='pdf'
-          northArrow={true}
-          scaleBar={true}
-          pdfPrintFunc={A4Portrait}
-          mapSize={[190, 247, 'mm']}
-        >
-          Print map A4 Portrait
-        </PrintButton>
-        <PrintButton
-          style={{
-            margin: '10px 10px 0 0'
-          }}
-          onProgressChange={setProgress}
-          title='A3 Landscape'
-          legendTitle='A3 Landscape Legend'
-          format='pdf'
-          northArrow={true}
-          scaleBar={true}
-          pdfPrintFunc={A3Landscape}
-          mapSize={[400, 250, 'mm']}
-        >
-          Print map A3 Landscape
-        </PrintButton>
-        <PrintButton
-          style={{
-            margin: '10px 10px 0 0'
-          }}
-          onProgressChange={setProgress}
-          title='A3 Portrait'
-          legendTitle='A3 Portrait Legend'
-          format='pdf'
-          northArrow={true}
-          scaleBar={true}
-          pdfPrintFunc={A3Portrait}
-          mapSize={[277, 370, 'mm']}
-        >
-          Print map A3 Portrait
+          Print map
         </PrintButton>
       </MapContext.Provider>
       <Progress percent={progress} />
