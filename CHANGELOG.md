@@ -1,3 +1,10 @@
+## [22.0.1](https://github.com/terrestris/react-geo/compare/v22.0.0...v22.0.1) (2022-12-19)
+
+
+### Bug Fixes
+
+* mark featurecollection from unknown layers with index ([9731fc2](https://github.com/terrestris/react-geo/commit/9731fc211d245cbc60ad66a1b5a1aa288bc3514a))
+
 # [22.0.0](https://github.com/terrestris/react-geo/compare/v21.0.1...v22.0.0) (2022-12-08)
 
 
