@@ -1,5 +1,9 @@
 import * as React from 'react';
 
+import { Spin } from 'antd';
+
+import { LoadingOutlined } from '@ant-design/icons';
+
 import _isEqual from 'lodash/isEqual';
 
 import OlLayerImage from 'ol/layer/Image';
@@ -11,6 +15,7 @@ import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import { CSS_PREFIX } from '../constants';
+
 export interface BaseProps {
   /**
    * An optional CSS class which should be added.
@@ -34,9 +39,21 @@ export interface BaseProps {
    * errors. Will remove the browsers default broken image
    */
   errorMsg?: string;
+  /**
+   * Additional headers to apply for the img request.
+   */
+  headers?: HeadersInit;
 }
 
 interface LegendState {
+  /**
+   * The current loading state of the legend image.
+   */
+  loading: boolean;
+  /**
+   * The base64 encoded image for the legend.
+   */
+  imgSrc: string;
   /**
    * The legend url.
    */
@@ -76,9 +93,17 @@ export class Legend extends React.Component<LegendProps, LegendState> {
     } = props;
 
     this.state = {
+      // A transparent 1 x 1 px image
+      // eslint-disable-next-line max-len
+      imgSrc: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
       legendUrl: this.getLegendUrl(layer, extraParams),
-      legendError: false
+      legendError: false,
+      loading: false
     };
+  }
+
+  componentDidMount() {
+    this.setLegendSrc();
   }
 
   /**
@@ -96,6 +121,36 @@ export class Legend extends React.Component<LegendProps, LegendState> {
     if (extraParams && !(_isEqual(extraParams, prevProps.extraParams))) {
       this.setState({
         legendUrl: this.getLegendUrl(layer, extraParams)
+      }, this.setLegendSrc);
+    }
+  }
+
+  async setLegendSrc() {
+    const {
+      headers
+    } = this.props;
+
+    try {
+      this.setState({
+        loading: true
+      });
+
+      const response = await fetch(this.state.legendUrl, {
+        headers
+      });
+
+      if (!response.ok) {
+        throw new Error('No successful response returned while getting the legend graphic');
+      }
+
+      this.setState({
+        imgSrc: URL.createObjectURL(await response.blob())
+      });
+    } catch (error) {
+      this.onError(error);
+    } finally {
+      this.setState({
+        loading: false
       });
     }
   }
@@ -158,19 +213,28 @@ export class Legend extends React.Component<LegendProps, LegendState> {
         className={finalClassName}
         {...passThroughProps}
       >
-        {this.state.legendError ?
-          <div
-            className='legend-load-error'
-          >
-            {errorMsg}
-          </div>
-          :
-          <img
-            src={this.state.legendUrl}
-            alt={alt}
-            onError={this.onError.bind(this)}
-          />
-        }
+        <Spin
+          spinning={this.state.loading}
+          indicator={(
+            <LoadingOutlined
+              spin
+            />
+          )}
+        >
+          {this.state.legendError ?
+            <div
+              className='legend-load-error'
+            >
+              {errorMsg}
+            </div>
+            :
+            <img
+              src={this.state.imgSrc}
+              alt={alt}
+              onError={this.onError.bind(this)}
+            />
+          }
+        </Spin>
       </div>
     );
   }
