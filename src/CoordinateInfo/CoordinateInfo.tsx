@@ -190,11 +190,11 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
       .then((textResponses: string[]) => {
         const features = {};
 
-        textResponses.forEach((featureCollection: string) => {
+        textResponses.forEach((featureCollection: string, idx: number) => {
           const fc = format.readFeatures(featureCollection);
           fc.forEach((feature: OlFeature<OlGeometry>) => {
             const id = feature.getId();
-            const featureTypeName = _isString(id) ? id.split('.')[0] : id?.toString() ?? '';
+            const featureTypeName = _isString(id) ? id.split('.')[0] : id?.toString() ?? `UNKNOWN-${idx}`;
 
             if (!features[featureTypeName]) {
               features[featureTypeName] = [];
