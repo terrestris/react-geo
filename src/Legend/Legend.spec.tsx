@@ -31,11 +31,13 @@ describe('<Legend />', () => {
   beforeAll(() => {
     enableFetchMocks();
     (window.URL.createObjectURL as jest.Mock) = jest.fn().mockReturnValue(mockLegend);
+    (window.URL.revokeObjectURL as jest.Mock) = jest.fn();
   });
 
   afterAll(() => {
     disableFetchMocks();
     (window.URL.createObjectURL as jest.Mock).mockRestore();
+    (window.URL.revokeObjectURL as jest.Mock).mockRestore();
   });
 
   beforeEach(() => {

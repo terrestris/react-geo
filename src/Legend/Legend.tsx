@@ -143,10 +143,16 @@ export class Legend extends React.Component<LegendProps, LegendState> {
         throw new Error('No successful response returned while getting the legend graphic');
       }
 
+      if (this.state.imgSrc) {
+        URL.revokeObjectURL(this.state.imgSrc);
+      }
+
       this.setState({
         imgSrc: URL.createObjectURL(await response.blob())
       });
     } catch (error) {
+      Logger.error('Error while setting the img src: ', error);
+
       this.onError(error);
     } finally {
       this.setState({
