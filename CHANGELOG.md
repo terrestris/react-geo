@@ -1,3 +1,17 @@
+# [22.1.0](https://github.com/terrestris/react-geo/compare/v22.0.1...v22.1.0) (2022-12-20)
+
+
+### Bug Fixes
+
+* adjust tests ([1225a3b](https://github.com/terrestris/react-geo/commit/1225a3b9a93a1bf62dc5571369e55e167070ab88))
+* revoke object URL ([00ca937](https://github.com/terrestris/react-geo/commit/00ca937c4091c7e6f4e30be3c59ac9e3609316ac))
+* set legend url with available cors headers ([f18d9e1](https://github.com/terrestris/react-geo/commit/f18d9e18a1ca24bb25ecc0bc7159ed996995c6f7))
+
+
+### Features
+
+* allow to pass custom headers and add a loading mask ([ad94811](https://github.com/terrestris/react-geo/commit/ad948115389e1665c88f17b0806c5358c3507351))
+
 ## [22.0.1](https://github.com/terrestris/react-geo/compare/v22.0.0...v22.0.1) (2022-12-19)
 
 
