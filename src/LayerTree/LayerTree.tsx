@@ -229,7 +229,6 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     const collection = groupLayer.getLayers();
     const addEvtKey = collection.on('add', this.onCollectionAdd);
     const removeEvtKey = collection.on('remove', this.onCollectionRemove);
-    // @ts-ignore
     const changeEvtKey = groupLayer.on('change:layers', this.onChangeLayers);
 
     this.olListenerKeys.push(addEvtKey, removeEvtKey, changeEvtKey);

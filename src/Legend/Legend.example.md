@@ -39,7 +39,7 @@ class LegendExample extends React.Component {
 
     this.places =  new OlLayerTile({
       name: 'Places',
-      legendUrl: 'https://www.koeln.de/files/images/Karnevalstrikot_Spieler_270.jpg',
+      legendUrl: 'https://terrestris.github.io/react-geo/assets/legend1.png',
       source: new OlSourceTileWMS({
         url: 'https://ahocevar.com/geoserver/wms',
         params: {LAYERS: 'ne:ne_10m_populated_places', TILED: true, TRANSPARENT: 'true'},
