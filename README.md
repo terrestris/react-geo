@@ -25,7 +25,7 @@ The `react-geo` package includes TypeScript declarations as `*.d.ts` files.
 
 ### Styling
 
-`react-geo` supports dynamic theming [via CSS variables](https://ant.design/docs/react/customize-theme-variable) and requires the following import inside your project.
+`react-geo` supports dynamic theming [via CSS variables](https://4x.ant.design/docs/react/customize-theme-variable) and requires the following import inside your project.
 
 ```css
 @import '~antd/dist/antd.variable.min.css';
