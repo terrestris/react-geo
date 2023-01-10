@@ -1,25 +1,22 @@
 This demonstrates the usage of the NominatimSearch.
 
 ```jsx
-import * as React from 'react';
+import {useEffect, useState} from 'react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
-import { fromLonLat } from 'ol/proj';
+import {fromLonLat} from 'ol/proj';
 
+import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
 import NominatimSearch from '@terrestris/react-geo/Field/NominatimSearch/NominatimSearch';
 
-class NominatimSearchExample extends React.Component {
+const NominatimSearchExample = () => {
+  const [map, setMap] = useState();
 
-  constructor(props) {
-
-    super(props);
-
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.map = new OlMap({
+  useEffect(() => {
+    const newMap = new OlMap({
       layers: [
         new OlLayerTile({
           name: 'OSM',
@@ -31,32 +28,31 @@ class NominatimSearchExample extends React.Component {
         zoom: 4
       })
     });
+
+    setMap(newMap);
+  }, []);
+
+  if (!map) {
+    return null;
   }
 
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="example-block">
-          <label>The NominatimSearch<br />
-            <NominatimSearch
-              map={this.map}
-            />
-          </label>
-        </div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
-        />
+  return (
+    <div>
+      <div className="example-block">
+        <label>The NominatimSearch<br />
+          <NominatimSearch map={map} />
+        </label>
       </div>
-    );
-  }
-}
+
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
+    </div>
+  );
+};
 
 <NominatimSearchExample />
 ```
