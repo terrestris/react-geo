@@ -1,3 +1,10 @@
+## [22.1.1](https://github.com/terrestris/react-geo/compare/v22.1.0...v22.1.1) (2023-01-11)
+
+
+### Bug Fixes
+
+* move [@types](https://github.com/types) to devDependencies ([a20855b](https://github.com/terrestris/react-geo/commit/a20855b141165b101a1a48abadc5ba3271a2f23f))
+
 # [22.1.0](https://github.com/terrestris/react-geo/compare/v22.0.1...v22.1.0) (2022-12-20)
 
 
