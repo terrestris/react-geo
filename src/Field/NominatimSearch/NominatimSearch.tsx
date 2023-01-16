@@ -16,6 +16,7 @@ import { GeoJSON } from 'geojson';
 import { CSS_PREFIX } from '../../constants';
 
 import './NominatimSearch.less';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 // See https://nominatim.org/release-docs/develop/api/Output/ for some more information
 export type NominatimPlace = {
@@ -43,15 +44,15 @@ interface OwnProps {
   /**
    * The Nominatim Base URL. See https://wiki.openstreetmap.org/wiki/Nominatim
    */
-  nominatimBaseUrl: string;
+  nominatimBaseUrl?: string;
   /**
    * Output format.
    */
-  format: string;
+  format?: string;
   /**
    * The preferred area to find search results in [left],[top],[right],[bottom].
    */
-  viewBox: string;
+  viewBox?: string;
   /**
    * Restrict the results to only items contained with the bounding box.
    * Restricting the results to the bounding box also enables searching by
@@ -59,25 +60,25 @@ interface OwnProps {
    * rejected but with bounded=1 will result in a list of items matching within
    * the bounding box.
    */
-  bounded: number;
+  bounded?: number;
   /**
    * Output geometry of results in geojson format.
    */
-  polygonGeoJSON: number;
+  polygonGeoJSON?: number;
   /**
    * Include a breakdown of the address into elements.
    */
-  addressDetails: number;
+  addressDetails?: number;
   /**
    * Limit the number of returned results.
    */
-  limit: number;
+  limit?: number;
   /**
    * Limit search results to a specific country (or a list of countries).
    * [countrycode] should be the ISO 3166-1alpha2 code, e.g. gb for the United
    * Kingdom, de for Germany, etc.
    */
-  countryCodes: string;
+  countryCodes?: string;
   /**
    * Preferred language order for showing search results, overrides the value
    * specified in the "Accept-Language" HTTP header. Either use a standard RFC2616
@@ -87,17 +88,17 @@ interface OwnProps {
   /**
    * The minimal amount of characters entered in the input to start a search.
    */
-  minChars: number;
+  minChars?: number;
   /**
    * A render function which gets called with the selected item as it is
    * returned by nominatim. It must return an `AutoComplete.Option`.
    */
-  renderOption: (item: NominatimPlace) => React.ReactElement<OptionProps>;
+  renderOption?: (item: NominatimPlace) => React.ReactElement<OptionProps>;
   /**
    * An onSelect function which gets called with the selected item as it is
    * returned by nominatim.
    */
-  onSelect: (item: NominatimPlace, olMap: OlMap) => void;
+  onSelect?: (item: NominatimPlace, olMap: OlMap) => void;
   /**
    * Indicate if we should render the input and results. When setting to false,
    * you need to handle user input and result yourself
@@ -121,7 +122,7 @@ interface OwnProps {
    */
   className?: string;
   /**
-   * The ol.map where the map will zoom to.
+   * The openlayers map where the map will zoom to.
    *
    */
   map: OlMap;
@@ -130,41 +131,68 @@ interface OwnProps {
    * value is empty.
    */
   onClear?: () => void;
-}
-
-interface NominatimSearchState {
-  searchTerm: string;
-  dataSource: NominatimPlace[];
+  /**
+   * Time in miliseconds that the search waits before doing a request.
+   */
+  debounceTime?: number;
 }
 
 export type NominatimSearchProps = OwnProps & Omit<AutoCompleteProps, 'onSelect'>;
 
 /**
  * The NominatimSearch.
- *
- * @class NominatimSearch
- * @extends React.Component
  */
-export class NominatimSearch extends React.Component<NominatimSearchProps, NominatimSearchState> {
+export const NominatimSearch: FC<NominatimSearchProps> = ({
+  nominatimBaseUrl = 'https://nominatim.openstreetmap.org/search?',
+  format = 'json',
+  viewBox = '-180,90,180,-90',
+  bounded = 1,
+  polygonGeoJSON = 1,
+  addressDetails = 1,
+  limit = 10,
+  countryCodes = 'de',
+  minChars = 3,
+  visible = true,
+  className = `${CSS_PREFIX}nominatimsearch`,
+  searchResultLanguage,
+  onClear,
+  onSelect,
+  onFetchError,
+  onFetchSuccess,
+  renderOption,
+  debounceTime = 300,
+  map,
+  ...passThroughProps
+}) => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [dataSource, setDataSource] = useState<NominatimPlace[]>([]);
 
-  static defaultProps = {
-    nominatimBaseUrl: 'https://nominatim.openstreetmap.org/search?',
-    format: 'json',
-    viewBox: '-180,90,180,-90',
-    bounded: 1,
-    polygonGeoJSON: 1,
-    addressDetails: 1,
-    limit: 10,
-    countryCodes: 'de',
-    minChars: 3,
-    visible: true,
-    /**
-     * Create an AutoComplete.Option from the given data.
-     *
-     * @param item The tuple as an object.
-     * @return The returned option
-     */
-    renderOption: (item: NominatimPlace): React.ReactElement<OptionProps> => {
+  const finalOnSelect = useCallback((selected: NominatimPlace, olMap: OlMap) => {
+    if (onSelect) {
+      onSelect(selected, olMap);
+    } else if (selected && selected.boundingbox) {
+      const olView = olMap.getView();
+      const bbox: number[] = selected.boundingbox.map(parseFloat);
+      let extent = [
+        bbox[2],
+        bbox[0],
+        bbox[3],
+        bbox[1]
+      ] as OlExtent;
+
+      extent = transformExtent(extent, 'EPSG:4326',
+        olView.getProjection().getCode());
+
+      olView.fit(extent, {
+        duration: 500
+      });
+    }
+  }, [onSelect]);
+
+  const finalRenderOption = useCallback((item: NominatimPlace): React.ReactElement<OptionProps> => {
+    if (renderOption) {
+      return renderOption(item);
+    } else {
       return (
         <Option
           key={item.place_id}
@@ -173,131 +201,16 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
           {item.display_name}
         </Option>
       );
-    },
-    /**
-     * The default onSelect method if no onSelect prop is given. It zooms to the
-     * selected item.
-     *
-     * @param selected The selected item as it is returned by nominatim.
-     * @param olMap The map
-     */
-    onSelect: (selected: NominatimPlace, olMap: OlMap) => {
-      if (selected && selected.boundingbox) {
-        const olView = olMap.getView();
-        const bbox: number[] = selected.boundingbox.map(parseFloat);
-        let extent = [
-          bbox[2],
-          bbox[0],
-          bbox[3],
-          bbox[1]
-        ] as OlExtent;
-
-        extent = transformExtent(extent, 'EPSG:4326',
-          olView.getProjection().getCode());
-
-        olView.fit(extent, {
-          duration: 500
-        });
-      }
     }
-  };
+  }, [renderOption]);
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}nominatimsearch`;
-
-  /**
-   * Create the NominatimSearch.
-   *
-   * @param props The initial props.
-   * @constructs NominatimSearch
-   */
-  constructor(props: NominatimSearchProps) {
-    super(props);
-    this.state = {
-      searchTerm: '',
-      dataSource: []
-    };
-    this.onUpdateInput = this.onUpdateInput.bind(this);
-    this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
-  }
-
-  /**
-   * Trigger search when searchTerm prop has changed
-   *
-   * @param prevProps Previous props
-   */
-  componentDidUpdate(prevProps: Readonly<NominatimSearchProps>) {
-    if (this.props.searchTerm !== prevProps.searchTerm) {
-      this.onUpdateInput(this.props.searchTerm);
-    }
-  }
-
-  /**
-   * Called if the input of the AutoComplete is being updated. It sets the
-   * current inputValue as searchTerm and starts a search if the inputValue has
-   * a length of at least `this.props.minChars` (default 3).
-   *
-   * @param inputValue The inputValue. Undefined if clear btn
-   *                                      is pressed.
-   */
-  onUpdateInput(inputValue?: string) {
-    const {
-      onClear
-    } = this.props;
-
-    this.setState({
-      dataSource: []
-    });
-
-    this.setState({
-      searchTerm: inputValue || ''
-    }, () => {
-      if (this.state.searchTerm.length >= this.props.minChars) {
-        this.doSearch();
-      }
-    });
-
-    if (!inputValue && onClear) {
-      onClear();
-    }
-  }
-
-  /**
-   * Perform the search.
-   */
-  async doSearch() {
-    const {
-      format,
-      viewBox,
-      bounded,
-      polygonGeoJSON,
-      nominatimBaseUrl,
-      addressDetails,
-      limit,
-      countryCodes,
-      searchResultLanguage
-    } = this.props;
-
-    const {
-      searchTerm
-    } = this.state;
-
-    const baseParams = {
-      format: format,
-      viewbox: viewBox,
-      bounded: bounded,
-      // eslint-disable-next-line camelcase
-      polygon_geojson: polygonGeoJSON,
-      addressdetails: addressDetails,
-      limit: limit,
-      countrycodes: countryCodes,
-      q: searchTerm
-    };
-
+  const fetchResults = useCallback(async (baseParams: any) => {
     const getRequestParams = UrlUtil.objectToRequestString(baseParams);
+
+    const onError = (error: any) => {
+      Logger.error(`Error while requesting Nominatim: ${error}`);
+      onFetchError?.(error);
+    };
 
     try {
       let fetchOpts: RequestInit = {};
@@ -312,45 +225,50 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
       const response = await fetch(`${nominatimBaseUrl}${getRequestParams}`, fetchOpts);
 
       if (!response.ok) {
-        throw new Error(`Return code: ${response.status}`);
+        onError(new Error(`Return code: ${response.status}`));
       }
 
       const responseJson = await response.json();
 
-      this.onFetchSuccess(responseJson);
-    } catch (e) {
-      this.onFetchError(e);
+      setDataSource(responseJson);
+      onFetchSuccess?.(responseJson);
+    } catch (error) {
+      onError(error);
     }
-  }
+  }, []);
 
   /**
-   * This function gets called on success of the nominatim fetch.
-   * It sets the response as dataSource.
-   *
-   * @param response The found features.
+   * Trigger search when searchTerm has changed
    */
-  onFetchSuccess(response: any) {
-    this.setState({
-      dataSource: response
-    }, () => {
-      if (this.props.onFetchSuccess) {
-        this.props.onFetchSuccess(response);
-      }
-    });
-  }
+  useEffect(() => {
+    setDataSource([]);
 
-  /**
-   * This function gets called when the nomintim fetch returns an error.
-   * It logs the error to the console.
-   *
-   * @param error The errorstring.
-   */
-  onFetchError(error: any) {
-    Logger.error(`Error while requesting Nominatim: ${error}`);
-    if (this.props.onFetchError) {
-      this.props.onFetchError(error);
+    if (!searchTerm && onClear) {
+      onClear();
     }
-  }
+
+    if (!searchTerm || searchTerm.length < minChars) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      fetchResults({
+        format: format,
+        viewbox: viewBox,
+        bounded: bounded,
+        // eslint-disable-next-line camelcase
+        polygon_geojson: polygonGeoJSON,
+        addressdetails: addressDetails,
+        limit: limit,
+        countrycodes: countryCodes,
+        q: searchTerm
+      });
+    }, debounceTime);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [searchTerm, minChars, debounceTime]);
 
   /**
    * The function describes what to do when an item is selected.
@@ -358,61 +276,36 @@ export class NominatimSearch extends React.Component<NominatimSearchProps, Nomin
    * @param value The value of the selected option.
    * @param option The selected OptionData
    */
-  onMenuItemSelected(value: string, option: any) {
-    const selected = this.state.dataSource.find(
+  const onMenuItemSelected = useCallback((value: string, option: any) => {
+    if (!map) {
+      return;
+    }
+    const selected = dataSource.find(
       i => i.place_id.toString() === option.key
     );
     if (selected) {
-      this.props.onSelect(selected, this.props.map);
+      finalOnSelect(selected, map);
     }
+  }, [finalOnSelect, dataSource, map]);
+
+  if (visible === false) {
+    return null;
   }
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      nominatimBaseUrl,
-      format,
-      viewBox,
-      bounded,
-      polygonGeoJSON,
-      addressDetails,
-      limit,
-      countryCodes,
-      map,
-      onSelect,
-      renderOption,
-      minChars,
-      visible,
-      searchResultLanguage,
-      ...passThroughProps
-    } = this.props;
-
-    if (visible === false) {
-      return null;
-    }
-
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
-
-    return (
-      <AutoComplete
-        className={finalClassName}
-        allowClear={true}
-        placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
-        onChange={(v: string) => this.onUpdateInput(v)}
-        onSelect={(v: string, o: any) => this.onMenuItemSelected(v, o)}
-        {...passThroughProps}
-      >
-        {
-          this.state.dataSource.map(renderOption)
-        }
-      </AutoComplete>
-    );
-  }
-}
+  return (
+    <AutoComplete
+      className={className}
+      allowClear={true}
+      placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
+      onChange={setSearchTerm}
+      onSelect={onMenuItemSelected}
+      {...passThroughProps}
+    >
+      {
+        dataSource.map(finalRenderOption)
+      }
+    </AutoComplete>
+  );
+};
 
 export default NominatimSearch;

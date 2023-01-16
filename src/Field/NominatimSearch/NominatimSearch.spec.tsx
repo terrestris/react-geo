@@ -1,188 +1,139 @@
-/* eslint-disable testing-library/render-result-naming-convention */
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
 
-import TestUtil from '../../Util/TestUtil';
-import Logger from '@terrestris/base-util/dist/Logger';
+import userEvent from '@testing-library/user-event';
 
 import NominatimSearch from '../NominatimSearch/NominatimSearch';
+import { actSetTimeout, renderInMapContext } from '../../Util/rtlTestUtils';
+
+import { screen } from '@testing-library/react';
+import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
+import * as React from 'react';
 
 describe('<NominatimSearch />', () => {
+  let map: OlMap;
+
+  const nominatimBoundingBox = ['52.7076346', '52.7476346', '7.7702617', '7.8102617'];
+
+  const resultMock = [{
+    // eslint-disable-next-line camelcase
+    place_id: 752526,
+    // eslint-disable-next-line camelcase
+    display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland',
+    boundingbox: nominatimBoundingBox
+  }, {
+    // eslint-disable-next-line camelcase
+    place_id: 123,
+    // eslint-disable-next-line camelcase
+    display_name: 'peter'
+  }];
+
+  beforeAll(() => {
+    enableFetchMocks();
+    (fetch as FetchMock).mockResponse(JSON.stringify(resultMock));
+  });
+
+  beforeEach(() => {
+    map = new OlMap({
+      layers: [
+        new OlLayerTile({
+          properties: {
+            name: 'OSM'
+          },
+          source: new OlSourceOsm()
+        })
+      ],
+      view: new OlView({
+        projection: 'EPSG:4326',
+        center: [37.40570, 8.81566],
+        zoom: 4
+      })
+    });
+  });
+
   it('is defined', () => {
     expect(NominatimSearch).not.toBeUndefined();
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(NominatimSearch);
-    expect(wrapper).not.toBeUndefined();
+    renderInMapContext(map, <NominatimSearch map={map} />);
+
+    const button = screen.getByRole('combobox');
+    expect(button).toBeVisible();
   });
 
-  describe('#onUpdateInput', () => {
-    it('resets state.dataSource', () => {
-      const wrapper = TestUtil.mountComponent(NominatimSearch);
-      wrapper.instance().onUpdateInput();
-      expect(wrapper.state().dataSource).toEqual([]);
-    });
+  it('performs a search and shows options', async () => {
+    renderInMapContext(map, <NominatimSearch map={map} />);
 
-    it('sets the inputValue as state.searchTerm', () => {
-      const wrapper = TestUtil.mountComponent(NominatimSearch);
-      const inputValue = 'a';
-      wrapper.instance().onUpdateInput(inputValue);
-      expect(wrapper.state().searchTerm).toBe(inputValue);
-    });
+    const input = screen.getByRole('combobox');
 
-    it('sends a request if input is as long as props.minChars', () => {
-      const wrapper = TestUtil.mountComponent(NominatimSearch);
-      const fetchSpy = jest.spyOn(window, 'fetch');
-      const inputValue = 'Bonn';
-      wrapper.instance().onUpdateInput(inputValue);
-      expect(fetchSpy).toHaveBeenCalled();
-      fetchSpy.mockRestore();
-    });
+    await userEvent.type(input, 'Cl');
+
+    await actSetTimeout(500);
+
+    let options = screen.queryAllByRole('option');
+
+    // eslint-disable-next-line jest-dom/prefer-in-document
+    expect(options).toHaveLength(0);
+
+    await userEvent.type(input, 'oppenburg');
+
+    await actSetTimeout(500);
+
+    options = screen.queryAllByRole('option');
+
+    // eslint-disable-next-line jest-dom/prefer-in-document
+    expect(options).toHaveLength(1);
+    expect(options[0]).toHaveTextContent(resultMock[0].display_name);
   });
 
-  describe('#doSearch', () => {
-    it('sends a request with appropriate parts', () => {
-      const wrapper = TestUtil.mountComponent(NominatimSearch);
-      const fetchSpy = jest.spyOn(window, 'fetch');
-      const inputValue = 'Bonn';
-      wrapper.setState({searchTerm: inputValue});
-      wrapper.instance().doSearch();
-      expect(fetchSpy).toHaveBeenCalled();
+  it('sets the text value of the search to the select item and zooms to the bounding box', async () => {
+    renderInMapContext(map, <NominatimSearch map={map} />);
 
-      const fetchUrl = fetchSpy.mock.calls[0][0];
+    const fitSpy = jest.spyOn(map.getView(), 'fit');
 
-      const expectations = [
-        wrapper.props().nominatimBaseUrl,
-        encodeURIComponent(wrapper.props().format),
-        encodeURIComponent(wrapper.props().viewBox),
-        encodeURIComponent(wrapper.props().bounded),
-        encodeURIComponent(wrapper.props().polygonGeoJSON),
-        encodeURIComponent(wrapper.props().addressDetails),
-        encodeURIComponent(wrapper.props().limit),
-        encodeURIComponent(wrapper.props().countryCodes),
-        encodeURIComponent(inputValue)
-      ];
-      expectations.forEach(expectation => {
-        expect(fetchUrl).toMatch(expectation);
-      });
-      fetchSpy.mockRestore();
+    const input = screen.getByRole('combobox');
+
+    await userEvent.type(input, 'Cloppenburg');
+
+    const option = await screen.findByText(resultMock[0].display_name, {
+      selector: '.ant-select-item-option-content'
     });
+
+    await userEvent.click(option);
+
+    expect(input).toHaveValue(resultMock[0].display_name);
+
+    expect(fitSpy).toBeCalled();
+
+    fitSpy.mockRestore();
   });
 
-  describe('#onFetchSuccess', () => {
-    it('sets the response as state.dataSource', () => {
-      const wrapper = TestUtil.mountComponent(NominatimSearch);
-      const response = [{
-        // eslint-disable-next-line camelcase
-        place_id: 123,
-        // eslint-disable-next-line camelcase
-        display_name: 'peter'
-      }];
-      wrapper.instance().onFetchSuccess(response);
-      expect(wrapper.state().dataSource).toEqual(response);
+  it('calls a custom select callback', async () => {
+    const selectSpy = jest.fn();
+
+    renderInMapContext(map, <NominatimSearch map={map} onSelect={selectSpy} />);
+
+    const fitSpy = jest.spyOn(map.getView(), 'fit');
+
+    const input = screen.getByRole('combobox');
+
+    await userEvent.type(input, 'Cloppenburg');
+
+    const option = await screen.findByText(resultMock[0].display_name, {
+      selector: '.ant-select-item-option-content'
     });
+
+    await userEvent.click(option);
+
+    expect(fitSpy).toHaveBeenCalledTimes(0);
+
+    expect(selectSpy).toBeCalled();
+    expect(selectSpy.mock.calls[0][0]).toStrictEqual(resultMock[0]);
+
+    fitSpy.mockRestore();
+    selectSpy.mockRestore();
   });
-
-  describe('#onFetchError', () => {
-    it('sets the response as state.dataSource', () => {
-      const wrapper = TestUtil.mountComponent(NominatimSearch);
-      const loggerSpy = jest.spyOn(Logger, 'error');
-      wrapper.instance().onFetchError('Peter');
-      expect(loggerSpy).toHaveBeenCalled();
-      expect(loggerSpy).toHaveBeenCalledWith('Error while requesting Nominatim: Peter');
-      loggerSpy.mockRestore();
-    });
-  });
-
-  describe('#onMenuItemSelected', () => {
-    it('calls this.props.onSelect with the selected item', () => {
-      // SETUP
-      const dataSource = [{
-        // eslint-disable-next-line camelcase
-        place_id: 752526,
-        // eslint-disable-next-line camelcase
-        display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland'
-      }];
-      const map = new OlMap({
-        layers: [new OlLayerTile({name: 'OSM', source: new OlSourceOsm()})],
-        view: new OlView({
-          projection: 'EPSG:4326',
-          center: [37.40570, 8.81566],
-          zoom: 4
-        })
-      });
-      // SETUP END
-
-      const selectSpy = jest.fn();
-      const wrapper = TestUtil.mountComponent(NominatimSearch, {
-        onSelect: selectSpy,
-        map
-      });
-      wrapper.setState({
-        dataSource: dataSource
-      });
-      wrapper.instance().onMenuItemSelected('752526', {
-        value: '752526',
-        children: '752526',
-        key: '752526'
-      });
-      expect(selectSpy).toHaveBeenCalled();
-      expect(selectSpy).toHaveBeenCalledWith(dataSource[0], map);
-
-      selectSpy.mockRestore();
-    });
-  });
-
-  describe('#onSelect', () => {
-    it('zooms to the boundingbox of the selected entry', () => {
-      // SETUP
-      const bbox = ['52.7076346', '52.7476346', '7.7702617', '7.8102617'];
-      const transformedExtent = [
-        parseFloat(bbox[2]),
-        parseFloat(bbox[0]),
-        parseFloat(bbox[3]),
-        parseFloat(bbox[1])
-      ];
-      const item = {
-        // eslint-disable-next-line camelcase
-        place_id: '752526',
-        boundingbox: bbox
-      };
-      const map = new OlMap({
-        layers: [new OlLayerTile({name: 'OSM', source: new OlSourceOsm()})],
-        view: new OlView({
-          projection: 'EPSG:4326',
-          center: [37.40570, 8.81566],
-          zoom: 4
-        })
-      });
-      // SETUP END
-
-      const wrapper = TestUtil.mountComponent(NominatimSearch, {map});
-      const fitSpy = jest.spyOn(map.getView(), 'fit');
-      wrapper.props().onSelect(item, map);
-      expect(fitSpy).toHaveBeenCalled();
-      expect(fitSpy).toHaveBeenCalledWith(transformedExtent, expect.any(Object) );
-      fitSpy.mockRestore();
-    });
-  });
-
-  describe('#renderOption', () => {
-    it('returns an AutoComplete.Option', () => {
-      const wrapper = TestUtil.mountComponent(NominatimSearch);
-      const item = {
-        // eslint-disable-next-line camelcase
-        place_id: '752526',
-        // eslint-disable-next-line camelcase
-        display_name: 'Böen, Löningen, Landkreis Cloppenburg, Niedersachsen, Deutschland'
-      };
-      const option = wrapper.props().renderOption(item);
-      expect(option.key).toBe(item.place_id);
-      expect(option.props.children).toBe(item.display_name);
-    });
-  });
-
 });
