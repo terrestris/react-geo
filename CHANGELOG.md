@@ -1,3 +1,10 @@
+# [22.2.0](https://github.com/terrestris/react-geo/compare/v22.1.1...v22.2.0) (2023-01-16)
+
+
+### Features
+
+* **NominatimSearch:** rewrite to FC, add debounceTime, use rtl for test ([eaf4b93](https://github.com/terrestris/react-geo/commit/eaf4b93680c7d777f4a5e33f990162b4f87bd1f7))
+
 ## [22.1.1](https://github.com/terrestris/react-geo/compare/v22.1.0...v22.1.1) (2023-01-11)
 
 
