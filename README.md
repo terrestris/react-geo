@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@terrestris/react-geo.svg?style=flat-square)](https://www.npmjs.com/package/@terrestris/react-geo)
 [![GitHub license](https://img.shields.io/github/license/terrestris/react-geo?style=flat-square)](https://github.com/terrestris/react-geo/blob/main/LICENSE)
 [![Coverage Status](https://img.shields.io/coveralls/github/terrestris/react-geo?style=flat-square)](https://coveralls.io/github/terrestris/react-geo?branch=main)
-![GitHub action build](https://img.shields.io/github/workflow/status/terrestris/react-geo/Test%20successful%20build%20of%20react-geo?style=flat-square)
+![GitHub action build](https://img.shields.io/github/actions/workflow/status/terrestris/react-geo/on-push-main.yml?branch=main&style=flat-square)
 [![Known Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/terrestris/react-geo?style=flat-square)](https://snyk.io/test/github/terrestris/react-geo)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/terrestris/react-geo/blob/main/CONTRIBUTING.md)
 
