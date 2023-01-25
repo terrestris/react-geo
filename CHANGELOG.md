@@ -1,3 +1,10 @@
+## [22.2.1](https://github.com/terrestris/react-geo/compare/v22.2.0...v22.2.1) (2023-01-25)
+
+
+### Bug Fixes
+
+* minor lint fixes ([e7809e1](https://github.com/terrestris/react-geo/commit/e7809e1c3509f4d8a29aa4253f3f24e8d35fbcfd))
+
 # [22.2.0](https://github.com/terrestris/react-geo/compare/v22.1.1...v22.2.0) (2023-01-16)
 
 
