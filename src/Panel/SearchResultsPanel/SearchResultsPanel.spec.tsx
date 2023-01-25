@@ -56,6 +56,7 @@ describe('<SearchResultsPanel />', () => {
         searchTerms={[]}
       />);
 
+      // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
       const resultsPanel = container.querySelector('.search-result-div');
       expect(resultsPanel).toBeVisible();
     });
@@ -70,6 +71,7 @@ describe('<SearchResultsPanel />', () => {
         searchTerms={[]}
       />);
 
+      // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
       const actionItemLists = container.querySelectorAll('.ant-list-item-action');
       expect(actionItemLists).toHaveLength(0);
     });
