@@ -1,8 +1,7 @@
 import { render, within, screen } from '@testing-library/react';
-import * as React from 'react';
+import React from 'react';
 import userEvent from '@testing-library/user-event';
 import TestUtil from '../Util/TestUtil';
-import Logger from '@terrestris/base-util/dist/Logger';
 
 import LayerSwitcher from './LayerSwitcher';
 import OlLayerTile from 'ol/layer/Tile';
@@ -46,13 +45,13 @@ describe('<LayerSwitcher />', () => {
 
   it('contains map element', () => {
     const { container } = render(<LayerSwitcher layers={layers} map={map} />);
-    const mapElement = within(container).getByRole('img');
+    const mapElement = within(container).getByRole('menu');
     expect(mapElement).toBeVisible();
   });
 
   it('adds a custom className', () => {
     render(<LayerSwitcher layers={layers} map={map} className="peter" />);
-    const firstChild = screen.getByRole('form');
+    const firstChild = screen.getByRole('menu');
     expect(firstChild).toHaveClass('peter');
   });
 
@@ -61,7 +60,7 @@ describe('<LayerSwitcher />', () => {
       backgroundColor: 'yellow',
       position: 'inherit'
     }} />);
-    const firstChild = screen.getByRole('form');
+    const firstChild = screen.getByRole('menu');
     expect(firstChild).toHaveStyle({
       backgroundColor: 'yellow'
     });

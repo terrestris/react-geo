@@ -103,6 +103,7 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
         .map(cloneLayer)
         .forEach(layer => switcherMap.addLayer(layer));
     }
+    updateLayerVisibility();
   }, [switcherMap]);
 
   /**
@@ -146,13 +147,12 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
    */
   const updateLayerVisibility = () => {
     layers.forEach((l, i) => {
-      const clone = switcherMap
-        ?.getAllLayers()
-        ?.find(lc => lc.get(identifierProperty) === l.get(identifierProperty));
-      l.setVisible(visibleLayerIndexRef.current === i);
+      const visible = visibleLayerIndexRef.current === i;
+      l.setVisible(visible);
+      const clone = switcherMap?.getAllLayers()?.find(lc => lc.get(identifierProperty) === l.get(identifierProperty));
       if (clone) {
-        clone.setVisible(visibleLayerIndexRef.current === i);
-        if (visibleLayerIndexRef.current === i) {
+        clone.setVisible(visible);
+        if (visible) {
           setPreviewLayer(clone);
         }
       }
@@ -165,9 +165,9 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
    */
   const onSwitcherClick = (evt: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     evt.stopPropagation();
-    switcherMap?.getAllLayers().forEach((layer, index: number) => {
+    layers.forEach((layer, index: number) => {
       if (layer.getVisible()) {
-        if (switcherMap?.getAllLayers()?.length - 1 === index) {
+        if (layers.length - 1 === index) {
           visibleLayerIndexRef.current = 0;
         } else {
           visibleLayerIndexRef.current = index + 1;
@@ -191,6 +191,7 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
   return (
     <div
       className={finalClassName}
+      role="menu"
       {...passThroughProps}
     >
       <div
