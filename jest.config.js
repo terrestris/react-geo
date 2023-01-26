@@ -26,7 +26,8 @@ module.exports = {
     '<rootDir>/jest/__mocks__/matchMediaMock.js'
   ],
   setupFilesAfterEnv: [
-    '<rootDir>/jest/setup.js'
+    '<rootDir>/jest/setup.js',
+    '<rootDir>/jest/__mocks__/resizeObserverMock.js'
   ],
   transform: {
     '^.+\\.jsx?$': '<rootDir>/node_modules/babel-jest',
