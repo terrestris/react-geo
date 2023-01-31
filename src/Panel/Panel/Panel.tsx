@@ -400,6 +400,7 @@ export class Panel extends React.Component<PanelProps, PanelState> {
     return (
       <Rnd
         className={rndClassName}
+        aria-label={'react-geo-panel'}
         ref={rnd => this._rnd = rnd}
         default={{
           x: defX,
