@@ -19,7 +19,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
     if (!map) {
       return;
     }
-    if (ref == null) {
+    if (ref === null) {
       map.setTarget(undefined);
     } else {
       map.setTarget(ref);

@@ -49,7 +49,6 @@ export type LayerSwitcherProps = OwnProps & React.HTMLAttributes<HTMLDivElement>
  * @class LayerSwitcher
  * @extends React.Component
  */
-// export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwitcherState> {
 export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
   identifierProperty = 'name',
   labelProperty = 'name',
