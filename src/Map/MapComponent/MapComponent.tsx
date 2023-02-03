@@ -1,102 +1,44 @@
-import * as React from 'react';
-import { PureComponent } from 'react';
+import React, {
+  useCallback
+} from 'react';
+
 import OlMap from 'ol/Map';
 
-interface DefaultProps {
-  mapDivId: string;
-}
-
-interface BaseProps {
+export interface MapComponentProps extends React.ComponentProps<'div'> {
   map: OlMap;
+  mapDivId?: string;
 }
 
-export type MapComponentProps = BaseProps & Partial<DefaultProps> & React.HTMLAttributes<HTMLDivElement>;
+export const MapComponent: React.FC<MapComponentProps> = ({
+  map,
+  mapDivId = 'map',
+  ...passThroughProps
+}): JSX.Element => {
 
-/**
- * Class representing a map.
- *
- * @class The MapComponent.
- * @extends React.PureComponent
- */
-export class MapComponent extends PureComponent<MapComponentProps> {
-
-  /**
-   * The default properties.
-   */
-  static defaultProps: DefaultProps = {
-    mapDivId: 'map'
-  };
-
-  /**
-   * Create a MapComponent.
-   */
-  constructor(props: MapComponentProps) {
-    super(props);
-  }
-
-  /**
-   * The componentDidMount function.
-   */
-  componentDidMount() {
-    const {
-      map,
-      mapDivId
-    } = this.props;
-
-    map.setTarget(mapDivId);
-  }
-
-  /**
-   * The componentWillUnmount function.
-   */
-  componentWillUnmount() {
-    const {
-      map
-    } = this.props;
-
-    map.setTarget(undefined);
-  }
-
-  /**
-   * Invoked immediately after updating occured and also called for the initial
-   * render.
-   */
-  componentDidUpdate() {
-    const {
-      map
-    } = this.props;
-    map.updateSize();
-  }
-
-  /**
-   * The render function.
-   */
-  render() {
-    let mapDiv;
-
-    const {
-      map,
-      mapDivId,
-      children,
-      role = 'application',
-      ...passThroughProps
-    } = this.props;
-
-    if (map) {
-      mapDiv = <div
-        className="map"
-        role={role}
-        id={mapDivId}
-        {...passThroughProps}
-      >
-        {children}
-      </div>;
+  const refCallback = useCallback((ref: HTMLDivElement) => {
+    if (!map) {
+      return;
     }
+    if (ref === null) {
+      map.setTarget(undefined);
+    } else {
+      map.setTarget(ref);
+    }
+  }, [map]);
 
-    return (
-      mapDiv
-    );
+  if (!map) {
+    return <></>;
   }
-}
+
+  return (
+    <div
+      id={mapDivId}
+      ref={refCallback}
+      className="map"
+      role="presentation"
+      {...passThroughProps}
+    />
+  );
+};
 
 export default MapComponent;
