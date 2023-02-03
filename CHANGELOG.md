@@ -1,3 +1,16 @@
+# [22.3.0](https://github.com/terrestris/react-geo/compare/v22.2.1...v22.3.0) (2023-02-03)
+
+
+### Bug Fixes
+
+* apply suggestions from code review ([1010fa9](https://github.com/terrestris/react-geo/commit/1010fa9d952cb65580e9bd5c92c75e4a58a627b8))
+* fix LayerSwitcher test ([9a4fc87](https://github.com/terrestris/react-geo/commit/9a4fc87af868731c6a5421294192c5fe4453d808))
+
+
+### Features
+
+* add Props to LayerSwitcher and refactor ([ee9abe6](https://github.com/terrestris/react-geo/commit/ee9abe6c041bf22bc3019cfaacd68c3e9d5e1151))
+
 ## [22.2.1](https://github.com/terrestris/react-geo/compare/v22.2.0...v22.2.1) (2023-01-25)
 
 
