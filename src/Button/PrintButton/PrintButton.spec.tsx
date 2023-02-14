@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import PrintButton from './PrintButton';
 import { renderInMapContext } from '../../Util/rtlTestUtils';
@@ -9,6 +8,7 @@ import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
+import { click } from '../../Util/electronTestUtils';
 
 describe('<PrintButton />', () => {
 
@@ -46,7 +46,7 @@ describe('<PrintButton />', () => {
     it('prints a png image', async () => {
       renderInMapContext(map, <PrintButton mapSize={[0, 0]}>Print test</PrintButton>);
       const button = screen.getByText('Print test');
-      await userEvent.click(button);
+      await click(button);
     });
 
   });

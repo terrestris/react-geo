@@ -1,9 +1,9 @@
 import testImage from  '../../assets/user.png';
 
 import UserChip from './UserChip';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import userEvent from '@testing-library/user-event';
+import { click } from '../Util/electronTestUtils';
 
 describe('<UserChip />', () => {
 
@@ -44,7 +44,7 @@ describe('<UserChip />', () => {
     };
     render(<UserChip userName="Shinji Kagawa" userMenu={exampleMenu}/>);
     const chip = screen.getByText('SK').parentElement;
-    await userEvent.click(chip);
+    await click(chip);
     const menu = screen.getByText('Example menu');
     // `toBeVisible` does not work because antd seems to be in the way
     expect(menu).toBeInTheDocument();
@@ -56,12 +56,14 @@ describe('<UserChip />', () => {
     expect(menu).not.toBeInTheDocument();
   });
 
-  it('should pass style prop', () => {
+  it('should pass style prop',async () => {
     render(<UserChip userName="Shinji Kagawa" style={{ backgroundColor: 'yellow' }} />);
     const chip = screen.getByText('Shinji Kagawa').parentElement;
-    expect(chip).toHaveStyle({
-      backgroundColor: 'yellow'
-    });
+    await waitFor(() => {
+      expect(chip).toHaveStyle({
+        backgroundColor: 'yellow'
+      });
+    })
   });
 
 });

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { screen, waitFor, within } from '@testing-library/react';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
@@ -11,8 +10,9 @@ import OlVectorSource from 'ol/source/Vector';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 
 import DrawButton from '../DrawButton/DrawButton';
-import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
+import { renderInMapContext } from '../../Util/rtlTestUtils';
 import SelectFeaturesButton from './SelectFeaturesButton';
+import { click, clickCenter } from '../../Util/electronTestUtils';
 
 describe('<SelectFeaturesButton />', () => {
 
@@ -58,22 +58,21 @@ describe('<SelectFeaturesButton />', () => {
 
   describe('#Selection', () => {
     it('calls the listener', async () => {
-      const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
-
       const selectSpy = jest.fn();
 
       renderInMapContext(map, <SelectFeaturesButton layers={[layer]} onFeatureSelect={selectSpy} />);
 
       const button = screen.getByRole('button');
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 200, 200);
+      await clickCenter(map.getViewport());
 
-      expect(selectSpy).toBeCalled();
+      await waitFor(() => {
+        expect(selectSpy).toBeCalled();
+      })
+
       const event: OlSelectEvent = selectSpy.mock.calls[0][0];
       expect(event.selected).toEqual([feature]);
-
-      mock.mockRestore();
     });
   });
 });

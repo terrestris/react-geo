@@ -260,7 +260,7 @@ export class LayerSwitcher extends React.Component<LayerSwitcherProps, LayerSwit
           role="button"
         >
           <MapComponent
-            mapDivId="layer-switcher-map"
+            className="layer-switcher-map"
             map={this._map}
             role="img"
           />

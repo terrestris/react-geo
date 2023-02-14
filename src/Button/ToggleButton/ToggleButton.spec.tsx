@@ -1,7 +1,7 @@
 import ToggleButton from './ToggleButton';
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
-import userEvent from '@testing-library/user-event';
+import { click } from '../../Util/electronTestUtils';
 
 describe('<ToggleButton />', () => {
 
@@ -31,7 +31,7 @@ describe('<ToggleButton />', () => {
 
     render(<ToggleButton pressed={true} onClick={onClick} />);
     const button = screen.getByRole('button');
-    await userEvent.click(button);
+    await click(button);
 
     expect(onClick).not.toHaveBeenCalled();
   });
@@ -114,7 +114,7 @@ describe('<ToggleButton />', () => {
     expect(onToggle).toHaveBeenCalledWith(true, null);
 
     // Pressed will now become false.
-    await userEvent.click(button);
+    await click(button);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
 
@@ -131,13 +131,13 @@ describe('<ToggleButton />', () => {
 
     expect(button).not.toHaveClass('btn-pressed');
 
-    await userEvent.click(button);
+    await click(button);
     expect(button).toHaveClass('btn-pressed');
 
-    await userEvent.click(button);
+    await click(button);
     expect(button).not.toHaveClass('btn-pressed');
 
-    await userEvent.click(button);
+    await click(button);
     expect(button).toHaveClass('btn-pressed');
   });
 
@@ -149,15 +149,15 @@ describe('<ToggleButton />', () => {
     render(<ToggleButton onToggle={onToggle}/>);
     const button = screen.getByRole('button');
 
-    await userEvent.click(button);
+    await click(button);
     expect(onToggle).toHaveBeenCalledTimes(1);
     expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
 
-    await userEvent.click(button);
+    await click(button);
     expect(onToggle).toHaveBeenCalledTimes(2);
     expect(onToggle).toHaveBeenCalledWith(false, clickEvtMock);
 
-    await userEvent.click(button);
+    await click(button);
     expect(onToggle).toHaveBeenCalledTimes(3);
     expect(onToggle).toHaveBeenCalledWith(true, clickEvtMock);
   });

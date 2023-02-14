@@ -253,7 +253,8 @@ const DrawButton: React.FC<DrawButtonProps> = ({
         {...passThroughProps}
       />
       {modal}
-    </span>);
+    </span>
+  );
 };
 
 export default DrawButton;

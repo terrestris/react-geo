@@ -137,7 +137,7 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
     >
       <Spin spinning={loading}>
         <MapComponent
-          mapDivId={`previewmap-${uid}`}
+          id={`previewmap-${uid}`}
           style={{
             height,
             width

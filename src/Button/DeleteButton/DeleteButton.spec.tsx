@@ -1,15 +1,15 @@
-import { screen,  within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
-import userEvent from '@testing-library/user-event';
 
 import OlView from 'ol/View';
 import OlMap from 'ol/Map';
 import OlPoint from 'ol/geom/Point';
 import OlFeature from 'ol/Feature';
 
-import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
+import { renderInMapContext } from '../../Util/rtlTestUtils';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import { DeleteButton } from './DeleteButton';
+import { click, clickCenter, clickCoordinate } from '../../Util/electronTestUtils';
 
 describe('<DeleteButton />', () => {
 
@@ -52,22 +52,20 @@ describe('<DeleteButton />', () => {
 
   describe('#Deleting', () => {
     it('deletes the feature', async () => {
-      const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
-
       const layer = DigitizeUtil.getDigitizeLayer(map);
 
       renderInMapContext(map, <DeleteButton />);
 
       const button = screen.getByRole('button');
-      await userEvent.click(button);
+      await click(button);
 
       expect(layer.getSource().getFeatures()).toHaveLength(1);
 
-      clickMap(map, 200, 200);
+      await clickCenter(map.getViewport());
 
-      expect(layer.getSource().getFeatures()).toHaveLength(0);
-
-      mock.mockRestore();
+      await waitFor(() => {
+        expect(layer.getSource().getFeatures()).toHaveLength(0);
+      })
     });
   });
 });

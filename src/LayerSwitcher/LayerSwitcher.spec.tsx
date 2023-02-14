@@ -1,13 +1,12 @@
 import { render, within, screen } from '@testing-library/react';
 import * as React from 'react';
-import userEvent from '@testing-library/user-event';
 import TestUtil from '../Util/TestUtil';
-import Logger from '@terrestris/base-util/dist/Logger';
 
 import LayerSwitcher from './LayerSwitcher';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceStamen from 'ol/source/Stamen';
 import OlSourceOsm from 'ol/source/OSM';
+import { click } from '../Util/electronTestUtils';
 
 describe('<LayerSwitcher />', () => {
   let map;
@@ -85,7 +84,7 @@ describe('<LayerSwitcher />', () => {
     const layer0visibile = layers[0].getVisible();
     const layer1visibile = layers[1].getVisible();
 
-    await userEvent.click(switcher);
+    await click(switcher);
 
     expect(layers[0].getVisible()).toBe(!layer0visibile);
     expect(layers[1].getVisible()).toBe(!layer1visibile);

@@ -25,6 +25,11 @@ export function onDropAware(WrappedComponent: React.ComponentType<MapComponentPr
       } = this.props;
 
       event.preventDefault();
+
+      if (!map) {
+        return;
+      }
+
       const files = event.dataTransfer?.files ?? [];
       if (files.length > 0) {
         for (let i = 0; i < files.length; ++i) {

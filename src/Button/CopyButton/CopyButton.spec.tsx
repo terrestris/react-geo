@@ -1,6 +1,5 @@
-import { screen,  within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
-import userEvent from '@testing-library/user-event';
 
 import OlView from 'ol/View';
 import OlMap from 'ol/Map';
@@ -10,9 +9,11 @@ import OlStyleStyle from 'ol/style/Style';
 import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
 
-import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
+import { renderInMapContext } from '../../Util/rtlTestUtils';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import CopyButton from './CopyButton';
+import { click, clickCenter } from '../../Util/electronTestUtils';
+import OlStyleCircle from 'ol/style/Circle';
 
 describe('<CopyButton />', () => {
 
@@ -29,6 +30,16 @@ describe('<CopyButton />', () => {
       }),
       fill: new OlStyleFill({
         color: 'green'
+      }),
+      image: new OlStyleCircle({
+        radius: 5,
+        stroke: new OlStyleStroke({
+          color: 'red',
+          width: 2
+        }),
+        fill: new OlStyleFill({
+          color: 'green'
+        })
       })
     });
     feature = new OlFeature<OlPoint>({
@@ -65,29 +76,27 @@ describe('<CopyButton />', () => {
 
   describe('#Copying', () => {
     it('copies the feature', async () => {
-      const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
-
       const layer = DigitizeUtil.getDigitizeLayer(map);
       layer.setStyle(style);
 
       renderInMapContext(map, <CopyButton />);
 
       const button = screen.getByRole('button');
-      await userEvent.click(button);
+      await click(button);
 
       expect(layer.getSource().getFeatures()).toHaveLength(1);
 
-      clickMap(map, 200, 200);
+      await clickCenter(map.getViewport());
 
-      expect(layer.getSource().getFeatures()).toHaveLength(2);
+      await waitFor(() => {
+        expect(layer.getSource().getFeatures()).toHaveLength(2);
+      });
 
-      const [feat1, feat2] = layer.getSource().getFeatures();
+      const [feat1, feat2] = layer.getSource()?.getFeatures();
 
       expect(feat2.get('someProp')).toEqual('test');
 
-      expect(feat1.getGeometry().getType()).toEqual(feat2.getGeometry().getType());
-
-      mock.mockRestore();
+      expect(feat1.getGeometry()?.getType()).toEqual(feat2.getGeometry()?.getType());
     });
   });
 });

@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
-import userEvent from '@testing-library/user-event';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
@@ -11,6 +10,7 @@ import {
   queryAntdDropdownOption
 } from '../../Util/antdTestQueries';
 import { actSetTimeout } from '../../Util/rtlTestUtils';
+import { type } from '../../Util/electronTestUtils';
 
 describe('<CoordinateReferenceSystemCombo />', () => {
 
@@ -65,7 +65,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       render(<CoordinateReferenceSystemCombo crsApiUrl={url} />);
 
       const combobox = screen.getByRole('combobox');
-      await userEvent.type(combobox, '25832');
+      await type(combobox, '25832');
 
       await actSetTimeout(0);
 
@@ -80,7 +80,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const combobox = screen.getByRole('combobox');
 
-      await userEvent.type(combobox, 'a');
+      await type(combobox, 'a');
 
       for (const result of resultMock.results) {
         const option = await findAntdDropdownOptionByText(`${result.name} (EPSG:${result.code})`);
@@ -101,7 +101,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const combobox = screen.getByRole('combobox');
 
-      await userEvent.type(combobox, 'a');
+      await type(combobox, 'a');
 
       await actSetTimeout(50);
 
@@ -118,7 +118,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       render(<CoordinateReferenceSystemCombo />);
       const combobox = screen.getByRole('combobox');
-      await userEvent.type(combobox, 'a');
+      await type(combobox, 'a');
 
       await waitFor(() => {
         expect(loggerSpy).toHaveBeenCalled();
@@ -139,7 +139,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const combobox = screen.getByRole('combobox');
 
-      await userEvent.type(combobox, 'a');
+      await type(combobox, 'a');
 
       const result = resultMock.results[0];
       const expected = transformedResults[0];
@@ -161,7 +161,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       const combobox = screen.getByRole('combobox');
 
-      await userEvent.type(combobox, 'a');
+      await type(combobox, 'a');
 
       const result = resultMock.results[0];
 

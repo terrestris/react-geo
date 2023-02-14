@@ -37,8 +37,6 @@ module.exports = {
     '!src/**/*example*.*'
   ],
   coverageDirectory: '<rootDir>/coverage',
-  testEnvironment: 'jsdom',
-  testEnvironmentOptions: {
-    url: 'http://localhost/'
-  }
+  runner: '@kayahr/jest-electron-runner',
+  testEnvironment: '@kayahr/jest-electron-runner/environment'
 };

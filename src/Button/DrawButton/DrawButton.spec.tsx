@@ -1,20 +1,24 @@
 import DrawButton from './DrawButton';
-import { screen,  within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import * as React from 'react';
-import userEvent from '@testing-library/user-event';
 
 import OlView from 'ol/View';
 import OlMap from 'ol/Map';
-import { clickMap, doubleClickMap, renderInMapContext } from '../../Util/rtlTestUtils';
+import { renderInMapContext } from '../../Util/rtlTestUtils';
 import LineString from 'ol/geom/LineString';
 import Polygon from 'ol/geom/Polygon';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
+import { click, clickCoordinate, doubleClickCoordinate, type } from '../../Util/electronTestUtils';
 
 describe('<DrawButton />', () => {
 
-  let map;
+  beforeAll(async () => {
+    (await import("@electron/remote")).getCurrentWindow().show();
+  });
+
+  let map: OlMap;
 
   beforeEach(() => {
     map = new OlMap({
@@ -48,15 +52,20 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()
+        ?.getFeatures())
+        .toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()
+        ?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Point');
+      expect(feature?.getGeometry()
+        ?.getType())
+        .toBe('Point');
     });
 
     it('draws lines', async () => {
@@ -66,20 +75,32 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
-      doubleClickMap(map, 120, 100);
+      await doubleClickCoordinate(120, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()
+        ?.getFeatures())
+        .toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()
+        ?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('LineString');
+      expect(feature?.getGeometry()
+        ?.getType())
+        .toBe('LineString');
 
-      expect((feature.getGeometry() as LineString).getCoordinates()).toHaveLength(2);
+      expect((
+        feature?.getGeometry() as LineString
+      ).getCoordinates())
+        .toHaveLength(2);
     });
+
+  });
+
+  describe('#Drawing', () => {
 
     it('draws polygons', async () => {
       renderInMapContext(map, <DrawButton drawType={'Polygon'} />);
@@ -88,23 +109,23 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
-      clickMap(map, 120, 100);
+      await clickCoordinate(120, 100);
 
-      clickMap(map, 120, 120);
+      await clickCoordinate(120, 120);
 
-      doubleClickMap(map, 100, 120);
+      await doubleClickCoordinate(100, 120);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Polygon');
+      expect(feature?.getGeometry()?.getType()).toBe('Polygon');
 
-      const coordinates = (feature.getGeometry() as Polygon).getCoordinates();
+      const coordinates = (feature?.getGeometry() as Polygon).getCoordinates();
 
       expect(coordinates).toHaveLength(1);
       expect(coordinates[0]).toHaveLength(5);
@@ -117,29 +138,29 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
       const dialog = screen.getByRole('dialog');
       expect(dialog).toBeVisible();
 
       const input = screen.getByRole('textbox');
 
-      await userEvent.type(input, 'Label text.');
+      await type(input, 'Label text.');
 
       const okButton = within(dialog).getByText('Ok');
 
-      await userEvent.click(okButton);
+      await click(okButton);
 
       expect(dialog).not.toBeVisible();
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Point');
-      expect(feature.get('label')).toBe('Label text.');
+      expect(feature?.getGeometry()?.getType()).toBe('Point');
+      expect(feature?.get('label')).toBe('Label text.');
     });
 
     it('aborts drawing labels', async () => {
@@ -149,24 +170,24 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
       const dialog = screen.getByRole('dialog');
       expect(dialog).toBeVisible();
 
       const input = screen.getByRole('textbox');
 
-      await userEvent.type(input, 'Label text.');
+      await type(input, 'Label text.');
 
       const cancelButton = within(dialog).getByText('Cancel');
 
-      await userEvent.click(cancelButton);
+      await click(cancelButton);
 
       expect(dialog).not.toBeVisible();
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(0);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(0);
     });
 
     it('draws circles', async () => {
@@ -176,17 +197,17 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
-      clickMap(map, 120, 120);
+      await clickCoordinate(120, 120);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Circle');
+      expect(feature?.getGeometry()?.getType()).toBe('Circle');
     });
 
     it('draws rectangles', async () => {
@@ -196,17 +217,17 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
-      clickMap(map, 120, 120);
+      await clickCoordinate( 120, 120);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Polygon');
+      expect(feature?.getGeometry()?.getType()).toBe('Polygon');
 
       const coordinates = (feature.getGeometry() as Polygon).getCoordinates();
 
@@ -221,25 +242,25 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(0);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(0);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 120, 100);
+      await clickCoordinate(120, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 120, 100);
+      await clickCoordinate(120, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(2);
     });
 
     it('calls draw start and draw end listeners', async () => {
@@ -250,21 +271,21 @@ describe('<DrawButton />', () => {
 
       const button = screen.getByRole('button');
 
-      await userEvent.click(button);
+      await click(button);
 
       expect(startSpy).not.toBeCalled();
       expect(endSpy).not.toBeCalled();
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
       expect(startSpy).toBeCalledTimes(1);
       expect(endSpy).not.toBeCalled();
 
-      clickMap(map, 120, 100);
+      await clickCoordinate(120, 100);
 
-      clickMap(map, 120, 120);
+      await clickCoordinate(120, 120);
 
-      doubleClickMap(map, 100, 120);
+      await doubleClickCoordinate(100, 120);
 
       expect(startSpy).toBeCalledTimes(1);
       expect(endSpy).toBeCalledTimes(1);
@@ -287,16 +308,16 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      await userEvent.click(button1);
+      await click(button1);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
-      await userEvent.click(button1);
-      await userEvent.click(button2);
+      await click(button1);
+      await click(button2);
 
-      clickMap(map, 120, 120);
+      await clickCoordinate(120, 120);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(2);
     });
 
     it('can use a custom layer', async () => {
@@ -310,15 +331,15 @@ describe('<DrawButton />', () => {
 
       const button = screen.getByRole('button');
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
-      expect(layer.getSource().getFeatures()).toHaveLength(1);
+      expect(layer.getSource()?.getFeatures()).toHaveLength(1);
 
       const defaultDigitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      expect(defaultDigitizeLayer.getSource().getFeatures()).toHaveLength(0);
+      expect(defaultDigitizeLayer.getSource()?.getFeatures()).toHaveLength(0);
     });
 
     it('can change the type', async () => {
@@ -326,22 +347,22 @@ describe('<DrawButton />', () => {
 
       const button = screen.getByRole('button');
 
-      await userEvent.click(button);
+      await click(button);
 
-      clickMap(map, 100, 100);
+      await clickCoordinate(100, 100);
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
-      expect(digitizeLayer.getSource().getFeatures()[0].getGeometry().getType()).toBe('Point');
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()[0].getGeometry()?.getType()).toBe('Point');
 
       rerenderInMapContext(<DrawButton drawType={'LineString'} />);
 
-      clickMap(map, 120, 120);
-      doubleClickMap(map, 140, 140);
+      await clickCoordinate(120, 120);
+      await doubleClickCoordinate(140, 140);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
-      expect(digitizeLayer.getSource().getFeatures()[1].getGeometry().getType()).toBe('LineString');
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(2);
+      expect(digitizeLayer.getSource()?.getFeatures()[1].getGeometry()?.getType()).toBe('LineString');
     });
   });
 });

@@ -3,20 +3,23 @@ import TestUtil from '../../Util/TestUtil';
 import moment from 'moment';
 import TimeLayerSliderPanel from '../TimeLayerSliderPanel/TimeLayerSliderPanel';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlMap from 'ol/Map';
+import { click } from '../../Util/electronTestUtils';
 
 describe('<TimeLayerSliderPanel />', () => {
 
-  let map;
+  let map: OlMap;
 
   const testLayerName = 'OSM-WMS';
   const testLayerTitle = 'OSM-WMS - by terrestris';
   const testLayer = new OlLayerTile({
     visible: false,
-    title: testLayerTitle,
+    properties: {
+      title: testLayerTitle,
+    },
     source: new OlSourceTileWMS({
       url: 'https://ows.terrestris.de/osm/service?',
       params: {
@@ -65,7 +68,7 @@ describe('<TimeLayerSliderPanel />', () => {
 
     const playButton = screen.getByLabelText('Autoplay');
     expect(playButton).toHaveAttribute('aria-pressed', 'false');
-    await userEvent.click(playButton);
+    await click(playButton);
     expect(playButton).toHaveAttribute('aria-pressed', 'true');
     expect(playButton).toBeVisible();
   });

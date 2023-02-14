@@ -1,6 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
 import * as React from 'react';
-import userEvent from '@testing-library/user-event';
 
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
@@ -8,6 +7,7 @@ import TestUtil from '../../Util/TestUtil';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 
 import AddWmsPanel from './AddWmsPanel';
+import { click } from '../../Util/electronTestUtils';
 
 describe('<AddWmsPanel />', () => {
 
@@ -17,7 +17,9 @@ describe('<AddWmsPanel />', () => {
   const testLayerTitle = 'OSM-WMS - by terrestris';
   const testLayer = new OlLayerTile({
     visible: false,
-    title: testLayerTitle,
+    properties: {
+      title: testLayerTitle
+    },
     source: new OlSourceTileWMS({
       url: 'https://ows.terrestris.de/osm/service?',
       params: {
@@ -31,7 +33,9 @@ describe('<AddWmsPanel />', () => {
   const testLayerTitle2 = 'OSM-WMS - by terrestris 2';
   const testLayer2 = new OlLayerTile({
     visible: false,
-    title: testLayerTitle2,
+    properties: {
+      title: testLayerTitle2
+    },
     source: new OlSourceTileWMS({
       url: 'https://ows.terrestris.de/osm/service?',
       params: {
@@ -82,7 +86,7 @@ describe('<AddWmsPanel />', () => {
       render(<AddWmsPanel map={map} wmsLayers={testWmsLayers} />);
 
       const addAllLayersButton = screen.getByRole('button', { name: /add all layers/i });
-      await userEvent.click(addAllLayersButton);
+      await click(addAllLayersButton);
 
       const layers = MapUtil.getLayersByProperty(map, 'title', testLayerTitle);
       expect(layers).toHaveLength(1);
@@ -98,7 +102,7 @@ describe('<AddWmsPanel />', () => {
       render(<AddWmsPanel wmsLayers={testWmsLayers} onLayerAddToMap={callback} />);
 
       const addAllLayersButton = screen.getByRole('button', { name: /add all layers/i });
-      await userEvent.click(addAllLayersButton);
+      await click(addAllLayersButton);
 
       expect(callback).toBeCalledWith(testWmsLayers);
     });
@@ -111,10 +115,10 @@ describe('<AddWmsPanel />', () => {
 
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
 
-      await userEvent.click(checkbox);
+      await click(checkbox);
       expect(callback).toBeCalledWith([testLayerTitle]);
 
-      await userEvent.click(checkbox);
+      await click(checkbox);
       expect(callback).toBeCalledWith([]);
     });
 
@@ -123,10 +127,10 @@ describe('<AddWmsPanel />', () => {
 
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
 
-      await userEvent.click(checkbox);
+      await click(checkbox);
 
       const addSelectedLayersButton = screen.getByRole('button', { name: /add selected layers/i });
-      await userEvent.click(addSelectedLayersButton);
+      await click(addSelectedLayersButton);
 
       const layers = MapUtil.getLayersByProperty(map, 'title', testLayerTitle);
       expect(layers).toHaveLength(1);
@@ -142,10 +146,10 @@ describe('<AddWmsPanel />', () => {
 
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
 
-      await userEvent.click(checkbox);
+      await click(checkbox);
 
       const addSelectedLayersButton = screen.getByRole('button', { name: /add selected layers/i });
-      await userEvent.click(addSelectedLayersButton);
+      await click(addSelectedLayersButton);
 
       expect(callback).toBeCalledWith([testLayer]);
     });
@@ -165,7 +169,7 @@ describe('<AddWmsPanel />', () => {
       const onCancelButton = screen.getByRole('button', { name: /cancel/i });
       expect(onCancelButton).toBeInTheDocument();
 
-      await userEvent.click(onCancelButton);
+      await click(onCancelButton);
       expect(callback).toBeCalled();
     });
   });

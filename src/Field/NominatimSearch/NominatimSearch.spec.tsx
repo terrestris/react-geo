@@ -3,14 +3,13 @@ import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
 
-import userEvent from '@testing-library/user-event';
-
 import NominatimSearch from '../NominatimSearch/NominatimSearch';
 import { actSetTimeout, renderInMapContext } from '../../Util/rtlTestUtils';
 
 import { screen } from '@testing-library/react';
 import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
 import * as React from 'react';
+import { click, type } from '../../Util/electronTestUtils';
 
 describe('<NominatimSearch />', () => {
   let map: OlMap;
@@ -69,7 +68,7 @@ describe('<NominatimSearch />', () => {
 
     const input = screen.getByRole('combobox');
 
-    await userEvent.type(input, 'Cl');
+    await type(input, 'Cl');
 
     await actSetTimeout(500);
 
@@ -78,7 +77,7 @@ describe('<NominatimSearch />', () => {
     // eslint-disable-next-line jest-dom/prefer-in-document
     expect(options).toHaveLength(0);
 
-    await userEvent.type(input, 'oppenburg');
+    await type(input, 'oppenburg');
 
     await actSetTimeout(500);
 
@@ -96,13 +95,13 @@ describe('<NominatimSearch />', () => {
 
     const input = screen.getByRole('combobox');
 
-    await userEvent.type(input, 'Cloppenburg');
+    await type(input, 'Cloppenburg');
 
     const option = await screen.findByText(resultMock[0].display_name, {
       selector: '.ant-select-item-option-content'
     });
 
-    await userEvent.click(option);
+    await click(option);
 
     expect(input).toHaveValue(resultMock[0].display_name);
 
@@ -120,13 +119,13 @@ describe('<NominatimSearch />', () => {
 
     const input = screen.getByRole('combobox');
 
-    await userEvent.type(input, 'Cloppenburg');
+    await type(input, 'Cloppenburg');
 
     const option = await screen.findByText(resultMock[0].display_name, {
       selector: '.ant-select-item-option-content'
     });
 
-    await userEvent.click(option);
+    await click(option);
 
     expect(fitSpy).toHaveBeenCalledTimes(0);
 
