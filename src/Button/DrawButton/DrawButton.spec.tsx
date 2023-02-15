@@ -14,9 +14,9 @@ import { click, clickCoordinate, doubleClickCoordinate, type } from '../../Util/
 
 describe('<DrawButton />', () => {
 
-  beforeAll(async () => {
-    (await import("@electron/remote")).getCurrentWindow().show();
-  });
+  // beforeAll(async () => {
+  //   (await import("@electron/remote")).getCurrentWindow().show();
+  // });
 
   let map: OlMap;
 
