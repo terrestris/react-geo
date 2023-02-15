@@ -1,3 +1,10 @@
+## [22.3.1](https://github.com/terrestris/react-geo/compare/v22.3.0...v22.3.1) (2023-02-15)
+
+
+### Bug Fixes
+
+* remove direct dependency to ant-design/icons and replace all usages with fontawesome icons ([def64ee](https://github.com/terrestris/react-geo/commit/def64eee02980ee019a5d719026cc34f96fdc943))
+
 # [22.3.0](https://github.com/terrestris/react-geo/compare/v22.2.1...v22.3.0) (2023-02-03)
 
 
