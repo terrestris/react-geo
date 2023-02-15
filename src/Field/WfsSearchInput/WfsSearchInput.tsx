@@ -5,8 +5,11 @@ import {
 } from 'antd';
 import { InputProps } from 'antd/lib/input';
 
-import LoadingOutlined from '@ant-design/icons/LoadingOutlined';
-import CloseCircleOutlined from '@ant-design/icons/CloseCircleOutlined';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCircleNotch,
+  faClose
+} from '@fortawesome/free-solid-svg-icons';
 
 import OlMap from 'ol/Map';
 import OlFormatGML32 from 'ol/format/GML32';
@@ -15,7 +18,9 @@ import OlFormatGeoJson from 'ol/format/GeoJSON';
 import _debounce from 'lodash/debounce';
 
 import Logger from '@terrestris/base-util/dist/Logger';
-import WfsFilterUtil, { AttributeDetails } from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
+import WfsFilterUtil, {
+  AttributeDetails
+} from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 
 import { Feature } from 'geojson';
 
@@ -443,10 +448,13 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
         ref={inputRef => {this._inputRef = inputRef; }}
         suffix={
           fetching ?
-            <LoadingOutlined
+            <FontAwesomeIcon
+              spin={true}
+              icon={faCircleNotch}
               onClick={this.resetSearch.bind(this)}
             /> :
-            <CloseCircleOutlined
+            <FontAwesomeIcon
+              icon={faClose}
               onClick={this.resetSearch.bind(this)}
             />
         }

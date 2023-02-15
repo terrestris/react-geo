@@ -41,27 +41,18 @@ import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 />
 ```
 
-A SimpleButton with an antd icon.
-
-```jsx
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
-
-import { DownloadOutlined } from '@ant-design/icons';
-
-<SimpleButton
-  icon={<DownloadOutlined />}
-/>
-```
-
 A round SimpleButton using shape config:
 
 ```jsx
 import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
 
-import { DownloadOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 <SimpleButton
-  icon={<DownloadOutlined />}
+  icon={<FontAwesomeIcon
+    icon={faDownload}
+  />}
   shape="circle"
 />
 ```

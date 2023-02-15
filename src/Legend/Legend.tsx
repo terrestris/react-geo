@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import { Spin } from 'antd';
 
-import { LoadingOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 
 import _isEqual from 'lodash/isEqual';
 
@@ -222,8 +223,8 @@ export class Legend extends React.Component<LegendProps, LegendState> {
         <Spin
           spinning={this.state.loading}
           indicator={(
-            <LoadingOutlined
-              spin
+            <FontAwesomeIcon
+              icon={faCircleNotch}
             />
           )}
         >
