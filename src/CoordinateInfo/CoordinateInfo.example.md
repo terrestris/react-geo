@@ -8,7 +8,8 @@ import {
   Tooltip
 } from 'antd';
 
-import CopyOutlined from '@ant-design/icons/CopyOutlined';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
@@ -104,7 +105,7 @@ class CoordinateInfoExample extends React.Component {
                         onClick={() => {
                           copy(clickCoord.join(', '));
                         }}
-                        icon={<CopyOutlined />}
+                        icon={<FontAwesomeIcon icon={faCopy}/>}
                       />
                     </Tooltip>
                   </div>
@@ -132,7 +133,7 @@ class CoordinateInfoExample extends React.Component {
                         onClick={() => {
                           copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
                         }}
-                        icon={<CopyOutlined />}
+                        icon={<FontAwesomeIcon icon={faCopy}/>}
                       />
                     </Tooltip>
                   </div>

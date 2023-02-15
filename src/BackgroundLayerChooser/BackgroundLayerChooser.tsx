@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef
+} from 'react';
 
 import OlOverviewMap from 'ol/control/OverviewMap';
 import OlLayerBase from 'ol/layer/Base';
@@ -11,14 +15,16 @@ import { getUid } from 'ol/util';
 
 import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPreview';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  LeftOutlined,
-  RightOutlined
-} from '@ant-design/icons';
+  faChevronLeft,
+  faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
 
-import './BackgroundLayerChooser.less';
 import useMap from '../Hook/useMap';
 import SimpleButton from '../Button/SimpleButton/SimpleButton';
+
+import './BackgroundLayerChooser.less';
 
 export type BackgroundLayerChooserProps = {
   layers: OlLayer[];
@@ -136,7 +142,14 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
         className={`change-bg-btn${layerOptionsVisible ? ' toggled' : ''}`}
         size="small"
         tooltip={buttonTooltip}
-        icon={layerOptionsVisible ? <RightOutlined /> : <LeftOutlined />}
+        icon={layerOptionsVisible ?
+          <FontAwesomeIcon
+            icon={faChevronRight}
+          /> :
+          <FontAwesomeIcon
+            icon={faChevronLeft}
+          />
+        }
         onClick={() => setLayerOptionsVisible(!layerOptionsVisible)}
       />
       <div className="bg-preview">

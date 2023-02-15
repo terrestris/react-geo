@@ -6,9 +6,8 @@ import OlMap from 'ol/Map';
 import OlPoint from 'ol/geom/Point';
 import OlFeature from 'ol/Feature';
 
-import {
-  GlobalOutlined
-} from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 import { renderInMapContext } from '../../Util/rtlTestUtils';
 
@@ -96,7 +95,7 @@ describe('<SearchResultsPanel />', () => {
       numTotal={searchResults.length}
       searchResults={searchResults}
       searchTerms={[]}
-      listPrefixRenderer={() => <GlobalOutlined />}
+      listPrefixRenderer={() => <FontAwesomeIcon icon={faGlobe} />}
     />);
 
     // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
@@ -104,7 +103,7 @@ describe('<SearchResultsPanel />', () => {
     expect(listPrefixItems.length).toEqual(1);
 
     // eslint-disable-next-line testing-library/no-node-access
-    const listPrefixItem = listPrefixItems.item(0).querySelectorAll('.anticon-global');
+    const listPrefixItem = listPrefixItems.item(0).querySelectorAll('.fa-globe');
     expect(listPrefixItem).toBeDefined();
   });
 
