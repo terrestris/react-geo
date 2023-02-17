@@ -9,7 +9,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 
-import LayerTransparencySlider from '@terrestris/react-geo/Slider/LayerTransparencySlider/LayerTransparencySlider';
+import LayerTransparencySlider from '@terrestris/react-geo/dist/Slider/LayerTransparencySlider/LayerTransparencySlider';
 
 class LayerTransparencySliderExample extends React.Component {
 

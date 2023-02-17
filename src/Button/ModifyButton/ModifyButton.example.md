@@ -10,10 +10,10 @@ import OlSourceOsm from 'ol/source/OSM';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import {fromLonLat} from 'ol/proj';
 
-import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import {ModifyButton} from '@terrestris/react-geo/Button/ModifyButton/ModifyButton';
-import {DigitizeUtil} from '@terrestris/react-geo/Util/DigitizeUtil';
+import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import {ModifyButton} from '@terrestris/react-geo/dist/Button/ModifyButton/ModifyButton';
+import {DigitizeUtil} from '@terrestris/react-geo/dist/Util/DigitizeUtil';
 
 import featuresJson from '../../../assets/simple-geometries.json';
 

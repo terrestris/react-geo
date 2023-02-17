@@ -18,10 +18,10 @@ import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
 
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import NominatimSearch from '@terrestris/react-geo/Field/NominatimSearch/NominatimSearch';
-import MapProvider from '@terrestris/react-geo/Provider/MapProvider/MapProvider';
-import { mappify } from '@terrestris/react-geo/HigherOrderComponent/MappifiedComponent/MappifiedComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import NominatimSearch from '@terrestris/react-geo/dist/Field/NominatimSearch/NominatimSearch';
+import MapProvider from '@terrestris/react-geo/dist/Provider/MapProvider/MapProvider';
+import { mappify } from '@terrestris/react-geo/dist/HigherOrderComponent/MappifiedComponent/MappifiedComponent';
 
 const Map = mappify(MapComponent);
 const Search = mappify(NominatimSearch);

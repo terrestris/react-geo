@@ -12,9 +12,9 @@ import OlVectorSource from 'ol/source/Vector';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import { fromLonLat } from 'ol/proj';
 
-import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import SelectFeaturesButton from '@terrestris/react-geo/Button/SelectFeaturesButton/SelectFeaturesButton';
+import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import SelectFeaturesButton from '@terrestris/react-geo/dist/Button/SelectFeaturesButton/SelectFeaturesButton';
 
 import federalStates from '../../../assets/federal-states-ger.json';
 

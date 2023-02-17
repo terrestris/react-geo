@@ -9,10 +9,10 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 
-import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
-import DrawButton from '@terrestris/react-geo/Button/DrawButton/DrawButton';
-import ToggleGroup from '@terrestris/react-geo/Button/ToggleGroup/ToggleGroup';
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
+import DrawButton from '@terrestris/react-geo/dist/Button/DrawButton/DrawButton';
+import ToggleGroup from '@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 
 const DrawButtonExample = () => {
 

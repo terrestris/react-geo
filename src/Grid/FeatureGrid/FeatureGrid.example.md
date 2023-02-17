@@ -10,7 +10,7 @@ import OlSourceOSM from 'ol/source/OSM';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import { fromLonLat } from 'ol/proj';
 
-import FeatureGrid from '@terrestris/react-geo/Grid/FeatureGrid/FeatureGrid';
+import FeatureGrid from '@terrestris/react-geo/dist/Grid/FeatureGrid/FeatureGrid';
 
 import federalStates from '../../../assets/federal-states-ger.json';
 
@@ -118,7 +118,7 @@ import Input from 'antd/lib/input';
 
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 
-import FeatureGrid from '@terrestris/react-geo/Grid/FeatureGrid/FeatureGrid';
+import FeatureGrid from '@terrestris/react-geo/dist/Grid/FeatureGrid/FeatureGrid';
 
 // Credits to Maps Icons Collection https://mapicons.mapsmarker.com.
 import mapMarker from '../../../assets/bus-map-marker.png';

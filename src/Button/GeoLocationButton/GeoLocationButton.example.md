@@ -9,8 +9,8 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 
-import GeoLocationButton from '@terrestris/react-geo/Button/GeoLocationButton/GeoLocationButton';
-import ToggleGroup from '@terrestris/react-geo/Button/ToggleGroup/ToggleGroup';
+import GeoLocationButton from '@terrestris/react-geo/dist/Button/GeoLocationButton/GeoLocationButton';
+import ToggleGroup from '@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup';
 
 class GeoLocationButtonExample extends React.Component {
 

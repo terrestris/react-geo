@@ -19,9 +19,9 @@ import OlView from 'ol/View';
 import WMTS from 'ol/source/WMTS';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext'
-import PrintButton from '@terrestris/react-geo/Button/PrintButton/PrintButton';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
+import PrintButton from '@terrestris/react-geo/dist/Button/PrintButton/PrintButton';
 
 import { Progress } from 'antd';
 

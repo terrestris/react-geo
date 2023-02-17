@@ -17,8 +17,8 @@ import OlStyleStyle from 'ol/style/Style';
 import OlStyleCircle from 'ol/style/Circle';
 import OlStyleFill from 'ol/style/Fill';
 
-import CircleMenu from '@terrestris/react-geo/CircleMenu/CircleMenu';
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
+import CircleMenu from '@terrestris/react-geo/dist/CircleMenu/CircleMenu';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil, faChartLine, faLink, faThumbsUp, faBullhorn } from '@fortawesome/free-solid-svg-icons';

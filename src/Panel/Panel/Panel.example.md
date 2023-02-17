@@ -1,7 +1,7 @@
 This example demonstrates the use of Panels
 
 ```jsx
-import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+import Panel from '@terrestris/react-geo/dist/Panel/Panel/Panel';
 
 <Panel
   style={{position: 'relative'}}
@@ -16,7 +16,7 @@ import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
 ```
 
 ```jsx
-import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+import Panel from '@terrestris/react-geo/dist/Panel/Panel/Panel';
 
 <div style={{display: 'flex'}}>
   <Panel
@@ -46,7 +46,7 @@ import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
 ```
 
 ```jsx
-import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+import Panel from '@terrestris/react-geo/dist/Panel/Panel/Panel';
 
 <Panel
   style={{position: 'relative'}}
@@ -64,7 +64,7 @@ import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
 ```
 
 ```jsx
-import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+import Panel from '@terrestris/react-geo/dist/Panel/Panel/Panel';
 
 <Panel
   style={{position: 'relative'}}
@@ -87,7 +87,7 @@ import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
 ```
 
 ```jsx
-import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+import Panel from '@terrestris/react-geo/dist/Panel/Panel/Panel';
 
 <Panel
   style={{position: 'relative'}}
@@ -101,7 +101,7 @@ import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
 ```
 
 ```jsx
-import Panel from '@terrestris/react-geo/Panel/Panel/Panel';
+import Panel from '@terrestris/react-geo/dist/Panel/Panel/Panel';
 
 <Panel
   style={{position: 'relative'}}

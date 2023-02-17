@@ -9,7 +9,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import { fromLonLat } from 'ol/proj';
 
-import Legend from '@terrestris/react-geo/Legend/Legend';
+import Legend from '@terrestris/react-geo/dist/Legend/Legend';
 
 class LegendExample extends React.Component {
 

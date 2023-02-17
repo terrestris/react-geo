@@ -5,8 +5,8 @@ Click to open window:
 ```jsx
 import * as React from 'react';
 
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
-import Window from '@terrestris/react-geo/Window/Window';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
+import Window from '@terrestris/react-geo/dist/Window/Window';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';

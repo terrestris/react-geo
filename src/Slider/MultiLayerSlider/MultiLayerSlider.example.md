@@ -13,7 +13,7 @@ import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 
-import MultiLayerSlider from '@terrestris/react-geo/Slider/MultiLayerSlider/MultiLayerSlider';
+import MultiLayerSlider from '@terrestris/react-geo/dist/Slider/MultiLayerSlider/MultiLayerSlider';
 
 class MultiLayerSliderExample extends React.Component {
 

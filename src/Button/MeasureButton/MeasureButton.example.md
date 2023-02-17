@@ -9,8 +9,8 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 
-import MeasureButton from '@terrestris/react-geo/Button/MeasureButton/MeasureButton';
-import ToggleGroup from '@terrestris/react-geo/Button/ToggleGroup/ToggleGroup';
+import MeasureButton from '@terrestris/react-geo/dist/Button/MeasureButton/MeasureButton';
+import ToggleGroup from '@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup';
 
 class MeasureButtonExample extends React.Component {
 

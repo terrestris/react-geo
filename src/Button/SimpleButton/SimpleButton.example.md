@@ -4,7 +4,7 @@ for more documentation and examples.
 Just a SimpleButton without any configuration:
 
 ```jsx
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 
 <SimpleButton>
   Click me
@@ -14,7 +14,7 @@ import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton
 A SimpleButton with a `tooltip` and a `tooltipPlacement`:
 
 ```jsx
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 
 <SimpleButton
   tooltip="bottom tooltip"
@@ -27,7 +27,7 @@ import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton
 A SimpleButton with a Font Awesome icon.
 
 ```jsx
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
@@ -44,7 +44,7 @@ import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 A round SimpleButton using shape config:
 
 ```jsx
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';

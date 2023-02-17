@@ -11,7 +11,7 @@ import OlSourceOSM from 'ol/source/OSM';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import { fromLonLat } from 'ol/proj';
 
-import AgFeatureGrid from '@terrestris/react-geo/Grid/AgFeatureGrid/AgFeatureGrid';
+import AgFeatureGrid from '@terrestris/react-geo/dist/Grid/AgFeatureGrid/AgFeatureGrid';
 
 import federalStates from '../../../assets/federal-states-ger.json';
 

@@ -8,8 +8,8 @@ If you are using function-components head over to the `useMap` example in the "H
 ```jsx
 import * as React from 'react';
 
-import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext';
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';

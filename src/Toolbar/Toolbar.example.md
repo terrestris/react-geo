@@ -1,8 +1,8 @@
 This is a example using a toolbar having vertically and horizontally aligned child elements (buttons in this example).
 
 ```jsx
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
-import Toolbar from '@terrestris/react-geo/Toolbar/Toolbar';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
+import Toolbar from '@terrestris/react-geo/dist/Toolbar/Toolbar';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faInfo } from '@fortawesome/free-solid-svg-icons';

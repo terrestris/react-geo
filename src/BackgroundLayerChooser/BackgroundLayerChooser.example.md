@@ -9,10 +9,10 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlSourceOsm from 'ol/source/OSM';
 
-import BackgroundLayerChooser from '@terrestris/react-geo/BackgroundLayerChooser/BackgroundLayerChooser';
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext';
-import { useMap } from '@terrestris/react-geo/Hook/useMap';
+import BackgroundLayerChooser from '@terrestris/react-geo/dist/BackgroundLayerChooser/BackgroundLayerChooser';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
+import { useMap } from '@terrestris/react-geo/dist/Hook/useMap';
 
 const layers = [
   new OlLayerTile({

@@ -9,8 +9,8 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 import {fromLonLat} from 'ol/proj';
 
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import NominatimSearch from '@terrestris/react-geo/Field/NominatimSearch/NominatimSearch';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import NominatimSearch from '@terrestris/react-geo/dist/Field/NominatimSearch/NominatimSearch';
 
 const NominatimSearchExample = () => {
   const [map, setMap] = useState();

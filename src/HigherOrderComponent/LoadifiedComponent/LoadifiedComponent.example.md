@@ -4,9 +4,9 @@ The example below you see a `SimpleButton` that changes the `Titlebar`'s loading
 ```jsx
 import * as React from 'react';
 
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
-import Titlebar from '@terrestris/react-geo/Panel/Titlebar/Titlebar';
-import { loadify } from '@terrestris/react-geo/HigherOrderComponent/LoadifiedComponent/LoadifiedComponent';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
+import Titlebar from '@terrestris/react-geo/dist/Panel/Titlebar/Titlebar';
+import { loadify } from '@terrestris/react-geo/dist/HigherOrderComponent/LoadifiedComponent/LoadifiedComponent';
 
 const LoadingPanel = loadify(Titlebar);
 
@@ -59,8 +59,8 @@ import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import { fromLonLat } from 'ol/proj';
 
-import LayerTree from '@terrestris/react-geo/LayerTree/LayerTree';
-import { loadify } from '@terrestris/react-geo/HigherOrderComponent/LoadifiedComponent/LoadifiedComponent';
+import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
+import { loadify } from '@terrestris/react-geo/dist/HigherOrderComponent/LoadifiedComponent/LoadifiedComponent';
 
 const LoadingTree = loadify(LayerTree);
 

@@ -18,7 +18,7 @@ import {
 import { applyTransform } from 'ol/extent';
 
 import CoordinateReferenceSystemCombo from
-  '@terrestris/react-geo/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
+  '@terrestris/react-geo/dist/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
 
 const predefinedCrsDefinitions = [{
   code: '25832',

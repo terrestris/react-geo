@@ -8,7 +8,7 @@ import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
 
-import FloatingMapLogo from '@terrestris/react-geo/Map/FloatingMapLogo/FloatingMapLogo';
+import FloatingMapLogo from '@terrestris/react-geo/dist/Map/FloatingMapLogo/FloatingMapLogo';
 
 import logo from '../../../assets/user.png';
 

@@ -4,7 +4,7 @@ This is an example containing a property grid:
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 
-import PropertyGrid from '@terrestris/react-geo/Grid/PropertyGrid/PropertyGrid';
+import PropertyGrid from '@terrestris/react-geo/dist/Grid/PropertyGrid/PropertyGrid';
 
 const feature = new OlFeature({
   geometry: new OlGeomPoint([19.09, 1.09]),

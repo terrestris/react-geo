@@ -20,7 +20,7 @@ import { fromLonLat } from 'ol/proj';
 
 import * as copy from 'copy-to-clipboard';
 
-import CoordinateInfo from '@terrestris/react-geo/CoordinateInfo/CoordinateInfo';
+import CoordinateInfo from '@terrestris/react-geo/dist/CoordinateInfo/CoordinateInfo';
 
 const queryLayer = new OlLayerTile({
   name: 'States (USA)',

@@ -6,10 +6,10 @@ It replaces the old `MapProvider` and `mappify` HOC.
 ```jsx
 import * as React from 'react';
 
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import LayerTree from '@terrestris/react-geo/LayerTree/LayerTree';
-import MapContext from '@terrestris/react-geo/Context/MapContext/MapContext';
-import { useMap } from '@terrestris/react-geo/Hook/useMap';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
+import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
+import { useMap } from '@terrestris/react-geo/dist/Hook/useMap';
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
