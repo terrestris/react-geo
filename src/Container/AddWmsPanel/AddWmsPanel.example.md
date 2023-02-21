@@ -11,8 +11,8 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 
-import AddWmsPanel from '@terrestris/react-geo/Container/AddWmsPanel/AddWmsPanel';
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
+import AddWmsPanel from '@terrestris/react-geo/dist/Container/AddWmsPanel/AddWmsPanel';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 
 import CapabilitiesUtil from '@terrestris/ol-util/dist/CapabilitiesUtil/CapabilitiesUtil';
 

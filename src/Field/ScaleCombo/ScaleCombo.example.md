@@ -9,7 +9,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 
-import ScaleCombo from '@terrestris/react-geo/Field/ScaleCombo/ScaleCombo';
+import ScaleCombo from '@terrestris/react-geo/dist/Field/ScaleCombo/ScaleCombo';
 
 class ScaleComboExample extends React.Component {
 

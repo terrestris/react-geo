@@ -11,7 +11,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceStamen from 'ol/source/Stamen';
 import OlSourceOsm from 'ol/source/OSM';
 
-import LayerSwitcher from '@terrestris/react-geo/LayerSwitcher/LayerSwitcher';
+import LayerSwitcher from '@terrestris/react-geo/dist/LayerSwitcher/LayerSwitcher';
 
 class LayerSwitcherExample extends React.Component {
 

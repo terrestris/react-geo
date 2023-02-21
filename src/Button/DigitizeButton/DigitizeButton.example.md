@@ -15,8 +15,8 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 
-import DigitizeButton from '@terrestris/react-geo/Button/DigitizeButton/DigitizeButton';
-import ToggleGroup from '@terrestris/react-geo/Button/ToggleGroup/ToggleGroup';
+import DigitizeButton from '@terrestris/react-geo/dist/Button/DigitizeButton/DigitizeButton';
+import ToggleGroup from '@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup';
 
 class DigitizeButtonExample extends React.Component {
 

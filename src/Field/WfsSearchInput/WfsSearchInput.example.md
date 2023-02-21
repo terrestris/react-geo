@@ -12,8 +12,8 @@ import OlSourceOSM from 'ol/source/OSM';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import { fromLonLat } from 'ol/proj';
 
-import AgFeatureGrid from '@terrestris/react-geo/Grid/AgFeatureGrid/AgFeatureGrid';
-import WfsSearchInput from '@terrestris/react-geo/Field/WfsSearchInput/WfsSearchInput';
+import AgFeatureGrid from '@terrestris/react-geo/dist/Grid/AgFeatureGrid/AgFeatureGrid';
+import WfsSearchInput from '@terrestris/react-geo/dist/Field/WfsSearchInput/WfsSearchInput';
 
 class WfsSearchInputExample extends React.Component {
 

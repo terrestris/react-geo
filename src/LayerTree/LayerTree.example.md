@@ -11,7 +11,7 @@ import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import { fromLonLat } from 'ol/proj';
 
-import LayerTree from '@terrestris/react-geo/LayerTree/LayerTree';
+import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
 
 class LayerTreeExample extends React.Component {
 

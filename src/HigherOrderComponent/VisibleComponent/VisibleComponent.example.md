@@ -7,9 +7,9 @@ In the example below you see three components wrapped by the use of
 it won't be rendered.
 
 ```jsx
-import SimpleButton from '@terrestris/react-geo/Button/SimpleButton/SimpleButton';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 
-import { isVisibleComponent } from '@terrestris/react-geo/HigherOrderComponent/VisibleComponent/VisibleComponent';
+import { isVisibleComponent } from '@terrestris/react-geo/dist/HigherOrderComponent/VisibleComponent/VisibleComponent';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faPowerOff } from '@fortawesome/free-solid-svg-icons';

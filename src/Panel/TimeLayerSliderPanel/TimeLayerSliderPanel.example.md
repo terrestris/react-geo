@@ -14,7 +14,7 @@ import OlSourceTileWMS from 'ol/source/TileWMS';
 import { transformExtent } from 'ol/proj';
 import { getCenter } from 'ol/extent';
 
-import TimeLayerSliderPanel from '@terrestris/react-geo/Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
+import TimeLayerSliderPanel from '@terrestris/react-geo/dist/Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
 
 class TimeLayerSliderPanelExample extends React.Component {
 

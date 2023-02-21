@@ -41,7 +41,8 @@ module.exports = {
     return `import ${name} from '@terrestris/react-geo/${dir}/${name}';`;
   },
   moduleAliases: {
-    '@terrestris/react-geo': path.resolve(__dirname, 'src')
+    // rewrite the example sources internally to the src folder to use e.g. hot reloading
+    '@terrestris/react-geo/dist': path.resolve(__dirname, 'src')
   },
   require: [
     'whatwg-fetch',

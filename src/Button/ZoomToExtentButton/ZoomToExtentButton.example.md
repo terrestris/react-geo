@@ -9,7 +9,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 
-import ZoomToExtentButton from '@terrestris/react-geo/Button/ZoomToExtentButton/ZoomToExtentButton';
+import ZoomToExtentButton from '@terrestris/react-geo/dist/Button/ZoomToExtentButton/ZoomToExtentButton';
 
 class ZoomToExtentButtonExample extends React.Component {
 

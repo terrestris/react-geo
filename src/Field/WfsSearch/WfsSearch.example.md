@@ -9,7 +9,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 
-import WfsSearch from '@terrestris/react-geo/Field/WfsSearch/WfsSearch';
+import WfsSearch from '@terrestris/react-geo/dist/Field/WfsSearch/WfsSearch';
 
 class WfsSearchExample extends React.Component {
 

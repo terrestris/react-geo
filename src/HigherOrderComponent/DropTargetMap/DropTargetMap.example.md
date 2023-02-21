@@ -10,10 +10,10 @@ import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOSM from 'ol/source/OSM';
 
-import onDropAware from '@terrestris/react-geo/HigherOrderComponent/DropTargetMap/DropTargetMap';
-import MapComponent from '@terrestris/react-geo/Map/MapComponent/MapComponent';
-import MapProvider from '@terrestris/react-geo/Provider/MapProvider/MapProvider';
-import { mappify } from '@terrestris/react-geo/HigherOrderComponent/MappifiedComponent/MappifiedComponent';
+import onDropAware from '@terrestris/react-geo/dist/HigherOrderComponent/DropTargetMap/DropTargetMap';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapProvider from '@terrestris/react-geo/dist/Provider/MapProvider/MapProvider';
+import { mappify } from '@terrestris/react-geo/dist/HigherOrderComponent/MappifiedComponent/MappifiedComponent';
 
 /**
  * Create the OlMap (you could do some asynchronus stuff here).
