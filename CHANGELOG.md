@@ -1,3 +1,11 @@
+## [22.3.2](https://github.com/terrestris/react-geo/compare/v22.3.1...v22.3.2) (2023-02-21)
+
+
+### Bug Fixes
+
+* adjust alias to use src folder for example loading ([88d68b4](https://github.com/terrestris/react-geo/commit/88d68b44dc34539431ea6ad3c0fca5b25185dd96))
+* example import statements ([6349519](https://github.com/terrestris/react-geo/commit/634951940581a884bf1faf9965ad17fe6e0364b8))
+
 ## [22.3.1](https://github.com/terrestris/react-geo/compare/v22.3.0...v22.3.1) (2023-02-15)
 
 
