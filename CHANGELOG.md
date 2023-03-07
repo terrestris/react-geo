@@ -1,3 +1,10 @@
+# [22.4.0](https://github.com/terrestris/react-geo/compare/v22.3.2...v22.4.0) (2023-03-07)
+
+
+### Features
+
+* add optional icon to header ([2d37a49](https://github.com/terrestris/react-geo/commit/2d37a494e50a0a2738f4c366e36460eec3e9f12b))
+
 ## [22.3.2](https://github.com/terrestris/react-geo/compare/v22.3.1...v22.3.2) (2023-02-21)
 
 
