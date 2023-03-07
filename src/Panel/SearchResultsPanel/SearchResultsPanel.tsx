@@ -5,6 +5,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlMap from 'ol/Map';
 
 import {
+  Avatar,
   Collapse,
   CollapseProps,
   List
@@ -23,9 +24,10 @@ export interface Category {
   title: string;
   /** Each feature is expected to have at least the properties `title` and `geometry` */
   features: OlFeature[];
+  icon?: React.ReactNode | string;
 }
 
-interface SearchResultsPanelProps extends Partial<CollapseProps>{
+interface SearchResultsPanelProps extends Partial<CollapseProps> {
   searchResults: Category[];
   numTotal: number;
   searchTerms: string[];
@@ -103,7 +105,8 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
   const renderPanelForCategory = (category: Category, categoryIdx: number) => {
     const {
       features,
-      title
+      title,
+      icon
     } = category;
     if (!features || _isEmpty(features)) {
       return;
@@ -112,6 +115,13 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     const header = (
       <div className="search-result-panel-header">
         <span>{`${title} (${features.length})`}</span>
+        {
+          icon &&
+          <Avatar
+            className="search-option-avatar"
+            src={icon}
+          />
+        }
       </div>
     );
 
