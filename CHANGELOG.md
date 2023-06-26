@@ -1,3 +1,10 @@
+## [22.4.1](https://github.com/terrestris/react-geo/compare/v22.4.0...v22.4.1) (2023-06-26)
+
+
+### Bug Fixes
+
+* pin ol, ol-util and react-styleguidist dependencies versions ([f856335](https://github.com/terrestris/react-geo/commit/f856335d3ee833c29860c16323f6020a84b03fb3))
+
 # [22.4.0](https://github.com/terrestris/react-geo/compare/v22.3.2...v22.4.0) (2023-03-07)
 
 
