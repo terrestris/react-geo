@@ -1,3 +1,10 @@
+## [22.4.2](https://github.com/terrestris/react-geo/compare/v22.4.1...v22.4.2) (2023-07-18)
+
+
+### Bug Fixes
+
+* manual commit to trigger release containing ol-util ([c9991dc](https://github.com/terrestris/react-geo/commit/c9991dc7ee0beb089e4d28bd095c6d16c45473d1))
+
 ## [22.4.1](https://github.com/terrestris/react-geo/compare/v22.4.0...v22.4.1) (2023-06-26)
 
 
