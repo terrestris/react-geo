@@ -8,6 +8,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlCollection from 'ol/Collection';
 import OlMultiPolygon from 'ol/geom/MultiPolygon';
 import OlMultiLineString from 'ol/geom/MultiLineString';
+import OlGeomCircle from 'ol/geom/Circle';
 import OlStyleStyle from 'ol/style/Style';
 import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleFill from 'ol/style/Fill';
@@ -17,7 +18,7 @@ import { unByKey } from 'ol/Observable';
 import OlOverlay from 'ol/Overlay';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlFeature from 'ol/Feature';
-import OlGeometry from 'ol/geom/Geometry';
+import OlGeometry, { Type } from 'ol/geom/Geometry';
 import OlGeomPolygon from 'ol/geom/Polygon';
 import OlGeomLineString from 'ol/geom/LineString';
 import { EventsKey } from 'ol/events';
@@ -113,15 +114,16 @@ interface OwnProps {
    */
   map: OlMap;
   /**
-   * Whether line, area or angle will be measured.
+   * Whether line, area, circle or angle will be measured.
    */
-  measureType: 'line' | 'polygon' | 'angle';
+  measureType: MeasureType;
   /**
    * Whether the measure is using geodesic or cartesian mode. Geodesic is used by default.
    */
   geodesic: boolean;
 }
 
+export type MeasureType = 'line' | 'polygon' | 'angle' | 'circle';
 export type MeasureButtonProps = OwnProps & Partial<ToggleButtonProps>;
 
 /**
@@ -389,7 +391,30 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     }
 
     const maxPoints = measureType === 'angle' ? 2 : undefined;
-    const drawType = measureType === 'polygon' ? 'MultiPolygon' : 'MultiLineString';
+
+    const getDrawType = (input: MeasureType): Type | undefined => {
+      switch (input) {
+        case 'line':
+        case 'angle':
+          return 'MultiLineString';
+        case 'polygon':
+          return 'MultiPolygon';
+        case 'circle':
+          return 'Circle';
+        default:
+          return undefined;
+      }
+    };
+
+    console.log('measureType', measureType);
+
+    const drawType = getDrawType(measureType);
+
+    if (!drawType) {
+      return;
+    }
+
+    console.log('drawType', drawType);
 
     const drawInteraction = new OlInteractionDraw({
       source: this._measureLayer.getSource() || undefined,
@@ -829,8 +854,10 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
 
       let measureTooltipCoord;
 
-      if (geom instanceof OlGeomPolygon) {
+      if (geom instanceof OlGeomCircle) {
         measureTooltipCoord = geom.getLastCoordinate();
+        output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
+      } else if (geom instanceof OlGeomPolygon) {
         output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
         // attach area at interior point
         measureTooltipCoord = geom.getInteriorPoint().getCoordinates();

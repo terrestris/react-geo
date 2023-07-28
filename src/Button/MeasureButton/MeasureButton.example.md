@@ -82,7 +82,16 @@ class MeasureButtonExample extends React.Component {
               map={this.map}
               measureType="polygon"
             >
-            Area
+            Area (polygon)
+            </MeasureButton>
+
+            <MeasureButton
+              name="circle"
+              map={this.map}
+              measureType="circle"
+              geodesic
+            >
+            Area (circle)
             </MeasureButton>
 
             <MeasureButton
