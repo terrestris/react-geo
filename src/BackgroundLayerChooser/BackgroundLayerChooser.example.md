@@ -70,6 +70,7 @@ function BackgroundChooserExample() {
       <ComponentToUseTheMap />
       <BackgroundLayerChooser
         layers={layers}
+        allowEmptyBackground={true}
       />
     </MapContext.Provider>
   );

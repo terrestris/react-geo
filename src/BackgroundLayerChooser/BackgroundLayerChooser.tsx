@@ -28,9 +28,21 @@ import SimpleButton from '../Button/SimpleButton/SimpleButton';
 import './BackgroundLayerChooser.less';
 
 export type BackgroundLayerChooserProps = {
+  /**
+ * Array of layers to be displayed in the BackgroundLayerChooser.
+ */
   layers: OlLayer[];
+  /**
+ * Adds a button that clears the backgroundlayer.
+ */
   allowEmptyBackground?: boolean;
+  /**
+ * Customize the tooltip.
+ */
   buttonTooltip?: string;
+  /**
+ * Filters the backgroundlayers by a function.
+ */
   backgroundLayerFilter?: (layer: OlLayerBase) => boolean;
 };
 
@@ -177,12 +189,12 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
       />
       <div className="bg-preview">
         <div className='overview-wrapper'>
-          {!isBackgroundImage?
+          {!isBackgroundImage ?
             <div id="overview-map" ref={mapTarget}
             /> :
             <FontAwesomeIcon className='no-background-preview' icon={faBan} size='5x' />
           }
-          { selectedLayer ?
+          {selectedLayer ?
             <span className="layer-title">{selectedLayer.get('name')}</span> :
             <span className="layer-title-no-background">No Background</span>
           }
