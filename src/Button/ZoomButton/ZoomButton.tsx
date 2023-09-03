@@ -42,38 +42,26 @@ export type ZoomButtonProps = OwnProps & SimpleButtonProps;
  * @class The ZoomButton
  * @extends React.Component
  */
-class ZoomButton extends React.Component<ZoomButtonProps> {
 
-  static defaultProps = {
-    delta: 1,
-    animate: true,
-    animateOptions: {
-      duration: 250,
-      easing: easeOut
-    }
-  };
+const defaultClassName = `${CSS_PREFIX}zoominbutton`;
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}zoominbutton`;
+const ZoomButton: React.FC<ZoomButtonProps> = ({
+  animate = true,
+  delta = 1,
+  animateOptions = {
+    duration: 250,
+    easing: easeOut
+  },
+  className,
+  map,
+  ...passThroughProps
+}) => {
 
-  /**
-   * Called when the button is clicked.
-   *
-   * @method
-   */
-  onClick() {
+  const onClick = () => {
     const {
-      map,
-      animate,
-      animateOptions: {
-        duration,
-        easing
-      },
-      delta
-    } = this.props;
+      duration,
+      easing
+    } = animateOptions;
 
     const view = map.getView();
     if (!view) { // no view, no zooming
@@ -97,33 +85,19 @@ class ZoomButton extends React.Component<ZoomButtonProps> {
     } else {
       view.setZoom(zoom);
     }
-  }
+  };
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      delta,
-      animate,
-      animateOptions,
-      map,
-      ...passThroughProps
-    } = this.props;
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
-    const finalClassName = className
-      ? `${className} ${this._className}`
-      : this._className;
-
-    return (
-      <SimpleButton
-        className={finalClassName}
-        onClick={this.onClick.bind(this)}
-        {...passThroughProps}
-      />
-    );
-  }
-}
+  return (
+    <SimpleButton
+      className={finalClassName}
+      onClick={onClick}
+      {...passThroughProps}
+    />
+  );
+};
 
 export default ZoomButton;
