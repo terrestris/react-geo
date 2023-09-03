@@ -45,21 +45,17 @@ export type UserChipProps = BaseProps & AvatarProps;
  * @class The UserChip
  * @extends React.Component
  */
-class UserChip extends React.Component<UserChipProps> {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className: string = `${CSS_PREFIX}userchip`;
+const defaultClassName = `${CSS_PREFIX}userchip`;
 
-  /**
-   * Create a UserChip.
-   * @constructs UserChip
-   */
-  constructor(props: UserChipProps) {
-    super(props);
-  }
+const UserChip: React.FC<UserChipProps> = ({
+  className,
+  imageSrc,
+  userMenu,
+  userName,
+  style,
+  ...passThroughProps
+}) => {
 
   /**
    * Determine initials for a given user name. The username will be splitted by
@@ -71,10 +67,7 @@ class UserChip extends React.Component<UserChipProps> {
    *
    * @method getInitials
    */
-  getInitials(): string {
-    const {
-      userName
-    } = this.props;
+  const getInitials = () => {
 
     if (!_isString(userName)) {
       return '??';
@@ -84,26 +77,18 @@ class UserChip extends React.Component<UserChipProps> {
       .map(part => part[0] ?? '')
       .join('')
       .toUpperCase();
-  }
+  };
 
   /**
    * getUserMenu - Description
    *
    * @return Description
    */
-  getUserMenu() {
-    const {
-      className,
-      imageSrc,
-      userMenu,
-      userName,
-      style,
-      ...passThroughProps
-    } = this.props;
+  const getUserMenu = () => {
 
     const finalClassName = className
-      ? `${className} ${this._className}`
-      : this._className;
+      ? `${className} ${defaultClassName}`
+      : defaultClassName;
 
     return (
       <div
@@ -117,7 +102,7 @@ class UserChip extends React.Component<UserChipProps> {
           {...passThroughProps}
         >
           {
-            imageSrc ? '' : this.getInitials()
+            imageSrc ? '' : getInitials()
           }
         </Avatar>
         <span
@@ -127,32 +112,23 @@ class UserChip extends React.Component<UserChipProps> {
         </span>
       </div>
     );
-  }
+  };
 
-  /**
-   * The render function
-   */
-  render() {
-    const {
-      userMenu
-    } = this.props;
-
-    if (userMenu?.items) {
-      return (
-        <Dropdown
-          menu={userMenu}
-          trigger={['click']}
-          getPopupContainer={() => {
-            return document.getElementsByClassName(this._className)[0] as HTMLElement;
-          }}
-        >
-          {this.getUserMenu()}
-        </Dropdown>
-      );
-    } else {
-      return this.getUserMenu();
-    }
+  if (userMenu?.items) {
+    return (
+      <Dropdown
+        menu={userMenu}
+        trigger={['click']}
+        getPopupContainer={() => {
+          return document.getElementsByClassName(defaultClassName)[0] as HTMLElement;
+        }}
+      >
+        {getUserMenu()}
+      </Dropdown>
+    );
+  } else {
+    return getUserMenu();
   }
-}
+};
 
 export default UserChip;
