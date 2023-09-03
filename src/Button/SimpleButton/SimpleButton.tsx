@@ -31,61 +31,35 @@ interface BaseProps {
 
 export type SimpleButtonProps = BaseProps & Partial<DefaultProps> & ButtonProps;
 
-/**
- * The SimpleButton.
- *
- * @class The SimpleButton
- * @extends React.Component
- */
-class SimpleButton extends React.Component<SimpleButtonProps> {
+const defaultClassName = `${CSS_PREFIX}simplebutton`;
 
-  /**
-   * The default properties.
-   */
-  static defaultProps: DefaultProps = {
-    type: 'primary',
-    tooltipProps: {
-      mouseEnterDelay: 1.5
-    }
-  };
+const SimpleButton: React.FC<SimpleButtonProps> = ({
+  className,
+  type = 'primary',
+  tooltip,
+  tooltipPlacement,
+  tooltipProps = {mouseEnterDelay: 1.5},
+  ...antBtnProps
+}) => {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}simplebutton`;
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      tooltip,
-      tooltipPlacement,
-      tooltipProps,
-      ...antBtnProps
-    } = this.props;
-
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
-
-    return (
-      <Tooltip
-        title={tooltip}
-        placement={tooltipPlacement}
-        {...tooltipProps}
+  return (
+    <Tooltip
+      title={tooltip}
+      placement={tooltipPlacement}
+      {...tooltipProps}
+    >
+      <Button
+        className={finalClassName}
+        {...antBtnProps}
       >
-        <Button
-          className={finalClassName}
-          {...antBtnProps}
-        >
-          {antBtnProps.children}
-        </Button>
-      </Tooltip>
-    );
-  }
+        {antBtnProps.children}
+      </Button>
+    </Tooltip>
+  );
 }
 
 export default SimpleButton;
