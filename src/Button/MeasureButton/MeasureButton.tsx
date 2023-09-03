@@ -406,15 +406,11 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       }
     };
 
-    console.log('measureType', measureType);
-
     const drawType = getDrawType(measureType);
 
     if (!drawType) {
       return;
     }
-
-    console.log('drawType', drawType);
 
     const drawInteraction = new OlInteractionDraw({
       source: this._measureLayer.getSource() || undefined,
