@@ -7,15 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout sources 🔰
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    - name: Setup Node.js 16
-      uses: actions/setup-node@v1
+    - name: Setup Node.js 18
+      uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: 18
 
     - name: Cache Node.js modules 💾
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.npm
         key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
