@@ -74,7 +74,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@terrestris/base-util": "^1.0.1",
-    "@terrestris/ol-util": "11.1.0",
+    "@terrestris/ol-util": "12.0.1",
     "@types/geojson": "^7946.0.8",
     "@types/lodash": "^4.14.179",
     "@types/moment": "^2.13.0",
