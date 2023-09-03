@@ -28,46 +28,29 @@ export type ToolbarProps = BaseProps & Partial<DefaultProps> & React.HTMLAttribu
  * @class The Toolbar
  * @extends React.Component
  */
-class Toolbar extends React.Component<ToolbarProps> {
 
-  /**
-   * The default properties.
-   */
-  static defaultProps: DefaultProps = {
-    alignment: 'horizontal'
-  };
+const defaultClassName = `${CSS_PREFIX}toolbar`;
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className: string = `${CSS_PREFIX}toolbar`;
+const Toolbar: React.FC<ToolbarProps> = ({
+  alignment = 'horizontal',
+  children,
+  className,
+  ...passThroughProps
+}) => {
 
-  /**
-   * The render function
-   */
-  render() {
-    const {
-      alignment,
-      children,
-      className,
-      ...passThroughProps
-    } = this.props;
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
-
-    return (
-      <div
-        className={`${finalClassName} ${alignment}-toolbar`}
-        role="toolbar"
-        {...passThroughProps}
-      >
-        {children}
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      className={`${finalClassName} ${alignment}-toolbar`}
+      role="toolbar"
+      {...passThroughProps}
+    >
+      {children}
+    </div>
+  );
+};
 
 export default Toolbar;
