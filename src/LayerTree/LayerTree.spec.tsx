@@ -14,6 +14,10 @@ import OlMap from 'ol/Map';
 import OlLayerBase from 'ol/layer/Base';
 import { getUid } from 'ol';
 
+import {
+  act
+} from 'react-dom/test-utils';
+
 describe('<LayerTree />', () => {
   let layerGroup: OlLayerGroup;
   let layerSubGroup: OlLayerGroup;
@@ -312,11 +316,15 @@ describe('<LayerTree />', () => {
       let treeNode = wrapper.find('.ant-tree-treenode').at(3);
 
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);
-      layer1.setVisible(false);
+      act(() => {
+        layer1.setVisible(false);
+      });
       wrapper.update();
       treeNode = wrapper.find('.ant-tree-treenode').at(3);
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(0);
-      layer1.setVisible(true);
+      act(() => {
+        layer1.setVisible(true);
+      });
       wrapper.update();
       treeNode = wrapper.find('.ant-tree-treenode').at(3);
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);
