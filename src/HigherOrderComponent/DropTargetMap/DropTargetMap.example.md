@@ -1,6 +1,5 @@
 This example shows the usage of the DropTargetMap HOC by use of the onDropAware
-function. The wrapped map component needs to be mappified in order to access
-the map.
+function.
 
 ```jsx
 import * as React from 'react';
@@ -12,20 +11,15 @@ import OlSourceOSM from 'ol/source/OSM';
 
 import onDropAware from '@terrestris/react-geo/dist/HigherOrderComponent/DropTargetMap/DropTargetMap';
 import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
-import MapProvider from '@terrestris/react-geo/dist/Provider/MapProvider/MapProvider';
-import { mappify } from '@terrestris/react-geo/dist/HigherOrderComponent/MappifiedComponent/MappifiedComponent';
+import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
+import { useMap } from '@terrestris/react-geo/dist/Hook/useMap';
 
-/**
- * Create the OlMap (you could do some asynchronus stuff here).
- *
- * @return {Promise} Promise that resolves an OlMap.
- */
-const mapPromise = new Promise((resolve) => {
+const DropTargetMapExample = () => {
+
   const layer = new OlLayerTile({
     source: new OlSourceOSM()
   });
-
-  const map = new OlMap({
+  const olMap = new OlMap({
     view: new OlView({
       center: [
         135.1691495,
@@ -37,13 +31,26 @@ const mapPromise = new Promise((resolve) => {
     layers: [layer]
   });
 
-  resolve(map);
-});
+  const mapComponent = () => {
+    const map = useMap();
+    return (
+      <MapComponent
+        map={map}
+        style={{
+          height: '512px'
+        }}
+      />
+    );
+  };
 
-const Map = mappify(onDropAware(MapComponent));
+  const DropTargetMapComponent = onDropAware(mapComponent);
 
-<MapProvider map={mapPromise}>
-  <Map style={{
-    height: '512px'
-  }} />
-</MapProvider>
+  return (
+    <MapContext.Provider value={olMap}>
+      <DropTargetMapComponent map={olMap}/>
+    </MapContext.Provider>
+  )
+}
+
+<DropTargetMapExample />
+```
