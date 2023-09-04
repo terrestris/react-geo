@@ -8,6 +8,10 @@ import FeatureGrid from './FeatureGrid';
 import OlGeometry from 'ol/geom/Geometry';
 import { MapBrowserEvent } from 'ol';
 
+import {
+  act
+} from 'react-dom/test-utils';
+
 describe('<FeatureGrid />', () => {
   let map;
   let features;
@@ -198,8 +202,12 @@ describe('<FeatureGrid />', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
     const selectedFeatureUid = features[0].ol_uid;
 
-    wrapper.setState({selectedRowKeys: [selectedFeatureUid]});
-    (wrapper.instance() as FeatureGrid).unhighlightFeatures(features);
+    act(() => {
+      wrapper.setState({selectedRowKeys: [selectedFeatureUid]});
+    });
+    act(() => {
+      (wrapper.instance() as FeatureGrid).unhighlightFeatures(features);
+    });
 
     features.forEach(feature => {
       if (feature.ol_uid === selectedFeatureUid) {
@@ -234,7 +242,9 @@ describe('<FeatureGrid />', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
     const selectedRowKeys = [features[0].ol_uid, features[1].ol_uid];
 
-    (wrapper.instance() as FeatureGrid).onSelectChange(selectedRowKeys);
+    act(() => {
+      (wrapper.instance() as FeatureGrid).onSelectChange(selectedRowKeys);
+    });
 
     features.forEach(feature => {
       if (selectedRowKeys.includes(feature.ol_uid)) {

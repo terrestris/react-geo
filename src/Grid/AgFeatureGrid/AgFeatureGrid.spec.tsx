@@ -8,6 +8,10 @@ import TestUtil from '../../Util/TestUtil';
 
 import AgFeatureGrid from './AgFeatureGrid';
 
+import {
+  act
+} from 'react-dom/test-utils';
+
 describe('<AgFeatureGrid />', () => {
   let map;
   let features;
@@ -323,24 +327,29 @@ describe('<AgFeatureGrid />', () => {
       features,
       onRowSelectionChange
     });
-    wrapper.setState({
-      selectedRows: selectionCurrent
-    }, () => {
-      const mockedEvt = {
-        api: {
-          getSelectedRows: mockedGetSelectedRows
-        }
-      };
-      wrapper.instance().onSelectionChanged(mockedEvt);
-      expect(onRowSelectionChange).toHaveBeenCalledTimes(1);
-      // selectedRows is the first passed parameter
-      const selectedRows = onRowSelectionChange.mock.calls[0][0];
-      expect(selectedRows).toEqual(selectionAfter);
 
-      // deselectedRows is the third passed parameter
-      const deselectedRows = _differenceWith(selectionCurrent, selectionAfter, (a,b) => a.key === b.key);
-      const deselectedRowsIs = onRowSelectionChange.mock.calls[0][2];
-      expect(deselectedRowsIs).toEqual(deselectedRows);
+    act(() => {
+      wrapper.setState({
+        selectedRows: selectionCurrent
+      }, () => {
+        const mockedEvt = {
+          api: {
+            getSelectedRows: mockedGetSelectedRows
+          }
+        };
+        act(() => {
+          wrapper.instance().onSelectionChanged(mockedEvt);
+        });
+        expect(onRowSelectionChange).toHaveBeenCalledTimes(1);
+        // selectedRows is the first passed parameter
+        const selectedRows = onRowSelectionChange.mock.calls[0][0];
+        expect(selectedRows).toEqual(selectionAfter);
+
+        // deselectedRows is the third passed parameter
+        const deselectedRows = _differenceWith(selectionCurrent, selectionAfter, (a,b) => a.key === b.key);
+        const deselectedRowsIs = onRowSelectionChange.mock.calls[0][2];
+        expect(deselectedRowsIs).toEqual(deselectedRows);
+      });
     });
   });
 
