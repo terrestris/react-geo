@@ -26,10 +26,7 @@ import AgFeatureGrid from './Grid/AgFeatureGrid/AgFeatureGrid';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid';
 import PropertyGrid from './Grid/PropertyGrid/PropertyGrid';
 import onDropAware from './HigherOrderComponent/DropTargetMap/DropTargetMap';
-import loadify from './HigherOrderComponent/LoadifiedComponent/LoadifiedComponent';
-import mappify from './HigherOrderComponent/MappifiedComponent/MappifiedComponent';
 import timeLayerAware from './HigherOrderComponent/TimeLayerAware/TimeLayerAware';
-import isVisibleComponent from './HigherOrderComponent/VisibleComponent/VisibleComponent';
 import useMap from './Hook/useMap';
 import LayerSwitcher from './LayerSwitcher/LayerSwitcher';
 import LayerTree from './LayerTree/LayerTree';
@@ -40,7 +37,6 @@ import MapComponent from './Map/MapComponent/MapComponent';
 import Panel from './Panel/Panel/Panel';
 import TimeLayerSliderPanel from './Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
 import Titlebar from './Panel/Titlebar/Titlebar';
-import MapProvider from './Provider/MapProvider/MapProvider';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider/LayerTransparencySlider';
 import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider';
 import TimeSlider from './Slider/TimeSlider/TimeSlider';
@@ -69,17 +65,13 @@ export {
   FeatureLabelModal,
   FloatingMapLogo,
   GeoLocationButton,
-  isVisibleComponent,
   LayerSwitcher,
   LayerTransparencySlider,
   LayerTree,
   LayerTreeNode,
   Legend,
-  loadify,
   MapComponent,
   MapContext,
-  mappify,
-  MapProvider,
   MeasureButton,
   ModifyButton,
   MultiLayerSlider,
