@@ -60,6 +60,6 @@ const SimpleButton: React.FC<SimpleButtonProps> = ({
       </Button>
     </Tooltip>
   );
-}
+};
 
 export default SimpleButton;
