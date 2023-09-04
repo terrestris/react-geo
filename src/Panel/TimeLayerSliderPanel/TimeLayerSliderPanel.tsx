@@ -8,6 +8,8 @@ import OlImageWMS from 'ol/source/ImageWMS';
 import OlTileWMS from 'ol/source/TileWMS';
 import { getUid } from 'ol';
 
+import dayjs from 'dayjs';
+
 import _isFinite from 'lodash/isFinite';
 import _isEqual from 'lodash/isEqual';
 
@@ -437,7 +439,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
           content={
             <RangePicker
               showTime={{ format: 'HH:mm' }}
-              defaultValue={[startDate, endDate]}
+              defaultValue={[dayjs(startDate.toISOString()), dayjs(endDate.toISOString())]}
               onOk={range => {
                 if (!range) {
                   return;
@@ -446,7 +448,8 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
                 if (!start || !end) {
                   return;
                 }
-                this.updateDataRange([start, end]);
+
+                this.updateDataRange([moment(start.toISOString()), moment(end.toISOString())]);
               }}
             />
           }
