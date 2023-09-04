@@ -1,3 +1,5 @@
+import useMap from '@terrestris/react-util/dist/hooks/useMap';
+import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import OlCollection from 'ol/Collection';
 import * as OlEventConditions from 'ol/events/condition';
 import OlFeature from 'ol/Feature';
@@ -11,8 +13,6 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-import { useMap } from '../../Hook/useMap';
-import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
 interface OwnProps {

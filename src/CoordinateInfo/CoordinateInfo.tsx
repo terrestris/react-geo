@@ -1,4 +1,5 @@
 import Logger from '@terrestris/base-util/dist/Logger';
+import { isWmsLayer, WmsLayer } from '@terrestris/react-util/dist/Util/typeUtils';
 import _isString from 'lodash/isString';
 import { getUid } from 'ol';
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
@@ -9,8 +10,6 @@ import OlBaseLayer from 'ol/layer/Base';
 import OlMap from 'ol/Map';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import * as React from 'react';
-
-import { isWmsLayer,WmsLayer } from '../Util/typeUtils';
 
 const format = new OlFormatGML2();
 

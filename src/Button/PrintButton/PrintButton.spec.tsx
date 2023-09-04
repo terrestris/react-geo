@@ -1,3 +1,4 @@
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OlLayerTile from 'ol/layer/Tile';
@@ -6,7 +7,6 @@ import OlSourceOsm from 'ol/source/OSM';
 import OlView from 'ol/View';
 import * as React from 'react';
 
-import { renderInMapContext } from '../../Util/rtlTestUtils';
 import PrintButton from './PrintButton';
 
 describe('<PrintButton />', () => {

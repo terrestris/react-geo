@@ -1,9 +1,9 @@
 This example shows the usage of the MapComponent in combination with the MapContext.Provider.
 
 ```jsx
-import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
 import NominatimSearch from '@terrestris/react-geo/dist/Field/NominatimSearch/NominatimSearch';
-import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';
