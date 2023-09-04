@@ -1,6 +1,5 @@
 import CopyButton from './Button/CopyButton/CopyButton';
 import DeleteButton from './Button/DeleteButton/DeleteButton';
-import DigitizeButton from './Button/DigitizeButton/DigitizeButton';
 import DrawButton from './Button/DrawButton/DrawButton';
 import GeoLocationButton from './Button/GeoLocationButton/GeoLocationButton';
 import MeasureButton from './Button/MeasureButton/MeasureButton';
@@ -65,7 +64,6 @@ export {
   CoordinateReferenceSystemCombo,
   CopyButton,
   DeleteButton,
-  DigitizeButton,
   DrawButton,
   FeatureGrid,
   FeatureLabelModal,
