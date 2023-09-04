@@ -216,7 +216,9 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
       isClicked: true
     }, () => {
       // This part can be removed in future if the ToggleGroup button is removed.
+      // @ts-ignore
       if (this.context.toggleGroup && _isFunction(this.context.toggleGroup.onChange)) {
+        // @ts-ignore
         this.context.toggleGroup.onChange(this.props);
         // this allows for the allowDeselect property to be taken into account
         // when used with ToggleGroup. Since the ToggleGroup changes the
