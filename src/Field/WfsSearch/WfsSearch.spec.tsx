@@ -1,4 +1,8 @@
 /* eslint-disable testing-library/render-result-naming-convention */
+import {
+  act
+} from 'react-dom/test-utils';
+
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
@@ -29,7 +33,9 @@ describe('<WfsSearch />', () => {
     it('sets the inputValue as state.searchTerm', () => {
       const wrapper = TestUtil.mountComponent(WfsSearch);
       const inputValue = 'a';
-      wrapper.instance().onUpdateInput(inputValue);
+      act(() => {
+        wrapper.instance().onUpdateInput(inputValue);
+      });
       expect(wrapper.state().searchTerm).toBe(inputValue);
     });
 
@@ -51,7 +57,9 @@ describe('<WfsSearch />', () => {
       });
       const doSearchSpy = jest.spyOn(wrapper.instance(), 'doSearch');
       const inputValue = 'Deutsch';
-      wrapper.instance().onUpdateInput(inputValue);
+      act(() => {
+        wrapper.instance().onUpdateInput(inputValue);
+      });
       expect(doSearchSpy).toHaveBeenCalled();
       doSearchSpy.mockRestore();
     });
@@ -113,10 +121,14 @@ describe('<WfsSearch />', () => {
         onSelect: selectSpy,
         map
       });
-      wrapper.setState({
-        data: data
+      act(() => {
+        wrapper.setState({
+          data: data
+        });
       });
-      wrapper.instance().onMenuItemSelected('Deutschland', { key: '752526' });
+      act(() => {
+        wrapper.instance().onMenuItemSelected('Deutschland', { key: '752526' });
+      });
       expect(selectSpy).toHaveBeenCalled();
       expect(selectSpy).toHaveBeenCalledWith(data[0], map);
 

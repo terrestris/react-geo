@@ -2,6 +2,10 @@ import TestUtil from '../../Util/TestUtil';
 
 import Panel from './Panel';
 
+import {
+  act
+} from 'react-dom/test-utils';
+
 describe('<Panel />', () => {
 
   it('is defined', () => {
@@ -74,7 +78,9 @@ describe('<Panel />', () => {
 
     it('inverts the collapsed property on the state', () => {
       const oldState = wrapper.state();
-      wrapper.instance().toggleCollapse();
+      act(() => {
+        wrapper.instance().toggleCollapse();
+      });
       const newState = wrapper.state();
       expect(oldState.collapsed).toBe(!newState.collapsed);
     });
@@ -88,7 +94,9 @@ describe('<Panel />', () => {
     });
 
     it('sets resizing on the state to true', () => {
-      wrapper.instance().onResize(null, null, {clientHeight: 1337});
+      act(() => {
+        wrapper.instance().onResize(null, null, {clientHeight: 1337});
+      });
       expect(wrapper.state().height).toBe(1337);
     });
 
@@ -111,7 +119,9 @@ describe('<Panel />', () => {
     });
 
     it('sets resizing on the state to true', () => {
-      wrapper.instance().onResizeStart();
+      act(() => {
+        wrapper.instance().onResizeStart();
+      });
       const state = wrapper.state();
       expect(state.resizing).toBe(true);
     });
