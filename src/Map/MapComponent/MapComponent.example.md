@@ -1,14 +1,4 @@
-This example shows the usage of the MapComponent in combination with the MapProvider.
-It makes use of the `mappify` HOC function to supply the provided map to the MapComponent
-and the NominatimSearch.
-
-**THE HOC IS DEPRECATED AND ONLY AVAILABLE FOR BACKWARDS COMPATIBILITY. PLEASE CONSIDER USING THE MAPCONTEXT WITH `useMap`**
-
-This way you can share the same mapobject across the whole application without passing
-it as prop to the whole rendertree.
-
-The map can be created asynchronusly so that every child of the MapProvider is just
-rendered when the map is ready.
+This example shows the usage of the MapComponent in combination with the MapContext.Provider.
 
 ```jsx
 import * as React from 'react';
@@ -20,64 +10,42 @@ import OlSourceOsm from 'ol/source/OSM';
 
 import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import NominatimSearch from '@terrestris/react-geo/dist/Field/NominatimSearch/NominatimSearch';
-import MapProvider from '@terrestris/react-geo/dist/Provider/MapProvider/MapProvider';
-import { mappify } from '@terrestris/react-geo/dist/HigherOrderComponent/MappifiedComponent/MappifiedComponent';
+import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
 
-const Map = mappify(MapComponent);
-const Search = mappify(NominatimSearch);
+const MapComponentExample = () => {
 
-class MapComponentExample extends React.Component {
+  const layer = new OlLayerTile({
+    source: new OlSourceOsm()
+  });
 
-  constructor(props) {
+  const mapId = `map-${Math.random()}`;
 
-    super(props);
+  const map = new OlMap({
+    target: mapId,
+    view: new OlView({
+      center: [
+        135.1691495,
+        34.6565482
+      ],
+      projection: 'EPSG:4326',
+      zoom: 16,
+    }),
+    layers: [layer]
+  });
 
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.mapPromise = new Promise(resolve => {
-      const layer = new OlLayerTile({
-        source: new OlSourceOsm()
-      });
-
-      const map = new OlMap({
-        target: null,
-        view: new OlView({
-          center: [
-            135.1691495,
-            34.6565482
-          ],
-          projection: 'EPSG:4326',
-          zoom: 16,
-        }),
-        layers: [layer]
-      });
-
-      this.map = map;
-
-      resolve(map);
-    });
-  }
-
-  componentDidMount() {
-    window.setTimeout(() => {
-      this.map.setTarget(this.mapDivId);
-    }, 100);
-  }
-
-  render() {
-    return (
-      <MapProvider map={this.mapPromise}>
-        NominatimSearch:
-        <Search />
-        <Map
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
-        />
-      </MapProvider>
-    );
-  }
+  return (
+    <MapContext.Provider value={map}>
+      NominatimSearch:
+      <NominatimSearch map={map} />
+      <MapComponent
+        map={map}
+        id={mapId}
+        style={{
+          height: '400px'
+        }}
+      />
+    </MapContext.Provider>
+  );
 }
 
 <MapComponentExample />

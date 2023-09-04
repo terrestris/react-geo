@@ -1,8 +1,6 @@
 This example shows the usage of the MapContext which uses the new React Context API introduced
 with [react 16.3](https://reactjs.org/docs/context.html).
 
-It replaces the old `MapProvider` and `mappify` HOC.
-
 ```jsx
 import * as React from 'react';
 
