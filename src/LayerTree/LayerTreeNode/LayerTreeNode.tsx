@@ -29,6 +29,7 @@ class LayerTreeNode extends React.PureComponent<LayerTreeNodeProps> {
     const {
       inResolutionRange,
       children,
+      icon,
       ...passThroughProps
     } = this.props;
 
