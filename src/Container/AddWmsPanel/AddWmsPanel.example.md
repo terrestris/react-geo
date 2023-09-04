@@ -49,7 +49,7 @@ class AddWmsPanelExample extends React.Component {
   }
 
   onClick() {
-    CapabilitiesUtil.parseWmsCapabilities(WMS_CAPABILITIES_URL)
+    CapabilitiesUtil.getWmsCapabilities(WMS_CAPABILITIES_URL)
       .then(CapabilitiesUtil.getLayersFromWmsCapabilities)
       .then(layers => {
         this.setState({
