@@ -64,9 +64,6 @@ describe('<AddWmsPanel />', () => {
     const dialog = screen.getByRole('dialog');
     expect(dialog).toBeVisible();
 
-    const title = within(dialog).getByText(/add wms layer/i);
-    expect(title).toBeVisible();
-
     const list = within(dialog).getByRole('list');
     expect(list).toBeVisible();
 

@@ -34,15 +34,12 @@ import LayerTreeNode from './LayerTree/LayerTreeNode/LayerTreeNode';
 import Legend from './Legend/Legend';
 import FloatingMapLogo from './Map/FloatingMapLogo/FloatingMapLogo';
 import MapComponent from './Map/MapComponent/MapComponent';
-import Panel from './Panel/Panel/Panel';
 import TimeLayerSliderPanel from './Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
-import Titlebar from './Panel/Titlebar/Titlebar';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider/LayerTransparencySlider';
 import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider';
 import TimeSlider from './Slider/TimeSlider/TimeSlider';
 import Toolbar from './Toolbar/Toolbar';
 import UserChip from './UserChip/UserChip';
-import Window from './Window/Window';
 import SearchResultsPanel from './Panel/SearchResultsPanel/SearchResultsPanel';
 import ClickAwayListener from './Util/ClickAwayListener/ClickAwayListener';
 import BackgroundLayerChooser from './BackgroundLayerChooser/BackgroundLayerChooser';
@@ -77,7 +74,6 @@ export {
   MultiLayerSlider,
   NominatimSearch,
   onDropAware,
-  Panel,
   PropertyGrid,
   ScaleCombo,
   SearchResultsPanel,
@@ -86,7 +82,6 @@ export {
   timeLayerAware,
   TimeLayerSliderPanel,
   TimeSlider,
-  Titlebar,
   ToggleButton,
   ToggleGroup,
   Toolbar,
@@ -95,7 +90,6 @@ export {
   UserChip,
   WfsSearch,
   WfsSearchInput,
-  Window,
   ZoomButton,
   ZoomToExtentButton
 };
