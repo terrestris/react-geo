@@ -4,8 +4,6 @@ import OlMap from 'ol/Map';
 
 import _isFunction from 'lodash/isFunction';
 
-import Panel, { PanelProps } from '../../Panel/Panel/Panel';
-import Titlebar from '../../Panel/Titlebar/Titlebar';
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import Logger from '@terrestris/base-util/dist/Logger';
 
@@ -27,10 +25,6 @@ interface OwnProps {
    * Optional text to be shown in cancel button
    */
   cancelText: string;
-  /**
-   * Optional text to be shown in panel title
-   */
-  titleText: string;
   /**
    * Array containing layers (e.g. `Capability.Layer.Layer` of ol capabilities
    * parser)
@@ -59,7 +53,7 @@ interface AddWmsLayerState {
   selectedWmsLayers: string[];
 }
 
-export type AddWmsPanelProps = OwnProps & PanelProps;
+export type AddWmsPanelProps = OwnProps;
 
 /**
  * Panel containing a (checkable) list of AddWmsLayerEntry instances.
@@ -79,7 +73,6 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
     addAllLayersText: 'Add all layers',
     addSelectedLayersText: 'Add selected layers',
     cancelText: 'Cancel',
-    titleText: 'Add WMS layer'
   };
 
   /**
@@ -118,7 +111,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
    * state
    */
   onAddSelectedLayers = () => {
-    const  {
+    const {
       selectedWmsLayers
     } = this.state;
 
@@ -136,7 +129,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
     } else if (map) {
       filteredLayers.forEach(layer => {
         // Add layer to map if it is not added yet
-        if (!map.getLayers().getArray().includes(layer) ) {
+        if (!map.getLayers().getArray().includes(layer)) {
           map.addLayer(layer);
         }
       });
@@ -160,7 +153,7 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
     } else if (map) {
       wmsLayers.forEach(layer => {
         // Add layer to map if it is not added yet
-        if (!map.getLayers().getArray().includes(layer) ) {
+        if (!map.getLayers().getArray().includes(layer)) {
           map.addLayer(layer);
         }
       });
@@ -172,70 +165,64 @@ export class AddWmsPanel extends React.Component<AddWmsPanelProps, AddWmsLayerSt
   /**
    * The render function.
    */
-  render () {
+  render() {
     const {
       wmsLayers,
       onCancel,
-      titleText,
       cancelText,
       addAllLayersText,
-      addSelectedLayersText,
-      onLayerAddToMap,
-      onSelectionChange,
-      ...passThroughProps
+      addSelectedLayersText
     } = this.props;
 
     const {
       selectedWmsLayers
-    } =  this.state;
+    } = this.state;
 
     return (
-      wmsLayers && wmsLayers.length > 0  ?
-        <Panel
-          title={titleText}
-          bounds="#main"
-          className="add-wms-panel"
-          role="dialog"
-          {...passThroughProps}
-        >
-          <div role="list" >
-            <Checkbox.Group onChange={value => this.onSelectedLayersChange(value.map(v => v as string))}>
-              {wmsLayers.map((layer, idx) =>
-                <div role="listitem" key={idx}>
-                  <AddWmsLayerEntry
-                    wmsLayer={layer}
-                  />
-                </div>
-              )}
-            </Checkbox.Group>
-          </div>
-          <Titlebar tools={[
+      wmsLayers && wmsLayers.length > 0 &&
+      <div
+        className="add-wms-panel"
+        role="dialog"
+      >
+        <div role="list" >
+          <Checkbox.Group onChange={value => this.onSelectedLayersChange(value.map(v => v as string))}>
+            {wmsLayers.map((layer, idx) =>
+              <div role="listitem" key={idx}>
+                <AddWmsLayerEntry
+                  wmsLayer={layer}
+                />
+              </div>
+            )}
+          </Checkbox.Group>
+        </div>
+        <div className="buttons">
+          <SimpleButton
+            size="small"
+            key="useSelectedBtn"
+            disabled={selectedWmsLayers.length === 0}
+            onClick={this.onAddSelectedLayers}
+          >
+            {addSelectedLayersText}
+          </SimpleButton>
+          <SimpleButton
+            size="small"
+            key="useAllBtn"
+            onClick={this.onAddAllLayers}
+          >
+            {addAllLayersText}
+          </SimpleButton>
+          {
+            onCancel &&
             <SimpleButton
               size="small"
-              key="useSelectedBtn"
-              disabled={selectedWmsLayers.length === 0}
-              onClick={this.onAddSelectedLayers}
+              key="cancelBtn"
+              onClick={onCancel}
             >
-              {addSelectedLayersText}
-            </SimpleButton>,
-            <SimpleButton
-              size="small"
-              key="useAllBtn"
-              onClick={this.onAddAllLayers}
-            >
-              {addAllLayersText}
-            </SimpleButton>,
-            onCancel ?
-              <SimpleButton
-                size="small"
-                key="cancelBtn"
-                onClick={onCancel}
-              >
-                {cancelText}
-              </SimpleButton> : null
-          ]} />
-        </Panel>
-        : null
+              {cancelText}
+            </SimpleButton>
+          }
+        </div>
+      </div>
     );
   }
 }

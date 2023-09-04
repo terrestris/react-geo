@@ -103,9 +103,6 @@ module.exports = {
       name: 'Map',
       components: 'src/Map/**/*.tsx'
     }, {
-      name: 'Panel',
-      components: 'src/Panel/**/*.tsx'
-    }, {
       name: 'Slider',
       components: 'src/Slider/**/*.tsx'
     }, {
@@ -114,9 +111,6 @@ module.exports = {
     }, {
       name: 'UserChip',
       components: 'src/UserChip/**/*.tsx'
-    }, {
-      name: 'Window',
-      components: 'src/Window/**/*.tsx'
     }]
   }]
 };
