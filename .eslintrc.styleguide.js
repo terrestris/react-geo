@@ -6,10 +6,14 @@ module.exports = {
     'markdown'
   ],
   overrides: [{
-    files: ["**/*.{md,mkdn,mdown,markdown}"],
-    processor: "markdown/markdown"
+    files: [
+      '**/*.{md,mkdn,mdown,markdown}'
+    ],
+    processor: 'markdown/markdown'
   }, {
-    files: ["**/*.{md,mkdn,mdown,markdown}/*.{js,javascript,jsx,node}"]
+    files: [
+      '**/*.{md,mkdn,mdown,markdown}/*.{js,javascript,jsx,node}'
+    ]
   }],
   env: {
     browser: true
