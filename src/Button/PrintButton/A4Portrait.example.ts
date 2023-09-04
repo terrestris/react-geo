@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf';
-import {
-  getAttributionsText
-} from '@camptocamp/inkmap';
+// import {
+//   getAttributionsText
+// } from '@camptocamp/inkmap';
 import Logger from '@terrestris/base-util/dist/Logger';
 import _isString from 'lodash/isString';
 
@@ -33,7 +33,7 @@ const pdfPrintFunc = async (
   // add attribution
   doc.setFont('arial', 'normal');
   doc.setFontSize(9);
-  doc.text(getAttributionsText(pdfSpec), doc.internal.pageSize.width - 10, 270, { align: 'right' });
+  // doc.text(getAttributionsText(pdfSpec), doc.internal.pageSize.width - 10, 270, { align: 'right' });
 
   if (pdfSpec.layers?.some((l: any) => l.legendUrl && l.legendUrl.length > 0)) {
     // add second page for legends
