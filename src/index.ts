@@ -38,8 +38,6 @@ import TimeLayerSliderPanel from './Panel/TimeLayerSliderPanel/TimeLayerSliderPa
 import LayerTransparencySlider from './Slider/LayerTransparencySlider/LayerTransparencySlider';
 import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider';
 import TimeSlider from './Slider/TimeSlider/TimeSlider';
-import Toolbar from './Toolbar/Toolbar';
-import UserChip from './UserChip/UserChip';
 import SearchResultsPanel from './Panel/SearchResultsPanel/SearchResultsPanel';
 import ClickAwayListener from './Util/ClickAwayListener/ClickAwayListener';
 import BackgroundLayerChooser from './BackgroundLayerChooser/BackgroundLayerChooser';
@@ -84,10 +82,8 @@ export {
   TimeSlider,
   ToggleButton,
   ToggleGroup,
-  Toolbar,
   UploadButton,
   useMap,
-  UserChip,
   WfsSearch,
   WfsSearchInput,
   ZoomButton,
