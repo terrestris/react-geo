@@ -1,6 +1,10 @@
 import TestUtil from '../../Util/TestUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
 
+import {
+  act
+} from 'react-dom/test-utils';
+
 import WfsSearchInput from './WfsSearchInput';
 
 describe('<WfsSearchInput />', () => {
@@ -27,7 +31,9 @@ describe('<WfsSearchInput />', () => {
           value: 'a'
         }
       };
-      wrapper.instance().onUpdateInput(evt);
+      act(() => {
+        wrapper.instance().onUpdateInput(evt);
+      });
       expect(wrapper.state().searchTerm).toBe(evt.target.value);
     });
 
@@ -43,7 +49,9 @@ describe('<WfsSearchInput />', () => {
         }
       };
 
-      wrapper.instance().onUpdateInput(evt);
+      act(() => {
+        wrapper.instance().onUpdateInput(evt);
+      });
       expect(wrapper.props().onBeforeSearch).toHaveBeenCalled();
     });
 
@@ -69,7 +77,9 @@ describe('<WfsSearchInput />', () => {
           value: 'abc'
         }
       };
-      wrapper.instance().onUpdateInput(evt);
+      act(() => {
+        wrapper.instance().onUpdateInput(evt);
+      });
       expect(doSearchSpy).toHaveBeenCalled();
       doSearchSpy.mockRestore();
     });
@@ -117,15 +127,19 @@ describe('<WfsSearchInput />', () => {
 
     it('resets state value for data', () => {
       const wrapper = TestUtil.mountComponent(WfsSearchInput);
-      wrapper.setState({
-        data: [{
-          feat1: {
-            prop: 'peter'
-          }
-        }]
+      act(() => {
+        wrapper.setState({
+          data: [{
+            feat1: {
+              prop: 'peter'
+            }
+          }]
+        });
       });
       expect(wrapper.state().data.length).toBe(1);
-      wrapper.instance().resetSearch();
+      act(() => {
+        wrapper.instance().resetSearch();
+      });
       expect(wrapper.state().data.length).toBe(0);
       expect(wrapper.state().data).toEqual([]);
 
@@ -136,7 +150,9 @@ describe('<WfsSearchInput />', () => {
       wrapper.setProps({
         onClearClick: jest.fn()
       });
-      wrapper.instance().resetSearch();
+      act(() => {
+        wrapper.instance().resetSearch();
+      });
       expect(wrapper.props().onClearClick).toHaveBeenCalled();
     });
   });
