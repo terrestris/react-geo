@@ -1,36 +1,32 @@
-import * as React from 'react';
+import './MeasureButton.less';
 
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
 import _isNil from 'lodash/isNil';
-
-import OlMap from 'ol/Map';
-import OlLayerVector from 'ol/layer/Vector';
-import OlSourceVector from 'ol/source/Vector';
 import OlCollection from 'ol/Collection';
-import OlMultiPolygon from 'ol/geom/MultiPolygon';
-import OlMultiLineString from 'ol/geom/MultiLineString';
-import OlGeomCircle from 'ol/geom/Circle';
-import OlStyleStyle from 'ol/style/Style';
-import OlStyleStroke from 'ol/style/Stroke';
-import OlStyleFill from 'ol/style/Fill';
-import OlStyleCircle from 'ol/style/Circle';
-import OlInteractionDraw, { DrawEvent } from 'ol/interaction/Draw';
-import { unByKey } from 'ol/Observable';
-import OlOverlay from 'ol/Overlay';
-import OlMapBrowserEvent from 'ol/MapBrowserEvent';
+import { EventsKey } from 'ol/events';
 import OlFeature from 'ol/Feature';
 import OlGeometry, { Type } from 'ol/geom/Geometry';
-import OlGeomPolygon from 'ol/geom/Polygon';
 import OlGeomLineString from 'ol/geom/LineString';
-import { EventsKey } from 'ol/events';
-
-import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-
-import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
+import OlMultiLineString from 'ol/geom/MultiLineString';
+import OlGeomCircle from 'ol/geom/Circle';
+import OlMultiPolygon from 'ol/geom/MultiPolygon';
+import OlGeomPolygon from 'ol/geom/Polygon';
+import OlInteractionDraw, { DrawEvent } from 'ol/interaction/Draw';
+import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
+import { unByKey } from 'ol/Observable';
+import OlOverlay from 'ol/Overlay';
+import OlSourceVector from 'ol/source/Vector';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyleStyle from 'ol/style/Style';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './MeasureButton.less';
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
 interface OwnProps {
   /**

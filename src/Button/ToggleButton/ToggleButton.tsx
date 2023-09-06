@@ -1,19 +1,16 @@
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
+import './ToggleButton.less';
 
 import {
   Button,
   Tooltip
 } from 'antd';
-
-import _isFunction from 'lodash/isFunction';
-
 import { AbstractTooltipProps, TooltipPlacement } from 'antd/lib/tooltip';
-import { SimpleButtonProps } from '../SimpleButton/SimpleButton';
+import _isFunction from 'lodash/isFunction';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './ToggleButton.less';
+import { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 
 interface OwnProps {
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';

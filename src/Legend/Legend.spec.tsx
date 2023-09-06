@@ -1,23 +1,19 @@
-import * as React from 'react';
-
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import {
   render,
   screen,
   waitFor
 } from '@testing-library/react';
-
 import {
-  enableFetchMocks,
   disableFetchMocks,
+  enableFetchMocks,
   FetchMock
 } from 'jest-fetch-mock';
-
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlLayerImage from 'ol/layer/Image';
+import OlLayerTile from 'ol/layer/Tile';
 import OlSourceImageWMS from 'ol/source/ImageWMS';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import * as React from 'react';
 
 import Legend from './Legend';
 

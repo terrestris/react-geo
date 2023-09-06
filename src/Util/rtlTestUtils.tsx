@@ -1,13 +1,14 @@
 import { act, fireEvent, render } from '@testing-library/react';
-import OlMap from 'ol/Map';
-import MapContext from '../Context/MapContext/MapContext';
-import MapComponent from '../Map/MapComponent/MapComponent';
-import * as React from 'react';
-import { ReactElement } from 'react';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
 import OlVectorLayer from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
 import OlVectorSource from 'ol/source/Vector';
+import * as React from 'react';
+import { ReactElement } from 'react';
+
+import MapContext from '../Context/MapContext/MapContext';
+import MapComponent from '../Map/MapComponent/MapComponent';
 
 export async function actSetTimeout(time: number): Promise<void> {
   return act(async () => {

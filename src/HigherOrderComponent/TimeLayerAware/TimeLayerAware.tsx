@@ -1,10 +1,8 @@
-import * as React from 'react';
-
 import _isArray from 'lodash/isArray';
-
 import OlLayer from 'ol/layer/Layer';
 import OlImageWMS from 'ol/source/ImageWMS';
 import OlTileWMS from 'ol/source/TileWMS';
+import * as React from 'react';
 
 export type TimeLayerAwareConfig = {
   isWmsTime?: boolean;

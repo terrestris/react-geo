@@ -1,22 +1,17 @@
-import * as React from 'react';
-
-import { Spin } from 'antd';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Logger from '@terrestris/base-util/dist/Logger';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import { Spin } from 'antd';
 import _isEqual from 'lodash/isEqual';
-
 import OlLayerImage from 'ol/layer/Image';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceImageWMS from 'ol/source/ImageWMS';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-
-import Logger from '@terrestris/base-util/dist/Logger';
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../constants';
-import { useEffect, useState } from 'react';
 
 /**
    * Get the corresponding legendGraphic of a layer. If layer is configured with

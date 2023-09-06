@@ -1,16 +1,13 @@
-import OlSourceVector from 'ol/source/Vector';
-import OlLayerVector from 'ol/layer/Vector';
-import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
-
 import _differenceWith from 'lodash/differenceWith';
-
-import TestUtil from '../../Util/TestUtil';
-
-import AgFeatureGrid from './AgFeatureGrid';
-
+import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
+import OlLayerVector from 'ol/layer/Vector';
+import OlSourceVector from 'ol/source/Vector';
 import {
   act
 } from 'react-dom/test-utils';
+
+import TestUtil from '../../Util/TestUtil';
+import AgFeatureGrid from './AgFeatureGrid';
 
 describe('<AgFeatureGrid />', () => {
   let map;

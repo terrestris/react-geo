@@ -1,20 +1,21 @@
-import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
-import OlVectorLayer from 'ol/layer/Vector';
-import OlVectorSource from 'ol/source/Vector';
-import OlGeometry from 'ol/geom/Geometry';
-import { CSS_PREFIX } from '../../constants';
-import { ReactNode, useEffect, useState } from 'react';
-import { useMap } from '../..';
-import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import * as React from 'react';
-import Modify, { ModifyEvent, Options as ModifyOptions } from 'ol/interaction/Modify';
-import Translate, { Options as TranslateOptions, TranslateEvent } from 'ol/interaction/Translate';
-import OlFeature from 'ol/Feature';
-import { singleClick } from 'ol/events/condition';
-import { unByKey } from 'ol/Observable';
 import OlCollection from 'ol/Collection';
-import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
+import { singleClick } from 'ol/events/condition';
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
+import Modify, { ModifyEvent, Options as ModifyOptions } from 'ol/interaction/Modify';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import Translate, { Options as TranslateOptions, TranslateEvent } from 'ol/interaction/Translate';
+import OlVectorLayer from 'ol/layer/Vector';
+import { unByKey } from 'ol/Observable';
+import OlVectorSource from 'ol/source/Vector';
+import { ReactNode, useEffect, useState } from 'react';
+import * as React from 'react';
+
+import { useMap } from '../..';
+import { CSS_PREFIX } from '../../constants';
+import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
+import { DigitizeUtil } from '../../Util/DigitizeUtil';
+import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
 
 interface OwnProps {
   /**

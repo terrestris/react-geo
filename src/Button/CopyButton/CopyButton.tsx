@@ -1,15 +1,13 @@
+import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
+import OlGeometry from 'ol/geom/Geometry';
+import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlVectorSource from 'ol/source/Vector';
+import OlStyle from 'ol/style/Style';
 import React, {
   useEffect,
   useState
 } from 'react';
-
-import OlVectorSource from 'ol/source/Vector';
-import OlGeometry from 'ol/geom/Geometry';
-import OlVectorLayer from 'ol/layer/Vector';
-import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
-import OlStyle from 'ol/style/Style';
-
-import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 
 import { CSS_PREFIX } from '../../constants';
 import { useMap } from '../../Hook/useMap';

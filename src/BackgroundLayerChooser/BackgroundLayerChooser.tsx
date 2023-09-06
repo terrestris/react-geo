@@ -1,31 +1,27 @@
-import React, {
-  useState,
-  useEffect,
-  useRef
-} from 'react';
+import './BackgroundLayerChooser.less';
 
-import OlOverviewMap from 'ol/control/OverviewMap';
-import OlLayerBase from 'ol/layer/Base';
-import OlLayer from 'ol/layer/Layer';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlLayerImage from 'ol/layer/Image';
-import { ObjectEvent } from 'ol/Object';
-import { getUid } from 'ol/util';
-
-import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPreview';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronLeft,
   faChevronRight,
   faBan
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import OlOverviewMap from 'ol/control/OverviewMap';
+import OlLayerBase from 'ol/layer/Base';
+import OlLayerImage from 'ol/layer/Image';
+import OlLayer from 'ol/layer/Layer';
+import OlLayerTile from 'ol/layer/Tile';
+import { ObjectEvent } from 'ol/Object';
+import { getUid } from 'ol/util';
+import OlView from 'ol/View';
+import React, {
+  useEffect,
+  useRef,
+  useState} from 'react';
 
-import useMap from '../Hook/useMap';
+import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPreview';
 import SimpleButton from '../Button/SimpleButton/SimpleButton';
-
-import './BackgroundLayerChooser.less';
+import useMap from '../Hook/useMap';
 
 export type BackgroundLayerChooserProps = {
   /**

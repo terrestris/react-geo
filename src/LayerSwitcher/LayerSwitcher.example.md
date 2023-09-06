@@ -3,15 +3,13 @@ Just click on the switcher to change the layer.
 The passed layers are handled like only one of it can be visible.
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceStamen from 'ol/source/Stamen';
-import OlSourceOsm from 'ol/source/OSM';
-
 import LayerSwitcher from '@terrestris/react-geo/dist/LayerSwitcher/LayerSwitcher';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import OlSourceOsm from 'ol/source/OSM';
+import OlSourceStamen from 'ol/source/Stamen';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 class LayerSwitcherExample extends React.Component {
 

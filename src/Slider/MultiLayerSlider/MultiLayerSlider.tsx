@@ -1,11 +1,11 @@
-import * as React from 'react';
-import OlLayerBase from 'ol/layer/Base';
+import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
 import { Slider } from 'antd';
 import { SliderSingleProps } from 'antd/lib/slider';
-import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
+import _isNumber from 'lodash/isNumber';
+import OlLayerBase from 'ol/layer/Base';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-import _isNumber from 'lodash/isNumber';
 
 interface DefaultProps {
   /**

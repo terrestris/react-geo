@@ -3,17 +3,15 @@ results in AgFeatureGrid component.
 
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
-import { fromLonLat } from 'ol/proj';
-
-import AgFeatureGrid from '@terrestris/react-geo/dist/Grid/AgFeatureGrid/AgFeatureGrid';
 import WfsSearchInput from '@terrestris/react-geo/dist/Field/WfsSearchInput/WfsSearchInput';
+import AgFeatureGrid from '@terrestris/react-geo/dist/Grid/AgFeatureGrid/AgFeatureGrid';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 class WfsSearchInputExample extends React.Component {
 

@@ -1,8 +1,7 @@
-import TestUtil from '../../Util/TestUtil';
-
-import ScaleCombo from './ScaleCombo';
-
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+
+import TestUtil from '../../Util/TestUtil';
+import ScaleCombo from './ScaleCombo';
 
 describe('<ScaleCombo />', () => {
   it('is defined', () => {

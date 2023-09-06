@@ -1,15 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import './LayerSwitcher.less';
 
-import OlMap from 'ol/Map';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
 import OlTileSource from 'ol/source/Tile';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { CSS_PREFIX } from '../constants';
 import MapComponent from '../Map/MapComponent/MapComponent';
-
-import './LayerSwitcher.less';
 
 /**
  * @export

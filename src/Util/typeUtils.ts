@@ -1,9 +1,9 @@
 import OlBaseLayer from 'ol/layer/Base';
+import OlImageLayer from 'ol/layer/Image';
 import OlLayer from 'ol/layer/Layer';
+import OlTileLayer from 'ol/layer/Tile';
 import OlImageWMS from 'ol/source/ImageWMS';
 import OlTileWMS from 'ol/source/TileWMS';
-import OlImageLayer from 'ol/layer/Image';
-import OlTileLayer from 'ol/layer/Tile';
 
 export type WmsLayer = OlImageLayer<OlImageWMS> | OlTileLayer<OlTileWMS> | OlLayer<OlImageWMS | OlTileWMS>;
 

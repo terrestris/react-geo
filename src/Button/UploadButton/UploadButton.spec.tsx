@@ -1,5 +1,4 @@
 import TestUtil from '../../Util/TestUtil';
-
 import UploadButton from './UploadButton';
 
 describe('<UploadButton />', () => {
