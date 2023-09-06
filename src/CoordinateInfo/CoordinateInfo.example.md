@@ -100,7 +100,11 @@ class CoordinateInfoExample extends React.Component {
                         onClick={() => {
                           copy(clickCoord.join(', '));
                         }}
-                        icon={<FontAwesomeIcon icon={faCopy}/>}
+                        icon={
+                          <FontAwesomeIcon
+                            icon={faCopy}
+                          />
+                        }
                       />
                     </Tooltip>
                   </div>
@@ -128,7 +132,11 @@ class CoordinateInfoExample extends React.Component {
                         onClick={() => {
                           copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
                         }}
-                        icon={<FontAwesomeIcon icon={faCopy}/>}
+                        icon={
+                          <FontAwesomeIcon
+                            icon={faCopy}
+                          />
+                        }
                       />
                     </Tooltip>
                   </div>

@@ -22,6 +22,7 @@ const features = format.readFeatures(featuresJson);
 
 const CopyButtonExample = () => {
   const [map, setMap] = useState();
+  const [pressed, setPressed] = useState();
 
   useEffect(() => {
     const newMap = new OlMap({
@@ -57,7 +58,10 @@ const CopyButtonExample = () => {
           }}
         />
 
-        <CopyButton>
+        <CopyButton
+          onChange={() => setPressed(!pressed)}
+          pressed={pressed}
+        >
           Copy feature
         </CopyButton>
       </MapContext.Provider>

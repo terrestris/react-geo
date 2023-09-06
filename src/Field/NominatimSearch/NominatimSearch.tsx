@@ -232,7 +232,7 @@ export const NominatimSearch: FC<NominatimSearchProps> = ({
     } catch (error) {
       onError(error);
     }
-  }, []);
+  }, [nominatimBaseUrl, onFetchError, onFetchSuccess, searchResultLanguage]);
 
   /**
    * Trigger search when searchTerm has changed
@@ -265,7 +265,8 @@ export const NominatimSearch: FC<NominatimSearchProps> = ({
     return () => {
       clearTimeout(timeout);
     };
-  }, [searchTerm, minChars, debounceTime]);
+  }, [searchTerm, minChars, debounceTime, addressDetails, bounded, countryCodes,
+    fetchResults, format, limit, onClear, polygonGeoJSON, viewBox]);
 
   /**
    * The function describes what to do when an item is selected.

@@ -65,8 +65,14 @@ describe('<GeoLocationButton />', () => {
       expect(callback).toBeCalledTimes(0);
 
       const button = within(container).getByRole('button');
-      await userEvent.click(button);
 
+      render(<GeoLocationButton
+        showMarker={false}
+        onGeoLocationChange={callback}
+        pressed={true}
+      />);
+
+      await userEvent.click(button);
       fireGeolocationListeners();
 
       expect(callback).toBeCalledTimes(1);
@@ -74,6 +80,12 @@ describe('<GeoLocationButton />', () => {
       await userEvent.click(button);
 
       fireGeolocationListeners();
+
+      render(<GeoLocationButton
+        showMarker={false}
+        onGeoLocationChange={callback}
+        pressed={false}
+      />);
 
       expect(callback).toBeCalledTimes(1);
     });

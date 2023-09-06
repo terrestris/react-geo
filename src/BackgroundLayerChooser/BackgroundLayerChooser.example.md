@@ -49,7 +49,7 @@ function ComponentToUseTheMap() {
   // This is example specific and usually not needed
   React.useEffect(() => {
     map.setTarget('usemap-map');
-  }, []);
+  }, [map]);
 
   return (
     <MapComponent

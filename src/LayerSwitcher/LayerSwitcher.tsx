@@ -1,5 +1,4 @@
 import './LayerSwitcher.less';
-import './LayerSwitcher.less';
 
 import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import OlLayerBase from 'ol/layer/Base';
@@ -7,7 +6,7 @@ import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlTileSource from 'ol/source/Tile';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { CSS_PREFIX } from '../constants';
 
@@ -80,30 +79,24 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
    */
   const className = `${CSS_PREFIX}layer-switcher`;
 
-  useEffect(() => {
-    const mapClone =  new OlMap({
-      view: map.getView(),
-      controls: []
-    });
-    setSwitcherMap(mapClone);
-    return () => {
-      if (switcherMap) {
-        switcherMap.getLayers().clear();
-        switcherMap.setTarget(undefined);
-        setSwitcherMap(undefined);
+  /**
+   * Sets the visiblity of the layers in the props.map and this._map.
+   * Also sets the previewLayer in the state.
+   *
+   */
+  const updateLayerVisibility = useCallback(() => {
+    layers.forEach((l, i) => {
+      const visible = visibleLayerIndexRef.current === i;
+      l.setVisible(visible);
+      const clone = switcherMap?.getAllLayers()?.find(lc => lc.get(identifierProperty) === l.get(identifierProperty));
+      if (clone) {
+        clone.setVisible(visible);
+        if (visible) {
+          setPreviewLayer(clone);
+        }
       }
-    };
-  }, [map]);
-
-  useEffect(() => {
-    if (switcherMap) {
-      switcherMap.getLayers().clear();
-      layers
-        .map(cloneLayer)
-        .forEach(layer => switcherMap.addLayer(layer));
-    }
-    updateLayerVisibility();
-  }, [switcherMap]);
+    });
+  }, [layers, identifierProperty, switcherMap]);
 
   /**
    * Clones a layer
@@ -111,7 +104,7 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
    * @param layer The layer to clone.
    * @returns The cloned layer.
    */
-  function cloneLayer(layer: OlLayerBase): OlLayerBase {
+  const cloneLayer = useCallback((layer: OlLayerBase): OlLayerBase => {
     if (layer instanceof OlLayerGroup) {
       return new OlLayerGroup({
         layers: layer.getLayers().getArray().map(l => {
@@ -137,26 +130,32 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
       clone.setMap(null);
       return clone;
     }
-  };
+  }, []);
 
-  /**
-   * Sets the visiblity of the layers in the props.map and this._map.
-   * Also sets the previewLayer in the state.
-   *
-   */
-  const updateLayerVisibility = () => {
-    layers.forEach((l, i) => {
-      const visible = visibleLayerIndexRef.current === i;
-      l.setVisible(visible);
-      const clone = switcherMap?.getAllLayers()?.find(lc => lc.get(identifierProperty) === l.get(identifierProperty));
-      if (clone) {
-        clone.setVisible(visible);
-        if (visible) {
-          setPreviewLayer(clone);
-        }
-      }
+  useEffect(() => {
+    const mapClone =  new OlMap({
+      view: map.getView(),
+      controls: []
     });
-  };
+    setSwitcherMap(mapClone);
+    return () => {
+      if (switcherMap) {
+        switcherMap.getLayers().clear();
+        switcherMap.setTarget(undefined);
+        setSwitcherMap(undefined);
+      }
+    };
+  }, [map, switcherMap]);
+
+  useEffect(() => {
+    if (switcherMap) {
+      switcherMap.getLayers().clear();
+      layers
+        .map(cloneLayer)
+        .forEach(layer => switcherMap.addLayer(layer));
+    }
+    updateLayerVisibility();
+  }, [switcherMap, cloneLayer, layers, updateLayerVisibility]);
 
   /**
    * Clickhandler for the overview switch.

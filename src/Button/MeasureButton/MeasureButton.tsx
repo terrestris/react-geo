@@ -879,7 +879,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
 
     return (
       <ToggleButton
-        onToggle={this.onToggle}
+        // onToggle={this.onToggle}
         className={finalClassName}
         {...passThroughProps}
       />
