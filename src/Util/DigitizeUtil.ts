@@ -1,19 +1,19 @@
-import OlVectorLayer from 'ol/layer/Vector';
-import OlStyleStyle, { StyleLike as OlStyleLike } from 'ol/style/Style';
-import OlStyleCircle from 'ol/style/Circle';
-import OlStyleFill from 'ol/style/Fill';
-import OlStyleStroke from 'ol/style/Stroke';
-import OlStyleText from 'ol/style/Text';
-import OlStyle from 'ol/style/Style';
-import OlLayerVector from 'ol/layer/Vector';
-import OlSourceVector from 'ol/source/Vector';
-import OlCollection from 'ol/Collection';
-import OlMap from 'ol/Map';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import OlCollection from 'ol/Collection';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
 import Geometry from 'ol/geom/Geometry';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
 import RenderFeature from 'ol/render/Feature';
+import OlSourceVector from 'ol/source/Vector';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyleStyle, { StyleLike as OlStyleLike } from 'ol/style/Style';
+import OlStyle from 'ol/style/Style';
+import OlStyleText from 'ol/style/Text';
 
 export class DigitizeUtil {
   /**

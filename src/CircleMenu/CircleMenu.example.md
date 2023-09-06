@@ -3,25 +3,22 @@ This demonstrates the usage of the CircleMenu.
 CircleMenu in a Map (click the red feature):
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlLayerVector from 'ol/layer/Vector';
-import OlSourceOSM from 'ol/source/OSM';
-import OlSourceVector from 'ol/source/Vector';
+import { faBullhorn,faChartLine, faLink, faPencil, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
+import CircleMenu from '@terrestris/react-geo/dist/CircleMenu/CircleMenu';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
-import OlStyleStyle from 'ol/style/Style';
+import OlLayerTile from 'ol/layer/Tile';
+import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
+import OlSourceOSM from 'ol/source/OSM';
+import OlSourceVector from 'ol/source/Vector';
 import OlStyleCircle from 'ol/style/Circle';
 import OlStyleFill from 'ol/style/Fill';
-
-import CircleMenu from '@terrestris/react-geo/dist/CircleMenu/CircleMenu';
-import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencil, faChartLine, faLink, faThumbsUp, faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import OlStyleStyle from 'ol/style/Style';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 class CircleMenuExample extends React.Component {
 

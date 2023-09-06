@@ -1,16 +1,14 @@
 /* eslint-disable testing-library/render-result-naming-convention */
+import Logger from '@terrestris/base-util/dist/Logger';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
 import {
   act
 } from 'react-dom/test-utils';
 
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOsm from 'ol/source/OSM';
-
 import TestUtil from '../../Util/TestUtil';
-import Logger from '@terrestris/base-util/dist/Logger';
-
 import WfsSearch from './WfsSearch';
 
 describe('<WfsSearch />', () => {

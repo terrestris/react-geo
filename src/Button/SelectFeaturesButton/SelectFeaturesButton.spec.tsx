@@ -1,17 +1,16 @@
-import * as React from 'react';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
 import OlFeature from 'ol/Feature';
 import OlPoint from 'ol/geom/Point';
-import OlVectorLayer from 'ol/layer/Vector';
-import OlVectorSource from 'ol/source/Vector';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
+import OlVectorSource from 'ol/source/Vector';
+import OlView from 'ol/View';
+import * as React from 'react';
 
-import DrawButton from '../DrawButton/DrawButton';
 import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
+import DrawButton from '../DrawButton/DrawButton';
 import SelectFeaturesButton from './SelectFeaturesButton';
 
 describe('<SelectFeaturesButton />', () => {

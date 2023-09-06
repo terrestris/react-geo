@@ -2,16 +2,15 @@ This example shows the usage of the MapContext which uses the new React Context 
 with [react 16.3](https://reactjs.org/docs/context.html).
 
 ```jsx
-import * as React from 'react';
-
-import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
-import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
 import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
 import { useMap } from '@terrestris/react-geo/dist/Hook/useMap';
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
+import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 const layer = new OlLayerTile({
   source: new OlSourceOsm(),

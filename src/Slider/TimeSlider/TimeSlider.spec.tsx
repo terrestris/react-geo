@@ -1,5 +1,6 @@
-import TestUtil from '../../Util/TestUtil';
 import moment from 'moment';
+
+import TestUtil from '../../Util/TestUtil';
 import TimeSlider from './TimeSlider';
 
 describe('<TimeSlider />', () => {

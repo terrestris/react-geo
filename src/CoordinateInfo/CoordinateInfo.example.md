@@ -1,26 +1,21 @@
 ```jsx
-import * as React from 'react';
-
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CoordinateInfo from '@terrestris/react-geo/dist/CoordinateInfo/CoordinateInfo';
 import {
-  Statistic,
   Button,
   Spin,
+  Statistic,
   Tooltip
 } from 'antd';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
+import * as copy from 'copy-to-clipboard';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-import { fromLonLat } from 'ol/proj';
-
-import * as copy from 'copy-to-clipboard';
-
-import CoordinateInfo from '@terrestris/react-geo/dist/CoordinateInfo/CoordinateInfo';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 const queryLayer = new OlLayerTile({
   name: 'States (USA)',

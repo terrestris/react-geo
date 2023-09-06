@@ -1,15 +1,15 @@
-import * as React from 'react';
 import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
+import * as React from 'react';
 
 const { Option } = AutoComplete;
 
-import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
+import './CoordinateReferenceSystemCombo.less';
+
 import Logger from '@terrestris/base-util/dist/Logger';
+import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './CoordinateReferenceSystemCombo.less';
 
 interface CrsDefinition {
   value: string;

@@ -1,16 +1,14 @@
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOsm from 'ol/source/OSM';
-
-import userEvent from '@testing-library/user-event';
-
-import NominatimSearch from '../NominatimSearch/NominatimSearch';
-import { actSetTimeout, renderInMapContext } from '../../Util/rtlTestUtils';
-
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
 import * as React from 'react';
+
+import { actSetTimeout, renderInMapContext } from '../../Util/rtlTestUtils';
+import NominatimSearch from '../NominatimSearch/NominatimSearch';
 
 describe('<NominatimSearch />', () => {
   let map: OlMap;

@@ -1,32 +1,26 @@
-import * as React from 'react';
+import './WfsSearchInput.less';
 
-import {
-  Input
-} from 'antd';
-import { InputProps } from 'antd/lib/input';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCircleNotch,
   faClose
 } from '@fortawesome/free-solid-svg-icons';
-
-import OlMap from 'ol/Map';
-import OlFormatGML32 from 'ol/format/GML32';
-import OlFormatGeoJson from 'ol/format/GeoJSON';
-
-import _debounce from 'lodash/debounce';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil, {
   AttributeDetails
 } from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
-
+import {
+  Input
+} from 'antd';
+import { InputProps } from 'antd/lib/input';
 import { Feature } from 'geojson';
+import _debounce from 'lodash/debounce';
+import OlFormatGeoJson from 'ol/format/GeoJSON';
+import OlFormatGML32 from 'ol/format/GML32';
+import OlMap from 'ol/Map';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './WfsSearchInput.less';
 
 interface OwnProps {
   /**

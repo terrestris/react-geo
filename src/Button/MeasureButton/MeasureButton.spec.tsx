@@ -1,15 +1,14 @@
-import TestUtil from '../../Util/TestUtil';
-
-import OlLayerVector from 'ol/layer/Vector';
-import OlInteractionDraw from 'ol/interaction/Draw';
+import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
 import OlFeature from 'ol/Feature';
 import OlGeomLineString from 'ol/geom/LineString';
-import OlGeomPolygon from 'ol/geom/Polygon';
 import OlGeomPoint from 'ol/geom/Point';
-import OlOverlay from 'ol/Overlay';
+import OlGeomPolygon from 'ol/geom/Polygon';
+import OlInteractionDraw from 'ol/interaction/Draw';
+import OlLayerVector from 'ol/layer/Vector';
 import * as OlObservable from 'ol/Observable';
+import OlOverlay from 'ol/Overlay';
 
-import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
+import TestUtil from '../../Util/TestUtil';
 import MeasureButton from './MeasureButton';
 
 describe('<MeasureButton />', () => {

@@ -1,15 +1,14 @@
+import OlGeometry from 'ol/geom/Geometry';
+import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlVectorSource from 'ol/source/Vector';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import OlVectorLayer from 'ol/layer/Vector';
-import OlVectorSource from 'ol/source/Vector';
-import OlGeometry from 'ol/geom/Geometry';
-
 import { CSS_PREFIX } from '../../constants';
 import { useMap } from '../../Hook/useMap';
-import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
 
 interface OwnProps {
   /**

@@ -1,5 +1,4 @@
 import TestUtil from '../../Util/TestUtil';
-
 import SimpleButton from './SimpleButton';
 
 describe('<SimpleButton />', () => {

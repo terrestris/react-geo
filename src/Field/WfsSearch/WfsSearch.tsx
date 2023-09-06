@@ -1,26 +1,22 @@
-import * as React from 'react';
-
 import {
   AutoComplete,
   Spin
 } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
+import * as React from 'react';
 const Option = AutoComplete.Option;
-import { OptionProps } from 'antd/lib/select';
-
-import OlMap from 'ol/Map';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
-import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
-
-import _isFunction from 'lodash/isFunction';
-import _debounce from 'lodash/debounce';
+import './WfsSearch.less';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import WfsFilterUtil, { AttributeDetails } from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
+import { OptionProps } from 'antd/lib/select';
+import _debounce from 'lodash/debounce';
+import _isFunction from 'lodash/isFunction';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
+import OlMap from 'ol/Map';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './WfsSearch.less';
 
 interface OwnProps {
   /**

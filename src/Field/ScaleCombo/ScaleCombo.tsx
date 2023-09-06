@@ -1,26 +1,24 @@
-import * as React from 'react';
 import { Select } from 'antd';
+import * as React from 'react';
 const Option = Select.Option;
 
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlMapEvent from 'ol/MapEvent';
-
-import _isInteger from 'lodash/isInteger';
-import _isEmpty from 'lodash/isEmpty';
-import _isNil from 'lodash/isNil';
-import _isEqual from 'lodash/isEqual';
-import _isFunction from 'lodash/isFunction';
-import _reverse from 'lodash/reverse';
-import _clone from 'lodash/clone';
+import './ScaleCombo.less';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import _clone from 'lodash/clone';
+import _isEmpty from 'lodash/isEmpty';
+import _isEqual from 'lodash/isEqual';
+import _isFunction from 'lodash/isFunction';
+import _isInteger from 'lodash/isInteger';
+import _isNil from 'lodash/isNil';
+import _isNumber from 'lodash/isNumber';
+import _reverse from 'lodash/reverse';
+import OlMap from 'ol/Map';
+import OlMapEvent from 'ol/MapEvent';
+import OlView from 'ol/View';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './ScaleCombo.less';
-import _isNumber from 'lodash/isNumber';
 
 interface ScaleComboProps {
   /**

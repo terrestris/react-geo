@@ -1,16 +1,14 @@
-import * as React from 'react';
-import { Checkbox } from 'antd';
-import OlMap from 'ol/Map';
+import './AddWmsPanel.less';
 
+import Logger from '@terrestris/base-util/dist/Logger';
+import { Checkbox } from 'antd';
 import _isFunction from 'lodash/isFunction';
+import OlMap from 'ol/Map';
+import * as React from 'react';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
-import Logger from '@terrestris/base-util/dist/Logger';
-
-import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry';
-
-import './AddWmsPanel.less';
 import { WmsLayer } from '../../Util/typeUtils';
+import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry';
 
 interface OwnProps {
   /**

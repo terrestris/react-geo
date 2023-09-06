@@ -1,21 +1,20 @@
-import * as React from 'react';
 import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
+import * as React from 'react';
 const Option = AutoComplete.Option;
 import { DefaultOptionType, OptionProps } from 'antd/lib/select';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
-
+import { GeoJSON } from 'geojson';
+import { Extent as OlExtent } from 'ol/extent';
 import OlMap from 'ol/Map';
 import { transformExtent } from 'ol/proj';
-import { Extent as OlExtent } from 'ol/extent';
-
-import { GeoJSON } from 'geojson';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-import { FC, useCallback, useEffect, useState } from 'react';
 import useMap from '../../Hook/useMap';
+
 import './NominatimSearch.less';
 
 // See https://nominatim.org/release-docs/develop/api/Output/ for some more information

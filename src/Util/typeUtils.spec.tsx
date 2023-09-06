@@ -1,18 +1,16 @@
-import { isWmsLayer } from './typeUtils';
-
 import OlBaseLayer from 'ol/layer/Base';
+import OlHeatmapLayer from 'ol/layer/Heatmap';
+import OlImageLayer from 'ol/layer/Image';
 import OlLayer from 'ol/layer/Layer';
+import OlTileLayer from 'ol/layer/Tile';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlSourceCluster from 'ol/source/Cluster';
 import OlImageWMS from 'ol/source/ImageWMS';
 import OlTileWMS from 'ol/source/TileWMS';
-import OlImageLayer from 'ol/layer/Image';
-import OlTileLayer from 'ol/layer/Tile';
-
-import OlVectorLayer from 'ol/layer/Vector';
-import OlHeatmapLayer from 'ol/layer/Heatmap';
-
 import OlSourceVector from 'ol/source/Vector';
 import OlSourceVectorTile from 'ol/source/VectorTile';
-import OlSourceCluster from 'ol/source/Cluster';
+
+import { isWmsLayer } from './typeUtils';
 
 const getWmsLikeLayers = () => {
   return {

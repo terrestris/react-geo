@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { mount, shallow, ShallowWrapper, ReactWrapper, MountRendererProps } from 'enzyme';
-import OlView from 'ol/View';
-import OlMap from 'ol/Map';
-import OlSourceVector from 'ol/source/Vector';
-import OlLayerVector from 'ol/layer/Vector';
+import { mount, MountRendererProps,ReactWrapper, shallow, ShallowWrapper } from 'enzyme';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
+import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
+import OlSourceVector from 'ol/source/Vector';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 type Wrapper =  ShallowWrapper | ReactWrapper;
 

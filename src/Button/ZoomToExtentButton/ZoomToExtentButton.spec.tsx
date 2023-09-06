@@ -1,7 +1,7 @@
-import TestUtil from '../../Util/TestUtil';
-import { getCenter, containsExtent } from 'ol/extent';
+import { containsExtent,getCenter } from 'ol/extent';
 import OlGeomPolygon from 'ol/geom/Polygon';
 
+import TestUtil from '../../Util/TestUtil';
 import ZoomToExtentButton from '../ZoomToExtentButton/ZoomToExtentButton';
 
 describe('<ZoomToExtentButton />', () => {

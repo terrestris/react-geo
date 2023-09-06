@@ -1,15 +1,13 @@
 This is a example containing a map component and a scale combo
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import { fromLonLat } from 'ol/proj';
-
 import ScaleCombo from '@terrestris/react-geo/dist/Field/ScaleCombo/ScaleCombo';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 class ScaleComboExample extends React.Component {
 
