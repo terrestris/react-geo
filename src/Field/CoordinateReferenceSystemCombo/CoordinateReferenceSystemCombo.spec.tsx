@@ -1,4 +1,5 @@
 import Logger from '@terrestris/base-util/dist/Logger';
+import { actSetTimeout } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
@@ -8,7 +9,6 @@ import {
   findAntdDropdownOptionByText,
   queryAntdDropdownOption
 } from '../../Util/antdTestQueries';
-import { actSetTimeout } from '../../Util/rtlTestUtils';
 import CoordinateReferenceSystemCombo from '../CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
 
 describe('<CoordinateReferenceSystemCombo />', () => {

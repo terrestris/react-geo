@@ -1,3 +1,5 @@
+import useMap from '@terrestris/react-util/dist/hooks/useMap';
+import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import OlCollection from 'ol/Collection';
 import { singleClick } from 'ol/events/condition';
 import OlFeature from 'ol/Feature';
@@ -8,13 +10,11 @@ import Translate, { Options as TranslateOptions, TranslateEvent } from 'ol/inter
 import OlVectorLayer from 'ol/layer/Vector';
 import { unByKey } from 'ol/Observable';
 import OlVectorSource from 'ol/source/Vector';
-import { ReactNode, useEffect, useState } from 'react';
 import * as React from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
-import { useMap } from '../..';
 import { CSS_PREFIX } from '../../constants';
 import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
-import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
 
 interface OwnProps {

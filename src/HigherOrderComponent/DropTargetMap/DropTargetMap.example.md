@@ -2,10 +2,10 @@ This example shows the usage of the DropTargetMap HOC by use of the onDropAware
 function.
 
 ```jsx
-import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
-import onDropAware from '@terrestris/react-geo/dist/HigherOrderComponent/DropTargetMap/DropTargetMap';
-import { useMap } from '@terrestris/react-geo/dist/Hook/useMap';
-import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import onDropAware from '@terrestris/react-util/dist/HigherOrderComponent/DropTargetMap/DropTargetMap';
+import { useMap } from '@terrestris/react-util/dist/hooks/useMap';
+import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlSourceOSM from 'ol/source/OSM';

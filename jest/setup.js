@@ -15,3 +15,20 @@ Object.assign(global, {
 });
 
 Enzyme.configure({ adapter: new Adapter() });
+
+jest.mock('use-resize-observer', () => ({
+  __esModule: true,
+  default: jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn(),
+  })),
+}));
+
+window.ResizeObserver =
+    window.ResizeObserver ||
+    jest.fn().mockImplementation(() => ({
+      disconnect: jest.fn(),
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+    }));
