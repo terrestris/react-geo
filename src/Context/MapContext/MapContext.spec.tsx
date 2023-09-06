@@ -1,9 +1,10 @@
-import React from 'react';
+import { mount,shallow } from 'enzyme';
 import OlMap from 'ol/Map';
-import { shallow, mount } from 'enzyme';
+import React from 'react';
+
 import { useMap } from '../../Hook/useMap';
-import MapContext from './MapContext';
 import { TestUtil } from '../../Util/TestUtil';
+import MapContext from './MapContext';
 
 describe('MapContext', () => {
   const olMap = TestUtil.createMap();

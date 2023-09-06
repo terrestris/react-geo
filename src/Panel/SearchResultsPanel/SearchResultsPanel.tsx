@@ -1,8 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import OlLayerVector from 'ol/layer/Vector';
-import OlFeature from 'ol/Feature';
-import OlSourceVector from 'ol/source/Vector';
-import OlMap from 'ol/Map';
+import './SearchResultsPanel.less';
 
 import {
   Avatar,
@@ -10,12 +6,16 @@ import {
   CollapseProps,
   List
 } from 'antd';
-
 import _isEmpty from 'lodash/isEmpty';
-import './SearchResultsPanel.less';
-import useMap from '../../Hook/useMap';
+import OlFeature from 'ol/Feature';
 import BaseLayer from 'ol/layer/Base';
+import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
+import OlSourceVector from 'ol/source/Vector';
 import OlStyle from 'ol/style/Style';
+import React, { ReactNode, useEffect, useState } from 'react';
+
+import useMap from '../../Hook/useMap';
 
 const Panel = Collapse.Panel;
 const ListItem = List.Item;

@@ -1,16 +1,16 @@
-import DrawButton from './DrawButton';
 import { screen,  within } from '@testing-library/react';
-import * as React from 'react';
 import userEvent from '@testing-library/user-event';
-
-import OlView from 'ol/View';
-import OlMap from 'ol/Map';
-import { clickMap, doubleClickMap, renderInMapContext } from '../../Util/rtlTestUtils';
 import LineString from 'ol/geom/LineString';
 import Polygon from 'ol/geom/Polygon';
 import VectorLayer from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
 import VectorSource from 'ol/source/Vector';
+import OlView from 'ol/View';
+import * as React from 'react';
+
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
+import { clickMap, doubleClickMap, renderInMapContext } from '../../Util/rtlTestUtils';
+import DrawButton from './DrawButton';
 
 describe('<DrawButton />', () => {
 

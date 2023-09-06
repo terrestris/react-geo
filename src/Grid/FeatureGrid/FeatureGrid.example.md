@@ -1,16 +1,14 @@
 This example demonstrates the usage of the FeatureGrid:
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
-import { fromLonLat } from 'ol/proj';
-
 import FeatureGrid from '@terrestris/react-geo/dist/Grid/FeatureGrid/FeatureGrid';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 import federalStates from '../../../assets/federal-states-ger.json';
 
@@ -99,26 +97,22 @@ class FeatureGridExample extends React.Component {
 An example with a remote feature source.
 
 ```jsx
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
-import { fromLonLat } from 'ol/proj';
-import OlStyle from 'ol/style/Style';
-import OlStyleIcon from 'ol/style/Icon';
-import OlStyleText from 'ol/style/Text';
-import OlStyleFill from 'ol/style/Fill';
-import OlStyleStroke from 'ol/style/Stroke';
-
-import Input from 'antd/lib/input';
-
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
-
 import FeatureGrid from '@terrestris/react-geo/dist/Grid/FeatureGrid/FeatureGrid';
+import Input from 'antd/lib/input';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleIcon from 'ol/style/Icon';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyle from 'ol/style/Style';
+import OlStyleText from 'ol/style/Text';
+import OlView from 'ol/View';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 // Credits to Maps Icons Collection https://mapicons.mapsmarker.com.
 import mapMarker from '../../../assets/bus-map-marker.png';

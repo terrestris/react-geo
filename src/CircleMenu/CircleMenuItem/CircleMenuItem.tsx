@@ -1,8 +1,8 @@
+import './CircleMenuItem.less';
+
 import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './CircleMenuItem.less';
 
 
 export interface CircleMenuItemProps {

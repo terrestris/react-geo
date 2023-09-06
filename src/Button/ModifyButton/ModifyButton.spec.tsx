@@ -1,13 +1,12 @@
 import { within } from '@testing-library/react';
+import OlFeature from 'ol/Feature';
+import OlPoint from 'ol/geom/Point';
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
 import * as React from 'react';
 
-import OlView from 'ol/View';
-import OlMap from 'ol/Map';
-import OlPoint from 'ol/geom/Point';
-import OlFeature from 'ol/Feature';
-
-import { renderInMapContext } from '../../Util/rtlTestUtils';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
+import { renderInMapContext } from '../../Util/rtlTestUtils';
 import { ModifyButton } from './ModifyButton';
 
 describe('<ModifyButton />', () => {

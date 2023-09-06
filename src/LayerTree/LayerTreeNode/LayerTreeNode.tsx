@@ -1,11 +1,12 @@
-import * as React from 'react';
 import { Tree } from 'antd';
+import * as React from 'react';
 const TreeNode = Tree.TreeNode;
 
 import './LayerTreeNode.less';
 
-import { CSS_PREFIX } from '../../constants';
 import { AntTreeNodeProps } from 'antd/lib/tree';
+
+import { CSS_PREFIX } from '../../constants';
 
 export interface BaseProps {
   inResolutionRange?: boolean;

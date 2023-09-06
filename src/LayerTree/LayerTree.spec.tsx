@@ -1,22 +1,18 @@
-import * as React from 'react';
-
+import { getUid } from 'ol';
+import OlCollection from 'ol/Collection';
+import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
-import OlSourceTileWMS from 'ol/source/TileWMS';
-import * as OlObservable from 'ol/Observable';
-import OlCollection from 'ol/Collection';
-
-import TestUtil from '../Util/TestUtil';
-
-import LayerTree from './LayerTree';
-
 import OlMap from 'ol/Map';
-import OlLayerBase from 'ol/layer/Base';
-import { getUid } from 'ol';
-
+import * as OlObservable from 'ol/Observable';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import * as React from 'react';
 import {
   act
 } from 'react-dom/test-utils';
+
+import TestUtil from '../Util/TestUtil';
+import LayerTree from './LayerTree';
 
 describe('<LayerTree />', () => {
   let layerGroup: OlLayerGroup;

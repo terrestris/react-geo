@@ -1,18 +1,16 @@
 The BackgroundLayerChooser
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceTileWMS from 'ol/source/TileWMS';
-import OlSourceOsm from 'ol/source/OSM';
-
 import BackgroundLayerChooser from '@terrestris/react-geo/dist/BackgroundLayerChooser/BackgroundLayerChooser';
-import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
 import { useMap } from '@terrestris/react-geo/dist/Hook/useMap';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import OlSourceOsm from 'ol/source/OSM';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 const layers = [
   new OlLayerTile({

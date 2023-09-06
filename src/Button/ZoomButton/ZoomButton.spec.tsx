@@ -1,11 +1,10 @@
-import TestUtil from '../../Util/TestUtil';
-import { actSetTimeout } from '../../Util/rtlTestUtils';
-import OlMap from 'ol/Map';
-
 import { render, screen } from '@testing-library/react';
-import * as React from 'react';
 import userEvent from '@testing-library/user-event';
+import OlMap from 'ol/Map';
+import * as React from 'react';
 
+import { actSetTimeout } from '../../Util/rtlTestUtils';
+import TestUtil from '../../Util/TestUtil';
 import ZoomButton from './ZoomButton';
 
 describe('<ZoomButton />', () => {

@@ -4,14 +4,13 @@ with [react 16.3](https://reactjs.org/docs/context.html).
 If you are using function-components head over to the `useMap` example in the "HOOKS" section.
 
 ```jsx
-import * as React from 'react';
-
 import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
 import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 const MapContextExample = () => {
 

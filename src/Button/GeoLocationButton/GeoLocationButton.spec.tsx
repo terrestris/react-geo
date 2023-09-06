@@ -1,12 +1,10 @@
 import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
-import * as React from 'react';
 import { transform } from 'ol/proj';
+import * as React from 'react';
 
-import TestUtil from '../../Util/TestUtil';
 import { disableGeolocationMock, enableGeolocationMock, fireGeolocationListeners } from '../../Util/geolocationMock';
-
+import TestUtil from '../../Util/TestUtil';
 import GeoLocationButton from './GeoLocationButton';
 
 describe('<GeoLocationButton />', () => {

@@ -1,14 +1,13 @@
 import { screen,  within } from '@testing-library/react';
-import * as React from 'react';
 import userEvent from '@testing-library/user-event';
-
-import OlView from 'ol/View';
-import OlMap from 'ol/Map';
-import OlPoint from 'ol/geom/Point';
 import OlFeature from 'ol/Feature';
+import OlPoint from 'ol/geom/Point';
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import * as React from 'react';
 
-import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
+import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
 import { DeleteButton } from './DeleteButton';
 
 describe('<DeleteButton />', () => {

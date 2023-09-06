@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
-
-import OlLayerBase from 'ol/layer/Base';
-import OlLayer from 'ol/layer/Layer';
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlLayerImage from 'ol/layer/Image';
-import { getUid } from 'ol/util';
+import './BackgroundLayerPreview.less';
 
 import { Spin } from 'antd';
-
-import './BackgroundLayerPreview.less';
 import { Coordinate } from 'ol/coordinate';
+import OlLayerBase from 'ol/layer/Base';
+import OlLayerImage from 'ol/layer/Image';
+import OlLayer from 'ol/layer/Layer';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { getUid } from 'ol/util';
+import OlView from 'ol/View';
+import React, { useEffect,useState } from 'react';
+
 import useMap from '../Hook/useMap';
 import MapComponent from '../Map/MapComponent/MapComponent';
 

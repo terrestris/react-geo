@@ -1,35 +1,29 @@
-import * as React from 'react';
-
+import {
+  DatePicker,
+  Popover,
+  Select} from 'antd';
+import dayjs from 'dayjs';
+import _isEqual from 'lodash/isEqual';
+import _isFinite from 'lodash/isFinite';
 import moment from 'moment';
-
+import { getUid } from 'ol';
 import OlLayer from 'ol/layer/Layer';
 import OlMap from 'ol/Map';
 import OlImageWMS from 'ol/source/ImageWMS';
 import OlTileWMS from 'ol/source/TileWMS';
-import { getUid } from 'ol';
-
-import dayjs from 'dayjs';
-
-import _isFinite from 'lodash/isFinite';
-import _isEqual from 'lodash/isEqual';
-
-import {
-  Select,
-  DatePicker,
-  Popover
-} from 'antd';
+import * as React from 'react';
 const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faPauseCircle, faPlayCircle, faSync } from '@fortawesome/free-solid-svg-icons';
+import './TimeLayerSliderPanel.less';
 
-import timeLayerAware, { TimeLayerAwareConfig } from '../../HigherOrderComponent/TimeLayerAware/TimeLayerAware';
-import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
+import { faCalendar, faPauseCircle, faPlayCircle, faSync } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import ToggleButton from '../../Button/ToggleButton/ToggleButton';
-
-import './TimeLayerSliderPanel.less';
+import timeLayerAware, { TimeLayerAwareConfig } from '../../HigherOrderComponent/TimeLayerAware/TimeLayerAware';
+import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
 
 export interface Tooltips {
   hours: string;

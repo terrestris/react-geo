@@ -1,11 +1,10 @@
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
+import './ToggleGroup.less';
 
 import _isFunction from 'lodash/isFunction';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './ToggleGroup.less';
 import { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
 export interface ToggleGroupProps {

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
-
 import ToggleButton from '../ToggleButton/ToggleButton';
 import ToggleGroup, { ToggleGroupState } from './ToggleGroup';
 

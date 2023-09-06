@@ -1,11 +1,9 @@
-import * as React from 'react';
 import moment from 'moment';
-
 import OlTileLayer from 'ol/layer/Tile';
 import OlTileWMS from 'ol/source/TileWMS';
+import * as React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
-
 import { timeLayerAware } from './TimeLayerAware';
 
 describe('timeLayerAware', () => {
