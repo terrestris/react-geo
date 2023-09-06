@@ -1,37 +1,30 @@
-import * as React from 'react';
-
+import Logger from '@terrestris/base-util/dist/Logger';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import { Tree } from 'antd';
-import { AntTreeNodeDropEvent, AntTreeNodeSelectedEvent } from 'antd/lib/tree/Tree';
-import { ReactElement, ReactNode } from 'react';
 import {
-  TreeProps,
   AntTreeNodeCheckedEvent,
-  DataNode
-} from 'antd/lib/tree';
+  DataNode,
+  TreeProps} from 'antd/lib/tree';
+import { AntTreeNodeDropEvent, AntTreeNodeSelectedEvent } from 'antd/lib/tree/Tree';
+import _isEqual from 'lodash/isEqual';
+import _isFunction from 'lodash/isFunction';
+import _isNumber from 'lodash/isNumber';
+import { getUid } from 'ol';
+import OlCollection from 'ol/Collection';
+import { EventsKey as OlEventsKey } from 'ol/events';
+import OlLayerBase from 'ol/layer/Base';
+import OlLayerGroup from 'ol/layer/Group';
+import OlMap from 'ol/Map';
+import OlMapEvent from 'ol/MapEvent';
+import { unByKey } from 'ol/Observable';
 import {
   EventDataNode
 } from 'rc-tree/lib/interface';
-
-import _isNumber from 'lodash/isNumber';
-
-import OlMap from 'ol/Map';
-import OlLayerBase from 'ol/layer/Base';
-import OlLayerGroup from 'ol/layer/Group';
-import OlCollection from 'ol/Collection';
-import OlMapEvent from 'ol/MapEvent';
-import { unByKey } from 'ol/Observable';
-import { getUid } from 'ol';
-import { EventsKey as OlEventsKey } from 'ol/events';
-
-import _isFunction from 'lodash/isFunction';
-import _isEqual from 'lodash/isEqual';
-
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-import Logger from '@terrestris/base-util/dist/Logger';
-
-import LayerTreeNode, { LayerTreeNodeProps } from './LayerTreeNode/LayerTreeNode';
+import * as React from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import { CSS_PREFIX } from '../constants';
+import LayerTreeNode, { LayerTreeNodeProps } from './LayerTreeNode/LayerTreeNode';
 
 
 interface OwnProps {

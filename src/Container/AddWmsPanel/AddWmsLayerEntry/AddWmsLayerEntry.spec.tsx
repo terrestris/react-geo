@@ -2,10 +2,10 @@ import {
   render,
   screen
 } from '@testing-library/react';
-import * as React from 'react';
-
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
+import * as React from 'react';
+
 import AddWmsLayerEntry from './AddWmsLayerEntry';
 
 describe('<AddWmsLayerEntry />', () => {

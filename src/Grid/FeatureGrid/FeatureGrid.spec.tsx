@@ -1,16 +1,14 @@
-import OlSourceVector from 'ol/source/Vector';
-import OlLayerVector from 'ol/layer/Vector';
-import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
-
-import TestUtil from '../../Util/TestUtil';
-
-import FeatureGrid from './FeatureGrid';
-import OlGeometry from 'ol/geom/Geometry';
 import { MapBrowserEvent } from 'ol';
-
+import OlGeometry from 'ol/geom/Geometry';
+import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
+import OlLayerVector from 'ol/layer/Vector';
+import OlSourceVector from 'ol/source/Vector';
 import {
   act
 } from 'react-dom/test-utils';
+
+import TestUtil from '../../Util/TestUtil';
+import FeatureGrid from './FeatureGrid';
 
 describe('<FeatureGrid />', () => {
   let map;

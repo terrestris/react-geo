@@ -1,6 +1,6 @@
+import FileUtil from '@terrestris/ol-util/dist/FileUtil/FileUtil';
 import * as React from 'react';
 
-import FileUtil from '@terrestris/ol-util/dist/FileUtil/FileUtil';
 import { MapComponentProps } from '../../Map/MapComponent/MapComponent';
 
 /**

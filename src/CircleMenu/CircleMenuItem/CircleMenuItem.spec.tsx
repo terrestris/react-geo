@@ -1,5 +1,4 @@
 import TestUtil from '../../Util/TestUtil';
-
 import { CircleMenuItem } from './CircleMenuItem';
 
 describe('<CircleMenuItem />', () => {

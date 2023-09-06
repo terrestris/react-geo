@@ -2,7 +2,6 @@ import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 
 import TestUtil from '../../Util/TestUtil';
-
 import PropertyGrid from './PropertyGrid';
 
 describe('<PropertyGrid />', () => {

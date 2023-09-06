@@ -1,17 +1,15 @@
 This example demonstrates the usage of the AgFeatureGrid:
 
 ```jsx
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
-import { fromLonLat } from 'ol/proj';
-
 import AgFeatureGrid from '@terrestris/react-geo/dist/Grid/AgFeatureGrid/AgFeatureGrid';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 import federalStates from '../../../assets/federal-states-ger.json';
 

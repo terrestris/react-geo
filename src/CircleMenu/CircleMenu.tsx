@@ -1,11 +1,10 @@
-import * as React from 'react';
+import './CircleMenu.less';
 
 import _isNil from 'lodash/isNil';
+import * as React from 'react';
 
-import CircleMenuItem from './CircleMenuItem/CircleMenuItem';
 import { CSS_PREFIX } from '../constants';
-
-import './CircleMenu.less';
+import CircleMenuItem from './CircleMenuItem/CircleMenuItem';
 
 interface OwnProps {
   /**

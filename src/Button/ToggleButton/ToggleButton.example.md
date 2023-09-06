@@ -28,10 +28,9 @@ import ToggleButton from '@terrestris/react-geo/dist/Button/ToggleButton/ToggleB
 A ToggleButton with an icon and a pressedIcon:
 
 ```jsx
-import ToggleButton from '@terrestris/react-geo/dist/Button/ToggleButton/ToggleButton';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFaceFrown, faFaceSmile } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ToggleButton from '@terrestris/react-geo/dist/Button/ToggleButton/ToggleButton';
 
 <ToggleButton
   icon={

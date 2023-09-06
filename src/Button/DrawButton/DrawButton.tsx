@@ -1,21 +1,20 @@
+import { EventsKey } from 'ol/events';
+import * as OlEventConditions from 'ol/events/condition';
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
+import OlInteractionDraw, { createBox, DrawEvent as OlDrawEvent, Options as OlDrawOptions } from 'ol/interaction/Draw';
+import OlVectorLayer from 'ol/layer/Vector';
+import { unByKey } from 'ol/Observable';
+import OlVectorSource from 'ol/source/Vector';
+import { StyleLike as OlStyleLike } from 'ol/style/Style';
 import * as React from 'react';
 import { ReactNode, useEffect, useState } from 'react';
 
-import { StyleLike as OlStyleLike } from 'ol/style/Style';
-import OlInteractionDraw, { createBox, DrawEvent as OlDrawEvent, Options as OlDrawOptions } from 'ol/interaction/Draw';
-import OlFeature from 'ol/Feature';
-import * as OlEventConditions from 'ol/events/condition';
-import { unByKey } from 'ol/Observable';
-import OlVectorSource from 'ol/source/Vector';
-import OlGeometry from 'ol/geom/Geometry';
-import OlVectorLayer from 'ol/layer/Vector';
-
-import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import { CSS_PREFIX } from '../../constants';
+import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
 import { useMap } from '../../Hook/useMap';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
-import { EventsKey } from 'ol/events';
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
 type DrawType = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Text';
 

@@ -1,3 +1,5 @@
+import BackgroundLayerChooser from './BackgroundLayerChooser/BackgroundLayerChooser';
+import BackgroundLayerPreview from './BackgroundLayerPreview/BackgroundLayerPreview';
 import CopyButton from './Button/CopyButton/CopyButton';
 import DeleteButton from './Button/DeleteButton/DeleteButton';
 import DrawButton from './Button/DrawButton/DrawButton';
@@ -34,14 +36,12 @@ import LayerTreeNode from './LayerTree/LayerTreeNode/LayerTreeNode';
 import Legend from './Legend/Legend';
 import FloatingMapLogo from './Map/FloatingMapLogo/FloatingMapLogo';
 import MapComponent from './Map/MapComponent/MapComponent';
+import SearchResultsPanel from './Panel/SearchResultsPanel/SearchResultsPanel';
 import TimeLayerSliderPanel from './Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
 import LayerTransparencySlider from './Slider/LayerTransparencySlider/LayerTransparencySlider';
 import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider';
 import TimeSlider from './Slider/TimeSlider/TimeSlider';
-import SearchResultsPanel from './Panel/SearchResultsPanel/SearchResultsPanel';
 import ClickAwayListener from './Util/ClickAwayListener/ClickAwayListener';
-import BackgroundLayerChooser from './BackgroundLayerChooser/BackgroundLayerChooser';
-import BackgroundLayerPreview from './BackgroundLayerPreview/BackgroundLayerPreview';
 
 export {
   AddWmsLayerEntry,

@@ -1,10 +1,9 @@
-import TestUtil from '../../Util/TestUtil';
 import Logger from '@terrestris/base-util/dist/Logger';
-
 import {
   act
 } from 'react-dom/test-utils';
 
+import TestUtil from '../../Util/TestUtil';
 import WfsSearchInput from './WfsSearchInput';
 
 describe('<WfsSearchInput />', () => {

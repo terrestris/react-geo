@@ -1,12 +1,11 @@
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import { render, screen, within } from '@testing-library/react';
-import * as React from 'react';
 import userEvent from '@testing-library/user-event';
-
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-import TestUtil from '../../Util/TestUtil';
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import * as React from 'react';
 
+import TestUtil from '../../Util/TestUtil';
 import AddWmsPanel from './AddWmsPanel';
 
 describe('<AddWmsPanel />', () => {

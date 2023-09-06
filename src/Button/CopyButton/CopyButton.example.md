@@ -1,19 +1,17 @@
 This demonstrates the use of the CopyButton.
 
 ```jsx
-import {useEffect, useState} from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOsm from 'ol/source/OSM';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
-import {fromLonLat} from 'ol/proj';
-
+import CopyButton from '@terrestris/react-geo/dist/Button/CopyButton/CopyButton';
 import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
 import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
-import CopyButton from '@terrestris/react-geo/dist/Button/CopyButton/CopyButton';
 import {DigitizeUtil} from '@terrestris/react-geo/dist/Util/DigitizeUtil';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import {fromLonLat} from 'ol/proj';
+import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
+import {useEffect, useState} from 'react';
 
 import featuresJson from '../../../assets/simple-geometries.json';
 

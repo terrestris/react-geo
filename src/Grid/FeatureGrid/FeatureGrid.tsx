@@ -1,31 +1,26 @@
-import * as React from 'react';
-
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import { Table } from 'antd';
-
-import OlStyle from 'ol/style/Style';
-import OlStyleFill from 'ol/style/Fill';
-import OlStyleCircle from 'ol/style/Circle';
-import OlStyleStroke from 'ol/style/Stroke';
-import OlMap from 'ol/Map';
-import OlFeature from 'ol/Feature';
-import OlSourceVector from 'ol/source/Vector';
-import OlLayerBase from 'ol/layer/Base';
-import OlLayerVector from 'ol/layer/Vector';
-import OlGeometry from 'ol/geom/Geometry';
-import OlGeometryCollection from 'ol/geom/GeometryCollection';
-import OlMapBrowserEvent from 'ol/MapBrowserEvent';
-import { getUid } from 'ol';
-
+import { ColumnProps, TableProps } from 'antd/lib/table';
 import _isEqual from 'lodash/isEqual';
 import _isFunction from 'lodash/isFunction';
-import _kebabCase from 'lodash/kebabCase';
-
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-
-import { ColumnProps, TableProps } from 'antd/lib/table';
 import _isNil from 'lodash/isNil';
-import { Key } from 'react';
+import _kebabCase from 'lodash/kebabCase';
+import { getUid } from 'ol';
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
+import OlGeometryCollection from 'ol/geom/GeometryCollection';
+import OlLayerBase from 'ol/layer/Base';
+import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import RenderFeature from 'ol/render/Feature';
+import OlSourceVector from 'ol/source/Vector';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyle from 'ol/style/Style';
+import * as React from 'react';
+import { Key } from 'react';
 
 interface OwnProps {
   /**

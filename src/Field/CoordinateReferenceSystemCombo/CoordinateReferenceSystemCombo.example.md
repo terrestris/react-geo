@@ -1,24 +1,20 @@
 This demonstrates the usage of the CoordinateReferenceSystemCombo.
 
 ```jsx
-import * as React from 'react';
-
-import proj4 from 'proj4';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import { register } from 'ol/proj/proj4';
-import {
-  fromLonLat,
-  getTransform,
-  get
-} from 'ol/proj';
-import { applyTransform } from 'ol/extent';
-
 import CoordinateReferenceSystemCombo from
   '@terrestris/react-geo/dist/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
+import { applyTransform } from 'ol/extent';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import {
+  fromLonLat,
+  get,
+  getTransform} from 'ol/proj';
+import { register } from 'ol/proj/proj4';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import proj4 from 'proj4';
+import * as React from 'react';
 
 const predefinedCrsDefinitions = [{
   code: '25832',

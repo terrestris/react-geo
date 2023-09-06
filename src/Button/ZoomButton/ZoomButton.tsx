@@ -1,12 +1,11 @@
+import _isNumber from 'lodash/isNumber';
+import { easeOut } from 'ol/easing';
+import OlMap from 'ol/Map';
+import { AnimationOptions as OlViewAnimationOptions } from 'ol/View';
 import * as React from 'react';
 
-import OlMap from 'ol/Map';
-import { easeOut } from 'ol/easing';
-
-import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
-import { AnimationOptions as OlViewAnimationOptions } from 'ol/View';
-import _isNumber from 'lodash/isNumber';
+import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 
 interface OwnProps {
   /**
