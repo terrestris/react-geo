@@ -2,6 +2,7 @@ This example demonstrates some uses of of the `ZoomButton` to zoom in and out of
 
 ```jsx
 import ZoomButton from '@terrestris/react-geo/dist/Button/ZoomButton/ZoomButton';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
@@ -37,47 +38,50 @@ class ZoomButtonExample extends React.Component {
 
   render() {
     return (
-      <div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
-        />
-
+      <MapContext.Provider value={this.map}>
         <div>
-          <br />
-          <ZoomButton map={this.map}>
+          <div
+            id={this.mapDivId}
+            style={{
+              height: '400px'
+            }}
+          />
+
+          <div>
+            <br />
+            <ZoomButton>
             Zoom in (standard, animated)
-          </ZoomButton>
-          <ZoomButton map={this.map} delta={0.5}>
+            </ZoomButton>
+            <ZoomButton delta={0.5}>
             Zoom in (0.5 zoomlevels, animated)
-          </ZoomButton>
-          <ZoomButton map={this.map} animate={false}>
+            </ZoomButton>
+            <ZoomButton animate={false}>
             Zoom in (no animation)
-          </ZoomButton>
-          <ZoomButton map={this.map} animateOptions={{duration: 1500}}>
+            </ZoomButton>
+            <ZoomButton animateOptions={{duration: 1500}}>
             Zoom in (1.5 seconds animation)
-          </ZoomButton>
-          <br />
-          <br />
-          <ZoomButton map={this.map} delta={-1}>
+            </ZoomButton>
+            <br />
+            <br />
+            <ZoomButton map={this.map} delta={-1}>
             Zoom out (standard, animated)
-          </ZoomButton>
-          <ZoomButton map={this.map} delta={-2}>
+            </ZoomButton>
+            <ZoomButton map={this.map} delta={-2}>
             Zoom out (2 zoomlevels, animated)
-          </ZoomButton>
-          <ZoomButton map={this.map} delta={-1} animate={false}>
+            </ZoomButton>
+            <ZoomButton map={this.map} delta={-1} animate={false}>
             Zoom out (no animation)
-          </ZoomButton>
-          <ZoomButton map={this.map} delta={-1} animateOptions={{duration: 1500}}>
+            </ZoomButton>
+            <ZoomButton map={this.map} delta={-1} animateOptions={{duration: 1500}}>
             Zoom out (1.5 seconds animation)
-          </ZoomButton>
+            </ZoomButton>
+          </div>
         </div>
-      </div>
+      </MapContext.Provider>
     );
   }
 }
 
 <ZoomButtonExample />
+
 ```

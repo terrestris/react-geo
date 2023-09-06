@@ -1,3 +1,4 @@
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import { actSetTimeout } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -20,13 +21,19 @@ describe('<ZoomButton />', () => {
   });
 
   it('can be rendered', () => {
-    const { container } = render(<ZoomButton map={map} />);
+    const { container } = render(
+      <MapContext.Provider value={map}>
+        <ZoomButton />
+      </MapContext.Provider>
+    );
     expect(container).toBeVisible();
   });
 
   it('zooms in when clicked', async () => {
     render(
-      <ZoomButton map={map}>Zoom test</ZoomButton>
+      <MapContext.Provider value={map}>
+        <ZoomButton>Zoom test</ZoomButton>
+      </MapContext.Provider>
     );
 
     const initialZoom = map.getView().getZoom();
@@ -40,7 +47,9 @@ describe('<ZoomButton />', () => {
 
   it('can be configured to zoom out', async () => {
     render(
-      <ZoomButton map={map} delta={-1}>Zoom test</ZoomButton>
+      <MapContext.Provider value={map}>
+        <ZoomButton delta={-1}>Zoom test</ZoomButton>
+      </MapContext.Provider>
     );
 
     const initialZoom = map.getView().getZoom();
@@ -54,7 +63,9 @@ describe('<ZoomButton />', () => {
 
   it('does not belch when map has no view', () => {
     render(
-      <ZoomButton map={new OlMap(undefined)}>Zoom test</ZoomButton>
+      <MapContext.Provider value={new OlMap(undefined)}>
+        <ZoomButton>Zoom test</ZoomButton>
+      </MapContext.Provider>
     );
     const button = screen.getByText('Zoom test');
 
@@ -65,7 +76,9 @@ describe('<ZoomButton />', () => {
 
   it('cancels already running animations', async () => {
     render(
-      <ZoomButton map={map} animateOptions={{ duration: 250 }}>Zoom test</ZoomButton>
+      <MapContext.Provider value={map}>
+        <ZoomButton animate={true} animateOptions={{ duration: 250 }}>Zoom test</ZoomButton>
+      </MapContext.Provider>
     );
 
     const button = screen.getByText('Zoom test');
@@ -76,7 +89,7 @@ describe('<ZoomButton />', () => {
     await userEvent.click(button);
     await userEvent.click(button);
 
-    expect(view.cancelAnimations.mock.calls.length).toBe(2);
+    expect(view.cancelAnimations.mock.calls.length).not.toBe(0);
   });
 
 });

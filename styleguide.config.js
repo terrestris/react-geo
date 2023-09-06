@@ -85,6 +85,9 @@ module.exports = {
       name: 'Hooks',
       components: 'src/Hook/**/*.ts'
     }, {
+      name: 'Util',
+      components: 'src/Util/**/*.ts'
+    }, {
       name: 'HigherOrderComponents',
       components: 'src/HigherOrderComponent/**/*.tsx'
     }, {

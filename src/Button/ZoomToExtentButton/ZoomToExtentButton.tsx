@@ -1,12 +1,13 @@
-import logger from '@terrestris/base-util/dist/Logger';
+import useMap from '@terrestris/react-util/dist/hooks/useMap';
+import { zoomTo } from '@terrestris/react-util/dist/Util/ZoomUtil';
 import _isFinite from 'lodash/isFinite';
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import { easeOut } from 'ol/easing';
 import { Extent as OlExtent } from 'ol/extent';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
-import OlMap from 'ol/Map';
 import { FitOptions as OlViewFitOptions } from 'ol/View';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
@@ -16,35 +17,31 @@ interface OwnProps {
    * Options for fitting to the given extent. See
    * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
    */
-  fitOptions: OlViewFitOptions;
+  fitOptions?: OlViewFitOptions;
   /**
    * If true, the view will always animate to the closest zoom level after an interaction.
    * False means intermediary zoom levels are allowed.
    * Default is false.
    */
-  constrainViewResolution: boolean;
+  constrainViewResolution?: boolean;
   /**
    * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
    * instance of ol.geom.SimpleGeometry that the map should zoom to.
    */
-  extent: OlExtent | OlSimpleGeometry;
+  extent?: OlExtent | OlSimpleGeometry;
   /**
    * The center `[x,y]` in the maps coordinate system or an
    * instance of ol.coordinate that the map should zoom to if no extent is given.
    */
-  center: OlCoordinate;
+  center?: OlCoordinate;
   /**
    *  The zoom level 'x' the map should zoom to if no extent is given.
    */
-  zoom: number;
+  zoom?: number | undefined;
   /**
    * The className which should be added.
    */
   className?: string;
-  /**
-   * Instance of OL map this component is bound to.
-   */
-  map: OlMap;
 }
 
 export type ZoomToExtentButtonProps = OwnProps & SimpleButtonProps;
@@ -56,99 +53,72 @@ export type ZoomToExtentButtonProps = OwnProps & SimpleButtonProps;
  * @class The ZoomToExtentButton
  * @extends React.Component
  */
-class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
+const ZoomToExtentButton: React.FC<ZoomToExtentButtonProps> = ({
+  fitOptions = {
+    duration: 250,
+    easing: easeOut
+  },
+  constrainViewResolution = false,
+  extent,
+  center,
+  zoom,
+  className,
+  ...passThroughProps
+}) => {
+  const map = useMap();
+  const [targetExtent, setTargetExtent] = useState<any>(extent);
+  const [targetZoom, setTargetZoom] = useState(zoom);
+  const [targetCenter, setTargetCenter] = useState(center);
 
-  /**
-   * The default properties.
-   */
-  static defaultProps = {
-    fitOptions: {
-      duration: 250,
-      easing: easeOut
-    },
-    constrainViewResolution: false,
-    extent: undefined,
-    center: undefined,
-    zoom: undefined
-  };
-
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}zoomtoextentbutton`;
+  useEffect(() => {
+    zoomTo(map, {
+      animate: !!fitOptions,
+      zoom: targetZoom,
+      animateOptions: fitOptions,
+      constrainViewResolution,
+      extent: targetExtent,
+      center: targetCenter
+    });
+  }, [map, fitOptions, targetZoom, fitOptions, constrainViewResolution, targetExtent, center]);
 
   /**
    * Called when the button is clicked.
    *
    * @method
    */
-  onClick() {
-    const {
-      map,
-      extent,
-      constrainViewResolution,
-      fitOptions,
-      center,
-      zoom
-    } = this.props;
+  const onClick = () => {
+    if (!map) {
+      return;
+    }
     const view = map.getView();
-
-    const {fitOptions: defaultFitOptions} = ZoomToExtentButton.defaultProps;
-
-    if (!view) { // no view, no zooming
-      return;
+    const currentCenter: number[] = view.getCenter() as number[];
+    const currentExtent = view.calculateExtent();
+    if (view.getZoom() !== zoom || (
+      currentCenter !== center && center && (center[0] !== currentCenter[0] || center[1] !== currentCenter[1])
+    ) || extent && (currentExtent[0] !== extent[0] || currentExtent[1] !== extent[1] ||
+      currentExtent[2] !== extent[2] || currentExtent[3] !== extent[3])) {
+      if (targetExtent && extent) {
+        if ((extent as OlSimpleGeometry).getExtent) {
+          setTargetExtent((extent as OlSimpleGeometry).getExtent());
+        } else {
+          setTargetExtent((extent as []).slice());
+        }
+      } else {
+        setTargetZoom(targetZoom);
+        if (targetCenter) {
+          setTargetCenter(targetCenter.slice());
+        }
+      }
     }
-    if (!extent && (!center || !_isFinite(zoom))) {
-      logger.error('zoomToExtentButton: You need to provide either an extent or a center and a zoom.');
-      return;
-    }
-    if (view.getAnimating()) {
-      view.cancelAnimations();
-    }
+  };
 
-    view.setConstrainResolution(constrainViewResolution);
-
-    const finalFitOptions = {
-      ...defaultFitOptions,
-      ...fitOptions
-    };
-
-    if (extent && (center && _isFinite(zoom))) {
-      logger.warn('zoomToExtentButton: Both extent and center / zoom are provided. ' +
-      'Extent will be used in favor of center / zoom');
-    }
-    if (extent) {
-      view.fit(extent, finalFitOptions);
-    }
-    else if (center && _isFinite(zoom)) {
-      view.setCenter(center);
-      view.setZoom(zoom);
-    }
-  }
-
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      fitOptions,
-      constrainViewResolution,
-      ...passThroughProps
-    } = this.props;
-    const finalClassName = className ?
-      `${className} ${this._className}` :
-      this._className;
-
-    return (
-      <SimpleButton
-        className = {finalClassName}
-        onClick = {this.onClick.bind(this)}
-        { ...passThroughProps}
-      />
-    );
-  }
-}
+  return (
+    <SimpleButton
+      className = {className ? `${className} ${CSS_PREFIX}zoomtoextentbutton` : `${CSS_PREFIX}zoomtoextentbutton`}
+      onClick = {onClick.bind(this)}
+      { ...passThroughProps}
+    />
+  );
+};
 
 export default ZoomToExtentButton;
