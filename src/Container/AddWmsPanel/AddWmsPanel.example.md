@@ -6,24 +6,30 @@ An `AddWmsPanel` shows a list of the parsed layers and each checked layer (or th
 import CapabilitiesUtil from '@terrestris/ol-util/dist/CapabilitiesUtil/CapabilitiesUtil';
 import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 import AddWmsPanel from '@terrestris/react-geo/dist/Container/AddWmsPanel/AddWmsPanel';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import useMap from '@terrestris/react-util/dist/hooks/useMap';
+import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
+import { WmsLayer } from '@terrestris/react-util/dist/Util/typeUtils';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';
-import * as React from 'react';
+import {
+  useEffect,
+  useState
+} from 'react';
 
 // Please note: CORS headers must be set on server providing capabilities document. Otherwise proxy needed.
-const WMS_CAPABILITIES_URL = 'https://ows.terrestris.de/osm/service?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
+const CAPABILITIES_URL = 'https://ows.terrestris.de/osm/service?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
 
-class AddWmsPanelExample extends React.Component {
+const AddWmsPanelExample = () => {
 
-  constructor(props) {
-    super(props);
+  const [map, setMap] = useState();
+  const [wmsLayers, setWmsLayers] = useState();
 
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.map = new OlMap({
+  useEffect(() => {
+    const olMap = new OlMap({
       layers: [
         new OlLayerTile({
           name: 'OSM',
@@ -35,64 +41,46 @@ class AddWmsPanelExample extends React.Component {
         zoom: 4
       })
     });
+    setMap(olMap);
+  }, []);
 
-    this.state = {
-      layers: []
-    };
+  const onClick = async () => {
+    try {
+      const capabilities = await CapabilitiesUtil.getWmsCapabilities(CAPABILITIES_URL);
+      const capaLayers = await CapabilitiesUtil.getLayersFromWmsCapabilities(capabilities);
+      if (capaLayers) {
+        setWmsLayers(capaLayers);
+      }
+    } catch (error) {
+      alert('Could not extract layers from capabilities document.')
+    }
+  };
+
+  if (!map) {
+    return null;
   }
 
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  onClick() {
-    CapabilitiesUtil.getWmsCapabilities(WMS_CAPABILITIES_URL)
-      .then(CapabilitiesUtil.getLayersFromWmsCapabilities)
-      .then(layers => {
-        this.setState({
-          layers: layers
-        });
-      })
-      .catch(() => alert('Could not parse capabilities document.'));
-  }
-
-  render() {
-    const {
-      layers
-    } = this.state;
-
-    return (
+  return (
+    <MapContext.Provider value={map}>
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
       <div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
+        <SimpleButton
+          onClick={onClick}
+        >
+          Fetch capabilities of OWS terrestris
+        </SimpleButton>
+        <AddWmsPanel
+          wmsLayers={wmsLayers}
         />
-        <div>
-          <SimpleButton
-            onClick={this.onClick.bind(this)}
-          >
-            Fetch capabilities of OWS terrestris
-          </SimpleButton>
-          <AddWmsPanel
-            style={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-            key="1"
-            map={this.map}
-            wmsLayers={layers}
-            draggable={true}
-            x={0}
-            y={0}
-          />
-        </div>
       </div>
-    );
-  }
-}
+    </MapContext.Provider>
+  );
+};
 
 <AddWmsPanelExample />
 ```
