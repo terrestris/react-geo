@@ -1,14 +1,16 @@
 import useMap from '@terrestris/react-util/dist/hooks/useMap';
+import {useSelectFeatures, UseSelectFeaturesProps} from '@terrestris/react-util/dist/hooks/useSelectFeatures';
+import { usePropOrDefault } from '@terrestris/react-util/dist/hooks/usePropOrDefault';
 import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import OlGeometry from 'ol/geom/Geometry';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 import OlVectorLayer from 'ol/layer/Vector';
 import OlVectorSource from 'ol/source/Vector';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
+import {useCallback, useMemo, useState} from "react";
+import ToggleButton, {ToggleButtonProps} from "../ToggleButton/ToggleButton";
 
 interface OwnProps {
   /**
@@ -25,8 +27,8 @@ interface OwnProps {
   onFeatureRemove?: (event: OlSelectEvent) => void;
 }
 
-export type DeleteButtonProps = OwnProps & Omit<SelectFeaturesButtonProps,
-  'layers'|'onFeatureSelect'|'featuresCollection'>;
+export type DeleteButtonProps = OwnProps & Omit<UseSelectFeaturesProps,
+  'layers'|'onFeatureSelect'|'featuresCollection'|'clearAfterSelect'> & Partial<ToggleButtonProps>;
 
 /**
  * The className added to this component.
@@ -37,43 +39,55 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   className,
   digitizeLayer,
   onFeatureRemove,
+  onToggle,
+  selectStyle,
+  selectInteractionConfig,
+  hitTolerance,
   ...passThroughProps
 }) => {
-  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]|null>(null);
+  const [active, setActive] = useState<boolean>(false);
 
   const map = useMap();
 
-  useEffect(() => {
-    if (!map) {
+  const layer = usePropOrDefault(
+    digitizeLayer,
+    () => map ? DigitizeUtil.getDigitizeLayer(map) : undefined,
+    [map]
+  );
+
+  const layers = useMemo(() => layer ? [layer] : [], [layer]);
+
+  const onFeatureSelect = useCallback((event: OlSelectEvent) => {
+    if (!layer) {
       return;
     }
-
-    if (digitizeLayer) {
-      setLayers([digitizeLayer]);
-    } else {
-      setLayers([DigitizeUtil.getDigitizeLayer(map)]);
-    }
-  }, [map, digitizeLayer]);
-
-  if (!layers) {
-    return null;
-  }
-
-  const onFeatureSelect = (event: OlSelectEvent) => {
     onFeatureRemove?.(event);
     const feat = event.selected[0];
-    layers[0].getSource()?.removeFeature(feat);
+    layer.getSource()?.removeFeature(feat);
+  }, [layer, onFeatureRemove]);
+
+  useSelectFeatures({
+    selectStyle,
+    selectInteractionConfig,
+    layers,
+    active,
+    hitTolerance,
+    onFeatureSelect,
+    clearAfterSelect: true
+  })
+
+  const onToggleInternal = (pressed: boolean, lastClickEvt: any) => {
+    setActive(pressed);
+    onToggle?.(pressed, lastClickEvt);
   };
 
   const finalClassName = className
     ? `${defaultClassName} ${className}`
     : defaultClassName;
 
-  return <SelectFeaturesButton
-    layers={layers}
-    onFeatureSelect={onFeatureSelect}
+  return <ToggleButton
+    onToggle={onToggleInternal}
     className={finalClassName}
-    clearAfterSelect={true}
     {...passThroughProps}
   />;
 };
