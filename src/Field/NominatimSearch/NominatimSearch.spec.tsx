@@ -1,3 +1,4 @@
+import { actSetTimeout, renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
@@ -7,7 +8,6 @@ import OlSourceOsm from 'ol/source/OSM';
 import OlView from 'ol/View';
 import * as React from 'react';
 
-import { actSetTimeout, renderInMapContext } from '../../Util/rtlTestUtils';
 import NominatimSearch from '../NominatimSearch/NominatimSearch';
 
 describe('<NominatimSearch />', () => {

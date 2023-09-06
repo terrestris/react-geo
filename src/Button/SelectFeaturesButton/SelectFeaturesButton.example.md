@@ -2,8 +2,8 @@ This demonstrates the use of the SelectFeaturesButton.
 
 ```jsx
 import SelectFeaturesButton from '@terrestris/react-geo/dist/Button/SelectFeaturesButton/SelectFeaturesButton';
-import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
-import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
+import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import OlLayerTile from 'ol/layer/Tile';
 import OlVectorLayer from 'ol/layer/Vector';

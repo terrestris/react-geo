@@ -1,6 +1,8 @@
 This is a example containing a map component and a floating map logo
 
 ```jsx
+import './FloatingMapLogo.less';
+
 import FloatingMapLogo from '@terrestris/react-geo/dist/Map/FloatingMapLogo/FloatingMapLogo';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';

@@ -1,9 +1,13 @@
+import {
+  disableGeolocationMock,
+  enableGeolocationMock,
+  fireGeolocationListeners
+} from '@terrestris/react-util/dist/Util/geolocationMock';
 import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { transform } from 'ol/proj';
 import * as React from 'react';
 
-import { disableGeolocationMock, enableGeolocationMock, fireGeolocationListeners } from '../../Util/geolocationMock';
 import TestUtil from '../../Util/TestUtil';
 import GeoLocationButton from './GeoLocationButton';
 

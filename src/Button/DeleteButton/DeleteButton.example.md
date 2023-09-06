@@ -2,9 +2,9 @@ This demonstrates the use of the DeleteButton.
 
 ```jsx
 import { DeleteButton } from '@terrestris/react-geo/dist/Button/DeleteButton/DeleteButton';
-import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
-import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
-import { DigitizeUtil } from '@terrestris/react-geo/dist/Util/DigitizeUtil';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
+import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
+import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';

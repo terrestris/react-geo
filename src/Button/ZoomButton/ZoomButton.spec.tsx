@@ -1,9 +1,9 @@
+import { actSetTimeout } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OlMap from 'ol/Map';
 import * as React from 'react';
 
-import { actSetTimeout } from '../../Util/rtlTestUtils';
 import TestUtil from '../../Util/TestUtil';
 import ZoomButton from './ZoomButton';
 
@@ -54,7 +54,7 @@ describe('<ZoomButton />', () => {
 
   it('does not belch when map has no view', () => {
     render(
-      <ZoomButton map={new OlMap(null)}>Zoom test</ZoomButton>
+      <ZoomButton map={new OlMap(undefined)}>Zoom test</ZoomButton>
     );
     const button = screen.getByText('Zoom test');
 

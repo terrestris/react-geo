@@ -1,13 +1,13 @@
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { screen,within } from '@testing-library/react';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import { within } from '@testing-library/react';
 import OlFeature from 'ol/Feature';
 import OlPoint from 'ol/geom/Point';
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import * as React from 'react';
 
-import { renderInMapContext } from '../../Util/rtlTestUtils';
 import SearchResultsPanel, { Category } from './SearchResultsPanel';
 
 describe('<SearchResultsPanel />', () => {
