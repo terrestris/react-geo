@@ -105,12 +105,6 @@ module.exports = {
     }, {
       name: 'Slider',
       components: 'src/Slider/**/*.tsx'
-    }, {
-      name: 'Toolbar',
-      components: 'src/Toolbar/**/*.tsx'
-    }, {
-      name: 'UserChip',
-      components: 'src/UserChip/**/*.tsx'
     }]
   }]
 };
