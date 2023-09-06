@@ -1,3 +1,5 @@
+import useMap from '@terrestris/react-util/dist/hooks/useMap';
+import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import { EventsKey } from 'ol/events';
 import * as OlEventConditions from 'ol/events/condition';
 import OlFeature from 'ol/Feature';
@@ -12,8 +14,6 @@ import { ReactNode, useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
-import { useMap } from '../../Hook/useMap';
-import { DigitizeUtil } from '../../Util/DigitizeUtil';
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
 type DrawType = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Text';

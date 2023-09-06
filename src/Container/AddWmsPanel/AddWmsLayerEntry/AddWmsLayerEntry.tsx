@@ -2,11 +2,10 @@ import './AddWmsLayerEntry.less';
 
 import { faCopyright, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { WmsLayer } from '@terrestris/react-util/dist/Util/typeUtils';
 import { Checkbox, Tooltip } from 'antd';
 import { Attribution as OlAttribution } from 'ol/source/Source';
 import * as React from 'react';
-
-import { WmsLayer } from '../../../Util/typeUtils';
 
 interface AddWmsLayerEntryProps {
   /**

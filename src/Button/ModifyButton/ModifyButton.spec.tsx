@@ -1,3 +1,5 @@
+import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { within } from '@testing-library/react';
 import OlFeature from 'ol/Feature';
 import OlPoint from 'ol/geom/Point';
@@ -5,8 +7,6 @@ import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import * as React from 'react';
 
-import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import { renderInMapContext } from '../../Util/rtlTestUtils';
 import { ModifyButton } from './ModifyButton';
 
 describe('<ModifyButton />', () => {
@@ -31,7 +31,7 @@ describe('<ModifyButton />', () => {
     });
 
     DigitizeUtil.getDigitizeLayer(map)
-      .getSource().addFeature(feature);
+      .getSource()?.addFeature(feature);
   });
 
   describe('#Basics', () => {
