@@ -1,8 +1,7 @@
-import * as React from 'react';
+import './FloatingMapLogo.less';
 
 import _cloneDeep from 'lodash/cloneDeep';
-
-import './FloatingMapLogo.less';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 

@@ -1,12 +1,12 @@
-import { render, within, screen } from '@testing-library/react';
-import React from 'react';
+import { render, screen,within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import TestUtil from '../Util/TestUtil';
-
-import LayerSwitcher from './LayerSwitcher';
 import OlLayerTile from 'ol/layer/Tile';
-import OlSourceStamen from 'ol/source/Stamen';
 import OlSourceOsm from 'ol/source/OSM';
+import OlSourceStamen from 'ol/source/Stamen';
+import React from 'react';
+
+import TestUtil from '../Util/TestUtil';
+import LayerSwitcher from './LayerSwitcher';
 
 describe('<LayerSwitcher />', () => {
   let map;

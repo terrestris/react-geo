@@ -1,9 +1,7 @@
-import * as React from 'react';
-
 import { Button, Tooltip } from 'antd';
-
-import { TooltipPlacement, AbstractTooltipProps } from 'antd/lib/tooltip';
 import { ButtonProps } from 'antd/lib/button';
+import { AbstractTooltipProps,TooltipPlacement } from 'antd/lib/tooltip';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 

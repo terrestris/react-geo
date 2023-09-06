@@ -3,18 +3,15 @@ The capabilities of this WMS are fetched and parsed to OL layer instances using 
 An `AddWmsPanel` shows a list of the parsed layers and each checked layer (or the entire set) can be added to the map.
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import { fromLonLat } from 'ol/proj';
-
-import AddWmsPanel from '@terrestris/react-geo/dist/Container/AddWmsPanel/AddWmsPanel';
-import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
-
 import CapabilitiesUtil from '@terrestris/ol-util/dist/CapabilitiesUtil/CapabilitiesUtil';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
+import AddWmsPanel from '@terrestris/react-geo/dist/Container/AddWmsPanel/AddWmsPanel';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 // Please note: CORS headers must be set on server providing capabilities document. Otherwise proxy needed.
 const WMS_CAPABILITIES_URL = 'https://ows.terrestris.de/osm/service?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';

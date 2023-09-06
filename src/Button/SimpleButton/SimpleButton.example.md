@@ -27,10 +27,9 @@ import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleB
 A SimpleButton with a Font Awesome icon.
 
 ```jsx
-import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 
 <SimpleButton
   icon={
@@ -44,10 +43,9 @@ import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 A round SimpleButton using shape config:
 
 ```jsx
-import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 
 <SimpleButton
   icon={<FontAwesomeIcon

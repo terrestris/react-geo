@@ -1,9 +1,9 @@
+import './UploadButton.less';
+
 import * as React from 'react';
 
-import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 import { CSS_PREFIX } from '../../constants';
-
-import './UploadButton.less';
+import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 
 interface BaseProps {
   /**

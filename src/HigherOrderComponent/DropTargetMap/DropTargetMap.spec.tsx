@@ -1,10 +1,8 @@
+import FileUtil from '@terrestris/ol-util/dist/FileUtil/FileUtil';
 import * as React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
-
 import { onDropAware } from './DropTargetMap';
-
-import FileUtil from '@terrestris/ol-util/dist/FileUtil/FileUtil';
 
 describe('onDropAware', () => {
   let EnhancedComponent;

@@ -1,13 +1,10 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-
+import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
 import { Modal, ModalProps } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
-
-import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 type OwnProps = {
   feature: Feature<Geometry>;

@@ -1,7 +1,8 @@
-import * as React from 'react';
-import LayerTreeNode from './LayerTreeNode';
-import Tree from 'rc-tree';
 import { mount } from 'enzyme';
+import Tree from 'rc-tree';
+import * as React from 'react';
+
+import LayerTreeNode from './LayerTreeNode';
 
 describe('<LayerTreeNode />', () => {
 

@@ -1,20 +1,19 @@
+import OlCollection from 'ol/Collection';
+import * as OlEventConditions from 'ol/events/condition';
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
+import OlInteractionSelect, { Options as OlSelectOptions, SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import OlVectorLayer from 'ol/layer/Vector';
+import { unByKey } from 'ol/Observable';
+import OlVectorSource from 'ol/source/Vector';
+import { StyleLike as OlStyleLike } from 'ol/style/Style';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import OlInteractionSelect, { Options as OlSelectOptions, SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
-import { StyleLike as OlStyleLike } from 'ol/style/Style';
-import OlVectorLayer from 'ol/layer/Vector';
-import OlVectorSource from 'ol/source/Vector';
-import OlGeometry from 'ol/geom/Geometry';
-import OlCollection from 'ol/Collection';
-import OlFeature from 'ol/Feature';
-import * as OlEventConditions from 'ol/events/condition';
-import { unByKey } from 'ol/Observable';
-
-import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
+import { CSS_PREFIX } from '../../constants';
 import { useMap } from '../../Hook/useMap';
 import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import { CSS_PREFIX } from '../../constants';
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
 interface OwnProps {
   /**

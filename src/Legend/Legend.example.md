@@ -1,15 +1,13 @@
 This example demonstrates the Legend.
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceTileWMS from 'ol/source/TileWMS';
-import { fromLonLat } from 'ol/proj';
-
 import Legend from '@terrestris/react-geo/dist/Legend/Legend';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 class LegendExample extends React.Component {
 

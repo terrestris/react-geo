@@ -1,17 +1,14 @@
-import * as React from 'react';
+import './PropertyGrid.less';
 
 import { Table } from 'antd';
 import { TableProps } from 'antd/lib/table';
-
-import OlGeometry from 'ol/geom/Geometry';
-import OlFeature from 'ol/Feature';
-import { getUid } from 'ol';
-
 import _get from 'lodash/get';
+import { getUid } from 'ol';
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './PropertyGrid.less';
 
 type AttributeNames = {
   [key: string]: string;

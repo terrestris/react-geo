@@ -1,26 +1,22 @@
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlGeolocation from 'ol/Geolocation';
-import OlGeomLineString from 'ol/geom/LineString';
+import MathUtil from '@terrestris/base-util/dist/MathUtil/MathUtil';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import OlFeature from 'ol/Feature';
+import OlGeolocation from 'ol/Geolocation';
+import OlGeometry from 'ol/geom/Geometry';
+import OlGeomLineString from 'ol/geom/LineString';
 import OlGeomPoint from 'ol/geom/Point';
 import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
+import RenderFeature from 'ol/render/Feature';
 import OlSourceVector from 'ol/source/Vector';
-import OlStyleStyle from 'ol/style/Style';
 import OlStyleIcon from 'ol/style/Icon';
-import OlGeometry from 'ol/geom/Geometry';
-
-import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
-
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-import MathUtil from '@terrestris/base-util/dist/MathUtil/MathUtil';
+import OlStyleStyle from 'ol/style/Style';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
+import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import mapMarker from './geolocation-marker.png';
 import mapMarkerHeading from './geolocation-marker-heading.png';
-import RenderFeature from 'ol/render/Feature';
 
 interface OwnProps {
   /**

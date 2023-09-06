@@ -1,14 +1,12 @@
 This is a example containing a map component and a floating map logo
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOsm from 'ol/source/OSM';
-
 import FloatingMapLogo from '@terrestris/react-geo/dist/Map/FloatingMapLogo/FloatingMapLogo';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 import logo from '../../../assets/user.png';
 

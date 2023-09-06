@@ -1,12 +1,12 @@
-import * as React from 'react';
-import TestUtil from '../../Util/TestUtil';
-import moment from 'moment';
-import TimeLayerSliderPanel from '../TimeLayerSliderPanel/TimeLayerSliderPanel';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
+import moment from 'moment';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
+import * as React from 'react';
+
+import TestUtil from '../../Util/TestUtil';
+import TimeLayerSliderPanel from '../TimeLayerSliderPanel/TimeLayerSliderPanel';
 
 describe('<TimeLayerSliderPanel />', () => {
 

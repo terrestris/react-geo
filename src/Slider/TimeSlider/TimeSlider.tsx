@@ -1,11 +1,9 @@
-import * as React from 'react';
-import moment from 'moment';
-
 import { Slider } from 'antd';
-
+import { SliderBaseProps,SliderMarks } from 'antd/lib/slider';
 import _isArray from 'lodash/isArray';
 import _isObject from 'lodash/isObject';
-import { SliderMarks, SliderBaseProps } from 'antd/lib/slider';
+import moment from 'moment';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
