@@ -1,3 +1,4 @@
+import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OlFeature from 'ol/Feature';
@@ -9,7 +10,6 @@ import OlVectorSource from 'ol/source/Vector';
 import OlView from 'ol/View';
 import * as React from 'react';
 
-import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
 import DrawButton from '../DrawButton/DrawButton';
 import SelectFeaturesButton from './SelectFeaturesButton';
 

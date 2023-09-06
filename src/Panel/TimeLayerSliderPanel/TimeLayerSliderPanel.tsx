@@ -19,10 +19,12 @@ import './TimeLayerSliderPanel.less';
 
 import { faCalendar, faPauseCircle, faPlayCircle, faSync } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import timeLayerAware, {
+  TimeLayerAwareConfig
+} from '@terrestris/react-util/dist/HigherOrderComponent/TimeLayerAware/TimeLayerAware';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import ToggleButton from '../../Button/ToggleButton/ToggleButton';
-import timeLayerAware, { TimeLayerAwareConfig } from '../../HigherOrderComponent/TimeLayerAware/TimeLayerAware';
 import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
 
 export interface Tooltips {
@@ -431,6 +433,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
           title={tooltips.dataRange}
           trigger="click"
           content={
+            // @ts-ignore
             <RangePicker
               showTime={{ format: 'HH:mm' }}
               defaultValue={[dayjs(startDate.toISOString()), dayjs(endDate.toISOString())]}

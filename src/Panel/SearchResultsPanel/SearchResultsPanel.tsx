@@ -1,5 +1,7 @@
 import './SearchResultsPanel.less';
+import './SearchResultsPanel.less';
 
+import useMap from '@terrestris/react-util/dist/hooks/useMap';
 import {
   Avatar,
   Collapse,
@@ -10,12 +12,9 @@ import _isEmpty from 'lodash/isEmpty';
 import OlFeature from 'ol/Feature';
 import BaseLayer from 'ol/layer/Base';
 import OlLayerVector from 'ol/layer/Vector';
-import OlMap from 'ol/Map';
 import OlSourceVector from 'ol/source/Vector';
 import OlStyle from 'ol/style/Style';
 import React, { ReactNode, useEffect, useState } from 'react';
-
-import useMap from '../../Hook/useMap';
 
 const Panel = Collapse.Panel;
 const ListItem = List.Item;
@@ -41,7 +40,12 @@ interface SearchResultsPanelProps extends Partial<CollapseProps> {
 
 const SearchResultsPanel = (props: SearchResultsPanelProps) => {
   const [highlightLayer, setHighlightLayer] = useState<OlLayerVector<OlSourceVector> | null>(null);
-  const map = useMap() as OlMap;
+  const map = useMap();
+
+  if (!map) {
+    return <></>;
+  }
+
   const {
     searchResults,
     numTotal,

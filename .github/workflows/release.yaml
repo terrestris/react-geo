@@ -21,7 +21,7 @@ jobs:
           node-version: 18
 
       - name: Install dependencies ⏬
-        run: npm ci
+        run: npm ci --force
 
       - name: Build artifacts 🏗️
         run: npm run build

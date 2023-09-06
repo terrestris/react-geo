@@ -1,3 +1,5 @@
+import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
+import { clickMap, doubleClickMap, renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { screen,  within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LineString from 'ol/geom/LineString';
@@ -8,8 +10,6 @@ import VectorSource from 'ol/source/Vector';
 import OlView from 'ol/View';
 import * as React from 'react';
 
-import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import { clickMap, doubleClickMap, renderInMapContext } from '../../Util/rtlTestUtils';
 import DrawButton from './DrawButton';
 
 describe('<DrawButton />', () => {
@@ -52,11 +52,11 @@ describe('<DrawButton />', () => {
 
       clickMap(map, 100, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Point');
+      expect(feature?.getGeometry()?.getType()).toBe('Point');
     });
 
     it('draws lines', async () => {
@@ -72,13 +72,13 @@ describe('<DrawButton />', () => {
 
       doubleClickMap(map, 120, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('LineString');
+      expect(feature?.getGeometry()?.getType()).toBe('LineString');
 
-      expect((feature.getGeometry() as LineString).getCoordinates()).toHaveLength(2);
+      expect((feature?.getGeometry() as LineString).getCoordinates()).toHaveLength(2);
     });
 
     it('draws polygons', async () => {
@@ -98,13 +98,13 @@ describe('<DrawButton />', () => {
 
       doubleClickMap(map, 100, 120);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Polygon');
+      expect(feature?.getGeometry()?.getType()).toBe('Polygon');
 
-      const coordinates = (feature.getGeometry() as Polygon).getCoordinates();
+      const coordinates = (feature?.getGeometry() as Polygon).getCoordinates();
 
       expect(coordinates).toHaveLength(1);
       expect(coordinates[0]).toHaveLength(5);
@@ -134,12 +134,12 @@ describe('<DrawButton />', () => {
 
       // expect(dialog).not.toBeVisible();
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Point');
-      expect(feature.get('label')).toBe('Label text.');
+      expect(feature?.getGeometry()?.getType()).toBe('Point');
+      expect(feature?.get('label')).toBe('Label text.');
     });
 
     it('aborts drawing labels', async () => {
@@ -166,7 +166,7 @@ describe('<DrawButton />', () => {
 
       expect(dialog).not.toBeVisible();
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(0);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(0);
     });
 
     it('draws circles', async () => {
@@ -182,11 +182,11 @@ describe('<DrawButton />', () => {
 
       clickMap(map, 120, 120);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Circle');
+      expect(feature?.getGeometry()?.getType()).toBe('Circle');
     });
 
     it('draws rectangles', async () => {
@@ -202,13 +202,13 @@ describe('<DrawButton />', () => {
 
       clickMap(map, 120, 120);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      const feature = digitizeLayer.getSource().getFeatures()[0];
+      const feature = digitizeLayer.getSource()?.getFeatures()[0];
 
-      expect(feature.getGeometry().getType()).toBe('Polygon');
+      expect(feature?.getGeometry()?.getType()).toBe('Polygon');
 
-      const coordinates = (feature.getGeometry() as Polygon).getCoordinates();
+      const coordinates = (feature?.getGeometry() as Polygon).getCoordinates();
 
       expect(coordinates).toHaveLength(1);
       expect(coordinates[0]).toHaveLength(5);
@@ -221,25 +221,25 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(0);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(0);
 
       await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
       await userEvent.click(button);
 
       clickMap(map, 120, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
       await userEvent.click(button);
 
       clickMap(map, 120, 100);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(2);
     });
 
     it('calls draw start and draw end listeners', async () => {
@@ -296,7 +296,7 @@ describe('<DrawButton />', () => {
 
       clickMap(map, 120, 120);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(2);
     });
 
     it('can use a custom layer', async () => {
@@ -314,11 +314,11 @@ describe('<DrawButton />', () => {
 
       clickMap(map, 100, 100);
 
-      expect(layer.getSource().getFeatures()).toHaveLength(1);
+      expect(layer.getSource()?.getFeatures()).toHaveLength(1);
 
       const defaultDigitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      expect(defaultDigitizeLayer.getSource().getFeatures()).toHaveLength(0);
+      expect(defaultDigitizeLayer.getSource()?.getFeatures()).toHaveLength(0);
     });
 
     it('can change the type', async () => {
@@ -332,16 +332,16 @@ describe('<DrawButton />', () => {
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(1);
-      expect(digitizeLayer.getSource().getFeatures()[0].getGeometry().getType()).toBe('Point');
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
+      expect(digitizeLayer.getSource()?.getFeatures()[0].getGeometry()?.getType()).toBe('Point');
 
       rerenderInMapContext(<DrawButton drawType={'LineString'} />);
 
       clickMap(map, 120, 120);
       doubleClickMap(map, 140, 140);
 
-      expect(digitizeLayer.getSource().getFeatures()).toHaveLength(2);
-      expect(digitizeLayer.getSource().getFeatures()[1].getGeometry().getType()).toBe('LineString');
+      expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(2);
+      expect(digitizeLayer.getSource()?.getFeatures()[1].getGeometry()?.getType()).toBe('LineString');
     });
   });
 });
