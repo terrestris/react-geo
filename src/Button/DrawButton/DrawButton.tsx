@@ -1,4 +1,7 @@
 import { useDraw, UseDrawProps } from '@terrestris/react-util/dist/Hooks/useDraw/useDraw';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import {usePropOrDefault} from '@terrestris/react-util/dist/Hooks/usePropOrDefault/usePropOrDefault';
+import {DigitizeUtil} from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
 import {
@@ -43,7 +46,7 @@ interface OwnProps {
   modalPromptCancelButtonText?: string;
 }
 
-export type DrawButtonProps = OwnProps & Omit<UseDrawProps, 'drawType'> & Partial<ToggleButtonProps>;
+export type DrawButtonProps = OwnProps & Omit<UseDrawProps, 'drawType'|'active'> & Partial<ToggleButtonProps>;
 
 /**
  * The className added to this component.
@@ -70,6 +73,12 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   pressed,
   ...passThroughProps
 }) => {
+  const map = useMap();
+  const layer = usePropOrDefault(
+    digitizeLayer,
+    () => map ? DigitizeUtil.getDigitizeLayer(map) : undefined,
+    [map]
+  );
   /**
    * Currently drawn feature which should be represented as label or post-it.
    */
@@ -85,7 +94,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 
   useDraw({
     onDrawEnd: onDrawEndInternal,
-    digitizeLayer,
+    digitizeLayer: layer,
     drawInteractionConfig,
     drawStyle,
     drawType: drawType === 'Text' ? 'Point' : drawType,
@@ -107,6 +116,8 @@ const DrawButton: React.FC<DrawButtonProps> = ({
     };
 
     const onModalLabelCancelInternal = () => {
+      layer?.getSource()?.removeFeature(digitizeTextFeature);
+      setDigitizeTextFeature(null);
       onModalLabelCancel?.();
       digitizeLayer?.getSource()?.removeFeature(digitizeTextFeature);
       setDigitizeTextFeature(null);
