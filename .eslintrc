@@ -1,6 +1,7 @@
 {
   "extends": [
     "@terrestris/eslint-config-typescript",
+    "@terrestris/eslint-config-typescript-react",
     "plugin:testing-library/react",
     "plugin:jest-dom/recommended"
   ],
