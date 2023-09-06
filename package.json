@@ -102,6 +102,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@terrestris/eslint-config-typescript": "^4.0.0",
+    "@terrestris/eslint-config-typescript-react": "^2.0.0",
     "@terrestris/ol-util": "^14.0.0",
     "@testing-library/dom": "^9.3.3",
     "@testing-library/jest-dom": "^6.1.4",
