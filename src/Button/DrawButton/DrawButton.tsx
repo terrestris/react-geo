@@ -43,7 +43,7 @@ interface OwnProps {
   modalPromptCancelButtonText?: string;
 }
 
-export type DrawButtonProps = OwnProps & Omit<UseDrawProps, 'drawType'> & Partial<ToggleButtonProps>;
+export type DrawButtonProps = OwnProps & Omit<UseDrawProps, 'drawType'|'active'> & Partial<ToggleButtonProps>;
 
 /**
  * The className added to this component.
