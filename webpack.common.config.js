@@ -68,7 +68,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'node_modules/@camptocamp/inkmap/src/worker/index.js',
+          from: 'node_modules/@camptocamp/inkmap/dist/inkmap-worker.js',
           to: 'build'
         }
       ]
