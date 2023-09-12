@@ -46,7 +46,8 @@ interface OwnProps {
   editLabel?: boolean;
 }
 
-export type ModifyButtonProps = OwnProps & Omit<UseModifyProps, ''> & Partial<ToggleButtonProps>;
+export type ModifyButtonProps = OwnProps & Omit<UseModifyProps, 'active' | 'onFeatureSelect'> &
+  Partial<ToggleButtonProps>;
 
 /**
  * The className added to this component.
