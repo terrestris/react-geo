@@ -22,3 +22,4 @@ node_modules
 
 # ignore IntelliJ iml files
 *.iml
+.idea
