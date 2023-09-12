@@ -1,8 +1,11 @@
 This demonstrates the use of the geolocation button.
 
+
 ```jsx
-import GeoLocationButton from '@terrestris/react-geo/dist/Button/GeoLocationButton/GeoLocationButton';
+import ZoomButton from '@terrestris/react-geo/dist/Button/ZoomButton/ZoomButton';
 import ToggleGroup from '@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup';
+import GeoLocationButton from '@terrestris/react-geo/dist/Button/GeoLocationButton/GeoLocationButton';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
@@ -26,8 +29,8 @@ class GeoLocationButtonExample extends React.Component {
         })
       ],
       view: new OlView({
-        center: fromLonLat([37.40570, 8.81566]),
-        zoom: 4
+        center: fromLonLat([8, 50]),
+        zoom: 9
       })
     });
   }
@@ -38,28 +41,25 @@ class GeoLocationButtonExample extends React.Component {
 
   render() {
     return (
-      <div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
-        />
-        <ToggleGroup>
+      <MapContext.Provider value={this.map}>
+        <div>
+          <div
+            id={this.mapDivId}
+            style={{
+              height: '400px'
+            }}
+          />
           <GeoLocationButton
-            onGeolocationChange={() => undefined}
-            map={this.map}
             showMarker={true}
             follow={true}
           >
-          Track location
+            Enable GeoLocation
           </GeoLocationButton>
-        </ToggleGroup>
-      </div>
+        </div>
+      </MapContext.Provider>
     );
   }
 }
 
 <GeoLocationButtonExample />
-
 ```
