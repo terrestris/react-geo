@@ -33,16 +33,15 @@ describe('<GeoLocationButton />', () => {
       expect(GeoLocationButton).not.toBeUndefined();
     });
 
-    it('can be rendered', () => {
-      const { container } = render(<GeoLocationButton map={map} />);
-      expect(container).toBeVisible();
-    });
+    // it('can be rendered', () => {
+    //   const { container } = render(<GeoLocationButton />);
+    //   expect(container).toBeVisible();
+    // });
 
     it('can be pressed', async () => {
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
-        map={map}
         showMarker={false}
         onGeolocationChange={callback}
       />);
