@@ -1,3 +1,28 @@
+# [23.0.0](https://github.com/terrestris/react-geo/compare/v22.4.2...v23.0.0) (2023-09-13)
+
+
+### Bug Fixes
+
+* copy correct inkmap-worker ([8f3a7cd](https://github.com/terrestris/react-geo/commit/8f3a7cda51c4116dd4a949eb3860897058697175))
+* set currect node version for release pipeline as well ([1c72573](https://github.com/terrestris/react-geo/commit/1c725737498e25ea32baca4019d4ef46a63f1637))
+
+
+### chore
+
+* bump ol-util to v12 and use fixed version of inkmap ([14bc679](https://github.com/terrestris/react-geo/commit/14bc679d43dadb36ca388a1f7fe8372465b3dd5c))
+* require node18 in ci pipelines as well ([27984cf](https://github.com/terrestris/react-geo/commit/27984cfd1a147b9feea779561464ba4a973deae3))
+
+
+### Features
+
+* add circle measure method ([5cbcf9d](https://github.com/terrestris/react-geo/commit/5cbcf9dab3c451156a5809fbb9fc6cb7f8d986f8))
+
+
+### BREAKING CHANGES
+
+* require node v18 in pipelines
+* use node v18
+
 ## [22.4.2](https://github.com/terrestris/react-geo/compare/v22.4.1...v22.4.2) (2023-07-18)
 
 
