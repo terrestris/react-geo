@@ -10,6 +10,9 @@ import {ReactNode, useCallback, useState} from 'react';
 import { CSS_PREFIX } from '../../constants';
 import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
+import {usePropOrDefault} from "@terrestris/react-util/dist/hooks/usePropOrDefault";
+import useMap from "@terrestris/react-util/dist/hooks/useMap";
+import {DigitizeUtil} from "@terrestris/react-util/dist/Util/DigitizeUtil";
 
 type ButtonDrawType = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Rectangle' | 'Text';
 
@@ -71,6 +74,12 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   ...passThroughProps
 }) => {
   const [active, setActive] = useState<boolean>(false);
+  const map = useMap();
+  const layer = usePropOrDefault(
+    digitizeLayer,
+    () => map ? DigitizeUtil.getDigitizeLayer(map) : undefined,
+    [map]
+  );
   /**
    * Currently drawn feature which should be represent as label or postit.
    */
@@ -86,7 +95,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 
   useDraw({
     onDrawEnd: onDrawEndInternal,
-    digitizeLayer,
+    digitizeLayer: layer,
     drawInteractionConfig,
     drawStyle,
     drawType: drawType == 'Text' ? 'Point' : drawType,
@@ -118,6 +127,8 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 
     const onModalLabelCancelInternal = () => {
       setActive(false);
+      layer?.getSource()?.removeFeature(digitizeTextFeature);
+      setDigitizeTextFeature(null);
       onModalLabelCancel?.();
     };
 
