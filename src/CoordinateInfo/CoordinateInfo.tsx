@@ -10,6 +10,7 @@ import OlMap from 'ol/Map';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
 import _isString from 'lodash/isString';
+import _cloneDeep from 'lodash/cloneDeep';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 
@@ -233,18 +234,16 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
   }
 
   getCoordinateInfoState(): CoordinateInfoState {
-    const featuresClone: { [name: string]: OlFeature[] } = {};
-    Object.entries(this.state.features)
-      .forEach(([layerName, feats]) => {
-        featuresClone[layerName] = feats.map(feat => feat.clone());
-      });
-
+    // We're cloning the click coordinate and features to
+    // not pass the internal state reference to the parent component.
+    // Also note that we explicitly don't use feature.clone() to
+    // keep all feature properties (in particular the id) intact.
     const coordinateInfoState: CoordinateInfoState = {
       clickCoordinate: this.state.clickCoordinate ?
-        [...this.state.clickCoordinate] :
+        _cloneDeep(this.state.clickCoordinate) :
         null,
       loading: this.state.loading,
-      features: featuresClone
+      features: _cloneDeep(this.state.features)
     };
 
     return coordinateInfoState;
