@@ -1,3 +1,10 @@
+## [23.0.1](https://github.com/terrestris/react-geo/compare/v23.0.0...v23.0.1) (2023-09-19)
+
+
+### Bug Fixes
+
+* keep feature id ([fb7c5c6](https://github.com/terrestris/react-geo/commit/fb7c5c679b52e7503cc795457529b3bd782f57ee))
+
 # [23.0.0](https://github.com/terrestris/react-geo/compare/v22.4.2...v23.0.0) (2023-09-13)
 
 
