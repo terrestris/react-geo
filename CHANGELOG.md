@@ -1,3 +1,10 @@
+# [23.1.0](https://github.com/terrestris/react-geo/compare/v23.0.1...v23.1.0) (2023-09-22)
+
+
+### Features
+
+* adds empty background if property is set ([#3477](https://github.com/terrestris/react-geo/issues/3477)) ([c093a2a](https://github.com/terrestris/react-geo/commit/c093a2a281124e00bf5f2b96541123ace47990fb))
+
 ## [23.0.1](https://github.com/terrestris/react-geo/compare/v23.0.0...v23.0.1) (2023-09-19)
 
 
