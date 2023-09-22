@@ -29,24 +29,24 @@ import './BackgroundLayerChooser.less';
 
 export type BackgroundLayerChooserProps = {
   /**
- * Array of layers to be displayed in the BackgroundLayerChooser.
- */
+   * Array of layers to be displayed in the BackgroundLayerChooser.
+   */
   layers: OlLayer[];
   /**
- * Adds a button that clears the backgroundlayer.
- */
+   * Adds a button that clears the backgroundlayer.
+   */
   allowEmptyBackground?: boolean;
   /**
- * Customize the tooltip.
- */
+   * Customize the tooltip.
+   */
   buttonTooltip?: string;
   /**
- * Filters the backgroundlayers by a function.
- */
+   * Filters the backgroundlayers by a function.
+   */
   backgroundLayerFilter?: (layer: OlLayerBase) => boolean;
   /**
- * Select a Layer that should be active initially.
- */
+   * Select a Layer that should be active initially.
+   */
   initiallySelectedLayer?: OlLayer;
 };
 
@@ -142,7 +142,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
             visibility: layerOptionsVisible ? 'visible' : 'hidden'
           }}
         >
-          { selectedLayer ?
+          {selectedLayer ?
             layers.map(layer => {
               return (
                 <BackgroundLayerPreview
