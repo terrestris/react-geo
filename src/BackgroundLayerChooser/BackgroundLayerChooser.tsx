@@ -44,12 +44,17 @@ export type BackgroundLayerChooserProps = {
  * Filters the backgroundlayers by a function.
  */
   backgroundLayerFilter?: (layer: OlLayerBase) => boolean;
+  /**
+ * Select a Layer that should be active initially.
+ */
+  initiallySelectedLayer?: OlLayer;
 };
 
 export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   layers,
   allowEmptyBackground = false,
   buttonTooltip = 'Change background layer',
+  initiallySelectedLayer,
   backgroundLayerFilter = (l: OlLayerBase) => !!l.get('isBackgroundLayer')
 }) => {
 
@@ -59,7 +64,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   const [center, setCenter] = useState(map?.getView()?.getCenter());
 
   const [layerOptionsVisible, setLayerOptionsVisible] = useState<boolean>(false);
-  const [selectedLayer, setSelectedLayer] = useState<OlLayer | undefined>();
+  const [selectedLayer, setSelectedLayer] = useState<OlLayer | undefined>(initiallySelectedLayer);
   const [isBackgroundImage, setIsBackgroundImage] = useState<boolean>(false);
 
   useEffect(() => {
@@ -138,7 +143,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
             visibility: layerOptionsVisible ? 'visible' : 'hidden'
           }}
         >
-          {
+          { selectedLayer ?
             layers.map(layer => {
               return (
                 <BackgroundLayerPreview
@@ -151,7 +156,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
                   center={center}
                 />
               );
-            })
+            }) : null
           }
           {allowEmptyBackground &&
             <SimpleButton

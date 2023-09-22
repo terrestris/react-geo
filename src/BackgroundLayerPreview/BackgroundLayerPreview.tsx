@@ -19,7 +19,7 @@ export type BackgroundLayerPreviewProps = {
   width?: number;
   height?: number;
   layer: OlLayer;
-  activeLayer?: OlLayer;
+  activeLayer: OlLayer;
   onClick: (l: OlLayer) => void;
   zoom?: number;
   center?: Coordinate;
