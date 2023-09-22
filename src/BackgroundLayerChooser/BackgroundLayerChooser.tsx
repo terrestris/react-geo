@@ -62,7 +62,6 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   const mapTarget = useRef(null);
   const [zoom, setZoom] = useState(map?.getView()?.getZoom());
   const [center, setCenter] = useState(map?.getView()?.getCenter());
-
   const [layerOptionsVisible, setLayerOptionsVisible] = useState<boolean>(false);
   const [selectedLayer, setSelectedLayer] = useState<OlLayer | undefined>(initiallySelectedLayer);
   const [isBackgroundImage, setIsBackgroundImage] = useState<boolean>(false);
