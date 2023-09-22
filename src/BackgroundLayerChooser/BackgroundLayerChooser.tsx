@@ -48,6 +48,10 @@ export type BackgroundLayerChooserProps = {
    * Select a Layer that should be active initially.
    */
   initiallySelectedLayer?: OlLayer;
+  /**
+   * Sets the title of the No-Background Button
+   */
+  noBackgroundTitle?: string;
 };
 
 export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
@@ -55,6 +59,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   allowEmptyBackground = false,
   buttonTooltip = 'Change background layer',
   initiallySelectedLayer,
+  noBackgroundTitle = 'No Background',
   backgroundLayerFilter = (l: OlLayerBase) => !!l.get('isBackgroundLayer')
 }) => {
 
@@ -172,7 +177,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
             >
               <FontAwesomeIcon icon={faBan} size='5x' />
               <br></br>
-              <span className="layer-title">No Background</span>
+              <span className="layer-title">{noBackgroundTitle}</span>
             </SimpleButton>
           }
         </div>
@@ -200,7 +205,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
           }
           {selectedLayer ?
             <span className="layer-title">{selectedLayer.get('name')}</span> :
-            <span className="layer-title-no-background">No Background</span>
+            <span className="layer-title-no-background">{noBackgroundTitle}</span>
           }
         </div>
       </div>
