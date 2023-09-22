@@ -95,7 +95,10 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
 
   useEffect(() => {
     const activeLayerCand = layers.find(l => l.getVisible());
-    setSelectedLayer(activeLayerCand as OlLayer);
+
+    if (!initiallySelectedLayer) {
+      setSelectedLayer(activeLayerCand as OlLayer);
+    }
   }, [layers]);
 
   useEffect(() => {
