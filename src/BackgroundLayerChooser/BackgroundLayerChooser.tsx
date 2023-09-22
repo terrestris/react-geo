@@ -18,7 +18,8 @@ import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPre
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronLeft,
-  faChevronRight
+  faChevronRight,
+  faBan
 } from '@fortawesome/free-solid-svg-icons';
 
 import useMap from '../Hook/useMap';
@@ -27,14 +28,38 @@ import SimpleButton from '../Button/SimpleButton/SimpleButton';
 import './BackgroundLayerChooser.less';
 
 export type BackgroundLayerChooserProps = {
+  /**
+   * Array of layers to be displayed in the BackgroundLayerChooser.
+   */
   layers: OlLayer[];
+  /**
+   * Adds a button that clears the backgroundlayer.
+   */
+  allowEmptyBackground?: boolean;
+  /**
+   * Customize the tooltip.
+   */
   buttonTooltip?: string;
+  /**
+   * Filters the backgroundlayers by a function.
+   */
   backgroundLayerFilter?: (layer: OlLayerBase) => boolean;
+  /**
+   * Select a Layer that should be active initially.
+   */
+  initiallySelectedLayer?: OlLayer;
+  /**
+   * Sets the title of the No-Background Button
+   */
+  noBackgroundTitle?: string;
 };
 
 export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   layers,
+  allowEmptyBackground = false,
   buttonTooltip = 'Change background layer',
+  initiallySelectedLayer,
+  noBackgroundTitle = 'No Background',
   backgroundLayerFilter = (l: OlLayerBase) => !!l.get('isBackgroundLayer')
 }) => {
 
@@ -42,9 +67,9 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   const mapTarget = useRef(null);
   const [zoom, setZoom] = useState(map?.getView()?.getZoom());
   const [center, setCenter] = useState(map?.getView()?.getCenter());
-
   const [layerOptionsVisible, setLayerOptionsVisible] = useState<boolean>(false);
-  const [selectedLayer, setSelectedLayer] = useState<OlLayer>();
+  const [selectedLayer, setSelectedLayer] = useState<OlLayer | undefined>(initiallySelectedLayer);
+  const [isBackgroundImage, setIsBackgroundImage] = useState<boolean>(false);
 
   useEffect(() => {
     if (map) {
@@ -108,20 +133,21 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   const onLayerSelect = (layer: OlLayer) => {
     setLayerOptionsVisible(false);
     setSelectedLayer(layer);
+    setIsBackgroundImage(false);
   };
 
   return (
     <div className={'bg-layer-chooser'}>
       {
-        selectedLayer &&
         <div
           className="layer-cards"
           style={{
             maxWidth: layerOptionsVisible ? '100vw' : 0,
-            opacity: layerOptionsVisible ? 1 : 0
+            opacity: layerOptionsVisible ? 1 : 0,
+            visibility: layerOptionsVisible ? 'visible' : 'hidden'
           }}
         >
-          {
+          {selectedLayer ?
             layers.map(layer => {
               return (
                 <BackgroundLayerPreview
@@ -134,7 +160,25 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
                   center={center}
                 />
               );
-            })
+            }) : null
+          }
+          {allowEmptyBackground &&
+            <SimpleButton
+              onMouseOver={() => {
+                selectedLayer?.setVisible(false);
+              }}
+              onClick={() => {
+                selectedLayer?.setVisible(false);
+                setSelectedLayer(undefined);
+                setLayerOptionsVisible(false);
+                setIsBackgroundImage(true);
+              }}
+              className='no-background'
+            >
+              <FontAwesomeIcon icon={faBan} size='5x' />
+              <br></br>
+              <span className="layer-title">{noBackgroundTitle}</span>
+            </SimpleButton>
           }
         </div>
       }
@@ -154,8 +198,15 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
       />
       <div className="bg-preview">
         <div className='overview-wrapper'>
-          <div id="overview-map" ref={mapTarget} />
-          <span className="layer-title">{selectedLayer?.get('name')}</span>
+          {!isBackgroundImage ?
+            <div id="overview-map" ref={mapTarget}
+            /> :
+            <FontAwesomeIcon className='no-background-preview' icon={faBan} size='5x' />
+          }
+          {selectedLayer ?
+            <span className="layer-title">{selectedLayer.get('name')}</span> :
+            <span className="layer-title-no-background">{noBackgroundTitle}</span>
+          }
         </div>
       </div>
     </div>

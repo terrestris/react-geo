@@ -119,12 +119,15 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
 
   const restoreBgLayerVisibility = () => {
     getBgLayersFromMap().forEach(l => l.setVisible(false));
-    activeLayer.setVisible(true);
+    activeLayer?.setVisible(true);
   };
 
+  let isActive = false;
   const uid = getUid(layer);
-  const activeUid = getUid(activeLayer);
-  const isActive = uid === activeUid;
+  if (activeLayer) {
+    const activeUid = getUid(activeLayer);
+    isActive = uid === activeUid;
+  }
 
   return (
     <div

@@ -7,8 +7,16 @@
     transition: 400ms;
   }
 
-  .layer-cards {
-    overflow: hidden;
+  .no-background {
+    height: 128px;
+    width: 128px;
+    padding-bottom: 15px;
+
+    span.layer-title {
+      position: absolute;
+      bottom: 0;
+      right: 10px;
+    }
   }
 
   .bg-preview {
@@ -31,7 +39,37 @@
       padding: 0 4px;
     }
 
+    span.layer-title-no-background {
+      position: absolute;
+      bottom: 0;
+      margin: 5px;
+      background: var(--ant-primary-color);
+      color: #fff;
+      font-weight: bolder;
+      text-align: center;
+      width: 128px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      left: 0px;
+    }
+
+    .no-background-preview {
+      border: solid 1px var(--ant-primary-color);
+      border-radius: 4px;
+      box-shadow: 0 6px 12px rgb(0 0 0 / 18%), 0 -6px 12px rgb(0 0 0 / 18%);
+      background-color: var(--ant-primary-1);
+      padding: 5%;
+      height: auto;
+      width: auto;
+      color: #fff;
+      font-size: 3em;
+    }
+
     #overview-map {
+
+      width: 140px;
+      height: 140px;
 
       .react-geo-bg-layer-chooser-overviewmap {
         bottom: unset;
@@ -45,13 +83,8 @@
 
         .ol-overviewmap-map {
           border: none;
-          width: 128px;
-          height: 128px;
-
-          canvas {
-            width: 128px;
-            height: 128px;
-          }
+          width: 140px;
+          height: 140px;
         }
 
         .ol-overviewmap-box {
