@@ -143,7 +143,7 @@
     "jest-fetch-mock": "^3.0.3",
     "less-loader": "^11.0.0",
     "np": "^8.0.1",
-    "ol": "7.1.0",
+    "ol": "7.5.2",
     "react": "^17.0.2",
     "react-docgen-typescript": "^2.2.2",
     "react-styleguidist": "13.0.0",
