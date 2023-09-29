@@ -1,3 +1,10 @@
+## [23.1.1](https://github.com/terrestris/react-geo/compare/v23.1.0...v23.1.1) (2023-09-29)
+
+
+### Bug Fixes
+
+* makes initalSelectedLayer work ([55b12b4](https://github.com/terrestris/react-geo/commit/55b12b4761e57ec71186475a2c741d291b14ea56))
+
 # [23.1.0](https://github.com/terrestris/react-geo/compare/v23.0.1...v23.1.0) (2023-09-22)
 
 
