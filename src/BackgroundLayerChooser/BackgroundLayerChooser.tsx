@@ -150,20 +150,19 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
             visibility: layerOptionsVisible ? 'visible' : 'hidden'
           }}
         >
-          {selectedLayer ?
-            layers.map(layer => {
-              return (
-                <BackgroundLayerPreview
-                  key={getUid(layer)}
-                  activeLayer={selectedLayer}
-                  onClick={l => onLayerSelect(l)}
-                  layer={layer}
-                  backgroundLayerFilter={backgroundLayerFilter}
-                  zoom={zoom}
-                  center={center}
-                />
-              );
-            }) : null
+          {layers.map(layer => {
+            return (
+              <BackgroundLayerPreview
+                key={getUid(layer)}
+                activeLayer={selectedLayer}
+                onClick={l => onLayerSelect(l)}
+                layer={layer}
+                backgroundLayerFilter={backgroundLayerFilter}
+                zoom={zoom}
+                center={center}
+              />
+            );
+          })
           }
           {allowEmptyBackground &&
             <SimpleButton
