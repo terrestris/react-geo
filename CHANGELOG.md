@@ -1,3 +1,10 @@
+## [23.1.2](https://github.com/terrestris/react-geo/compare/v23.1.1...v23.1.2) (2023-10-05)
+
+
+### Bug Fixes
+
+* enables layer array after no layer was selected ([#3562](https://github.com/terrestris/react-geo/issues/3562)) ([89e1b13](https://github.com/terrestris/react-geo/commit/89e1b138947a4232fee0c17737189bd4adaaec6f))
+
 ## [23.1.1](https://github.com/terrestris/react-geo/compare/v23.1.0...v23.1.1) (2023-09-29)
 
 
