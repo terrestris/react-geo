@@ -4,11 +4,14 @@ import { faCopyright, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { WmsLayer } from '@terrestris/react-util/dist/Util/typeUtils';
 import { Checkbox, Tooltip } from 'antd';
-import { FrameState } from 'ol/Map';
-import { Attribution as OlAttribution } from 'ol/source/Source';
+import OlMap from 'ol/Map';
 import React, { useEffect, useState } from 'react';
 
 export type AddWmsLayerEntryProps = {
+  /**
+   * The map.
+   */
+  map?: OlMap;
   /**
    * Object containing layer information
    */
@@ -44,6 +47,7 @@ export type AddWmsLayerEntryProps = {
  *
  */
 export const AddWmsLayerEntry: React.FC<AddWmsLayerEntryProps> = ({
+  map,
   wmsLayer,
   layerQueryableText = 'Layer is queryable',
   ariaLabelCopyright = 'Icon indicating that attribution information for layer is available',
@@ -61,19 +65,30 @@ export const AddWmsLayerEntry: React.FC<AddWmsLayerEntryProps> = ({
   const [queryable, setQueryable] = useState<boolean>();
 
   useEffect(() => {
-    if (wmsLayer) {
-      if (wmsLayer.getSource()?.getAttributions()) {
-        const attributionsFn = wmsLayer.getSource()?.getAttributions() as OlAttribution;
-        const attributions = (attributionsFn({} as FrameState));
-        if (attributions?.length > 0) {
-          if (Array.isArray(attributions)) {
-            setCopyright(attributions.join(', '));
-          } else {
-            setCopyright(attributions);
-          }
-        }
+    if (!map || !wmsLayer) {
+      return;
+    }
+
+    setQueryable(!!wmsLayer.get('queryable'));
+
+    const attributionsFn = wmsLayer.getSource()?.getAttributions();
+
+    if (!attributionsFn) {
+      return;
+    }
+
+    const mapView = map.getView();
+    const attributions = attributionsFn({
+      extent: mapView.calculateExtent(),
+      viewState: mapView.getState()
+    });
+
+    if (attributions?.length > 0) {
+      if (Array.isArray(attributions)) {
+        setCopyright(attributions.join(', '));
+      } else {
+        setCopyright(attributions);
       }
-      setQueryable(!!wmsLayer.get('queryable'));
     }
   }, [wmsLayer]);
 
