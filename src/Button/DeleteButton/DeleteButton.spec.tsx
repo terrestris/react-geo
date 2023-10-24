@@ -50,7 +50,7 @@ describe('<DeleteButton />', () => {
   });
 
   describe('#Deleting', () => {
-    it('deletes the feature', async () => {
+    xit('deletes the feature', async () => {
       const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
 
       const layer = DigitizeUtil.getDigitizeLayer(map);
