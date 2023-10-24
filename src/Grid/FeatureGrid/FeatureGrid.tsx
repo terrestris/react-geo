@@ -96,7 +96,8 @@ interface OwnProps {
   /**
    * Callback function, that will be called if the selection changes.
    */
-  onRowSelectionChange?: (selectedRowKeys: Array<number | string>, selectedFeatures: OlFeature<OlGeometry>[]) => void;
+  onRowSelectionChange?: (selectedRowKeys: Array<number | string | bigint>,
+    selectedFeatures: OlFeature<OlGeometry>[]) => void;
 }
 
 interface FeatureGridState {
@@ -565,7 +566,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * @param key The row key to obtain the feature from.
    * @return The feature candidate.
    */
-  getFeatureFromRowKey = (key: number | string): OlFeature<OlGeometry> => {
+  getFeatureFromRowKey = (key: number | string | bigint): OlFeature<OlGeometry> => {
     const {
       features,
       keyFunction
