@@ -2,8 +2,8 @@ This example shows the usage of the MapComponent in combination with the MapCont
 
 ```jsx
 import NominatimSearch from '@terrestris/react-geo/dist/Field/NominatimSearch/NominatimSearch';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
-import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';

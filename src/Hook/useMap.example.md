@@ -3,9 +3,9 @@ with [react 16.3](https://reactjs.org/docs/context.html).
 
 ```jsx
 import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
-import { useMap } from '@terrestris/react-util/dist/hooks/useMap';
-import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
+import { useMap } from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';

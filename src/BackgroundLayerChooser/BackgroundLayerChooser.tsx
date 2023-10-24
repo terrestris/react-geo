@@ -7,10 +7,10 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BackgroudLayerChooserBase, {
   BackgroundLayerButtonProps
-} from '@terrestris/react-util/dist/BackgroundLayerChooser/BackgroundLayerChooser';
+} from '@terrestris/react-util/dist/Components/BackgroundLayerChooser/BackgroundLayerChooser';
 import {
   BackgroundLayerLoadingMaskProps
-} from '@terrestris/react-util/dist/BackgroundLayerPreview/BackgroundLayerPreview';
+} from '@terrestris/react-util/dist/Components/BackgroundLayerPreview/BackgroundLayerPreview';
 import Spin from 'antd/lib/spin';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayer from 'ol/layer/Layer';

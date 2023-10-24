@@ -1,4 +1,5 @@
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OlLayerTile from 'ol/layer/Tile';
@@ -7,7 +8,6 @@ import * as React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 import AddWmsPanel from './AddWmsPanel';
-import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 
 describe('<AddWmsPanel />', () => {
 
@@ -100,7 +100,7 @@ describe('<AddWmsPanel />', () => {
       const callback = jest.fn();
       renderInMapContext(
         map, <AddWmsPanel wmsLayers={testWmsLayers} onLayerAddToMap={callback} />
-      )
+      );
       const addAllLayersButton = screen.getByRole('button', { name: /add all layers/i });
       await userEvent.click(addAllLayersButton);
 
@@ -113,7 +113,7 @@ describe('<AddWmsPanel />', () => {
       const callback = jest.fn();
       renderInMapContext(
         map, <AddWmsPanel wmsLayers={testWmsLayers} onSelectionChange={callback} />
-      )
+      );
 
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
       await userEvent.click(checkbox);
@@ -126,7 +126,7 @@ describe('<AddWmsPanel />', () => {
     it('adds selected layers to the map', async () => {
       renderInMapContext(
         map, <AddWmsPanel wmsLayers={testWmsLayers} />
-      )
+      );
 
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
 
@@ -147,7 +147,7 @@ describe('<AddWmsPanel />', () => {
       const callback = jest.fn();
       renderInMapContext(
         map, <AddWmsPanel wmsLayers={testWmsLayers} onLayerAddToMap={callback} />
-      )
+      );
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
 
       await userEvent.click(checkbox);
@@ -163,7 +163,7 @@ describe('<AddWmsPanel />', () => {
     it('shows no cancel button if no `onCancel` method is provided', () => {
       renderInMapContext(
         map, <AddWmsPanel wmsLayers={testWmsLayers} />
-      )
+      );
       const onCancelButton = screen.queryByRole('button', { name: /cancel/i });
       expect(onCancelButton).not.toBeInTheDocument();
     });
@@ -172,7 +172,7 @@ describe('<AddWmsPanel />', () => {
       const callback = jest.fn();
       renderInMapContext(
         map, <AddWmsPanel wmsLayers={testWmsLayers} onCancel={callback} />
-      )
+      );
 
       const onCancelButton = screen.getByRole('button', { name: /cancel/i });
       expect(onCancelButton).toBeInTheDocument();
