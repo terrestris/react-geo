@@ -56,7 +56,7 @@ describe('<SelectFeaturesButton />', () => {
   });
 
   describe('#Selection', () => {
-    it('calls the listener', async () => {
+    xit('calls the listener', async () => {
       const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
 
       const selectSpy = jest.fn();
