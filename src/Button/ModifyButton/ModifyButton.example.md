@@ -2,8 +2,8 @@ This demonstrates the use of the ModifyButton.
 
 ```jsx
 import {ModifyButton} from '@terrestris/react-geo/dist/Button/ModifyButton/ModifyButton';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
-import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
 import {DigitizeUtil} from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import OlLayerTile from 'ol/layer/Tile';

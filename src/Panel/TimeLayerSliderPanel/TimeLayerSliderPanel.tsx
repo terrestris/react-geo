@@ -19,9 +19,9 @@ import './TimeLayerSliderPanel.less';
 
 import { faCalendar, faPauseCircle, faPlayCircle, faSync } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import timeLayerAware, {
+import {
   TimeLayerAwareConfig
-} from '@terrestris/react-util/dist/HigherOrderComponent/TimeLayerAware/TimeLayerAware';
+} from '@terrestris/react-util/dist/Hooks/useTimeLayerAware/useTimeLayerAware';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import ToggleButton from '../../Button/ToggleButton/ToggleButton';
@@ -89,7 +89,6 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
     autoPlaySpeedOptions: [ 0.5, 1, 2, 5, 10, 100, 300 ]
   };
 
-  private _TimeLayerAwareSlider: any;
   private _wmsTimeLayers: TimeLayerAwareConfig[] = [];
   private _interval: number;
 
@@ -187,9 +186,9 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         });
       }
     });
+
     // make sure an initial value is set
     this.wmsTimeHandler(this.state.value);
-    this._TimeLayerAwareSlider = timeLayerAware(TimeSlider, this._wmsTimeLayers);
   };
 
   /**
@@ -366,7 +365,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
    *
    * @param val
    */
-  onTimeChanged(val: string) {
+  onTimeChanged(val: string | [string, string]) {
     this.setState({
       value: moment(val)
     }, () => {
@@ -424,8 +423,6 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       return <Option key={val} value={val}>{val}</Option>;
     });
 
-    const TimeLayerAwareSlider = this._TimeLayerAwareSlider;
-
     return (
       <div className={`time-layer-slider ${disabledCls}`.trim()}>
         <Popover
@@ -433,7 +430,6 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
           title={tooltips.dataRange}
           trigger="click"
           content={
-            // @ts-ignore
             <RangePicker
               showTime={{ format: 'HH:mm' }}
               defaultValue={[dayjs(startDate.toISOString()), dayjs(endDate.toISOString())]}
@@ -473,7 +469,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
               tooltip={tooltips.setToNow}
             /> : null
         }
-        <TimeLayerAwareSlider
+        <TimeSlider
           className={`${extraCls} timeslider ${futureClass}`.trim()}
           formatString={dateFormat}
           defaultValue={startDateString}

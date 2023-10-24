@@ -1,7 +1,7 @@
 import './LayerSwitcher.less';
 import './LayerSwitcher.less';
 
-import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
