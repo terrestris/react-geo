@@ -5,7 +5,6 @@ import {
 } from '@terrestris/react-util/dist/Util/geolocationMock';
 import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { transform } from 'ol/proj';
 import * as React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
@@ -33,17 +32,17 @@ describe('<GeoLocationButton />', () => {
       expect(GeoLocationButton).not.toBeUndefined();
     });
 
-    // it('can be rendered', () => {
-    //   const { container } = render(<GeoLocationButton />);
-    //   expect(container).toBeVisible();
-    // });
+    it('can be rendered', () => {
+      const { container } = render(<GeoLocationButton />);
+      expect(container).toBeVisible();
+    });
 
     it('can be pressed', async () => {
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
         showMarker={false}
-        onGeolocationChange={callback}
+        onGeoLocationChange={callback}
       />);
 
       const button = within(container).getByRole('button');
@@ -57,9 +56,8 @@ describe('<GeoLocationButton />', () => {
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
-        map={map}
         showMarker={false}
-        onGeolocationChange={callback}
+        onGeoLocationChange={callback}
       />);
 
       fireGeolocationListeners();
@@ -84,9 +82,8 @@ describe('<GeoLocationButton />', () => {
       const callback = jest.fn();
 
       const { container } = render(<GeoLocationButton
-        map={map}
         showMarker={false}
-        onGeolocationChange={callback}
+        onGeoLocationChange={callback}
       />);
 
       const button = within(container).getByRole('button');
@@ -104,12 +101,10 @@ describe('<GeoLocationButton />', () => {
         }
       });
 
-      const converted = transform(coordinates, 'EPSG:4326', map.getView().getProjection());
-
       expect(callback).toBeCalledWith({
         accuracy: 7,
         heading: 0,
-        position: converted,
+        position: coordinates,
         speed: 9
       });
     });
