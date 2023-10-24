@@ -123,6 +123,7 @@ export const AddWmsPanel: React.FC<AddWmsPanelProps> = ({
               <div role="listitem" key={idx}>
                 <AddWmsLayerEntry
                   wmsLayer={layer}
+                  map={map}
                 />
               </div>
             )
