@@ -1,7 +1,7 @@
 import './SearchResultsPanel.less';
 import './SearchResultsPanel.less';
 
-import useMap from '@terrestris/react-util/dist/hooks/useMap';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import {
   Avatar,
   Collapse,

@@ -1,4 +1,4 @@
-import useMap from '@terrestris/react-util/dist/hooks/useMap';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import OlCollection from 'ol/Collection';
 import { singleClick } from 'ol/events/condition';
