@@ -7,7 +7,7 @@ import LayerSwitcher from '@terrestris/react-geo/dist/LayerSwitcher/LayerSwitche
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';
-import OlSourceStamen from 'ol/source/Stamen';
+import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
 import * as React from 'react';
 
@@ -25,11 +25,10 @@ class LayerSwitcherExample extends React.Component {
         source: new OlSourceOsm()
       }),
       new OlLayerTile({
-        name: 'Stamen',
-        source: new OlSourceStamen({
-          layer: 'watercolor'
+        source: new OlSourceTileWMS({
+          url: 'https://ows.terrestris.de/osm/service?'
         })
-      }),
+      })
     ];
 
     this.map = new OlMap({

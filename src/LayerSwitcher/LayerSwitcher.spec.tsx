@@ -2,7 +2,6 @@ import { render, screen,within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
-import OlSourceStamen from 'ol/source/Stamen';
 import React from 'react';
 
 import TestUtil from '../Util/TestUtil';
@@ -18,10 +17,8 @@ describe('<LayerSwitcher />', () => {
         source: new OlSourceOsm()
       }),
       new OlLayerTile({
-        source: new OlSourceStamen({
-          layer: 'watercolor'
-        })
-      }),
+        source: new OlSourceOsm()
+      })
     ];
     map = TestUtil.createMap();
     map.addLayer(layers[0]);
