@@ -1,7 +1,7 @@
 import {
-  GeoLocation,
+  type GeoLocation,
   useGeoLocation
-} from '@terrestris/react-util';
+} from '@terrestris/react-util/dist/Hooks/useGeoLocation/useGeoLocation';
 import React, {
   FC,
   useState
@@ -56,7 +56,7 @@ export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
 
   useGeoLocation({
     active: isActive,
-    enableTracking,
+    enableTracking: isActive,
     follow,
     onError,
     onGeoLocationChange,
