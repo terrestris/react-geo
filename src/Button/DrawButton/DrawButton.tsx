@@ -1,4 +1,4 @@
-import useMap from '@terrestris/react-util/dist/hooks/useMap';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import { EventsKey } from 'ol/events';
 import * as OlEventConditions from 'ol/events/condition';

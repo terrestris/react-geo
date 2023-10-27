@@ -2,8 +2,8 @@ This demonstrates the use of the PrintButton.
 
 ```jsx
 import PrintButton from '@terrestris/react-geo/dist/Button/PrintButton/PrintButton';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
-import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
 import { Progress } from 'antd';
 import {getTopLeft, getWidth} from 'ol/extent';
 import Feature from 'ol/Feature';
@@ -14,7 +14,6 @@ import OlMap from 'ol/Map';
 import {fromLonLat, get as getProjection} from 'ol/proj';
 import {OSM, Vector as VectorSource} from 'ol/source';
 import OlSourceOsm from 'ol/source/OSM';
-import OlSourceStamen from 'ol/source/Stamen';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import WMTS from 'ol/source/WMTS';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
@@ -133,18 +132,9 @@ const PrintButtonExample = () => {
     osm.set('name', 'OpenStreetMap');
     osm.set('legendUrl', 'https://terrestris.github.io/react-geo/assets/legend1.png');
 
-    const stamen = new OlLayerTile({
-      source: new OlSourceStamen({
-        layer: 'watercolor'
-      })
-    });
-    stamen.set('name', 'Stamen');
-    stamen.set('legendUrl', 'https://terrestris.github.io/react-geo/assets/legend2.png');
-
     const newMap = new OlMap({
       layers: [
         osm,
-        stamen,
         new OlLayerTile({
           name: 'True Color Composite',
           opacity: 0.5,

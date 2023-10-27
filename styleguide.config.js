@@ -85,9 +85,6 @@ module.exports = {
       name: 'Hooks',
       components: 'src/Hook/**/*.ts'
     }, {
-      name: 'HigherOrderComponents',
-      components: 'src/HigherOrderComponent/**/*.tsx'
-    }, {
       name: 'LayerSwitcher',
       components: 'src/LayerSwitcher/**/*.tsx'
     }, {
@@ -102,6 +99,9 @@ module.exports = {
     }, {
       name: 'Map',
       components: 'src/Map/**/*.tsx'
+    }, {
+      name: 'Panel',
+      components: 'src/Panel/**/*.tsx'
     }, {
       name: 'Slider',
       components: 'src/Slider/**/*.tsx'

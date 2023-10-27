@@ -6,9 +6,9 @@ An `AddWmsPanel` shows a list of the parsed layers and each checked layer (or th
 import CapabilitiesUtil from '@terrestris/ol-util/dist/CapabilitiesUtil/CapabilitiesUtil';
 import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 import AddWmsPanel from '@terrestris/react-geo/dist/Container/AddWmsPanel/AddWmsPanel';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
-import useMap from '@terrestris/react-util/dist/hooks/useMap';
-import MapComponent from '@terrestris/react-util/dist/Map/MapComponent/MapComponent';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { WmsLayer } from '@terrestris/react-util/dist/Util/typeUtils';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
