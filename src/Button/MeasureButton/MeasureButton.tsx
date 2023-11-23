@@ -866,7 +866,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
           const radius = Math.round(geom.getRadius() * decimalHelper) / decimalHelper;
           output = `${radius.toString()} m`;
           if (area > (Math.PI * 1000000)) {
-            output = (Math.round(geom.getRadius() / 100 * decimalHelper) /
+            output = (Math.round(geom.getRadius() / 1000 * decimalHelper) /
             decimalHelper) + ' km';
           }
         }
