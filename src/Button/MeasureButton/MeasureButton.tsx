@@ -861,9 +861,14 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
         if (!measureRadius) {
           output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
         } else {
+          const area = MeasureUtil.getAreaOfCircle(geom, map);
           const decimalHelper = Math.pow(10, decimalPlacesInTooltips);
           const radius = Math.round(geom.getRadius() * decimalHelper) / decimalHelper;
           output = `${radius.toString()} m`;
+          if (area > (Math.PI * 1000000)) {
+            output = (Math.round(geom.getRadius() / 100 * decimalHelper) /
+            decimalHelper) + ' km';
+          }
         }
       } else if (geom instanceof OlGeomPolygon) {
         output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
