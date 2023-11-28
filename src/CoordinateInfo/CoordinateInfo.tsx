@@ -47,11 +47,13 @@ export interface CoordinateInfoProps {
   map: OlMap;
   /**
    * Optional request options to apply (separated by each query layer, identified
-   * by its internal ol id).
+   * by its internal ol id or a callback function).
    */
-  fetchOpts: {
-    [uid: string]: RequestInit;
-  };
+  fetchOpts:
+    | {
+        [uid: string]: RequestInit;
+      }
+    | ((layer: WmsLayer) => RequestInit);
   /**
    * Callback function that gets called if all features are fetched successfully
    * via GetFeatureInfo.
@@ -168,7 +170,13 @@ export class CoordinateInfo extends React.Component<CoordinateInfoProps, Coordin
         }
       );
       if (featureInfoUrl) {
-        promises.push(fetch(featureInfoUrl, fetchOpts[getUid(l)]));
+        let opts;
+        if (fetchOpts instanceof Function) {
+          opts = fetchOpts(l as WmsLayer);
+        } else {
+          opts = fetchOpts[getUid(l)];
+        }
+        promises.push(fetch(featureInfoUrl, opts));
       }
 
       return !drillDown;
