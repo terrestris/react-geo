@@ -1,3 +1,16 @@
+# [23.2.0](https://github.com/terrestris/react-geo/compare/v23.1.3...v23.2.0) (2023-11-29)
+
+
+### Bug Fixes
+
+* fixing number typo ([14fc3e8](https://github.com/terrestris/react-geo/commit/14fc3e8d898266a7117e0220ab8a9a287feae651))
+
+
+### Features
+
+* adds a radius property to the measure circle button ([6942024](https://github.com/terrestris/react-geo/commit/694202455a651087d9c5f9cc2ab87bf2d46ce837))
+* adds readable unit based on actual distance ([72b0e63](https://github.com/terrestris/react-geo/commit/72b0e63f0ba7c6aee7ef7b336db359742e476de4))
+
 ## [23.1.3](https://github.com/terrestris/react-geo/compare/v23.1.2...v23.1.3) (2023-11-29)
 
 
