@@ -1,3 +1,10 @@
+## [23.1.3](https://github.com/terrestris/react-geo/compare/v23.1.2...v23.1.3) (2023-11-29)
+
+
+### Bug Fixes
+
+* update CoordinateInfo fetch options ([8a07f67](https://github.com/terrestris/react-geo/commit/8a07f6714f7f831c6385572a1171dd5e59dd5043))
+
 ## [23.1.2](https://github.com/terrestris/react-geo/compare/v23.1.1...v23.1.2) (2023-10-05)
 
 
