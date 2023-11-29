@@ -1,50 +1,30 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import OlLayerVector from 'ol/layer/Vector';
-import OlFeature from 'ol/Feature';
 import OlSourceVector from 'ol/source/Vector';
 import OlMap from 'ol/Map';
-
-import {
-  Avatar,
-  Collapse,
-  CollapseProps,
-  List
-} from 'antd';
-
-import _isEmpty from 'lodash/isEmpty';
 import './SearchResultsPanel.less';
 import useMap from '../../Hook/useMap';
 import BaseLayer from 'ol/layer/Base';
 import OlStyle from 'ol/style/Style';
 
-const Panel = Collapse.Panel;
-const ListItem = List.Item;
+import SearchResultsCategory from './SearchResultsCategory'; // Componente para renderizar uma categoria
+import { Category } from './types'; // Importe os tipos necessários
 
-export interface Category {
-  title: string;
-  /** Each feature is expected to have at least the properties `title` and `geometry` */
-  features: OlFeature[];
-  icon?: React.ReactNode | string;
-}
-
-interface SearchResultsPanelProps extends Partial<CollapseProps> {
+interface SearchResultsPanelProps {
   searchResults: Category[];
   numTotal: number;
   searchTerms: string[];
-  /** Creator function that creates actions for each item */
-  actionsCreator?: (item: any) => undefined | ReactNode[];
-  /** A renderer function returning a prefix component for each list item */
+  actionsCreator?: (item: any) => undefined | React.ReactNode[];
   listPrefixRenderer?: (item: any) => undefined | JSX.Element;
   layerStyle?: undefined | OlStyle;
 }
 
-const SearchResultsPanel = (props: SearchResultsPanelProps) => {
-  const [highlightLayer, setHighlightLayer] = useState<OlLayerVector<OlSourceVector> | null>(null);
+const SearchResultsPanel: React.FC<SearchResultsPanelProps> = (props) => {
   const map = useMap() as OlMap;
+
   const {
     searchResults,
     numTotal,
-    searchTerms,
     actionsCreator = () => undefined,
     listPrefixRenderer = () => undefined,
     layerStyle,
@@ -52,148 +32,42 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
   } = props;
 
   useEffect(() => {
-    const layer = new OlLayerVector({
-      source: new OlSourceVector()
+    const highlightLayer = new OlLayerVector({
+      source: new OlSourceVector(),
     });
 
     if (layerStyle) {
-      layer.setStyle(layerStyle);
+      highlightLayer.setStyle(layerStyle);
     }
 
-    setHighlightLayer(layer);
-    map.addLayer(layer);
-  }, []);
+    map.addLayer(highlightLayer);
 
-  useEffect(() => {
     return () => {
       map.removeLayer(highlightLayer as BaseLayer);
     };
-  }, [highlightLayer]);
-
-  const highlightSearchTerms = (text: string) => {
-    searchTerms.forEach(searchTerm => {
-      const term = searchTerm.toLowerCase();
-      if (term === '') {
-        return;
-      }
-      let start = text.toLowerCase().indexOf(term);
-      while (start >= 0) {
-        const startPart = text.substring(0, start);
-        const matchedPart = text.substring(start, start + term.length);
-        const endPart = text.substring(start + term.length, text.length);
-        text = `${startPart}<b>${matchedPart}</b>${endPart}`;
-        start = text.toLowerCase().indexOf(term, start + 8);
-      }
-    });
-    return text;
-  };
-
-  const onMouseOver = (feature: OlFeature) => {
-    return () => {
-      highlightLayer?.getSource()?.clear();
-      highlightLayer?.getSource()?.addFeature(feature);
-    };
-  };
-
-  /**
-   * Renders content panel of related collapse element for each category and
-   * its features.
-   *
-   * @param category The category to render
-   * @param categoryIdx The idx of the category in the searchResults list.
-   */
-  const renderPanelForCategory = (category: Category, categoryIdx: number) => {
-    const {
-      features,
-      title,
-      icon
-    } = category;
-    if (!features || _isEmpty(features)) {
-      return;
-    }
-
-    const header = (
-      <div className="search-result-panel-header">
-        <span>{`${title} (${features.length})`}</span>
-        {
-          icon &&
-          <Avatar
-            className="search-option-avatar"
-            src={icon}
-          />
-        }
-      </div>
-    );
-
-    const categoryKey = getCategoryKey(category, categoryIdx);
-    return (
-      <Panel
-        header={header}
-        key={categoryKey}
-      >
-        <List
-          size="small"
-          dataSource={features.map((feat, idx) => {
-            let text: string = highlightSearchTerms(feat.get('title'));
-            return {
-              text,
-              idx,
-              feature: feat
-            };
-          })}
-          renderItem={(item: any) => (
-            <ListItem
-              className="result-list-item"
-              key={item.idx}
-              onMouseOver={onMouseOver(item.feature)}
-              onMouseOut={() => highlightLayer?.getSource()?.clear()}
-              onClick={() => map.getView().fit(item.feature.getGeometry(), {
-                size: map.getSize()
-              })}
-              actions={actionsCreator(item)}
-            >
-              <div
-                className="result-prefix"
-              >
-                {
-                  listPrefixRenderer(item)
-                }
-              </div>
-              <div
-                className="result-text"
-                dangerouslySetInnerHTML={{ __html: item.text }}
-              />
-            </ListItem>
-          )}
-        />
-      </Panel>
-    );
-  };
-
-  /**
-   * Create a category key that is based on the category title and its position in searchResults.
-   *
-   * @param category The category to create the key for.
-   * @param idx The position of the category in searchResults.
-   * @returns The created key for the category.
-   */
-  const getCategoryKey = (category: Category, idx: number): string => {
-    return `${category.title}-${idx}`;
-  };
+  }, [map, layerStyle]);
 
   if (numTotal === 0) {
     return null;
   }
 
+  const renderPanelForCategory = (category: Category, categoryIdx: number) => {
+    return (
+      <SearchResultsCategory
+        key={`${category.title}-${categoryIdx}`}
+        category={category}
+        searchTerms={props.searchTerms}
+        actionsCreator={props.actionsCreator}
+        listPrefixRenderer={props.listPrefixRenderer}
+        map={map}
+      />
+    );
+  };
+
   return (
     <div className="search-result-div">
-      <Collapse
-        defaultActiveKey={searchResults[0] ? getCategoryKey(searchResults[0], 0) : undefined}
-        {...passThroughProps}
-      >
-        {
-          searchResults.map(renderPanelForCategory)
-        }
+      <Collapse defaultActiveKey={searchResults[0] ? `${searchResults[0].title}-0` : undefined} {...passThroughProps}>
+        {searchResults.map(renderPanelForCategory)}
       </Collapse>
     </div>
   );
