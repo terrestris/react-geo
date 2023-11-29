@@ -121,6 +121,10 @@ interface OwnProps {
    * Whether the measure is using geodesic or cartesian mode. Geodesic is used by default.
    */
   geodesic: boolean;
+  /**
+   * If set true, instead of the area, the radius  will be measured.
+   */
+  measureRadius?: boolean;
 }
 
 export type MeasureType = 'line' | 'polygon' | 'angle' | 'circle';
@@ -156,7 +160,8 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     },
     pressed: false,
     onToggle: () => undefined,
-    geodesic: true
+    geodesic: true,
+    measureRadius: false
   };
 
   /**
@@ -831,7 +836,8 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       measureType,
       decimalPlacesInTooltips,
       map,
-      geodesic
+      geodesic,
+      measureRadius
     } = this.props;
 
     if (!this._measureTooltipElement) {
@@ -852,7 +858,18 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
 
       if (geom instanceof OlGeomCircle) {
         measureTooltipCoord = geom.getLastCoordinate();
-        output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
+        if (!measureRadius) {
+          output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
+        } else {
+          const area = MeasureUtil.getAreaOfCircle(geom, map);
+          const decimalHelper = Math.pow(10, decimalPlacesInTooltips);
+          const radius = Math.round(geom.getRadius() * decimalHelper) / decimalHelper;
+          output = `${radius.toString()} m`;
+          if (area > (Math.PI * 1000000)) {
+            output = (Math.round(geom.getRadius() / 1000 * decimalHelper) /
+            decimalHelper) + ' km';
+          }
+        }
       } else if (geom instanceof OlGeomPolygon) {
         output = MeasureUtil.formatArea(geom, map, decimalPlacesInTooltips, geodesic);
         // attach area at interior point
