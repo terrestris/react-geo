@@ -1,3 +1,10 @@
+## [23.2.1](https://github.com/terrestris/react-geo/compare/v23.2.0...v23.2.1) (2023-12-20)
+
+
+### Bug Fixes
+
+* allow custom onChange implementations ([f1e0df7](https://github.com/terrestris/react-geo/commit/f1e0df793575805e57d7b548c3aaca844147e2bd))
+
 # [23.2.0](https://github.com/terrestris/react-geo/compare/v23.1.3...v23.2.0) (2023-11-29)
 
 
