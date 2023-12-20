@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
 const Option = AutoComplete.Option;
-import { OptionProps } from 'antd/lib/select';
+import { DefaultOptionType, OptionProps } from 'antd/lib/select';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
@@ -14,9 +14,9 @@ import { Extent as OlExtent } from 'ol/extent';
 import { GeoJSON } from 'geojson';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './NominatimSearch.less';
 import { FC, useCallback, useEffect, useState } from 'react';
+import useMap from '../../Hook/useMap';
+import './NominatimSearch.less';
 
 // See https://nominatim.org/release-docs/develop/api/Output/ for some more information
 export type NominatimPlace = {
@@ -38,7 +38,7 @@ export type NominatimPlace = {
   namedetails?: any;
   geojson: GeoJSON;
   licence: string;
-};
+} & DefaultOptionType;
 
 interface OwnProps {
   /**
@@ -122,11 +122,6 @@ interface OwnProps {
    */
   className?: string;
   /**
-   * The openlayers map where the map will zoom to.
-   *
-   */
-  map: OlMap;
-  /**
    * A function that gets called when the clear Button is pressed or the input
    * value is empty.
    */
@@ -143,27 +138,30 @@ export type NominatimSearchProps = OwnProps & Omit<AutoCompleteProps, 'onSelect'
  * The NominatimSearch.
  */
 export const NominatimSearch: FC<NominatimSearchProps> = ({
-  nominatimBaseUrl = 'https://nominatim.openstreetmap.org/search?',
-  format = 'json',
-  viewBox = '-180,90,180,-90',
-  bounded = 1,
-  polygonGeoJSON = 1,
   addressDetails = 1,
-  limit = 10,
-  countryCodes = 'de',
-  minChars = 3,
-  visible = true,
+  bounded = 1,
   className = `${CSS_PREFIX}nominatimsearch`,
-  searchResultLanguage,
+  countryCodes = 'de',
+  debounceTime = 300,
+  format = 'json',
+  limit = 10,
+  minChars = 3,
+  nominatimBaseUrl = 'https://nominatim.openstreetmap.org/search?',
   onClear,
-  onSelect,
   onFetchError,
   onFetchSuccess,
+  onSelect,
+  polygonGeoJSON = 1,
   renderOption,
-  debounceTime = 300,
-  map,
+  onChange = () => undefined,
+  searchResultLanguage,
+  viewBox = '-180,90,180,-90',
+  visible = true,
   ...passThroughProps
 }) => {
+
+  const map = useMap();
+
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [dataSource, setDataSource] = useState<NominatimPlace[]>([]);
 
@@ -273,10 +271,9 @@ export const NominatimSearch: FC<NominatimSearchProps> = ({
   /**
    * The function describes what to do when an item is selected.
    *
-   * @param value The value of the selected option.
    * @param option The selected OptionData
    */
-  const onMenuItemSelected = useCallback((value: string, option: any) => {
+  const onMenuItemSelected = useCallback((_, option: NominatimPlace) => {
     if (!map) {
       return;
     }
@@ -288,16 +285,21 @@ export const NominatimSearch: FC<NominatimSearchProps> = ({
     }
   }, [finalOnSelect, dataSource, map]);
 
-  if (visible === false) {
+  const onValueChange = (value: string, option: NominatimPlace | NominatimPlace[]) => {
+    setSearchTerm(value);
+    onChange(value, option);
+  };
+
+  if (!visible) {
     return null;
   }
 
   return (
-    <AutoComplete
+    <AutoComplete<string, any>
       className={className}
       allowClear={true}
       placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
-      onChange={setSearchTerm}
+      onChange={onValueChange}
       onSelect={onMenuItemSelected}
       {...passThroughProps}
     >
