@@ -1,54 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-
 import OlMap from 'ol/Map';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 import OlTileSource from 'ol/source/Tile';
-
-import { CSS_PREFIX } from '../constants';
 import MapComponent from '../Map/MapComponent/MapComponent';
-
+import { CSS_PREFIX } from '../constants';
 import './LayerSwitcher.less';
 
-/**
- * @export
- * @interface LayerSwitcherProps
- * @extends {React.HTMLAttributes<HTMLDivElement>}
- */
-export interface OwnProps {
-  /**
-   * An optional CSS class which will be added to the wrapping div Element.
-   */
+// Defina as interfaces no mesmo arquivo para melhor organização
+
+interface LayerSwitcherProps {
   className?: string;
-  /**
-   * The layers to be available in the switcher.
-   */
   layers: OlLayerBase[];
-  /**
-   * The main map the layers should be synced with.
-   */
   map: OlMap;
-  /**
-   * The property that identifies the layer.
-   */
   identifierProperty?: string;
-  /**
-   * The property that labels the layer.
-   */
   labelProperty?: string;
 }
 
-export type LayerSwitcherProps = OwnProps & React.HTMLAttributes<HTMLDivElement>;
-
-/**
- * Class representing the LayerSwitcher.
- * A basic component to switch between the passed layers.
- * This is most likely to be used for the backgroundlayer.
- *
- * @class LayerSwitcher
- * @extends React.Component
- */
 export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
   identifierProperty = 'name',
   labelProperty = 'name',
@@ -57,31 +26,14 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
   className: classNameProp,
   ...passThroughProps
 }) => {
-
-  /**
-   * The internal map of the LayerSwitcher
-   * @private
-   */
-  const [switcherMap, setSwitcherMap] = useState<OlMap>();
-
-  /**
-   * The internal index of visible layer in provided layers array. If all passed
-   * layers are initially invisible, the first layer in array will be taken as
-   * default.
-   * @private
-   */
+  const [switcherMap, setSwitcherMap] = useState<OlMap | null>(null);
   const visibleLayerIndexRef = useRef<number>(0);
+  const [previewLayer, setPreviewLayer] = useState<OlLayerBase | null>(null);
 
-  const [previewLayer, setPreviewLayer] = useState<OlLayerBase>();
-
-  /**
-   * The className added to this component.
-   * @private
-   */
   const className = `${CSS_PREFIX}layer-switcher`;
 
   useEffect(() => {
-    const mapClone =  new OlMap({
+    const mapClone = new OlMap({
       view: map.getView(),
       controls: []
     });
@@ -90,7 +42,6 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
       if (switcherMap) {
         switcherMap.getLayers().clear();
         switcherMap.setTarget(undefined);
-        setSwitcherMap(undefined);
       }
     };
   }, [map]);
@@ -98,34 +49,22 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
   useEffect(() => {
     if (switcherMap) {
       switcherMap.getLayers().clear();
-      layers
-        .map(cloneLayer)
-        .forEach(layer => switcherMap.addLayer(layer));
+      layers.map(cloneLayer).forEach(layer => switcherMap.addLayer(layer));
     }
     updateLayerVisibility();
   }, [switcherMap]);
 
-  /**
-   * Clones a layer
-   *
-   * @param layer The layer to clone.
-   * @returns The cloned layer.
-   */
   function cloneLayer(layer: OlLayerBase): OlLayerBase {
     if (layer instanceof OlLayerGroup) {
+      const clonedLayers = layer.getLayers().getArray().map(l => cloneLayer(l));
       return new OlLayerGroup({
-        layers: layer.getLayers().getArray().map(l => {
-          if (!(l instanceof OlLayerTile) || !(l instanceof OlLayerGroup)) {
-            throw new Error('Layer of layergroup is of unclonable type');
-          }
-          return cloneLayer(l);
-        }),
+        layers: clonedLayers,
         properties: {
           originalLayer: layer
         },
         ...layer.getProperties()
       });
-    } else {
+    } else if (layer instanceof OlLayerTile) {
       const clone = new OlLayerTile({
         source: (layer as OlLayerTile<OlTileSource>).getSource() || undefined,
         properties: {
@@ -133,22 +72,17 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
         },
         ...layer.getProperties()
       });
-      // reset reference to the map instance of original layer
       clone.setMap(null);
       return clone;
     }
-  };
+    throw new Error('Layer of unclonable type');
+  }
 
-  /**
-   * Sets the visiblity of the layers in the props.map and this._map.
-   * Also sets the previewLayer in the state.
-   *
-   */
   const updateLayerVisibility = () => {
     layers.forEach((l, i) => {
       const visible = visibleLayerIndexRef.current === i;
       l.setVisible(visible);
-      const clone = switcherMap?.getAllLayers()?.find(lc => lc.get(identifierProperty) === l.get(identifierProperty));
+      const clone = switcherMap?.getLayers().getArray().find(lc => lc.get(identifierProperty) === l.get(identifierProperty));
       if (clone) {
         clone.setVisible(visible);
         if (visible) {
@@ -158,60 +92,28 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
     });
   };
 
-  /**
-   * Clickhandler for the overview switch.
-   *
-   */
   const onSwitcherClick = (evt: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     evt.stopPropagation();
-    layers.forEach((layer, index: number) => {
+    layers.forEach((layer, index) => {
       if (layer.getVisible()) {
-        if (layers.length - 1 === index) {
-          visibleLayerIndexRef.current = 0;
-        } else {
-          visibleLayerIndexRef.current = index + 1;
-        }
+        visibleLayerIndexRef.current = (index + 1) % layers.length;
       }
     });
     updateLayerVisibility();
   };
 
-  /**
-   * The render function.
-   */
-  const finalClassName = classNameProp
-    ? `${className} ${classNameProp}`
-    : className;
+  const finalClassName = classNameProp ? `${className} ${classNameProp}` : className;
 
   if (!switcherMap) {
     return null;
   }
 
   return (
-    <div
-      className={finalClassName}
-      role="menu"
-      {...passThroughProps}
-    >
-      <div
-        className="clip"
-        onClick={onSwitcherClick}
-        role="button"
-      >
-        <MapComponent
-          mapDivId="layer-switcher-map"
-          map={switcherMap}
-          role="presentation"
-        />
-        {
-          previewLayer &&
-          <span className="layer-title">
-            {previewLayer?.get(labelProperty)}
-          </span>
-        }
+    <div className={finalClassName} role="menu" {...passThroughProps}>
+      <div className="clip" onClick={onSwitcherClick} role="button">
+        <MapComponent mapDivId="layer-switcher-map" map={switcherMap} role="presentation" />
+        {previewLayer && <span className="layer-title">{previewLayer.get(labelProperty)}</span>}
       </div>
     </div>
   );
 };
-
-export default LayerSwitcher;
