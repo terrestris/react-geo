@@ -36,6 +36,7 @@ interface SearchResultsPanelProps extends Partial<CollapseProps> {
   /** A renderer function returning a prefix component for each list item */
   listPrefixRenderer?: (item: any) => undefined | JSX.Element;
   layerStyle?: undefined | OlStyle;
+  extentShift?: number | undefined;
 }
 
 const SearchResultsPanel = (props: SearchResultsPanelProps) => {
@@ -48,6 +49,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     actionsCreator = () => undefined,
     listPrefixRenderer = () => undefined,
     layerStyle,
+    extentShift,
     ...passThroughProps
   } = props;
 
@@ -147,9 +149,34 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
               key={item.idx}
               onMouseOver={onMouseOver(item.feature)}
               onMouseOut={() => highlightLayer?.getSource()?.clear()}
-              onClick={() => map.getView().fit(item.feature.getGeometry(), {
-                size: map.getSize()
-              })}
+              onClick={() => {
+                const extent = item.feature.getGeometry().getExtent();
+                let adjustedExtent: number[] | undefined = undefined;
+
+                if (extentShift) {
+                  const mapSize = map.getSize();
+
+                  let domWidth = 0;
+                  if (mapSize && mapSize.length > 1) {
+                    domWidth = mapSize[0];
+                  }
+
+                  const extentWidth = extent[2] - extent[0];
+                  const pixelsPerCoordinate = extentWidth / domWidth;
+                  const shiftInCoordinates = pixelsPerCoordinate * extentShift;
+
+                  adjustedExtent = [
+                    extent[0] - shiftInCoordinates,
+                    extent[1],
+                    extent[2],
+                    extent[3]
+                  ];
+                }
+
+                map.getView().fit(adjustedExtent ? adjustedExtent : extent, {
+                  size: map.getSize()
+                });
+              }}
               actions={actionsCreator(item)}
             >
               <div
