@@ -1,3 +1,11 @@
+# [23.3.0](https://github.com/terrestris/react-geo/compare/v23.2.1...v23.3.0) (2024-01-11)
+
+
+### Features
+
+* adds optional geoemtry extent shift ([ca4f31b](https://github.com/terrestris/react-geo/commit/ca4f31b346937ff8898e2780e0be7e302bbbeb9b))
+* makes onClick property configurable ([62a40c4](https://github.com/terrestris/react-geo/commit/62a40c469f7816be5b8af8b261e29da24ae6636c))
+
 ## [23.2.1](https://github.com/terrestris/react-geo/compare/v23.2.0...v23.2.1) (2023-12-20)
 
 
