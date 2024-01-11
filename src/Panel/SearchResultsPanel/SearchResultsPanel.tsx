@@ -36,6 +36,7 @@ interface SearchResultsPanelProps extends Partial<CollapseProps> {
   /** A renderer function returning a prefix component for each list item */
   listPrefixRenderer?: (item: any) => undefined | JSX.Element;
   layerStyle?: undefined | OlStyle;
+  onClick?: (item: any) => void;
 }
 
 const SearchResultsPanel = (props: SearchResultsPanelProps) => {
@@ -48,6 +49,8 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     actionsCreator = () => undefined,
     listPrefixRenderer = () => undefined,
     layerStyle,
+    onClick = item =>
+      map.getView().fit(item.feature.getGeometry(), { size: map.getSize() }),
     ...passThroughProps
   } = props;
 
@@ -147,9 +150,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
               key={item.idx}
               onMouseOver={onMouseOver(item.feature)}
               onMouseOut={() => highlightLayer?.getSource()?.clear()}
-              onClick={() => map.getView().fit(item.feature.getGeometry(), {
-                size: map.getSize()
-              })}
+              onClick={() => onClick(item)}
               actions={actionsCreator(item)}
             >
               <div
