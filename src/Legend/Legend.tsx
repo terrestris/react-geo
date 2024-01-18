@@ -9,7 +9,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceImageWMS from 'ol/source/ImageWMS';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../constants';
 
@@ -89,16 +89,18 @@ export const Legend: React.FC<LegendProps> = ({
   const [legendError, setLegendError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setLegendSrc();
-  }, []);
+  /**
+   * onError handler for the rendered img.
+   */
+  const handleError = useCallback((e: any) => {
+    Logger.warn(`Image error for legend of "${layer.get('name')}".`);
+    setLegendError(true);
+    if (onError) {
+      onError(e);
+    }
+  }, [layer, onError]);
 
-  useEffect(() => {
-    setLegendUrl(getLegendUrl(layer, extraParams));
-    setLegendSrc();
-  }, []);
-
-  const setLegendSrc = async () => {
+  const setLegendSrc = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -122,18 +124,16 @@ export const Legend: React.FC<LegendProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [handleError, headers, imgSrc, legendUrl]);
 
-  /**
-   * onError handler for the rendered img.
-   */
-  const handleError = (e: any) => {
-    Logger.warn(`Image error for legend of "${layer.get('name')}".`);
-    setLegendError(true);
-    if (onError) {
-      onError(e);
-    }
-  };
+  useEffect(() => {
+    setLegendSrc();
+  }, [setLegendSrc]);
+
+  useEffect(() => {
+    setLegendUrl(getLegendUrl(layer, extraParams));
+    setLegendSrc();
+  }, [layer, extraParams, setLegendSrc]);
 
   const alt = layer.get('name')
     ? layer.get('name') + ' legend'

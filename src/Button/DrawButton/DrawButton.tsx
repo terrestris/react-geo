@@ -107,7 +107,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   onDrawStart,
   onModalLabelCancel,
   onModalLabelOk,
-  onToggle,
+  pressed,
   ...passThroughProps
 }) => {
 
@@ -201,18 +201,17 @@ const DrawButton: React.FC<DrawButtonProps> = ({
     };
   }, [drawInteraction, onDrawStart, onDrawEnd]);
 
+  useEffect(() => {
+    if (!drawInteraction) {
+      return;
+    }
+
+    drawInteraction.setActive(!!pressed);
+  }, [drawInteraction, pressed]);
+
   if (!drawInteraction || !layer) {
     return null;
   }
-
-  /**
-   * Called when the draw button is toggled. If the button state is pressed,
-   * the draw interaction will be activated.
-   */
-  const onToggleInternal = (pressed: boolean, lastClickEvent: any) => {
-    drawInteraction.setActive(pressed);
-    onToggle?.(pressed, lastClickEvent);
-  };
 
   const finalClassName = className
     ? `${defaultClassName} ${className}`
@@ -247,8 +246,8 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   return (
     <span className={btnWrapperClass}>
       <ToggleButton
-        onToggle={onToggleInternal}
         className={finalClassName}
+        pressed={pressed}
         {...passThroughProps}
       />
       {modal}

@@ -35,7 +35,7 @@ describe('<PrintButton />', () => {
     });
 
     it('can be rendered', () => {
-      const { container } = renderInMapContext(map, <PrintButton mapSize={[0, 0]}/>);
+      const { container } = renderInMapContext(map, <PrintButton mapSize={[0, 0]} />);
       expect(container).toBeVisible();
     });
   });
