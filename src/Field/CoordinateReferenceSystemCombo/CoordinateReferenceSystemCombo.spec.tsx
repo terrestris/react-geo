@@ -134,7 +134,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     it('calls the onSelect callback with the correct value', async () => {
       const onSelect = jest.fn();
 
-      render(<CoordinateReferenceSystemCombo onSelect={onSelect}/>);
+      render(<CoordinateReferenceSystemCombo onSelect={onSelect} />);
 
       const combobox = screen.getByRole('combobox');
 
@@ -156,7 +156,7 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     it('sets the value of the combobox to the correct value', async () => {
       const onSelect = jest.fn();
 
-      render(<CoordinateReferenceSystemCombo onSelect={onSelect}/>);
+      render(<CoordinateReferenceSystemCombo onSelect={onSelect} />);
 
       const combobox = screen.getByRole('combobox');
 

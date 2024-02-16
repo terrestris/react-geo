@@ -82,14 +82,14 @@ interface OwnProps {
    * The default will display the property `name` if existing or the
    * property defined in `props.idProperty` (default is to `id`).
    */
-  renderOption: (feature: any, props: Partial<WfsSearchProps>) => React.ReactElement<OptionProps>;
+  renderOption: (feature: OlFeature, props: Partial<WfsSearchProps>) => React.ReactElement<OptionProps>;
   /**
    * An onSelect function which gets called with the selected feature as it is
    * returned by server.
    * The default function will create a searchlayer, adds the feature and will
    * zoom to its extend.
    */
-  onSelect: (feature: any, olMap: OlMap) => void;
+  onSelect: (feature: OlFeature, olMap: OlMap) => void;
   /**
    * An optional CSS class which should be added.
    */
@@ -213,19 +213,17 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
      * @param feature The selected feature as returned by the server.
      * @param olMap The openlayers map that was passed via prop.
      */
-    onSelect: (feature: any, olMap: OlMap) => {
+    onSelect: (feature: OlFeature, olMap: OlMap) => {
       if (feature) {
         const olView = olMap.getView();
         const geoJsonFormat = new OlFormatGeoJSON();
         const olFeature = geoJsonFormat.readFeature(feature);
-        if (olFeature instanceof OlFeature) {
-          const geometry = olFeature.getGeometry() as OlSimpleGeometry;
+        const geometry = (olFeature as OlFeature).getGeometry() as OlSimpleGeometry;
 
-          if (geometry) {
-            olView.fit(geometry, {
-              duration: 500
-            });
-          }
+        if (geometry) {
+          olView.fit(geometry, {
+            duration: 500
+          });
         }
       }
     }

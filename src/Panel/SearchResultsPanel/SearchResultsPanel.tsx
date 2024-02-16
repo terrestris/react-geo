@@ -1,5 +1,4 @@
 import './SearchResultsPanel.less';
-import './SearchResultsPanel.less';
 
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import {
@@ -42,10 +41,6 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
   const [highlightLayer, setHighlightLayer] = useState<OlLayerVector<OlSourceVector> | null>(null);
   const map = useMap();
 
-  if (!map) {
-    return <></>;
-  }
-
   const {
     searchResults,
     numTotal,
@@ -54,11 +49,15 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     listPrefixRenderer = () => undefined,
     layerStyle,
     onClick = item =>
-      map.getView().fit(item.feature.getGeometry(), { size: map.getSize() }),
+      map?.getView().fit(item.feature.getGeometry(), { size: map.getSize() }),
     ...passThroughProps
   } = props;
 
   useEffect(() => {
+    if (!map) {
+      return;
+    }
+
     const layer = new OlLayerVector({
       source: new OlSourceVector()
     });
@@ -69,13 +68,17 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
 
     setHighlightLayer(layer);
     map.addLayer(layer);
-  }, []);
+  }, [layerStyle, map]);
 
   useEffect(() => {
     return () => {
+      if (!map) {
+        return;
+      }
+
       map.removeLayer(highlightLayer as BaseLayer);
     };
-  }, [highlightLayer]);
+  }, [highlightLayer, map]);
 
   const highlightSearchTerms = (text: string) => {
     searchTerms.forEach(searchTerm => {
@@ -115,6 +118,11 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
       title,
       icon
     } = category;
+
+    if (!map) {
+      return <></>;
+    }
+
     if (!features || _isEmpty(features)) {
       return;
     }
@@ -133,6 +141,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
     );
 
     const categoryKey = getCategoryKey(category, categoryIdx);
+
     return (
       <Panel
         header={header}

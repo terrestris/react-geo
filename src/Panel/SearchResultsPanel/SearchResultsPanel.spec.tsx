@@ -79,7 +79,7 @@ describe('<SearchResultsPanel />', () => {
         numTotal={searchResults.length}
         searchResults={searchResults}
         searchTerms={[]}
-        actionsCreator={() => [<div>{actionContent}</div>]}
+        actionsCreator={() => [<div key="1">{actionContent}</div>]}
       />);
 
       const actionItems = within(container).getAllByText(actionContent);

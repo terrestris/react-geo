@@ -451,7 +451,7 @@ class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
     if (eventKey) {
       const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
       if (!layer) {
-        Logger.error('layer is not defined');
+        Logger.error('Layer is not defined');
         return;
       }
       this.setLayerVisibility(layer, checked);

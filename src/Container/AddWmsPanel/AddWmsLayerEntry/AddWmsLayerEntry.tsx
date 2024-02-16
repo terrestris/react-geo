@@ -90,7 +90,7 @@ export const AddWmsLayerEntry: React.FC<AddWmsLayerEntryProps> = ({
         setCopyright(attributions);
       }
     }
-  }, [wmsLayer]);
+  }, [wmsLayer, map]);
 
   return (
     <Checkbox

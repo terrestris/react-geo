@@ -9,7 +9,8 @@ import OlMap from 'ol/Map';
 import {
   fromLonLat,
   get,
-  getTransform} from 'ol/proj';
+  getTransform
+} from 'ol/proj';
 import { register } from 'ol/proj/proj4';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';

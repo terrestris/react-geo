@@ -29,7 +29,7 @@ export class TestUtil {
    * @param options The options to be set.
    */
   static mountComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
-    return mount(<Component {...props}/>, options);
+    return mount(<Component {...props} />, options);
   };
 
   /**
@@ -40,7 +40,7 @@ export class TestUtil {
    * @param options The options to be set.
    */
   static shallowComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
-    return shallow(<Component {...props}/>, options);
+    return shallow(<Component {...props} />, options);
   };
 
   /**
