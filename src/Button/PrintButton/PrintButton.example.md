@@ -75,7 +75,7 @@ const PrintButtonExample = () => {
         },
       }
     ]}
-  ));
+  ), []);
 
   const image = new CircleStyle({
     radius: 5,
@@ -209,7 +209,7 @@ const PrintButtonExample = () => {
     });
 
     setMap(newMap);
-  }, []);
+  }, [geojson]);
 
   if (!map) {
     return null;

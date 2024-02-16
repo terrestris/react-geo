@@ -71,9 +71,9 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
   onFeatureSelect,
   hitTolerance = 5,
   layers,
-  onToggle,
   clearAfterSelect = false,
   featuresCollection,
+  pressed,
   ...passThroughProps
 }) => {
   const [selectInteraction, setSelectInteraction] = useState<OlInteractionSelect>();
@@ -131,27 +131,33 @@ const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
     };
   }, [selectInteraction, features, onFeatureSelect, clearAfterSelect]);
 
-  if (!selectInteraction) {
-    return null;
-  }
+  useEffect(() => {
+    if (!selectInteraction) {
+      return;
+    }
 
-  const onToggleInternal = (pressed: boolean, lastClickEvt: any) => {
-    selectInteraction.setActive(pressed);
-    onToggle?.(pressed, lastClickEvt);
+    selectInteraction.setActive(!!pressed);
+
     if (!pressed) {
       selectInteraction.getFeatures().clear();
     }
-  };
+  }, [selectInteraction, pressed]);
+
+  if (!selectInteraction) {
+    return null;
+  }
 
   const finalClassName = className
     ? `${defaultClassName} ${className}`
     : defaultClassName;
 
-  return <ToggleButton
-    onToggle={onToggleInternal}
-    className={finalClassName}
-    {...passThroughProps}
-  />;
+  return (
+    <ToggleButton
+      className={finalClassName}
+      pressed={pressed}
+      {...passThroughProps}
+    />
+  );
 };
 
 export default SelectFeaturesButton;

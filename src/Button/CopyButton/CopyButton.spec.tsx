@@ -74,6 +74,8 @@ describe('<CopyButton />', () => {
       const button = screen.getByRole('button');
       await userEvent.click(button);
 
+      renderInMapContext(map, <CopyButton pressed={true} />);
+
       expect(layer.getSource()?.getFeatures()).toHaveLength(1);
 
       clickMap(map, 200, 200);

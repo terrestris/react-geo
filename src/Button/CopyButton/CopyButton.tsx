@@ -88,13 +88,15 @@ const CopyButton: React.FC<CopyButtonProps> = ({
     return null;
   }
 
-  return <SelectFeaturesButton
-    layers={layers}
-    onFeatureSelect={onFeatureSelect}
-    className={finalClassName}
-    clearAfterSelect={true}
-    {...passThroughProps}
-  />;
+  return (
+    <SelectFeaturesButton
+      layers={layers}
+      onFeatureSelect={onFeatureSelect}
+      className={finalClassName}
+      clearAfterSelect={true}
+      {...passThroughProps}
+    />
+  );
 
 };
 

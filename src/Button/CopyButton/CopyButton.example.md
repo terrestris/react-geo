@@ -3,7 +3,7 @@ This demonstrates the use of the CopyButton.
 ```jsx
 import CopyButton from '@terrestris/react-geo/dist/Button/CopyButton/CopyButton';
 import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
-import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import {DigitizeUtil} from '@terrestris/react-util/dist/Util/DigitizeUtil';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import OlLayerTile from 'ol/layer/Tile';
@@ -22,6 +22,7 @@ const features = format.readFeatures(featuresJson);
 
 const CopyButtonExample = () => {
   const [map, setMap] = useState();
+  const [pressed, setPressed] = useState();
 
   useEffect(() => {
     const newMap = new OlMap({
@@ -57,7 +58,10 @@ const CopyButtonExample = () => {
           }}
         />
 
-        <CopyButton>
+        <CopyButton
+          onChange={() => setPressed(!pressed)}
+          pressed={pressed}
+        >
           Copy feature
         </CopyButton>
       </MapContext.Provider>

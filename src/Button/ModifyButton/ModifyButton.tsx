@@ -60,7 +60,7 @@ interface OwnProps {
    */
   onTranslateStart?: (event: TranslateEvent) => void;
   /**
-   * Listener function for the 'qtranslateend' event of an ol.interaction.Translate.
+   * Listener function for the 'translateend' event of an ol.interaction.Translate.
    * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
    * for more information.
    */
@@ -124,12 +124,12 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
   translateInteractionConfig,
   onModalLabelOk,
   onModalLabelCancel,
-  onToggle,
   maxLabelLineLength,
   modalPromptTitle,
   modalPromptOkButtonText,
   modalPromptCancelButtonText,
   editLabel = true,
+  pressed,
   ...passThroughProps
 }) => {
   const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource>]|null>(null);

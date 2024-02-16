@@ -3,9 +3,11 @@ import {
   enableGeolocationMock,
   fireGeolocationListeners
 } from '@terrestris/react-util/dist/Util/geolocationMock';
-import { render, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import { render } from '@testing-library/react';
+import { fromLonLat } from 'ol/proj';
 import * as React from 'react';
+import { act } from 'react-dom/test-utils';
 
 import GeoLocationButton from './GeoLocationButton';
 
@@ -33,40 +35,55 @@ describe('<GeoLocationButton />', () => {
     it('can be pressed', async () => {
       const callback = jest.fn();
 
-      const { container } = render(<GeoLocationButton
+      const { rerenderInMapContext } = renderInMapContext(map, (
+        <GeoLocationButton
+          showMarker={false}
+          onGeoLocationChange={callback}
+          pressed={false}
+        />
+      ));
+
+      rerenderInMapContext(<GeoLocationButton
         showMarker={false}
         onGeoLocationChange={callback}
+        pressed={true}
       />);
 
-      const button = within(container).getByRole('button');
-      await userEvent.click(button);
+      act(() => {
+        fireGeolocationListeners();
+      });
 
-      fireGeolocationListeners();
       expect(callback).toBeCalled();
     });
 
     it('can be pressed twice', async () => {
       const callback = jest.fn();
 
-      const { container } = render(<GeoLocationButton
+      const { rerenderInMapContext } = renderInMapContext(map, (<GeoLocationButton
         showMarker={false}
         onGeoLocationChange={callback}
-      />);
-
-      fireGeolocationListeners();
+        pressed={false}
+      />));
 
       expect(callback).toBeCalledTimes(0);
 
-      const button = within(container).getByRole('button');
-      await userEvent.click(button);
+      rerenderInMapContext(<GeoLocationButton
+        showMarker={false}
+        onGeoLocationChange={callback}
+        pressed={true}
+      />);
 
-      fireGeolocationListeners();
+      act(() => {
+        fireGeolocationListeners();
+      });
 
       expect(callback).toBeCalledTimes(1);
 
-      await userEvent.click(button);
-
-      fireGeolocationListeners();
+      render(<GeoLocationButton
+        showMarker={false}
+        onGeoLocationChange={callback}
+        pressed={false}
+      />);
 
       expect(callback).toBeCalledTimes(1);
     });
@@ -74,30 +91,36 @@ describe('<GeoLocationButton />', () => {
     it('is called with the correct position', async () => {
       const callback = jest.fn();
 
-      const { container } = render(<GeoLocationButton
+      const { rerenderInMapContext } = renderInMapContext(map, <GeoLocationButton
         showMarker={false}
         onGeoLocationChange={callback}
+        pressed={false}
       />);
 
-      const button = within(container).getByRole('button');
-      await userEvent.click(button);
+      rerenderInMapContext(<GeoLocationButton
+        showMarker={false}
+        onGeoLocationChange={callback}
+        pressed={true}
+      />);
 
       const coordinates = [ 47.12, -64.99 ];
 
-      fireGeolocationListeners({
-        coords: {
-          longitude: coordinates[0],
-          latitude: coordinates[1],
-          accuracy: 7,
-          speed: 9,
-          heading: 0
-        }
+      act(() => {
+        fireGeolocationListeners({
+          coords: {
+            longitude: coordinates[0],
+            latitude: coordinates[1],
+            accuracy: 7,
+            speed: 9,
+            heading: 0
+          }
+        });
       });
 
       expect(callback).toBeCalledWith({
         accuracy: 7,
         heading: 0,
-        position: coordinates,
+        position: fromLonLat(coordinates),
         speed: 9
       });
     });

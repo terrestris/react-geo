@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 
 const DrawButtonExample = () => {
 
+  const [selected, setSelected] = useState();
   const [map, setMap] = useState();
 
   useEffect(() => {
@@ -46,44 +47,49 @@ const DrawButtonExample = () => {
         />
         <div>
           <span>Select a digitize type:</span>
-          <ToggleGroup>
+          <ToggleGroup
+            selected={selected}
+            onChange={(evt, value) => {
+              setSelected(value)
+            }}
+          >
             <DrawButton
-              name="drawPoint"
+              value="drawPoint"
               drawType="Point"
             >
               Draw point
             </DrawButton>
 
             <DrawButton
-              name="drawLine"
+              value="drawLine"
               drawType="LineString"
             >
               Draw line
             </DrawButton>
 
             <DrawButton
-              name="drawPolygon"
+              value="drawPolygon"
               drawType="Polygon"
             >
               Draw polygon
             </DrawButton>
 
             <DrawButton
-              name="drawCircle"
+              value="drawCircle"
               drawType="Circle"
             >
               Draw circle
             </DrawButton>
 
             <DrawButton
-              name="drawRectangle"
+              value="drawRectangle"
               drawType="Rectangle"
             >
               Draw rectangle
             </DrawButton>
 
             <DrawButton
-              name="drawText"
+              value="drawText"
               drawType="Text"
             >
               Draw text label

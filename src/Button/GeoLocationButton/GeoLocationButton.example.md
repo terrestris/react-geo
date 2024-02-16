@@ -1,5 +1,4 @@
-This demonstrates the use of the geolocation button.
-
+This demonstrates the use of the GeoLocation button.
 
 ```jsx
 import GeoLocationButton from '@terrestris/react-geo/dist/Button/GeoLocationButton/GeoLocationButton';
@@ -10,11 +9,12 @@ import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect,useState } from 'react';
 
 const GeoLocationButtonExample = () => {
 
   const [map, setMap] = useState();
+  const [pressed, setPressed] = useState();
 
   useEffect(() => {
     setMap(new OlMap({
@@ -36,26 +36,25 @@ const GeoLocationButtonExample = () => {
   }
 
   return (
-    <MapContext.Provider
-      value={map}
-    >
-      <>
-        <MapComponent
-          map={map}
-          style={{
-            height: '400px'
-          }}
-        />
-        <GeoLocationButton
-          showMarker={true}
-          follow={true}
-        >
-          Enable GeoLocation
-        </GeoLocationButton>
-      </>
+    <MapContext.Provider value={map}>
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
+      <GeoLocationButton
+        map={map}
+        showMarker={true}
+        follow={true}
+        pressed={pressed}
+        onChange={() => setPressed(!pressed)}
+      >
+        Track location
+      </GeoLocationButton>
     </MapContext.Provider>
   );
-};
+}
 
 <GeoLocationButtonExample />
 ```

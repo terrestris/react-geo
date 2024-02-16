@@ -284,9 +284,16 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
    * TODO: we should do the request for new features less aggresive,
    * e.g. a precache would be helpful
    */
-  autoPlay(pressed: boolean) {
-    if (pressed) {
+  autoPlay() {
+    this.setState({
+      autoPlayActive: !this.state.autoPlayActive
+    }, () => {
       window.clearInterval(this._interval);
+
+      if (!this.state.autoPlayActive) {
+        return;
+      }
+
       this._interval = window.setInterval(() => {
         const {
           endDate
@@ -311,17 +318,8 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
         }
         this.timeSliderCustomHandler(newValue);
         this.wmsTimeHandler(newValue);
-        // value is handled in timeSliderCustomHandler
-        this.setState({
-          autoPlayActive: true
-        });
       }, 1000, this);
-    } else {
-      window.clearInterval(this._interval);
-      this.setState({
-        autoPlayActive: false
-      });
-    }
+    });
   }
 
   /**
@@ -332,7 +330,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
       playbackSpeed: val
     }, () => {
       if (this.state.autoPlayActive) {
-        this.autoPlay(true);
+        this.autoPlay();
       }
     });
   };
@@ -491,7 +489,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
           }
           className={extraCls + ' playback'}
           pressed={autoPlayActive}
-          onToggle={this.autoPlay}
+          onChange={this.autoPlay}
           tooltip={autoPlayActive ? 'Pause' : 'Autoplay'}
           aria-label={autoPlayActive ? 'Pause' : 'Autoplay'}
           pressedIcon={

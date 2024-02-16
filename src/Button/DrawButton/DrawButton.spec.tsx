@@ -42,13 +42,9 @@ describe('<DrawButton />', () => {
 
   describe('#Drawing', () => {
     xit('draws points', async () => {
-      renderInMapContext(map, <DrawButton drawType={'Point'} />);
-
-      const button = screen.getByRole('button');
+      renderInMapContext(map, <DrawButton pressed={true} drawType={'Point'} />);
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
-
-      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -60,13 +56,9 @@ describe('<DrawButton />', () => {
     });
 
     xit('draws lines', async () => {
-      renderInMapContext(map, <DrawButton drawType={'LineString'} />);
-
-      const button = screen.getByRole('button');
+      renderInMapContext(map, <DrawButton pressed={true} drawType={'LineString'} />);
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
-
-      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -82,13 +74,9 @@ describe('<DrawButton />', () => {
     });
 
     xit('draws polygons', async () => {
-      renderInMapContext(map, <DrawButton drawType={'Polygon'} />);
-
-      const button = screen.getByRole('button');
+      renderInMapContext(map, <DrawButton pressed={true} drawType={'Polygon'} />);
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
-
-      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -111,13 +99,9 @@ describe('<DrawButton />', () => {
     });
 
     xit('draws labels', async () => {
-      renderInMapContext(map, <DrawButton drawType={'Text'} />);
-
-      const button = screen.getByRole('button');
+      renderInMapContext(map, <DrawButton pressed={true} drawType={'Text'} />);
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
-
-      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -143,13 +127,9 @@ describe('<DrawButton />', () => {
     });
 
     xit('aborts drawing labels', async () => {
-      renderInMapContext(map, <DrawButton drawType={'Text'} />);
-
-      const button = screen.getByRole('button');
+      renderInMapContext(map, <DrawButton pressed={true} drawType={'Text'} />);
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
-
-      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -170,13 +150,9 @@ describe('<DrawButton />', () => {
     });
 
     xit('draws circles', async () => {
-      renderInMapContext(map, <DrawButton drawType={'Circle'} />);
-
-      const button = screen.getByRole('button');
+      renderInMapContext(map, <DrawButton pressed={true} drawType={'Circle'} />);
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
-
-      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -190,13 +166,9 @@ describe('<DrawButton />', () => {
     });
 
     xit('draws rectangles', async () => {
-      renderInMapContext(map, <DrawButton drawType={'Rectangle'} />);
-
-      const button = screen.getByRole('button');
+      renderInMapContext(map, <DrawButton pressed={true} drawType={'Rectangle'} />);
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
-
-      await userEvent.click(button);
 
       clickMap(map, 100, 100);
 
@@ -215,27 +187,25 @@ describe('<DrawButton />', () => {
     });
 
     xit('toggles off', async () => {
-      renderInMapContext(map, <DrawButton drawType={'Point'} />);
-
-      const button = screen.getByRole('button');
+      const { rerenderInMapContext } = renderInMapContext(map, <DrawButton pressed={false} drawType={'Point'} />);
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
       expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(0);
 
-      await userEvent.click(button);
+      rerenderInMapContext(<DrawButton pressed={true} drawType={'Point'} />);
 
       clickMap(map, 100, 100);
 
       expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      await userEvent.click(button);
+      rerenderInMapContext(<DrawButton pressed={false} drawType={'Point'} />);
 
       clickMap(map, 120, 100);
 
       expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
-      await userEvent.click(button);
+      rerenderInMapContext(<DrawButton pressed={true} drawType={'Point'} />);
 
       clickMap(map, 120, 100);
 
@@ -246,11 +216,14 @@ describe('<DrawButton />', () => {
       const startSpy = jest.fn();
       const endSpy = jest.fn();
 
-      renderInMapContext(map, <DrawButton drawType={'Polygon'} onDrawStart={startSpy} onDrawEnd={endSpy}/>);
-
-      const button = screen.getByRole('button');
-
-      await userEvent.click(button);
+      const { rerenderInMapContext } = renderInMapContext(map, (
+        <DrawButton
+          pressed={true}
+          drawType={'Polygon'}
+          onDrawStart={startSpy}
+          onDrawEnd={endSpy}
+        />
+      ));
 
       expect(startSpy).not.toBeCalled();
       expect(endSpy).not.toBeCalled();
@@ -277,22 +250,23 @@ describe('<DrawButton />', () => {
     });
 
     xit('multiple draw buttons use the same digitize layer', async () => {
-      renderInMapContext(map, <>
-        <DrawButton drawType={'Point'}>Point 1</DrawButton>
-        <DrawButton drawType={'Point'}>Point 2</DrawButton>
-      </>);
-
-      const button1 = screen.getByText('Point 1');
-      const button2 = screen.getByText('Point 2');
+      const { rerenderInMapContext } = renderInMapContext(map, (
+        <>
+          <DrawButton pressed={true} drawType={'Point'}>Point 1</DrawButton>
+          <DrawButton drawType={'Point'}>Point 2</DrawButton>
+        </>
+      ));
 
       const digitizeLayer = DigitizeUtil.getDigitizeLayer(map);
 
-      await userEvent.click(button1);
-
       clickMap(map, 100, 100);
 
-      await userEvent.click(button1);
-      await userEvent.click(button2);
+      rerenderInMapContext(
+        <>
+          <DrawButton drawType={'Point'}>Point 1</DrawButton>
+          <DrawButton pressed={true} drawType={'Point'}>Point 2</DrawButton>
+        </>
+      );
 
       clickMap(map, 120, 120);
 
@@ -306,11 +280,7 @@ describe('<DrawButton />', () => {
 
       map.addLayer(layer);
 
-      renderInMapContext(map, <DrawButton drawType={'Point'} digitizeLayer={layer} />);
-
-      const button = screen.getByRole('button');
-
-      await userEvent.click(button);
+      renderInMapContext(map, <DrawButton pressed={true} drawType={'Point'} digitizeLayer={layer} />);
 
       clickMap(map, 100, 100);
 
@@ -322,11 +292,7 @@ describe('<DrawButton />', () => {
     });
 
     xit('can change the type', async () => {
-      const { rerenderInMapContext } = renderInMapContext(map, <DrawButton drawType={'Point'} />);
-
-      const button = screen.getByRole('button');
-
-      await userEvent.click(button);
+      const { rerenderInMapContext } = renderInMapContext(map, <DrawButton pressed={true} drawType={'Point'} />);
 
       clickMap(map, 100, 100);
 
@@ -335,7 +301,7 @@ describe('<DrawButton />', () => {
       expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
       expect(digitizeLayer.getSource()?.getFeatures()[0].getGeometry()?.getType()).toBe('Point');
 
-      rerenderInMapContext(<DrawButton drawType={'LineString'} />);
+      rerenderInMapContext(<DrawButton pressed={true} drawType={'LineString'} />);
 
       clickMap(map, 120, 120);
       doubleClickMap(map, 140, 140);
