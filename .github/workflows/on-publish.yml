@@ -29,7 +29,7 @@ jobs:
           ${{ runner.OS }}-
 
     - name: Install dependencies ⏬
-      run: npm ci --force
+      run: npm ci
 
     - name: Build styleguide 🏗️
       run: npm run build:styleguide

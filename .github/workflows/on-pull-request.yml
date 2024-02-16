@@ -24,7 +24,7 @@ jobs:
           ${{ runner.OS }}-
 
     - name: Install dependencies ⏬
-      run: npm ci --force
+      run: npm ci
 
     - name: Build artifacts 🏗️
       run: npm run build
