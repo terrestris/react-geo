@@ -2,7 +2,7 @@ import { Slider } from 'antd';
 import { SliderBaseProps,SliderMarks } from 'antd/lib/slider';
 import _isArray from 'lodash/isArray';
 import _isObject from 'lodash/isObject';
-import moment from 'moment';
+import moment, {Moment} from 'moment';
 import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
@@ -103,7 +103,7 @@ class TimeSlider extends React.Component<TimeSliderProps> {
    * @param val the input value(s)
    * @return The converted value(s)
    */
-  convert(val: string[] | string): number | [number, number] {
+  convert(val: string[] | string | Moment | Moment[]): number | [number, number] {
     return _isArray(val) ?
       (val as Array<string>).map(iso => moment(iso).unix()) as [number, number]:
       moment(val).unix() as number;

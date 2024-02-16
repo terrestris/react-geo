@@ -31,7 +31,7 @@ describe('<CircleMenu />', () => {
       position: [0, 0],
       animationDuration: animationDuration
     });
-    const instance = wrapper.instance();
+    const instance = wrapper.instance() as CircleMenu;
     const transformationSpy = jest.spyOn(instance, 'applyTransformation');
 
     wrapper.setProps({
@@ -59,7 +59,7 @@ describe('<CircleMenu />', () => {
         position: [0, 0],
         animationDuration: animationDuration
       });
-      const instance = wrapper.instance();
+      const instance = wrapper.instance() as CircleMenu;
 
       instance.applyTransformation();
 

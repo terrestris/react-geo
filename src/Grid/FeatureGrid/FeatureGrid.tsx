@@ -212,13 +212,13 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * The source holding the features of the grid.
    * @private
    */
-  _source: OlSourceVector<OlGeometry> | null = null;
+  _source: OlSourceVector | null = null;
 
   /**
    * The layer representing the features of the grid.
    * @private
    */
-  _layer: OlLayerVector<OlSourceVector<OlGeometry>> | null = null;
+  _layer: OlLayerVector<OlSourceVector> | null = null;
 
   /**
    * The constructor.
@@ -524,6 +524,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
         title: key,
         dataIndex: key,
         key: key,
+        // @ts-ignore
         ...columnDefs[key]
       });
     });
@@ -532,7 +533,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
   };
 
   /**
-   * Returns the table row data from all of the given features.
+   * Returns the table row data from all the given features.
    *
    * @return The table data.
    */
@@ -548,7 +549,7 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
       const properties = feature.getProperties();
       const filtered: typeof properties = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
-        .reduce((obj, key) => {
+        .reduce((obj: {[k: string]: any}, key) => {
           obj[key] = properties[key];
           return obj;
         }, {});

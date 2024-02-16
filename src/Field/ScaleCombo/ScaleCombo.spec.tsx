@@ -36,7 +36,8 @@ describe('<ScaleCombo />', () => {
       const wrapper = TestUtil.mountComponent(ScaleCombo, {
         map
       });
-      expect(wrapper.instance().getOptionsFromMap).not.toBeUndefined();
+      const instance = wrapper.instance() as ScaleCombo;
+      expect(instance.getOptionsFromMap).not.toBeUndefined();
     });
 
     it('creates options array from resolutions set on the map', () => {
@@ -64,8 +65,8 @@ describe('<ScaleCombo />', () => {
       // Reset the scales array, as getOptionsFromMap() will be called in
       // constructor.
       wrapper.setState({scales: []});
-
-      const scales = wrapper.instance().getOptionsFromMap();
+      const instance = wrapper.instance() as ScaleCombo;
+      const scales = instance.getOptionsFromMap();
       expect(scales).toBeInstanceOf(Array);
 
       TestUtil.removeMap(map);
@@ -85,12 +86,14 @@ describe('<ScaleCombo />', () => {
       // constructor.
       wrapper.setState({scales: []});
 
-      const scales = wrapper.instance().getOptionsFromMap();
+      const instance = wrapper.instance() as ScaleCombo;
+      const scales = instance.getOptionsFromMap();
+
       expect(scales).toBeInstanceOf(Array);
       expect(scales).toHaveLength(testResolutions.length);
 
-      const roundScale = (Math.round(MapUtil.getScaleForResolution(
-        testResolutions[testResolutions.length - 1] ,'m')));
+      let testResolution = testResolutions[testResolutions.length - 1];
+      const roundScale = (Math.round(MapUtil.getScaleForResolution(testResolution ,'m')!));
 
       expect(scales[0]).toBe(roundScale);
 
@@ -104,7 +107,7 @@ describe('<ScaleCombo />', () => {
       });
 
       // eslint-disable-next-line
-      const resolutionsFilter = res => {
+      const resolutionsFilter = (res: number) => {
         return res >= 19 || res <= 13;
       };
 
@@ -120,12 +123,13 @@ describe('<ScaleCombo />', () => {
       // constructor.
       wrapper.setState({scales: []});
 
-      const scales = wrapper.instance().getOptionsFromMap();
+      const instance = wrapper.instance() as ScaleCombo;
+      const scales = instance.getOptionsFromMap();
       expect(scales).toBeInstanceOf(Array);
       expect(scales).toHaveLength(expectedLength);
 
       const roundScale = MapUtil.roundScale(MapUtil.getScaleForResolution(
-        testResolutions[testResolutions.length - 2] ,'m'));
+        testResolutions[testResolutions.length - 2] ,'m')!);
 
       expect(scales[1]).toBe(roundScale);
 
@@ -139,7 +143,8 @@ describe('<ScaleCombo />', () => {
       const wrapper = TestUtil.mountComponent(ScaleCombo, {
         map
       });
-      expect(wrapper.instance().determineOptionKeyForZoomLevel).not.toBeUndefined();
+      const instance = wrapper.instance() as ScaleCombo;
+      expect(instance.determineOptionKeyForZoomLevel).not.toBeUndefined();
     });
 
     it('returns "undefied" for erronous zoom level or if exceeds number of valid zoom levels ', () => {
@@ -150,11 +155,10 @@ describe('<ScaleCombo />', () => {
         scales: scaleArray
       });
 
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(undefined)).toBeUndefined();
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(null)).toBeUndefined();
-      expect(wrapper.instance().determineOptionKeyForZoomLevel('foo')).toBeUndefined();
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(17.123)).toBeUndefined();
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(scaleArray.length)).toBeUndefined();
+      let component = wrapper.instance() as ScaleCombo;
+      expect(component.determineOptionKeyForZoomLevel(undefined)).toBeUndefined();
+      expect(component.determineOptionKeyForZoomLevel(17.123)).toBeUndefined();
+      expect(component.determineOptionKeyForZoomLevel(scaleArray.length)).toBeUndefined();
 
       TestUtil.removeMap(map);
     });
@@ -167,7 +171,8 @@ describe('<ScaleCombo />', () => {
         scales: scaleArray
       });
       const index = 1;
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(index)).toBe(scaleArray[index].toString());
+      let component = wrapper.instance() as ScaleCombo;
+      expect(component.determineOptionKeyForZoomLevel(index)).toBe(scaleArray[index].toString());
 
       TestUtil.removeMap(map);
     });

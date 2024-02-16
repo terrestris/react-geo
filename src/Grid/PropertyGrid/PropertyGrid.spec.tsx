@@ -1,3 +1,5 @@
+import _get from 'lodash/get';
+import _isNil from 'lodash/isNil';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 
@@ -58,8 +60,9 @@ describe('<PropertyGrid />', () => {
     expect(dataSource).toHaveLength(Object.keys(attributeObject).length);
     dataSource.forEach((dataSourceElement) => {
       const attributeName = dataSourceElement.attributeName;
+      // @ts-ignore
       const key = `ATTR_${attributeName}_fid_${testFeature.ol_uid}`;
-      expect(attributeObject[attributeName]).toBe(dataSourceElement.attributeValue);
+      expect(_get(attributeObject,attributeName)).toBe(dataSourceElement.attributeValue);
       expect(key).toBe(dataSourceElement.key);
     });
 
@@ -125,9 +128,9 @@ describe('<PropertyGrid />', () => {
     dataSource.forEach((dataSourceElement) => {
       const key = dataSourceElement.key;
       const orignalAttributeName = key.split('_')[1];
-      if (attributeNames[orignalAttributeName]) {
+      if (!_isNil(_get(attributeNames, orignalAttributeName))) {
         const mappedAttributeNameInDataSource = dataSourceElement.attributeName;
-        expect(mappedAttributeNameInDataSource).toBe(attributeNames[orignalAttributeName]);
+        expect(mappedAttributeNameInDataSource).toEqual(_get(attributeNames, orignalAttributeName));
       }
     });
   });

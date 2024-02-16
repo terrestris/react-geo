@@ -4,7 +4,7 @@ import {
 } from 'react-dom/test-utils';
 
 import TestUtil from '../../Util/TestUtil';
-import WfsSearchInput from './WfsSearchInput';
+import WfsSearchInput, {WfsSearchInputProps, WfsSearchState} from './WfsSearchInput';
 
 describe('<WfsSearchInput />', () => {
   it('is defined', () => {
@@ -19,8 +19,9 @@ describe('<WfsSearchInput />', () => {
   describe('#onUpdateInput', () => {
     it('resets state.data', () => {
       const wrapper = TestUtil.mountComponent(WfsSearchInput);
-      wrapper.instance().onUpdateInput();
-      expect(wrapper.state().data).toEqual([]);
+      const instance = wrapper.instance() as WfsSearchInput;
+      instance.onUpdateInput();
+      expect((wrapper.state() as WfsSearchState).data).toEqual([]);
     });
 
     it('sets the inputValue as state.searchTerm', () => {
@@ -31,9 +32,10 @@ describe('<WfsSearchInput />', () => {
         }
       };
       act(() => {
-        wrapper.instance().onUpdateInput(evt);
+        const instance = wrapper.instance() as WfsSearchInput;
+        instance.onUpdateInput(evt);
       });
-      expect(wrapper.state().searchTerm).toBe(evt.target.value);
+      expect((wrapper.state() as WfsSearchState).searchTerm).toBe(evt.target.value);
     });
 
     it('calls onBeforeSearch callback if passed in props', () => {
@@ -49,9 +51,10 @@ describe('<WfsSearchInput />', () => {
       };
 
       act(() => {
-        wrapper.instance().onUpdateInput(evt);
+        const instance = wrapper.instance() as WfsSearchInput;
+        instance.onUpdateInput(evt);
       });
-      expect(wrapper.props().onBeforeSearch).toHaveBeenCalled();
+      expect((wrapper.props() as WfsSearchInputProps).onBeforeSearch).toHaveBeenCalled();
     });
 
     it('sends a request if input is as long as props.minChars', () => {
@@ -70,14 +73,16 @@ describe('<WfsSearchInput />', () => {
           }
         }
       });
-      const doSearchSpy = jest.spyOn(wrapper.instance(), 'doSearch');
+
+      const instance = wrapper.instance() as WfsSearchInput;
+      const doSearchSpy = jest.spyOn(instance, 'doSearch');
       const evt = {
         target: {
           value: 'abc'
         }
       };
       act(() => {
-        wrapper.instance().onUpdateInput(evt);
+        instance.onUpdateInput(evt);
       });
       expect(doSearchSpy).toHaveBeenCalled();
       doSearchSpy.mockRestore();
@@ -95,12 +100,13 @@ describe('<WfsSearchInput />', () => {
           }
         }]
       };
-      wrapper.instance().onFetchSuccess(response);
+      const instance = wrapper.instance() as WfsSearchInput;
+      instance.onFetchSuccess(response);
       const promise = new Promise(resolve => {
         setTimeout(resolve, 350);
       });
       return promise.then(() => {
-        expect(wrapper.state().data).toEqual(response.features);
+        expect((wrapper.state() as WfsSearchState).data).toEqual(response.features);
       });
     });
   });
@@ -109,7 +115,8 @@ describe('<WfsSearchInput />', () => {
     it('sets the response as state.data', () => {
       const wrapper = TestUtil.mountComponent(WfsSearchInput);
       const loggerSpy = jest.spyOn(Logger, 'error');
-      wrapper.instance().onFetchError('Peter');
+      const instance = wrapper.instance() as WfsSearchInput;
+      instance.onFetchError('Peter');
       expect(loggerSpy).toHaveBeenCalled();
       expect(loggerSpy).toHaveBeenCalledWith('Error while requesting WFS GetFeature: Peter');
       loggerSpy.mockRestore();
@@ -119,9 +126,10 @@ describe('<WfsSearchInput />', () => {
   describe('#resetSearch', () => {
     it('resets input value', () => {
       const wrapper = TestUtil.mountComponent(WfsSearchInput);
-      wrapper.instance()._inputRef.input.value = 'some value';
-      wrapper.instance().resetSearch();
-      expect(wrapper.instance()._inputRef.input.value).toBe('');
+      const instance = wrapper.instance() as WfsSearchInput;
+      instance._inputRef.input.value = 'some value';
+      instance.resetSearch();
+      expect(instance._inputRef.input.value).toBe('');
     });
 
     it('resets state value for data', () => {
@@ -135,12 +143,13 @@ describe('<WfsSearchInput />', () => {
           }]
         });
       });
-      expect(wrapper.state().data.length).toBe(1);
+      expect((wrapper.state() as WfsSearchState).data.length).toBe(1);
       act(() => {
-        wrapper.instance().resetSearch();
+        const instance = wrapper.instance() as WfsSearchInput;
+        instance.resetSearch();
       });
-      expect(wrapper.state().data.length).toBe(0);
-      expect(wrapper.state().data).toEqual([]);
+      expect((wrapper.state() as WfsSearchState).data.length).toBe(0);
+      expect((wrapper.state() as WfsSearchState).data).toEqual([]);
 
     });
 
@@ -150,9 +159,10 @@ describe('<WfsSearchInput />', () => {
         onClearClick: jest.fn()
       });
       act(() => {
-        wrapper.instance().resetSearch();
+        const instance = wrapper.instance() as WfsSearchInput;
+        instance.resetSearch();
       });
-      expect(wrapper.props().onClearClick).toHaveBeenCalled();
+      expect((wrapper.props() as WfsSearchInputProps).onClearClick).toHaveBeenCalled();
     });
   });
 });

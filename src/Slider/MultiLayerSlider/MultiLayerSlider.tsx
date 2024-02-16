@@ -151,7 +151,7 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
    * @return The marks object
    */
   getMarks() {
-    const marks = {};
+    const marks: {[index: number]: any} = {};
     const {
       layers,
       nameProperty

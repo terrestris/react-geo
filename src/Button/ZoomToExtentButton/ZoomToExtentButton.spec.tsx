@@ -1,12 +1,13 @@
 import { containsExtent,getCenter } from 'ol/extent';
 import OlGeomPolygon from 'ol/geom/Polygon';
+import OlMap from 'ol/Map';
 
 import TestUtil from '../../Util/TestUtil';
 import ZoomToExtentButton from '../ZoomToExtentButton/ZoomToExtentButton';
 
 describe('<ZoomToExtentButton />', () => {
 
-  let map;
+  let map: OlMap;
   const mockGeometry = new OlGeomPolygon([
     [[5000, 0], [0, 5000], [5000, 10000], [10000, 5000], [5000, 0]]
   ]);
@@ -36,7 +37,8 @@ describe('<ZoomToExtentButton />', () => {
       map,
       extent: mockExtent
     });
-    wrapper.instance().onClick();
+    const component = wrapper.instance() as ZoomToExtentButton;
+    component.onClick();
 
     const promise = new Promise(resolve => {
       setTimeout(resolve, 1200);
@@ -57,7 +59,8 @@ describe('<ZoomToExtentButton />', () => {
       extent: mockGeometry
     });
 
-    wrapper.instance().onClick();
+    const component = wrapper.instance() as ZoomToExtentButton;
+    component.onClick();
 
     const promise = new Promise(resolve => {
       setTimeout(resolve, 1200);
@@ -79,7 +82,9 @@ describe('<ZoomToExtentButton />', () => {
       center: mockExtentCenter,
       zoom: mockZoom
     });
-    wrapper.instance().onClick();
+
+    const component = wrapper.instance() as ZoomToExtentButton;
+    component.onClick();
 
     const promise = new Promise(resolve => {
       setTimeout(resolve, 1200);

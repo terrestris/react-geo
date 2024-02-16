@@ -14,7 +14,7 @@ describe('<TimeSlider />', () => {
   });
 
   it('converts time millis properly', () => {
-    const slider = TestUtil.mountComponent(TimeSlider, {}).instance();
+    const slider = TestUtil.mountComponent(TimeSlider, {}).instance() as TimeSlider;
     const time = moment(1500000000000);
     const unix = slider.convert(time);
     expect(unix).toBe(1500000000);
@@ -35,7 +35,7 @@ describe('<TimeSlider />', () => {
       max: max.unix(),
       defaultValue: defaultValue.unix()
     };
-    const slider = TestUtil.mountComponent(TimeSlider, props).instance();
+    const slider = TestUtil.mountComponent(TimeSlider, props).instance() as TimeSlider;
     const got = slider.convertTimestamps();
     expect(got).toEqual(expected);
   });
@@ -47,7 +47,7 @@ describe('<TimeSlider />', () => {
     const expected1 = val1.unix();
     const expected2 = [expected1, val2.unix()];
 
-    const slider = TestUtil.mountComponent(TimeSlider, {}).instance();
+    const slider = TestUtil.mountComponent(TimeSlider, {}).instance() as TimeSlider;
     const got1 = slider.convert(val1);
     const got2 = slider.convert([val1, val2]);
 
@@ -60,20 +60,20 @@ describe('<TimeSlider />', () => {
       const format = 'YYYY-MM-DD hh:mm:ss';
       const val1 = moment('2000-01-01 12:00:00', format);
       const val2 = moment('2001-01-01 12:00:00', format);
-      const marks = {};
-      marks[val1] = val1;
-      marks[val2] = val2;
+      const marks: any = {};
+      marks['2000-01-01 12:00:00'] = val1;
+      marks['2001-01-01 12:00:00'] = val2;
 
       const expected1 = val1.unix();
       const expected2 = val2.unix();
 
-      const slider = TestUtil.mountComponent(TimeSlider, {}).instance();
+      const slider = TestUtil.mountComponent(TimeSlider, {}).instance() as TimeSlider;
       const gotMarks = slider.convertMarks(marks);
-      const gotKeys = Object.keys(gotMarks);
+      const gotKeys = Object.keys(gotMarks!);
 
       expect(gotKeys).toEqual(expect.arrayContaining([expected1.toString(), expected2.toString()]));
-      expect(gotMarks[expected1]).toEqual(val1);
-      expect(gotMarks[expected2]).toEqual(val2);
+      expect(gotMarks![expected1]).toEqual(val1);
+      expect(gotMarks![expected2]).toEqual(val2);
     });
   });
 
@@ -82,7 +82,7 @@ describe('<TimeSlider />', () => {
     const formatted = '2000-01-01 12:00:00';
     const val = moment(formatted, format).unix();
 
-    const slider = TestUtil.mountComponent(TimeSlider, {formatString: format}).instance();
+    const slider = TestUtil.mountComponent(TimeSlider, {formatString: format}).instance() as TimeSlider;
 
     const got = slider.formatTimestamp(val);
     expect(got).toEqual(formatted);
@@ -96,7 +96,7 @@ describe('<TimeSlider />', () => {
     const expected1 = moment(val1.unix() * 1000).toISOString();
     const expected2 = [expected1, moment(val2.unix() * 1000).toISOString()];
 
-    const slider = TestUtil.mountComponent(TimeSlider, {onChange}).instance();
+    const slider = TestUtil.mountComponent(TimeSlider, {onChange}).instance() as TimeSlider;
 
     slider.valueUpdated(val1.unix());
     expect(onChange.mock.calls.length).toBe(1);

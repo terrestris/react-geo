@@ -74,9 +74,8 @@ describe('<AddWmsLayerEntry />', () => {
 
   it('doesn\'t add copyright icon if prop wmsLayer has no attribution', () => {
     render(<AddWmsLayerEntry wmsLayer={testLayer} />);
-    let icon;
     expect(() => {
-      icon = screen.getByLabelText(labelIconAttribution);
+      screen.getByLabelText(labelIconAttribution);
     }).toThrowError();
   });
 

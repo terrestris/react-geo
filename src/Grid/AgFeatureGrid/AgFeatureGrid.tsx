@@ -245,13 +245,13 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * The source holding the features of the grid.
    * @private
    */
-  _source: OlSourceVector<OlGeometry> | null = null;
+  _source: OlSourceVector | null = null;
 
   /**
    * The layer representing the features of the grid.
    * @private
    */
-  _layer: OlLayerVector<OlSourceVector<OlGeometry>> | null = null;
+  _layer: OlLayerVector<OlSourceVector> | null = null;
 
   /**
    * The constructor.
@@ -605,7 +605,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
-        .reduce((obj, key) => {
+        .reduce((obj: {[k: string]: any}, key) => {
           obj[key] = properties[key];
           return obj;
         }, {});

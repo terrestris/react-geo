@@ -1,8 +1,10 @@
+import OlLayer from 'ol/layer/Layer';
+
 import TestUtil from '../../Util/TestUtil';
 import MultiLayerSlider from './MultiLayerSlider';
 
 describe('<MultiLayerSlider />', () => {
-  let layers;
+  let layers: OlLayer[];
 
   beforeEach(() => {
     layers = [

@@ -69,7 +69,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
    * The default props of LayerSetBaseMapChooser
    *
    * @static
-   * @memberof LayerSetBaseMapChooser
+   * @memberof TimeLayerSliderPanel
    */
   public static defaultProps = {
     className: '',
@@ -399,7 +399,7 @@ export class TimeLayerSliderPanel extends React.Component<TimeLayerSliderPanelPr
     const endDateString = endDate.toISOString();
     const valueString = value.toISOString();
     const mid = startDate!.clone().add(endDate!.diff(startDate) / 2);
-    const marks = {};
+    const marks: {[k: string]: any} = {};
     const futureClass = moment().isBefore(value) ? ' timeslider-in-future' : '';
     const extraCls = className ? className : '';
     const disabledCls = timeAwareLayers.length < 1 ? 'no-layers-available' : '';

@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import moment from 'moment';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import * as React from 'react';
 
@@ -10,20 +11,22 @@ import TimeLayerSliderPanel from '../TimeLayerSliderPanel/TimeLayerSliderPanel';
 
 describe('<TimeLayerSliderPanel />', () => {
 
-  let map;
+  let map: OlMap;
 
   const testLayerName = 'OSM-WMS';
   const testLayerTitle = 'OSM-WMS - by terrestris';
   const testLayer = new OlLayerTile({
     visible: false,
-    title: testLayerTitle,
     source: new OlSourceTileWMS({
       url: 'https://ows.terrestris.de/osm/service?',
       params: {
         LAYERS: testLayerName,
         TILED: true
       }
-    })
+    }),
+    properties: {
+      title: testLayerTitle
+    }
   });
 
   beforeEach(() => {

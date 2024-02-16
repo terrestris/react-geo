@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {buildQueries, queryAllByTitle} from '@testing-library/react';
 
 const allAntdDropdownOptionQuery = (container) => {

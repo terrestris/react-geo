@@ -1,5 +1,5 @@
 import TestUtil from '../../Util/TestUtil';
-import SimpleButton from './SimpleButton';
+import SimpleButton, {SimpleButtonProps} from './SimpleButton';
 
 describe('<SimpleButton />', () => {
   it('is defined', () => {
@@ -21,15 +21,16 @@ describe('<SimpleButton />', () => {
       disabled: true
     });
 
-    expect(wrapper.props().type).toBe('secondary');
-    expect(wrapper.props().shape).toBe('circle');
-    expect(wrapper.props().size).toBe('small');
-    expect(wrapper.props().disabled).toBe(true);
+    const props = wrapper.props() as SimpleButtonProps;
+    expect(props.type).toBe('secondary');
+    expect(props.shape).toBe('circle');
+    expect(props.size).toBe('small');
+    expect(props.disabled).toBe(true);
 
     expect(wrapper.find('button.ant-btn-secondary').length).toBe(1);
     expect(wrapper.find('button.ant-btn-circle').length).toBe(1);
     expect(wrapper.find('button.ant-btn-sm').length).toBe(1);
-    expect(wrapper.find('button', {disabled: true}).length).toBe(1);
+    expect(wrapper.find('button').length).toBe(1);
   });
 
   it('calls a given click callback method onClick', () => {
