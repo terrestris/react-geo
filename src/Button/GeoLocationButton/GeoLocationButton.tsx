@@ -3,8 +3,7 @@ import {
   useGeoLocation
 } from '@terrestris/react-util/dist/Hooks/useGeoLocation/useGeoLocation';
 import React, {
-  FC,
-  useState
+  FC
 } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
@@ -30,16 +29,12 @@ interface OwnProps {
    */
   follow?: boolean;
   /**
-   * The className which should be added.
-   */
-  className?: string;
-  /**
    * Enable tracking of GeoLocations
    */
   enableTracking?: boolean;
 }
 
-export type GeoLocationButtonProps = OwnProps & Omit<Partial<ToggleButtonProps>, 'onToggle' | 'className'>;
+export type GeoLocationButtonProps = OwnProps & Partial<ToggleButtonProps>;
 
 export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
   className,
@@ -49,14 +44,13 @@ export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
   onError = () => undefined,
   showMarker = true,
   trackingOptions,
+  pressed,
   ...passThroughProps
 }) => {
 
-  const [isActive, setActive] = useState<boolean>(false);
-
   useGeoLocation({
-    active: isActive,
-    enableTracking: isActive,
+    active: !!pressed,
+    enableTracking: pressed,
     follow,
     onError,
     onGeoLocationChange,
@@ -68,12 +62,9 @@ export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
     ? `${className} ${CSS_PREFIX}geolocationbutton`
     : `${CSS_PREFIX}geolocationbutton`;
 
-  const onToggle = (pressed: boolean) => setActive(pressed);
-
   return (
     <ToggleButton
-      pressed={isActive}
-      onToggle={onToggle}
+      pressed={pressed}
       className={finalClassName}
       {...passThroughProps}
     />

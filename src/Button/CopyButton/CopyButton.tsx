@@ -1,7 +1,7 @@
 import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
-import OlGeometry from 'ol/geom/Geometry';
+import OlFeature from 'ol/Feature';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 import OlVectorLayer from 'ol/layer/Vector';
 import OlVectorSource from 'ol/source/Vector';
@@ -19,7 +19,7 @@ interface OwnProps {
    * The vector layer which will be used for digitize features.
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
    */
-  digitizeLayer?: OlVectorLayer<OlVectorSource<OlGeometry>>;
+  digitizeLayer?: OlVectorLayer<OlVectorSource<OlFeature>>;
   /**
    * Listener function for the 'select' event of the ol.interaction.Select
    * if in `Copy` mode.
@@ -42,7 +42,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({
   ...passThroughProps
 }) => {
 
-  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]|null>(null);
+  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlFeature>>]|null>(null);
 
   const map = useMap();
 
@@ -89,13 +89,15 @@ const CopyButton: React.FC<CopyButtonProps> = ({
     return null;
   }
 
-  return <SelectFeaturesButton
-    layers={layers}
-    onFeatureSelect={onFeatureSelect}
-    className={finalClassName}
-    clearAfterSelect={true}
-    {...passThroughProps}
-  />;
+  return (
+    <SelectFeaturesButton
+      layers={layers}
+      onFeatureSelect={onFeatureSelect}
+      className={finalClassName}
+      clearAfterSelect={true}
+      {...passThroughProps}
+    />
+  );
 
 };
 
