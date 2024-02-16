@@ -26,12 +26,11 @@ const layers = [
       url: 'https://sgx.geodatenzentrum.de/wms_topplus_open',
       params: {
         LAYERS: 'web',
-        TILED: true
       }
     }),
     properties: {
       name: 'BKG',
-      isBackgroundLayer: true,
+      isBackgroundLayer: true
     }
   })
 ];
@@ -49,7 +48,7 @@ function ComponentToUseTheMap() {
   // This is example specific and usually not needed
   React.useEffect(() => {
     map.setTarget('usemap-map');
-  }, []);
+  }, [map]);
 
   return (
     <MapComponent

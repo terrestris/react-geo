@@ -29,7 +29,7 @@ const DropTargetMapExample = () => {
     layers: [layer]
   });
 
-  const WrappedMapComponent = () => {
+  const ExampleMapComponent = () => {
     const map = useMap();
     const {
       onDrop,
@@ -50,7 +50,7 @@ const DropTargetMapExample = () => {
 
   return (
     <MapContext.Provider value={olMap}>
-      <WrappedMapComponent />
+      <ExampleMapComponent />
     </MapContext.Provider>
   )
 }

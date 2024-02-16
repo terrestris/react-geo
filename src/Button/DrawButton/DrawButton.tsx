@@ -58,7 +58,7 @@ interface OwnProps {
    * The vector layer which will be used for digitize features.
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
    */
-  digitizeLayer?: OlVectorLayer<OlVectorSource<OlGeometry>>;
+  digitizeLayer?: OlVectorLayer<OlVectorSource<OlFeature>>;
   /**
    * Title for modal used for input of labels for digitize features.
    */
@@ -107,12 +107,12 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   onDrawStart,
   onModalLabelCancel,
   onModalLabelOk,
-  onToggle,
+  pressed,
   ...passThroughProps
 }) => {
 
   const [drawInteraction, setDrawInteraction] = useState<OlInteractionDraw>();
-  const [layer, setLayer] = useState<OlVectorLayer<OlVectorSource<OlGeometry>> | null>(null);
+  const [layer, setLayer] = useState<OlVectorLayer<OlVectorSource<OlFeature>> | null>(null);
 
   /**
    * Currently drawn feature which should be represent as label or postit.
@@ -201,18 +201,17 @@ const DrawButton: React.FC<DrawButtonProps> = ({
     };
   }, [drawInteraction, onDrawStart, onDrawEnd]);
 
+  useEffect(() => {
+    if (!drawInteraction) {
+      return;
+    }
+
+    drawInteraction.setActive(!!pressed);
+  }, [drawInteraction, pressed]);
+
   if (!drawInteraction || !layer) {
     return null;
   }
-
-  /**
-   * Called when the draw button is toggled. If the button state is pressed,
-   * the draw interaction will be activated.
-   */
-  const onToggleInternal = (pressed: boolean, lastClickEvent: any) => {
-    drawInteraction.setActive(pressed);
-    onToggle?.(pressed, lastClickEvent);
-  };
 
   const finalClassName = className
     ? `${defaultClassName} ${className}`
@@ -247,8 +246,8 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   return (
     <span className={btnWrapperClass}>
       <ToggleButton
-        onToggle={onToggleInternal}
         className={finalClassName}
+        pressed={pressed}
         {...passThroughProps}
       />
       {modal}

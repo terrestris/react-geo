@@ -9,18 +9,18 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlSourceImageWMS from 'ol/source/ImageWMS';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../constants';
 
 /**
-   * Get the corresponding legendGraphic of a layer. If layer is configured with
-   * "legendUrl" this will be used. Otherwise a getLegendGraphic requestString
-   * will be created by the MapUtil.
-   *
-   * @param legendLayer The layer to get the legend graphic request for.
-   * @param params The extra params.
-   */
+ * Get the corresponding legendGraphic of a layer. If layer is configured with
+ * "legendUrl" this will be used. Otherwise a getLegendGraphic requestString
+ * will be created by the MapUtil.
+ *
+ * @param legendLayer The layer to get the legend graphic request for.
+ * @param params The extra params.
+ */
 const getLegendUrl = (
   legendLayer: OlLayerTile<OlSourceTileWMS> | OlLayerImage<OlSourceImageWMS>,
   params: any
@@ -89,16 +89,17 @@ export const Legend: React.FC<LegendProps> = ({
   const [legendError, setLegendError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setLegendSrc();
-  }, []);
+  const handleError = useCallback((e: any) => {
+    Logger.warn(`Image error for legend of "${layer.get('name')}".`);
 
-  useEffect(() => {
-    setLegendUrl(getLegendUrl(layer, extraParams));
-    setLegendSrc();
-  }, []);
+    setLegendError(true);
 
-  const setLegendSrc = async () => {
+    if (onError) {
+      onError(e);
+    }
+  }, [layer, onError]);
+
+  const setLegendSrc = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -110,11 +111,12 @@ export const Legend: React.FC<LegendProps> = ({
         throw new Error('No successful response returned while getting the legend graphic');
       }
 
-      if (imgSrc) {
-        URL.revokeObjectURL(imgSrc);
-      }
+      const responseBlob = await response.blob();
 
-      setImgSrc(URL.createObjectURL(await response.blob()));
+      setImgSrc(previousImgSrc => {
+        URL.revokeObjectURL(previousImgSrc);
+        return URL.createObjectURL(responseBlob);
+      });
     } catch (error) {
       Logger.error('Error while setting the img src: ', error);
 
@@ -122,18 +124,15 @@ export const Legend: React.FC<LegendProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [handleError, headers, legendUrl]);
 
-  /**
-   * onError handler for the rendered img.
-   */
-  const handleError = (e: any) => {
-    Logger.warn(`Image error for legend of "${layer.get('name')}".`);
-    setLegendError(true);
-    if (onError) {
-      onError(e);
-    }
-  };
+  useEffect(() => {
+    setLegendSrc();
+  }, [setLegendSrc]);
+
+  useEffect(() => {
+    setLegendUrl(getLegendUrl(layer, extraParams));
+  }, [layer, extraParams, setLegendSrc]);
 
   const alt = layer.get('name')
     ? layer.get('name') + ' legend'
