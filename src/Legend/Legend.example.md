@@ -2,99 +2,114 @@ This example demonstrates the Legend.
 
 ```jsx
 import Legend from '@terrestris/react-geo/dist/Legend/Legend';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
-import { fromLonLat } from 'ol/proj';
+import {
+  fromLonLat
+} from 'ol/proj';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
-import * as React from 'react';
+import React from 'react';
 
-class LegendExample extends React.Component {
+const LegendExample = () => {
+  const backgroundLayer = new OlLayerTile({
+    properties: {
+      name: 'OSM-WMS'
+    },
+    source: new OlSourceTileWMS({
+      url: 'https://ows.terrestris.de/osm-gray/service',
+      params: {
+        LAYERS: 'OSM-WMS',
+        TILED: true
+      }
+    })
+  });
 
-  constructor(props) {
+  const statesLayer = new OlLayerTile({
+    properties: {
+      name: 'States (USA)'
+    },
+    source: new OlSourceTileWMS({
+      url: 'https://ahocevar.com/geoserver/wms',
+      params: {
+        LAYERS: 'usa:states',
+        TILED: true
+      }
+    })
+  });
 
-    super(props);
+  const placesLayer = new OlLayerTile({
+    properties: {
+      name: 'Places'
+    },
+    legendUrl: 'https://terrestris.github.io/react-geo/assets/legend1.png',
+    source: new OlSourceTileWMS({
+      url: 'https://ahocevar.com/geoserver/wms',
+      params: {
+        LAYERS: 'ne:ne_10m_populated_places',
+        TILED: true,
+        TRANSPARENT: 'true'
+      }
+    })
+  });
 
-    this.mapDivId = `map-${Math.random()}`;
+  const extraParams = {
+    HEIGHT: 10,
+    WIDTH: 10
+  };
 
-    this.background = new OlLayerTile({
-      name: 'OSM-WMS',
-      source: new OlSourceTileWMS({
-        url: 'https://ows.terrestris.de/osm-gray/service',
-        params: {LAYERS: 'OSM-WMS', TILED: true},
-        serverType: 'geoserver'
-      })
-    });
+  const map = new OlMap({
+    layers: [
+      backgroundLayer,
+      statesLayer,
+      placesLayer
+    ],
+    view: new OlView({
+      center: fromLonLat([-98.583333, 39.833333]),
+      zoom: 4
+    })
+  });
 
-    this.usa = new OlLayerTile({
-      name: 'States (USA)',
-      source: new OlSourceTileWMS({
-        url: 'https://ahocevar.com/geoserver/wms',
-        params: {LAYERS: 'usa:states', TILED: true},
-        serverType: 'geoserver'
-      })
-    });
+  return (
+    <>
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
 
-    this.places =  new OlLayerTile({
-      name: 'Places',
-      legendUrl: 'https://terrestris.github.io/react-geo/assets/legend1.png',
-      source: new OlSourceTileWMS({
-        url: 'https://ahocevar.com/geoserver/wms',
-        params: {LAYERS: 'ne:ne_10m_populated_places', TILED: true, TRANSPARENT: 'true'},
-        serverType: 'geoserver'
-      })
-    });
-
-    this.extraParams = {
-      HEIGHT: 10,
-      WIDTH: 10
-    };
-
-    this.map = new OlMap({
-      layers: [
-        this.background,
-        this.usa,
-        this.places
-      ],
-      view: new OlView({
-        center: fromLonLat([-98.583333, 39.833333]),
-        zoom: 4
-      })
-    });
-  }
-
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  render() {
-    return (
-      <div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '200px'
-          }}
+      <div
+        className="example-block"
+      >
+        <span>{`Layer ${backgroundLayer.get('name')}:`}</span>
+        <Legend
+          layer={backgroundLayer}
         />
-
-        <div className="example-block">
-          <span>{`Layer ${this.background.get('name')}:`}</span>
-          <Legend layer={this.background} />
-        </div>
-
-        <div className="example-block">
-          <span>{`Layer ${this.usa.get('name')} with "extraParams":`}</span>
-          <Legend layer={this.usa} extraParams={this.extraParams} />
-        </div>
-
-        <div className="example-block">
-          <span>{`Layer ${this.places.get('name')} with custom "legendUrl":`}</span>
-          <Legend layer={this.places} />
-        </div>
       </div>
-    );
-  }
-}
+
+      <div
+        className="example-block"
+      >
+        <span>{`Layer ${statesLayer.get('name')} with "extraParams":`}</span>
+        <Legend
+          layer={statesLayer}
+          extraParams={this.extraParams}
+        />
+      </div>
+
+      <div
+        className="example-block"
+      >
+        <span>{`Layer ${placesLayer.get('name')} with custom "legendUrl":`}</span>
+        <Legend
+          layer={placesLayer}
+        />
+      </div>
+    </>
+  );
+};
 
 <LegendExample />
 ```
