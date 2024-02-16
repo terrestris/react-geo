@@ -115,7 +115,7 @@ const DrawButton: React.FC<DrawButtonProps> = ({
   const [layer, setLayer] = useState<OlVectorLayer<OlVectorSource<OlFeature>> | null>(null);
 
   /**
-   * Currently drawn feature which should be represent as label or postit.
+   * Currently drawn feature which should be represented as label or post-it.
    */
   const [digitizeTextFeature, setDigitizeTextFeature] = useState<OlFeature<OlGeometry> | null>(null);
 

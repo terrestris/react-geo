@@ -1,42 +1,30 @@
 import './MeasureButton.less';
 
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
-import {
-  useMap,
-  useOlInteraction,
-  useOlLayer
-} from '@terrestris/react-util';
-import _isNil from 'lodash/isNil';
+import {useMap, useOlInteraction, useOlLayer} from '@terrestris/react-util';
 import OlCollection from 'ol/Collection';
-import {
-  Coordinate as OlCoordinate
-} from 'ol/coordinate';
+import {Coordinate as OlCoordinate} from 'ol/coordinate';
 import OlFeature from 'ol/Feature';
 import OlGeomCircle from 'ol/geom/Circle';
-import OlGeometry, { Type } from 'ol/geom/Geometry';
+import OlGeometry, {Type} from 'ol/geom/Geometry';
 import OlGeomLineString from 'ol/geom/LineString';
 import OlMultiLineString from 'ol/geom/MultiLineString';
 import OlMultiPolygon from 'ol/geom/MultiPolygon';
 import OlGeomPolygon from 'ol/geom/Polygon';
-import OlInteractionDraw, { DrawEvent } from 'ol/interaction/Draw';
+import OlInteractionDraw, {DrawEvent} from 'ol/interaction/Draw';
 import OlLayerVector from 'ol/layer/Vector';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
-import { unByKey } from 'ol/Observable';
+import {unByKey} from 'ol/Observable';
 import OlOverlay from 'ol/Overlay';
 import OlSourceVector from 'ol/source/Vector';
 import OlStyleCircle from 'ol/style/Circle';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
 import OlStyleStyle from 'ol/style/Style';
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useState
-} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 
-import { CSS_PREFIX } from '../../constants';
-import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
+import {CSS_PREFIX} from '../../constants';
+import ToggleButton, {ToggleButtonProps} from '../ToggleButton/ToggleButton';
 
 interface OwnProps {
   /**
@@ -118,7 +106,7 @@ interface OwnProps {
   /**
    * Whether the measure is using geodesic or cartesian mode. Geodesic is used by default.
    */
-  geodesic: boolean;
+  geodesic?: boolean;
   /**
    * If set true, instead of the area, the radius  will be measured.
    */

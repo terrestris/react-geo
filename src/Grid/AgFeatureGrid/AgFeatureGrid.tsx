@@ -605,7 +605,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
-        .reduce((obj, key) => {
+        .reduce((obj: {[k: string]: any}, key) => {
           obj[key] = properties[key];
           return obj;
         }, {});

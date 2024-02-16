@@ -1,6 +1,7 @@
 import { actSetTimeout } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import _isNil from 'lodash/isNil';
 import OlMap from 'ol/Map';
 import * as React from 'react';
 
@@ -9,7 +10,7 @@ import ZoomButton from './ZoomButton';
 
 describe('<ZoomButton />', () => {
 
-  let map;
+  let map: OlMap;
 
   beforeEach(() => {
     map = TestUtil.createMap();
@@ -30,12 +31,14 @@ describe('<ZoomButton />', () => {
     );
 
     const initialZoom = map.getView().getZoom();
-    const button = screen.getByText('Zoom test');
-    await userEvent.click(button);
+    if (!_isNil(initialZoom)) {
+      const button = screen.getByText('Zoom test');
+      await userEvent.click(button);
 
-    await actSetTimeout(300);
-    const newZoom = map.getView().getZoom();
-    expect(newZoom).toBe(initialZoom + 1);
+      await actSetTimeout(300);
+      const newZoom = map.getView().getZoom();
+      expect(newZoom).toBe(initialZoom + 1);
+    }
   });
 
   it('can be configured to zoom out', async () => {
@@ -44,12 +47,14 @@ describe('<ZoomButton />', () => {
     );
 
     const initialZoom = map.getView().getZoom();
-    const button = screen.getByText('Zoom test');
-    await userEvent.click(button);
+    if (!_isNil(initialZoom)) {
+      const button = screen.getByText('Zoom test');
+      await userEvent.click(button);
 
-    await actSetTimeout(300);
-    const newZoom = map.getView().getZoom();
-    expect(newZoom).toBe(initialZoom - 1);
+      await actSetTimeout(300);
+      const newZoom = map.getView().getZoom();
+      expect(newZoom).toBe(initialZoom - 1);
+    }
   });
 
   it('does not belch when map has no view', () => {
@@ -76,7 +81,7 @@ describe('<ZoomButton />', () => {
     await userEvent.click(button);
     await userEvent.click(button);
 
-    expect(view.cancelAnimations.mock.calls.length).toBe(2);
+    expect((view.cancelAnimations as jest.Mock).mock.calls.length).toBe(2);
   });
 
 });

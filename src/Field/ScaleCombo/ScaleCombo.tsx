@@ -261,7 +261,10 @@ class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
    *
    * @return Option element for provided zoom level
    */
-  determineOptionKeyForZoomLevel = (zoom: number): string | undefined => {
+  determineOptionKeyForZoomLevel = (zoom?: number): string | undefined => {
+    if (_isNil(zoom)) {
+      return undefined;
+    }
     if (!_isInteger(zoom) || (this.state.scales.length - 1 - zoom) < 0) {
       return undefined;
     }

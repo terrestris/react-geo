@@ -15,7 +15,7 @@ describe('<CircleMenuItem />', () => {
     const wrapper = TestUtil.mountComponent(CircleMenuItem, {
       children: 'A'
     });
-    const instance = wrapper.instance();
+    const instance = wrapper.instance() as CircleMenuItem;
     const transformationSpy = jest.spyOn(instance, 'applyTransformation');
 
     wrapper.setProps({
@@ -44,7 +44,7 @@ describe('<CircleMenuItem />', () => {
         animationDuration: duration,
         rotationAngle: rotationAngle
       });
-      const instance = wrapper.instance();
+      const instance = wrapper.instance() as CircleMenuItem;
 
       expect.assertions(2);
 

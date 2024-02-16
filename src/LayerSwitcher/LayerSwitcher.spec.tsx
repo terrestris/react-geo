@@ -1,6 +1,8 @@
 import { render, screen,within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import OlLayer from 'ol/layer/Layer';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';
 import React from 'react';
 
@@ -8,8 +10,8 @@ import TestUtil from '../Util/TestUtil';
 import LayerSwitcher from './LayerSwitcher';
 
 describe('<LayerSwitcher />', () => {
-  let map;
-  let layers;
+  let map: OlMap;
+  let layers: OlLayer[];
 
   beforeEach(() => {
     layers = [
@@ -26,9 +28,8 @@ describe('<LayerSwitcher />', () => {
   });
 
   afterEach(() => {
-    map.dispose();
-    layers = null;
-    map = null;
+    map?.dispose();
+    layers = [];
   });
 
   it('is defined', () => {
@@ -78,13 +79,13 @@ describe('<LayerSwitcher />', () => {
     const { container } = render(<LayerSwitcher layers={layers} map={map} />);
     const switcher = within(container).getByRole('button');
 
-    const layer0visibile = layers[0].getVisible();
-    const layer1visibile = layers[1].getVisible();
+    const layer0visible = layers[0].getVisible();
+    const layer1visible = layers[1].getVisible();
 
     await userEvent.click(switcher);
 
-    expect(layers[0].getVisible()).toBe(!layer0visibile);
-    expect(layers[1].getVisible()).toBe(!layer1visibile);
+    expect(layers[0].getVisible()).toBe(!layer0visible);
+    expect(layers[1].getVisible()).toBe(!layer1visible);
   });
 
   it('assumes the first provided layer as visible if the initial visibility of all layers is false', () => {

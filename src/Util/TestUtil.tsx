@@ -8,7 +8,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlView from 'ol/View';
 import * as React from 'react';
 
-type Wrapper =  ShallowWrapper | ReactWrapper;
+export type Wrapper =  ShallowWrapper | ReactWrapper;
 
 /**
  * A set of some useful static helper methods.
@@ -140,7 +140,7 @@ export class TestUtil {
       clientY: position.top + y + TestUtil.mapDivHeight / 2,
       shiftKey
     });
-    const olEvt = OlMapBrowserEvent(type, map, event, dragging);
+    const olEvt = new OlMapBrowserEvent(type, map, event, dragging);
     map.handleMapBrowserEvent(olEvt);
   };
 
@@ -162,7 +162,7 @@ export class TestUtil {
   /**
    * Returns a point feature with a random position.
    */
-  static generatePointFeature = (props = {
+  static generatePointFeature = (props: {[k: string]: any} = {
     ATTR_1: Math.random() * 100,
     ATTR_2: 'Borsigplatz 9',
     ATTR_3: 'Dortmund'

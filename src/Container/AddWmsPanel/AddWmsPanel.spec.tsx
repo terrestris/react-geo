@@ -1,8 +1,9 @@
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
-import { render, screen, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import * as React from 'react';
 
@@ -11,7 +12,7 @@ import AddWmsPanel from './AddWmsPanel';
 
 describe('<AddWmsPanel />', () => {
 
-  let map;
+  let map: OlMap;
 
   const testLayerName = 'OSM-WMS';
   const testLayerTitle = 'OSM-WMS - by terrestris';

@@ -14,7 +14,7 @@ import DrawButton from './DrawButton';
 
 describe('<DrawButton />', () => {
 
-  let map;
+  let map: OlMap;
 
   beforeEach(() => {
     map = new OlMap({
@@ -215,15 +215,6 @@ describe('<DrawButton />', () => {
     xit('calls draw start and draw end listeners', async () => {
       const startSpy = jest.fn();
       const endSpy = jest.fn();
-
-      const { rerenderInMapContext } = renderInMapContext(map, (
-        <DrawButton
-          pressed={true}
-          drawType={'Polygon'}
-          onDrawStart={startSpy}
-          onDrawEnd={endSpy}
-        />
-      ));
 
       expect(startSpy).not.toBeCalled();
       expect(endSpy).not.toBeCalled();
