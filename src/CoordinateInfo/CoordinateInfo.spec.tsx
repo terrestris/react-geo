@@ -17,7 +17,7 @@ describe('<CoordinateInfo />', () => {
   });
 
   it('can be rendered', () => {
-    const { container } = render(<CoordinateInfo map={map} />);
+    const { container } = render(<CoordinateInfo />);
     expect(container).toBeVisible();
   });
 });
