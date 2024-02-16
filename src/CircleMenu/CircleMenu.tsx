@@ -1,7 +1,11 @@
 import './CircleMenu.less';
 
 import _isNil from 'lodash/isNil';
-import * as React from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useRef
+} from 'react';
 
 import { CSS_PREFIX } from '../constants';
 import CircleMenuItem from './CircleMenuItem/CircleMenuItem';
@@ -10,15 +14,15 @@ interface OwnProps {
   /**
    * The duration of the animation in milliseconds. Pass 0 to avoid animation.
    */
-  animationDuration: number;
+  animationDuration?: number;
   /**
    * The diameter of the CircleMenu in pixels.
    */
-  diameter: number;
+  diameter?: number;
   /**
    * Optional Segement of angles where to show the children.
    */
-  segmentAngles: [number, number];
+  segmentAngles?: [number, number];
   className?: string;
   style?: any;
   /**
@@ -29,123 +33,82 @@ interface OwnProps {
 
 export type CircleMenuProps = OwnProps & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-/**
- * The CircleMenu.
- *
- * @class CircleMenu
- * @extends React.Component
- */
-export class CircleMenu extends React.Component<CircleMenuProps> {
+const defaultClassName = `${CSS_PREFIX}circlemenu`;
 
-  static defaultProps = {
-    animationDuration: 300,
-    diameter: 100,
-    segmentAngles: [0, 360]
-  };
+export const CircleMenu: React.FC<CircleMenuProps> = ({
+  animationDuration = 300,
+  diameter = 100,
+  segmentAngles = [0, 360],
+  className,
+  style,
+  position,
+  children,
+  ...passThroughProps
+}) => {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}circlemenu`;
+  const ref = useRef<HTMLDivElement>(null);
 
-  /**
-   * Internal reference used to apply the transformation right on the div.
-   * @private
-   */
-  _ref: HTMLDivElement | null = null;
-
-  /**
-   * A react lifecycle method called when the component did mount.
-   * It calls the applyTransformation method right after mounting.
-   */
-  componentDidMount() {
-    setTimeout(this.applyTransformation.bind(this), 1);
-  }
-
-  /**
-   * A react lifecycle method called when the component did update.
-   * It calls the applyTransformation method right after updating.
-   */
-  componentDidUpdate() {
-    setTimeout(this.applyTransformation.bind(this), 1);
-  }
-
-  /**
-   * Applies the transformation to the component.
-   */
-  applyTransformation() {
-    if (this._ref) {
-      this._ref.style.width = `${this.props.diameter}px`;
-      this._ref.style.height = `${this.props.diameter}px`;
-      this._ref.style.opacity = '1';
+  const applyTransformation = useCallback(() => {
+    if (ref.current) {
+      ref.current.style.width = `${diameter}px`;
+      ref.current.style.height = `${diameter}px`;
+      ref.current.style.opacity = '1';
     }
-  }
+  }, [diameter]);
 
-  childrenMapper = (child: React.ReactNode, idx?: number, children?: React.ReactNode[]): React.ReactNode => {
-    const {
-      diameter,
-      segmentAngles,
-    } = this.props;
-    if (!children || _isNil(idx)) {
+  useEffect(() => {
+    setTimeout(applyTransformation, 1);
+  }, [applyTransformation]);
+
+  const childrenMapper = (child: React.ReactNode, idx?: number, childs?: React.ReactNode[]): React.ReactNode => {
+    if (!childs || _isNil(idx)) {
       return;
     }
+
     const start = segmentAngles[0];
     const end = segmentAngles[1];
     const range = end - start;
-    const amount = range > 270 ? children.length : children.length - 1;
+    const amount = range > 270 ? childs.length : childs.length - 1;
     const rotationAngle = start + (range / amount) * idx;
+
     return (
       <CircleMenuItem
         radius={diameter / 2}
-        rotationAngle={rotationAngle}
-        animationDuration={this.props.animationDuration}
         key={idx}
+        rotationAngle={rotationAngle}
+        animationDuration={animationDuration}
       >
         {child}
       </CircleMenuItem>
     );
   };
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      animationDuration,
-      className,
-      diameter,
-      children,
-      position,
-      segmentAngles,
-      style,
-      ...passThroughProps
-    } = this.props;
+  const finalClassName = className
+    ? `${defaultClassName} ${className}`
+    : defaultClassName;
 
-    const finalClassName = className
-      ? `${className} ${this._className}`
-      : this._className;
+  const left = position[0] - (diameter / 2);
+  const top = position[1] - (diameter / 2);
 
-    return (
-      <div
-        ref={i => this._ref = i}
-        className={finalClassName}
-        style={{
-          transition: `all ${animationDuration}ms`,
-          left: position[0] - (diameter / 2),
-          top: position[1] - (diameter / 2),
-          ...style
-        }}
-        {...passThroughProps}
-      >
-        {
-          Array.isArray(children)
-            ? children.map(this.childrenMapper)
-            : this.childrenMapper(children)
-        }
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      ref={ref}
+      className={finalClassName}
+      style={{
+        transition: `all ${animationDuration}ms`,
+        left: left,
+        top: top,
+        ...style
+      }}
+      {...passThroughProps}
+    >
+      {
+        Array.isArray(children)
+          ? children.map(childrenMapper)
+          : childrenMapper(children)
+      }
+    </div>
+  );
+};
 
 export default CircleMenu;

@@ -1,5 +1,5 @@
-import { actSetTimeout } from '@terrestris/react-util/dist/Util/rtlTestUtils';
-import { render, screen } from '@testing-library/react';
+import { actSetTimeout, renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import _isNil from 'lodash/isNil';
 import OlMap from 'ol/Map';
@@ -21,13 +21,13 @@ describe('<ZoomButton />', () => {
   });
 
   it('can be rendered', () => {
-    const { container } = render(<ZoomButton map={map} />);
+    const { container } = renderInMapContext(map, <ZoomButton />);
     expect(container).toBeVisible();
   });
 
   it('zooms in when clicked', async () => {
-    render(
-      <ZoomButton map={map}>Zoom test</ZoomButton>
+    renderInMapContext(map,
+      <ZoomButton>Zoom test</ZoomButton>
     );
 
     const initialZoom = map.getView().getZoom();
@@ -42,8 +42,8 @@ describe('<ZoomButton />', () => {
   });
 
   it('can be configured to zoom out', async () => {
-    render(
-      <ZoomButton map={map} delta={-1}>Zoom test</ZoomButton>
+    renderInMapContext(map,
+      <ZoomButton delta={-1}>Zoom test</ZoomButton>
     );
 
     const initialZoom = map.getView().getZoom();
@@ -58,8 +58,8 @@ describe('<ZoomButton />', () => {
   });
 
   it('does not belch when map has no view', () => {
-    render(
-      <ZoomButton map={new OlMap(undefined)}>Zoom test</ZoomButton>
+    renderInMapContext(new OlMap(undefined),
+      <ZoomButton>Zoom test</ZoomButton>
     );
     const button = screen.getByText('Zoom test');
 
@@ -69,8 +69,8 @@ describe('<ZoomButton />', () => {
   });
 
   it('cancels already running animations', async () => {
-    render(
-      <ZoomButton map={map} animateOptions={{ duration: 250 }}>Zoom test</ZoomButton>
+    renderInMapContext(map,
+      <ZoomButton animateOptions={{ duration: 250 }}>Zoom test</ZoomButton>
     );
 
     const button = screen.getByText('Zoom test');

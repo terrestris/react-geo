@@ -6,7 +6,7 @@ import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 
 const feature = new OlFeature({
-  geometry: new OlGeomPoint([19.09, 1.09]),
+  geometry: new OlGeomPoint([19.09, 1.09])
 });
 
 const attributeObject = {

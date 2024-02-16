@@ -1,10 +1,10 @@
 import logger from '@terrestris/base-util/dist/Logger';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import _isFinite from 'lodash/isFinite';
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import { easeOut } from 'ol/easing';
 import { Extent as OlExtent } from 'ol/extent';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
-import OlMap from 'ol/Map';
 import { FitOptions as OlViewFitOptions } from 'ol/View';
 import * as React from 'react';
 
@@ -16,85 +16,59 @@ interface OwnProps {
    * Options for fitting to the given extent. See
    * https://openlayers.org/en/latest/apidoc/module-ol_View-View.html#fit
    */
-  fitOptions: OlViewFitOptions;
+  fitOptions?: OlViewFitOptions;
   /**
    * If true, the view will always animate to the closest zoom level after an interaction.
    * False means intermediary zoom levels are allowed.
    * Default is false.
    */
-  constrainViewResolution: boolean;
+  constrainViewResolution?: boolean;
   /**
    * The extent `[minx, miny, maxx, maxy]` in the maps coordinate system or an
    * instance of ol.geom.SimpleGeometry that the map should zoom to.
    */
-  extent: OlExtent | OlSimpleGeometry;
+  extent?: OlExtent | OlSimpleGeometry;
   /**
    * The center `[x,y]` in the maps coordinate system or an
    * instance of ol.coordinate that the map should zoom to if no extent is given.
    */
-  center: OlCoordinate;
+  center?: OlCoordinate;
   /**
-   *  The zoom level 'x' the map should zoom to if no extent is given.
+   * The zoom level 'x' the map should zoom to if no extent is given.
    */
-  zoom: number;
+  zoom?: number;
   /**
    * The className which should be added.
    */
   className?: string;
-  /**
-   * Instance of OL map this component is bound to.
-   */
-  map: OlMap;
 }
 
 export type ZoomToExtentButtonProps = OwnProps & SimpleButtonProps;
 
-/**
- * Class representing a zoom to extent button.
- *
- *
- * @class The ZoomToExtentButton
- * @extends React.Component
- */
-class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
+// The class name for the component.
+const defaultClassName = `${CSS_PREFIX}zoomtoextentbutton`;
 
-  /**
-   * The default properties.
-   */
-  static defaultProps = {
-    fitOptions: {
-      duration: 250,
-      easing: easeOut
-    },
-    constrainViewResolution: false,
-    extent: undefined,
-    center: undefined,
-    zoom: undefined
-  };
+const ZoomToExtentButton: React.FC<ZoomToExtentButtonProps> = ({
+  fitOptions = {
+    duration: 250,
+    easing: easeOut
+  },
+  constrainViewResolution = false,
+  extent,
+  center,
+  zoom,
+  className,
+  ...passThroughProps
+}) => {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}zoomtoextentbutton`;
+  const map = useMap();
 
-  /**
-   * Called when the button is clicked.
-   *
-   * @method
-   */
-  onClick() {
-    const {
-      map,
-      extent,
-      constrainViewResolution,
-      fitOptions,
-      center,
-      zoom
-    } = this.props;
+  const onClick = () => {
+    if (!map) {
+      return;
+    }
+
     const view = map.getView();
-
-    const {fitOptions: defaultFitOptions} = ZoomToExtentButton.defaultProps;
 
     if (!view) { // no view, no zooming
       return;
@@ -109,46 +83,29 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
 
     view.setConstrainResolution(constrainViewResolution);
 
-    const finalFitOptions = {
-      ...defaultFitOptions,
-      ...fitOptions
-    };
-
     if (extent && (center && _isFinite(zoom))) {
       logger.warn('zoomToExtentButton: Both extent and center / zoom are provided. ' +
       'Extent will be used in favor of center / zoom');
     }
     if (extent) {
-      view.fit(extent, finalFitOptions);
-    }
-    else if (center && _isFinite(zoom)) {
+      view.fit(extent, fitOptions);
+    } else if (center && _isFinite(zoom)) {
       view.setCenter(center);
-      view.setZoom(zoom);
+      view.setZoom(zoom!);
     }
-  }
+  };
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      fitOptions,
-      constrainViewResolution,
-      ...passThroughProps
-    } = this.props;
-    const finalClassName = className ?
-      `${className} ${this._className}` :
-      this._className;
+  const finalClassName = className
+    ? `${defaultClassName} ${className}`
+    : defaultClassName;
 
-    return (
-      <SimpleButton
-        className = {finalClassName}
-        onClick = {this.onClick.bind(this)}
-        { ...passThroughProps}
-      />
-    );
-  }
-}
+  return (
+    <SimpleButton
+      className = {finalClassName}
+      onClick = {onClick}
+      { ...passThroughProps}
+    />
+  );
+};
 
 export default ZoomToExtentButton;

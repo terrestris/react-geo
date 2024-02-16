@@ -7,106 +7,120 @@ layers showing the same area but different content or time.
 
 ```jsx
 import MultiLayerSlider from '@terrestris/react-geo/dist/Slider/MultiLayerSlider/MultiLayerSlider';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
-import * as React from 'react';
+import React from 'react';
 
-class MultiLayerSliderExample extends React.Component {
+const MultiLayerSliderExample = () => {
 
-  constructor(props) {
+  const layer1 = new OlLayerTile({
+    properties: {
+      name: 'Land/Water'
+    },
+    source: new OlSourceTileWMS({
+      url: 'https://geoserver.mundialis.de/geoserver/wms',
+      params: {
+        LAYERS: '1_8A1104',
+        TILED: true
+      }
+    })
+  });
+  const layer2 = new OlLayerTile({
+    properties: {
+      name: 'True Color Composite'
+    },
+    source: new OlSourceTileWMS({
+      url: 'https://geoserver.mundialis.de/geoserver/wms',
+      params: {
+        LAYERS: '1_040302',
+        TILED: true
+      }
+    })
+  });
+  const layer3 = new OlLayerTile({
+    properties: {
+      name: 'Color Infrared (vegetation)'
+    },
+    source: new OlSourceTileWMS({
+      url: 'https://geoserver.mundialis.de/geoserver/wms',
+      params: {
+        LAYERS: '1_080403',
+        TILED: true
+      }
+    })
+  });
+  const layer4 = new OlLayerTile({
+    properties: {
+      name: 'Atmospheric Penetration'
+    },
+    source: new OlSourceTileWMS({
+      url: 'https://geoserver.mundialis.de/geoserver/wms',
+      params: {
+        LAYERS: '1_12118A',
+        TILED: true
+      }
+    })
+  });
+  const layer5 = new OlLayerTile({
+    properties: {
+      name: 'Vegetation'
+    },
+    source: new OlSourceTileWMS({
+      url: 'https://geoserver.mundialis.de/geoserver/wms',
+      params: {
+        LAYERS: '1_118A04',
+        TILED: true
+      }
+    })
+  });
 
-    super(props);
+  const map = new OlMap({
+    layers: [
+      layer1,
+      layer2,
+      layer3,
+      layer4,
+      layer5
+    ],
+    view: new OlView({
+      center: fromLonLat([
+        36.8331537,
+        -4.0962687
+      ]),
+      zoom: 13
+    })
+  });
 
-    this.mapDivId = `map-${Math.random()}`;
+  map.on('change:zoom')
 
-    this.layer1 = new OlLayerTile({
-      name: 'Land/Water',
-      source: new OlSourceTileWMS({
-        url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {LAYERS: '1_8A1104', TILED: true},
-        serverType: 'geoserver'
-      })
-    });
-    this.layer2 = new OlLayerTile({
-      name: 'True Color Composite',
-      source: new OlSourceTileWMS({
-        url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {LAYERS: '1_040302', TILED: true},
-        serverType: 'geoserver'
-      })
-    });
-    this.layer3 = new OlLayerTile({
-      name: 'Color Infrared (vegetation)',
-      source: new OlSourceTileWMS({
-        url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {LAYERS: '1_080403', TILED: true},
-        serverType: 'geoserver'
-      })
-    });
-    this.layer4 = new OlLayerTile({
-      name: 'Atmospheric Penetration',
-      source: new OlSourceTileWMS({
-        url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {LAYERS: '1_12118A', TILED: true},
-        serverType: 'geoserver'
-      })
-    });
-    this.layer5 = new OlLayerTile({
-      name: 'Vegetation',
-      source: new OlSourceTileWMS({
-        url: 'https://geoserver.mundialis.de/geoserver/wms',
-        params: {LAYERS: '1_118A04', TILED: true},
-        serverType: 'geoserver'
-      })
-    });
+  return (
+    <>
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
 
-    this.map = new OlMap({
-      layers: [
-        this.layer1,
-        this.layer2,
-        this.layer3,
-        this.layer4,
-        this.layer5
-      ],
-      view: new OlView({
-        center: [4100247.903296841, -456383.49866892234],
-        zoom: 13
-      })
-    });
-  }
-
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  render() {
-    return (
       <div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
+        <span>{'Move the slider to change the layer\'s opacity:'}</span>
+        <MultiLayerSlider
+          layers={[
+            layer1,
+            layer2,
+            layer3,
+            layer4,
+            layer5
+          ]}
         />
-
-        <div>
-          <span>{'Move the slider to change the layer\'s opacity:'}</span>
-          <MultiLayerSlider
-            layers={[
-              this.layer1,
-              this.layer2,
-              this.layer3,
-              this.layer4,
-              this.layer5
-            ]}
-          />
-        </div>
       </div>
-    );
-  }
-}
+    </>
+  );
+};
 
 <MultiLayerSliderExample />
 ```

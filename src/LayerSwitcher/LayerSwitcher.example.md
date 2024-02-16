@@ -4,68 +4,81 @@ The passed layers are handled like only one of it can be visible.
 
 ```jsx
 import LayerSwitcher from '@terrestris/react-geo/dist/LayerSwitcher/LayerSwitcher';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
 import OlSourceOsm from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
-import * as React from 'react';
+import {
+  useEffect,
+  useState
+} from 'react';
 
-class LayerSwitcherExample extends React.Component {
+const LayerSwitcherExample = () => {
+  const [map, setMap] = useState();
+  const [pressed, setPressed] = useState();
 
-  constructor(props) {
-
-    super(props);
-
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.layers = [
-      new OlLayerTile({
-        name: 'OSM',
-        source: new OlSourceOsm()
-      }),
-      new OlLayerTile({
-        source: new OlSourceTileWMS({
-          url: 'https://ows.terrestris.de/osm/service?'
+  useEffect(() => {
+    const newMap = new OlMap({
+      layers: [
+        new OlLayerTile({
+          properties: {
+            name: 'OSM'
+          },
+          source: new OlSourceOsm()
+        }),
+        new OlLayerTile({
+          properties: {
+            name: 'OSM-WMS'
+          },
+          source: new OlSourceTileWMS({
+            url: 'https://ows.terrestris.de/osm/service?',
+            params: {
+              LAYERS: 'OSM-WMS'
+            }
+          })
         })
-      })
-    ];
-
-    this.map = new OlMap({
+      ],
       view: new OlView({
-        center: [801045, 6577113],
+        center: fromLonLat([8, 50]),
         zoom: 9
-      }),
-      layers: this.layers
+      })
     });
+
+    setMap(newMap);
+  }, []);
+
+  if (!map) {
+    return null;
   }
 
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  render() {
-    return (
-      <div
-        id={this.mapDivId}
-        style={{
-          position: 'relative',
-          height: '200px'
-        }}
-      >
-        <LayerSwitcher
+  return (
+    <div>
+      <MapContext.Provider value={map}>
+        <MapComponent
+          map={map}
           style={{
-            position: 'absolute',
-            bottom: 0,
-            left: '10px',
-            zIndex: 2
+            position: 'relative',
+            height: '400px'
           }}
-          map={this.map}
-          layers={this.layers}
-        />
-      </div>
-    );
-  }
+        >
+          <LayerSwitcher
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              left: '10px',
+              zIndex: 2
+            }}
+            map={map}
+            layers={map.getLayers().getArray()}
+          />
+        </MapComponent>
+      </MapContext.Provider>
+    </div>
+  );
 }
 
 <LayerSwitcherExample />

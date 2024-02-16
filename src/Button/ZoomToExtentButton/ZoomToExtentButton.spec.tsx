@@ -1,6 +1,10 @@
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { containsExtent,getCenter } from 'ol/extent';
 import OlGeomPolygon from 'ol/geom/Polygon';
 import OlMap from 'ol/Map';
+import * as React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 import ZoomToExtentButton from '../ZoomToExtentButton/ZoomToExtentButton';
@@ -25,79 +29,84 @@ describe('<ZoomToExtentButton />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(ZoomToExtentButton, {
-      map,
-      extent: mockExtent
-    });
-    expect(wrapper).not.toBeUndefined();
+    const { container } = renderInMapContext(map, <ZoomToExtentButton
+      extent={mockExtent}
+    />);
+    expect(container).toBeVisible();
   });
 
-  it('zooms to extent when clicked', () => {
-    const wrapper = TestUtil.mountComponent(ZoomToExtentButton, {
-      map,
-      extent: mockExtent
-    });
-    const component = wrapper.instance() as ZoomToExtentButton;
-    component.onClick();
+  it('zooms to extent when clicked', async () => {
+    renderInMapContext(map,
+      <ZoomToExtentButton
+        extent={mockExtent}
+      >
+        Zoom test
+      </ZoomToExtentButton>
+    );
 
-    const promise = new Promise(resolve => {
+    const button = screen.getByText('Zoom test');
+
+    await userEvent.click(button);
+
+    await new Promise(resolve => {
       setTimeout(resolve, 1200);
     });
 
-    expect.assertions(2);
-    return promise.then(() => {
-      const newExtent = map.getView().calculateExtent();
-      const newCenter = getCenter(newExtent);
-      expect(newCenter).toEqual(mockExtentCenter);
-      expect(containsExtent(newExtent, mockExtent)).toBe(true);
-    });
+    const newExtent = map.getView().calculateExtent();
+    const newCenter = getCenter(newExtent);
+
+    expect(newCenter).toEqual(mockExtentCenter);
+    expect(containsExtent(newExtent, mockExtent)).toBe(true);
   });
 
-  it('zooms to polygon\'s geometry extent when clicked', () => {
-    const wrapper = TestUtil.mountComponent(ZoomToExtentButton, {
-      map,
-      extent: mockGeometry
-    });
+  it('zooms to polygon\'s geometry extent when clicked', async () => {
+    renderInMapContext(map,
+      <ZoomToExtentButton
+        extent={mockGeometry}
+      >
+        Zoom test
+      </ZoomToExtentButton>
+    );
 
-    const component = wrapper.instance() as ZoomToExtentButton;
-    component.onClick();
+    const button = screen.getByText('Zoom test');
 
-    const promise = new Promise(resolve => {
+    await userEvent.click(button);
+
+    await new Promise(resolve => {
       setTimeout(resolve, 1200);
     });
 
-    expect.assertions(2);
-    return promise.then(() => {
-      const newExtent = map.getView().calculateExtent();
-      const newCenter = getCenter(newExtent);
-      expect(newCenter).toEqual(mockGeometryCenter);
-      expect(containsExtent(newExtent, mockExtent)).toBe(true);
-    });
+    const newExtent = map.getView().calculateExtent();
+    const newCenter = getCenter(newExtent);
 
+    expect(newCenter).toEqual(mockGeometryCenter);
+    expect(containsExtent(newExtent, mockExtent)).toBe(true);
   });
 
-  it('zooms to extent when clicked providing center and zoom', () => {
-    const wrapper = TestUtil.mountComponent(ZoomToExtentButton, {
-      map,
-      center: mockExtentCenter,
-      zoom: mockZoom
-    });
+  it('zooms to extent when clicked providing center and zoom', async () => {
+    renderInMapContext(map,
+      <ZoomToExtentButton
+        center={mockExtentCenter}
+        zoom={mockZoom}
+      >
+        Zoom test
+      </ZoomToExtentButton>
+    );
 
-    const component = wrapper.instance() as ZoomToExtentButton;
-    component.onClick();
+    const button = screen.getByText('Zoom test');
 
-    const promise = new Promise(resolve => {
+    await userEvent.click(button);
+
+    await new Promise(resolve => {
       setTimeout(resolve, 1200);
     });
 
-    expect.assertions(3);
-    return promise.then(() => {
-      const newExtent = map.getView().calculateExtent();
-      const newCenter = getCenter(newExtent);
-      const newZoom = map.getView().getZoom();
-      expect(newCenter).toEqual(mockExtentCenter);
-      expect(containsExtent(newExtent, mockExtent)).toBe(true);
-      expect(newZoom).toEqual(mockZoom);
-    });
+    const newExtent = map.getView().calculateExtent();
+    const newCenter = getCenter(newExtent);
+    const newZoom = map.getView().getZoom();
+
+    expect(newCenter).toEqual(mockExtentCenter);
+    expect(containsExtent(newExtent, mockExtent)).toBe(true);
+    expect(newZoom).toEqual(mockZoom);
   });
 });

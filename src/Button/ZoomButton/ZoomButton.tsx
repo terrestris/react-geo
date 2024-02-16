@@ -1,6 +1,6 @@
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import _isNumber from 'lodash/isNumber';
 import { easeOut } from 'ol/easing';
-import OlMap from 'ol/Map';
 import { AnimationOptions as OlViewAnimationOptions } from 'ol/View';
 import * as React from 'react';
 
@@ -11,68 +11,46 @@ interface OwnProps {
   /**
    * Whether the zoom in shall be animated.
    */
-  animate: boolean;
+  animate?: boolean;
   /**
    * The delta to zoom when clicked. Defaults to positive `1` essentially zooming-in.
    * Pass negative numbers to zoom out.
    */
-  delta: number;
+  delta?: number;
   /**
    * The options for the zoom animation. By default zooming will take 250
    * milliseconds and an easing which starts fast and then slows down will be
    * used.
    */
-  animateOptions: OlViewAnimationOptions;
+  animateOptions?: OlViewAnimationOptions;
   /**
    * The className which should be added.
    */
   className?: string;
-  /**
-   * Instance of OL map this component is bound to.
-   */
-  map: OlMap;
 }
 
 export type ZoomButtonProps = OwnProps & SimpleButtonProps;
 
-/**
- * Class representing a zoom button.
- *
- * @class The ZoomButton
- * @extends React.Component
- */
-class ZoomButton extends React.Component<ZoomButtonProps> {
+// The class name for the component.
+const defaultClassName = `${CSS_PREFIX}zoominbutton`;
 
-  static defaultProps = {
-    delta: 1,
-    animate: true,
-    animateOptions: {
-      duration: 250,
-      easing: easeOut
+const ZoomButton: React.FC<ZoomButtonProps> = ({
+  className,
+  delta = 1,
+  animate = true,
+  animateOptions = {
+    duration: 250,
+    easing: easeOut
+  },
+  ...passThroughProps
+}) => {
+
+  const map = useMap();
+
+  const onClick = () => {
+    if (!map) {
+      return;
     }
-  };
-
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}zoominbutton`;
-
-  /**
-   * Called when the button is clicked.
-   *
-   * @method
-   */
-  onClick() {
-    const {
-      map,
-      animate,
-      animateOptions: {
-        duration,
-        easing
-      },
-      delta
-    } = this.props;
 
     const view = map.getView();
     if (!view) { // no view, no zooming
@@ -89,40 +67,26 @@ class ZoomButton extends React.Component<ZoomButtonProps> {
     if (animate) {
       const finalOptions = {
         zoom,
-        duration,
-        easing
+        duration: animateOptions.duration,
+        easing: animateOptions.easing
       };
       view.animate(finalOptions);
     } else {
       view.setZoom(zoom);
     }
-  }
+  };
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      delta,
-      animate,
-      animateOptions,
-      map,
-      ...passThroughProps
-    } = this.props;
+  const finalClassName = className
+    ? `${defaultClassName} ${className}`
+    : defaultClassName;
 
-    const finalClassName = className
-      ? `${className} ${this._className}`
-      : this._className;
-
-    return (
-      <SimpleButton
-        className={finalClassName}
-        onClick={this.onClick.bind(this)}
-        {...passThroughProps}
-      />
-    );
-  }
-}
+  return (
+    <SimpleButton
+      className={finalClassName}
+      onClick={onClick}
+      {...passThroughProps}
+    />
+  );
+};
 
 export default ZoomButton;
