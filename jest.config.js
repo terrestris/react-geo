@@ -20,7 +20,7 @@ module.exports = {
     '<rootDir>/dist/'
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(ol|@camptocamp/inkmap|@terrestris/react-util|d3-selection)/)'
+    'node_modules/(?!(ol|@camptocamp/inkmap|@terrestris/react-util|d3-selection|color-space|color-rgba|color-name|color-parse)/)'
   ],
   setupFiles: [
     '<rootDir>/jest/__mocks__/matchMediaMock.js'
