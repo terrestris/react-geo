@@ -34,39 +34,35 @@ export type UploadButtonProps = BaseProps & SimpleButtonProps;
  * @class The UploadButton
  * @extends React.Component
  */
-class UploadButton extends React.Component<UploadButtonProps> {
 
+
+const UploadButton: React.FC<UploadButtonProps> = ({
+  className,
+  children,
+  onChange,
+  inputProps,
+  ...passThroughProps
+}
+) => {
+
+  const defaultClassName = `${CSS_PREFIX}uploadbutton`;
   /**
    * The className added to this component.
    * @private
    */
-  _className = `${CSS_PREFIX}uploadbutton`;
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      children,
-      onChange,
-      inputProps,
-      ...passThroughProps
-    } = this.props;
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
-    const finalClassName = className
-      ? `${className} ${this._className}`
-      : this._className;
+  const button = <SimpleButton {...passThroughProps} />;
 
-    const button = <SimpleButton {...passThroughProps} />;
-
-    return (
-      <div className={finalClassName}>
-        {children || button}
-        <input type="file" onChange={onChange} {...inputProps} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className={finalClassName}>
+      {children || button}
+      <input type="file" onChange={onChange} {...inputProps} />
+    </div>
+  );
+};
 
 export default UploadButton;

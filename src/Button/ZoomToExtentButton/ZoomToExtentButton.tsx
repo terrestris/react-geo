@@ -59,45 +59,31 @@ export type ZoomToExtentButtonProps = OwnProps & SimpleButtonProps;
  * @class The ZoomToExtentButton
  * @extends React.Component
  */
-class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
+const defaultFitOptions = {
+  duration: 250,
+  easing: easeOut
+};
 
-  /**
-   * The default properties.
-   */
-  static defaultProps = {
-    fitOptions: {
-      duration: 250,
-      easing: easeOut
-    },
-    constrainViewResolution: false,
-    extent: undefined,
-    center: undefined,
-    zoom: undefined
-  };
+const defaultClassname = `${CSS_PREFIX}zoomtoextentbutton`;
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}zoomtoextentbutton`;
+const ZoomToExtentButton: React.FC<ZoomToExtentButtonProps> = ({
+  fitOptions = defaultFitOptions,
+  constrainViewResolution = false,
+  extent = undefined,
+  center = undefined,
+  zoom = undefined,
+  className,
+  map,
+  ...passThroughProps
+}) => {
 
   /**
    * Called when the button is clicked.
    *
    * @method
    */
-  onClick() {
-    const {
-      map,
-      extent,
-      constrainViewResolution,
-      fitOptions,
-      center,
-      zoom
-    } = this.props;
+  const onClick = () => {
     const view = map.getView();
-
-    const {fitOptions: defaultFitOptions} = ZoomToExtentButton.defaultProps;
 
     if (!view) { // no view, no zooming
       return;
@@ -119,39 +105,29 @@ class ZoomToExtentButton extends React.Component<ZoomToExtentButtonProps> {
 
     if (extent && (center && _isFinite(zoom))) {
       logger.warn('zoomToExtentButton: Both extent and center / zoom are provided. ' +
-      'Extent will be used in favor of center / zoom');
+        'Extent will be used in favor of center / zoom');
     }
     if (extent) {
       view.fit(extent, finalFitOptions);
     }
-    else if (center && _isFinite(zoom)) {
+    else if (center && _isFinite(zoom) && zoom) {
       view.setCenter(center);
       view.setZoom(zoom);
     }
-  }
+  };
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      fitOptions,
-      constrainViewResolution,
-      ...passThroughProps
-    } = this.props;
-    const finalClassName = className ?
-      `${className} ${this._className}` :
-      this._className;
+  const finalClassName = className ?
+    `${className} ${defaultClassname}`
+    : defaultClassname;
 
-    return (
-      <SimpleButton
-        className = {finalClassName}
-        onClick = {this.onClick.bind(this)}
-        { ...passThroughProps}
-      />
-    );
-  }
-}
+  return (
+    <SimpleButton
+      className={finalClassName}
+      onClick={onClick}
+      {...passThroughProps}
+    />
+  );
+
+};
 
 export default ZoomToExtentButton;
