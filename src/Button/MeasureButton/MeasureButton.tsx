@@ -6,10 +6,10 @@ import _isNil from 'lodash/isNil';
 import OlCollection from 'ol/Collection';
 import { EventsKey } from 'ol/events';
 import OlFeature from 'ol/Feature';
+import OlGeomCircle from 'ol/geom/Circle';
 import OlGeometry, { Type } from 'ol/geom/Geometry';
 import OlGeomLineString from 'ol/geom/LineString';
 import OlMultiLineString from 'ol/geom/MultiLineString';
-import OlGeomCircle from 'ol/geom/Circle';
 import OlMultiPolygon from 'ol/geom/MultiPolygon';
 import OlGeomPolygon from 'ol/geom/Polygon';
 import OlInteractionDraw, { DrawEvent } from 'ol/interaction/Draw';
@@ -125,6 +125,8 @@ interface OwnProps {
 
 export type MeasureType = 'line' | 'polygon' | 'angle' | 'circle';
 export type MeasureButtonProps = OwnProps & Partial<ToggleButtonProps>;
+export type EventName = 'drawstart' | 'drawend' | 'pointermove' | 'click' | 'change';
+export type EventsKeyType = {[K in EventName]: EventsKey | undefined};
 
 /**
  * The MeasureButton.
@@ -231,7 +233,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
    *
    * @private
    */
-  _eventKeys: {[K in 'drawstart'|'drawend'|'pointermove'|'click'|'change']: EventsKey|undefined} = {
+  _eventKeys: EventsKeyType = {
     drawstart: undefined,
     drawend: undefined,
     pointermove: undefined,
@@ -244,7 +246,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
    *
    * @private
    */
-  _measureLayer: OlLayerVector<OlSourceVector<OlGeometry>> | null = null;
+  _measureLayer: OlLayerVector<OlSourceVector> | null = null;
 
   /**
    * The draw interaction used to draw the geometries to measure.
@@ -336,7 +338,7 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
       map
     } = this.props;
 
-    let measureLayer = MapUtil.getLayerByName(map, measureLayerName) as OlLayerVector<OlSourceVector<OlGeometry>>;
+    let measureLayer = MapUtil.getLayerByName(map, measureLayerName) as OlLayerVector<OlSourceVector>;
 
     if (!measureLayer) {
       measureLayer = new OlLayerVector({
@@ -767,8 +769,9 @@ class MeasureButton extends React.Component<MeasureButtonProps> {
     }
 
     Object.keys(this._eventKeys).forEach(key => {
-      if (this._eventKeys[key]) {
-        unByKey(this._eventKeys[key]);
+      const eventKey = this._eventKeys[key as EventName] as EventsKey;
+      if (eventKey) {
+        unByKey(eventKey);
       }
     });
 

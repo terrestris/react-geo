@@ -1,11 +1,13 @@
+import OlLayer from 'ol/layer/Layer';
+
 import TestUtil from '../../Util/TestUtil';
 import LayerTransparencySlider from './LayerTransparencySlider';
 
 describe('<LayerTransparencySlider />', () => {
-  let layer;
+  let layer: OlLayer;
 
   beforeEach(() => {
-    layer = TestUtil.createVectorLayer();
+    layer = TestUtil.createVectorLayer({});
   });
 
   it('is defined', () => {
@@ -27,7 +29,8 @@ describe('<LayerTransparencySlider />', () => {
     };
 
     const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
-    const transparency = wrapper.instance().getLayerTransparency();
+    const instance = wrapper.instance() as LayerTransparencySlider;
+    const transparency = instance.getLayerTransparency();
     expect(transparency).toBe(91);
   });
 
@@ -36,8 +39,9 @@ describe('<LayerTransparencySlider />', () => {
       layer: layer
     };
     const wrapper = TestUtil.mountComponent(LayerTransparencySlider, props);
+    const instance = wrapper.instance() as LayerTransparencySlider;
 
-    wrapper.instance().setLayerTransparency(91);
+    instance.setLayerTransparency(91);
     expect(layer.getOpacity()).toBe(0.09);
   });
 

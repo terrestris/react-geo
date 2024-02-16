@@ -2,10 +2,12 @@ import { AutoComplete } from 'antd';
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
 import * as React from 'react';
 const Option = AutoComplete.Option;
-import { DefaultOptionType, OptionProps } from 'antd/lib/select';
+import './NominatimSearch.less';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import { DefaultOptionType, OptionProps } from 'antd/lib/select';
 import { GeoJSON } from 'geojson';
 import { Extent as OlExtent } from 'ol/extent';
 import OlMap from 'ol/Map';
@@ -13,9 +15,6 @@ import { transformExtent } from 'ol/proj';
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-import useMap from '../../Hook/useMap';
-
-import './NominatimSearch.less';
 
 // See https://nominatim.org/release-docs/develop/api/Output/ for some more information
 export type NominatimPlace = {
@@ -272,7 +271,7 @@ export const NominatimSearch: FC<NominatimSearchProps> = ({
    *
    * @param option The selected OptionData
    */
-  const onMenuItemSelected = useCallback((_, option: NominatimPlace) => {
+  const onMenuItemSelected = useCallback((_: any, option: NominatimPlace) => {
     if (!map) {
       return;
     }

@@ -147,7 +147,7 @@ interface OwnProps {
   wfsFormatOptions?: any;
 }
 
-interface WfsSearchState {
+export interface WfsSearchState {
   searchTerm: string;
   data: Feature[];
   fetching: boolean;
@@ -232,7 +232,7 @@ export class WfsSearchInput extends React.Component<WfsSearchInputProps, WfsSear
    * @param evt The input value from `keyup` event.
    * Gets undefined if clear btn is pressed.
    */
-  onUpdateInput(evt: any) {
+  onUpdateInput(evt?: any) {
     const {
       minChars,
       onBeforeSearch

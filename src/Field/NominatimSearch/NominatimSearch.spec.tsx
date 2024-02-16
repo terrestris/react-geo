@@ -56,14 +56,14 @@ describe('<NominatimSearch />', () => {
   });
 
   it('can be rendered', () => {
-    renderInMapContext(map, <NominatimSearch map={map} />);
+    renderInMapContext(map, <NominatimSearch />);
 
     const button = screen.getByRole('combobox');
     expect(button).toBeVisible();
   });
 
   it('performs a search and shows options', async () => {
-    renderInMapContext(map, <NominatimSearch map={map} />);
+    renderInMapContext(map, <NominatimSearch />);
 
     const input = screen.getByRole('combobox');
 
@@ -88,7 +88,7 @@ describe('<NominatimSearch />', () => {
   });
 
   it('sets the text value of the search to the select item and zooms to the bounding box', async () => {
-    renderInMapContext(map, <NominatimSearch map={map} />);
+    renderInMapContext(map, <NominatimSearch />);
 
     const fitSpy = jest.spyOn(map.getView(), 'fit');
 
@@ -112,7 +112,7 @@ describe('<NominatimSearch />', () => {
   it('calls a custom select callback', async () => {
     const selectSpy = jest.fn();
 
-    renderInMapContext(map, <NominatimSearch map={map} onSelect={selectSpy} />);
+    renderInMapContext(map, <NominatimSearch onSelect={selectSpy} />);
 
     const fitSpy = jest.spyOn(map.getView(), 'fit');
 

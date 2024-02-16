@@ -7,12 +7,9 @@ import { render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import TestUtil from '../../Util/TestUtil';
 import GeoLocationButton from './GeoLocationButton';
 
 describe('<GeoLocationButton />', () => {
-
-  let map;
 
   beforeAll(() => {
     enableGeolocationMock();
@@ -20,10 +17,6 @@ describe('<GeoLocationButton />', () => {
 
   afterAll(() => {
     disableGeolocationMock();
-  });
-
-  beforeEach(() => {
-    map = TestUtil.createMap();
   });
 
   describe('#Basics', () => {

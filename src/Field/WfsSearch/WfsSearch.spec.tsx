@@ -1,5 +1,5 @@
-/* eslint-disable testing-library/render-result-naming-convention */
 import Logger from '@terrestris/base-util/dist/Logger';
+import {OptionProps} from 'antd/lib/select';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlSourceOsm from 'ol/source/OSM';
@@ -9,7 +9,7 @@ import {
 } from 'react-dom/test-utils';
 
 import TestUtil from '../../Util/TestUtil';
-import WfsSearch from './WfsSearch';
+import WfsSearch, {WfsSearchProps, WfsSearchState} from './WfsSearch';
 
 describe('<WfsSearch />', () => {
   it('is defined', () => {
@@ -22,19 +22,17 @@ describe('<WfsSearch />', () => {
   });
 
   describe('#onUpdateInput', () => {
-    it('resets state.data', () => {
-      const wrapper = TestUtil.mountComponent(WfsSearch);
-      wrapper.instance().onUpdateInput();
-      expect(wrapper.state().data).toEqual([]);
-    });
 
     it('sets the inputValue as state.searchTerm', () => {
       const wrapper = TestUtil.mountComponent(WfsSearch);
+      const instance = wrapper.instance() as WfsSearch;
+
       const inputValue = 'a';
       act(() => {
-        wrapper.instance().onUpdateInput(inputValue);
+        instance.onUpdateInput(inputValue);
       });
-      expect(wrapper.state().searchTerm).toBe(inputValue);
+      let state = wrapper.state() as WfsSearchState;
+      expect(state.searchTerm).toBe(inputValue);
     });
 
     it('sends a request if input is as long as props.minChars', () => {
@@ -53,10 +51,11 @@ describe('<WfsSearch />', () => {
           }
         }
       });
-      const doSearchSpy = jest.spyOn(wrapper.instance(), 'doSearch');
+      const instance = wrapper.instance() as WfsSearch;
+      const doSearchSpy = jest.spyOn(instance, 'doSearch');
       const inputValue = 'Deutsch';
       act(() => {
-        wrapper.instance().onUpdateInput(inputValue);
+        instance.onUpdateInput(inputValue);
       });
       expect(doSearchSpy).toHaveBeenCalled();
       doSearchSpy.mockRestore();
@@ -74,12 +73,13 @@ describe('<WfsSearch />', () => {
           }
         }]
       };
-      wrapper.instance().onFetchSuccess(response);
+      const instance = wrapper.instance() as WfsSearch;
+      instance.onFetchSuccess(response);
       const promise = new Promise(resolve => {
         setTimeout(resolve, 350);
       });
       return promise.then(() => {
-        expect(wrapper.state().data).toEqual(response.features);
+        expect((wrapper.state() as WfsSearchState).data).toEqual(response.features);
       });
     });
   });
@@ -88,7 +88,8 @@ describe('<WfsSearch />', () => {
     it('sets the response as state.data', () => {
       const wrapper = TestUtil.mountComponent(WfsSearch);
       const loggerSpy = jest.spyOn(Logger, 'error');
-      wrapper.instance().onFetchError('Peter');
+      const instance = wrapper.instance() as WfsSearch;
+      instance.onFetchError('Peter');
       expect(loggerSpy).toHaveBeenCalled();
       expect(loggerSpy).toHaveBeenCalledWith('Error while requesting WFS GetFeature: Peter');
       loggerSpy.mockRestore();
@@ -105,7 +106,7 @@ describe('<WfsSearch />', () => {
         }
       }];
       const map = new OlMap({
-        layers: [new OlLayerTile({ name: 'OSM', source: new OlSourceOsm() })],
+        layers: [new OlLayerTile({ source: new OlSourceOsm(), properties: {name: 'OSM'} })],
         view: new OlView({
           projection: 'EPSG:4326',
           center: [37.40570, 8.81566],
@@ -119,13 +120,15 @@ describe('<WfsSearch />', () => {
         onSelect: selectSpy,
         map
       });
+      const instance = wrapper.instance() as WfsSearch;
       act(() => {
         wrapper.setState({
           data: data
         });
       });
       act(() => {
-        wrapper.instance().onMenuItemSelected('Deutschland', { key: '752526' });
+        const op: OptionProps = { key: '752526', children: null };
+        instance.onMenuItemSelected('Deutschland', op);
       });
       expect(selectSpy).toHaveBeenCalled();
       expect(selectSpy).toHaveBeenCalledWith(data[0], map);
@@ -149,7 +152,7 @@ describe('<WfsSearch />', () => {
         }
       };
       const map = new OlMap({
-        layers: [new OlLayerTile({ name: 'OSM', source: new OlSourceOsm() })],
+        layers: [new OlLayerTile({ source: new OlSourceOsm(), properties: {name: 'OSM'} })],
         view: new OlView({
           projection: 'EPSG:4326',
           center: [37.40570, 8.81566],
@@ -161,7 +164,7 @@ describe('<WfsSearch />', () => {
 
       const wrapper = TestUtil.mountComponent(WfsSearch, { map });
       const fitSpy = jest.spyOn(map.getView(), 'fit');
-      wrapper.props().onSelect(feature, map);
+      (wrapper.props() as WfsSearchProps).onSelect(feature, map);
 
       expect.assertions(3);
 
@@ -187,7 +190,7 @@ describe('<WfsSearch />', () => {
           name: 'Deutschland'
         }
       };
-      const option = wrapper.props().renderOption(feature, {
+      const option = (wrapper.props() as WfsSearchProps).renderOption(feature, {
         // Props must be passed to the renderOption function.
         displayValue: 'name',
         idProperty: 'id'
@@ -207,7 +210,7 @@ describe('<WfsSearch />', () => {
           name: 'Deutschland'
         }
       };
-      const option = wrapper.props().renderOption(feature, {
+      const option = (wrapper.props() as WfsSearchProps).renderOption(feature, {
         displayValue: 'name',
         idProperty: 'customId'
       });

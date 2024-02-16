@@ -17,7 +17,7 @@ describe('<SelectFeaturesButton />', () => {
 
   const coord = [829729, 6708850];
   let map: OlMap;
-  let layer: OlVectorLayer<OlVectorSource<OlPoint>>;
+  let layer: OlVectorLayer<OlVectorSource>;
   let feature: OlFeature<OlPoint>;
 
   beforeEach(() => {

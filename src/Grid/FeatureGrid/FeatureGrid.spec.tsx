@@ -1,7 +1,9 @@
-import { MapBrowserEvent } from 'ol';
+import {MapBrowserEvent} from 'ol';
+import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
 import OlSourceVector from 'ol/source/Vector';
 import {
   act
@@ -11,8 +13,8 @@ import TestUtil from '../../Util/TestUtil';
 import FeatureGrid from './FeatureGrid';
 
 describe('<FeatureGrid />', () => {
-  let map;
-  let features;
+  let map: OlMap;
+  let features: OlFeature[];
 
   beforeEach(() => {
     map = TestUtil.createMap();
@@ -179,7 +181,7 @@ describe('<FeatureGrid />', () => {
     const featGeometries: OlGeometry[] = [];
     features.forEach(feature => {
       if (feature.getGeometry()) {
-        featGeometries.push(feature.getGeometry());
+        featGeometries.push(feature.getGeometry()!);
       }
     });
 
@@ -198,6 +200,7 @@ describe('<FeatureGrid />', () => {
 
   it('unhighlight all given features, but takes selection into account', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
+    // @ts-ignore
     const selectedFeatureUid = features[0].ol_uid;
 
     act(() => {
@@ -208,6 +211,7 @@ describe('<FeatureGrid />', () => {
     });
 
     features.forEach(feature => {
+      // @ts-ignore
       if (feature.ol_uid === selectedFeatureUid) {
         expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
       } else {
@@ -238,6 +242,7 @@ describe('<FeatureGrid />', () => {
 
   it('sets the appropriate select style to a feature if selection in grid changes', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
+    // @ts-ignore
     const selectedRowKeys = [features[0].ol_uid, features[1].ol_uid];
 
     act(() => {
@@ -245,6 +250,7 @@ describe('<FeatureGrid />', () => {
     });
 
     features.forEach(feature => {
+      // @ts-ignore
       if (selectedRowKeys.includes(feature.ol_uid)) {
         expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
       } else {
@@ -257,6 +263,7 @@ describe('<FeatureGrid />', () => {
 
   it('returns the feature for a given row key', () => {
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
+    // @ts-ignore
     const rowKey = features[1].ol_uid;
 
     expect((wrapper.instance() as FeatureGrid).getFeatureFromRowKey(rowKey)).toEqual(features[1]);
@@ -266,6 +273,7 @@ describe('<FeatureGrid />', () => {
     const onRowClickSpy = jest.fn();
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features, onRowClick: onRowClickSpy});
     const clickedRow = {
+      // @ts-ignore
       key: features[0].ol_uid
     };
     const zoomToFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'zoomToFeatures');
@@ -283,6 +291,7 @@ describe('<FeatureGrid />', () => {
     const onRowMouseOverSpy = jest.fn();
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features, onRowMouseOver: onRowMouseOverSpy});
     const clickedRow = {
+      // @ts-ignore
       key: features[0].ol_uid
     };
     const highlightFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'highlightFeatures');
@@ -300,6 +309,7 @@ describe('<FeatureGrid />', () => {
     const onRowMouseOutSpy = jest.fn();
     const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features, onRowMouseOut: onRowMouseOutSpy});
     const clickedRow = {
+      // @ts-ignore
       key: features[0].ol_uid
     };
     const unhighlightFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'unhighlightFeatures');

@@ -14,7 +14,7 @@ import DrawButton from './DrawButton';
 
 describe('<DrawButton />', () => {
 
-  let map;
+  let map: OlMap;
 
   beforeEach(() => {
     map = new OlMap({

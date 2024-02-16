@@ -58,7 +58,7 @@ interface OwnProps {
    * The vector layer which will be used for digitize features.
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
    */
-  digitizeLayer?: OlVectorLayer<OlVectorSource<OlGeometry>>;
+  digitizeLayer?: OlVectorLayer<OlVectorSource>;
   /**
    * Title for modal used for input of labels for digitize features.
    */
@@ -112,10 +112,10 @@ const DrawButton: React.FC<DrawButtonProps> = ({
 }) => {
 
   const [drawInteraction, setDrawInteraction] = useState<OlInteractionDraw>();
-  const [layer, setLayer] = useState<OlVectorLayer<OlVectorSource<OlGeometry>> | null>(null);
+  const [layer, setLayer] = useState<OlVectorLayer<OlVectorSource> | null>(null);
 
   /**
-   * Currently drawn feature which should be represent as label or postit.
+   * Currently drawn feature which should be represented as label or post-it.
    */
   const [digitizeTextFeature, setDigitizeTextFeature] = useState<OlFeature<OlGeometry> | null>(null);
 

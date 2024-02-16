@@ -8,7 +8,7 @@ describe('<LayerTreeNode />', () => {
 
   const defaultProps = {
     inResolutionRange: true,
-    filterTreeNode: ftn => ftn
+    filterTreeNode: jest.fn()
   };
 
   it('is defined', () => {

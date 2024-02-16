@@ -40,7 +40,7 @@ interface OwnProps {
    * The vector layer which will be used for digitize features.
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
    */
-  digitizeLayer?: OlVectorLayer<OlVectorSource<OlGeometry>>;
+  digitizeLayer?: OlVectorLayer<OlVectorSource>;
   /**
    * Listener function for the 'modifystart' event of an ol.interaction.Modify.
    * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-ModifyEvent.html
@@ -60,7 +60,7 @@ interface OwnProps {
    */
   onTranslateStart?: (event: TranslateEvent) => void;
   /**
-   * Listener function for the 'translateend' event of an ol.interaction.Translate.
+   * Listener function for the 'qtranslateend' event of an ol.interaction.Translate.
    * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
    * for more information.
    */
@@ -132,7 +132,7 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
   editLabel = true,
   ...passThroughProps
 }) => {
-  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]|null>(null);
+  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource>]|null>(null);
   const [modifyInteraction, setModifyInteraction] = useState<Modify|null>(null);
   const [translateInteraction, setTranslateInteraction] = useState<Translate|null>(null);
   const [features, setFeatures] = useState<OlCollection<OlFeature<OlGeometry>>|null>(null);
