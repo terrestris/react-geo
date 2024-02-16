@@ -60,7 +60,7 @@ interface OwnProps {
    */
   onTranslateStart?: (event: TranslateEvent) => void;
   /**
-   * Listener function for the 'qtranslateend' event of an ol.interaction.Translate.
+   * Listener function for the 'translateend' event of an ol.interaction.Translate.
    * See https://openlayers.org/en/latest/apidoc/module-ol_interaction_Translate-TranslateEvent.html
    * for more information.
    */
