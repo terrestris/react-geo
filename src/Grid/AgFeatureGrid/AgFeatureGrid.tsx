@@ -245,13 +245,13 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * The source holding the features of the grid.
    * @private
    */
-  _source: OlSourceVector<OlGeometry> | null = null;
+  _source: OlSourceVector<OlFeature> | null = null;
 
   /**
    * The layer representing the features of the grid.
    * @private
    */
-  _layer: OlLayerVector<OlSourceVector<OlGeometry>> | null = null;
+  _layer: OlLayerVector<OlSourceVector<OlFeature>> | null = null;
 
   /**
    * The constructor.

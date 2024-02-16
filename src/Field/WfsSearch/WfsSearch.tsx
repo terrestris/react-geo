@@ -12,6 +12,7 @@ import WfsFilterUtil, { AttributeDetails } from '@terrestris/ol-util/dist/WfsFil
 import { OptionProps } from 'antd/lib/select';
 import _debounce from 'lodash/debounce';
 import _isFunction from 'lodash/isFunction';
+import OlFeature from 'ol/Feature';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 import OlMap from 'ol/Map';
@@ -81,14 +82,14 @@ interface OwnProps {
    * The default will display the property `name` if existing or the
    * property defined in `props.idProperty` (default is to `id`).
    */
-  renderOption: (feature: any, props: WfsSearchProps) => React.ReactElement<OptionProps>;
+  renderOption: (feature: OlFeature, props: WfsSearchProps) => React.ReactElement<OptionProps>;
   /**
    * An onSelect function which gets called with the selected feature as it is
    * returned by server.
    * The default function will create a searchlayer, adds the feature and will
    * zoom to its extend.
    */
-  onSelect: (feature: any, olMap: OlMap) => void;
+  onSelect: (feature: OlFeature, olMap: OlMap) => void;
   /**
    * An optional CSS class which should be added.
    */
@@ -212,12 +213,12 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
      * @param feature The selected feature as returned by the server.
      * @param olMap The openlayers map that was passed via prop.
      */
-    onSelect: (feature: any, olMap: OlMap) => {
+    onSelect: (feature: OlFeature, olMap: OlMap) => {
       if (feature) {
         const olView = olMap.getView();
         const geoJsonFormat = new OlFormatGeoJSON();
         const olFeature = geoJsonFormat.readFeature(feature);
-        const geometry = olFeature.getGeometry() as OlSimpleGeometry;
+        const geometry = (olFeature as OlFeature).getGeometry() as OlSimpleGeometry;
 
         if (geometry) {
           olView.fit(geometry, {
