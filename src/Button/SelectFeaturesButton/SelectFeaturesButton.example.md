@@ -24,6 +24,7 @@ const SelectFeaturesButtonExample = () => {
   const [map, setMap] = useState();
   const [layers, setLayers] = useState();
   const [feature, setFeature] = useState();
+  const [pressed, setPressed] = useState();
 
   useEffect(() => {
     const layer = new OlVectorLayer({
@@ -63,7 +64,12 @@ const SelectFeaturesButtonExample = () => {
           }}
         />
 
-        <SelectFeaturesButton layers={layers} onFeatureSelect={e => setFeature(e.selected[0])}>
+        <SelectFeaturesButton
+          layers={layers}
+          onFeatureSelect={e => setFeature(e.selected[0])}
+          onChange={() => setPressed(!pressed)}
+          pressed={pressed}
+        >
           Select feature
         </SelectFeaturesButton>
 

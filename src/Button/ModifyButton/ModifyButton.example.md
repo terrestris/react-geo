@@ -23,6 +23,7 @@ const features = format.readFeatures(featuresJson);
 const ModifyButtonExample = () => {
 
   const [map, setMap] = useState();
+  const [pressed, setPressed] = useState();
 
   useEffect(() => {
     const newMap = new OlMap({
@@ -58,7 +59,10 @@ const ModifyButtonExample = () => {
           }}
         />
 
-        <ModifyButton>
+        <ModifyButton
+          onChange={() => setPressed(!pressed)}
+          pressed={pressed}
+        >
           Select feature
         </ModifyButton>
       </MapContext.Provider>

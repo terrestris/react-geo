@@ -1,23 +1,22 @@
-import {
-  AutoComplete,
-  Spin
-} from 'antd';
-import { AutoCompleteProps } from 'antd/lib/auto-complete';
-import * as React from 'react';
-const Option = AutoComplete.Option;
 import './WfsSearch.less';
 
 import Logger from '@terrestris/base-util/dist/Logger';
-import WfsFilterUtil, { AttributeDetails } from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
-import { OptionProps } from 'antd/lib/select';
+import WfsFilterUtil, {AttributeDetails} from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
+import {AutoComplete, Spin} from 'antd';
+import {AutoCompleteProps} from 'antd/lib/auto-complete';
+import {OptionProps} from 'antd/lib/select';
 import _debounce from 'lodash/debounce';
+import _get from 'lodash/get';
 import _isFunction from 'lodash/isFunction';
+import _isNil from 'lodash/isNil';
 import OlFeature from 'ol/Feature';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 import OlMap from 'ol/Map';
+import * as React from 'react';
 
-import { CSS_PREFIX } from '../../constants';
+import {CSS_PREFIX} from '../../constants';
+
+const Option = AutoComplete.Option;
 
 interface OwnProps {
   /**
@@ -82,14 +81,14 @@ interface OwnProps {
    * The default will display the property `name` if existing or the
    * property defined in `props.idProperty` (default is to `id`).
    */
-  renderOption: (feature: any, props: Partial<WfsSearchProps>) => React.ReactElement<OptionProps>;
+  renderOption: (feature: OlFeature, props: Partial<WfsSearchProps>) => React.ReactElement<OptionProps>;
   /**
    * An onSelect function which gets called with the selected feature as it is
    * returned by server.
    * The default function will create a searchlayer, adds the feature and will
-   * zoom to its extend.
+   * zoom to its extent.
    */
-  onSelect: (feature: any, olMap: OlMap) => void;
+  onSelect: (feature: OlFeature, olMap: OlMap) => void;
   /**
    * An optional CSS class which should be added.
    */
@@ -194,12 +193,16 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
         idProperty
       } = props;
 
-      const display = feature.properties[displayValue] ?
-        feature.properties[displayValue] : feature[idProperty];
+      if (_isNil(feature) || !(feature instanceof OlFeature)) {
+        return <></>;
+      }
+
+      const value = _get(feature?.getProperties(), displayValue);
+      const display = _isNil(value) ? feature.get(idProperty) : value;
       return (
         <Option
           value={display}
-          key={feature[idProperty]}
+          key={feature.get(idProperty)}
           title={display}
         >
           {display}
@@ -213,19 +216,15 @@ export class WfsSearch extends React.Component<WfsSearchProps, WfsSearchState> {
      * @param feature The selected feature as returned by the server.
      * @param olMap The openlayers map that was passed via prop.
      */
-    onSelect: (feature: any, olMap: OlMap) => {
-      if (feature) {
+    onSelect: (feature: OlFeature, olMap: OlMap) => {
+      if (!_isNil(feature) && !_isNil(olMap)) {
         const olView = olMap.getView();
-        const geoJsonFormat = new OlFormatGeoJSON();
-        const olFeature = geoJsonFormat.readFeature(feature);
-        if (olFeature instanceof OlFeature) {
-          const geometry = olFeature.getGeometry() as OlSimpleGeometry;
+        const geometry = feature.getGeometry() as OlSimpleGeometry;
 
-          if (geometry) {
-            olView.fit(geometry, {
-              duration: 500
-            });
-          }
+        if (geometry) {
+          olView.fit(geometry, {
+            duration: 500
+          });
         }
       }
     }

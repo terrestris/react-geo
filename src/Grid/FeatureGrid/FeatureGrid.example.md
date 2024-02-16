@@ -134,7 +134,7 @@ class RemoteFeatureGrid extends React.Component {
         order: 'ascend'
       },
       nameFilterText: '',
-      filterDropdownVisible: false
+      filterDropdownOpen: false
     };
   }
 
@@ -239,7 +239,7 @@ class RemoteFeatureGrid extends React.Component {
         ...this.state.pagination,
         current: 1
       },
-      filterDropdownVisible: false
+      filterDropdownOpen: false
     }, () => this.fetchData());
   }
 
@@ -275,7 +275,7 @@ class RemoteFeatureGrid extends React.Component {
       features,
       pagination,
       nameFilterText,
-      filterDropdownVisible,
+      filterDropdownOpen,
     } = this.state;
 
     const getFeatureStyle = this.getFeatureStyle;
@@ -317,10 +317,10 @@ class RemoteFeatureGrid extends React.Component {
                 />
               </div>
             ),
-            filterDropdownVisible: filterDropdownVisible,
-            onFilterDropdownVisibleChange: visible => {
+            filterDropdownOpen: filterDropdownOpen,
+            onFilterDropdownOpenChange: visible => {
               this.setState({
-                filterDropdownVisible: visible
+                filterDropdownOpen: visible
               }, () => {
                 this.searchInput.focus();
               });

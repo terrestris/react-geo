@@ -212,13 +212,13 @@ export class FeatureGrid extends React.Component<FeatureGridProps, FeatureGridSt
    * The source holding the features of the grid.
    * @private
    */
-  _source: OlSourceVector | null = null;
+  _source: OlSourceVector<OlFeature> | null = null;
 
   /**
    * The layer representing the features of the grid.
    * @private
    */
-  _layer: OlLayerVector<OlSourceVector> | null = null;
+  _layer: OlLayerVector<OlSourceVector<OlFeature>> | null = null;
 
   /**
    * The constructor.

@@ -20,6 +20,7 @@ const features = format.readFeatures(federalStates);
 
 const DeleteButtonExample = () => {
   const [map, setMap] = useState();
+  const [pressed, setPressed] = useState();
 
   useEffect(() => {
     const newMap = new OlMap({
@@ -54,7 +55,10 @@ const DeleteButtonExample = () => {
             height: '400px'
           }}
         />
-        <DeleteButton>
+        <DeleteButton
+          onChange={() => setPressed(!pressed)}
+          pressed={pressed}
+        >
           Delete feature
         </DeleteButton>
       </MapContext.Provider>

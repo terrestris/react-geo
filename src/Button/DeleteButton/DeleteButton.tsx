@@ -1,5 +1,6 @@
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
+import OlFeature from 'ol/Feature';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 import OlVectorLayer from 'ol/layer/Vector';
 import OlVectorSource from 'ol/source/Vector';
@@ -14,7 +15,7 @@ interface OwnProps {
    * The vector layer which will be used for digitize features.
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
    */
-  digitizeLayer?: OlVectorLayer<OlVectorSource>;
+  digitizeLayer?: OlVectorLayer<OlVectorSource<OlFeature>>;
   /**
    * Listener function for the 'select' event of the ol.interaction.Select
    * if in `Delete` mode.
@@ -38,7 +39,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   onFeatureRemove,
   ...passThroughProps
 }) => {
-  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource>]|null>(null);
+  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlFeature>>]|null>(null);
 
   const map = useMap();
 

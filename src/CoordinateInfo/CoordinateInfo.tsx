@@ -1,5 +1,5 @@
 import Logger from '@terrestris/base-util/dist/Logger';
-import {isWmsLayer, WmsLayer} from '@terrestris/react-util/dist/Util/typeUtils';
+import { isWmsLayer, WmsLayer } from '@terrestris/react-util/dist/Util/typeUtils';
 import _cloneDeep from 'lodash/cloneDeep';
 import _isString from 'lodash/isString';
 import {getUid} from 'ol';
