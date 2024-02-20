@@ -1,22 +1,18 @@
 import { Button, Tooltip } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
-import { AbstractTooltipProps,TooltipPlacement } from 'antd/lib/tooltip';
+import { AbstractTooltipProps, TooltipPlacement } from 'antd/lib/tooltip';
 import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
-interface DefaultProps {
-  type: 'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link';
+export type OwnProps = {
   /**
    * Additional [antd tooltip](https://ant.design/components/tooltip/)
    * properties to pass to the tooltip component. Note: The props `title`
    * and `placement` will override the props `tooltip` and `tooltipPlacement`
    * of this component!
    */
-  tooltipProps: AbstractTooltipProps;
-}
-
-interface BaseProps {
+  tooltipProps?: AbstractTooltipProps;
   /**
    * The tooltip to be shown on hover.
    */
@@ -25,65 +21,41 @@ interface BaseProps {
    * The position of the tooltip.
    */
   tooltipPlacement?: TooltipPlacement;
-}
+};
 
-export type SimpleButtonProps = BaseProps & Partial<DefaultProps> & ButtonProps;
+export type SimpleButtonProps = OwnProps & ButtonProps;
 
-/**
- * The SimpleButton.
- *
- * @class The SimpleButton
- * @extends React.Component
- */
-class SimpleButton extends React.Component<SimpleButtonProps> {
+const defaultClassName = `${CSS_PREFIX}simplebutton`;
 
-  /**
-   * The default properties.
-   */
-  static defaultProps: DefaultProps = {
-    type: 'primary',
-    tooltipProps: {
-      mouseEnterDelay: 1.5
-    }
-  };
+const SimpleButton: React.FC<SimpleButtonProps> = ({
+  className,
+  type = 'primary',
+  tooltip,
+  tooltipPlacement,
+  tooltipProps = {
+    mouseEnterDelay: 1.5
+  },
+  ...passThroughProps
+}) => {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}simplebutton`;
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : `${defaultClassName}`;
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      tooltip,
-      tooltipPlacement,
-      tooltipProps,
-      ...antBtnProps
-    } = this.props;
-
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
-
-    return (
-      <Tooltip
-        title={tooltip}
-        placement={tooltipPlacement}
-        {...tooltipProps}
+  return (
+    <Tooltip
+      title={tooltip}
+      placement={tooltipPlacement}
+      {...tooltipProps}
+    >
+      <Button
+        className={finalClassName}
+        {...passThroughProps}
       >
-        <Button
-          className={finalClassName}
-          {...antBtnProps}
-        >
-          {antBtnProps.children}
-        </Button>
-      </Tooltip>
-    );
-  }
-}
+        {passThroughProps.children}
+      </Button>
+    </Tooltip>
+  );
+};
 
 export default SimpleButton;
