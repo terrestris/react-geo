@@ -40,7 +40,6 @@ describe('<TimeLayerSliderPanel />', () => {
 
   it('can be rendered', () => {
     const { container } = render(<TimeLayerSliderPanel
-      map={map}
       initStartDate={moment().subtract(3, 'hours')}
       initEndDate={moment()}
     />);
@@ -49,7 +48,6 @@ describe('<TimeLayerSliderPanel />', () => {
 
   it('autoplay button is visible', () => {
     render(<TimeLayerSliderPanel
-      map={map}
       initStartDate={moment().subtract(3, 'hours')}
       initEndDate={moment()}
     />);
@@ -60,7 +58,6 @@ describe('<TimeLayerSliderPanel />', () => {
 
   it('autoplay can be toggled', async () => {
     render(<TimeLayerSliderPanel
-      map={map}
       initStartDate={moment().subtract(3, 'hours')}
       initEndDate={moment()}
       timeAwareLayers={[testLayer]}
