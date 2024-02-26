@@ -1,105 +1,128 @@
-import OlLayer from 'ol/layer/Layer';
+import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import OlLayerBase from 'ol/layer/Base';
+import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
 import MultiLayerSlider from './MultiLayerSlider';
 
 describe('<MultiLayerSlider />', () => {
-  let layers: OlLayer[];
+  let layers: ArrayTwoOrMore<OlLayerBase>;
 
   beforeEach(() => {
     layers = [
       TestUtil.createVectorLayer({}),
       TestUtil.createVectorLayer({}),
-      TestUtil.createVectorLayer({})
     ];
+    layers.push(TestUtil.createVectorLayer({}));
   });
 
   it('is defined', () => {
     expect(MultiLayerSlider).not.toBeUndefined();
   });
 
-  it('can be rendered', () => {
-    const props = {
-      layers: layers
-    };
-    const wrapper = TestUtil.mountComponent(MultiLayerSlider, props);
-    expect(wrapper).not.toBeUndefined();
+  it('can rendered', () => {
+    const { container } = render(
+      <MultiLayerSlider
+        layers={layers}
+      />
+    );
+
+    expect(container).toBeVisible();
   });
 
   it('sets the initial transparency of the layers', () => {
-    const props = {
-      layers: layers
-    };
-
-    TestUtil.mountComponent(MultiLayerSlider, props);
+    render(
+      <MultiLayerSlider
+        layers={layers}
+      />
+    );
     expect(layers[0].getOpacity()).toBe(1);
     expect(layers[1].getOpacity()).toBe(0);
     expect(layers[2].getOpacity()).toBe(0);
   });
 
-  it('updates the opacity of the layer by setting a transparency value', () => {
-    const props = {
-      layers: layers
-    };
-    const wrapper = TestUtil.mountComponent(MultiLayerSlider, props);
+  it('updates the opacity of the layer by setting a transparency value', async () => {
+    render(
+      <MultiLayerSlider
+        layers={layers}
+      />
+    );
 
-    (wrapper.instance() as MultiLayerSlider).valueUpdated(25);
-    expect(layers[0].getOpacity()).toBe(0.5);
-    expect(layers[1].getOpacity()).toBe(0.5);
+    const mark1 = screen.getByText('Layer 1');
+
+    await userEvent.click(mark1);
+
+    expect(layers[0].getOpacity()).toBe(1);
+    expect(layers[1].getOpacity()).toBe(0);
     expect(layers[2].getOpacity()).toBe(0);
 
-    (wrapper.instance() as MultiLayerSlider).valueUpdated(50);
+    const mark2 = screen.getByText('Layer 2');
+
+    await userEvent.click(mark2);
+
     expect(layers[0].getOpacity()).toBe(0);
     expect(layers[1].getOpacity()).toBe(1);
     expect(layers[2].getOpacity()).toBe(0);
 
-    (wrapper.instance() as MultiLayerSlider).valueUpdated(75);
-    expect(layers[0].getOpacity()).toBe(0);
-    expect(layers[1].getOpacity()).toBe(0.5);
-    expect(layers[2].getOpacity()).toBe(0.5);
+    const mark3 = screen.getByText('Layer 3');
 
-    (wrapper.instance() as MultiLayerSlider).valueUpdated(100);
+    await userEvent.click(mark3);
+
     expect(layers[0].getOpacity()).toBe(0);
     expect(layers[1].getOpacity()).toBe(0);
     expect(layers[2].getOpacity()).toBe(1);
-
-    (wrapper.instance() as MultiLayerSlider).valueUpdated(0);
-    expect(layers[0].getOpacity()).toBe(1);
-    expect(layers[1].getOpacity()).toBe(0);
-    expect(layers[2].getOpacity()).toBe(0);
   });
 
-  it.only('sets the display name for the layer based on the layer property defined by the user', () => {
+  it('sets the display name for the layer based on the layer property defined by the user', () => {
     layers.forEach((layer, index) => {
       layer.set('name', `Layer Name ${index + 1}`);
       layer.set('title', `Layer Title ${index + 1}`);
     });
 
-    const props = {
-      layers: layers,
-    };
+    const { rerender } = render(
+      <MultiLayerSlider
+        layers={layers}
+      />
+    );
 
-    // if nothing is defined, it should get the layer name
-    const wrapper = TestUtil.mountComponent(MultiLayerSlider, props);
+    let mark1 = screen.getByText('Layer Name 1');
+    let mark2 = screen.getByText('Layer Name 2');
+    let mark3 = screen.getByText('Layer Name 3');
 
-    const expectedMarksWithNameProperty = { 0: 'Layer Name 1', 50: 'Layer Name 2', 100: 'Layer Name 3' };
-    const expectedMarksWithTitleProperty = { 0: 'Layer Title 1', 50: 'Layer Title 2', 100: 'Layer Title 3' };
-    const expectedMarksWithoutProperty = { 0: 'Layer 1', 50: 'Layer 2', 100: 'Layer 3' };
+    expect(mark1).toBeVisible();
+    expect(mark2).toBeVisible();
+    expect(mark3).toBeVisible();
 
-    expect((wrapper.instance() as MultiLayerSlider).getMarks()).toEqual(expectedMarksWithNameProperty);
-    expect((wrapper.instance() as MultiLayerSlider).formatTip(0)).toEqual('Layer Name 1 100%');
+    rerender(
+      <MultiLayerSlider
+        layers={layers}
+        nameProperty="title"
+      />
+    );
 
-    wrapper.setProps({ ...props, nameProperty: 'title' });
-    expect((wrapper.instance() as MultiLayerSlider).getMarks()).toEqual(expectedMarksWithTitleProperty);
-    expect((wrapper.instance() as MultiLayerSlider).formatTip(0)).toEqual('Layer Title 1 100%');
+    mark1 = screen.getByText('Layer Title 1');
+    mark2 = screen.getByText('Layer Title 2');
+    mark3 = screen.getByText('Layer Title 3');
 
-    wrapper.setProps({ ...props, nameProperty: 'name' });
-    expect((wrapper.instance() as MultiLayerSlider).getMarks()).toEqual(expectedMarksWithNameProperty);
-    expect((wrapper.instance() as MultiLayerSlider).formatTip(0)).toEqual('Layer Name 1 100%');
+    expect(mark1).toBeVisible();
+    expect(mark2).toBeVisible();
+    expect(mark3).toBeVisible();
 
-    wrapper.setProps({ ...props, nameProperty: 'randomProp' });
-    expect((wrapper.instance() as MultiLayerSlider).getMarks()).toEqual(expectedMarksWithoutProperty);
-    expect((wrapper.instance() as MultiLayerSlider).formatTip(0)).toEqual('Layer 1 100%');
+    rerender(
+      <MultiLayerSlider
+        layers={layers}
+        nameProperty="randomProp"
+      />
+    );
 
+    mark1 = screen.getByText('Layer 1');
+    mark2 = screen.getByText('Layer 2');
+    mark3 = screen.getByText('Layer 3');
+
+    expect(mark1).toBeVisible();
+    expect(mark2).toBeVisible();
+    expect(mark3).toBeVisible();
   });
 });
