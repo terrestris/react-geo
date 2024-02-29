@@ -1,15 +1,18 @@
 import './CircleMenuItem.less';
 
-import * as React from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useRef
+} from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
 
 export interface CircleMenuItemProps {
   /**
    * The duration of the animation in milliseconds. Pass 0 to avoid animation.
    */
-  animationDuration: number;
+  animationDuration?: number;
   className?: string;
   /**
    * The radius of the CircleMenu in pixels.
@@ -25,94 +28,50 @@ export interface CircleMenuItemProps {
   rotationAngle: number;
 }
 
-/**
- * The CircleMenuItem.
- *
- * @class CircleMenuItem
- * @extends React.Component
- */
-export class CircleMenuItem extends React.Component<CircleMenuItemProps> {
+export const CircleMenuItem: React.FC<CircleMenuItemProps> = ({
+  rotationAngle,
+  radius,
+  animationDuration = 300,
+  className,
+  children,
+  ...passThroughProps
+}) => {
 
-  static defaultProps = {
-    animationDuration: 300
-  };
+  const finalClassName = className
+    ? `${className} ${CSS_PREFIX}circlemenuitem`
+    : `${CSS_PREFIX}circlemenuitem`;
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}circlemenuitem`;
+  const ref = useRef<HTMLDivElement>(null);
 
-  /**
-   * Internal reference used to apply the transformation right on the div.
-   * @private
-   */
-  _ref: HTMLDivElement | null = null;
-
-  /**
-   * A react lifecycle method called when the component did mount.
-   * It calls the applyTransformation method right after updating.
-   */
-  componentDidMount() {
-    setTimeout(this.applyTransformation.bind(this), 1);
-  }
-
-  /**
-   * A react lifecycle method called when the component did update.
-   * It calls the applyTransformation method right after updating.
-   */
-  componentDidUpdate() {
-    setTimeout(this.applyTransformation.bind(this), 1);
-  }
-
-  /**
-   * Applies the transformation to the component.
-   */
-  applyTransformation() {
-    const {
-      rotationAngle,
-      radius
-    } = this.props;
-    if (this._ref) {
-      this._ref.style.transform = `rotate(${rotationAngle}deg) translate(${radius}px) rotate(-${rotationAngle}deg)`;
+  const applyTransformation = useCallback(() => {
+    if (ref.current) {
+      ref.current.style.transform = `rotate(${rotationAngle}deg) translate(${radius}px) rotate(-${rotationAngle}deg)`;
     }
-  }
+  }, [radius, rotationAngle]);
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      rotationAngle,
-      radius,
-      animationDuration,
-      className,
-      ...passThroughProps
-    } = this.props;
+  useEffect(() => {
+    setTimeout(applyTransformation, 1);
+  }, [rotationAngle, radius, applyTransformation]);
 
-    const finalClassName = className
-      ? `${className} ${this._className}`
-      : this._className;
-
-    return (
-      <div
-        className={finalClassName}
-        ref={i => this._ref = i}
-        style={{
-          display: 'block',
-          top: '50%',
-          left: '50%',
-          margin: '-1.3em',
-          position: 'absolute',
-          transform: 'rotate(0deg) translate(0px) rotate(0deg)',
-          transition: `transform ${animationDuration}ms`
-        }}
-        {...passThroughProps}
-      >
-        {this.props.children}
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      className={finalClassName}
+      ref={ref}
+      role="menuitem"
+      style={{
+        display: 'block',
+        top: '50%',
+        left: '50%',
+        margin: '-1.3em',
+        position: 'absolute',
+        transform: 'rotate(0deg) translate(0px) rotate(0deg)',
+        transition: `transform ${animationDuration}ms`
+      }}
+      {...passThroughProps}
+    >
+      {children}
+    </div>
+  );
+};
 
 export default CircleMenuItem;

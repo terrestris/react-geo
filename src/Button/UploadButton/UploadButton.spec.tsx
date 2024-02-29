@@ -1,36 +1,48 @@
-import TestUtil from '../../Util/TestUtil';
+import { fireEvent,render, screen } from '@testing-library/react';
+import * as React from 'react';
+
 import UploadButton from './UploadButton';
 
 describe('<UploadButton />', () => {
   it('is defined', () => {
-    expect(UploadButton).not.toBeUndefined();
+    expect(UploadButton).toBeDefined();
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(UploadButton);
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<UploadButton />);
+    expect(container).toBeVisible();
   });
 
-  it('renders an inputfield', () => {
-    const wrapper = TestUtil.mountComponent(UploadButton);
-    expect(wrapper.find('input').length).toBe(1);
+  it('applies inputProps to the input field', () => {
+    render(
+      <UploadButton
+        inputProps={{
+          role: 'test'
+        }}
+      />
+    );
+
+    expect(screen.getByRole('test')).toBeInTheDocument();
   });
 
-  it('applies inputProps to the inputfield', () => {
-    const wrapper = TestUtil.mountComponent(UploadButton, {inputProps: {multiple: true}});
-    expect(wrapper.find('input[multiple=true]').length).toBe(1);
-  });
-
-  it('renders a simplebutton if no children are given', () => {
-    const wrapper = TestUtil.mountComponent(UploadButton);
-    expect(wrapper.find('button').length).toBe(1);
+  it('renders a simple button if no children are given', () => {
+    render(<UploadButton />);
+    expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
   it('calls a given click callback method onChange', () => {
     const onChange = jest.fn();
-    const wrapper = TestUtil.mountComponent(UploadButton, {onChange});
-    wrapper.find('input').simulate('change');
+    render(
+      <UploadButton
+        onChange={onChange}
+        inputProps={{
+          role: 'test'
+        }}
+      />
+    );
+
+    fireEvent.change(screen.getByRole('test'));
+
     expect(onChange).toHaveBeenCalledTimes(1);
   });
-
 });
