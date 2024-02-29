@@ -43,7 +43,7 @@ interface OwnProps {
 }
 
 export type CRSComboProps = OwnProps & AutoCompleteProps;
-const className = `${CSS_PREFIX}coordinatereferencesystemcombo`;
+const defaultClassName = `${CSS_PREFIX}coordinatereferencesystemcombo`;
 
 /**
  * Class representing a combo to choose coordinate projection system via a
@@ -54,6 +54,7 @@ const className = `${CSS_PREFIX}coordinatereferencesystemcombo`;
  */
 const CoordinateReferenceSystemCombo: FC<CRSComboProps> = ({
   crsApiUrl,
+  className,
   emptyTextPlaceholderText = 'Please select a CRS',
   onSelect = () => undefined,
   predefinedCrsDefinitions,
@@ -140,7 +141,7 @@ const CoordinateReferenceSystemCombo: FC<CRSComboProps> = ({
     }
   }, [onSelect, selected]);
 
-  const finalClassName = className ? `${className} ${className}` : className;
+  const finalClassName = className ? `${defaultClassName} ${className}` : defaultClassName;
 
   return (
     <AutoComplete
