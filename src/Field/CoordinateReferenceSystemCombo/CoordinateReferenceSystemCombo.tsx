@@ -1,35 +1,36 @@
-import { AutoComplete } from 'antd';
-import { AutoCompleteProps } from 'antd/lib/auto-complete';
-import * as React from 'react';
-
-const { Option } = AutoComplete;
-
 import './CoordinateReferenceSystemCombo.less';
 
 import Logger from '@terrestris/base-util/dist/Logger';
-import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
+import {
+  ProjectionDefinition,
+  useProjFromEpsgIO
+} from '@terrestris/react-util/dist/Hooks/useProjFromEpsgIO/useProjFromEpsgIO';
+import { AutoComplete } from 'antd';
+import { AutoCompleteProps } from 'antd/lib/auto-complete';
+import { DefaultOptionType } from 'antd/lib/select';
+import _find from 'lodash/find';
+import _isEqual from 'lodash/isEqual';
+import _isNil from 'lodash/isNil';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
-interface CrsDefinition {
-  value: string;
-  code: string;
-}
+const { Option } = AutoComplete;
 
 interface OwnProps {
   /**
    * The API to query for CRS definitions
    * default: https://epsg.io
    */
-  crsApiUrl: string;
+  crsApiUrl?: string;
   /**
    * The empty text set if no value is given / provided
    */
-  emptyTextPlaceholderText: string;
+  emptyTextPlaceholderText?: string;
   /**
    * A function
    */
-  onSelect: (crsDefinition: CrsDefinition) => void;
+  onSelect?: (projectionDefinition: ProjectionDefinition | undefined) => void;
   /**
    * An optional CSS class which should be added.
    */
@@ -38,15 +39,11 @@ interface OwnProps {
    * An array of predefined crs definitions having at least value (name of
    * CRS) and code (e.g. EPSG-code of CRS) property
    */
-  predefinedCrsDefinitions?: CrsDefinition[];
-}
-
-interface CRSComboState {
-  crsDefinitions: CrsDefinition[];
-  value: string|null;
+  predefinedCrsDefinitions?: Record<string, ProjectionDefinition>;
 }
 
 export type CRSComboProps = OwnProps & AutoCompleteProps;
+const defaultClassName = `${CSS_PREFIX}coordinatereferencesystemcombo`;
 
 /**
  * Class representing a combo to choose coordinate projection system via a
@@ -55,191 +52,112 @@ export type CRSComboProps = OwnProps & AutoCompleteProps;
  * @class The CoordinateReferenceSystemCombo
  * @extends React.Component
  */
-class CoordinateReferenceSystemCombo extends React.Component<CRSComboProps, CRSComboState> {
+const CoordinateReferenceSystemCombo: FC<CRSComboProps> = ({
+  crsApiUrl,
+  className,
+  emptyTextPlaceholderText = 'Please select a CRS',
+  onSelect = () => undefined,
+  predefinedCrsDefinitions,
+  ...passThroughOpts
+}) => {
 
-  static defaultProps = {
-    emptyTextPlaceholderText: 'Please select a CRS',
-    crsApiUrl: 'https://epsg.io/',
-    onSelect: () => undefined
-  };
-
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}coordinatereferencesystemcombo`;
-
-  /**
-   * Create a CRS combo.
-   * @constructs CoordinateReferenceSystemCombo
-   */
-  constructor(props: CRSComboProps) {
-    super(props);
-
-    this.state = {
-      crsDefinitions: [],
-      value: null
-    };
-  }
-
-  /**
-   * Fetch CRS definitions from epsg.io for given search string
-   *
-   * @param searchVal The search string
-   */
-  fetchCrs = async (searchVal: string) => {
-    const { crsApiUrl } = this.props;
-
-    const queryParameters = {
-      format: 'json',
-      q: searchVal
-    };
-
-    return fetch(`${crsApiUrl}?${UrlUtil.objectToRequestString(queryParameters)}`)
-      .then(response => response.json());
-  };
+  const [projectionDefinitions, setProjectionDefinitions] = useState<Record<string, ProjectionDefinition>>({});
+  const [searchValue, setSearchValue] = useState<string>();
+  const [selected, setSelected] = useState<ProjectionDefinition>();
 
   /**
    * This function gets called when the EPSG.io fetch returns an error.
    * It logs the error to the console.
    *
    */
-  onFetchError(error: any) {
-    Logger.error('Error while requesting in CoordinateReferenceSystemCombo', error);
-  }
-
-  /**
-   * This function transforms results of EPSG.io
-   *
-   * @param json The result object of EPSG.io-API, see where
-   *  https://github.com/klokantech/epsg.io#api-for-results
-   * @return Array of CRS definitons used in CoordinateReferenceSystemCombo
-   */
-  transformResults = (json: any): CrsDefinition[] => {
-    const results = json.results;
-    if (results && results.length > 0) {
-      return results.map((obj: any) => ({code: obj.code, value: obj.name, proj4def: obj.proj4, bbox: obj.bbox}));
-    } else {
-      return [];
-    }
+  const onFetchError = (error: any) => {
+    Logger.error(`Error while requesting in CoordinateReferenceSystemCombo: ${error}`);
   };
 
-  /**
-   * This function gets called when the EPSG.io fetch returns an error.
-   * It logs the error to the console.
-   *
-   * @param value The search value.
-   */
-  handleSearch = async (value: string) => {
-    const {
-      predefinedCrsDefinitions
-    } = this.props;
+  const crsObjects = useMemo(
+    () => predefinedCrsDefinitions || projectionDefinitions,
+    [projectionDefinitions, predefinedCrsDefinitions]
+  );
 
-    if (!value || value.length === 0) {
-      this.setState({
-        value,
-        crsDefinitions: []
-      });
-      return;
-    }
+  const epsgIoResults = useProjFromEpsgIO({
+    crsApiUrl,
+    onFetchError,
+    searchValue
+  });
 
-    if (!predefinedCrsDefinitions) {
-      try {
-        const result = await this.fetchCrs(value);
-        this.setState({
-          crsDefinitions: this.transformResults(result)
-        });
-      } catch (e) {
-        this.onFetchError(e);
-      }
-    } else {
-      this.setState({ value });
-    }
-  };
+  const getEpsgDescription = (projDefinition: ProjectionDefinition) =>
+    `${projDefinition.name} (EPSG:${projDefinition.code})`;
 
   /**
    * Handles selection of a CRS item in Autocomplete
    *
-   * @param value The EPSG code.
+   * @param _
    * @param option The selected OptionData
    */
-  onCrsItemSelect = (value: string, option: any) => {
-    const {
-      onSelect,
-      predefinedCrsDefinitions
-    } = this.props;
-
-    const  {
-      crsDefinitions
-    } = this.state;
-
-    const crsObjects = predefinedCrsDefinitions || crsDefinitions;
-
-    const selected = crsObjects.filter(i => i.code === option.key)[0];
-
-    this.setState({
-      value: selected.value
-    });
-
-    onSelect(selected);
+  const onCrsItemSelect = (_: string, option: DefaultOptionType) => {
+    const selectedProjection = _find(crsObjects, (p: ProjectionDefinition) => p.code === option.code);
+    setSelected(selectedProjection);
+    if (!_isNil(selectedProjection)) {
+      setSearchValue(undefined);
+    }
   };
 
   /**
-   * Tranforms CRS object returned by EPSG.io to antd  Option component
+   * Transform CRS object returned by EPSG.io to antd Option component
    *
-   * @param crsObject Single plain CRS object returned by EPSG.io
+   * @param code The EPSG code of the ProjectionDefinition
+   * @param projDefinition Single plain CRS object returned by EPSG.io
    *
    * @return Option component to render
    */
-  transformCrsObjectsToOptions(crsObject: CrsDefinition) {
-    const value = `${crsObject.value} (EPSG:${crsObject.code})`;
-
+  const transformCrsObjectsToOptions = ([, projDefinition]: [string, ProjectionDefinition]) => {
+    const epsgDescription = getEpsgDescription(projDefinition);
     return (
       <Option
-        key={crsObject.code}
-        value={value}
+        key={projDefinition.code}
+        code={projDefinition.code}
+        value={epsgDescription}
       >
-        {value}
+        {epsgDescription}
       </Option>
     );
-  }
+  };
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      emptyTextPlaceholderText,
-      onSelect,
-      crsApiUrl,
-      predefinedCrsDefinitions,
-      ...passThroughOpts
-    } = this.props;
+  const onClear = () => {
+    setSelected(undefined);
+    setSearchValue(undefined);
+    setProjectionDefinitions({});
+  };
 
-    const {
-      crsDefinitions
-    } = this.state;
+  useEffect(() => {
+    if (!_isNil(epsgIoResults) && !_isEqual(epsgIoResults, projectionDefinitions) && _isNil(selected)) {
+      setProjectionDefinitions(epsgIoResults);
+    }
+  }, [epsgIoResults, projectionDefinitions, selected]);
 
-    const crsObjects = predefinedCrsDefinitions || crsDefinitions;
+  useEffect(() => {
+    if (!_isNil(selected)) {
+      onSelect(selected);
+    }
+  }, [onSelect, selected]);
 
-    const finalClassName = className ? `${className} ${this.className}` : this.className;
+  const finalClassName = className ? `${defaultClassName} ${className}` : defaultClassName;
 
-    return (
-      <AutoComplete
-        className={finalClassName}
-        allowClear={true}
-        onSelect={(v: string, o: any) => this.onCrsItemSelect(v, o)}
-        onChange={(v: string) => this.handleSearch(v)}
-        placeholder={emptyTextPlaceholderText}
-        {...passThroughOpts}
-      >
-        {
-          crsObjects.map(this.transformCrsObjectsToOptions)
-        }
-      </AutoComplete>
-    );
-  }
-}
+  return (
+    <AutoComplete
+      allowClear={true}
+      className={finalClassName}
+      onChange={setSearchValue}
+      onClear={onClear}
+      onSelect={onCrsItemSelect}
+      placeholder={emptyTextPlaceholderText}
+      {...passThroughOpts}
+    >
+      {
+        Object.entries(crsObjects).map(transformCrsObjectsToOptions)
+      }
+    </AutoComplete>
+  );
+};
 
 export default CoordinateReferenceSystemCombo;
