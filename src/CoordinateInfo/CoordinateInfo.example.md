@@ -2,6 +2,8 @@
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CoordinateInfo from '@terrestris/react-geo/dist/CoordinateInfo/CoordinateInfo';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import {
   Button,
   Spin,
@@ -9,8 +11,6 @@ import {
   Tooltip
 } from 'antd';
 import * as copy from 'copy-to-clipboard';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
-import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
@@ -64,88 +64,88 @@ const CoordinateInfoExample = () => {
           height: '400px'
         }}
       />
-        <CoordinateInfo
-          map={this.map}
-          queryLayers={[queryLayer]}
-          resultRenderer={(opts) => {
-            const features = opts.features;
-            const clickCoord = opts.clickCoordinate;
-            const loading = opts.loading;
+      <CoordinateInfo
+        map={this.map}
+        queryLayers={[queryLayer]}
+        resultRenderer={(opts) => {
+          const features = opts.features;
+          const clickCoord = opts.clickCoordinate;
+          const loading = opts.loading;
 
-            return (
-              Object.keys(features).length === 1 && features[Object.keys(features)[0]].length === 1 ?
-                <div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
+          return (
+            Object.keys(features).length === 1 && features[Object.keys(features)[0]].length === 1 ?
+              <div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Spin
+                    spinning={loading}
                   >
-                    <Spin
-                      spinning={loading}
-                    >
-                      <Statistic
-                        title="Coordinate"
-                        value={clickCoord.join(', ')}
-                      />
-                    </Spin>
-                    <Tooltip
-                      title="Copy to clipboard"
-                    >
-                      <Button
-                        style={{ marginTop: 16 }}
-                        type="primary"
-                        onClick={() => {
-                          copy(clickCoord.join(', '));
-                        }}
-                        icon={
-                          <FontAwesomeIcon
-                            icon={faCopy}
-                          />
-                        }
-                      />
-                    </Tooltip>
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
+                    <Statistic
+                      title="Coordinate"
+                      value={clickCoord.join(', ')}
+                    />
+                  </Spin>
+                  <Tooltip
+                    title="Copy to clipboard"
                   >
-                    <Spin
-                      spinning={loading}
-                    >
-                      <Statistic
-                        title="State"
-                        value={features[Object.keys(features)[0]][0].get('STATE_NAME')}
-                      />
-                    </Spin>
-                    <Tooltip
-                      title="Copy to clipboard"
-                    >
-                      <Button
-                        style={{ marginTop: 16 }}
-                        type="primary"
-                        onClick={() => {
-                          copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
-                        }}
-                        icon={
-                          <FontAwesomeIcon
-                            icon={faCopy}
-                          />
-                        }
-                      />
-                    </Tooltip>
-                  </div>
-                </div> :
-                <span>Click on a state to get details about the clicked coordinate.</span>
-            );
-          }}
-        />
-      </MapContext.Provider>
-    );
+                    <Button
+                      style={{ marginTop: 16 }}
+                      type="primary"
+                      onClick={() => {
+                        copy(clickCoord.join(', '));
+                      }}
+                      icon={
+                        <FontAwesomeIcon
+                          icon={faCopy}
+                        />
+                      }
+                    />
+                  </Tooltip>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Spin
+                    spinning={loading}
+                  >
+                    <Statistic
+                      title="State"
+                      value={features[Object.keys(features)[0]][0].get('STATE_NAME')}
+                    />
+                  </Spin>
+                  <Tooltip
+                    title="Copy to clipboard"
+                  >
+                    <Button
+                      style={{ marginTop: 16 }}
+                      type="primary"
+                      onClick={() => {
+                        copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
+                      }}
+                      icon={
+                        <FontAwesomeIcon
+                          icon={faCopy}
+                        />
+                      }
+                    />
+                  </Tooltip>
+                </div>
+              </div> :
+              <span>Click on a state to get details about the clicked coordinate.</span>
+          );
+        }}
+      />
+    </MapContext.Provider>
+  );
 }
 
 <CoordinateInfoExample />
