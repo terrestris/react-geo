@@ -1,23 +1,23 @@
 This demonstrates the usage of the WfsSearch.
+Type a country name in its own language…
 
 ```jsx
 import WfsSearch from '@terrestris/react-geo/dist/Field/WfsSearch/WfsSearch';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';
-import * as React from 'react';
+import {useEffect, useState} from 'react';
 
-class WfsSearchExample extends React.Component {
+const WfsSearchExample = () => {
 
-  constructor(props) {
+  const [map, setMap] = useState();
 
-    super(props);
-
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.map = new OlMap({
+  useEffect(() => {
+    const newMap = new OlMap({
       layers: [
         new OlLayerTile({
           name: 'OSM',
@@ -29,45 +29,44 @@ class WfsSearchExample extends React.Component {
         zoom: 4
       })
     });
+  
+    setMap(newMap);
+  }, []);
+  
+  if (!map) {
+    return null;
   }
 
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="example-block">
-          <label>WFS Search:<br />
-            <WfsSearch
-              placeholder="Type a countryname in its own language…"
-              baseUrl='https://ows-demo.terrestris.de/geoserver/osm/wfs'
-              featureTypes={['osm:osm-country-borders']}
-              maxFeatures={3}
-              attributeDetails={{
-                'osm:osm-country-borders': {
-                  name: {
-                    type: 'string',
-                    exactSearch: false,
-                    matchCase: false
-                  }
+  return (
+    <MapContext.Provider value={map}>
+      <div className="example-block">
+        <label>WFS Search:<br />
+          <WfsSearch
+            placeholder="Type a countryname in its own language…"
+            baseUrl='https://ows-demo.terrestris.de/geoserver/osm/wfs'
+            featureTypes={['osm:osm-country-borders']}
+            featureNS={"osm"}
+            maxFeatures={3}
+            attributeDetails={{
+              'osm:osm-country-borders': {
+                name: {
+                  type: 'string',
+                  exactSearch: false,
+                  matchCase: false
                 }
-              }}
-              map={this.map}
-            />
-          </label>
-        </div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
-        />
+              }
+            }}
+          />
+        </label>
       </div>
-    );
-  }
-}
-
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
+    </MapContext.Provider>
+  );
+};
 <WfsSearchExample />
 ```
