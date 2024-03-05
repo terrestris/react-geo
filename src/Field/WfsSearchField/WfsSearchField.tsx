@@ -1,16 +1,18 @@
-import './WfsSearch.less';
+import './WfsSearchField.less';
 
+import { faCircleNotch, faClose } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Logger from '@terrestris/base-util/dist/Logger';
 import { SearchConfig } from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { useWfs } from '@terrestris/react-util/dist/Hooks/useWfs/useWfs';
-import { AutoComplete, Spin } from 'antd';
-import { AutoCompleteProps } from 'antd/lib/auto-complete';
+import { AutoComplete, Input, Spin } from 'antd';
 import { DefaultOptionType, OptionProps } from 'antd/lib/select';
 import _get from 'lodash/get';
 import _isNil from 'lodash/isNil';
+import _isString from 'lodash/isString';
 import OlFeature from 'ol/Feature';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -22,30 +24,35 @@ export interface WfsSearchState {
   searchTerm: string;
 }
 
-export type WfsSearchProps = {
+export type WfsSearchFieldProps = {
   additionalFetchOptions?: Partial<RequestInit>;
+  asInput?: boolean;
   baseUrl: string;
   className?: string;
   displayValue?: string;
   idProperty?: string;
   minChars?: number;
-} & SearchConfig & AutoCompleteProps ;
+  onBeforeSearch?: (value: string) => string;
+  onChange?: (val: OlFeature[] | undefined) => undefined;
+  value?: OlFeature[] | undefined;
+} & SearchConfig;
 
 const defaultClassName = `${CSS_PREFIX}wfssearch`;
 
 /**
- * The WfsSearch field.
+ * The WfsSearchField field.
  * Implements an input field to do a WFS-GetFeature request.
  *
  * The GetFeature request is created with `ol.format.WFS.writeGetFeature`
  * so most of the WFS specific options work like document in the corresponding
  * API-docs: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
  *
- * @class WfsSearch
+ * @class WfsSearchField
  * @extends React.Component
  */
-export const WfsSearch: FC<WfsSearchProps> = ({
+export const WfsSearchField: FC<WfsSearchFieldProps> = ({
   additionalFetchOptions,
+  asInput = false,
   attributeDetails = {},
   baseUrl,
   className,
@@ -57,9 +64,12 @@ export const WfsSearch: FC<WfsSearchProps> = ({
   idProperty = 'id',
   maxFeatures,
   minChars = 3,
+  onBeforeSearch = v => v,
+  onChange = () => undefined,
   outputFormat = 'application/json',
   propertyNames,
   srsName = 'EPSG:3857',
+  value,
   wfsFormatOptions,
   ...passThroughProps
 }) => {
@@ -125,8 +135,8 @@ export const WfsSearch: FC<WfsSearchProps> = ({
       return <></>;
     }
 
-    const value = _get(feature?.getProperties(), displayValue);
-    const display = _isNil(value) ? feature.get(idProperty) : value;
+    const v = _get(feature?.getProperties(), displayValue);
+    const display = _isNil(v) ? feature.get(idProperty) : v;
     return (
       <Option
         key={feature.get(idProperty)}
@@ -156,22 +166,72 @@ export const WfsSearch: FC<WfsSearchProps> = ({
     }
   };
 
-  const onUpdateInput = (val: string) => setSearchTerm(val);
+  /**
+   * Called if the input is being updated. It sets the current inputValue
+   * as searchTerm and starts a search if the inputValue has
+   * a length of at least `this.props.minChars` (default 3).
+   *
+   * Gets undefined if clear btn is pressed.
+   * @param val
+   */
+  const onUpdateInput = (val: any) => {
+    let updatedValue = '';
+    if (_isString(val)) {
+      updatedValue = onBeforeSearch(val);
+    } else {
+      if (val?.target?.value) {
+        updatedValue = onBeforeSearch(val.target.value);
+      }
+    }
+    setSearchTerm(updatedValue);
+    return;
+  };
 
   /**
    * The function describes what to do when an item is selected.
    *
-   * @param value The value of the selected option.
+   * @param _
    * @param option The selected option.
    */
-  const onMenuItemSelected = (value: string, option: DefaultOptionType): void => {
+  const onMenuItemSelected = (_: string, option: DefaultOptionType): void => {
     const selectedFeatures = features?.filter(feat => `${feat.get(idProperty)}` === option.key);
     if (!_isNil(selectedFeatures) && Array.isArray(selectedFeatures) && selectedFeatures?.length > 0) {
       onSelect(selectedFeatures[0]);
     }
   };
 
+  /**
+   * Resets input field value and previously fetched data on reset button click.
+   */
+  const resetSearch = () => setSearchTerm(undefined);
+
+  useEffect(() => {
+    onChange(features);
+  }, [onChange, features]);
+
   const finalClassName = className ? `${className} ${defaultClassName}` : defaultClassName;
+
+  if (asInput) {
+    return (
+      <Input
+        className={finalClassName}
+        onChange={onUpdateInput}
+        suffix={
+          loading ?
+            <FontAwesomeIcon
+              spin={true}
+              icon={faCircleNotch}
+              onClick={resetSearch}
+            /> :
+            <FontAwesomeIcon
+              icon={faClose}
+              onClick={resetSearch}
+            />
+        }
+        value={searchTerm}
+      />
+    );
+  }
 
   return (
     <AutoComplete<string>
@@ -183,6 +243,7 @@ export const WfsSearch: FC<WfsSearchProps> = ({
       onChange={onUpdateInput}
       onSelect={onMenuItemSelected}
       suffixIcon={null}
+      value={searchTerm}
       {...passThroughProps}
     >
       {
@@ -192,4 +253,4 @@ export const WfsSearch: FC<WfsSearchProps> = ({
   );
 };
 
-export default WfsSearch;
+export default WfsSearchField;
