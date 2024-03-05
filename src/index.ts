@@ -20,8 +20,7 @@ import FeatureLabelModal from './FeatureLabelModal/FeatureLabelModal';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
 import NominatimSearch from './Field/NominatimSearch/NominatimSearch';
 import ScaleCombo from './Field/ScaleCombo/ScaleCombo';
-import WfsSearch from './Field/WfsSearch/WfsSearch';
-import WfsSearchInput from './Field/WfsSearchInput/WfsSearchInput';
+import WfsSearchField from './Field/WfsSearchField/WfsSearchField';
 import AgFeatureGrid from './Grid/AgFeatureGrid/AgFeatureGrid';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid';
 import PropertyGrid from './Grid/PropertyGrid/PropertyGrid';
@@ -68,8 +67,7 @@ export {
   ToggleButton,
   ToggleGroup,
   UploadButton,
-  WfsSearch,
-  WfsSearchInput,
+  WfsSearchField,
   ZoomButton,
   ZoomToExtentButton
 };
