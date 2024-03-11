@@ -2,6 +2,8 @@
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CoordinateInfo from '@terrestris/react-geo/dist/CoordinateInfo/CoordinateInfo';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import {
   Button,
   Spin,
@@ -9,8 +11,6 @@ import {
   Tooltip
 } from 'antd';
 import * as copy from 'copy-to-clipboard';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
-import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
