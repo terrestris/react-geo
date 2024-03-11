@@ -18,12 +18,6 @@ import { CSS_PREFIX } from '../../constants';
 
 const Option = AutoComplete.Option;
 
-export interface WfsSearchState {
-  data: Array<any>;
-  fetching: boolean;
-  searchTerm: string;
-}
-
 export type WfsSearchFieldProps = {
   additionalFetchOptions?: Partial<RequestInit>;
   asInput?: boolean;
@@ -41,14 +35,12 @@ const defaultClassName = `${CSS_PREFIX}wfssearch`;
 
 /**
  * The WfsSearchField field.
- * Implements an input field to do a WFS-GetFeature request.
+ * Implements a field to do a WFS-GetFeature request.
  *
  * The GetFeature request is created with `ol.format.WFS.writeGetFeature`
  * so most of the WFS specific options work like document in the corresponding
  * API-docs: https://openlayers.org/en/latest/apidoc/module-ol_format_WFS.html
  *
- * @class WfsSearchField
- * @extends React.Component
  */
 export const WfsSearchField: FC<WfsSearchFieldProps> = ({
   additionalFetchOptions,
@@ -124,12 +116,12 @@ export const WfsSearchField: FC<WfsSearchFieldProps> = ({
   });
 
   /**
-    * Create an AutoComplete.Option from the given data.
-    *
-    * @param feature The feature as returned by the server.
-    * @return The AutoComplete.Option that will be
-    * rendered for each feature.
-    */
+   * Create an AutoComplete.Option from the given data.
+   *
+   * @param feature The feature as returned by the server.
+   * @return The AutoComplete.Option that will be
+   * rendered for each feature.
+   */
   const renderOption = (feature?: OlFeature): React.ReactElement<OptionProps> => {
     if (_isNil(feature)) {
       return <></>;
