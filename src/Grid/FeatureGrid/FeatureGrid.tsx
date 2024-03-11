@@ -270,7 +270,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   };
 
   /**
-   * Called on row click and zooms the the corresponding feature's extent.
+   * Called on row click and zooms the corresponding feature's extent.
    */
   const onRowClick = (row: InternalTableRecord) => {
     if (!row.key) {

@@ -99,7 +99,6 @@ import OlStyleStroke from 'ol/style/Stroke';
 import OlStyle from 'ol/style/Style';
 import OlStyleText from 'ol/style/Text';
 import OlView from 'ol/View';
-import * as PropTypes from 'prop-types';
 import React, {
   useCallback,
   useEffect,

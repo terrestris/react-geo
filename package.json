@@ -82,8 +82,7 @@
     "jspdf": "^2.5.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "proj4": "^2.9.2",
-    "prop-types": "^15.8.1"
+    "proj4": "^2.9.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",

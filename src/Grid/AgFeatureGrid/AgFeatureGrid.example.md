@@ -8,7 +8,6 @@ import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
 import federalStates from '../../../assets/federal-states-ger.json';
