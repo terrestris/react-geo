@@ -517,8 +517,12 @@ export const MeasureButton: FC<MeasureButtonProps> = ({
     const onMapClickKey = map?.on('click', onMapClick);
 
     return () => {
-      unByKey(onDrawStartKey);
-      unByKey(onDrawEndKey);
+      if (!_isNil(onDrawStartKey)) {
+        unByKey(onDrawStartKey);
+      }
+      if (!_isNil(onDrawEndKey)) {
+        unByKey(onDrawEndKey);
+      }
       if (onMapPointerMoveKey) {
         unByKey(onMapPointerMoveKey);
       }
