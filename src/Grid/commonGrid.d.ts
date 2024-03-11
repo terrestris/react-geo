@@ -1,5 +1,5 @@
-import OlFeature from "ol/Feature";
-import OlGeometry from "ol/geom/Geometry";
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
 
 export type RgCommonGridProps<RowType> = {
   /**

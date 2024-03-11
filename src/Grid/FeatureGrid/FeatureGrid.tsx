@@ -15,14 +15,11 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import RenderFeature from 'ol/render/Feature';
 import OlSourceVector from 'ol/source/Vector';
-import OlStyleCircle from 'ol/style/Circle';
-import OlStyleFill from 'ol/style/Fill';
-import OlStyleStroke from 'ol/style/Stroke';
-import OlStyle from 'ol/style/Style';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 import { CSS_PREFIX } from 'src/constants';
 
 import { RgCommonGridProps } from '../commonGrid';
+import { defaultFeatureStyle, defaultHighlightStyle, defaultSelectStyle } from '../commonGridStyles';
 
 type OwnProps = {
   onRowSelectionChange?: (selectedRowKeys: Array<number | string | bigint>,
@@ -40,77 +37,23 @@ const rowKeyClassNamePrefix = 'row-key-';
 const cellRowHoverClassName = 'ant-table-cell-row-hover';
 
 export const FeatureGrid = <T extends AnyObject = AnyObject,>({
-  features = [],
   attributeBlacklist = [],
-  featureStyle = new OlStyle({
-    fill: new OlStyleFill({
-      color: 'rgba(255, 255, 255, 0.5)'
-    }),
-    stroke: new OlStyleStroke({
-      color: 'rgba(73, 139, 170, 0.9)',
-      width: 1
-    }),
-    image: new OlStyleCircle({
-      radius: 6,
-      fill: new OlStyleFill({
-        color: 'rgba(255, 255, 255, 0.5)'
-      }),
-      stroke: new OlStyleStroke({
-        color: 'rgba(73, 139, 170, 0.9)',
-        width: 1
-      })
-    })
-  }),
-  highlightStyle = new OlStyle({
-    fill: new OlStyleFill({
-      color: 'rgba(230, 247, 255, 0.8)'
-    }),
-    stroke: new OlStyleStroke({
-      color: 'rgba(73, 139, 170, 0.9)',
-      width: 1
-    }),
-    image: new OlStyleCircle({
-      radius: 6,
-      fill: new OlStyleFill({
-        color: 'rgba(230, 247, 255, 0.8)'
-      }),
-      stroke: new OlStyleStroke({
-        color: 'rgba(73, 139, 170, 0.9)',
-        width: 1
-      })
-    })
-  }),
-  selectStyle = new OlStyle({
-    fill: new OlStyleFill({
-      color: 'rgba(230, 247, 255, 0.8)'
-    }),
-    stroke: new OlStyleStroke({
-      color: 'rgba(73, 139, 170, 0.9)',
-      width: 2
-    }),
-    image: new OlStyleCircle({
-      radius: 6,
-      fill: new OlStyleFill({
-        color: 'rgba(230, 247, 255, 0.8)'
-      }),
-      stroke: new OlStyleStroke({
-        color: 'rgba(73, 139, 170, 0.9)',
-        width: 2
-      })
-    })
-  }),
-  layerName = 'react-geo-feature-grid-layer',
-  columns,
-  keyFunction = getUid,
-  zoomToExtent = false,
-  selectable = false,
-  onRowClick: onRowClickProp,
-  onRowMouseOver: onRowMouseOverProp,
-  onRowMouseOut: onRowMouseOutProp,
-  onRowSelectionChange,
-  className,
-  rowClassName,
   children,
+  className,
+  columns,
+  featureStyle = defaultFeatureStyle,
+  features = [],
+  highlightStyle = defaultHighlightStyle,
+  keyFunction = getUid,
+  layerName = 'react-geo-feature-grid-layer',
+  onRowClick: onRowClickProp,
+  onRowMouseOut: onRowMouseOutProp,
+  onRowMouseOver: onRowMouseOverProp,
+  onRowSelectionChange,
+  rowClassName,
+  selectStyle = defaultSelectStyle,
+  selectable = false,
+  zoomToExtent = false,
   ...passThroughProps
 }: FeatureGridProps<T>): React.ReactElement | null => {
 

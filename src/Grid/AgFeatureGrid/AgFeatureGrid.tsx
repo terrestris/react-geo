@@ -28,14 +28,11 @@ import OlLayerBase from 'ol/layer/Base';
 import OlLayerVector from 'ol/layer/Vector';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlSourceVector from 'ol/source/Vector';
-import OlStyleCircle from 'ol/style/Circle';
-import OlStyleFill from 'ol/style/Fill';
-import OlStyleStroke from 'ol/style/Stroke';
-import OlStyle from 'ol/style/Style';
 import React, { Key, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 import { RgCommonGridProps } from '../commonGrid';
+import { defaultFeatureStyle, defaultHighlightStyle, defaultSelectStyle } from '../commonGridStyles';
 
 export type WithKey<T> = {
   key: Key;
@@ -96,87 +93,30 @@ export type AgFeatureGridProps<T> = OwnProps<T> & RgCommonGridProps<T> & AgGridR
 
 /**
  * The AgFeatureGrid.
- *
- * @class The AgFeatureGrid
- * @extends React.Component
  */
 export function AgFeatureGrid<T>({
-  theme = 'ag-theme-balham',
-  height = 250,
-  features = [],
-  className,
   attributeBlacklist = [],
-  featureStyle = new OlStyle({
-    fill: new OlStyleFill({
-      color: 'rgba(255, 255, 255, 0.5)'
-    }),
-    stroke: new OlStyleStroke({
-      color: 'rgba(73, 139, 170, 0.9)',
-      width: 1
-    }),
-    image: new OlStyleCircle({
-      radius: 6,
-      fill: new OlStyleFill({
-        color: 'rgba(255, 255, 255, 0.5)'
-      }),
-      stroke: new OlStyleStroke({
-        color: 'rgba(73, 139, 170, 0.9)',
-        width: 1
-      })
-    })
-  }),
-  highlightStyle = new OlStyle({
-    fill: new OlStyleFill({
-      color: 'rgba(230, 247, 255, 0.8)'
-    }),
-    stroke: new OlStyleStroke({
-      color: 'rgba(73, 139, 170, 0.9)',
-      width: 1
-    }),
-    image: new OlStyleCircle({
-      radius: 6,
-      fill: new OlStyleFill({
-        color: 'rgba(230, 247, 255, 0.8)'
-      }),
-      stroke: new OlStyleStroke({
-        color: 'rgba(73, 139, 170, 0.9)',
-        width: 1
-      })
-    })
-  }),
-  selectStyle = new OlStyle({
-    fill: new OlStyleFill({
-      color: 'rgba(230, 247, 255, 0.8)'
-    }),
-    stroke: new OlStyleStroke({
-      color: 'rgba(73, 139, 170, 0.9)',
-      width: 2
-    }),
-    image: new OlStyleCircle({
-      radius: 6,
-      fill: new OlStyleFill({
-        color: 'rgba(230, 247, 255, 0.8)'
-      }),
-      stroke: new OlStyleStroke({
-        color: 'rgba(73, 139, 170, 0.9)',
-        width: 2
-      })
-    })
-  }),
-  layerName = 'react-geo-feature-grid-layer',
-  columnDefs = [],
-  keyFunction = getUid,
-  zoomToExtent = false,
-  selectable = false,
-  onRowClick,
-  onRowMouseOver,
-  onRowMouseOut,
-  onRowSelectionChange,
-  onGridIsReady = () => undefined,
-  width,
   children,
-  rowData,
+  className,
+  columnDefs = [],
+  featureStyle = defaultFeatureStyle,
+  features = [],
+  height = 250,
+  highlightStyle = defaultHighlightStyle,
+  keyFunction = getUid,
+  layerName = 'react-geo-feature-grid-layer',
+  onGridIsReady = () => undefined,
   onMapSingleClick,
+  onRowClick,
+  onRowMouseOut,
+  onRowMouseOver,
+  onRowSelectionChange,
+  rowData,
+  selectStyle = defaultSelectStyle,
+  selectable = false,
+  theme = 'ag-theme-balham',
+  width,
+  zoomToExtent = false,
   ...agGridPassThroughProps
 }: AgFeatureGridProps<T>): ReactElement<AgFeatureGridProps<WithKey<T>>> | null {
 
