@@ -41,7 +41,7 @@ export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 export interface TimeLayerSliderPanelProps {
   className?: string;
   onChange?: (arg: moment.Moment) => void;
-  timeAwareLayers?: OlLayer<OlImageWMS | OlTileWMS, any>[];
+  timeAwareLayers: OlLayer<OlImageWMS | OlTileWMS>[];
   value?: moment.Moment;
   dateFormat?: string;
   tooltips?: Tooltips;
@@ -95,7 +95,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
 
     const wrapTimeSlider = useCallback(() => {
       const wmsTimeLayers: TimeLayerAwareConfig[] = [];
-      timeAwareLayers.forEach((l: any) => {
+      timeAwareLayers.forEach((l: OlLayer<OlImageWMS | OlTileWMS>) => {
         if (l.get('type') === 'WMSTime') {
           wmsTimeLayers.push({ layer: l });
         }
@@ -138,7 +138,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
       []
     );
 
-    const wmsTimeHandler = (val?: any) => {
+    const wmsTimeHandler = (val: moment.Moment | string | [string, string]) => {
       wmsTimeLayersRef.current.forEach(config => {
         if (config.layer && config.layer.get('type') === 'WMSTime') {
           const params = config.layer.getSource()?.getParams();
