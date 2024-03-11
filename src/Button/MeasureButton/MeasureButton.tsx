@@ -2,6 +2,7 @@ import './MeasureButton.less';
 
 import MeasureUtil from '@terrestris/ol-util/dist/MeasureUtil/MeasureUtil';
 import {useMap, useOlInteraction, useOlLayer} from '@terrestris/react-util';
+import _isNil from 'lodash/isNil';
 import OlCollection from 'ol/Collection';
 import {Coordinate as OlCoordinate} from 'ol/coordinate';
 import OlFeature from 'ol/Feature';
@@ -503,8 +504,12 @@ export const MeasureButton: FC<MeasureButtonProps> = ({
     const onMapClickKey = map?.on('click', onMapClick);
 
     return () => {
-      unByKey(onDrawStartKey);
-      unByKey(onDrawEndKey);
+      if (!_isNil(onDrawStartKey)) {
+        unByKey(onDrawStartKey);
+      }
+      if (!_isNil(onDrawEndKey)) {
+        unByKey(onDrawEndKey);
+      }
       if (onMapPointerMoveKey) {
         unByKey(onMapPointerMoveKey);
       }
