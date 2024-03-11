@@ -2,9 +2,7 @@ import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
 import { Table } from 'antd';
 import { AnyObject } from 'antd/lib/_util/type';
-import { ColumnsType, ColumnType } from 'antd/lib/table';
-import { TableProps } from 'antd/lib/table';
-import _isEqual from 'lodash/isEqual';
+import { ColumnsType, ColumnType, TableProps } from 'antd/lib/table';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
 import _kebabCase from 'lodash/kebabCase';
@@ -21,83 +19,17 @@ import OlStyleCircle from 'ol/style/Circle';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
 import OlStyle from 'ol/style/Style';
-import React, {
-  Key,
-  useCallback,
-  useEffect,
-  useState
-} from 'react';
+import React, { Key, useCallback, useEffect, useState } from 'react';
 import { CSS_PREFIX } from 'src/constants';
 
-type OwnProps<T> = {
-  /**
-   * The features to show in the grid and the map (if set).
-   */
-  features: OlFeature<OlGeometry>[];
-  /**
-   */
-  attributeBlacklist: string[];
-  /**
-   * The default style to apply to the features.
-   */
-  featureStyle: OlStyle | (() => OlStyle);
-  /**
-   * The highlight style to apply to the features.
-   */
-  highlightStyle: OlStyle | (() => OlStyle);
-  /**
-   * The select style to apply to the features.
-   */
-  selectStyle: OlStyle | (() => OlStyle);
-  /**
-   * The name of the vector layer presenting the features in the grid.
-   */
-  layerName: string;
-  /**
-   * A Function that creates the rowkey from the given feature.
-   * Receives the feature as property.
-   * Default is: feature => feature.ol_uid
-   *
-   */
-  keyFunction: (feature: OlFeature<OlGeometry>) => string;
-  /**
-   * Whether the map should center on the current feature's extent on init or
-   * not.
-   */
-  zoomToExtent: boolean;
-  /**
-   * Whether rows and features should be selectable or not.
-   */
-  selectable: boolean;
-  /**
-   * A CSS class which should be added to the table.
-   */
-  className?: string;
-  /**
-   * A CSS class to add to each table row or a function that
-   * is evaluated for each record.
-   */
-  rowClassName?: string | ((record: T) => string);
-  /**
-   * Callback function, that will be called on rowclick.
-   */
-  onRowClick?: (row: T, feature: OlFeature<OlGeometry>) => void;
-  /**
-   * Callback function, that will be called on rowmouseover.
-   */
-  onRowMouseOver?: (row: T, feature: OlFeature<OlGeometry>) => void;
-  /**
-   * Callback function, that will be called on rowmouseout.
-   */
-  onRowMouseOut?: (row: T, feature: OlFeature<OlGeometry>) => void;
-  /**
-   * Callback function, that will be called if the selection changes.
-   */
+import { RgCommonGridProps } from '../commonGrid';
+
+type OwnProps = {
   onRowSelectionChange?: (selectedRowKeys: Array<number | string | bigint>,
     selectedFeatures: OlFeature<OlGeometry>[]) => void;
 };
 
-export type FeatureGridProps<T> = OwnProps<T> & TableProps<T>;
+export type FeatureGridProps<T> = OwnProps & RgCommonGridProps<T> & TableProps<T>;
 
 const defaultClassName = `${CSS_PREFIX}feature-grid`;
 
@@ -478,7 +410,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   /**
    * Sets the select style to the given features in the map.
    *
-   * @param features The features to select.
+   * @param feats
    */
   const selectFeatures = (feats: OlFeature<OlGeometry>[]) => {
     if (!map) {
