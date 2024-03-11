@@ -2,7 +2,7 @@ This demonstrates the usage of the CoordinateReferenceSystemCombo.
 
 ```jsx
 import CoordinateReferenceSystemCombo from
-  '@terrestris/react-geo/dist/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
+    '@terrestris/react-geo/dist/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
 import { applyTransform } from 'ol/extent';
 import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
@@ -46,7 +46,7 @@ const predefinedCrsDefinitions = [{
 const CoordinateReferenceSystemComboExample = () => {
 
   const [map, setMap] = useState();
-  
+
   useEffect(() => {
     setMap(new OlMap({
       layers: [

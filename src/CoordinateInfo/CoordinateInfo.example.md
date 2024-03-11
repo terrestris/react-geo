@@ -64,88 +64,88 @@ const CoordinateInfoExample = () => {
           height: '400px'
         }}
       />
-        <CoordinateInfo
-          map={this.map}
-          queryLayers={[queryLayer]}
-          resultRenderer={(opts) => {
-            const features = opts.features;
-            const clickCoord = opts.clickCoordinate;
-            const loading = opts.loading;
+      <CoordinateInfo
+        map={this.map}
+        queryLayers={[queryLayer]}
+        resultRenderer={(opts) => {
+          const features = opts.features;
+          const clickCoord = opts.clickCoordinate;
+          const loading = opts.loading;
 
-            return (
-              Object.keys(features).length === 1 && features[Object.keys(features)[0]].length === 1 ?
-                <div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
+          return (
+            Object.keys(features).length === 1 && features[Object.keys(features)[0]].length === 1 ?
+              <div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Spin
+                    spinning={loading}
                   >
-                    <Spin
-                      spinning={loading}
-                    >
-                      <Statistic
-                        title="Coordinate"
-                        value={clickCoord.join(', ')}
-                      />
-                    </Spin>
-                    <Tooltip
-                      title="Copy to clipboard"
-                    >
-                      <Button
-                        style={{ marginTop: 16 }}
-                        type="primary"
-                        onClick={() => {
-                          copy(clickCoord.join(', '));
-                        }}
-                        icon={
-                          <FontAwesomeIcon
-                            icon={faCopy}
-                          />
-                        }
-                      />
-                    </Tooltip>
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
+                    <Statistic
+                      title="Coordinate"
+                      value={clickCoord.join(', ')}
+                    />
+                  </Spin>
+                  <Tooltip
+                    title="Copy to clipboard"
                   >
-                    <Spin
-                      spinning={loading}
-                    >
-                      <Statistic
-                        title="State"
-                        value={features[Object.keys(features)[0]][0].get('STATE_NAME')}
-                      />
-                    </Spin>
-                    <Tooltip
-                      title="Copy to clipboard"
-                    >
-                      <Button
-                        style={{ marginTop: 16 }}
-                        type="primary"
-                        onClick={() => {
-                          copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
-                        }}
-                        icon={
-                          <FontAwesomeIcon
-                            icon={faCopy}
-                          />
-                        }
-                      />
-                    </Tooltip>
-                  </div>
-                </div> :
-                <span>Click on a state to get details about the clicked coordinate.</span>
-            );
-          }}
-        />
-      </MapContext.Provider>
-    );
+                    <Button
+                      style={{ marginTop: 16 }}
+                      type="primary"
+                      onClick={() => {
+                        copy(clickCoord.join(', '));
+                      }}
+                      icon={
+                        <FontAwesomeIcon
+                          icon={faCopy}
+                        />
+                      }
+                    />
+                  </Tooltip>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Spin
+                    spinning={loading}
+                  >
+                    <Statistic
+                      title="State"
+                      value={features[Object.keys(features)[0]][0].get('STATE_NAME')}
+                    />
+                  </Spin>
+                  <Tooltip
+                    title="Copy to clipboard"
+                  >
+                    <Button
+                      style={{ marginTop: 16 }}
+                      type="primary"
+                      onClick={() => {
+                        copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
+                      }}
+                      icon={
+                        <FontAwesomeIcon
+                          icon={faCopy}
+                        />
+                      }
+                    />
+                  </Tooltip>
+                </div>
+              </div> :
+              <span>Click on a state to get details about the clicked coordinate.</span>
+          );
+        }}
+      />
+    </MapContext.Provider>
+  );
 }
 
 <CoordinateInfoExample />
