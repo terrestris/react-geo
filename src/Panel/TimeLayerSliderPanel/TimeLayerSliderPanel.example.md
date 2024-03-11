@@ -74,7 +74,6 @@ class TimeLayerSliderPanelExample extends React.Component {
           }}
         />
         <TimeLayerSliderPanel
-          map={this.map}
           initStartDate={moment().subtract(3, 'hours')}
           initEndDate={moment()}
           timeAwareLayers={this.layers}
