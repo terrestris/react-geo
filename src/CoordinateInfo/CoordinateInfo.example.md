@@ -1,26 +1,23 @@
 ```jsx
-import * as React from 'react';
-
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CoordinateInfo from '@terrestris/react-geo/dist/CoordinateInfo/CoordinateInfo';
 import {
-  Statistic,
   Button,
   Spin,
+  Statistic,
   Tooltip
 } from 'antd';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
+import * as copy from 'copy-to-clipboard';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-import { fromLonLat } from 'ol/proj';
-
-import * as copy from 'copy-to-clipboard';
-
-import CoordinateInfo from '@terrestris/react-geo/dist/CoordinateInfo/CoordinateInfo';
+import OlView from 'ol/View';
+import React, { useEffect,useState } from 'react';
 
 const queryLayer = new OlLayerTile({
   name: 'States (USA)',
@@ -35,14 +32,12 @@ const queryLayer = new OlLayerTile({
   })
 });
 
-class CoordinateInfoExample extends React.Component {
+const CoordinateInfoExample = () => {
 
-  constructor(props) {
-    super(props);
+  const [map, setMap] = useState();
 
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.map = new OlMap({
+  useEffect(() => {
+    setMap(new OlMap({
       layers: [
         new OlLayerTile({
           name: 'OSM',
@@ -54,22 +49,21 @@ class CoordinateInfoExample extends React.Component {
         center: fromLonLat([-99.4031637, 38.3025695]),
         zoom: 4
       })
-    });
+    }));
+  }, []);
+
+  if (!map) {
+    return null;
   }
 
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  render() {
-    return (
-      <>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
-        />
+  return (
+    <MapContext.Provider value={map}>
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
         <CoordinateInfo
           map={this.map}
           queryLayers={[queryLayer]}
@@ -105,7 +99,11 @@ class CoordinateInfoExample extends React.Component {
                         onClick={() => {
                           copy(clickCoord.join(', '));
                         }}
-                        icon={<FontAwesomeIcon icon={faCopy}/>}
+                        icon={
+                          <FontAwesomeIcon
+                            icon={faCopy}
+                          />
+                        }
                       />
                     </Tooltip>
                   </div>
@@ -133,7 +131,11 @@ class CoordinateInfoExample extends React.Component {
                         onClick={() => {
                           copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
                         }}
-                        icon={<FontAwesomeIcon icon={faCopy}/>}
+                        icon={
+                          <FontAwesomeIcon
+                            icon={faCopy}
+                          />
+                        }
                       />
                     </Tooltip>
                   </div>
@@ -142,9 +144,8 @@ class CoordinateInfoExample extends React.Component {
             );
           }}
         />
-      </>
+      </MapContext.Provider>
     );
-  }
 }
 
 <CoordinateInfoExample />

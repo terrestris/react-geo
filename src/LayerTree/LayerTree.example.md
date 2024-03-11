@@ -1,17 +1,15 @@
 This example demonstrates the LayerTree.
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
+import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-import { fromLonLat } from 'ol/proj';
-
-import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 class LayerTreeExample extends React.Component {
 

@@ -47,7 +47,7 @@ module.exports = {
   require: [
     'whatwg-fetch',
     'ol/ol.css',
-    'antd/dist/antd.variable.css'
+    // 'antd/dist/antd.variable.css'
   ],
   pagePerSection: true,
   sections: [{
@@ -85,9 +85,6 @@ module.exports = {
       name: 'Hooks',
       components: 'src/Hook/**/*.ts'
     }, {
-      name: 'HigherOrderComponents',
-      components: 'src/HigherOrderComponent/**/*.tsx'
-    }, {
       name: 'LayerSwitcher',
       components: 'src/LayerSwitcher/**/*.tsx'
     }, {
@@ -108,15 +105,6 @@ module.exports = {
     }, {
       name: 'Slider',
       components: 'src/Slider/**/*.tsx'
-    }, {
-      name: 'Toolbar',
-      components: 'src/Toolbar/**/*.tsx'
-    }, {
-      name: 'UserChip',
-      components: 'src/UserChip/**/*.tsx'
-    }, {
-      name: 'Window',
-      components: 'src/Window/**/*.tsx'
     }]
   }]
 };

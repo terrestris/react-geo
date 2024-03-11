@@ -1,33 +1,15 @@
 .add-wms-panel {
-  .body {
+  display: flex;
+  flex-direction: column;
+
+  .ant-checkbox-group {
+    display: block;
+
+  }
+
+  .buttons {
     display: flex;
-    flex-direction: column;
-
-    .ant-checkbox-group {
-      flex: 1;
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    .add-wms-layer-checkbox-line {
-      padding: 5px;
-      margin: 1px;
-      display: flex;
-      flex: 1;
-      align-items: center;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-
-      .add-wms-add-info-icon {
-        margin-left: 5px;
-      }
-    }
-
-    .react-geo-titlebar {
-      .react-geo-simplebutton {
-        margin-right: 5px;
-      }
-    }
+    gap: 5px;
+    justify-content: end;
   }
 }

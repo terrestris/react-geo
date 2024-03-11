@@ -3,10 +3,9 @@ This example demonstrates the use of the `UploadButton`.
 UploadButton:
 
 ```jsx
-import UploadButton from '@terrestris/react-geo/dist/Button/UploadButton/UploadButton';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import UploadButton from '@terrestris/react-geo/dist/Button/UploadButton/UploadButton';
 
 <UploadButton
   onChange={e => {
@@ -23,8 +22,8 @@ import { faUpload } from '@fortawesome/free-solid-svg-icons';
 UploadButton with a texted SimpleButton as child:
 
 ```jsx
-import UploadButton from '@terrestris/react-geo/dist/Button/UploadButton/UploadButton';
 import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
+import UploadButton from '@terrestris/react-geo/dist/Button/UploadButton/UploadButton';
 
 <UploadButton
   onChange={e => {

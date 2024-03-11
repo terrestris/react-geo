@@ -1,14 +1,13 @@
-import * as React from 'react';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 import PrintButton from './PrintButton';
-import { renderInMapContext } from '../../Util/rtlTestUtils';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOsm from 'ol/source/OSM';
 
 describe('<PrintButton />', () => {
 
@@ -36,7 +35,7 @@ describe('<PrintButton />', () => {
     });
 
     it('can be rendered', () => {
-      const { container } = renderInMapContext(map, <PrintButton mapSize={[0, 0]}/>);
+      const { container } = renderInMapContext(map, <PrintButton mapSize={[0, 0]} />);
       expect(container).toBeVisible();
     });
   });

@@ -1,17 +1,19 @@
 module.exports = {
   extends: [
     '@terrestris/eslint-config-typescript',
+    '@terrestris/eslint-config-typescript-react',
     'plugin:testing-library/react',
     'plugin:jest-dom/recommended'
   ],
   plugins: [
     'testing-library',
-    'jest-dom'
+    'jest-dom',
+    'simple-import-sort'
   ],
   rules: {
-    'no-underscore-dangle': 'off',
     '@typescript-eslint/member-ordering': 'off',
-    'testing-library/no-node-access': 'warn',
-    'testing-library/no-container': 'warn'
+    'no-underscore-dangle': 'off',
+    'simple-import-sort/exports': 'warn',
+    'simple-import-sort/imports': 'warn'
   }
 };

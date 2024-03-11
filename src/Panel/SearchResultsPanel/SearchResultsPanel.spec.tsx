@@ -1,15 +1,12 @@
-import * as React from 'react';
-import { within, screen } from '@testing-library/react';
-
-import OlView from 'ol/View';
-import OlMap from 'ol/Map';
-import OlPoint from 'ol/geom/Point';
-import OlFeature from 'ol/Feature';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
-
-import { renderInMapContext } from '../../Util/rtlTestUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import { within } from '@testing-library/react';
+import OlFeature from 'ol/Feature';
+import OlPoint from 'ol/geom/Point';
+import OlMap from 'ol/Map';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 import SearchResultsPanel, { Category } from './SearchResultsPanel';
 
@@ -82,7 +79,7 @@ describe('<SearchResultsPanel />', () => {
         numTotal={searchResults.length}
         searchResults={searchResults}
         searchTerms={[]}
-        actionsCreator={() => [<div>{actionContent}</div>]}
+        actionsCreator={() => [<div key="1">{actionContent}</div>]}
       />);
 
       const actionItems = within(container).getAllByText(actionContent);

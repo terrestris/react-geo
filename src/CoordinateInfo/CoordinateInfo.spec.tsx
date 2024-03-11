@@ -1,11 +1,12 @@
-import * as React from 'react';
-import TestUtil from '../Util/TestUtil';
 import { render } from '@testing-library/react';
+import OlMap from 'ol/Map';
+import * as React from 'react';
 
 import CoordinateInfo from '../CoordinateInfo/CoordinateInfo';
+import TestUtil from '../Util/TestUtil';
 
 describe('<CoordinateInfo />', () => {
-  let map;
+  let map: OlMap;
 
   beforeEach(() => {
     map = TestUtil.createMap();
@@ -16,7 +17,7 @@ describe('<CoordinateInfo />', () => {
   });
 
   it('can be rendered', () => {
-    const { container } = render(<CoordinateInfo map={map} />);
+    const { container } = render(<CoordinateInfo />);
     expect(container).toBeVisible();
   });
 });

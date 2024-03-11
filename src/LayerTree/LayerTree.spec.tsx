@@ -1,18 +1,18 @@
-import * as React from 'react';
-
+import { getUid } from 'ol';
+import OlCollection from 'ol/Collection';
+import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
-import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlMap from 'ol/Map';
 import * as OlObservable from 'ol/Observable';
-import OlCollection from 'ol/Collection';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import * as React from 'react';
+import {
+  act
+} from 'react-dom/test-utils';
 
 import TestUtil from '../Util/TestUtil';
-
 import LayerTree from './LayerTree';
-
-import OlMap from 'ol/Map';
-import OlLayerBase from 'ol/layer/Base';
-import { getUid } from 'ol';
 
 describe('<LayerTree />', () => {
   let layerGroup: OlLayerGroup;
@@ -312,11 +312,15 @@ describe('<LayerTree />', () => {
       let treeNode = wrapper.find('.ant-tree-treenode').at(3);
 
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);
-      layer1.setVisible(false);
+      act(() => {
+        layer1.setVisible(false);
+      });
       wrapper.update();
       treeNode = wrapper.find('.ant-tree-treenode').at(3);
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(0);
-      layer1.setVisible(true);
+      act(() => {
+        layer1.setVisible(true);
+      });
       wrapper.update();
       treeNode = wrapper.find('.ant-tree-treenode').at(3);
       expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);

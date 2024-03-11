@@ -1,18 +1,16 @@
 The BackgroundLayerChooser
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceTileWMS from 'ol/source/TileWMS';
-import OlSourceOsm from 'ol/source/OSM';
-
 import BackgroundLayerChooser from '@terrestris/react-geo/dist/BackgroundLayerChooser/BackgroundLayerChooser';
-import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
-import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext';
-import { useMap } from '@terrestris/react-geo/dist/Hook/useMap';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import { useMap } from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import OlSourceOsm from 'ol/source/OSM';
+import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 const layers = [
   new OlLayerTile({
@@ -28,12 +26,11 @@ const layers = [
       url: 'https://sgx.geodatenzentrum.de/wms_topplus_open',
       params: {
         LAYERS: 'web',
-        TILED: true
       }
     }),
     properties: {
       name: 'BKG',
-      isBackgroundLayer: true,
+      isBackgroundLayer: true
     }
   })
 ];
@@ -51,7 +48,7 @@ function ComponentToUseTheMap() {
   // This is example specific and usually not needed
   React.useEffect(() => {
     map.setTarget('usemap-map');
-  }, []);
+  }, [map]);
 
   return (
     <MapComponent

@@ -1,178 +1,124 @@
-import TestUtil from '../../Util/TestUtil';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
 
+import TestUtil from '../../Util/TestUtil';
 import ScaleCombo from './ScaleCombo';
 
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-
 describe('<ScaleCombo />', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('is defined', () => {
-    expect(ScaleCombo).not.toBeUndefined();
+    expect(ScaleCombo).toBeDefined();
   });
 
   it('can be rendered', () => {
-    const map = TestUtil.createMap();
-    const wrapper = TestUtil.mountComponent(ScaleCombo, {
-      map
-    });
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<ScaleCombo />);
+    expect(container).toBeVisible();
   });
 
-  it('passes style prop', () => {
+  it('calls onZoomLevelSelect when a scale is selected', async () => {
+    const onZoomLevelSelect = jest.fn();
     const map = TestUtil.createMap();
-    const props = {
-      map,
-      style: {
-        backgroundColor: 'yellow'
-      }
-    };
-    const wrapper = TestUtil.mountComponent(ScaleCombo, props);
-    expect(wrapper.getDOMNode()).toHaveStyle('backgroundColor: yellow');
+    renderInMapContext(map,
+      <ScaleCombo
+        onZoomLevelSelect={onZoomLevelSelect}
+        scales={[100, 200]}
+        open
+      />
+    );
 
+    const entry = screen.getByText('1:100');
+
+    await userEvent.click(entry);
+
+    expect(onZoomLevelSelect).toHaveBeenCalledWith('100');
     TestUtil.removeMap(map);
   });
 
-  describe('#getOptionsFromMap', () => {
-    it('is defined', () => {
-      const map = TestUtil.createMap();
-      const wrapper = TestUtil.mountComponent(ScaleCombo, {
-        map
-      });
-      expect(wrapper.instance().getOptionsFromMap).not.toBeUndefined();
+  it('creates options array from given map with resolutions', () => {
+    const testResolutions = [560, 280, 140, 70, 28];
+    const map = TestUtil.createMap({
+      resolutions: testResolutions
     });
 
-    it('creates options array from resolutions set on the map', () => {
-      const map = TestUtil.createMap();
+    renderInMapContext(map, (
+      <ScaleCombo
+        open
+      />
+    ));
 
-      const getOptionsFromMapSpy = jest.spyOn(ScaleCombo.prototype, 'getOptionsFromMap');
+    const options = screen.getAllByText((text, element) => element?.tagName === 'DIV' && /1:/.test(text));
 
-      TestUtil.mountComponent(ScaleCombo, {
-        map
-      });
-
-      expect(getOptionsFromMapSpy).toHaveBeenCalledTimes(1);
-      getOptionsFromMapSpy.mockRestore();
-
-      TestUtil.removeMap(map);
-    });
-
-    it('creates options array from given map without resolutions', () => {
-      const map = TestUtil.createMap();
-      const wrapper = TestUtil.mountComponent(ScaleCombo, {
-        scales: [],
-        map: map
-      });
-
-      // Reset the scales array, as getOptionsFromMap() will be called in
-      // constructor.
-      wrapper.setState({scales: []});
-
-      const scales = wrapper.instance().getOptionsFromMap();
-      expect(scales).toBeInstanceOf(Array);
-
-      TestUtil.removeMap(map);
-    });
-
-    it('creates options array from given map with resolutions', () => {
-      const testResolutions = [560, 280, 140, 70, 28];
-      const map = TestUtil.createMap({
-        resolutions: testResolutions
-      });
-      const wrapper = TestUtil.mountComponent(ScaleCombo, {
-        scales: [],
-        map: map
-      });
-
-      // Reset the scales array, as getOptionsFromMap() will be called in
-      // constructor.
-      wrapper.setState({scales: []});
-
-      const scales = wrapper.instance().getOptionsFromMap();
-      expect(scales).toBeInstanceOf(Array);
-      expect(scales).toHaveLength(testResolutions.length);
-
-      const roundScale = (Math.round(MapUtil.getScaleForResolution(
-        testResolutions[testResolutions.length - 1] ,'m')));
-
-      expect(scales[0]).toBe(roundScale);
-
-      TestUtil.removeMap(map);
-    });
-
-    it('creates options array from given map with filtered resolutions', () => {
-      const testResolutions = [560, 280, 140, 70, 28, 19, 15, 14, 13, 9];
-      const map = TestUtil.createMap({
-        resolutions: testResolutions
-      });
-
-      // eslint-disable-next-line
-      const resolutionsFilter = res => {
-        return res >= 19 || res <= 13;
-      };
-
-      const expectedLength = testResolutions.filter(resolutionsFilter).length;
-
-      const wrapper = TestUtil.mountComponent(ScaleCombo, {
-        map: map,
-        scales: [],
-        resolutionsFilter
-      });
-
-      // Reset the scales array, as getOptionsFromMap() will be called in
-      // constructor.
-      wrapper.setState({scales: []});
-
-      const scales = wrapper.instance().getOptionsFromMap();
-      expect(scales).toBeInstanceOf(Array);
-      expect(scales).toHaveLength(expectedLength);
-
-      const roundScale = MapUtil.roundScale(MapUtil.getScaleForResolution(
-        testResolutions[testResolutions.length - 2] ,'m'));
-
-      expect(scales[1]).toBe(roundScale);
-
-      TestUtil.removeMap(map);
-    });
+    expect(options).toHaveLength(testResolutions.length);
+    TestUtil.removeMap(map);
   });
 
-  describe('#determineOptionKeyForZoomLevel', () => {
-    it('is defined', () => {
-      const map = TestUtil.createMap();
-      const wrapper = TestUtil.mountComponent(ScaleCombo, {
-        map
-      });
-      expect(wrapper.instance().determineOptionKeyForZoomLevel).not.toBeUndefined();
+  it('creates options array from given map with filtered resolutions', () => {
+    const testResolutions = [560, 280, 140, 70, 28, 19, 15, 14, 13, 9];
+    const map = TestUtil.createMap({
+      resolutions: testResolutions
     });
 
-    it('returns "undefied" for erronous zoom level or if exceeds number of valid zoom levels ', () => {
-      const map = TestUtil.createMap();
-      const scaleArray = [100, 200, 300];
-      const wrapper = TestUtil.mountComponent(ScaleCombo, {
-        map,
-        scales: scaleArray
-      });
+    const resolutionsFilter = (res: number) => {
+      return res >= 19 || res <= 13;
+    };
 
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(undefined)).toBeUndefined();
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(null)).toBeUndefined();
-      expect(wrapper.instance().determineOptionKeyForZoomLevel('foo')).toBeUndefined();
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(17.123)).toBeUndefined();
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(scaleArray.length)).toBeUndefined();
+    const expectedLength = testResolutions.filter(resolutionsFilter).length;
 
-      TestUtil.removeMap(map);
-    });
+    renderInMapContext(map, (
+      <ScaleCombo
+        open
+        resolutionsFilter={resolutionsFilter}
+      />
+    ));
 
-    it('returns matching key for zoom level', () => {
-      const map = TestUtil.createMap();
-      const scaleArray = [100, 200, 300];
-      const wrapper = TestUtil.mountComponent(ScaleCombo, {
-        map,
-        scales: scaleArray
-      });
-      const index = 1;
-      expect(wrapper.instance().determineOptionKeyForZoomLevel(index)).toBe(scaleArray[index].toString());
+    const options = screen.getAllByText((text, element) => element?.tagName === 'DIV' && /1:/.test(text));
 
-      TestUtil.removeMap(map);
-    });
-
+    expect(options).toHaveLength(expectedLength);
+    TestUtil.removeMap(map);
   });
 
+  it('zooms the map to the clicked scale', async () => {
+    const map = TestUtil.createMap();
+
+    renderInMapContext(map,
+      <ScaleCombo
+        scales={[100, 200, 300, 400, 500]}
+        open
+      />
+    );
+
+    expect(map.getView().getResolution()).toBeCloseTo(1);
+
+    const entry = screen.getByText('1:300');
+
+    await userEvent.click(entry);
+
+    expect(map.getView().getResolution()).toBeCloseTo(0.08);
+    TestUtil.removeMap(map);
+  });
+
+  it('sets the correct scale on map zoom', () => {
+    const map = TestUtil.createMap();
+
+    renderInMapContext(map,
+      <ScaleCombo
+        scales={[100, 200, 300, 400, 500]}
+      />
+    );
+
+    expect(map.getView().getResolution()).toBeCloseTo(1);
+
+    act(() => {
+      map.getView().setZoom(4);
+    });
+
+    const entry = screen.getByText('1:100');
+
+    expect(entry).toBeVisible();
+  });
 });

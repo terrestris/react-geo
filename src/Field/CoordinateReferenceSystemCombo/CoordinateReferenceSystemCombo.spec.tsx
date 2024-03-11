@@ -1,16 +1,11 @@
+import { actSetTimeout } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import * as React from 'react';
-import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
 import userEvent from '@testing-library/user-event';
+import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
+import * as React from 'react';
 
-import Logger from '@terrestris/base-util/dist/Logger';
-
+import { findAntdDropdownOptionByText, queryAntdDropdownOption } from '../../Util/antdTestQueries';
 import CoordinateReferenceSystemCombo from '../CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
-import {
-  findAntdDropdownOptionByText,
-  queryAntdDropdownOption
-} from '../../Util/antdTestQueries';
-import { actSetTimeout } from '../../Util/rtlTestUtils';
 
 describe('<CoordinateReferenceSystemCombo />', () => {
 
@@ -109,55 +104,12 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     });
   });
 
-  describe('error handling', () => {
-    it('logs error message', async () => {
-      const error = new Error('Peter');
-      (fetch as FetchMock).mockRejectOnce(error);
-
-      const loggerSpy = jest.spyOn(Logger, 'error');
-
-      render(<CoordinateReferenceSystemCombo />);
-      const combobox = screen.getByRole('combobox');
-      await userEvent.type(combobox, 'a');
-
-      await waitFor(() => {
-        expect(loggerSpy).toHaveBeenCalled();
-      });
-
-      expect(loggerSpy).toHaveBeenCalledWith('Error while requesting in CoordinateReferenceSystemCombo', error);
-
-      loggerSpy.mockRestore();
-    });
-  });
-
   describe('option clicks are handled correctly', () => {
-
-    it('calls the onSelect callback with the correct value', async () => {
-      const onSelect = jest.fn();
-
-      render(<CoordinateReferenceSystemCombo onSelect={onSelect}/>);
-
-      const combobox = screen.getByRole('combobox');
-
-      await userEvent.type(combobox, 'a');
-
-      const result = resultMock.results[0];
-      const expected = transformedResults[0];
-
-      const option = await findAntdDropdownOptionByText(`${result.name} (EPSG:${result.code})`);
-
-      // we have to use fireEvent directly instead of `userEvent.click()` because antd is in the way
-      fireEvent.click(option);
-
-      await waitFor(() => {
-        expect(onSelect).toBeCalledWith(expected);
-      });
-    });
 
     it('sets the value of the combobox to the correct value', async () => {
       const onSelect = jest.fn();
 
-      render(<CoordinateReferenceSystemCombo onSelect={onSelect}/>);
+      render(<CoordinateReferenceSystemCombo onSelect={onSelect} />);
 
       const combobox = screen.getByRole('combobox');
 

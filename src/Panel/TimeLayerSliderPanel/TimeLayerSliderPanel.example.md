@@ -2,19 +2,16 @@ This example demonstrates the usage of the TimeLayerSliderPanel
 (Data: IEM generated CONUS composite of NWS NEXRAD WSR-88D level III base reflectivity, Iowa State University)
 
 ```jsx
-import * as React from 'react';
-
+import TimeLayerSliderPanel from '@terrestris/react-geo/dist/Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
 import moment from 'moment';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
+import { getCenter } from 'ol/extent';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { transformExtent } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-import { transformExtent } from 'ol/proj';
-import { getCenter } from 'ol/extent';
-
-import TimeLayerSliderPanel from '@terrestris/react-geo/dist/Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 class TimeLayerSliderPanelExample extends React.Component {
 
@@ -77,7 +74,6 @@ class TimeLayerSliderPanelExample extends React.Component {
           }}
         />
         <TimeLayerSliderPanel
-          map={this.map}
           initStartDate={moment().subtract(3, 'hours')}
           initEndDate={moment()}
           timeAwareLayers={this.layers}

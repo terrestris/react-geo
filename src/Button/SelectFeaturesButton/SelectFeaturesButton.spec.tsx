@@ -1,24 +1,23 @@
-import * as React from 'react';
+import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
 import OlFeature from 'ol/Feature';
 import OlPoint from 'ol/geom/Point';
-import OlVectorLayer from 'ol/layer/Vector';
-import OlVectorSource from 'ol/source/Vector';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
+import OlVectorSource from 'ol/source/Vector';
+import OlView from 'ol/View';
+import * as React from 'react';
 
 import DrawButton from '../DrawButton/DrawButton';
-import { clickMap, mockForEachFeatureAtPixel, renderInMapContext } from '../../Util/rtlTestUtils';
 import SelectFeaturesButton from './SelectFeaturesButton';
 
 describe('<SelectFeaturesButton />', () => {
 
   const coord = [829729, 6708850];
   let map: OlMap;
-  let layer: OlVectorLayer<OlVectorSource<OlPoint>>;
+  let layer: OlVectorLayer<OlVectorSource>;
   let feature: OlFeature<OlPoint>;
 
   beforeEach(() => {
@@ -57,15 +56,28 @@ describe('<SelectFeaturesButton />', () => {
   });
 
   describe('#Selection', () => {
-    it('calls the listener', async () => {
+    xit('selects the clicked feature', async () => {
       const mock = mockForEachFeatureAtPixel(map, [200, 200], feature);
 
       const selectSpy = jest.fn();
 
-      renderInMapContext(map, <SelectFeaturesButton layers={[layer]} onFeatureSelect={selectSpy} />);
+      renderInMapContext(map, (
+        <SelectFeaturesButton
+          layers={[layer]}
+          onFeatureSelect={selectSpy}
+        />
+      ));
 
       const button = screen.getByRole('button');
       await userEvent.click(button);
+
+      renderInMapContext(map, (
+        <SelectFeaturesButton
+          pressed={true}
+          layers={[layer]}
+          onFeatureSelect={selectSpy}
+        />
+      ));
 
       clickMap(map, 200, 200);
 

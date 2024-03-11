@@ -2,10 +2,11 @@ import {
   render,
   screen
 } from '@testing-library/react';
-import * as React from 'react';
-
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceTileWMS from 'ol/source/TileWMS';
+import * as React from 'react';
+
+import TestUtil from '../../../Util/TestUtil';
 import AddWmsLayerEntry from './AddWmsLayerEntry';
 
 describe('<AddWmsLayerEntry />', () => {
@@ -37,7 +38,9 @@ describe('<AddWmsLayerEntry />', () => {
   it('adds queryable icon if prop wmsLayer has queryable set to true', () => {
     testLayer.set('queryable', true);
 
-    render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    const map = TestUtil.createMap();
+
+    render(<AddWmsLayerEntry map={map} wmsLayer={testLayer} />);
     let icon;
     expect(() => {
       icon = screen.getByLabelText(labelIconQueryable);
@@ -58,7 +61,8 @@ describe('<AddWmsLayerEntry />', () => {
     const wmsAttribution = 'Test - attribution';
     testLayer.getSource()?.setAttributions(wmsAttribution);
 
-    render(<AddWmsLayerEntry wmsLayer={testLayer} />);
+    const map = TestUtil.createMap();
+    render(<AddWmsLayerEntry map={map} wmsLayer={testLayer} />);
     let icon;
     expect(() => {
       icon = screen.getByLabelText(labelIconAttribution);
@@ -70,9 +74,8 @@ describe('<AddWmsLayerEntry />', () => {
 
   it('doesn\'t add copyright icon if prop wmsLayer has no attribution', () => {
     render(<AddWmsLayerEntry wmsLayer={testLayer} />);
-    let icon;
     expect(() => {
-      icon = screen.getByLabelText(labelIconAttribution);
+      screen.getByLabelText(labelIconAttribution);
     }).toThrowError();
   });
 

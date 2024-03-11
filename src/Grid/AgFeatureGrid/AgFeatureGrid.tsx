@@ -1,33 +1,8 @@
 /* eslint-disable testing-library/render-result-naming-convention */
-import * as React from 'react';
-import { Key } from 'react';
-
-import OlStyle from 'ol/style/Style';
-import OlStyleFill from 'ol/style/Fill';
-import OlStyleCircle from 'ol/style/Circle';
-import OlStyleStroke from 'ol/style/Stroke';
-import OlMap from 'ol/Map';
-import OlFeature from 'ol/Feature';
-import OlSourceVector from 'ol/source/Vector';
-import OlLayerVector from 'ol/layer/Vector';
-import OlLayerBase from 'ol/layer/Base';
-import OlGeometry from 'ol/geom/Geometry';
-import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
-import OlMapBrowserEvent from 'ol/MapBrowserEvent';
-import { getUid } from 'ol';
-
-import _isArray from 'lodash/isArray';
-import _differenceWith from 'lodash/differenceWith';
-import _isEqual from 'lodash/isEqual';
-import _isFunction from 'lodash/isFunction';
-
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-
-import { CSS_PREFIX } from '../../constants';
-
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
-import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
+
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import {
   CellMouseOutEvent,
   CellMouseOverEvent,
@@ -36,7 +11,29 @@ import {
   RowNode,
   SelectionChangedEvent
 } from 'ag-grid-community';
+import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
+import _differenceWith from 'lodash/differenceWith';
+import _isArray from 'lodash/isArray';
+import _isEqual from 'lodash/isEqual';
+import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
+import { getUid } from 'ol';
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
+import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
+import OlLayerBase from 'ol/layer/Base';
+import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
+import OlSourceVector from 'ol/source/Vector';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyle from 'ol/style/Style';
+import * as React from 'react';
+import { Key } from 'react';
+
+import { CSS_PREFIX } from '../../constants';
 
 interface OwnProps {
   /**
@@ -248,13 +245,13 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    * The source holding the features of the grid.
    * @private
    */
-  _source: OlSourceVector<OlGeometry> | null = null;
+  _source: OlSourceVector<OlFeature> | null = null;
 
   /**
    * The layer representing the features of the grid.
    * @private
    */
-  _layer: OlLayerVector<OlSourceVector<OlGeometry>> | null = null;
+  _layer: OlLayerVector<OlSourceVector<OlFeature>> | null = null;
 
   /**
    * The constructor.
@@ -608,7 +605,7 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
-        .reduce((obj, key) => {
+        .reduce((obj: {[k: string]: any}, key) => {
           obj[key] = properties[key];
           return obj;
         }, {});

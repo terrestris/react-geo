@@ -1,16 +1,22 @@
-import OlSourceVector from 'ol/source/Vector';
-import OlLayerVector from 'ol/layer/Vector';
-import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
-
+import {CellMouseOverEvent, RowClickedEvent, SelectionChangedEvent} from 'ag-grid-community';
 import _differenceWith from 'lodash/differenceWith';
+import _isNil from 'lodash/isNil';
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
+import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
+import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
+import OlSourceVector from 'ol/source/Vector';
+import {
+  act
+} from 'react-dom/test-utils';
 
 import TestUtil from '../../Util/TestUtil';
-
 import AgFeatureGrid from './AgFeatureGrid';
 
 describe('<AgFeatureGrid />', () => {
-  let map;
-  let features;
+  let map: OlMap;
+  let features: OlFeature[];
 
   beforeEach(() => {
     map = TestUtil.createMap();
@@ -43,26 +49,29 @@ describe('<AgFeatureGrid />', () => {
 
     expect(layerCand).toHaveLength(1);
     expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
-    expect(wrapper.instance()._source).toBeInstanceOf(OlSourceVector);
-    expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
+    const instance1 = wrapper.instance() as AgFeatureGrid;
+    expect(instance1._source).toBeInstanceOf(OlSourceVector);
+    expect(instance1._layer).toBeInstanceOf(OlLayerVector);
   });
 
   it('initializes a vector layer if it\'s not already added to the map only', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map});
+    const instance = wrapper.instance() as AgFeatureGrid;
 
-    wrapper.instance().initVectorLayer(map);
+    instance.initVectorLayer(map);
 
     const layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === wrapper.prop('layerName'));
 
     expect(layerCand).toHaveLength(1);
     expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
-    expect(wrapper.instance()._source).toBeInstanceOf(OlSourceVector);
-    expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
+    expect(instance._source).toBeInstanceOf(OlSourceVector);
+    expect(instance._layer).toBeInstanceOf(OlLayerVector);
   });
 
   it('sets the given featureStyle to the featurelayer', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
-    expect(wrapper.instance()._layer.getStyle()).toEqual(wrapper.prop('featureStyle'));
+    const instance = wrapper.instance() as AgFeatureGrid;
+    expect(instance._layer?.getStyle()).toEqual(wrapper.prop('featureStyle'));
   });
 
   it('removes the vector layer from the map on unmount', () => {
@@ -81,9 +90,10 @@ describe('<AgFeatureGrid />', () => {
     const mapOnSpy = jest.spyOn(map, 'on');
 
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, selectable: true});
+    const instance = wrapper.instance() as AgFeatureGrid;
 
-    const onPointerMove = wrapper.instance().onMapPointerMove;
-    const onMapSingleClick = wrapper.instance().onMapSingleClick;
+    const onPointerMove = instance.onMapPointerMove;
+    const onMapSingleClick = instance.onMapSingleClick;
 
     expect(mapOnSpy).toHaveBeenCalledTimes(2);
     expect(mapOnSpy).toHaveBeenCalledWith('pointermove', onPointerMove);
@@ -94,10 +104,11 @@ describe('<AgFeatureGrid />', () => {
 
   it('unregisters a pointermove and singleclick map event handler on unmount', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, selectable: true});
+    const instance = wrapper.instance() as AgFeatureGrid;
 
     const mapUnSpy = jest.spyOn(map, 'un');
-    const onPointerMove = wrapper.instance().onMapPointerMove;
-    const onMapSingleClick = wrapper.instance().onMapSingleClick;
+    const onPointerMove = instance.onMapPointerMove;
+    const onMapSingleClick = instance.onMapSingleClick;
 
     wrapper.unmount();
 
@@ -110,8 +121,8 @@ describe('<AgFeatureGrid />', () => {
 
   it('generates the column definition out of the given features and takes attributeBlacklist into account', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
-
-    const got = wrapper.instance().getColumnDefs();
+    const instance = wrapper.instance() as AgFeatureGrid;
+    const got = instance.getColumnDefs();
 
     const exp = [{
       field: 'id',
@@ -127,7 +138,7 @@ describe('<AgFeatureGrid />', () => {
       attributeBlacklist: ['id']
     });
 
-    const gotBlacklisted = wrapper.instance().getColumnDefs();
+    const gotBlacklisted = instance.getColumnDefs();
 
     const expBlacklisted = [{
       field: 'name',
@@ -139,8 +150,8 @@ describe('<AgFeatureGrid />', () => {
 
   it('generates the appropriate data to render', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
-
-    const got = wrapper.instance().getRowData();
+    const instance = wrapper.instance() as AgFeatureGrid;
+    const got = instance.getRowData();
 
     const expRows = [{
       id: 1,
@@ -154,21 +165,25 @@ describe('<AgFeatureGrid />', () => {
     }];
 
     expRows.forEach((row, idx) => {
-      expect(row.id).toEqual(got[idx].id);
-      expect(row.name).toEqual(got[idx].name);
+      let gotElement = got[idx] as any;
+      expect(row.id).toEqual(gotElement.id);
+      expect(row.name).toEqual(gotElement.name);
     });
   });
 
   it('fits the map to show all given features', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
+    const instance = wrapper.instance() as AgFeatureGrid;
 
     const mapViewFitSpy = jest.spyOn(map.getView(), 'fit');
 
-    wrapper.instance().zoomToFeatures(features);
+    instance.zoomToFeatures(features);
 
-    const featGeometries = [];
+    const featGeometries: OlGeometry[] = [];
     features.forEach(feature => {
-      featGeometries.push(feature.getGeometry());
+      if (!_isNil(feature.getGeometry())) {
+        featGeometries.push(feature.getGeometry()!);
+      }
     });
 
     expect(mapViewFitSpy).toHaveBeenCalledWith(new OlGeomGeometryCollection(featGeometries).getExtent());
@@ -176,8 +191,8 @@ describe('<AgFeatureGrid />', () => {
 
   it('highlights all given features', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
-
-    wrapper.instance().highlightFeatures(features);
+    const instance = wrapper.instance() as AgFeatureGrid;
+    instance.highlightFeatures(features);
 
     features.forEach(feature => {
       expect(feature.getStyle()).toEqual(wrapper.prop('highlightStyle'));
@@ -186,8 +201,8 @@ describe('<AgFeatureGrid />', () => {
 
   it('selects all given features', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
-
-    wrapper.instance().selectFeatures(features);
+    const instance = wrapper.instance() as AgFeatureGrid;
+    instance.selectFeatures(features);
 
     features.forEach(feature => {
       expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
@@ -196,8 +211,8 @@ describe('<AgFeatureGrid />', () => {
 
   it('resets all given features to default feature style', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
-
-    wrapper.instance().resetFeatureStyles(features);
+    const instance = wrapper.instance() as AgFeatureGrid;
+    instance.resetFeatureStyles();
 
     features.forEach(feature => {
       expect(feature.getStyle()).toBe(undefined);
@@ -206,22 +221,26 @@ describe('<AgFeatureGrid />', () => {
 
   it('returns the feature for a given row key', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features});
+    const instance = wrapper.instance() as AgFeatureGrid;
+    // @ts-ignore
     const rowKey = features[1].ol_uid;
 
-    expect(wrapper.instance().getFeatureFromRowKey(rowKey)).toEqual(features[1]);
+    expect(instance.getFeatureFromRowKey(rowKey)).toEqual(features[1]);
   });
 
   it('selects the feature on row click', () => {
     const onRowClickSpy = jest.fn();
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features, onRowClick: onRowClickSpy});
+    const instance = wrapper.instance() as AgFeatureGrid;
     const clickedRow = {
       data: {
+        // @ts-ignore
         key: features[0].ol_uid
       }
-    };
-    const zoomToFeaturesSpy = jest.spyOn(wrapper.instance(), 'zoomToFeatures');
+    } as RowClickedEvent;
+    const zoomToFeaturesSpy = jest.spyOn(instance, 'zoomToFeatures');
 
-    wrapper.instance().onRowClick(clickedRow);
+    instance.onRowClick(clickedRow);
 
     expect(onRowClickSpy).toHaveBeenCalled();
     expect(zoomToFeaturesSpy).not.toHaveBeenCalled();
@@ -235,12 +254,14 @@ describe('<AgFeatureGrid />', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map, features, onRowMouseOver: onRowMouseOverSpy});
     const clickedRow = {
       data: {
+        // @ts-ignore
         key: features[0].ol_uid
       }
-    };
-    const highlightFeaturesSpy = jest.spyOn(wrapper.instance(), 'highlightFeatures');
+    } as CellMouseOverEvent;
+    const instance = wrapper.instance() as AgFeatureGrid;
+    const highlightFeaturesSpy = jest.spyOn(instance, 'highlightFeatures');
 
-    wrapper.instance().onRowMouseOver(clickedRow);
+    instance.onRowMouseOver(clickedRow);
 
     expect(onRowMouseOverSpy).toHaveBeenCalled();
     expect(highlightFeaturesSpy).toHaveBeenCalled();
@@ -251,13 +272,13 @@ describe('<AgFeatureGrid />', () => {
 
   it('handles the change of props', () => {
     const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map: map});
+    const instance = wrapper.instance() as AgFeatureGrid;
+    expect(instance._source).toBeInstanceOf(OlSourceVector);
+    expect(instance._layer).toBeInstanceOf(OlLayerVector);
 
-    expect(wrapper.instance()._source).toBeInstanceOf(OlSourceVector);
-    expect(wrapper.instance()._layer).toBeInstanceOf(OlLayerVector);
+    expect(instance._source?.getFeatures()).toEqual([]);
 
-    expect(wrapper.instance()._source.getFeatures()).toEqual([]);
-
-    const zoomToFeaturesSpy = jest.spyOn(wrapper.instance(), 'zoomToFeatures');
+    const zoomToFeaturesSpy = jest.spyOn(instance, 'zoomToFeatures');
 
     wrapper.setProps({
       map: map,
@@ -265,7 +286,7 @@ describe('<AgFeatureGrid />', () => {
       zoomToExtent: true
     });
 
-    expect(wrapper.instance()._source.getFeatures()).toEqual(features);
+    expect(instance._source?.getFeatures()).toEqual(features);
     expect(zoomToFeaturesSpy).toHaveBeenCalled();
 
     zoomToFeaturesSpy.mockRestore();
@@ -323,24 +344,30 @@ describe('<AgFeatureGrid />', () => {
       features,
       onRowSelectionChange
     });
-    wrapper.setState({
-      selectedRows: selectionCurrent
-    }, () => {
-      const mockedEvt = {
-        api: {
-          getSelectedRows: mockedGetSelectedRows
-        }
-      };
-      wrapper.instance().onSelectionChanged(mockedEvt);
-      expect(onRowSelectionChange).toHaveBeenCalledTimes(1);
-      // selectedRows is the first passed parameter
-      const selectedRows = onRowSelectionChange.mock.calls[0][0];
-      expect(selectedRows).toEqual(selectionAfter);
 
-      // deselectedRows is the third passed parameter
-      const deselectedRows = _differenceWith(selectionCurrent, selectionAfter, (a,b) => a.key === b.key);
-      const deselectedRowsIs = onRowSelectionChange.mock.calls[0][2];
-      expect(deselectedRowsIs).toEqual(deselectedRows);
+    act(() => {
+      wrapper.setState({
+        selectedRows: selectionCurrent
+      }, () => {
+        const instance = wrapper.instance() as AgFeatureGrid;
+        const mockedEvt = {
+          api: {
+            getSelectedRows: mockedGetSelectedRows
+          },
+        };
+        act(() => {
+          instance.onSelectionChanged(mockedEvt as any as SelectionChangedEvent);
+        });
+        expect(onRowSelectionChange).toHaveBeenCalledTimes(1);
+        // selectedRows is the first passed parameter
+        const selectedRows = onRowSelectionChange.mock.calls[0][0];
+        expect(selectedRows).toEqual(selectionAfter);
+
+        // deselectedRows is the third passed parameter
+        const deselectedRows = _differenceWith(selectionCurrent, selectionAfter, (a,b) => a.key === b.key);
+        const deselectedRowsIs = onRowSelectionChange.mock.calls[0][2];
+        expect(deselectedRowsIs).toEqual(deselectedRows);
+      });
     });
   });
 
