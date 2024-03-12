@@ -200,8 +200,6 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     if (selectable) {
       map.on('singleclick', onMapSingleClick);
     } else {
-      setSelectedRowKeys([]);
-
       map.un('singleclick', onMapSingleClick);
     }
   }, [map, onMapSingleClick, selectable]);
