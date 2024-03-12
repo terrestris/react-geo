@@ -16,8 +16,8 @@ import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import RenderFeature from 'ol/render/Feature';
 import OlSourceVector from 'ol/source/Vector';
 import React, { Key, useCallback, useEffect, useState } from 'react';
-import { CSS_PREFIX } from 'src/constants';
 
+import { CSS_PREFIX } from '../../constants';
 import { RgCommonGridProps } from '../commonGrid';
 import { defaultFeatureStyle, defaultHighlightStyle, defaultSelectStyle } from '../commonGridStyles';
 
