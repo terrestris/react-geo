@@ -35,11 +35,11 @@ export type RgCommonGridProps<RowType> = {
    * Whether the map should center on the current feature's extent on init or
    * not.
    */
-  zoomToExtent: boolean;
+  zoomToExtent?: boolean;
   /**
    * Whether rows and features should be selectable or not.
    */
-  selectable: boolean;
+  selectable?: boolean;
   /**
    * A CSS class which should be added to the table.
    */
