@@ -91,9 +91,6 @@ module.exports = {
       name: 'LayerTree',
       components: 'src/LayerTree/**/*.tsx'
     }, {
-      name: 'LayerTreeNode',
-      components: 'src/LayerTreeNode/**/*.tsx'
-    }, {
       name: 'Legend',
       components: 'src/Legend/**/*.tsx'
     }, {
