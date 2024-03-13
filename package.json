@@ -159,10 +159,10 @@
     "whatwg-fetch": "^3.6.19"
   },
   "peerDependencies": {
-    "@terrestris/ol-util": ">=15",
+    "@terrestris/ol-util": ">=16",
     "@types/react": ">=18",
     "antd": "^5",
-    "ol": ">=8",
+    "ol": ">=9",
     "ol-mapbox-style": ">=12",
     "react": ">=18",
     "react-dom": ">=18"
