@@ -303,7 +303,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   };
 
   /**
-   * Called on mouseout and unhightlights any highlighted feature.
+   * Called on mouseout and un-hightlights any highlighted feature.
    */
   const onRowMouseOut = (row: InternalTableRecord) => {
     if (!row.key) {

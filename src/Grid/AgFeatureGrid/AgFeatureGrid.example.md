@@ -17,19 +17,21 @@ import federalStates from '../../../assets/federal-states-ger.json';
 const format = new OlFormatGeoJSON();
 const features = format.readFeatures(federalStates);
 
-const NameColumnRenderer = value => {
-  return <a href={`https://en.wikipedia.org/wiki/${value}`}>{value}</a>;
-};
-
-const MathRoundRenderer = value => {
-  return (
-    <>
-      {Math.round(value)}
-    </>
-  )
-};
-
 const AgFeatureGridExample = () => {
+
+  const nameColumnRenderer = cellRendererParams => {
+    const value = cellRendererParams.value;
+    return <a target="_blank" href={`https://en.wikipedia.org/wiki/${value}`}>{value}</a>;
+  };
+
+  const mathRoundRenderer = cellRendererParams => {
+    const value = cellRendererParams.value;
+    return (
+      <>
+        {Math.round(value)}
+      </>
+    )
+  };
 
   const map = new OlMap({
     layers: [
@@ -44,41 +46,37 @@ const AgFeatureGridExample = () => {
     })
   });
 
+  const colDefs = [{
+    cellRenderer: nameColumnRenderer,
+    field: 'GEN',
+    filter: true,
+    headerName: 'Name',
+    resizable: true,
+    sortable: true
+  }, {
+    cellRenderer: mathRoundRenderer,
+    field: 'SHAPE_LENG',
+    filter: true,
+    headerName: 'Length',
+    resizable: true,
+    sortable: true
+  }, {
+    cellRenderer: mathRoundRenderer,
+    field: 'SHAPE_AREA',
+    filter: true,
+    headerName: 'Area',
+    resizable: true,
+    sortable: true
+  }];
+
   return (
     <MapContext.Provider value={map}>
       <AgFeatureGrid
-        features={features}
-        map={this.map}
         attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
-        columnDefs={{
-          GEN: {
-            headerName: 'Name',
-            cellRenderer: 'nameColumnRenderer',
-            sortable: true,
-            filter: true,
-            resizable: true
-          },
-          SHAPE_LENG: {
-            headerName: 'Length',
-            cellRenderer: 'mathRoundRenderer',
-            sortable: true,
-            filter: true,
-            resizable: true
-          },
-          SHAPE_AREA: {
-            headerName: 'Area',
-            cellRenderer: 'mathRoundRenderer',
-            sortable: true,
-            filter: true,
-            resizable: true
-          }
-        }}
-        zoomToExtent={true}
+        columnDefs={colDefs}
+        features={features}
         selectable={true}
-        frameworkComponents={{
-          nameColumnRenderer: NameColumnRenderer,
-          mathRoundRenderer: MathRoundRenderer
-        }}
+        zoomToExtent={true}
       />
       <MapComponent
         map={map}

@@ -23,9 +23,11 @@ export const defaultFeatureStyle = new OlStyle({
   })
 });
 
+export const highlightFillColor: string = 'rgba(230, 247, 255, 0.8)';
+
 export const defaultHighlightStyle = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(230, 247, 255, 0.8)'
+    color: highlightFillColor
   }),
   stroke: new OlStyleStroke({
     color: 'rgba(73, 139, 170, 0.9)',

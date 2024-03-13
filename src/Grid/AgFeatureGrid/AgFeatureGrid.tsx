@@ -9,8 +9,10 @@ import {
   CellMouseOverEvent,
   GridApi,
   GridReadyEvent,
+  RowClassParams,
   RowClickedEvent,
   RowNode,
+  RowStyle,
   SelectionChangedEvent
 } from 'ag-grid-community';
 import { ColDef, ColGroupDef } from 'ag-grid-community/dist/lib/entities/colDef';
@@ -32,7 +34,12 @@ import React, { Key, ReactElement, useCallback, useEffect, useMemo, useState } f
 
 import { CSS_PREFIX } from '../../constants';
 import { RgCommonGridProps } from '../commonGrid';
-import { defaultFeatureStyle, defaultHighlightStyle, defaultSelectStyle } from '../commonGridStyles';
+import {
+  defaultFeatureStyle,
+  defaultHighlightStyle,
+  defaultSelectStyle,
+  highlightFillColor
+} from '../commonGridStyles';
 
 export type WithKey<T> = {
   key: Key;
@@ -85,6 +92,10 @@ interface OwnProps<T> {
    * A Function that is called once the grid is ready.
    */
   onGridIsReady?: (gridReadyEvent: GridReadyEvent<WithKey<T>>) => void;
+  /**
+   * A custom rowStyle function (if used: row highlighting is overwritten)
+   */
+  rowStyleFn?: (params: RowClassParams<WithKey<T>>) => RowStyle | undefined;
 }
 
 const defaultClassName = `${CSS_PREFIX}ag-feature-grid`;
@@ -96,7 +107,6 @@ export type AgFeatureGridProps<T> = OwnProps<T> & RgCommonGridProps<T> & AgGridR
  */
 export function AgFeatureGrid<T>({
   attributeBlacklist = [],
-  children,
   className,
   columnDefs = [],
   featureStyle = defaultFeatureStyle,
@@ -112,6 +122,7 @@ export function AgFeatureGrid<T>({
   onRowMouseOver,
   onRowSelectionChange,
   rowData,
+  rowStyleFn,
   selectStyle = defaultSelectStyle,
   selectable = false,
   theme = 'ag-theme-balham',
@@ -126,6 +137,8 @@ export function AgFeatureGrid<T>({
 
   const [gridApi, setGridApi] = useState<GridApi<WithKey<T>> | undefined>(undefined);
   const [selectedRows, setSelectedRows] = useState<WithKey<T>[]>([]);
+  const [highlightedRows, setHighlightedRows] = useState<Key[]>([]);
+
   const map = useMap();
 
   const gridVectorLayer = useOlLayer(() => new OlLayerVector({
@@ -187,15 +200,12 @@ export function AgFeatureGrid<T>({
       layerFilter: layerCand => layerCand === gridVectorLayer
     }) || []) as OlFeature<OlGeometry>[];
 
-    // gridApi?.forEachNode((n) => {
-    //   n.hisadf(null);
-    // });
+    setHighlightedRows([]);
 
     features
       .filter((f): f is OlFeature => !_isNil(f))
       .forEach(feature => {
         const key = keyFunction(feature);
-
         if (selectedRowKeys.includes(key)) {
           feature.setStyle(selectStyle);
         } else {
@@ -203,18 +213,34 @@ export function AgFeatureGrid<T>({
         }
       });
 
+    const rowsToHighlight: Key[] = [];
     highlightedFeatureArray
       .filter((f): f is OlFeature => !_isNil(f))
       .forEach(feat => {
         const key = keyFunction(feat);
         gridApi?.forEachNode((n) => {
           if (n?.data?.key === key) {
-            // n.setHighlighted(1);
+            rowsToHighlight.push(n?.data?.key);
             feat.setStyle(highlightStyle);
           }
         });
       });
+    setHighlightedRows(rowsToHighlight);
   }, [gridVectorLayer, features, getSelectedRowKeys, gridApi, highlightStyle, keyFunction, map, selectStyle]);
+
+  const getRowStyle = useCallback((params: RowClassParams<WithKey<T>>): RowStyle | undefined => {
+    if (!_isNil(rowStyleFn)) {
+      return rowStyleFn(params);
+    }
+
+    if (!_isNil(params?.node?.data?.key) && highlightedRows?.includes(params?.node?.data?.key)) {
+      return {
+        backgroundColor: highlightFillColor
+      };
+    }
+
+    return;
+  }, [highlightedRows, rowStyleFn]);
 
   /**
    * Selects the selected feature in the map and in the grid.
@@ -326,8 +352,8 @@ export function AgFeatureGrid<T>({
    *
    * @return The table data.
    */
-  const getRowData = () => {
-    return features?.map(feature => {
+  const getRowData = (): WithKey<T>[] | undefined => {
+    return features?.map((feature): WithKey<T> => {
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
@@ -339,7 +365,7 @@ export function AgFeatureGrid<T>({
       return {
         key: keyFunction(feature),
         ...filtered
-      };
+      } as WithKey<T>;
     });
   };
 
@@ -553,7 +579,7 @@ export function AgFeatureGrid<T>({
       className={finalClassName}
       style={outerDivStyle}
     >
-      <AgGridReact
+      <AgGridReact<WithKey<T>>
         columnDefs={colDefs}
         onCellMouseOut={onRowMouseOutInner}
         onCellMouseOver={onRowMouseOverInner}
@@ -563,6 +589,7 @@ export function AgFeatureGrid<T>({
         rowData={rowData && _isArray(rowData) ? rowData : getRowData()}
         rowSelection="multiple"
         suppressRowClickSelection={true}
+        getRowStyle={getRowStyle}
         {...agGridPassThroughProps}
       />
     </div>
