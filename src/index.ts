@@ -26,7 +26,6 @@ import FeatureGrid from './Grid/FeatureGrid/FeatureGrid';
 import PropertyGrid from './Grid/PropertyGrid/PropertyGrid';
 import LayerSwitcher from './LayerSwitcher/LayerSwitcher';
 import LayerTree from './LayerTree/LayerTree';
-import LayerTreeNode from './LayerTree/LayerTreeNode/LayerTreeNode';
 import Legend from './Legend/Legend';
 import SearchResultsPanel from './Panel/SearchResultsPanel/SearchResultsPanel';
 import TimeLayerSliderPanel from './Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
@@ -51,7 +50,6 @@ export {
   LayerSwitcher,
   LayerTransparencySlider,
   LayerTree,
-  LayerTreeNode,
   Legend,
   MeasureButton,
   ModifyButton,
