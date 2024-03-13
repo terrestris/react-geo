@@ -18,8 +18,13 @@ import OlSourceVector from 'ol/source/Vector';
 import React, { Key, useCallback, useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-import { RgCommonGridProps } from '../commonGrid';
-import { defaultFeatureStyle, defaultHighlightStyle, defaultSelectStyle } from '../commonGridStyles';
+import {
+  defaultFeatureGridLayerName,
+  defaultFeatureStyle,
+  defaultHighlightStyle,
+  defaultSelectStyle,
+  RgCommonGridProps
+} from '../commonGrid';
 
 type OwnProps = {
   onRowSelectionChange?: (selectedRowKeys: Array<number | string | bigint>,
@@ -45,7 +50,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   features = [],
   highlightStyle = defaultHighlightStyle,
   keyFunction = getUid,
-  layerName = 'react-geo-feature-grid-layer',
+  layerName = defaultFeatureGridLayerName,
   onRowClick: onRowClickProp,
   onRowMouseOut: onRowMouseOutProp,
   onRowMouseOver: onRowMouseOverProp,

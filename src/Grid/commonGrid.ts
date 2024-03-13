@@ -1,5 +1,9 @@
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
+import OlStyleCircle from 'ol/style/Circle';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlStyle from 'ol/style/Style';
 
 export type RgCommonGridProps<RowType> = {
   /**
@@ -62,3 +66,67 @@ export type RgCommonGridProps<RowType> = {
    */
   onRowMouseOut?: (row: RowType, feature: OlFeature<OlGeometry>, additionalArgs?: any) => void;
 };
+
+export const defaultFeatureGridLayerName: string = 'react-geo-feature-grid-layer';
+
+export const defaultFeatureStyle = new OlStyle({
+  fill: new OlStyleFill({
+    color: 'rgba(255, 255, 255, 0.5)'
+  }),
+  stroke: new OlStyleStroke({
+    color: 'rgba(73, 139, 170, 0.9)',
+    width: 1
+  }),
+  image: new OlStyleCircle({
+    radius: 6,
+    fill: new OlStyleFill({
+      color: 'rgba(255, 255, 255, 0.5)'
+    }),
+    stroke: new OlStyleStroke({
+      color: 'rgba(73, 139, 170, 0.9)',
+      width: 1
+    })
+  })
+});
+
+export const highlightFillColor: string = 'rgba(230, 247, 255, 0.8)';
+
+export const defaultHighlightStyle = new OlStyle({
+  fill: new OlStyleFill({
+    color: highlightFillColor
+  }),
+  stroke: new OlStyleStroke({
+    color: 'rgba(73, 139, 170, 0.9)',
+    width: 1
+  }),
+  image: new OlStyleCircle({
+    radius: 6,
+    fill: new OlStyleFill({
+      color: 'rgba(230, 247, 255, 0.8)'
+    }),
+    stroke: new OlStyleStroke({
+      color: 'rgba(73, 139, 170, 0.9)',
+      width: 1
+    })
+  })
+});
+
+export const defaultSelectStyle = new OlStyle({
+  fill: new OlStyleFill({
+    color: 'rgba(230, 247, 255, 0.8)'
+  }),
+  stroke: new OlStyleStroke({
+    color: 'rgba(73, 139, 170, 0.9)',
+    width: 2
+  }),
+  image: new OlStyleCircle({
+    radius: 6,
+    fill: new OlStyleFill({
+      color: 'rgba(230, 247, 255, 0.8)'
+    }),
+    stroke: new OlStyleStroke({
+      color: 'rgba(73, 139, 170, 0.9)',
+      width: 2
+    })
+  })
+});

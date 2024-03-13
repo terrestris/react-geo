@@ -15,10 +15,9 @@ import {
   RowStyle,
   SelectionChangedEvent
 } from 'ag-grid-community';
-import { ColDef, ColGroupDef } from 'ag-grid-community/dist/lib/entities/colDef';
+import { ColDef, ColDefField, ColGroupDef } from 'ag-grid-community/dist/lib/entities/colDef';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import _differenceWith from 'lodash/differenceWith';
-import _isArray from 'lodash/isArray';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
 import _isNumber from 'lodash/isNumber';
@@ -33,13 +32,14 @@ import OlSourceVector from 'ol/source/Vector';
 import React, { Key, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-import { RgCommonGridProps } from '../commonGrid';
 import {
+  defaultFeatureGridLayerName,
   defaultFeatureStyle,
   defaultHighlightStyle,
   defaultSelectStyle,
-  highlightFillColor
-} from '../commonGridStyles';
+  highlightFillColor,
+  RgCommonGridProps
+} from '../commonGrid';
 
 export type WithKey<T> = {
   key: Key;
@@ -49,21 +49,21 @@ interface OwnProps<T> {
   /**
    * The height of the grid.
    */
-  height: number | string;
+  height?: number | string;
   /**
    * The theme to use for the grid. See
    * https://www.ag-grid.com/javascript-grid-styling/ for available options.
    * Note: CSS must be loaded to use the theme!
    */
-  theme: string;
+  theme?: string;
   /**
    * Custom column definitions to apply to the given column (mapping via key).
    */
-  columnDefs: (ColDef<WithKey<T>> | ColGroupDef<WithKey<T>>)[] | null;
+  columnDefs?: (ColDef<WithKey<T>> | ColGroupDef<WithKey<T>>)[] | null;
   /**
    * The width of the grid.
    */
-  width: number | string;
+  width?: number | string;
   /**
    * Custom row data to be shown in feature grid. This might be helpful if
    * original feature properties should be manipulated in some way before they
@@ -108,13 +108,13 @@ export type AgFeatureGridProps<T> = OwnProps<T> & RgCommonGridProps<T> & AgGridR
 export function AgFeatureGrid<T>({
   attributeBlacklist = [],
   className,
-  columnDefs = [],
+  columnDefs,
   featureStyle = defaultFeatureStyle,
   features = [],
   height = 250,
   highlightStyle = defaultHighlightStyle,
   keyFunction = getUid,
-  layerName = 'react-geo-feature-grid-layer',
+  layerName = defaultFeatureGridLayerName,
   onGridIsReady = () => undefined,
   onMapSingleClick,
   onRowClick,
@@ -292,7 +292,6 @@ export function AgFeatureGrid<T>({
     if (features.length < 1) {
       return;
     }
-
     const columns: ColDef<WithKey<T>>[] = [];
     // assumption: all features in array have the same structure
     const feature = features[0];
@@ -308,7 +307,7 @@ export function AgFeatureGrid<T>({
         pinned: 'left',
         suppressHeaderMenuButton: true,
         suppressMovable: true,
-        width: 28
+        width: 40
       });
     }
 
@@ -330,11 +329,10 @@ export function AgFeatureGrid<T>({
       }
 
       return {
-        cellClass: 'default',
         colId: key,
+        field: key as ColDefField<WithKey<T>>,
         filter,
         headerName: key,
-        hide: true,
         minWidth: 50,
         resizable: true,
         sortable: true
@@ -352,7 +350,7 @@ export function AgFeatureGrid<T>({
    *
    * @return The table data.
    */
-  const getRowData = (): WithKey<T>[] | undefined => {
+  const getRowData = useCallback((): WithKey<T>[] | undefined => {
     return features?.map((feature): WithKey<T> => {
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
@@ -367,7 +365,7 @@ export function AgFeatureGrid<T>({
         ...filtered
       } as WithKey<T>;
     });
-  };
+  }, [features, keyFunction]);
 
   /**
    * Returns the corresponding feature for the given table row key.
@@ -570,6 +568,11 @@ export function AgFeatureGrid<T>({
     getColumnDefsFromFeature
   ]);
 
+  const passedRowData = useMemo(() => !_isNil(rowData) ? rowData : getRowData(), [
+    rowData,
+    getRowData
+  ]);
+
   const finalClassName = className
     ? `${className} ${defaultClassName} ${theme}`
     : `${defaultClassName} ${theme}`;
@@ -586,7 +589,7 @@ export function AgFeatureGrid<T>({
         onGridReady={onGridReady}
         onRowClicked={onRowClickInner}
         onSelectionChanged={onSelectionChanged}
-        rowData={rowData && _isArray(rowData) ? rowData : getRowData()}
+        rowData={passedRowData}
         rowSelection="multiple"
         suppressRowClickSelection={true}
         getRowStyle={getRowStyle}

@@ -9,6 +9,7 @@ import OlStyle from 'ol/style/Style';
 import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
+import { defaultFeatureGridLayerName } from '../commonGrid';
 import FeatureGrid from './FeatureGrid';
 
 describe('<FeatureGrid />', () => {
@@ -49,7 +50,7 @@ describe('<FeatureGrid />', () => {
   });
 
   it('initializes a vector layer on mount', () => {
-    let layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === 'react-geo-feature-grid-layer');
+    let layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === defaultFeatureGridLayerName);
 
     expect(layerCand).toHaveLength(0);
 
@@ -59,7 +60,7 @@ describe('<FeatureGrid />', () => {
       />
     ));
 
-    layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === 'react-geo-feature-grid-layer');
+    layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === defaultFeatureGridLayerName);
 
     expect(layerCand).toHaveLength(1);
     expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
@@ -75,7 +76,7 @@ describe('<FeatureGrid />', () => {
       />
     ));
 
-    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === 'react-geo-feature-grid-layer');
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
     expect((layerCand as OlLayerVector<OlSourceVector>)?.getStyle()).toBe(featureStyle);
   });
@@ -89,7 +90,7 @@ describe('<FeatureGrid />', () => {
 
     unmount();
 
-    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === 'react-geo-feature-grid-layer');
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
     expect(layerCand).toBeUndefined();
   });
@@ -101,7 +102,7 @@ describe('<FeatureGrid />', () => {
       />
     ));
 
-    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === 'react-geo-feature-grid-layer');
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
     expect((layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures()).toHaveLength(3);
 
@@ -137,7 +138,7 @@ describe('<FeatureGrid />', () => {
 
     await userEvent.hover(row);
 
-    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === 'react-geo-feature-grid-layer');
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
     const featCand = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures()
       .find(feat => feat.get('name') === 'Shinji Kagawa');
 
@@ -163,7 +164,7 @@ describe('<FeatureGrid />', () => {
       await userEvent.click(row);
     }
 
-    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === 'react-geo-feature-grid-layer');
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
     const feats = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures() || [];
 
