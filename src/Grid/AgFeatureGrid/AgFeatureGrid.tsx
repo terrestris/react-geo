@@ -18,6 +18,7 @@ import {
 import { ColDef, ColDefField, ColGroupDef } from 'ag-grid-community/dist/lib/entities/colDef';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import _differenceWith from 'lodash/differenceWith';
+import _has from 'lodash/has';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
 import _isNumber from 'lodash/isNumber';
@@ -150,6 +151,17 @@ export function AgFeatureGrid<T>({
     }),
     style: featureStyle
   }), [features, layerName], true);
+
+  const checkBoxColumnDefinition: ColDef<WithKey<T>> = useMemo(() => ({
+    checkboxSelection: true,
+    headerCheckboxSelection: true,
+    headerName: '',
+    lockPosition: true,
+    pinned: 'left',
+    suppressHeaderMenuButton: true,
+    suppressMovable: true,
+    width: 40
+  }), []);
 
   /**
    * Returns the currently selected row keys.
@@ -299,16 +311,7 @@ export function AgFeatureGrid<T>({
 
     if (selectable) {
       // adds select checkbox column
-      columns.push({
-        checkboxSelection: true,
-        headerCheckboxSelection: true,
-        headerName: '',
-        lockPosition: true,
-        pinned: 'left',
-        suppressHeaderMenuButton: true,
-        suppressMovable: true,
-        width: 40
-      });
+      columns.push(checkBoxColumnDefinition);
     }
 
     const colDefsFromFeature = Object.keys(props).map((key: string): ColDef<WithKey<T>> | undefined => {
@@ -343,7 +346,7 @@ export function AgFeatureGrid<T>({
       ...columns,
       ...(colDefsFromFeature.filter(c => !_isNil(c)) as ColDef<WithKey<T>>[])
     ];
-  }, [attributeBlacklist, features, selectable]);
+  }, [attributeBlacklist, features, selectable, checkBoxColumnDefinition]);
 
   /**
    * Returns the table row data from all the given features.
@@ -563,9 +566,28 @@ export function AgFeatureGrid<T>({
     width
   }), [width, height]);
 
-  const colDefs = useMemo(() => !_isNil(columnDefs) ? columnDefs : getColumnDefsFromFeature(), [
+  const colDefs = useMemo(() => {
+    if (!_isNil(columnDefs)) {
+      if (!selectable) {
+        return columnDefs;
+      }
+      // check for checkbox column - if not present => add
+      const checkboxSelectionPresent = colDefs?.
+        some((colDef: ColDef<WithKey<T>>) => _has(colDef, 'checkboxSelection') && !_isNil(colDef.checkboxSelection));
+      if (checkboxSelectionPresent) {
+        return columnDefs;
+      }
+      return [
+        checkBoxColumnDefinition,
+        ...columnDefs
+      ];
+    }
+    return getColumnDefsFromFeature();
+  }, [
+    checkBoxColumnDefinition,
     columnDefs,
-    getColumnDefsFromFeature
+    getColumnDefsFromFeature,
+    selectable
   ]);
 
   const passedRowData = useMemo(() => !_isNil(rowData) ? rowData : getRowData(), [
@@ -584,6 +606,7 @@ export function AgFeatureGrid<T>({
     >
       <AgGridReact<WithKey<T>>
         columnDefs={colDefs}
+        getRowStyle={getRowStyle}
         onCellMouseOut={onRowMouseOutInner}
         onCellMouseOver={onRowMouseOverInner}
         onGridReady={onGridReady}
@@ -591,8 +614,7 @@ export function AgFeatureGrid<T>({
         onSelectionChanged={onSelectionChanged}
         rowData={passedRowData}
         rowSelection="multiple"
-        suppressRowClickSelection={true}
-        getRowStyle={getRowStyle}
+        suppressRowClickSelection
         {...agGridPassThroughProps}
       />
     </div>

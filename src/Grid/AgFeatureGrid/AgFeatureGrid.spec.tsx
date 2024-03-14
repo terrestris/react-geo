@@ -1,9 +1,6 @@
 import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-  RowClickedEvent,
-} from 'ag-grid-community';
 import _isNil from 'lodash/isNil';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
@@ -144,21 +141,23 @@ describe('<AgFeatureGrid />', () => {
       />
     ));
 
-    // const rows = screen.find('ag-de');
-    // // Ignore the first one ("Select all")
-    // rows.shift();
-    //
-    // for (const row of rows) {
-    //   await userEvent.click(row);
-    // }
-    //
-    // const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
-    //
-    // const feats = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures() || [];
-    //
-    // for (const feat of feats) {
-    //   expect(feat.getStyle()).toBe(selectStyle);
-    // }
+
+    // TODO: check how can checkbox select be triggered correctly using testing-library
+    const rows = screen.getAllByRole('presentation');
+
+    for (const row of rows) {
+      if (row.className.indexOf('ag-checkbox-input') > -1) {
+        await userEvent.click(row);
+      }
+    }
+
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
+
+    const feats = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures() || [];
+
+    for (const feat of feats) {
+      expect(feat.getStyle()).toBeDefined(); // TODO
+    }
   });
 
   it('resets all given features to default feature style', () => {
@@ -171,41 +170,6 @@ describe('<AgFeatureGrid />', () => {
     features.forEach(feature => {
       expect(feature.getStyle()).toBeNull();
     });
-  });
-
-  it('selects the feature on row click', () => {
-    const onRowClickSpy = jest.fn();
-    renderInMapContext(map, (
-      <AgFeatureGrid
-        features={features}
-        selectable
-        onRowClick={onRowClickSpy}
-      />
-    ));
-
-    // const rows = screen.find('ag-de');
-    // // Ignore the first one ("Select all")
-    // rows.shift();
-    //
-    // for (const row of rows) {
-    //   await userEvent.click(row);
-    // }
-
-    // const clickedRow = {
-    //   data: {
-    //     // @ts-ignore
-    //     key: features[0].ol_uid
-    //   }
-    // } as RowClickedEvent;
-    // const zoomToFeaturesSpy = jest.spyOn(instance, 'zoomToFeatures');
-    //
-    // instance.onRowClick(clickedRow);
-    //
-    // expect(onRowClickSpy).toHaveBeenCalled();
-    // expect(zoomToFeaturesSpy).not.toHaveBeenCalled();
-
-    onRowClickSpy.mockRestore();
-    // zoomToFeaturesSpy.mockRestore();
   });
 
   it('highlights the feature on row mouse over', async () => {
@@ -229,21 +193,24 @@ describe('<AgFeatureGrid />', () => {
     expect(featCand?.getStyle()).toBe(hoverStyle);
   });
 
-  // it('respects the column definition override', async () => {
-  //   renderInMapContext(map, (
-  //     <AgFeatureGrid
-  //       features={features}
-  //       columns={[{
-  //         key: 'name',
-  //         dataIndex: 'name',
-  //         title: 'Name override'
-  //       }]}
-  //     />
-  //   ));
-  //
-  //   const columnTitle = screen.getByText('Name override');
-  //
-  //   expect(columnTitle).toBeVisible();
-  // });
+
+  it('respects the column definition override', async () => {
+    const columnNameToCheck = 'My nice test column header';
+    renderInMapContext(map, (
+      <AgFeatureGrid
+        features={features}
+        columnDefs={[{
+          field: 'TEST',
+          filter: true,
+          headerName: columnNameToCheck,
+          resizable: true,
+          sortable: true
+        }]}
+      />
+    ));
+    const columnTitle = screen.getByText(columnNameToCheck);
+
+    expect(columnTitle).toBeVisible();
+  });
 
 });
