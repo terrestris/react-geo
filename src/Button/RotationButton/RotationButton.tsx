@@ -10,7 +10,6 @@ import ToggleButton, {
   ToggleButtonProps
 } from '../ToggleButton/ToggleButton';
 
-
 export type RotationButtonProps =  Partial<ToggleButtonProps>;
 
 export const RotationButton: React.FC<RotationButtonProps> = ({
