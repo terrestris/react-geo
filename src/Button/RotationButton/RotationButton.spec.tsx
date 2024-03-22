@@ -1,12 +1,11 @@
-import * as React from 'react';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { within } from '@testing-library/react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlSourceOsm from 'ol/source/OSM';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
 
-import { renderInMapContext } from '../../Util/rtlTestUtils';
 import RotationButton from './RotationButton';
 
 describe('<RotationButton />', () => {
