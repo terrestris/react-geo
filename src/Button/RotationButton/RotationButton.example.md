@@ -7,9 +7,6 @@ import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlSourceOsm from 'ol/source/OSM';
-import OlVectorLayer from 'ol/layer/Vector';
-import OlVectorSource from 'ol/source/Vector';
-import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import { fromLonLat } from 'ol/proj';
 
 import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
