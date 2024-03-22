@@ -1,3 +1,16 @@
+# [23.4.0](https://github.com/terrestris/react-geo/compare/v23.3.0...v23.4.0) (2024-03-22)
+
+
+### Bug Fixes
+
+* remove line ([1df8a6f](https://github.com/terrestris/react-geo/commit/1df8a6f2c2d95c27d5b2f1645e2b201d0ddd04c7))
+* remove unneeded imports ([c345370](https://github.com/terrestris/react-geo/commit/c34537069f321d3cfb5ee37c229ff60f1df46525))
+
+
+### Features
+
+* add RotationButton ([e46d4a5](https://github.com/terrestris/react-geo/commit/e46d4a588cd68e4e69e8556a3ae6cd718608a604))
+
 # [23.3.0](https://github.com/terrestris/react-geo/compare/v23.2.1...v23.3.0) (2024-01-11)
 
 
