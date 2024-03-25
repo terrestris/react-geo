@@ -1,3 +1,10 @@
+## [23.4.1](https://github.com/terrestris/react-geo/compare/v23.4.0...v23.4.1) (2024-03-25)
+
+
+### Bug Fixes
+
+* tooltip for RotationButton ([7ce3c9c](https://github.com/terrestris/react-geo/commit/7ce3c9c8cdb312e8e7ab2ce000db40a716507cc9))
+
 # [23.4.0](https://github.com/terrestris/react-geo/compare/v23.3.0...v23.4.0) (2024-03-22)
 
 
