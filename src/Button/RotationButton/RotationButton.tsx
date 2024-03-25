@@ -34,7 +34,7 @@ export const RotationButton: React.FC<RotationButtonProps> = ({
 
   return (
     <ToggleButton
-      tooltip={'Shift + Drag to rotate and zoom the map around its center'}
+      tooltip={tooltip}
       icon={<FontAwesomeIcon icon={faArrowsRotate} />}
       pressedIcon={<FontAwesomeIcon icon={faArrowsRotate} />}
       onToggle={onToggle}
