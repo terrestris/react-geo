@@ -1,4 +1,5 @@
 /* eslint-disable testing-library/render-result-naming-convention */
+import { isNil } from 'lodash';
 import * as React from 'react';
 import { Key } from 'react';
 
@@ -29,6 +30,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import {
+  ColDef,
   CellMouseOutEvent,
   CellMouseOverEvent,
   DetailGridInfo,
@@ -75,7 +77,11 @@ interface OwnProps {
   /**
    * Custom column definitions to apply to the given column (mapping via key).
    */
-  columnDefs: any;
+  columnDefs: Record<string, ColDef & { index?: number }>;
+  /**
+   * Custom column definitions.
+   */
+  overwriteColumnDefs?: ColDef[];
   /**
    * A Function that creates the rowkey from the given feature.
    * Receives the feature as property.
@@ -535,22 +541,16 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
    *
    * @return The column definitions.
    */
-  getColumnDefs = () => {
+  getColumnDefs = (): ColDef[] => {
     const {
       attributeBlacklist,
       features,
       columnDefs,
+      overwriteColumnDefs,
       selectable
     } = this.props;
 
     const columns: any[] = [];
-    if (features.length < 1) {
-      return;
-    }
-
-    const feature = features[0];
-
-    const props = feature.getProperties();
 
     if (selectable) {
       columns.push({
@@ -568,30 +568,39 @@ export class AgFeatureGrid extends React.Component<AgFeatureGridProps, AgFeature
       });
     }
 
-    let index = -1;
+    if (overwriteColumnDefs) {
+      return columns.concat(overwriteColumnDefs);
+    } else if (features.length < 1) {
+      return columns;
+    } else {
+      const feature = features[0];
+      const props = feature.getProperties();
 
-    Object.keys(props).forEach(key => {
-      if (attributeBlacklist.includes(key)) {
-        return;
-      }
+      let index = -1;
 
-      if (props[key] instanceof OlGeometry) {
-        return;
-      }
+      Object.keys(props).forEach(key => {
+        if (attributeBlacklist.includes(key)) {
+          return;
+        }
 
-      if (columnDefs[key] && columnDefs[key].index !== undefined) {
-        index = columnDefs[key].index;
-      } else {
-        ++index;
-      }
-      columns[index] = {
-        headerName: key,
-        field: key,
-        ...columnDefs[key]
-      };
-    });
+        if (props[key] instanceof OlGeometry) {
+          return;
+        }
 
-    return columns;
+        if (!isNil(columnDefs[key]?.index)) {
+          index = columnDefs[key].index!;
+        } else {
+          ++index;
+        }
+        columns[index] = {
+          headerName: key,
+          field: key,
+          ...columnDefs[key]
+        };
+      });
+
+      return columns;
+    }
   };
 
   /**
