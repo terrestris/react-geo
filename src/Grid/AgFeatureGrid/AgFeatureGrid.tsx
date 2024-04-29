@@ -15,7 +15,7 @@ import {
   RowStyle,
   SelectionChangedEvent
 } from 'ag-grid-community';
-import { ColDef, ColDefField, ColGroupDef } from 'ag-grid-community/dist/lib/entities/colDef';
+import { ColDef, ColDefField, ColGroupDef } from 'ag-grid-community';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import _differenceWith from 'lodash/differenceWith';
 import _has from 'lodash/has';

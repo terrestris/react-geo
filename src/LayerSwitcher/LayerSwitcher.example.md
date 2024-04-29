@@ -5,7 +5,7 @@ The passed layers are handled like only one of it can be visible.
 ```jsx
 import LayerSwitcher from '@terrestris/react-geo/dist/LayerSwitcher/LayerSwitcher';
 import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
-import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';

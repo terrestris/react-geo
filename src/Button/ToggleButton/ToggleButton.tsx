@@ -58,6 +58,11 @@ interface OwnProps {
    * The onChange callback.
    */
   onChange?: (evt: MouseEvent<HTMLButtonElement>, value?: string) => void;
+
+  /**
+   * Sets button background to transparent instead of primary color.
+   */
+  buttonTransparent?: boolean;
 }
 
 export type ToggleButtonProps = OwnProps & Omit<SimpleButtonProps, 'onChange' | 'value'>;
@@ -77,6 +82,7 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
   value,
   onClick,
   onChange = () => {},
+  buttonTransparent = true,
   ...passThroughProps
 }) => {
 
@@ -113,9 +119,12 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
     >
       <Button
         style={{
-          backgroundColor: pressed ?
-            token.token.colorPrimaryActive :
-            token.token.colorPrimary
+          backgroundColor:
+            buttonTransparent
+              ? 'transparent'
+              : pressed
+                ? token.token.colorPrimaryActive
+                : token.token.colorPrimary
         }}
         type={type}
         onClick={handleChange}

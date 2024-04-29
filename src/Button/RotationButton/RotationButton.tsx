@@ -1,11 +1,9 @@
-import React from 'react';
-
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { DragRotateAndZoom } from 'ol/interaction.js';
-
 import { useOlInteraction } from '@terrestris/react-util/';
+import { DragRotateAndZoom } from 'ol/interaction.js';
+import React from 'react';
+
 import ToggleButton, {
   ToggleButtonProps
 } from '../ToggleButton/ToggleButton';

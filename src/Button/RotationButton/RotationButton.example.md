@@ -1,17 +1,15 @@
 This demonstrates the use of the RotationButton
 
 ```jsx
-import { useEffect, useState } from "react";
-
-import OlMap from "ol/Map";
-import OlView from "ol/View";
-import OlLayerTile from "ol/layer/Tile";
-import OlSourceOsm from "ol/source/OSM";
-import { fromLonLat } from "ol/proj";
-
-import MapComponent from "@terrestris/react-util/dist/Components/MapComponent/MapComponent";
-import MapContext from "@terrestris/react-util/dist/Context/MapContext/MapContext";
-import RotationButton from "@terrestris/react-geo/dist/Button/RotationButton/RotationButton";
+import RotationButton from '@terrestris/react-geo/dist/Button/RotationButton/RotationButton';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
+import { useEffect, useState } from 'react';
 
 const RotationButtonExample = () => {
   const [map, setMap] = useState();
@@ -22,7 +20,7 @@ const RotationButtonExample = () => {
       new OlMap({
         layers: [
           new OlLayerTile({
-            name: "OSM",
+            name: 'OSM',
             source: new OlSourceOsm(),
           }),
         ],
@@ -44,7 +42,7 @@ const RotationButtonExample = () => {
         <MapComponent
           map={map}
           style={{
-            height: "400px",
+            height: '400px',
           }}
         />
         <RotationButton
