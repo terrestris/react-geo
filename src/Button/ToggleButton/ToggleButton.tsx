@@ -121,10 +121,10 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
         style={{
           backgroundColor:
             buttonTransparent
-            ? 'transparent'
-            : pressed
-              ? token.token.colorPrimaryActive
-              : token.token.colorPrimary
+              ? 'transparent'
+              : pressed
+                ? token.token.colorPrimaryActive
+                : token.token.colorPrimary
         }}
         type={type}
         onClick={handleChange}
