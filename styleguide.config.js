@@ -47,7 +47,7 @@ module.exports = {
   require: [
     'whatwg-fetch',
     'ol/ol.css',
-    // 'antd/dist/antd.variable.css'
+    'antd/dist/reset.css'
   ],
   pagePerSection: true,
   sections: [{
