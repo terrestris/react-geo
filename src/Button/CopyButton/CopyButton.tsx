@@ -34,7 +34,7 @@ interface OwnProps {
 }
 
 export type CopyButtonProps = OwnProps & Omit<UseSelectFeaturesProps,
-  'layers'|'onFeatureSelect'|'featuresCollection'|'clearAfterSelect'> & Partial<ToggleButtonProps>;
+  'layers'|'onFeatureSelect'|'featuresCollection'|'clearAfterSelect'|'active'> & Partial<ToggleButtonProps>;
 
 // The class name for the component.
 const defaultClassName = `${CSS_PREFIX}copybutton`;

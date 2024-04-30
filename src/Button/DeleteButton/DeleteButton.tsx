@@ -30,7 +30,7 @@ interface OwnProps {
 }
 
 export type DeleteButtonProps = OwnProps & Omit<UseSelectFeaturesProps,
-  'layers'|'onFeatureSelect'|'featuresCollection'|'clearAfterSelect'> & Partial<ToggleButtonProps>;
+  'layers'|'onFeatureSelect'|'featuresCollection'|'clearAfterSelect'|'active'> & Partial<ToggleButtonProps>;
 
 /**
  * The className added to this component.

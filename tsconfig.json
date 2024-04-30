@@ -33,7 +33,6 @@
     "webpack",
     "jest",
     "coverage",
-    "src/Util/**",
-    "src/**/*.spec.ts"
+    "src/Util/**"
   ]
 }
