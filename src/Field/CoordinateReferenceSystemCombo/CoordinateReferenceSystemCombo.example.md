@@ -3,9 +3,9 @@ This demonstrates the usage of the CoordinateReferenceSystemCombo.
 ```jsx
 import CoordinateReferenceSystemCombo from
   '@terrestris/react-geo/dist/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
-import { applyTransform } from 'ol/extent';
 import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import { applyTransform } from 'ol/extent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import {
@@ -13,11 +13,11 @@ import {
   get,
   getTransform
 } from 'ol/proj';
+import { register } from 'ol/proj/proj4';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';
-import React, { useEffect, useState } from 'react';
 import proj4 from 'proj4';
-import { register } from 'ol/proj/proj4';
+import React, { useEffect, useState } from 'react';
 
 const predefinedCrsDefinitions = [{
   code: '25832',
@@ -46,7 +46,7 @@ const predefinedCrsDefinitions = [{
 const CoordinateReferenceSystemComboExample = () => {
 
   const [map, setMap] = useState();
-  
+
   useEffect(() => {
     setMap(new OlMap({
       layers: [
