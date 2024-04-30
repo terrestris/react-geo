@@ -82,7 +82,7 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
   value,
   onClick,
   onChange = () => {},
-  buttonTransparent = false,
+  buttonTransparent = true,
   ...passThroughProps
 }) => {
 
@@ -118,14 +118,14 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
       {...tooltipProps}
     >
       <Button
-        style={
-          (!buttonTransparent ? {
-            backgroundColor: pressed ?
-              token.token.colorPrimaryActive :
-              token.token.colorPrimary
-          }: ({
-            backgroundColor: 'transparent'
-          }))}
+        style={{
+          backgroundColor:
+            buttonTransparent
+            ? 'transparent'
+            : pressed
+              ? token.token.colorPrimaryActive
+              : token.token.colorPrimary
+        }}
         type={type}
         onClick={handleChange}
         onChange={onChange}
