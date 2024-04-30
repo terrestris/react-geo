@@ -1,58 +1,51 @@
 This is a example containing a map component and a floating map logo
 
 ```jsx
-import './FloatingMapLogo.less';
-
-import FloatingMapLogo from '@terrestris/react-geo/dist/Map/FloatingMapLogo/FloatingMapLogo';
+import FloatingMapLogo from '@terrestris/react-util/dist/Components/FloatingMapLogo/FloatingMapLogo';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
+import {
+  fromLonLat
+} from 'ol/proj';
 import OlSourceOsm from 'ol/source/OSM';
 import OlView from 'ol/View';
-import * as React from 'react';
+import React from 'react';
 
 import logo from '../../../assets/user.png';
 
-class FloatingMapLogoExample extends React.Component {
+const FloatingMapLogoExample = () => {
 
-  constructor(props) {
+  const map = new OlMap({
+    view: new OlView({
+      center: fromLonLat([
+        7.1219992,
+        50.729458
+      ]),
+      zoom: 11
+    }),
+    layers: [
+      new OlLayerTile({
+        source: new OlSourceOsm()
+      })
+    ]
+  });
 
-    super(props);
+  return (
+    <MapComponent
+      map={map}
+      style={{
+        position: 'relative',
+        height: '400px'
+      }}
+    >
+      <FloatingMapLogo
+        imageSrc={logo}
+      />
+    </MapComponent>
+  );
 
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.map = new OlMap({
-      view: new OlView({
-        center: [801045, 6577113],
-        zoom: 9
-      }),
-      layers: [
-        new OlLayerTile({
-          source: new OlSourceOsm()
-        })
-      ]
-    });
-  }
-
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  render() {
-    return (
-      <div
-        id={this.mapDivId}
-        style={{
-          position: 'relative',
-          height: '200px'
-        }}
-      >
-        <FloatingMapLogo
-          imageSrc={logo}
-        />
-      </div>
-    );
-  }
-}
+};
 
 <FloatingMapLogoExample />
 ```
