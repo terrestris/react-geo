@@ -2,6 +2,8 @@ This example demonstrates the LayerTree.
 
 ```jsx
 import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
+import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
@@ -11,102 +13,156 @@ import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
 import * as React from 'react';
 
-class LayerTreeExample extends React.Component {
+const LayerTreeExample = () => {
 
-  constructor(props) {
-
-    super(props);
-
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.layerGroup = new OlLayerGroup({
-      name: 'Layergroup',
-      layers: [
-        new OlLayerTile({
-          name: 'OSM-Overlay-WMS',
-          minResolution: 0,
-          maxResolution: 200,
-          source: new OlSourceTileWMS({
-            url: 'https://ows.terrestris.de/osm/service',
-            params: {
-              LAYERS: 'OSM-Overlay-WMS'
-            }
-          })
-        }),
-        new OlLayerTile({
-          name: 'SRTM30-Contour',
-          minResolution: 0,
-          maxResolution: 10,
-          source: new OlSourceTileWMS({
-            url: 'https://ows.terrestris.de/osm/service',
-            params: {
-              LAYERS: 'SRTM30-Contour'
-            }
-          })
+  const layerGroup = new OlLayerGroup({
+    properties: {
+      name: 'Layergroup'
+    },
+    layers: [
+      new OlLayerTile({
+        properties: {
+          name: 'OSM-Overlay-WMS'
+        },
+        minResolution: 0,
+        maxResolution: 200,
+        source: new OlSourceTileWMS({
+          url: 'https://ows.terrestris.de/osm/service',
+          params: {
+            LAYERS: 'OSM-Overlay-WMS'
+          }
         })
-      ]
-    });
-
-    this.map = new OlMap({
-      layers: [
-        new OlLayerTile({
-          name: 'OSM',
-          source: new OlSourceOSM()
-        }),
-        this.layerGroup
-      ],
-      view: new OlView({
-        center: fromLonLat([12.924, 47.551]),
-        zoom: 13
+      }),
+      new OlLayerTile({
+        properties: {
+          name: 'SRTM30-Contour'
+        },
+        minResolution: 0,
+        maxResolution: 10,
+        visible: false,
+        source: new OlSourceTileWMS({
+          url: 'https://ows.terrestris.de/osm/service',
+          params: {
+            LAYERS: 'SRTM30-Contour'
+          }
+        })
+      }),
+      new OlLayerTile({
+        properties: {
+          name: 'SRTM30-Colored-Hillshade'
+        },
+        minResolution: 0,
+        maxResolution: 10,
+        visible: false,
+        source: new OlSourceTileWMS({
+          url: 'https://ows.terrestris.de/osm/service',
+          params: {
+            LAYERS: 'SRTM30-Colored-Hillshade'
+          }
+        })
       })
-    });
-  }
+    ]
+  });
 
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
+  const anotherLayerGroup = new OlLayerGroup({
+    properties: {
+      name: 'Layergroup'
+    },
+    layers: [
+      new OlLayerTile({
+        properties: {
+          name: 'OSM-Overlay-WMS A'
+        },
+        minResolution: 0,
+        maxResolution: 200,
+        source: new OlSourceTileWMS({
+          url: 'https://ows.terrestris.de/osm/service',
+          params: {
+            LAYERS: 'OSM-Overlay-WMS'
+          }
+        })
+      }),
+      new OlLayerTile({
+        properties: {
+          name: 'OSM-Overlay-WMS B'
+        },
+        minResolution: 0,
+        maxResolution: 200,
+        source: new OlSourceTileWMS({
+          url: 'https://ows.terrestris.de/osm/service',
+          params: {
+            LAYERS: 'OSM-Overlay-WMS'
+          }
+        })
+      }),
+      layerGroup
+    ]
+  });
 
-  render() {
-    return (
-      <div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
+  const map = new OlMap({
+    layers: [
+      new OlLayerTile({
+        properties: {
+          name: 'OSM'
+        },
+        source: new OlSourceOSM()
+      }),
+      anotherLayerGroup,
+      new OlLayerGroup({
+        properties: {
+          name: 'Empty layergroup'
+        },
+        visible: true,
+        layers: []
+      })
+    ],
+    view: new OlView({
+      center: fromLonLat([12.924, 47.551]),
+      zoom: 13
+    })
+  });
+
+  return (
+    <MapContext.Provider value={map}>
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
+
+      <span>{'Please note that the layers have resolution restrictions, please ' +
+      ' zoom in and out to see how the trees react to this.'}</span>
+      <div className="example-block">
+        <span>{'Autoconfigured with topmost LayerGroup of passed map:'}</span>
+
+        <LayerTree
+          className="top"
+          toggleOnClick={true}
         />
 
-        <span>{'Please note that the layers have resolution restrictions, please ' +
-        ' zoom in and out to see how the trees react to this.'}</span>
-        <div className="example-block">
-          <span>{'Autoconfigured with topmost LayerGroup of passed map:'}</span>
-
-          <LayerTree
-            map={this.map}
-          />
-
-        </div>
-
-        <div className="example-block">
-          <span>{'A LayerTree configured with concrete layerGroup:'}</span>
-
-          <LayerTree
-            layerGroup={this.layerGroup}
-            map={this.map}
-          />
-        </div>
-
-        <div className="example-block">
-          <span>{'A LayerTree with a filterFunction (The OSM layer is filtered out):'}</span>
-
-          <LayerTree
-            map={this.map}
-            filterFunction={(layer) => layer.get('name') !== 'OSM'}
-          />
-        </div>
       </div>
-    );
-  }
+
+      <div className="example-block">
+        <span>{'A LayerTree configured with concrete layerGroup:'}</span>
+
+        <LayerTree
+          layerGroup={layerGroup}
+          className="middle"
+        />
+      </div>
+
+      <div className="example-block">
+        <span>{'A LayerTree with a filterFunction (The OSM layer is filtered out):'}</span>
+
+        <LayerTree
+          filterFunction={layer => layer.get('name') !== 'OSM'}
+          className="bottom"
+          toggleOnClick={true}
+        />
+      </div>
+    </MapContext.Provider>
+  );
 }
 
 <LayerTreeExample />
