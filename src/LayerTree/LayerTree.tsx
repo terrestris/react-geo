@@ -51,7 +51,7 @@ interface OwnProps {
    *
    * Compare MDN Docs for Array.prototype.filter: https://mdn.io/array/filter
    */
-  filterFunction?: (value: any, index: number, array: any[]) => boolean;
+  filterFunction?: (value: OlLayerBase, index: number, array: OlLayerBase[]) => boolean;
 
   /**
    * A LayerGroup the Tree should handle.
@@ -136,7 +136,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
       childNodes = childLayers
         .map(childLayer => treeNodeFromLayer(childLayer))
         .filter(childLayer => childLayer !== undefined)
-        .reverse() as TreeDataNode[];
+        .toReversed() as TreeDataNode[];
     }
 
     return {
@@ -158,7 +158,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
     return lGroup.getLayers().getArray()
       .map(l => treeNodeFromLayer(l))
       .filter(n => n !== undefined)
-      .reverse() as TreeDataNode[];
+      .toReversed() as TreeDataNode[];
   }, [layerGroup, map, treeNodeFromLayer]);
 
   const onChangeResolution = useCallback(() => {
@@ -307,7 +307,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
     const dropPos = info.node.pos.split('-');
     const dropPosition = info.dropPosition;
     // The drop position relative to the drop node, inside 0, top -1, bottom 1.
-    const dropPositionRelative = dropPosition - Number(dropPos[dropPos.length - 1]);
+    const dropPositionRelative = dropPosition - parseInt(dropPos[dropPos.length - 1], 10);
 
     // Reorder layers
     if (!map) {
