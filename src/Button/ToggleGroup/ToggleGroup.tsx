@@ -38,7 +38,7 @@ export type ToggleGroupProps<T extends ToggleButtonProps = ToggleButtonProps> = 
    * The children of this group. Typically a set of `ToggleButton`s.
    */
   children?: ReactElement<T>[];
-} & React.ComponentProps<'div'>;
+} & Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>;
 
 export const ToggleGroupContext = React.createContext<boolean>(false);
 
