@@ -25,6 +25,7 @@ export const CoordinateInfo: FC<CoordinateInfoProps> = ({
   featureCount = 1,
   fetchOpts = {},
   onError = () => undefined,
+  onSuccess = () => undefined,
   queryLayers = [],
   resultRenderer = () => <></>
 }) => {
@@ -34,6 +35,7 @@ export const CoordinateInfo: FC<CoordinateInfoProps> = ({
     featureCount,
     fetchOpts,
     onError,
+    onSuccess,
     queryLayers,
   });
 
