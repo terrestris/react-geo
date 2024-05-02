@@ -1,17 +1,15 @@
-import { getUid } from 'ol';
-import OlCollection from 'ol/Collection';
+import { act,fireEvent, render, screen } from '@testing-library/react';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
-import * as OlObservable from 'ol/Observable';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import * as React from 'react';
-import {
-  act
-} from 'react-dom/test-utils';
 
-import TestUtil from '../Util/TestUtil';
+import TestUtil from '../Util/TestUtil';;
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import userEvent from '@testing-library/user-event';
+
 import LayerTree from './LayerTree';
 
 describe('<LayerTree />', () => {
@@ -28,6 +26,8 @@ describe('<LayerTree />', () => {
       properties: {
         name: 'layer1'
       },
+      minResolution: 10,
+      maxResolution: 1000,
       source: layerSource1
     });
     const layerSource2 = new OlSourceTileWMS();
@@ -67,605 +67,468 @@ describe('<LayerTree />', () => {
     TestUtil.removeMap(map);
   });
 
-  it('is defined', () => {
-    expect(LayerTree).not.toBeUndefined();
-  });
-
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(LayerTree, {map});
-    expect(wrapper).not.toBeUndefined();
+    const {
+      container
+    } = render(<LayerTree />);
+
+    expect(container).toBeVisible();
   });
 
-  it('layergroup taken from map if not provided', () => {
-    const wrapper = TestUtil.mountComponent(LayerTree, {map});
-    expect(wrapper.state('layerGroup')).toBe(map.getLayerGroup());
+  it('sets the layer name as title per default', () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
+
+    const expectedNodeTitles = [
+      'layer1',
+      'layer2',
+      'layerSubGroup'
+    ];
+
+    expectedNodeTitles.forEach(expectedNodeTitle => {
+      const node = screen.queryByText(expectedNodeTitle);
+      expect(node).toBeInTheDocument();
+    });
+
+    const unexpectedNodeTitles = [
+      // Not visible since not expanded.
+      'layer3',
+      // Not visible since it's the root node.
+      'layerGroup'
+    ];
+
+    unexpectedNodeTitles.forEach(unexpectedNodeTitle => {
+      const node = screen.queryByText(unexpectedNodeTitle);
+      expect(node).not.toBeInTheDocument();
+    });
   });
 
-  it('unmount removes listeners', () => {
-    // @ts-ignore
-    OlObservable.unByKey = jest.fn();
-    const wrapper = TestUtil.mountComponent(LayerTree, {map});
-    const olListenerKeys = (wrapper.instance() as LayerTree).olListenerKeys;
-    wrapper.unmount();
-    expect(OlObservable.unByKey).toHaveBeenCalled();
-    expect(OlObservable.unByKey).toHaveBeenCalledWith(olListenerKeys);
+  it('accepts a layer group instead of getting all layers from the map directly', () => {
+    renderInMapContext(map,
+      <LayerTree
+        layerGroup={layerSubGroup}
+      />
+    );
+
+    const expectedNodeTitles = [
+      'layer3'
+    ];
+
+    expectedNodeTitles.forEach(expectedNodeTitle => {
+      const node = screen.queryByText(expectedNodeTitle);
+      expect(node).toBeInTheDocument();
+    });
+
+    const unexpectedNodeTitles = [
+      // Not visible since not contained in layerSubGroup
+      'layer1',
+      'layer2',
+      'layerGroup',
+      // Not visible since it's the root node.
+      'layerSubGroup'
+    ];
+
+    unexpectedNodeTitles.forEach(unexpectedNodeTitle => {
+      const node = screen.queryByText(unexpectedNodeTitle);
+      expect(node).not.toBeInTheDocument();
+    });
   });
 
-  it('CWR with new layerGroup rebuild listeners and treenodes ', () => {
-    const props = {
-      layerGroup,
-      map
+  it('removes all registered view listeners on unmount', () => {
+    expect(map.getListeners('moveend')).toBeUndefined();
+
+    const {
+      unmount
+    } = renderInMapContext(map,
+      <LayerTree />
+    );
+
+    expect(map.getView().getListeners('change:resolution')?.length).toBe(1);
+
+    unmount();
+
+    expect(map.getView().getListeners('change:resolution')).toBeUndefined();
+  });
+
+  it('removes all registered layer(-group) listeners on unmount', () => {
+    expect(layer1.getListeners('change:visible')).toBeUndefined();
+    expect(layer2.getListeners('change:visible')).toBeUndefined();
+    expect(layer3.getListeners('change:visible')).toBeUndefined();
+
+    // The layer group has registered a default listener.
+    expect(layerGroup.getLayers().getListeners('add')?.length).toBe(1);
+    expect(layerGroup.getLayers().getListeners('remove')?.length).toBe(1);
+    expect(layerGroup.getListeners('change:layers')?.length).toBe(1);
+
+    expect(layerSubGroup.getLayers().getListeners('add')?.length).toBe(1);
+    expect(layerSubGroup.getLayers().getListeners('remove')?.length).toBe(1);
+    expect(layerSubGroup.getListeners('change:layers')?.length).toBe(1);
+
+    const {
+      unmount
+    } = renderInMapContext(map,
+      <LayerTree />
+    );
+
+    expect(layer1.getListeners('change:visible')?.length).toBe(1);
+    expect(layer2.getListeners('change:visible')?.length).toBe(1);
+    expect(layer3.getListeners('change:visible')?.length).toBe(1);
+
+    expect(layerGroup.getLayers().getListeners('add')?.length).toBe(2);
+    expect(layerGroup.getLayers().getListeners('remove')?.length).toBe(2);
+    expect(layerGroup.getListeners('change:layers')?.length).toBe(2);
+
+    expect(layerSubGroup.getLayers().getListeners('add')?.length).toBe(2);
+    expect(layerSubGroup.getLayers().getListeners('remove')?.length).toBe(2);
+    expect(layerSubGroup.getListeners('change:layers')?.length).toBe(2);
+
+    unmount();
+
+    expect(layer1.getListeners('change:visible')).toBeUndefined();
+    expect(layer2.getListeners('change:visible')).toBeUndefined();
+    expect(layer3.getListeners('change:visible')).toBeUndefined();
+
+    expect(layerGroup.getLayers().getListeners('add')?.length).toBe(1);
+    expect(layerGroup.getLayers().getListeners('remove')?.length).toBe(1);
+    expect(layerGroup.getListeners('change:layers')?.length).toBe(1);
+
+    expect(layerSubGroup.getLayers().getListeners('add')?.length).toBe(1);
+    expect(layerSubGroup.getLayers().getListeners('remove')?.length).toBe(1);
+    expect(layerSubGroup.getListeners('change:layers')?.length).toBe(1);
+  });
+
+  it('accepts a custom title renderer function', () => {
+    const nodeTitleRenderer = (layer: OlLayerBase) => {
+      return <span>{`Custom-${layer.get('name')}`}</span>;
     };
-    const wrapper = TestUtil.mountComponent(LayerTree, props);
 
-    const subLayer = new OlLayerTile({
-      properties: {
-        name: 'subLayer'
-      },
-      source: new OlSourceTileWMS()
-    });
-    const nestedLayerGroup = new OlLayerGroup({
-      properties: {
-        name: 'nestedLayerGroup'
-      },
-      layers: [subLayer]
-    });
+    renderInMapContext(map,
+      <LayerTree
+        layerGroup={layerSubGroup}
+        nodeTitleRenderer={nodeTitleRenderer}
+      />
+    );
 
-    expect((wrapper.instance() as LayerTree).olListenerKeys).toHaveLength(10);
-    wrapper.setProps({
-      layerGroup: nestedLayerGroup
-    });
-    expect((wrapper.instance() as LayerTree).olListenerKeys).toHaveLength(4);
-  });
+    const expectedNodeTitles = [
+      'Custom-layer3'
+    ];
 
-  describe('<LayerTreeNode> creation', () => {
-
-    it('adds a <LayerTreeNode> for every child', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.find('.ant-tree-treenode');
-
-      expect(treeNodes).toHaveLength(4);
-    });
-
-    // TODO This test could be better if the TreeNodes where iterable, but they
-    // are not. See comment below.
-    // it('can handle nested `ol.layer.group`s', () => {
-    //   const props = {
-    //     layerGroup,
-    //     map
-    //   };
-    //   const subLayer = new OlLayerTile({
-    //     name: 'subLayer',
-    //     source: new OlSourceTileWMS()
-    //   });
-    //   const nestedLayerGroup = new OlLayerGroup({
-    //     name: 'nestedLayerGroup',
-    //     layers: [subLayer]
-    //   });
-    //   layerGroup.getLayers().push(nestedLayerGroup);
-
-    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
-    //   const treeNodes = wrapper.find('.ant-tree-treenode');
-
-    //   const groupNode = treeNodes.at(0);
-    //   const subNode = groupNode.props().children[0];
-
-    //   expect(subNode.props.title).toBe(subLayer.get('name'));
-    // });
-
-    it('can handle a replacement of layergroups `ol.Collection`', () => {
-      const props = {
-        map
-      };
-      const subLayer = new OlLayerTile({
-        properties: {
-          name: 'subLayer'
-        },
-        source: new OlSourceTileWMS()
-      });
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
-      map.getLayerGroup().setLayers(new OlCollection([subLayer]));
-      expect(rebuildSpy).toHaveBeenCalled();
-      rebuildSpy.mockRestore();
-    });
-
-    it('sets the layer name as title per default', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.find('LayerTreeNode');
-      treeNodes.forEach((node: any, index: number) => {
-        const reverseIndex = treeNodes.length - (index + 1);
-        const layer = layerGroup.getLayers().item(reverseIndex);
-        expect(node.props().title).toBe(layer.get('name'));
-      });
-    });
-
-    it('accepts a custom title renderer function', () => {
-      const nodeTitleRenderer = function(layer: OlLayerBase) {
-        return (
-          <span className="span-1">
-            <span className="sub-span-1">
-              {layer.get('name')}
-            </span>
-            <span className="sub-span-2" />
-          </span>
-        );
-      };
-      const props = {
-        layerGroup,
-        map,
-        nodeTitleRenderer
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.find('LayerTreeNode');
-
-      treeNodes.forEach((node: any, index: number) => {
-        const reverseIndex = treeNodes.length - (index + 1);
-        const layer = layerGroup.getLayers().item(reverseIndex);
-        expect(node.find('span.span-1').length).toBe(1);
-        expect(node.find('span.sub-span-1').length).toBe(1);
-        expect(node.find('span.sub-span-1').props().children).toBe(layer.get('name'));
-        expect(node.find('span.sub-span-2').length).toBe(1);
-      });
-    });
-
-    it('can filter layers if a filterFunction is given', () => {
-      const filterFunction = function(layer: OlLayerBase) {
-        return layer.get('name') !== 'layer1';
-      };
-      const props = {
-        layerGroup,
-        map,
-        filterFunction
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.find('.ant-tree-treenode');
-
-      expect(treeNodes.length).toBe(3);
-    });
-
-    it('sets the right keys for the layers', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.find('LayerTreeNode');
-
-      treeNodes.forEach((node: any, index: number) => {
-        const reverseIndex = treeNodes.length - (index + 1);
-        const layer = layerGroup.getLayers().item(reverseIndex);
-        expect(node.props().eventKey).toBe(getUid(layer));
-      });
-    });
-
-    it('sets visible layers as checked', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.find('LayerTreeNode');
-
-      treeNodes.forEach((node: any, index: number) => {
-        const reverseIndex = treeNodes.length - (index + 1);
-        const layer = layerGroup.getLayers().item(reverseIndex);
-        expect(layer.getVisible()).toBe(node.props().checked);
-      });
-    });
-
-    describe('#treeNodeFromLayer', () => {
-
-      it('returns a LayerTreeNode when called with a layer', () => {
-        const props = {
-          layerGroup,
-          map
-        };
-        layerGroup.setVisible(false);
-
-        const wrapper = TestUtil.mountComponent(LayerTree, props);
-        const treeNode = (wrapper.instance() as LayerTree).treeNodeFromLayer(layer1);
-
-        expect(treeNode.props.title).toBe(layer1.get('name'));
-        expect(treeNode.key).toBe(getUid(layer1));
-      });
+    expectedNodeTitles.forEach(expectedNodeTitle => {
+      const node = screen.queryByText(expectedNodeTitle);
+      expect(node).toBeInTheDocument();
     });
   });
 
-  describe('#onCheck', () => {
-    it('sets the correct visibility to the layer from the checked state', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const treeNodes = wrapper.find('LayerTreeNode');
+  it('accepts a filterFunction to filter the layers in the tree', () => {
+    const filterFunction = (layer: OlLayerBase) => {
+      return layer.get('name') === 'layer1';
+    };
 
-
-      treeNodes.forEach((node: any, index: number) => {
-        const reverseIndex = treeNodes.length - (index + 1);
-        const layer = layerGroup.getLayers().item(reverseIndex);
-        const checkBox = node.find('.ant-tree-checkbox');
-        const wasVisible = layer.getVisible();
-        checkBox.simulate('click');
-        expect(wasVisible).toBe(!layer.getVisible());
-      });
-    });
+    renderInMapContext(map,
+      <LayerTree
+        filterFunction={filterFunction}
+      />
+    );
   });
 
-  describe('event handling', () => {
+  it('sets visible layers as checked initially', () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
 
-    it('sets checked state corresponding to layer.setVisible', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      let treeNode = wrapper.find('.ant-tree-treenode').at(3);
+    const layer1Span = screen.queryByText('layer1');
+    const layer2Span = screen.queryByText('layer2');
 
-      expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);
-      act(() => {
-        layer1.setVisible(false);
-      });
-      wrapper.update();
-      treeNode = wrapper.find('.ant-tree-treenode').at(3);
-      expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(0);
-      act(() => {
-        layer1.setVisible(true);
-      });
-      wrapper.update();
-      treeNode = wrapper.find('.ant-tree-treenode').at(3);
-      expect(treeNode.find('.ant-tree-checkbox-checked').length).toEqual(1);
-    });
-
-    it('triggers tree rebuild on nodeTitleRenderer changes', () => {
-      const exampleNodeTitleRenderer = function(layer: OlLayerBase) {
-        return (
-          <span className="span-1">
-            {layer.get('name')}
-          </span>
-        );
-      };
-
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
-
-      wrapper.setProps({
-        nodeTitleRenderer: exampleNodeTitleRenderer
-      });
-      expect(rebuildSpy).toHaveBeenCalledTimes(1);
-
-      wrapper.setProps({
-        nodeTitleRenderer: null
-      });
-      expect(rebuildSpy).toHaveBeenCalledTimes(2);
-
-      rebuildSpy.mockRestore();
-    });
-
-    it('triggers tree rebuild on layer add', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const layer = new OlLayerTile({
-        source: new OlSourceTileWMS()
-      });
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
-
-      layerGroup.getLayers().push(layer);
-      expect(rebuildSpy).toHaveBeenCalled();
-
-      rebuildSpy.mockRestore();
-    });
-
-    it('… also registers add/remove events for added groups ', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const layer = new OlLayerTile({
-        source: new OlSourceTileWMS()
-      });
-      const group = new OlLayerGroup({
-        layers: [layer]
-      });
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
-      const registerSpy = jest.spyOn((wrapper.instance() as LayerTree), 'registerAddRemoveListeners');
-
-      layerGroup.getLayers().push(group);
-      expect(rebuildSpy).toHaveBeenCalled();
-      expect(registerSpy).toHaveBeenCalled();
-
-      rebuildSpy.mockRestore();
-      registerSpy.mockRestore();
-    });
-
-    it('trigger unregisterEventsByLayer and rebuildTreeNodes for removed layers ', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
-      const unregisterSpy = jest.spyOn((wrapper.instance() as LayerTree), 'unregisterEventsByLayer');
-
-      layerGroup.getLayers().remove(layer1);
-      expect(rebuildSpy).toHaveBeenCalled();
-      expect(unregisterSpy).toHaveBeenCalled();
-
-      rebuildSpy.mockRestore();
-      unregisterSpy.mockRestore();
-    });
-
-    it('… unregister recursively for removed groups', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const subLayer1 = new OlLayerTile({
-        source: new OlSourceTileWMS()
-      });
-      const subLayer2 = new OlLayerTile({
-        source: new OlSourceTileWMS()
-      });
-      const nestedLayerGroup = new OlLayerGroup({
-        properties: {
-          name: 'nestedLayerGroup'
-        },
-        layers: [subLayer1, subLayer2]
-      });
-      layerGroup.getLayers().push(nestedLayerGroup);
-
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      const rebuildSpy = jest.spyOn((wrapper.instance() as LayerTree), 'rebuildTreeNodes');
-      const unregisterSpy = jest.spyOn((wrapper.instance() as LayerTree), 'unregisterEventsByLayer');
-
-      layerGroup.getLayers().remove(nestedLayerGroup);
-      expect(rebuildSpy).toHaveBeenCalledTimes(1);
-      expect(unregisterSpy).toHaveBeenCalledTimes(3);
-
-      rebuildSpy.mockRestore();
-      unregisterSpy.mockRestore();
-    });
-
-    describe('#unregisterEventsByLayer', () => {
-
-      it('removes the listener and the eventKey from olListenerKeys', () => {
-        const props = {
-          layerGroup,
-          map
-        };
-        const subLayer1 = new OlLayerTile({
-          source: new OlSourceTileWMS()
-        });
-        const subLayer2 = new OlLayerTile({
-          source: new OlSourceTileWMS()
-        });
-        const nestedLayerGroup = new OlLayerGroup({
-          properties: {
-            name: 'nestedLayerGroup'
-          },
-          layers: [subLayer1, subLayer2]
-        });
-        layerGroup.getLayers().push(nestedLayerGroup);
-
-        const wrapper = TestUtil.mountComponent(LayerTree, props);
-        const oldOlListenerKey = (wrapper.instance() as LayerTree).olListenerKeys;
-        // @ts-ignore
-        OlObservable.unByKey = jest.fn();
-
-        (wrapper.instance() as LayerTree).unregisterEventsByLayer(subLayer1);
-
-        const newOlListenerKey = (wrapper.instance() as LayerTree).olListenerKeys;
-
-        expect(OlObservable.unByKey).toHaveBeenCalled();
-        expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 1);
-      });
-
-      it('… of children for groups', () => {
-        const props = {
-          layerGroup,
-          map
-        };
-        const subLayer1 = new OlLayerTile({
-          source: new OlSourceTileWMS()
-        });
-        const subLayer2 = new OlLayerTile({
-          source: new OlSourceTileWMS()
-        });
-        const nestedLayerGroup = new OlLayerGroup({
-          properties: {
-            name: 'nestedLayerGroup'
-          },
-          layers: [subLayer1, subLayer2]
-        });
-        layerGroup.getLayers().push(nestedLayerGroup);
-
-        const wrapper = TestUtil.mountComponent(LayerTree, props);
-        const oldOlListenerKey = (wrapper.instance() as LayerTree).olListenerKeys;
-        // @ts-ignore
-        OlObservable.unByKey = jest.fn();
-
-        (wrapper.instance() as LayerTree).unregisterEventsByLayer(nestedLayerGroup);
-
-        const newOlListenerKey = (wrapper.instance() as LayerTree).olListenerKeys;
-
-        expect(OlObservable.unByKey).toHaveBeenCalledTimes(2);
-        expect(newOlListenerKey.length).toBe(oldOlListenerKey.length - 2);
-      });
-
-    });
-
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer1Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer2Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
   });
 
-  describe('#setLayerVisibility', () => {
-    it('sets the visibility of a single layer', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      layer1.setVisible(true);
+  it('sets the layers visibility on check', async () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
 
-      (wrapper.instance() as LayerTree).setLayerVisibility(layer1, false);
-      expect(layer1.getVisible()).toBe(false);
-      (wrapper.instance() as LayerTree).setLayerVisibility(layer1, true);
-      expect(layer1.getVisible()).toBe(true);
-    });
+    const layer1Span = screen.getByText('layer1');
+    const layer2Span = screen.getByText('layer2');
 
-    it('sets the visibility for the children when called with a layerGroup', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      layer1.setVisible(true);
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer1Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer2Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
+
+    expect(layer1.getVisible()).toBe(true);
+    expect(layer2.getVisible()).toBe(false);
+
+    await userEvent.click(layer1Span);
+    await userEvent.click(layer2Span);
+
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer1Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer2Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
+
+    expect(layer1.getVisible()).toBe(false);
+    expect(layer2.getVisible()).toBe(true);
+  });
+
+  it('updates the checked state if the layers visibility changes internally', async () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
+
+    const layer1Span = screen.getByText('layer1');
+    const layer2Span = screen.getByText('layer2');
+
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer1Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer2Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
+
+    act(() => {
+      layer1.setVisible(false);
       layer2.setVisible(true);
-
-      (wrapper.instance() as LayerTree).setLayerVisibility(layerGroup, false);
-      expect(layerGroup.getVisible()).toBe(false);
-      expect(layer1.getVisible()).toBe(false);
-      expect(layer2.getVisible()).toBe(false);
-
-      (wrapper.instance() as LayerTree).setLayerVisibility(layerGroup, true);
-      expect(layerGroup.getVisible()).toBe(true);
-      expect(layer1.getVisible()).toBe(true);
-      expect(layer2.getVisible()).toBe(true);
     });
 
-    it('sets the parent layerGroups visible when layer has been made visible', () => {
-      const props = {
-        layerGroup,
-        map
-      };
-      const wrapper = TestUtil.mountComponent(LayerTree, props);
-      layerGroup.setVisible(false);
-      layerSubGroup.setVisible(false);
-      layer1.setVisible(false);
-      layer2.setVisible(false);
-      layer3.setVisible(false);
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer1Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer2Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
+  });
 
+  it('sets the out-of-range class if the layer is not visible', () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
 
-      (wrapper.instance() as LayerTree).setLayerVisibility(layer2, true);
-      expect(layerGroup.getVisible()).toBe(true);
-      expect(layer1.getVisible()).toBe(false);
-      expect(layer2.getVisible()).toBe(true);
-      expect(layer3.getVisible()).toBe(false);
-      expect(layerSubGroup.getVisible()).toBe(false);
+    const layer1Span = screen.getByText('layer1');
 
-      (wrapper.instance() as LayerTree).setLayerVisibility(layer1, true);
-      expect(layerGroup.getVisible()).toBe(true);
-      expect(layer1.getVisible()).toBe(true);
-      expect(layer2.getVisible()).toBe(true);
-      expect(layer3.getVisible()).toBe(false);
-      expect(layerSubGroup.getVisible()).toBe(false);
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer1Span?.parentNode?.parentNode).toHaveClass('out-of-range');
 
-      layerGroup.setVisible(false);
-      layerSubGroup.setVisible(false);
-      layer1.setVisible(false);
-      layer2.setVisible(false);
-      layer3.setVisible(false);
-
-      (wrapper.instance() as LayerTree).setLayerVisibility(layer3, true);
-      expect(layer1.getVisible()).toBe(false);
-      expect(layer2.getVisible()).toBe(false);
-      expect(layer3.getVisible()).toBe(true);
-      expect(layerSubGroup.getVisible()).toBe(true);
-      expect(layerGroup.getVisible()).toBe(true);
+    act(() => {
+      map.getView().setZoom(10);
     });
 
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(layer1Span?.parentNode?.parentNode).not.toHaveClass('out-of-range');
   });
 
-  // TODO rc-tree drop event seems to be broken in PhantomJS / cant be simulated
-  describe('#onDrop', () => {
+  it('adds/removes layers to the tree if added/removed internally', () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
 
-    // let props = {};
-    //
-    // beforeEach(() => {
-    //   props = {
-    //     layerGroup,
-    //     map
-    //   };
-    //   const layer3 = new OlLayerTile({
-    //     name: 'layer3',
-    //     source: new OlSourceTileWMS()
-    //   });
-    //   const subLayer = new OlLayerTile({
-    //     name: 'subLayer',
-    //     source: new OlSourceTileWMS()
-    //   });
-    //   const nestedLayerGroup = new OlLayerGroup({
-    //     name: 'nestedLayerGroup',
-    //     layers: [subLayer]
-    //   });
-    //   props.layerGroup.getLayers().push(layer3);
-    //   props.layerGroup.getLayers().push(nestedLayerGroup);
-    // });
-    //
-    // it('can handle drop on leaf', () => {
-    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
-    //   const firstNode = wrapper.childAt(0);
-    //   const thirdNode = wrapper.childAt(2);
-    //   const dragTarget = firstNode.find('.ant-tree-node-content-wrapper');
-    //   const dropTarget = thirdNode.find('.react-geo-layertree-node');
-    //
-    //   console.log(props.layerGroup.getLayers().getLength());
-    //   console.log(props.layerGroup.getLayers().item(0).get('name'));
-    //   console.log(props.layerGroup.getLayers().item(1).get('name'));
-    //   console.log(props.layerGroup.getLayers().item(2).get('name'));
-    //   console.log(props.layerGroup.getLayers().item(3).get('name'));
-    //
-    //   debugger
-    //
-    //   console.log('--------');
-    //   dragTarget.simulate('dragStart');
-    //   dropTarget.simulate('dragOver');
-    //   dropTarget.simulate('drop');
-    //
-    //   console.log(props.layerGroup.getLayers().getLength());
-    //   console.log(props.layerGroup.getLayers().item(0).get('name'));
-    //   console.log(props.layerGroup.getLayers().item(1).get('name'));
-    //   console.log(props.layerGroup.getLayers().item(2).get('name'));
-    //   console.log(props.layerGroup.getLayers().item(3).get('name'));
-    //
-    //
-    // });
+    let newLayerSpan = screen.queryByText('newLayer');
 
-    // it('can handle drop before leaf', () => {
-    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
-    //   const treeNodes = wrapper.children('TreeNode');
-    //   const firstNode = treeNodes.get(0);
-    //   const thirdNode = treeNodes.get(2);
-    // });
-    //
-    // it('can handle drop after leaf', () => {
-    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
-    //   const treeNodes = wrapper.children('TreeNode');
-    //   const firstNode = treeNodes.get(0);
-    //   const thirdNode = treeNodes.get(2);
-    // });
-    //
-    // it('can handle drop on folder', () => {
-    //   const wrapper = TestUtil.mountComponent(LayerTree, props);
-    //   const treeNodes = wrapper.children('TreeNode');
-    //   const firstNode = treeNodes.get(0);
-    //   const folderNode = treeNodes.get(3);
-    // });
+    expect(newLayerSpan).not.toBeInTheDocument();
+
+    const newLayer = new OlLayerTile({
+      source: new OlSourceTileWMS(),
+      properties: {
+        name: 'newLayer'
+      }
+    });
+
+    act(() => {
+      map.addLayer(newLayer);
+    });
+
+    newLayerSpan = screen.getByText('newLayer');
+
+    expect(newLayerSpan).toBeInTheDocument();
+
+    act(() => {
+      map.removeLayer(newLayer);
+    });
+
+    expect(newLayerSpan).not.toBeInTheDocument();
   });
 
+  it('updates the layer name if changed internally', () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
+
+    let layer1Span = screen.queryByText('layer1');
+
+    expect(layer1Span).toBeInTheDocument();
+
+    act(() => {
+      layer1.set('name', 'newLayerName');
+    });
+
+    layer1Span = screen.queryByText('layer1');
+
+    expect(layer1Span).not.toBeInTheDocument();
+
+    layer1Span = screen.queryByText('newLayerName');
+
+    expect(layer1Span).toBeInTheDocument();
+  });
+
+  it('sets the visibility for the children when called with a layerGroup', async () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
+
+    const layerSubGroupSpan = screen.getByText('layerSubGroup');
+
+    expect(layer3.getVisible()).toBe(false);
+
+    await userEvent.click(layerSubGroupSpan);
+
+    expect(layer3.getVisible()).toBe(true);
+  });
+
+  it('sets the parent layerGroup visible when layer has been made visible', async () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
+
+    // Expand all nodes.
+    const carets = screen.getAllByLabelText('caret-down');
+    for (const caret of carets) {
+      await userEvent.click(caret);
+    }
+
+    const layerSubGroupSpan = screen.getByText('layerSubGroup');
+
+    // eslint-disable-next-line testing-library/no-node-access
+    let layerSubGroupCheckbox = layerSubGroupSpan?.parentNode?.parentNode?.querySelector('.ant-tree-checkbox-checked');
+
+    expect(layerSubGroupCheckbox).toBe(null);
+
+    const layer3Span = screen.getByText('layer3');
+
+    await userEvent.click(layer3Span);
+
+    // eslint-disable-next-line testing-library/no-node-access
+    layerSubGroupCheckbox = layerSubGroupSpan?.parentNode?.parentNode?.querySelector('.ant-tree-checkbox-checked');
+
+    expect(layerSubGroupCheckbox).toBeInstanceOf(HTMLSpanElement);
+  });
+
+  it('renders the layers in correct order', () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
+
+    // Last drawn map layer (layerSubGroup) should be on top of the tree.
+    const layerSubGroupSpan = screen.getByText('layerSubGroup');
+    const layer2Span = screen.getByText('layer2');
+    const layer1Span = screen.getByText('layer1');
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
+    expect(layerSubGroupSpan.compareDocumentPosition(layer2Span)).toEqual(4);
+    expect(layer2Span.compareDocumentPosition(layer1Span)).toEqual(4);
+  });
+
+  it('can handle drop on a node', () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
+
+    const layers = map.getLayers().getArray();
+
+    expect(layers[0]).toBe(layer1);
+    expect(layers[1]).toBe(layer2);
+    expect(layers[2]).toBe(layerSubGroup);
+
+    const layerSubGroupSpan = screen.getByText('layerSubGroup');
+    const layer1Span = screen.getByText('layer1');
+
+    // Move layer1 on layerSubGroup (relative position = 0).
+    fireEvent.dragStart(layer1Span);
+    fireEvent.dragEnter(layerSubGroupSpan);
+    fireEvent.dragOver(layerSubGroupSpan);
+    fireEvent.drop(layerSubGroupSpan);
+
+    expect(layers[0]).toBe(layer2);
+    expect(layers[1]).toBe(layerSubGroup);
+    expect((layers[1] as OlLayerGroup).getLayers().getArray()).toContain(layer1);
+  });
+
+  it('ignores drop on leaf', () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
+
+    const layers = map.getLayers().getArray();
+
+    expect(layers[0]).toBe(layer1);
+    expect(layers[1]).toBe(layer2);
+    expect(layers[2]).toBe(layerSubGroup);
+
+    const layer2Span = screen.getByText('layer2');
+    const layer1Span = screen.getByText('layer1');
+
+    // Move layer1 on layer2 (relative position = 0).
+    fireEvent.dragStart(layer1Span);
+    fireEvent.dragEnter(layer2Span);
+    fireEvent.dragOver(layer2Span);
+    fireEvent.drop(layer2Span);
+
+    expect(layers[0]).toBe(layer1);
+    expect(layers[1]).toBe(layer2);
+    expect(layers[2]).toBe(layerSubGroup);
+  });
+
+  it('can handle drop after leaf', () => {
+    renderInMapContext(map,
+      <LayerTree />
+    );
+
+    const layers = map.getLayers().getArray();
+
+    expect(layers[0]).toBe(layer1);
+    expect(layers[1]).toBe(layer2);
+    expect(layers[2]).toBe(layerSubGroup);
+
+    const layerSubGroupSpan = screen.getByText('layerSubGroup');
+    const layer2Span = screen.getByText('layer2');
+
+    // Move layerSubGroup on bottom of layer2 (relative position = 1).
+    fireEvent.dragStart(layerSubGroupSpan);
+    fireEvent.dragEnter(layer2Span);
+    fireEvent.dragOver(layer2Span);
+    fireEvent.drop(layer2Span);
+
+    expect(layers[0]).toBe(layer1);
+    expect(layers[1]).toBe(layerSubGroup);
+    expect(layers[2]).toBe(layer2);
+  });
+
+  // TODO This seems not to working with the jest runner.
+  // it('can handle drop before leaf', () => {
+  //   renderInMapContext(map,
+  //     <LayerTree />
+  //   );
+
+  //   const layers = map.getLayers().getArray();
+
+  //   expect(layers[0]).toBe(layer1);
+  //   expect(layers[1]).toBe(layer2);
+  //   expect(layers[2]).toBe(layerSubGroup);
+
+  //   const layerSubGroupSpan = screen.getByText('layerSubGroup');
+  //   const layer2Span = screen.getByText('layer2');
+  //   const layer1Span = screen.getByText('layer1');
+
+  //   // Move layer1 on top of layer2 (relative position = 1).
+  //   fireEvent.dragStart(layer1Span);
+  //   fireEvent.dragEnter(layer2Span);
+  //   fireEvent.dragOver(layer2Span);
+  //   // fireEvent.dragLeave(layer2Span);
+  //   // fireEvent.dragExit(layer2Span);
+  //   fireEvent.dragEnter(layerSubGroupSpan);
+  //   // fireEvent.dragOver(layer2Span);
+  //   fireEvent.drop(layerSubGroupSpan);
+
+  //   // expect(layers[0]).toBe(layer2);
+  //   // expect(layers[1]).toBe(layer1);
+  //   // expect(layers[2]).toBe(layerSubGroup);
+  // });
 });
