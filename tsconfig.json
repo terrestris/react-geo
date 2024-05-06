@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": ["es7", "dom"],
+    "lib": ["es7", "dom", "esnext"],
     "module": "commonjs",
     "moduleResolution": "node",
     "strict": true,
@@ -18,8 +18,8 @@
     "rootDir": "src",
     "skipLibCheck": true,
     "sourceMap": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "target": "es5"
+    "target": "es5",
+    "types": ["node", "jest", "@testing-library/jest-dom"]
   },
   "exclude": [
     "node_modules",
@@ -34,7 +34,6 @@
     "jest",
     "coverage",
     "src/Util/**",
-    "**.config.js",
-    "**/*.spec.tsx"
+    "**.config.js"
   ]
 }

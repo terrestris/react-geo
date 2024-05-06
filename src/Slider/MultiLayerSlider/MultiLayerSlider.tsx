@@ -1,90 +1,55 @@
-import * as React from 'react';
-import OlLayerBase from 'ol/layer/Base';
+import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
 import { Slider } from 'antd';
 import { SliderSingleProps } from 'antd/lib/slider';
-import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
+import _isNumber from 'lodash/isNumber';
+import OlLayerBase from 'ol/layer/Base';
+import React, {
+  useEffect
+} from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-import _isNumber from 'lodash/isNumber';
 
-interface DefaultProps {
+export type OwnProps = {
   /**
    * The default value(s).
    */
-  defaultValue: number;
+  defaultValue?: number;
   /**
    * layer property that will define the name shown on the lables. Defaults to 'name'.
    */
-  nameProperty: string;
-}
-
-/**
- *
- * @export
- * @interface TimeSliderProps
- */
-export interface BaseProps {
+  nameProperty?: string;
   /**
    * The layers that should be handled.
-   *
    */
   layers: ArrayTwoOrMore<OlLayerBase>;
   /**
    * An optional CSS class which should be added.
    */
   className?: string;
-}
+};
 
-export type MultiLayerSliderProps = BaseProps & Partial<DefaultProps> & SliderSingleProps;
+export type MultiLayerSliderProps = OwnProps & SliderSingleProps;
 
-/**
- * Slider that changes opacity on a set of layers.
- *
- * @class The MultiLayerSlider
- * @extends React.Component
- */
-class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
+const defaultClassName = `${CSS_PREFIX}multilayerslider`;
 
-  static defaultProps: DefaultProps = {
-    defaultValue: 0,
-    nameProperty: 'name'
-  };
+const MultiLayerSlider: React.FC<MultiLayerSliderProps> = ({
+  layers,
+  defaultValue = 0,
+  nameProperty = 'name',
+  className,
+  ...passThroughProps
+}) => {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}multilayerslider`;
-
-  /**
-   * The constructor.
-   *
-   * @constructs MultiLayerSlider
-   * @param props The properties.
-   */
-  constructor(props: MultiLayerSliderProps) {
-    super(props);
-    const {
-      layers
-    } = props;
+  useEffect(() => {
     layers.forEach(l => l.setOpacity(0));
     layers[0].setOpacity(1);
-  }
+  }, [layers]);
 
-  /**
-   * Formats the tip for the slider.
-   * @param value The slider value
-   * @return The formatted tip value
-   */
-  formatTip(value?: number) {
-    if (!_isNumber(value)) {
+  const formatTip = (val?: number) => {
+    if (!_isNumber(val)) {
       return '';
     }
-    const {
-      layers,
-      nameProperty
-    } = this.props;
-    const layerIdx = this.getLayerIndexForSliderValue(value);
+    const layerIdx = getLayerIndexForSliderValue(val);
     let tip: string = '';
     if (layers[layerIdx]) {
       const opacity = Math.round(layers[layerIdx].get('opacity') * 100);
@@ -93,15 +58,12 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
       tip = `${layername} ${opacity}%`;
     }
     return tip;
-  }
+  };
 
-  /**
-   * Called when the value of the slider changed.
-   */
-  valueUpdated(value: number) {
-    const layerIdx = this.getLayerIndexForSliderValue(value);
-    const opacity = this.getOpacityForValue(value);
-    const layers = this.props.layers;
+  const valueUpdated = (val: number) => {
+    const layerIdx = getLayerIndexForSliderValue(val);
+    const opacity = getOpacityForValue(val);
+
     // set all opacities to 0 first
     layers.forEach(l => l.setOpacity(0));
     if (layers[layerIdx]) {
@@ -113,49 +75,25 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
     if (layers[layerIdx + 1]) {
       layers[layerIdx + 1].setOpacity(opacity);
     }
-  }
+  };
 
-  /**
-   * Gets the opacity for a given slider value
-   * @param value The current slider value
-   * @return The opacity
-   */
-  getOpacityForValue(value: number) {
-    const {
-      layers
-    } = this.props;
+  const getOpacityForValue = (val: number) => {
     const length = layers.length - 1;
     const ticksPerLayer = Math.round(100 / length);
-    const idx = Math.floor(value / ticksPerLayer);
-    const opacity = value / ticksPerLayer - (idx > length ? length : idx);
+    const idx = Math.floor(val / ticksPerLayer);
+    const opacity = val / ticksPerLayer - (idx > length ? length : idx);
     return opacity > 1 ? 1 : opacity;
-  }
+  };
 
-  /**
-   * Gets the matching index of the layer array for a given slider value
-   * @param value the current slider value
-   * @return The layer array index
-   */
-  getLayerIndexForSliderValue(value: number) {
-    const {
-      layers
-    } = this.props;
+  const getLayerIndexForSliderValue = (val: number) => {
     const length = layers.length - 1;
     const ticksPerLayer = Math.round(100 / length);
-    const idx = Math.floor(value / ticksPerLayer);
+    const idx = Math.floor(val / ticksPerLayer);
     return idx > length ? length : idx;
-  }
+  };
 
-  /**
-   * Creates the marks used with the slider based on the layers names.
-   * @return The marks object
-   */
-  getMarks() {
-    const marks = {};
-    const {
-      layers,
-      nameProperty
-    } = this.props;
+  const getMarks = () => {
+    const marks: {[index: number]: any} = {};
     const length = layers.length - 1;
     layers.forEach((layer, index) => {
       const layername = (nameProperty ? layer.get(nameProperty) : undefined) ?? `Layer ${index + 1}`;
@@ -163,38 +101,26 @@ class MultiLayerSlider extends React.Component<MultiLayerSliderProps> {
       marks[idx] = layername;
     });
     return marks;
-  }
+  };
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      layers,
-      defaultValue,
-      className,
-      ...passThroughProps
-    } = this.props;
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
-
-    return (
-      <Slider
-        className={finalClassName}
-        marks={this.getMarks()}
-        defaultValue={defaultValue}
-        min={0}
-        max={100}
-        tooltip={{
-          formatter: this.formatTip.bind(this)
-        }}
-        onChange={this.valueUpdated.bind(this)}
-        {...passThroughProps}
-      />
-    );
-  }
-}
+  return (
+    <Slider
+      className={finalClassName}
+      marks={getMarks()}
+      defaultValue={defaultValue}
+      min={0}
+      max={100}
+      tooltip={{
+        formatter: formatTip
+      }}
+      onChange={valueUpdated}
+      {...passThroughProps}
+    />
+  );
+};
 
 export default MultiLayerSlider;

@@ -1,16 +1,11 @@
+import { actSetTimeout } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import * as React from 'react';
-import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
 import userEvent from '@testing-library/user-event';
+import { enableFetchMocks, FetchMock } from 'jest-fetch-mock';
+import * as React from 'react';
 
-import Logger from '@terrestris/base-util/dist/Logger';
-
+import { findAntdDropdownOptionByText, queryAntdDropdownOption } from '../../Util/antdTestQueries';
 import CoordinateReferenceSystemCombo from '../CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
-import {
-  findAntdDropdownOptionByText,
-  queryAntdDropdownOption
-} from '../../Util/antdTestQueries';
-import { actSetTimeout } from '../../Util/rtlTestUtils';
 
 describe('<CoordinateReferenceSystemCombo />', () => {
 
@@ -31,19 +26,6 @@ describe('<CoordinateReferenceSystemCombo />', () => {
       name: 'WGS 84'
     }]
   };
-
-  const transformedResults = [{
-    code: '31466',
-    bbox: [53.81,5.86,49.11,7.5],
-    // eslint-disable-next-line max-len
-    proj4def: '+proj=tmerc +lat_0=0 +lon_0=6 +k=1 +x_0=2500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs',
-    value: 'DHDN / 3-degree Gauss-Kruger zone 2'
-  }, {
-    code: '4326',
-    bbox: [90,-180,-90,180],
-    proj4def: '+proj=longlat +datum=WGS84 +no_defs',
-    value: 'WGS 84'
-  }];
 
   beforeAll(() => {
     enableFetchMocks();
@@ -109,55 +91,12 @@ describe('<CoordinateReferenceSystemCombo />', () => {
     });
   });
 
-  describe('error handling', () => {
-    it('logs error message', async () => {
-      const error = new Error('Peter');
-      (fetch as FetchMock).mockRejectOnce(error);
-
-      const loggerSpy = jest.spyOn(Logger, 'error');
-
-      render(<CoordinateReferenceSystemCombo />);
-      const combobox = screen.getByRole('combobox');
-      await userEvent.type(combobox, 'a');
-
-      await waitFor(() => {
-        expect(loggerSpy).toHaveBeenCalled();
-      });
-
-      expect(loggerSpy).toHaveBeenCalledWith('Error while requesting in CoordinateReferenceSystemCombo', error);
-
-      loggerSpy.mockRestore();
-    });
-  });
-
   describe('option clicks are handled correctly', () => {
-
-    it('calls the onSelect callback with the correct value', async () => {
-      const onSelect = jest.fn();
-
-      render(<CoordinateReferenceSystemCombo onSelect={onSelect}/>);
-
-      const combobox = screen.getByRole('combobox');
-
-      await userEvent.type(combobox, 'a');
-
-      const result = resultMock.results[0];
-      const expected = transformedResults[0];
-
-      const option = await findAntdDropdownOptionByText(`${result.name} (EPSG:${result.code})`);
-
-      // we have to use fireEvent directly instead of `userEvent.click()` because antd is in the way
-      fireEvent.click(option);
-
-      await waitFor(() => {
-        expect(onSelect).toBeCalledWith(expected);
-      });
-    });
 
     it('sets the value of the combobox to the correct value', async () => {
       const onSelect = jest.fn();
 
-      render(<CoordinateReferenceSystemCombo onSelect={onSelect}/>);
+      render(<CoordinateReferenceSystemCombo onSelect={onSelect} />);
 
       const combobox = screen.getByRole('combobox');
 

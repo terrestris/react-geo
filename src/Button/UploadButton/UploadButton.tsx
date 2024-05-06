@@ -1,11 +1,11 @@
-import * as React from 'react';
-
-import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
-import { CSS_PREFIX } from '../../constants';
-
 import './UploadButton.less';
 
-interface BaseProps {
+import * as React from 'react';
+
+import { CSS_PREFIX } from '../../constants';
+import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
+
+export type OwnProps = {
   /**
    * The className which should be added.
    */
@@ -18,55 +18,45 @@ interface BaseProps {
    * The onChange handler for the upload input field.
    */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
+};
 
-export type UploadButtonProps = BaseProps & SimpleButtonProps;
+export type UploadButtonProps = OwnProps & SimpleButtonProps;
 
 /**
- * Class representing an upload button. Can be used as wrapper if children
+ * Component representing an upload button. Can be used as wrapper if children
  * are given. Otherwise a Simplebutton will be rendered.
  *
  * To use a text with the UploadButton provide a SimpleButton as children.
  *
  * This automatically supports uploads via drag and drop from the operating
  * system.
- *
- * @class The UploadButton
- * @extends React.Component
  */
-class UploadButton extends React.Component<UploadButtonProps> {
+const UploadButton: React.FC<UploadButtonProps> = ({
+  className,
+  children,
+  onChange,
+  inputProps,
+  ...passThroughProps
+}) => {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}uploadbutton`;
+  const finalClassName = className
+    ? `${className} ${CSS_PREFIX}uploadbutton`
+    : `${CSS_PREFIX}uploadbutton`;
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      children,
-      onChange,
-      inputProps,
-      ...passThroughProps
-    } = this.props;
+  const button = <SimpleButton {...passThroughProps} />;
 
-    const finalClassName = className
-      ? `${className} ${this._className}`
-      : this._className;
-
-    const button = <SimpleButton {...passThroughProps} />;
-
-    return (
-      <div className={finalClassName}>
-        {children || button}
-        <input type="file" onChange={onChange} {...inputProps} />
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      className={finalClassName}
+    >
+      {children || button}
+      <input
+        type="file"
+        onChange={onChange}
+        {...inputProps}
+      />
+    </div>
+  );
+};
 
 export default UploadButton;

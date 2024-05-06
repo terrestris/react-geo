@@ -1,31 +1,32 @@
-import React, {
-  useState,
-  useEffect,
-  useRef
-} from 'react';
+import './BackgroundLayerChooser.less';
 
+import {
+  faBan,
+  faChevronLeft,
+  faChevronRight} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import OlOverviewMap from 'ol/control/OverviewMap';
 import OlLayerBase from 'ol/layer/Base';
-import OlLayer from 'ol/layer/Layer';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
+import OlLayerGroup from 'ol/layer/Group';
 import OlLayerImage from 'ol/layer/Image';
+import OlLayer from 'ol/layer/Layer';
+import OlLayerTile from 'ol/layer/Tile';
 import { ObjectEvent } from 'ol/Object';
+import OlSourceImageWMS from 'ol/source/ImageWMS';
+import OlSourceOSM from 'ol/source/OSM';
+import OlSourceTileWMS from 'ol/source/TileWMS';
 import { getUid } from 'ol/util';
+import OlView from 'ol/View';
+import { apply as applyMapboxStyle } from 'ol-mapbox-style';
+import React, {
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 
 import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPreview';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faChevronLeft,
-  faChevronRight,
-  faBan
-} from '@fortawesome/free-solid-svg-icons';
-
-import useMap from '../Hook/useMap';
 import SimpleButton from '../Button/SimpleButton/SimpleButton';
-
-import './BackgroundLayerChooser.less';
 
 export type BackgroundLayerChooserProps = {
   /**
@@ -37,10 +38,6 @@ export type BackgroundLayerChooserProps = {
    */
   allowEmptyBackground?: boolean;
   /**
-   * Customize the tooltip.
-   */
-  buttonTooltip?: string;
-  /**
    * Filters the backgroundlayers by a function.
    */
   backgroundLayerFilter?: (layer: OlLayerBase) => boolean;
@@ -49,11 +46,23 @@ export type BackgroundLayerChooserProps = {
    */
   initiallySelectedLayer?: OlLayer;
   /**
+   * Customize the tooltip.
+   */
+  buttonTooltip?: string;
+  /**
    * Sets the title of the No-Background Button
    */
   noBackgroundTitle?: string;
 };
 
+/**
+ * This component supports TileWMS and ImageWMS layers. Besides that, mapbox vector tile layers are
+ * also supported in a limited way:
+ *
+ * * you'll need to render the vector tile layer inside of a group layer
+ * * the group layer needs to have a property isVectorTile set to true
+ * * the group layer needs to have a property url pointing to the json description
+ */
 export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   layers,
   allowEmptyBackground = false,
@@ -62,26 +71,25 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   noBackgroundTitle = 'No Background',
   backgroundLayerFilter = (l: OlLayerBase) => !!l.get('isBackgroundLayer')
 }) => {
-
   const map = useMap();
-  const mapTarget = useRef(null);
+
   const [zoom, setZoom] = useState(map?.getView()?.getZoom());
   const [center, setCenter] = useState(map?.getView()?.getCenter());
   const [layerOptionsVisible, setLayerOptionsVisible] = useState<boolean>(false);
-  const [selectedLayer, setSelectedLayer] = useState<OlLayer | undefined>(initiallySelectedLayer);
+  const [selectedLayer, setSelectedLayer] = useState<OlLayer>();
   const [isBackgroundImage, setIsBackgroundImage] = useState<boolean>(false);
 
+  const mapTarget = useRef(null);
+
   useEffect(() => {
-    if (map) {
+    if (map && layerOptionsVisible) {
+      setCenter(map.getView().getCenter());
+      setZoom(map.getView().getZoom());
       const centerListener = (evt: ObjectEvent) => {
-        if (layerOptionsVisible) {
-          setCenter(evt.target.getCenter());
-        }
+        setCenter(evt.target.getCenter());
       };
       const resolutionListener = (evt: ObjectEvent) => {
-        if (layerOptionsVisible) {
-          setZoom(evt.target.getZoom());
-        }
+        setZoom(evt.target.getZoom());
       };
       map.getView().on('change:center', centerListener);
       map.getView().on('change:resolution', resolutionListener);
@@ -90,7 +98,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
         map.getView().un('change:resolution', resolutionListener);
       };
     }
-    return;
+    return undefined;
   }, [map, layerOptionsVisible]);
 
   useEffect(() => {
@@ -99,39 +107,81 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
     if (!initiallySelectedLayer) {
       setSelectedLayer(activeLayerCand as OlLayer);
     }
-  }, [layers]);
+  }, [initiallySelectedLayer, layers]);
 
   useEffect(() => {
-    if (selectedLayer && map) {
-      const existingControl = map.getControls().getArray()
-        .find(c => c instanceof OlOverviewMap);
-      if (existingControl) {
-        map.removeControl(existingControl);
-      }
-      let ovLayer;
-      if (selectedLayer instanceof OlLayerTile) {
-        ovLayer = new OlLayerTile({
-          source: selectedLayer.getSource()
+    if (!selectedLayer || !map) {
+      return undefined;
+    }
+    const selectedLayerSource = selectedLayer.getSource();
+
+    let ovLayer: OlLayer | OlLayerGroup | null = null;
+
+    if (selectedLayer instanceof OlLayerTile) {
+      let newSource: OlSourceOSM | OlSourceTileWMS | null = null;
+
+      if (selectedLayerSource instanceof OlSourceTileWMS) {
+        newSource = new OlSourceTileWMS({
+          url: selectedLayerSource.getUrls()?.[0],
+          params: selectedLayerSource.getParams(),
+          tileLoadFunction: selectedLayerSource.getTileLoadFunction()
         });
-      } else if (selectedLayer instanceof OlLayerImage) {
+      } else if (selectedLayerSource instanceof OlSourceOSM) {
+        newSource = new OlSourceOSM();
+      }
+
+      if (newSource) {
+        ovLayer = new OlLayerTile({
+          source: newSource
+        });
+      }
+    } else if (selectedLayer instanceof OlLayerImage) {
+      let newSource: OlSourceImageWMS | null = null;
+
+      if (selectedLayerSource instanceof OlSourceImageWMS) {
+        newSource = new OlSourceImageWMS({
+          url: selectedLayerSource.getUrl(),
+          params: selectedLayerSource.getParams(),
+          imageLoadFunction: selectedLayerSource.getImageLoadFunction()
+        });
+      }
+
+      if (newSource) {
         ovLayer = new OlLayerImage({
           source: selectedLayer.getSource()
         });
       }
-      if (ovLayer && mapTarget.current) {
-        const overViewControl = new OlOverviewMap({
-          collapsible: false,
-          target: mapTarget.current,
-          className: 'ol-overviewmap react-geo-bg-layer-chooser-overviewmap',
-          layers: [ovLayer],
-          view: new OlView({
-            projection: map.getView().getProjection()
-          })
+    } else if (selectedLayer instanceof OlLayerGroup) {
+      if (selectedLayer.get('isVectorTile')) {
+        ovLayer = new OlLayerGroup();
+        applyMapboxStyle(ovLayer, selectedLayer.get('url'));
+      } else {
+        ovLayer = new OlLayerGroup({
+          layers: selectedLayer.getLayers()
         });
-        map.addControl(overViewControl);
       }
     }
-  }, [selectedLayer]);
+
+    if (ovLayer && mapTarget.current) {
+      const overViewControl = new OlOverviewMap({
+        collapsible: false,
+        target: mapTarget.current,
+        className: 'ol-overviewmap react-geo-bg-layer-chooser-overviewmap',
+        layers: [ovLayer],
+        view: new OlView({
+          projection: map.getView().getProjection()
+        })
+      });
+
+      map.addControl(overViewControl);
+
+      return () => {
+        map.removeControl(overViewControl);
+      };
+    }
+
+    return undefined;
+  }, [selectedLayer, map]);
 
   const onLayerSelect = (layer: OlLayer) => {
     setLayerOptionsVisible(false);
@@ -140,49 +190,56 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   };
 
   return (
-    <div className={'bg-layer-chooser'}>
+    <div className="bg-layer-chooser">
       {
-        <div
-          className="layer-cards"
-          style={{
-            maxWidth: layerOptionsVisible ? '100vw' : 0,
-            opacity: layerOptionsVisible ? 1 : 0,
-            visibility: layerOptionsVisible ? 'visible' : 'hidden'
-          }}
-        >
-          {layers.map(layer => {
-            return (
-              <BackgroundLayerPreview
-                key={getUid(layer)}
-                activeLayer={selectedLayer}
-                onClick={l => onLayerSelect(l)}
-                layer={layer}
-                backgroundLayerFilter={backgroundLayerFilter}
-                zoom={zoom}
-                center={center}
-              />
-            );
-          })
-          }
-          {allowEmptyBackground &&
-            <SimpleButton
-              onMouseOver={() => {
-                selectedLayer?.setVisible(false);
-              }}
-              onClick={() => {
-                selectedLayer?.setVisible(false);
-                setSelectedLayer(undefined);
-                setLayerOptionsVisible(false);
-                setIsBackgroundImage(true);
-              }}
-              className='no-background'
-            >
-              <FontAwesomeIcon icon={faBan} size='5x' />
-              <br></br>
-              <span className="layer-title">{noBackgroundTitle}</span>
-            </SimpleButton>
-          }
-        </div>
+        layerOptionsVisible && (
+          <div className="layer-cards">
+            {
+              layers.map(layer => (
+                <BackgroundLayerPreview
+                  key={getUid(layer)}
+                  activeLayer={selectedLayer}
+                  onClick={l => onLayerSelect(l)}
+                  layer={layer}
+                  backgroundLayerFilter={backgroundLayerFilter}
+                  zoom={zoom}
+                  center={center}
+                />
+              ))
+            }
+            {
+              allowEmptyBackground &&
+                <div
+                  className={`no-background${selectedLayer ? '' : ' selected'}`}
+                  onMouseOver={() => {
+                    selectedLayer?.setVisible(false);
+                  }}
+                  onMouseLeave={() => {
+                    selectedLayer?.setVisible(true);
+                  }}
+                  onClick={() => {
+                    selectedLayer?.setVisible(false);
+                    setSelectedLayer(undefined);
+                    setLayerOptionsVisible(false);
+                    setIsBackgroundImage(true);
+                  }}
+                >
+                  <div
+                    className="no-background-preview"
+                  >
+                    <FontAwesomeIcon
+                      icon={faBan}
+                    />
+                  </div>
+                  <span
+                    className="layer-title"
+                  >
+                    {noBackgroundTitle}
+                  </span>
+                </div>
+            }
+          </div>
+        )
       }
       <SimpleButton
         className={`change-bg-btn${layerOptionsVisible ? ' toggled' : ''}`}
@@ -198,18 +255,36 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
         }
         onClick={() => setLayerOptionsVisible(!layerOptionsVisible)}
       />
-      <div className="bg-preview">
-        <div className='overview-wrapper'>
-          {!isBackgroundImage ?
-            <div id="overview-map" ref={mapTarget}
+      <div
+        className="bg-preview"
+      >
+        {
+          !isBackgroundImage ?
+            <div
+              id="overview-map"
+              ref={mapTarget}
             /> :
-            <FontAwesomeIcon className='no-background-preview' icon={faBan} size='5x' />
-          }
-          {selectedLayer ?
-            <span className="layer-title">{selectedLayer.get('name')}</span> :
-            <span className="layer-title-no-background">{noBackgroundTitle}</span>
-          }
-        </div>
+            <div
+              className="no-background-preview"
+            >
+              <FontAwesomeIcon
+                icon={faBan}
+              />
+            </div>
+        }
+        {
+          selectedLayer ?
+            <span
+              className="layer-title"
+            >
+              {selectedLayer.get('name')}
+            </span> :
+            <span
+              className="layer-title"
+            >
+              {noBackgroundTitle}
+            </span>
+        }
       </div>
     </div>
   );

@@ -1,22 +1,17 @@
+import Logger from '@terrestris/base-util/dist/Logger';
+import { InkmapPrintSpec } from '@terrestris/ol-util/dist/LayerUtil/InkmapTypes';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import { PrintUtil } from '@terrestris/react-util/dist/Util/PrintUtil';
+import { jsPDF } from 'jspdf';
+import _isFinite from 'lodash/isFinite';
+import _isString from 'lodash/isString';
 import React, {
   useState
 } from 'react';
 
-import { useMap } from '../../Hook/useMap';
-import { jsPDF } from 'jspdf';
 import SimpleButton, {
   SimpleButtonProps
 } from '../SimpleButton/SimpleButton';
-
-import _isFinite from 'lodash/isFinite';
-import _isString from 'lodash/isString';
-
-import Logger from '@terrestris/base-util/dist/Logger';
-import { PrintUtil } from '../../Util/PrintUtil';
-
-import {
-  InkmapPrintSpec
-} from '../../Util/InkmapTypes';
 
 interface OwnProps {
   onProgressChange?: (val: number) => void;

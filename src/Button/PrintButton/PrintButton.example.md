@@ -1,34 +1,30 @@
 This demonstrates the use of the PrintButton.
 
 ```jsx
-import {useEffect, useState, useMemo} from 'react';
-
-import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
-import {fromLonLat, get as getProjection} from 'ol/proj';
+import PrintButton from '@terrestris/react-geo/dist/Button/PrintButton/PrintButton';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
+import { Progress } from 'antd';
 import {getTopLeft, getWidth} from 'ol/extent';
-import {OSM, Vector as VectorSource} from 'ol/source';
-import {Vector as VectorLayer} from 'ol/layer';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
+import {Vector as VectorLayer} from 'ol/layer';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
+import {fromLonLat, get as getProjection} from 'ol/proj';
+import {OSM, Vector as VectorSource} from 'ol/source';
 import OlSourceOsm from 'ol/source/OSM';
-import OlSourceStamen from 'ol/source/Stamen';
 import OlSourceTileWMS from 'ol/source/TileWMS';
-import OlView from 'ol/View';
 import WMTS from 'ol/source/WMTS';
+import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import OlView from 'ol/View';
+import {useEffect, useMemo,useState} from 'react';
 
-import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
-import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
-import PrintButton from '@terrestris/react-geo/dist/Button/PrintButton/PrintButton';
-
-import { Progress } from 'antd';
-
-import A4Landscape from './A4Landscape.example.ts';
-import A4Portrait from './A4Portrait.example.ts';
 import A3Landscape from './A3Landscape.example.ts';
 import A3Portrait from './A3Portrait.example.ts';
+import A4Landscape from './A4Landscape.example.ts';
+import A4Portrait from './A4Portrait.example.ts';
 
 const PrintButtonExample = () => {
   const [map, setMap] = useState();
@@ -79,7 +75,7 @@ const PrintButtonExample = () => {
         },
       }
     ]}
-  ));
+  ), []);
 
   const image = new CircleStyle({
     radius: 5,
@@ -136,18 +132,9 @@ const PrintButtonExample = () => {
     osm.set('name', 'OpenStreetMap');
     osm.set('legendUrl', 'https://terrestris.github.io/react-geo/assets/legend1.png');
 
-    const stamen = new OlLayerTile({
-      source: new OlSourceStamen({
-        layer: 'watercolor'
-      })
-    });
-    stamen.set('name', 'Stamen');
-    stamen.set('legendUrl', 'https://terrestris.github.io/react-geo/assets/legend2.png');
-
     const newMap = new OlMap({
       layers: [
         osm,
-        stamen,
         new OlLayerTile({
           name: 'True Color Composite',
           opacity: 0.5,
@@ -222,7 +209,7 @@ const PrintButtonExample = () => {
     });
 
     setMap(newMap);
-  }, []);
+  }, [geojson]);
 
   if (!map) {
     return null;

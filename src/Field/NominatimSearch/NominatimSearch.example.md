@@ -1,16 +1,15 @@
 This demonstrates the usage of the NominatimSearch.
 
 ```jsx
-import {useEffect, useState} from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import {fromLonLat} from 'ol/proj';
-
-import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import NominatimSearch from '@terrestris/react-geo/dist/Field/NominatimSearch/NominatimSearch';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import {fromLonLat} from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import {useEffect, useState} from 'react';
 
 const NominatimSearchExample = () => {
   const [map, setMap] = useState();
@@ -37,10 +36,11 @@ const NominatimSearchExample = () => {
   }
 
   return (
-    <div>
+    <MapContext.Provider value={map}>
+
       <div className="example-block">
         <label>The NominatimSearch<br />
-          <NominatimSearch map={map} />
+          <NominatimSearch />
         </label>
       </div>
 
@@ -50,7 +50,7 @@ const NominatimSearchExample = () => {
           height: '400px'
         }}
       />
-    </div>
+    </MapContext.Provider>
   );
 };
 

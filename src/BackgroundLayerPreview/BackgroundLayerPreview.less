@@ -1,52 +1,28 @@
-.layer-cards {
-  display: flex;
-  gap: 10px;
-  padding: 5px;
-  background-color: var(--ant-primary-1);
-  border: solid 1px var(--ant-primary-color);
-  border-radius: 4px;
+.layer-preview {
+  cursor: pointer;
+  margin: auto 0;
 
-  .layer-preview {
+  &:hover {
+    outline: 2px solid #2f4f4f;
+  }
 
-    cursor: pointer;
-    margin: auto 0;
-
-    &:hover {
-      outline: 2px solid var(--ant-primary-color-active);
+  &.selected {
+    .layer-title {
+      outline: 2px solid #2f4f4f;
+      font-weight: bold;
     }
+  }
 
-    &.selected {
-      .ant-spin-container {
-        img,
-        div.no-preview,
-        span.layer-title {
-          outline: 2px solid var(--ant-primary-color-active);
-          font-weight: bold;
-        }
-      }
-    }
-
-    .ant-spin-container {
-      display: flex;
-      flex-direction: column;
-
-      canvas {
-        outline: solid 1px var(--ant-primary-color );
-      }
-
-      span.layer-title {
-        position: absolute;
-        bottom: 0;
-        background: var(--ant-primary-color);
-        color: #fff;
-        text-align: center;
-        width: 100%;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        padding: 0 4px;
-      }
-    }
-
+  .layer-title {
+    position: absolute;
+    bottom: 0;
+    background: #fff;
+    color: #000;
+    text-align: center;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 4px;
   }
 }

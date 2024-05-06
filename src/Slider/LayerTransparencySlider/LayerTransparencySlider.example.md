@@ -1,65 +1,49 @@
 This example demonstrates the LayerTransparencySlider.
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import { fromLonLat } from 'ol/proj';
-
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import LayerTransparencySlider from '@terrestris/react-geo/dist/Slider/LayerTransparencySlider/LayerTransparencySlider';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import React from 'react';
 
-class LayerTransparencySliderExample extends React.Component {
+const LayerTransparencySliderExample = () => {
+  const layer = new OlLayerTile({
+    source: new OlSourceOSM()
+  });
 
-  constructor(props) {
+  const map = new OlMap({
+    layers: [
+      layer
+    ],
+    view: new OlView({
+      center: fromLonLat([0, 0]),
+      zoom: 0
+    })
+  });
 
-    super(props);
+  return (
+    <>
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
 
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.layer = new OlLayerTile({
-      name: 'OSM',
-      source: new OlSourceOSM()
-    });
-
-    this.map = new OlMap({
-      layers: [
-        this.layer
-      ],
-      view: new OlView({
-        center: fromLonLat([37.40570, 8.81566]),
-        zoom: 4
-      })
-    });
-  }
-
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  render() {
-    return (
       <div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
+        <span>{'Move the slider to change the layer\'s opacity:'}</span>
+
+        <LayerTransparencySlider
+          layer={layer}
         />
-
-        <div>
-          <span>{'Move the slider to change the layer\'s opacity:'}</span>
-
-          <LayerTransparencySlider
-            layer={this.layer}
-          />
-        </div>
       </div>
-    );
-  }
-}
+    </>
+  );
+};
 
 <LayerTransparencySliderExample />
 ```

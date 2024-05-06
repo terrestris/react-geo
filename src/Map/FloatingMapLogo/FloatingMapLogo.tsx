@@ -1,88 +1,62 @@
-import * as React from 'react';
+import './FloatingMapLogo.less';
 
 import _cloneDeep from 'lodash/cloneDeep';
-
-import './FloatingMapLogo.less';
+import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
-interface DefaultProps {
+export type FloatingMapLogoProps = Exclude<React.ComponentProps<'img'>, 'src' | 'height'> & {
   /**
-   * Whether the map-logo is absolutely postioned or not
+   * Whether the map logo is absolutely postioned or not. Default is false.
    */
-  absolutelyPositioned: boolean;
-}
+  absolutelyPositioned?: boolean;
 
-interface BaseProps {
   /**
    * The imageSrc.
    */
   imageSrc: string;
-  /**
-   * An optional CSS class which should be added.
-   */
-  className?: string;
+
   /**
    * The image height
    */
   imageHeight?: string;
-}
+};
 
-export type FloatingMapLogoProps = BaseProps & Partial<DefaultProps> & React.HTMLAttributes<HTMLImageElement>;
+export const FloatingMapLogo: React.FC<FloatingMapLogoProps> = ({
+  absolutelyPositioned = false,
+  imageSrc,
+  className,
+  imageHeight,
+  style,
+  ...passThroughProps
+}): JSX.Element => {
 
-/**
- * Class representing a floating map logo
- *
- * @class The FloatingMapLogo
- * @extends React.Component
- */
-class FloatingMapLogo extends React.Component<FloatingMapLogoProps> {
+  const defaultClassName = `${CSS_PREFIX}floatingmaplogo`;
 
-  /**
-   * The default properties.
-   */
-  static defaultProps: DefaultProps = {
-    absolutelyPositioned: false
-  };
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}floatingmaplogo`;
+  let imgStyle = style ? _cloneDeep(style) : {};
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      imageSrc,
-      imageHeight,
-      absolutelyPositioned,
-      className,
-      style
-    } = this.props;
-
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
-
-    let imgStyle = style ? _cloneDeep(style) : {};
-
-    if (absolutelyPositioned) {
-      Object.assign(imgStyle, {position: 'absolute'});
-    }
-
-    return (
-      <img
-        className={finalClassName}
-        src={imageSrc}
-        height={imageHeight}
-        style={imgStyle}
-      >
-      </img>
-    );
+  if (absolutelyPositioned) {
+    imgStyle = {
+      ...imgStyle,
+      ...{
+        position: 'absolute'
+      }
+    };
   }
-}
+
+  return (
+    <img
+      className={finalClassName}
+      src={imageSrc}
+      height={imageHeight}
+      style={imgStyle}
+      {...passThroughProps}
+    />
+  );
+};
 
 export default FloatingMapLogo;

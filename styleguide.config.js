@@ -5,21 +5,26 @@ const reactDogGenTypeScript = require('react-docgen-typescript');
 module.exports = {
   title: 'react-geo',
   styleguideDir: './build/styleguide',
-  webpackConfig: webpackCommonConf,
+  webpackConfig: {
+    ...webpackCommonConf,
+    mode: process.env.NODE_ENV
+  },
   usageMode: 'expand',
   template: {
     favicon: 'https://terrestris.github.io/react-geo/assets/favicon.ico'
   },
-  propsParser: reactDogGenTypeScript
-    .withCustomConfig('./tsconfig.json', {
-      savePropValueAsString: true,
-      propFilter: (prop) => {
-        if (prop.parent) {
-          return !prop.parent.fileName.includes('node_modules');
-        }
-        return true;
-      }
-    }).parse,
+  minimize: process.env.NODE_ENV === 'production',
+  propsParser: process.env.NODE_ENV === 'production' ?
+    reactDogGenTypeScript
+      .withCustomConfig('./tsconfig.json', {
+        propFilter: (prop) => {
+          if (prop.parent) {
+            return !prop.parent.fileName.includes('node_modules');
+          }
+          return true;
+        }})
+      .parse :
+    undefined,
   ignore: [
     '**/__tests__/**',
     '**/*.spec.{js,jsx,ts,tsx}',
@@ -47,7 +52,7 @@ module.exports = {
   require: [
     'whatwg-fetch',
     'ol/ol.css',
-    'antd/dist/antd.variable.css'
+    'antd/dist/reset.css'
   ],
   pagePerSection: true,
   sections: [{
@@ -85,17 +90,11 @@ module.exports = {
       name: 'Hooks',
       components: 'src/Hook/**/*.ts'
     }, {
-      name: 'HigherOrderComponents',
-      components: 'src/HigherOrderComponent/**/*.tsx'
-    }, {
       name: 'LayerSwitcher',
       components: 'src/LayerSwitcher/**/*.tsx'
     }, {
       name: 'LayerTree',
       components: 'src/LayerTree/**/*.tsx'
-    }, {
-      name: 'LayerTreeNode',
-      components: 'src/LayerTreeNode/**/*.tsx'
     }, {
       name: 'Legend',
       components: 'src/Legend/**/*.tsx'
@@ -108,15 +107,6 @@ module.exports = {
     }, {
       name: 'Slider',
       components: 'src/Slider/**/*.tsx'
-    }, {
-      name: 'Toolbar',
-      components: 'src/Toolbar/**/*.tsx'
-    }, {
-      name: 'UserChip',
-      components: 'src/UserChip/**/*.tsx'
-    }, {
-      name: 'Window',
-      components: 'src/Window/**/*.tsx'
     }]
   }]
 };

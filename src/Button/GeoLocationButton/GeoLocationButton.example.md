@@ -1,26 +1,23 @@
-This demonstrates the use of the geolocation button.
+This demonstrates the use of the GeoLocation button.
 
 ```jsx
-import * as React from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOSM from 'ol/source/OSM';
-import { fromLonLat } from 'ol/proj';
-
 import GeoLocationButton from '@terrestris/react-geo/dist/Button/GeoLocationButton/GeoLocationButton';
-import ToggleGroup from '@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import React, { useEffect,useState } from 'react';
 
-class GeoLocationButtonExample extends React.Component {
+const GeoLocationButtonExample = () => {
 
-  constructor(props) {
+  const [map, setMap] = useState();
+  const [pressed, setPressed] = useState();
 
-    super(props);
-
-    this.mapDivId = `map-${Math.random()}`;
-
-    this.map = new OlMap({
+  useEffect(() => {
+    setMap(new OlMap({
       layers: [
         new OlLayerTile({
           name: 'OSM',
@@ -28,40 +25,36 @@ class GeoLocationButtonExample extends React.Component {
         })
       ],
       view: new OlView({
-        center: fromLonLat([37.40570, 8.81566]),
-        zoom: 4
+        center: fromLonLat([8, 50]),
+        zoom: 9
       })
-    });
+    }));
+  }, []);
+
+  if (!map) {
+    return null;
   }
 
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
-
-  render() {
-    return (
-      <div>
-        <div
-          id={this.mapDivId}
-          style={{
-            height: '400px'
-          }}
-        />
-        <ToggleGroup>
-          <GeoLocationButton
-            onGeolocationChange={() => undefined}
-            map={this.map}
-            showMarker={true}
-            follow={true}
-          >
-          Track location
-          </GeoLocationButton>
-        </ToggleGroup>
-      </div>
-    );
-  }
+  return (
+    <MapContext.Provider value={map}>
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
+      <GeoLocationButton
+        map={map}
+        showMarker={true}
+        follow={true}
+        pressed={pressed}
+        onChange={() => setPressed(!pressed)}
+      >
+        Track location
+      </GeoLocationButton>
+    </MapContext.Provider>
+  );
 }
 
 <GeoLocationButtonExample />
-
 ```

@@ -1,27 +1,30 @@
+import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import { usePropOrDefault } from '@terrestris/react-util/dist/Hooks/usePropOrDefault/usePropOrDefault';
+import {
+  useSelectFeatures,
+  UseSelectFeaturesProps
+} from '@terrestris/react-util/dist/Hooks/useSelectFeatures/useSelectFeatures';
+import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
+import OlFeature from 'ol/Feature';
+import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlVectorSource from 'ol/source/Vector';
+import OlStyle from 'ol/style/Style';
 import React, {
-  useEffect,
-  useState
+  useCallback,
+  useMemo,
 } from 'react';
 
-import OlVectorSource from 'ol/source/Vector';
-import OlGeometry from 'ol/geom/Geometry';
-import OlVectorLayer from 'ol/layer/Vector';
-import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
-import OlStyle from 'ol/style/Style';
-
-import AnimateUtil from '@terrestris/ol-util/dist/AnimateUtil/AnimateUtil';
-
 import { CSS_PREFIX } from '../../constants';
-import { useMap } from '../../Hook/useMap';
-import { DigitizeUtil } from '../../Util/DigitizeUtil';
-import SelectFeaturesButton, { SelectFeaturesButtonProps } from '../SelectFeaturesButton/SelectFeaturesButton';
+import ToggleButton, {ToggleButtonProps} from '../ToggleButton/ToggleButton';
 
 interface OwnProps {
   /**
    * The vector layer which will be used for digitize features.
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
    */
-  digitizeLayer?: OlVectorLayer<OlVectorSource<OlGeometry>>;
+  digitizeLayer?: OlVectorLayer<OlVectorSource<OlFeature>>;
   /**
    * Listener function for the 'select' event of the ol.interaction.Select
    * if in `Copy` mode.
@@ -31,74 +34,77 @@ interface OwnProps {
   onFeatureCopy?: (event: OlSelectEvent) => void;
 }
 
-export type CopyButtonProps = OwnProps & Omit<SelectFeaturesButtonProps,
-  'layers'|'onFeatureSelect'|'featuresCollection'>;
+export type CopyButtonProps = OwnProps & Omit<UseSelectFeaturesProps,
+  'layers'|'onFeatureSelect'|'featuresCollection'|'clearAfterSelect'|'active'> & Partial<ToggleButtonProps>;
 
 // The class name for the component.
 const defaultClassName = `${CSS_PREFIX}copybutton`;
 
 const CopyButton: React.FC<CopyButtonProps> = ({
   className,
-  onFeatureCopy,
   digitizeLayer,
+  onFeatureCopy,
+  selectStyle,
+  selectInteractionConfig,
+  hitTolerance,
+  pressed,
   ...passThroughProps
 }) => {
 
-  const [layers, setLayers] = useState<[OlVectorLayer<OlVectorSource<OlGeometry>>]|null>(null);
-
   const map = useMap();
 
-  useEffect(() => {
-    if (!map) {
-      return;
-    }
+  const layer = usePropOrDefault(
+    digitizeLayer,
+    () => map ? DigitizeUtil.getDigitizeLayer(map) : undefined,
+    [map]
+  );
 
-    if (digitizeLayer) {
-      setLayers([digitizeLayer]);
-    } else {
-      setLayers([DigitizeUtil.getDigitizeLayer(map)]);
-    }
-  }, [map, digitizeLayer]);
+  const layers = useMemo(() => layer ? [layer] : [], [layer]);
 
-  const onFeatureSelect = (event: OlSelectEvent) => {
+  const onFeatureSelect = useCallback((event: OlSelectEvent) => {
     onFeatureCopy?.(event);
 
     const feat = event.selected[0];
 
-    if (!feat || !layers || !map) {
+    if (!feat || !layer || !map) {
       return;
     }
 
     const copy = feat.clone();
 
-    layers[0].getSource()?.addFeature(copy);
+    layer.getSource()?.addFeature(copy);
 
     AnimateUtil.moveFeature(
       map,
-      layers[0],
+      layer,
       copy,
       500,
       50,
-      layers[0].getStyle() as OlStyle
+      layer.getStyle() as OlStyle
     );
-  };
+  }, [layer, onFeatureCopy, map]);
+
+  useSelectFeatures({
+    selectStyle,
+    selectInteractionConfig,
+    layers,
+    active: !!pressed,
+    hitTolerance,
+    onFeatureSelect,
+    clearAfterSelect: true
+  });
 
   const finalClassName = className
     ? `${defaultClassName} ${className}`
     : defaultClassName;
 
-  if (!layers) {
-    return null;
-  }
-
-  return <SelectFeaturesButton
-    layers={layers}
-    onFeatureSelect={onFeatureSelect}
-    className={finalClassName}
-    clearAfterSelect={true}
-    {...passThroughProps}
-  />;
-
+  return (
+    <ToggleButton
+      pressed={pressed}
+      className={finalClassName}
+      {...passThroughProps}
+    />
+  );
 };
 
 export default CopyButton;

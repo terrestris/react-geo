@@ -1,38 +1,47 @@
-import * as React from 'react';
+import './LayerTree.less';
 
-import { Tree } from 'antd';
-import { AntTreeNodeDropEvent, AntTreeNodeSelectedEvent } from 'antd/lib/tree/Tree';
-import { ReactElement, ReactNode } from 'react';
+import Logger from '@terrestris/base-util/dist/Logger';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import {
-  TreeProps,
-  AntTreeNodeCheckedEvent,
-  DataNode
-} from 'antd/lib/tree';
+  Tree,
+  TreeDataNode
+} from 'antd';
+import {
+  BasicDataNode,
+  DataNode,
+  TreeProps} from 'antd/lib/tree';
+import _isEqual from 'lodash/isEqual';
+import _isFunction from 'lodash/isFunction';
+import _isNumber from 'lodash/isNumber';
+import { getUid } from 'ol';
+import {
+  EventsKey as OlEventsKey,
+} from 'ol/events';
+import OlLayerBase from 'ol/layer/Base';
+import OlLayerGroup from 'ol/layer/Group';
+import {
+  unByKey
+} from 'ol/Observable';
+import {
+  NodeDragEventParams
+} from 'rc-tree/lib/contextTypes';
 import {
   EventDataNode
 } from 'rc-tree/lib/interface';
-
-import _isNumber from 'lodash/isNumber';
-
-import OlMap from 'ol/Map';
-import OlLayerBase from 'ol/layer/Base';
-import OlLayerGroup from 'ol/layer/Group';
-import OlCollection from 'ol/Collection';
-import OlMapEvent from 'ol/MapEvent';
-import { unByKey } from 'ol/Observable';
-import { getUid } from 'ol';
-import { EventsKey as OlEventsKey } from 'ol/events';
-
-import _isFunction from 'lodash/isFunction';
-import _isEqual from 'lodash/isEqual';
-
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-import Logger from '@terrestris/base-util/dist/Logger';
-
-import LayerTreeNode, { LayerTreeNodeProps } from './LayerTreeNode/LayerTreeNode';
+import {
+  AllowDropOptions,
+  CheckInfo
+} from 'rc-tree/lib/Tree';
+import React, {
+  Key,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 
 import { CSS_PREFIX } from '../constants';
-
 
 interface OwnProps {
   /**
@@ -42,11 +51,7 @@ interface OwnProps {
    *
    * Compare MDN Docs for Array.prototype.filter: https://mdn.io/array/filter
    */
-  filterFunction: (value: any, index: number, array: any[]) => boolean;
-  /**
-   * An optional CSS class which should be added.
-   */
-  className?: string;
+  filterFunction?: (value: OlLayerBase, index: number, array: OlLayerBase[]) => boolean;
 
   /**
    * A LayerGroup the Tree should handle.
@@ -54,606 +59,334 @@ interface OwnProps {
   layerGroup?: OlLayerGroup;
 
   /**
-   * The OpenLayers map the tree interacts with.
-   */
-  map: OlMap;
-
-  /**
    * A function that can be used to pass a custom node title. It can return
    * any renderable element (String, Number, Element etc.) and receives
    * the layer instance of the current tree node.
    */
   nodeTitleRenderer?: (layer: OlLayerBase) => React.ReactNode;
-
-  toggleOnClick?: boolean;
 }
 
-interface LayerTreeState {
-  layerGroup: OlLayerGroup | null;
-  layerGroupRevision: number;
-  treeNodes: ReactElement<LayerTreeNodeProps>[];
-  checkedKeys: React.ReactText[];
-  mapResolution: number;
-}
+const defaultClassName = `${CSS_PREFIX}layertree`;
 
-export type LayerTreeProps = OwnProps & TreeProps;
+export type LayerTreeProps<T extends BasicDataNode = DataNode> = OwnProps & TreeProps<T>;
 
-/**
- * The LayerTree.
- *
- * Note. This component expects that all layerGroups are permanently visible.
- *
- * @class LayerTree
- * @extends React.Component
- */
-class LayerTree extends React.Component<LayerTreeProps, LayerTreeState> {
+const LayerTree: React.FC<LayerTreeProps> = ({
+  className,
+  layerGroup,
+  nodeTitleRenderer,
+  filterFunction,
+  checkable = true,
+  draggable = true,
+  ...passThroughProps
+}) => {
+  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
+  const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
-  /**
-   * The default properties.
-   */
-  static defaultProps = {
-    draggable: true,
-    checkable: true,
-    filterFunction: () => true,
-    toggleOnClick: false
-  };
+  const olListenerKeys = useRef<OlEventsKey[]>([]);
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}layertree`;
+  const map = useMap();
 
-  /**
-   *  An array of ol.EventsKey as returned by on() or once().
-   * @private
-   */
-  olListenerKeys: OlEventsKey[] = [];
-
-  /**
-   * Create the LayerTree.
-   *
-   * @constructs LayerTree
-   */
-  constructor(props: LayerTreeProps) {
-    super(props);
-
-    this.state = {
-      layerGroup: null,
-      layerGroupRevision: 0,
-      treeNodes: [],
-      checkedKeys: [],
-      mapResolution: -1
-    };
-  }
-
-  /**
-   * Invoked after the component is instantiated as well as when it
-   * receives new props. It should return an object to update state, or null
-   * to indicate that the new props do not require any state updates.
-   *
-   * @param nextProps The next properties.
-   * @param prevState The previous state.
-   */
-  static getDerivedStateFromProps(nextProps: LayerTreeProps, prevState: LayerTreeState) {
-    if (prevState.layerGroup && nextProps.layerGroup) {
-      if (!_isEqual(getUid(prevState.layerGroup), getUid(nextProps.layerGroup)) ||
-        !_isEqual(prevState.layerGroupRevision, nextProps.layerGroup.getRevision())) {
-        return {
-          layerGroup: nextProps.layerGroup,
-          layerGroupRevision: nextProps.layerGroup.getRevision()
-        };
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Determines what to do on the initial mount.
-   */
-  componentDidMount() {
-    const layerGroup = this.props.layerGroup ?
-      this.props.layerGroup :
-      this.props.map.getLayerGroup();
-
-    const revision = this.props.layerGroup ? this.props.layerGroup.getRevision() : 0;
-
-    this.setState({
-      layerGroup,
-      layerGroupRevision: revision
-    }, () => {
-      if (this.state.layerGroup) {
-        this.registerAddRemoveListeners(this.state.layerGroup);
-      }
-      this.registerResolutionChangeHandler();
-      this.rebuildTreeNodes();
-    });
-  }
-
-  /**
-   * Invoked immediately after updating occurs. This method is not called for
-   * the initial render.
-   *
-   * @param prevProps The previous props.
-   * @param prevState The previous state.
-   */
-  componentDidUpdate(prevProps: LayerTreeProps, prevState: LayerTreeState) {
-    const {
-      layerGroup,
-      nodeTitleRenderer
-    } = this.props;
-
-    if (layerGroup && prevState.layerGroup) {
-      if (!_isEqual(getUid(prevState.layerGroup), getUid(layerGroup))) {
-        unByKey(this.olListenerKeys);
-        this.olListenerKeys = [];
-
-        this.registerAddRemoveListeners(layerGroup);
-        this.rebuildTreeNodes();
-      }
+  const getVisibleLayerKeys = useCallback(() => {
+    if (!map) {
+      return [];
     }
 
-    if (nodeTitleRenderer !== prevProps.nodeTitleRenderer) {
-      this.rebuildTreeNodes();
-    }
-  }
+    const lGroup = layerGroup ? MapUtil.getAllLayers(layerGroup) : MapUtil.getAllLayers(map);
 
-  /**
-   * Determines what to do when the component is unmounted.
-   */
-  componentWillUnmount() {
-    unByKey(this.olListenerKeys);
-  }
+    let visibleLayers = lGroup
+      .filter(layer => !(layer instanceof OlLayerGroup) && layer.getVisible());
 
-  /**
-   * Creates TreeNodes from a given layergroup and sets the treeNodes in the state.
-   *
-   * @param groupLayer A grouplayer.
-   */
-  treeNodesFromLayerGroup(groupLayer: OlLayerGroup) {
-    const layerArray = groupLayer.getLayers().getArray()
-      .filter(this.props.filterFunction);
-    const treeNodes = layerArray.map((layer) => {
-      return this.treeNodeFromLayer(layer);
-    });
-    treeNodes.reverse();
-    this.setState({ treeNodes });
-  }
-
-  /**
-   * Registers the add/remove listeners recursively for all ol.layer.Group.
-   *
-   * @param groupLayer A ol.layer.Group
-   */
-  registerAddRemoveListeners(groupLayer: OlLayerGroup) {
-    const collection = groupLayer.getLayers();
-    const addEvtKey = collection.on('add', this.onCollectionAdd);
-    const removeEvtKey = collection.on('remove', this.onCollectionRemove);
-    const changeEvtKey = groupLayer.on('change:layers', this.onChangeLayers);
-
-    this.olListenerKeys.push(addEvtKey, removeEvtKey, changeEvtKey);
-
-    collection.forEach((layer) => {
-      if ((layer as OlLayerGroup).getLayers) {
-        this.registerAddRemoveListeners((layer as OlLayerGroup));
-      }
-    });
-  }
-
-  /**
-   * Registers an eventhandler on the `ol.View`, which will rebuild the tree
-   * nodes whenever the view's resolution changes.
-   */
-  registerResolutionChangeHandler() {
-    const { map } = this.props;
-    const evtKey = map.on('moveend', this.rebuildTreeNodes.bind(this));
-    this.olListenerKeys.push(evtKey); // TODO when and how to we unbind?
-  }
-
-  /**
-   * Listens to the collections add event of a collection.
-   * Registers add/remove listeners if element is a collection and rebuilds the
-   * treeNodes.
-   *
-   * @param evt The add event.
-   */
-  onCollectionAdd = (evt: any) => {
-    if ((evt.element as OlLayerGroup).getLayers) {
-      this.registerAddRemoveListeners(evt.element);
-    }
-    this.rebuildTreeNodes();
-  };
-
-  /**
-   * Listens to the collections remove event of a collection.
-   * Unregisters the events of deleted layers and rebuilds the treeNodes.
-   *
-   * @param evt The remove event.
-   */
-  onCollectionRemove = (evt: any) => {
-    this.unregisterEventsByLayer(evt.element);
-    if ((evt.element as OlLayerGroup).getLayers) {
-      evt.element.getLayers().forEach((layer: OlLayerBase) => {
-        this.unregisterEventsByLayer(layer);
-      });
-    }
-    this.rebuildTreeNodes();
-  };
-
-  /**
-   * Listens to the LayerGroups change:layers event.
-   * Unregisters the old and reregisters new listeners.
-   *
-   * @param evt The change event.
-   */
-  onChangeLayers = (evt: any) => {
-    this.unregisterEventsByLayer(evt.oldValue);
-    if (evt.oldValue instanceof OlCollection) {
-      evt.oldValue.forEach((layer: OlLayerBase) => this.unregisterEventsByLayer(layer));
-    }
-    if (evt.target.getLayers) {
-      this.registerAddRemoveListeners(evt.target);
-    }
-    this.rebuildTreeNodes();
-  };
-
-  /**
-   * Unregisters the Events of a given layer.
-   *
-   * @param layer An ol.layer.Base.
-   */
-  unregisterEventsByLayer = (layer: OlLayerBase) => {
-    this.olListenerKeys = this.olListenerKeys.filter((key) => {
-      if ((layer as OlLayerGroup).getLayers) {
-        const layers = (layer as OlLayerGroup).getLayers();
-        if (key.target === layers) {
-          if ((key.type === 'add' && key.listener === this.onCollectionAdd) ||
-            (key.type === 'remove' && key.listener === this.onCollectionRemove) ||
-            (key.type === 'change:layers' && key.listener === this.onChangeLayers)) {
-
-            unByKey(key);
-            return false;
-          }
-        }
-      } else if (key.target === layer) {
-        if (key.type === 'change:visible' && key.listener === this.onLayerChangeVisible) {
-          unByKey(key);
-          return false;
-        }
-      }
-      return true;
-    });
-  };
-
-  /**
-   * Rebuilds the treeNodes and its checked states.
-   * @param evt The OpenLayers MapEvent (passed by moveend)
-   *
-   */
-  rebuildTreeNodes = (evt?: OlMapEvent) => {
-    const { mapResolution } = this.state;
-
-    let newMapResolution: number = -1;
-
-    if (evt?.target instanceof OlMap) {
-      newMapResolution = evt.target.getView().getResolution() ?? -1;
-      if (mapResolution === newMapResolution) {
-        // If map resolution didn't change => no redraw of tree nodes needed.
-        return;
-      }
+    if (filterFunction) {
+      visibleLayers = visibleLayers.filter(filterFunction);
     }
 
-    if (this.state.layerGroup) {
-      this.treeNodesFromLayerGroup(this.state.layerGroup);
-    }
+    const visibleKeys = visibleLayers.map(getUid);
 
-    const checkedKeys = this.getVisibleOlUids();
-    this.setState({
-      checkedKeys,
-      mapResolution: newMapResolution
-    });
-  };
+    return visibleKeys;
+  }, [filterFunction, layerGroup, map]);
 
-  /**
-   * Returns the title to render in the LayerTreeNode. If a nodeTitleRenderer
-   * has been passed as prop, it will be called and the (custom) return value
-   * will be rendered. Note: This can be any renderable element collection! If
-   * no function is given (the default) the layer name will be passed.
-   *
-   * @param layer The layer attached to the tree node.
-   * @return The title composition to render.
-   */
-  getTreeNodeTitle(layer: OlLayerBase) {
-    if (_isFunction(this.props.nodeTitleRenderer)) {
-      return this.props.nodeTitleRenderer.call(this, layer);
+  const getTreeNodeTitle = useCallback((layer: OlLayerBase) => {
+    if (_isFunction(nodeTitleRenderer)) {
+      return nodeTitleRenderer(layer);
     } else {
       return layer.get('name');
     }
-  }
+  }, [nodeTitleRenderer]);
 
-  /**
-   * Creates a treeNode from a given layer.
-   *
-   * @param layer The given layer.
-   * @return The corresponding LayerTreeNode Element.
-   */
-  treeNodeFromLayer(layer: OlLayerBase): ReactElement<LayerTreeNodeProps> {
-    let childNodes: ReactNode = null;
-
-    if ((layer as OlLayerGroup).getLayers) {
-      const childLayers = (layer as OlLayerGroup).getLayers().getArray()
-        .filter(this.props.filterFunction);
-      childNodes = childLayers.map((childLayer: OlLayerBase) => {
-        return this.treeNodeFromLayer(childLayer);
-      }).reverse();
-    } else {
-      if (!this.hasListener({ target: layer, type: 'change:visible', listener: this.onLayerChangeVisible })) {
-        const eventKey = layer.on('change:visible', this.onLayerChangeVisible);
-        this.olListenerKeys.push(eventKey);
-      }
-    }
-
-    return (
-      <LayerTreeNode
-        title={this.getTreeNodeTitle(layer)}
-        key={getUid(layer)}
-        inResolutionRange={MapUtil.layerInResolutionRange(layer, this.props.map)}
-      >
-        {childNodes}
-      </LayerTreeNode>
-    );
-  }
-
-  /**
-   * Determines if the target has already registered the given listener for the
-   * given eventtype.
-   */
-  hasListener = (key: OlEventsKey) => {
-    return this.olListenerKeys.some((listenerKey) => {
+  const hasListener = useCallback((key: OlEventsKey) => {
+    return olListenerKeys.current.some(listenerKey => {
       return listenerKey.target === key.target
         && listenerKey.type === key.type
         && listenerKey.listener === key.listener;
     });
-  };
+  }, []);
 
-  /**
-   * Reacts to the layer change:visible event and calls setCheckedState.
-   */
-  onLayerChangeVisible = () => {
-    const checkedKeys = this.getVisibleOlUids();
-    this.setState({
-      checkedKeys
-    }, () => {
-      this.rebuildTreeNodes();
-    });
-  };
+  const treeNodeFromLayer = useCallback((layer: OlLayerBase) => {
+    let childNodes: TreeDataNode[] = [];
 
-  /**
-   * Get the flat array of ol_uids from visible non groupLayers.
-   *
-   * @return The visible ol_uids.
-   */
-  getVisibleOlUids = (): string[] => {
-    if (!this.state.layerGroup) {
+    if (filterFunction && [layer].filter(filterFunction).length === 0) {
+      return;
+    }
+
+    if (layer instanceof OlLayerGroup) {
+      let childLayers = layer.getLayers().getArray();
+      if (filterFunction) {
+        childLayers = childLayers.filter(filterFunction);
+      }
+      childNodes = childLayers
+        .map(childLayer => treeNodeFromLayer(childLayer))
+        .filter(childLayer => childLayer !== undefined)
+        .toReversed() as TreeDataNode[];
+    }
+
+    return {
+      key: getUid(layer),
+      title: getTreeNodeTitle(layer),
+      className: MapUtil.layerInResolutionRange(layer, map) ? '' : 'out-of-range',
+      // Required to identify a group layer/node.
+      children: layer instanceof OlLayerGroup ? childNodes : undefined
+    } as TreeDataNode;
+  }, [map, getTreeNodeTitle, filterFunction]);
+
+  const treeNodesFromLayerGroup = useCallback(() => {
+    if (!map) {
       return [];
     }
 
-    return MapUtil.getAllLayers(this.state.layerGroup,
-      (layer: OlLayerBase) => {
-        return !((layer as OlLayerGroup).getLayers) && layer.getVisible();
-      })
-      .filter(this.props.filterFunction)
-      .map(getUid);
-  };
+    const lGroup = layerGroup ? layerGroup : map.getLayerGroup();
 
-  /**
-   * Sets the visibility of a layer due to its checked state.
-   *
-   * @param checkedKeys Contains all checkedKeys.
-   * @param e The ant-tree event object for this event. See ant docs.
-   */
-  onCheck(checkedKeys: string[], e: AntTreeNodeCheckedEvent) {
-    const { checked = false } = e;
-    const eventKey = e.node.props.eventKey;
-    if (eventKey) {
-      const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
-      if (!layer) {
-        Logger.error('layer is not defined');
-        return;
-      }
-      this.setLayerVisibility(layer, checked);
-    }
-  }
+    return lGroup.getLayers().getArray()
+      .map(l => treeNodeFromLayer(l))
+      .filter(n => n !== undefined)
+      .toReversed() as TreeDataNode[];
+  }, [layerGroup, map, treeNodeFromLayer]);
 
-  /**
-   * Toggles the visibility of a layer when clicking the name.
-   *
-   * @param checkedKeys Contains all checkedKeys.
-   * @param e The ant-tree event object for this event. See ant docs.
-   */
-  onSelect = (checkedKeys: string[], e: AntTreeNodeSelectedEvent) => {
-    // @ts-ignore
-    const checked = !e.node.checked;
-    // @ts-ignore
-    e.node.checked = checked;
-    const eventKey = e.node.props.eventKey;
-    if (eventKey) {
-      const layer = MapUtil.getLayerByOlUid(this.props.map, eventKey);
-      if (!layer) {
-        Logger.error('layer is not defined');
-        return;
-      }
-      this.setLayerVisibility(layer, checked);
-    }
-  };
+  const onChangeResolution = useCallback(() => {
+    setTreeData(treeNodesFromLayerGroup());
+  }, [treeNodesFromLayerGroup]);
 
-  /**
-   * Sets the layer visibility. Calls itself recursively for groupLayers.
-   *
-   * @param layer The layer.
-   * @param visibility The visibility.
-   */
-  setLayerVisibility(layer: OlLayerBase, visibility: boolean) {
-    if ((layer as OlLayerGroup).getLayers) {
-      layer.setVisible(visibility);
-      (layer as OlLayerGroup).getLayers().forEach((subLayer) => {
-        this.setLayerVisibility(subLayer, visibility);
+  const setLayerVisibility = useCallback((layer: OlLayerBase, visible: boolean) => {
+    if (layer instanceof OlLayerGroup) {
+      layer.getLayers().forEach(subLayer => {
+        setLayerVisibility(subLayer, visible);
       });
     } else {
-      layer.setVisible(visibility);
-      // if layer has a parent folder, make it visible too
-      if (visibility) {
-        const group = this.props.layerGroup ? this.props.layerGroup :
-          this.props.map.getLayerGroup();
-        this.setParentFoldersVisible(group, getUid(layer), group);
+      layer.setVisible(visible);
+    }
+  }, []);
+
+  const updateTreeNodes = useCallback(() => {
+    setTreeData(treeNodesFromLayerGroup());
+  }, [treeNodesFromLayerGroup]);
+
+  const updateCheckedKeys = useCallback(() => {
+    setCheckedKeys(getVisibleLayerKeys());
+  }, [getVisibleLayerKeys]);
+
+  const updateTree = useCallback(() => {
+    updateTreeNodes();
+    updateCheckedKeys();
+  }, [updateTreeNodes, updateCheckedKeys]);
+
+  useEffect(() => {
+    updateTree();
+  }, [updateTree]);
+
+  const registerLayerListeners = useCallback((layer: OlLayerBase) => {
+    if (filterFunction && [layer].filter(filterFunction).length === 0) {
+      return;
+    }
+
+    if (!(hasListener({ target: layer, type: 'propertychange', listener: updateTree }))) {
+      const evtKey = layer.on('propertychange', updateTree);
+      olListenerKeys.current.push(evtKey);
+    }
+
+    if (layer instanceof OlLayerGroup) {
+      const layerCollection = layer.getLayers();
+
+      if (!(hasListener({ target: layerCollection, type: 'add', listener: updateTree }))) {
+        const addEvtKey = layerCollection.on('add', updateTree);
+        olListenerKeys.current.push(addEvtKey);
+      }
+      if (!(hasListener({ target: layerCollection, type: 'remove', listener: updateTree }))) {
+        const removeEvtKey = layerCollection.on('remove', updateTree);
+        olListenerKeys.current.push(removeEvtKey);
+      }
+      if (!(hasListener({ target: layer, type: 'change:layers', listener: updateTree }))) {
+        const changeEvtKey = layer.on('change:layers', updateTree);
+        olListenerKeys.current.push(changeEvtKey);
+      }
+
+      for (const lay of layerCollection.getArray()) {
+        registerLayerListeners(lay);
+      }
+    } else {
+      if (!(hasListener({ target: layer, type: 'change:visible', listener: updateCheckedKeys }))) {
+        const evtKey = layer.on('change:visible', updateCheckedKeys);
+        olListenerKeys.current.push(evtKey);
       }
     }
-  }
+  }, [filterFunction, hasListener, updateTree, updateCheckedKeys]);
 
-  /**
-   * Find the parent OlLayerGroup for the given layers ol_uid and make it
-   * visible. Traverse the tree to also set the parenting layer groups visible
-   *
-   * @param currentGroup The current group to search in
-   * @param olUid The ol_uid of the layer or folder that has been set visible
-   * @param mainGroup The main group to search in. Needed when searching for
-   * parents as we always have to start search from top
-   */
-  setParentFoldersVisible(currentGroup: OlLayerGroup, olUid: string, mainGroup: OlLayerGroup) {
-    const items = currentGroup.getLayers().getArray();
-    const groups = items.filter(l => l instanceof OlLayerGroup) as OlLayerGroup[];
-    const match = items.find(i => getUid(i) === olUid);
-    if (match) {
-      currentGroup.setVisible(true);
-      this.setParentFoldersVisible(mainGroup, getUid(currentGroup), mainGroup);
+  const registerAllLayerListeners = useCallback(() => {
+    if (!map) {
       return;
     }
-    groups.forEach(g => {
-      this.setParentFoldersVisible(g, olUid, mainGroup);
-    });
-  }
 
-  /**
-   * The callback method for the drop event. Layers will get reordered in the map
-   * and the tree.
-   *
-   * @param e The ant-tree event object for this event. See ant docs.
-   */
-  onDrop(e: AntTreeNodeDropEvent) {
-    if (!e.dragNode.props.eventKey || !e.node.props.eventKey) {
+    const lGroup = layerGroup ? layerGroup : map.getLayerGroup();
+
+    registerLayerListeners(lGroup);
+
+  }, [layerGroup, map, registerLayerListeners]);
+
+  const unregisterAllLayerListeners = useCallback(() => {
+    unByKey(olListenerKeys.current);
+  }, []);
+
+  useEffect(() => {
+    registerAllLayerListeners();
+
+    return () => {
+      unregisterAllLayerListeners();
+    };
+  }, [registerAllLayerListeners, unregisterAllLayerListeners]);
+
+  // Reregister all layer listeners if the treeData changes, this is e.g. required if a layer becomes
+  // a child of a layer group that isn't part of the treeData yet.
+  useEffect(() => {
+    unregisterAllLayerListeners();
+    registerAllLayerListeners();
+  }, [treeData, registerAllLayerListeners, unregisterAllLayerListeners]);
+
+  useEffect(() => {
+    if (!map) {
       return;
     }
-    const dragLayer = MapUtil.getLayerByOlUid(this.props.map, e.dragNode.props.eventKey);
+
+    map.getView().on('change:resolution', onChangeResolution);
+
+    return () => {
+      map.getView().un('change:resolution', onChangeResolution);
+    };
+  }, [map, onChangeResolution]);
+
+  const onCheck = (keys: {
+    checked: Key[];
+    halfChecked: Key[];
+  } | Key[], info: CheckInfo<TreeDataNode>) => {
+    if (!map) {
+      return;
+    }
+
+    const key = info.node.key as string;
+    const checked = info.checked;
+
+    if (!key) {
+      return;
+    }
+
+    const layer = MapUtil.getLayerByOlUid(map, key);
+
+    if (!layer) {
+      Logger.error('Layer is not defined');
+      return;
+    }
+
+    setLayerVisibility(layer, checked);
+  };
+
+  const onDrop = (info: NodeDragEventParams<DataNode> & {
+    dragNode: EventDataNode<DataNode>;
+    dragNodesKeys: Key[];
+    dropPosition: number;
+    dropToGap: boolean;
+  }) => {
+    const dropKey = info.node.key as string;
+    const dragKey = info.dragNode.key as string;
+    const dropPos = info.node.pos.split('-');
+    const dropPosition = info.dropPosition;
+    // The drop position relative to the drop node, inside 0, top -1, bottom 1.
+    const dropPositionRelative = dropPosition - parseInt(dropPos[dropPos.length - 1], 10);
+
+    // Reorder layers
+    if (!map) {
+      return;
+    }
+
+    const dragLayer = MapUtil.getLayerByOlUid(map, dragKey);
     if (!dragLayer) {
       Logger.error('dragLayer is not defined');
       return;
     }
-    const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, this.props.map);
-    if (!dragInfo || !dragInfo?.groupLayer) {
-      return;
-    }
-    const dragCollection = dragInfo.groupLayer.getLayers();
-    const dropLayer = MapUtil.getLayerByOlUid(this.props.map, e.node.props.eventKey);
+
+    const dropLayer = MapUtil.getLayerByOlUid(map, dropKey);
     if (!dropLayer) {
       Logger.error('dropLayer is not defined');
       return;
     }
-    const dropPos = e.node.props.pos.split('-');
-    const location = e.dropPosition - Number(dropPos[dropPos.length - 1]);
 
-    dragCollection.remove(dragLayer);
+    const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, map);
+    if (!dragInfo || !dragInfo?.groupLayer) {
+      return;
+    }
 
-    const dropInfo = MapUtil.getLayerPositionInfo(dropLayer, this.props.map);
+    const dropInfo = MapUtil.getLayerPositionInfo(dropLayer, map);
     if (!dropInfo || !dropInfo?.groupLayer) {
       return;
     }
-    const dropPosition = dropInfo.position;
+
+    const dragCollection = dragInfo.groupLayer.getLayers();
     const dropCollection = dropInfo.groupLayer.getLayers();
 
-    if (!_isNumber(dropPosition)) {
-      return;
-    }
+    dragCollection.remove(dragLayer);
 
-    // drop before node
-    if (location === -1) {
+    const dropLayerIndex = dropCollection.getArray().findIndex(l => l === dropLayer);
+
+    // Drop on the top of the drop node/layer.
+    if (dropPositionRelative === -1) {
       if (dropPosition === dropCollection.getLength() - 1) {
         dropCollection.push(dragLayer);
       } else {
-        dropCollection.insertAt(dropPosition + 1, dragLayer);
+        dropCollection.insertAt(dropLayerIndex + 1, dragLayer);
       }
-      // drop on node
-    } else if (location === 0) {
-      if ((dropLayer as OlLayerGroup).getLayers) {
-        (dropLayer as OlLayerGroup).getLayers().push(dragLayer);
-      } else {
-        dropCollection.insertAt(dropPosition + 1, dragLayer);
+    // Drop on node (= to a layer group).
+    } else if (dropPositionRelative === 0) {
+      if (dropLayer instanceof OlLayerGroup) {
+        dropLayer.getLayers().push(dragLayer);
       }
-      // drop after node
-    } else if (location === 1) {
-      dropCollection.insertAt(dropPosition, dragLayer);
-    }
-
-    this.rebuildTreeNodes();
-  }
-
-  /**
-   * Call rebuildTreeNodes onExpand to avoid sync issues.
-   *
-   */
-  onExpand = (expandedKeys: string[], info: {
-    node: EventDataNode<DataNode>;
-    expanded: boolean;
-    nativeEvent: MouseEvent;
-  }) => {
-    const {
-      onExpand
-    } = this.props;
-
-    this.rebuildTreeNodes();
-
-    if (onExpand) {
-      onExpand(expandedKeys, info);
+    // Drop on the bottom of the drop node/layer.
+    } else if (dropPositionRelative === 1) {
+      dropCollection.insertAt(dropLayerIndex, dragLayer);
     }
   };
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      className,
-      layerGroup,
-      map,
-      nodeTitleRenderer,
-      toggleOnClick,
-      ...passThroughProps
-    } = this.props;
+  const allowDrop = (options: AllowDropOptions<TreeDataNode>) => {
+    const dropNode = options.dropNode;
+    const dropPositionRelative = options.dropPosition;
 
-    let ddListeners: any;
-    if (passThroughProps.draggable) {
-      ddListeners = {
-        onDrop: this.onDrop.bind(this)
-      };
-    }
+    // Don't allow dropping on a layer node.
+    return !(dropPositionRelative === 0 && !dropNode.children);
+  };
 
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
-    return (
-      <Tree
-        className={finalClassName}
-        checkedKeys={this.state.checkedKeys}
-        onCheck={this.onCheck.bind(this)}
-        onSelect={toggleOnClick ? this.onSelect : undefined}
-        onExpand={this.onExpand}
-        {...ddListeners}
-        {...passThroughProps}
-      >
-        {this.state.treeNodes}
-      </Tree>
-    );
-  }
-}
+  return (
+    <Tree
+      className={finalClassName}
+      checkedKeys={checkedKeys}
+      onCheck={onCheck}
+      onDrop={onDrop}
+      allowDrop={allowDrop}
+      selectable={false}
+      checkable={checkable}
+      draggable={draggable}
+      treeData={treeData}
+      {...passThroughProps}
+    />
+  );
+};
 
 export default LayerTree;
