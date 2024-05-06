@@ -4,7 +4,7 @@
 [![GitHub license](https://img.shields.io/github/license/terrestris/react-geo?style=flat-square)](https://github.com/terrestris/react-geo/blob/main/LICENSE)
 [![Coverage Status](https://img.shields.io/coveralls/github/terrestris/react-geo?style=flat-square)](https://coveralls.io/github/terrestris/react-geo?branch=main)
 ![GitHub action build](https://img.shields.io/github/actions/workflow/status/terrestris/react-geo/on-push-main.yml?branch=main&style=flat-square)
-[![Known Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/terrestris/react-geo?style=flat-square)](https://snyk.io/test/github/terrestris/react-geo)
+[![Known Vulnerabilities](https://snyk.io/test/github/terrestris/react-geo/badge.svg)](https://snyk.io/test/github/terrestris/react-geo)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/terrestris/react-geo/blob/main/CONTRIBUTING.md)
 
 `react-geo` is a JavaScript library providing a large number of components to build modern mapping applications. It is used in combination with [React](https://github.com/facebook/react), [OpenLayers](https://github.com/openlayers/openlayers) and [Ant Design](https://github.com/ant-design/ant-design).
