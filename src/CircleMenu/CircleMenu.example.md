@@ -7,7 +7,7 @@ import { faBullhorn,faChartLine, faLink, faPencil, faThumbsUp } from '@fortaweso
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 import CircleMenu from '@terrestris/react-geo/dist/CircleMenu/CircleMenu';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import OlLayerTile from 'ol/layer/Tile';

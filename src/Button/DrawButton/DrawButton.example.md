@@ -3,7 +3,7 @@ This demonstrates the use of the DrawButton.
 ```jsx
 import DrawButton from '@terrestris/react-geo/dist/Button/DrawButton/DrawButton';
 import ToggleGroup from '@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';

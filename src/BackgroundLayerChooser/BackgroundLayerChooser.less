@@ -1,21 +1,80 @@
 .bg-layer-chooser {
+  position: absolute;
+  bottom: 20px;
+  right: 5px;
+  z-index: 10;
+
   display: flex;
   align-items: center;
   justify-content: flex-end;
 
-  &.moved {
-    transition: 400ms;
+  .change-bg-btn {
+    width: 22px;
+    height: 64px;
+    z-index: 3;
+    border: 1px solid #808080;
+    // suppress border on hover and focus
+    border-right: none !important;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-radius: 0;
+
+    &.toggled {
+      border-left: none;
+    }
+  }
+
+  .layer-cards {
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    background-color: #fff;
+    border: solid 1px #808080;
+    border-radius: 4px;
   }
 
   .no-background {
-    height: 128px;
+    cursor: pointer;
+    margin: auto 0;
     width: 128px;
-    padding-bottom: 15px;
+    height: 128px;
+    position: relative;
 
-    span.layer-title {
+    &:hover {
+      outline: 2px solid #2f4f4f;
+    }
+
+    .no-background-preview {
+      padding: 5%;
+      padding-bottom: 25px;
+      height: 100%;
+      width: 100%;
+
+      svg {
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    .layer-title {
       position: absolute;
+      left: 0;
       bottom: 0;
-      right: 10px;
+      background: #fff;
+      color: #000;
+      text-align: center;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      padding: 0 4px;
+    }
+
+    &.selected {
+      span.layer-title {
+        outline: 2px solid #2f4f4f;
+        font-weight: bold;
+      }
     }
   }
 
@@ -24,67 +83,26 @@
     width: 140px;
     height: 140px;
 
-    span.layer-title {
-      position: absolute;
-      bottom: 0;
-      margin: 5px;
-      background: var(--ant-primary-color);
-      color: #fff;
-      font-weight: bolder;
-      text-align: center;
-      width: 128px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      padding: 0 4px;
-    }
-
-    span.layer-title-no-background {
-      position: absolute;
-      bottom: 0;
-      margin: 5px;
-      background: var(--ant-primary-color);
-      color: #fff;
-      font-weight: bolder;
-      text-align: center;
-      width: 128px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      left: 0px;
-    }
-
-    .no-background-preview {
-      border: solid 1px var(--ant-primary-color);
-      border-radius: 4px;
-      box-shadow: 0 6px 12px rgb(0 0 0 / 18%), 0 -6px 12px rgb(0 0 0 / 18%);
-      background-color: var(--ant-primary-1);
-      padding: 5%;
-      height: auto;
-      width: auto;
-      color: #fff;
-      font-size: 3em;
-    }
-
     #overview-map {
-
-      width: 140px;
-      height: 140px;
+      height: 100%;
+      width: 100%;
 
       .react-geo-bg-layer-chooser-overviewmap {
-        bottom: unset;
-        left: unset;
-        right: unset;
-        top: unset;
-        border: solid 1px var(--ant-primary-color);
+        height: 100%;
+        width: 100%;
+        border: solid 1px #808080;
         border-radius: 4px;
         box-shadow: 0 6px 12px rgb(0 0 0 / 18%), 0 -6px 12px rgb(0 0 0 / 18%);
-        background-color: var(--ant-primary-1);
+        background-color: #fff;
 
         .ol-overviewmap-map {
           border: none;
-          width: 140px;
-          height: 140px;
+          width: 100%;
+          height: 100%;
+
+          .ol-viewport {
+            border-radius: 4px;
+          }
         }
 
         .ol-overviewmap-box {
@@ -92,85 +110,44 @@
           outline: 2px solid blue;
         }
         .ol-overviewmap-box:before {
-          content: " ";
+          content: ' ';
           position: absolute;
-          outline: 2px dashed white;
+          outline: 2px dashed #fff;
           width: 100%;
           height: 100%;
         }
       }
     }
-  }
 
-  button.change-bg-btn {
-    width: 22px;
-    height: 64px;
-    z-index: 3;
-    border: 1px solid var(--ant-primary-color);
-    // suppress border on hover and focus
-    border-right: none !important;
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
+    .no-background-preview {
+      border: solid 1px #808080;
+      border-radius: 4px;
+      box-shadow: 0 6px 12px rgb(0 0 0 / 18%), 0 -6px 12px rgb(0 0 0 / 18%);
+      background-color: #fff;
+      padding: 5%;
+      padding-bottom: 25px;
+      height: 100%;
+      width: 100%;
 
-    &.toggled {
-      border-radius: 0;
-      border-left: none;
-    }
-  }
-
-}
-
-// styling for preview cards
-.layer-cards {
-  display: flex;
-  gap: 10px;
-  padding: 5px;
-  background-color: var(--ant-primary-1);
-  border: solid 1px var(--ant-primary-color);
-  border-radius: 4px;
-  transition: 400ms;
-
-  .layer-preview {
-
-    cursor: pointer;
-    margin: auto 0;
-
-    &:hover {
-      outline: 2px solid var(--ant-primary-color-active);
-    }
-
-    &.selected {
-      .ant-spin-container {
-        img,
-        div.no-preview,
-        span.layer-title {
-          outline: 2px solid var(--ant-primary-color-active);
-          font-weight: bold;
-        }
-      }
-    }
-
-    .ant-spin-container {
-      display: flex;
-      flex-direction: column;
-
-      canvas {
-        outline: solid 1px var(--ant-primary-color );
-      }
-
-      span.layer-title {
-        position: absolute;
-        bottom: 0;
-        background: var(--ant-primary-color);
-        color: #fff;
-        text-align: center;
+      svg {
+        height: 100%;
         width: 100%;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        padding: 0 4px;
       }
     }
 
+    span.layer-title {
+      position: absolute;
+      bottom: 1px;
+      left: 1px;
+      background:rgba(255, 255, 255, 0.8);
+      border-radius: 0 0 4px 4px;
+      color: #000;
+      font-weight: bolder;
+      text-align: center;
+      width: calc(100% - 2px);;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
 }
