@@ -23,7 +23,7 @@ import VectorSource from 'ol/source/Vector.js';
 import OlView from 'ol/View';
 import React, { useEffect, useState } from 'react';
 
-const queryLayer = new OlLayerTile({
+const wmsLayer = new OlLayerTile({
   name: 'States (USA)',
   source: new OlSourceTileWMS({
     url: 'https://ahocevar.com/geoserver/wms',
@@ -51,7 +51,7 @@ const vectorSource = new VectorSource({
   strategy: bboxStrategy,
 });
 
-const vector = new VectorLayer({
+const vectorLayer = new VectorLayer({
   source: vectorSource,
   style: {
     'stroke-width': 0.75,
@@ -71,8 +71,8 @@ const CoordinateInfoExample = () => {
           name: 'OSM',
           source: new OlSourceOSM()
         }),
-        vector,
-        queryLayer
+        vectorLayer,
+        wmsLayer
       ],
       view: new OlView({
         center: fromLonLat([-99.4031637, 38.3025695]),
@@ -95,7 +95,7 @@ const CoordinateInfoExample = () => {
       />
       <CoordinateInfo
         map={this.map}
-        queryLayers={[queryLayer]}
+        queryLayers={[wmsLayer, vectorLayer]}
         resultRenderer={(opts) => {
           const features = opts.features;
           const clickCoord = opts.clickCoordinate;
