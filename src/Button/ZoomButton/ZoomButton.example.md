@@ -2,7 +2,7 @@ This example demonstrates some uses of of the `ZoomButton` to zoom in and out of
 
 ```jsx
 import ZoomButton from '@terrestris/react-geo/dist/Button/ZoomButton/ZoomButton';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';

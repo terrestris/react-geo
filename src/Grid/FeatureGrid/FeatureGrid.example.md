@@ -2,7 +2,7 @@ This example demonstrates the usage of the FeatureGrid:
 
 ```jsx
 import FeatureGrid from '@terrestris/react-geo/dist/Grid/FeatureGrid/FeatureGrid';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import OlLayerTile from 'ol/layer/Tile';
@@ -85,7 +85,7 @@ An example with a remote feature source.
 ```jsx
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
 import FeatureGrid from '@terrestris/react-geo/dist/Grid/FeatureGrid/FeatureGrid';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import Input from 'antd/lib/input';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';

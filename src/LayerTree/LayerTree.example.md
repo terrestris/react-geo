@@ -2,7 +2,7 @@ This example demonstrates the LayerTree.
 
 ```jsx
 import LayerTree from '@terrestris/react-geo/dist/LayerTree/LayerTree';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
