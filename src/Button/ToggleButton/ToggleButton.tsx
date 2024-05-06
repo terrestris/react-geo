@@ -82,7 +82,7 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
   value,
   onClick,
   onChange = () => {},
-  buttonTransparent = true,
+  buttonTransparent = false,
   ...passThroughProps
 }) => {
 
