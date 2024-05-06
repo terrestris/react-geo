@@ -27,7 +27,6 @@ import React, {
 
 import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPreview';
 import SimpleButton from '../Button/SimpleButton/SimpleButton';
-// import NoBackgroundImage from './no-background.svg';
 
 export type BackgroundLayerChooserProps = {
   /**
