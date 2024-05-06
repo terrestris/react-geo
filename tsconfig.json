@@ -34,7 +34,6 @@
     "jest",
     "coverage",
     "src/Util/**",
-    "**.config.js",
-    "**/*.spec.tsx"
+    "**.config.js"
   ]
 }

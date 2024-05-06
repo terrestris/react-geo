@@ -4,7 +4,6 @@ import {
 } from '@testing-library/react';
 import * as React from 'react';
 
-import TestUtil from '../Util/TestUtil';
 import CircleMenu from './CircleMenu';
 
 describe('<CircleMenu />', () => {
@@ -82,7 +81,7 @@ describe('<CircleMenu />', () => {
     it('applies the transformation to the ref', async () => {
       const diameter = 1337;
       const animationDuration = 1;
-      const { rerender } = render(
+      render(
         <CircleMenu
           position={[0, 0]}
           animationDuration={animationDuration}

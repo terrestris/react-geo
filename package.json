@@ -46,7 +46,7 @@
   "scripts": {
     "build": "npm run test -- --coverage && npm run build:all",
     "build:all": "npm run build:styleguide && npm run build:dist",
-    "build:declaration": "tsc --emitDeclarationOnly",
+    "build:declaration": "tsc --emitDeclarationOnly && rimraf --glob ./dist/**/*.spec.d.ts ./dist/**/*.spec.js",
     "build:dist": "babel src --out-dir dist --copy-files --ignore spec.tsx,.md --extensions '.ts,.tsx' && npm run build:declaration",
     "build:styleguide": "npm run clean:build && styleguidist build",
     "clean": "rimraf ./build/* ./coverage/* ./dist/*",
