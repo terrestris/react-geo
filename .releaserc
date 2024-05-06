@@ -1,7 +1,10 @@
 {
   "branches": [
     "main",
-    "next",
+    {
+      name: "next",
+      prerelease: true
+    }
     "15.x.x"
   ],
   "plugins": [
