@@ -40,7 +40,7 @@ describe('<LayerTransparencySlider />', () => {
   it('updates the opacity of the layer by providing a transparency value', async () => {
     layer.setOpacity(0);
 
-    const { container } = render(
+    render(
       <LayerTransparencySlider
         layer={layer}
         marks={{

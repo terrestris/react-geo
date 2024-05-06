@@ -42,6 +42,7 @@ describe('<TimeLayerSliderPanel />', () => {
     const { container } = render(<TimeLayerSliderPanel
       initStartDate={moment().subtract(3, 'hours')}
       initEndDate={moment()}
+      timeAwareLayers={[]}
     />);
     expect(container).toBeVisible();
   });
@@ -50,6 +51,7 @@ describe('<TimeLayerSliderPanel />', () => {
     render(<TimeLayerSliderPanel
       initStartDate={moment().subtract(3, 'hours')}
       initEndDate={moment()}
+      timeAwareLayers={[]}
     />);
 
     const playButton = screen.getByLabelText('Autoplay');
