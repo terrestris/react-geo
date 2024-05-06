@@ -5,13 +5,17 @@ import {
 } from '@terrestris/react-util/dist/Util/geolocationMock';
 import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { render } from '@testing-library/react';
+import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
 
+import TestUtil from '../../Util/TestUtil';
 import GeoLocationButton from './GeoLocationButton';
 
 describe('<GeoLocationButton />', () => {
+
+  let map: OlMap;
 
   beforeAll(() => {
     enableGeolocationMock();
@@ -19,6 +23,10 @@ describe('<GeoLocationButton />', () => {
 
   afterAll(() => {
     disableGeolocationMock();
+  });
+
+  beforeEach(() => {
+    map = TestUtil.createMap();
   });
 
   describe('#Basics', () => {

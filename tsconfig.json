@@ -33,6 +33,7 @@
     "webpack",
     "jest",
     "coverage",
-    "src/Util/**"
+    "src/Util/**",
+    "**.config.js"
   ]
 }

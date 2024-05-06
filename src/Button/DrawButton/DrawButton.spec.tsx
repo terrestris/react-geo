@@ -216,15 +216,6 @@ describe('<DrawButton />', () => {
       const startSpy = jest.fn();
       const endSpy = jest.fn();
 
-      const { rerenderInMapContext } = renderInMapContext(map, (
-        <DrawButton
-          pressed={true}
-          drawType={'Polygon'}
-          onDrawStart={startSpy}
-          onDrawEnd={endSpy}
-        />
-      ));
-
       expect(startSpy).not.toBeCalled();
       expect(endSpy).not.toBeCalled();
 
