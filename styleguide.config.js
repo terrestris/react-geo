@@ -5,21 +5,26 @@ const reactDogGenTypeScript = require('react-docgen-typescript');
 module.exports = {
   title: 'react-geo',
   styleguideDir: './build/styleguide',
-  webpackConfig: webpackCommonConf,
+  webpackConfig: {
+    ...webpackCommonConf,
+    mode: process.env.NODE_ENV
+  },
   usageMode: 'expand',
   template: {
     favicon: 'https://terrestris.github.io/react-geo/assets/favicon.ico'
   },
-  propsParser: reactDogGenTypeScript
-    .withCustomConfig('./tsconfig.json', {
-      savePropValueAsString: true,
-      propFilter: (prop) => {
-        if (prop.parent) {
-          return !prop.parent.fileName.includes('node_modules');
-        }
-        return true;
-      }
-    }).parse,
+  minimize: process.env.NODE_ENV === 'production',
+  propsParser: process.env.NODE_ENV === 'production' ?
+    reactDogGenTypeScript
+      .withCustomConfig('./tsconfig.json', {
+        propFilter: (prop) => {
+          if (prop.parent) {
+            return !prop.parent.fileName.includes('node_modules');
+          }
+          return true;
+        }})
+      .parse :
+    undefined,
   ignore: [
     '**/__tests__/**',
     '**/*.spec.{js,jsx,ts,tsx}',
