@@ -3,7 +3,7 @@ This demonstrates the usage of the CoordinateReferenceSystemCombo.
 ```jsx
 import CoordinateReferenceSystemCombo from
   '@terrestris/react-geo/dist/Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import { applyTransform } from 'ol/extent';
 import OlLayerTile from 'ol/layer/Tile';

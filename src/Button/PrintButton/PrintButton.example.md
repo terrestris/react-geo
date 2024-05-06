@@ -2,7 +2,7 @@ This demonstrates the use of the PrintButton.
 
 ```jsx
 import PrintButton from '@terrestris/react-geo/dist/Button/PrintButton/PrintButton';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
 import { Progress } from 'antd';
 import {getTopLeft, getWidth} from 'ol/extent';

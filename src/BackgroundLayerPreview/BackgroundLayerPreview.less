@@ -1,0 +1,28 @@
+.layer-preview {
+  cursor: pointer;
+  margin: auto 0;
+
+  &:hover {
+    outline: 2px solid #2f4f4f;
+  }
+
+  &.selected {
+    .layer-title {
+      outline: 2px solid #2f4f4f;
+      font-weight: bold;
+    }
+  }
+
+  .layer-title {
+    position: absolute;
+    bottom: 0;
+    background: #fff;
+    color: #000;
+    text-align: center;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 4px;
+  }
+}

@@ -1,8 +1,8 @@
 This example demonstrates the LayerTransparencySlider.
 
 ```jsx
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import LayerTransparencySlider from '@terrestris/react-geo/dist/Slider/LayerTransparencySlider/LayerTransparencySlider';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';

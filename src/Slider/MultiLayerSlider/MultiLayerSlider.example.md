@@ -6,8 +6,8 @@ This way you can slide through a set of layers, which e.g. is useful when using
 layers showing the same area but different content or time.
 
 ```jsx
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MultiLayerSlider from '@terrestris/react-geo/dist/Slider/MultiLayerSlider/MultiLayerSlider';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';

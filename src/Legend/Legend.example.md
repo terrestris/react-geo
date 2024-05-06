@@ -2,7 +2,7 @@ This example demonstrates the Legend.
 
 ```jsx
 import Legend from '@terrestris/react-geo/dist/Legend/Legend';
-import MapComponent from '@terrestris/react-util/dist/Components/MapComponent/MapComponent';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import {
