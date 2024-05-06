@@ -11,15 +11,19 @@ import {
   Tooltip
 } from 'antd';
 import * as copy from 'copy-to-clipboard';
+import GeoJSON from 'ol/format/GeoJSON.js';
+import { Vector as VectorLayer } from 'ol/layer.js';
 import OlLayerTile from 'ol/layer/Tile';
+import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
+import VectorSource from 'ol/source/Vector.js';
 import OlView from 'ol/View';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const queryLayer = new OlLayerTile({
+const wmsLayer = new OlLayerTile({
   name: 'States (USA)',
   source: new OlSourceTileWMS({
     url: 'https://ahocevar.com/geoserver/wms',
@@ -30,6 +34,30 @@ const queryLayer = new OlLayerTile({
     serverType: 'geoserver',
     crossOrigin: 'anonymous'
   })
+});
+
+const vectorSource = new VectorSource({
+  format: new GeoJSON(),
+  url: function (extent) {
+    return (
+      'https://ows-demo.terrestris.de/geoserver/osm/wfs?service=WFS&' +
+      'version=1.1.0&request=GetFeature&typename=osm:osm-country-borders&' +
+      'outputFormat=application/json&srsname=EPSG:3857&' +
+      'bbox=' +
+      extent.join(',') +
+      ',EPSG:3857'
+    );
+  },
+  strategy: bboxStrategy,
+});
+
+const vectorLayer = new VectorLayer({
+  source: vectorSource,
+  style: {
+    'stroke-width': 0.75,
+    'stroke-color': 'white',
+    'fill-color': 'rgba(100,100,100,0.25)',
+  },
 });
 
 const CoordinateInfoExample = () => {
@@ -43,7 +71,8 @@ const CoordinateInfoExample = () => {
           name: 'OSM',
           source: new OlSourceOSM()
         }),
-        queryLayer
+        vectorLayer,
+        wmsLayer
       ],
       view: new OlView({
         center: fromLonLat([-99.4031637, 38.3025695]),
@@ -66,11 +95,18 @@ const CoordinateInfoExample = () => {
       />
       <CoordinateInfo
         map={this.map}
-        queryLayers={[queryLayer]}
+        queryLayers={[wmsLayer, vectorLayer]}
         resultRenderer={(opts) => {
           const features = opts.features;
           const clickCoord = opts.clickCoordinate;
           const loading = opts.loading;
+
+          const getValue = (feature, key) => {
+            if (feature.getProperties().hasOwnProperty(key)) {
+              return feature.get(key);
+            }
+            return null;
+          };
 
           return (
             Object.keys(features).length === 1 && features[Object.keys(features)[0]].length === 1 ?
@@ -119,7 +155,8 @@ const CoordinateInfoExample = () => {
                   >
                     <Statistic
                       title="State"
-                      value={features[Object.keys(features)[0]][0].get('STATE_NAME')}
+                      value={getValue(features[Object.keys(features)[0]][0], 'STATE_NAME')
+                        || getValue(features[Object.keys(features)[0]][0], 'name')}
                     />
                   </Spin>
                   <Tooltip
@@ -146,7 +183,7 @@ const CoordinateInfoExample = () => {
       />
     </MapContext.Provider>
   );
-}
+};
 
-<CoordinateInfoExample />
+<CoordinateInfoExample />;
 ```
