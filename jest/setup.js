@@ -3,8 +3,6 @@ import 'jest-canvas-mock';
 import '@testing-library/jest-dom';
 import 'regenerator-runtime/runtime';
 
-import Adapter from '@cfaester/enzyme-adapter-react-18';
-import Enzyme from 'enzyme';
 import {
   TextDecoder,
   TextEncoder
@@ -14,8 +12,6 @@ Object.assign(global, {
   TextDecoder,
   TextEncoder
 });
-
-Enzyme.configure({ adapter: new Adapter() });
 
 jest.mock('use-resize-observer', () => ({
   __esModule: true,

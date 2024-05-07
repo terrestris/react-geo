@@ -1,4 +1,3 @@
-import { mount, MountRendererProps,ReactWrapper, shallow, ShallowWrapper } from 'enzyme';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import OlLayerVector from 'ol/layer/Vector';
@@ -6,9 +5,6 @@ import OlMap from 'ol/Map';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlSourceVector from 'ol/source/Vector';
 import OlView from 'ol/View';
-import * as React from 'react';
-
-export type Wrapper =  ShallowWrapper | ReactWrapper;
 
 /**
  * A set of some useful static helper methods.
@@ -20,28 +16,6 @@ export class TestUtil {
   static mapDivId = 'map';
   static mapDivHeight = 256;
   static mapDivWidth = 256;
-
-  /**
-   * Mounts the given component.
-   *
-   * @param Component The Component to render.
-   * @param props The props to be used.
-   * @param options The options to be set.
-   */
-  static mountComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
-    return mount(<Component {...props} />, options);
-  };
-
-  /**
-   * Mounts the given component (shallowly).
-   *
-   * @param Component The Component to render.
-   * @param props The props to be used.
-   * @param options The options to be set.
-   */
-  static shallowComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
-    return shallow(<Component {...props} />, options);
-  };
 
   /**
    * Creates and applies a map <div> element to the body.

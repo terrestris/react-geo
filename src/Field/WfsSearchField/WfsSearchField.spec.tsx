@@ -1,4 +1,6 @@
-import TestUtil from '../../Util/TestUtil';
+import { render } from '@testing-library/react';
+import React from 'react';
+
 import WfsSearchField from './WfsSearchField';
 
 describe('<WfsSearchField />', () => {
@@ -7,8 +9,15 @@ describe('<WfsSearchField />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(WfsSearchField);
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(
+      <WfsSearchField
+        baseUrl=""
+        attributeDetails={{}}
+        featureNS=""
+        featurePrefix=""
+      />
+    );
+    expect(container).not.toBeUndefined();
   });
 
 });
