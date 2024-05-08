@@ -1,5 +1,5 @@
 import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
-import { screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import _isNil from 'lodash/isNil';
 import OlFeature from 'ol/Feature';
@@ -44,8 +44,8 @@ describe('<AgFeatureGrid />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(AgFeatureGrid, {map});
-    expect(wrapper).not.toBeUndefined();
+    const { container } = render(<AgFeatureGrid />);
+    expect(container).not.toBeUndefined();
   });
 
   it('initializes a vector layer on mount (if map prop is given)', () => {
