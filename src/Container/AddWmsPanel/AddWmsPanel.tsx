@@ -1,11 +1,10 @@
 import './AddWmsPanel.less';
 
 import Logger from '@terrestris/base-util/dist/Logger';
+import { WmsLayer } from '@terrestris/ol-util';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import { WmsLayer } from '@terrestris/react-util/dist/Util/typeUtils';
 import { Checkbox } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
-import _isFunction from 'lodash/isFunction';
 import React, { useState } from 'react';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
