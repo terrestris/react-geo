@@ -9,7 +9,7 @@ import AddWmsPanel from '@terrestris/react-geo/dist/Container/AddWmsPanel/AddWms
 import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import { WmsLayer } from '@terrestris/react-util/dist/Util/typeUtils';
+import { WmsLayer } from '@terrestris/ol-util';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
