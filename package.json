@@ -74,8 +74,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@terrestris/base-util": "^1.1.0",
-    "@terrestris/ol-util": "^17.0.0",
-    "@terrestris/react-util": "^5.0.0-beta.1",
+    "@terrestris/ol-util": "^18.0.0",
+    "@terrestris/react-util": "^5.0.0",
     "@types/geojson": "^7946.0.14",
     "@types/lodash": "^4.17.1",
     "ag-grid-community": "^31.3.1",
@@ -101,7 +101,7 @@
     "@semantic-release/git": "^10.0.1",
     "@terrestris/eslint-config-typescript": "^5.0.0",
     "@terrestris/eslint-config-typescript-react": "^2.0.0",
-    "@terrestris/ol-util": "^17.0.0",
+    "@terrestris/ol-util": "^18.0.0",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.6",
@@ -153,7 +153,7 @@
     "whatwg-fetch": "^3.6.20"
   },
   "peerDependencies": {
-    "@terrestris/ol-util": ">=17",
+    "@terrestris/ol-util": ">=18",
     "@types/react": ">=18",
     "antd": "^5",
     "ol": ">=9",
