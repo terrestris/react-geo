@@ -1,13 +1,8 @@
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Logger from '@terrestris/base-util/dist/Logger';
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import { MapUtil, WmsLayer } from '@terrestris/ol-util';
 import { Spin } from 'antd';
-import _isEqual from 'lodash/isEqual';
-import OlLayerImage from 'ol/layer/Image';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceImageWMS from 'ol/source/ImageWMS';
-import OlSourceTileWMS from 'ol/source/TileWMS';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -22,7 +17,7 @@ import { CSS_PREFIX } from '../constants';
  * @param params The extra params.
  */
 const getLegendUrl = (
-  legendLayer: OlLayerTile<OlSourceTileWMS> | OlLayerImage<OlSourceImageWMS>,
+  legendLayer: WmsLayer,
   params: any
 ) => {
   let url;
@@ -44,7 +39,7 @@ export interface BaseProps {
   /**
    * The layer you want to display the legend of.
    */
-  layer: OlLayerTile<OlSourceTileWMS> | OlLayerImage<OlSourceImageWMS>;
+  layer: WmsLayer;
   /**
    * An object containing additional request params like "{HEIGHT: 400}" will
    * be transformed to "&HEIGHT=400" an added to the GetLegendGraphic request.

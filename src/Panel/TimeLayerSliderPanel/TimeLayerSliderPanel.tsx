@@ -1,12 +1,10 @@
+import { WmsLayer } from '@terrestris/ol-util';
 import { DatePicker, Popover, Select } from 'antd';
 import dayjs from 'dayjs';
 import _isEqual from 'lodash/isEqual';
 import _isFinite from 'lodash/isFinite';
 import moment, { Moment } from 'moment';
 import { getUid } from 'ol';
-import OlLayer from 'ol/layer/Layer';
-import OlImageWMS from 'ol/source/ImageWMS';
-import OlTileWMS from 'ol/source/TileWMS';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
@@ -41,7 +39,7 @@ export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 export interface TimeLayerSliderPanelProps {
   className?: string;
   onChange?: (arg: moment.Moment) => void;
-  timeAwareLayers: OlLayer<OlImageWMS | OlTileWMS>[];
+  timeAwareLayers: WmsLayer[];
   value?: moment.Moment;
   dateFormat?: string;
   tooltips?: Tooltips;
@@ -95,7 +93,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
 
     const wrapTimeSlider = useCallback(() => {
       const wmsTimeLayers: TimeLayerAwareConfig[] = [];
-      timeAwareLayers.forEach((l: OlLayer<OlImageWMS | OlTileWMS>) => {
+      timeAwareLayers.forEach(l => {
         if (l.get('type') === 'WMSTime') {
           wmsTimeLayers.push({ layer: l });
         }
@@ -188,7 +186,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
       const startDatesFromLayers: moment.Moment[] = [];
       const endDatesFromLayers: moment.Moment[] = [];
 
-      timeAwareLayers.forEach((l: OlLayer<OlImageWMS | OlTileWMS, any>) => {
+      timeAwareLayers.forEach(l => {
         const layerType = l.get('type');
         if (layerType === 'WMSTime') {
           const layerStartDate = l.get('startDate');
