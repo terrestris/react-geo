@@ -1,3 +1,10 @@
+# [24.0.0-next.2](https://github.com/terrestris/react-geo/compare/v24.0.0-next.1...v24.0.0-next.2) (2024-05-14)
+
+
+### Features
+
+* use `WmsLayer` from `ol-util` instead of `react-util` ([0abde72](https://github.com/terrestris/react-geo/commit/0abde72b1355907203b9cd2ce9017d4c3709f390))
+
 # [24.0.0-next.1](https://github.com/terrestris/react-geo/compare/v23.4.1...v24.0.0-next.1) (2024-05-06)
 
 
