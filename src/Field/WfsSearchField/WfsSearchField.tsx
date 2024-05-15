@@ -7,6 +7,7 @@ import { SearchConfig } from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUt
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { useWfs, WfsQueryArgs } from '@terrestris/react-util/dist/Hooks/useWfs/useWfs';
 import { AutoComplete, Input, Spin } from 'antd';
+import { AutoCompleteProps } from 'antd/lib/auto-complete';
 import { DefaultOptionType, OptionProps } from 'antd/lib/select';
 import _get from 'lodash/get';
 import _isNil from 'lodash/isNil';
@@ -26,7 +27,7 @@ export type WfsSearchFieldProps = {
   onBeforeSearch?: (value: string) => string;
   onChange?: (val: OlFeature[] | undefined) => undefined;
   value?: OlFeature[] | undefined;
-} & SearchConfig & Omit<WfsQueryArgs, 'searchConfig' | 'searchTerm'>;
+} & SearchConfig & Omit<WfsQueryArgs, 'searchConfig' | 'searchTerm'> & Omit<AutoCompleteProps, 'onChange'>;
 
 const defaultClassName = `${CSS_PREFIX}wfssearch`;
 
