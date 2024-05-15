@@ -1,3 +1,10 @@
+# [23.5.0](https://github.com/terrestris/react-geo/compare/v23.4.1...v23.5.0) (2024-05-15)
+
+
+### Features
+
+* render urls as anchor element ([4b1822c](https://github.com/terrestris/react-geo/commit/4b1822c717c1d929c7d0d9a4211dcdb6ac8d80f4))
+
 ## [23.4.1](https://github.com/terrestris/react-geo/compare/v23.4.0...v23.4.1) (2024-03-25)
 
 
