@@ -69,6 +69,7 @@ export const NominatimSearch: FC<NominatimSearchProps> = ({
   onChange = () => undefined,
   onClear,
   onFetchError,
+  onFetchSuccess,
   onSelect,
   polygonGeoJSON,
   renderOption,
