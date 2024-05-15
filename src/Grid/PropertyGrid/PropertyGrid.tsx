@@ -96,11 +96,15 @@ class PropertyGrid extends React.Component<PropertyGridProps> {
     return dataSource;
   }
 
+  isUrl(value: string) {
+    return /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/.test(value);
+  }
+
   /**
    * Generates the column definition for the given feature.
    */
   getColumns() {
-    const columns = [{
+    const columns: TableProps<any>["columns"] = [{
       title: this.props.attributeNameColumnTitle,
       dataIndex: 'attributeName',
       key: 'attributeName',
@@ -109,7 +113,14 @@ class PropertyGrid extends React.Component<PropertyGridProps> {
       title: this.props.attributeValueColumnTitle,
       dataIndex: 'attributeValue',
       key: 'attributeValue',
-      width: `${100 - this.props.attributeNameColumnWidthInPercent}%`
+      width: `${100 - this.props.attributeNameColumnWidthInPercent}%`,
+      render: (value) => {
+        if (this.isUrl(value)) {
+          return <a href={value} target="_blank">{value}</a>;
+        } else {
+          return value;
+        }
+      }
     }];
 
     return columns;

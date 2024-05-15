@@ -15,7 +15,8 @@ describe('<PropertyGrid />', () => {
     foo: 'bar',
     bvb: 'yarmolenko',
     mip: 'map',
-    name: 'Point'
+    name: 'Point',
+    link: 'https://www.example.com'
   };
 
   testFeature.setProperties(attributeObject);
@@ -132,4 +133,22 @@ describe('<PropertyGrid />', () => {
       }
     });
   });
+
+  it('renders urls as links', () => {
+    const props = {
+      feature: testFeature
+    };
+    const wrapper = TestUtil.mountComponent(PropertyGrid, props);
+
+    const dataSource = wrapper.instance().getDataSource();
+    dataSource.forEach((dataSourceElement) => {
+      const attributeValue = dataSourceElement.attributeValue;
+      const renderedValue = wrapper.find('a').filterWhere((a) => a.text() === attributeValue);
+      if (dataSourceElement.attributeName === 'link') {
+        expect(renderedValue).toHaveLength(1);
+      } else {
+        expect(renderedValue).toHaveLength(0);
+      }
+    });
+  })
 });
