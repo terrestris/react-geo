@@ -26,7 +26,7 @@ export type WfsSearchFieldProps = {
   onBeforeSearch?: (value: string) => string;
   onChange?: (val: OlFeature[] | undefined) => undefined;
   value?: OlFeature[] | undefined;
-} & SearchConfig & Omit<WfsQueryArgs, 'searchConfig'|'searchTerm'>;
+} & SearchConfig & Omit<WfsQueryArgs, 'searchConfig' | 'searchTerm'>;
 
 const defaultClassName = `${CSS_PREFIX}wfssearch`;
 
