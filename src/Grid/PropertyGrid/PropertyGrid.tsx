@@ -86,6 +86,10 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
     });
   }, [attributeFilter, attributeNames, feature]);
 
+  const isUrl = (value: string) => {
+    return /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/.test(value);
+  };
+
   const columns = useMemo(() => {
     return [{
       title: attributeNameColumnTitle,
@@ -96,7 +100,14 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
       title: attributeValueColumnTitle,
       dataIndex: 'attributeValue',
       key: 'attributeValue',
-      width: `${100 - attributeNameColumnWidthInPercent}%`
+      width: `${100 - attributeNameColumnWidthInPercent}%`,
+      render: (value: any) => {
+        if (isUrl(value)) {
+          return <a href={value} target="_blank">{value}</a>;
+        } else {
+          return value;
+        }
+      }
     }];
   }, [attributeNameColumnTitle, attributeNameColumnWidthInPercent, attributeValueColumnTitle]);
 

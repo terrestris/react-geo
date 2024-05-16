@@ -15,7 +15,8 @@ describe('<PropertyGrid />', () => {
     foo: 'bar',
     bvb: 'yarmolenko',
     mip: 'map',
-    name: 'Point'
+    name: 'Point',
+    link: 'https://www.example.com'
   };
 
   testFeature.setProperties(attributeObject);
@@ -69,4 +70,18 @@ describe('<PropertyGrid />', () => {
     expect(screen.getByText('name')).toBeVisible();
     expect(screen.getByText('Point')).toBeVisible();
   });
+
+  it('renders urls as links', () => {
+    render(
+      <PropertyGrid
+        feature={testFeature}
+      />
+    );
+
+    const link = screen.getByText('https://www.example.com');
+    expect(link).toBeVisible();
+    expect(link).toBeInstanceOf(HTMLAnchorElement);
+    expect(link).toHaveAttribute('href', 'https://www.example.com');
+  });
+
 });

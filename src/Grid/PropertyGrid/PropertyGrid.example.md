@@ -12,7 +12,7 @@ const feature = new OlFeature({
 const attributeObject = {
   foo: 'bar',
   foo2: 'bar2',
-  foo3: 'bar3',
+  foo3: 'https://terrestris.github.io/react-geo/',
   foo9: 'bar9',
   name: 'Point'
 };
