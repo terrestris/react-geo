@@ -1,3 +1,12 @@
+# [24.0.0-next.3](https://github.com/terrestris/react-geo/compare/v24.0.0-next.2...v24.0.0-next.3) (2024-05-16)
+
+
+### Features
+
+* add visible option for WfsSearchField ([a26f844](https://github.com/terrestris/react-geo/commit/a26f84406de50e185b5b4f81eda5a255498cc92a))
+* pass through AutoComplete props ([698d913](https://github.com/terrestris/react-geo/commit/698d91337fb548b1feddcc9e0741d1b39b35ed9d))
+* pass through on fetch success callbacks ([0b624bd](https://github.com/terrestris/react-geo/commit/0b624bd018b98bac9d292ff7dc1ea022b7884b9b))
+
 # [24.0.0-next.2](https://github.com/terrestris/react-geo/compare/v24.0.0-next.1...v24.0.0-next.2) (2024-05-14)
 
 
