@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Logger from '@terrestris/base-util/dist/Logger';
 import { SearchConfig } from '@terrestris/ol-util/dist/WfsFilterUtil/WfsFilterUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import { useWfs } from '@terrestris/react-util/dist/Hooks/useWfs/useWfs';
+import { useWfs, WfsQueryArgs } from '@terrestris/react-util/dist/Hooks/useWfs/useWfs';
 import { AutoComplete, Input, Spin } from 'antd';
+import { AutoCompleteProps } from 'antd/lib/auto-complete';
 import { DefaultOptionType, OptionProps } from 'antd/lib/select';
 import _get from 'lodash/get';
 import _isNil from 'lodash/isNil';
@@ -19,17 +20,15 @@ import { CSS_PREFIX } from '../../constants';
 const Option = AutoComplete.Option;
 
 export type WfsSearchFieldProps = {
-  additionalFetchOptions?: Partial<RequestInit>;
   asInput?: boolean;
-  baseUrl: string;
   className?: string;
   displayValue?: string;
   idProperty?: string;
-  minChars?: number;
   onBeforeSearch?: (value: string) => string;
   onChange?: (val: OlFeature[] | undefined) => undefined;
   value?: OlFeature[] | undefined;
-} & SearchConfig;
+  visible?: boolean;
+} & SearchConfig & Omit<WfsQueryArgs, 'searchConfig' | 'searchTerm'> & Omit<AutoCompleteProps, 'onChange'>;
 
 const defaultClassName = `${CSS_PREFIX}wfssearch`;
 
@@ -63,6 +62,9 @@ export const WfsSearchField: FC<WfsSearchFieldProps> = ({
   srsName = 'EPSG:3857',
   value,
   wfsFormatOptions,
+  onFetchError,
+  onFetchSuccess,
+  visible,
   ...passThroughProps
 }) => {
 
@@ -100,8 +102,10 @@ export const WfsSearchField: FC<WfsSearchFieldProps> = ({
    *
    * @param error The error string.
    */
-  const onFetchError = (error: any) => {
-    Logger.error(`Error while requesting WFS GetFeature: ${error}`);
+  const onFetchErrorInternal = (error: any) => {
+    const msg = `Error while requesting WFS GetFeature: ${error}`;
+    Logger.error(msg);
+    onFetchError?.(msg);
   };
 
   const {
@@ -110,7 +114,8 @@ export const WfsSearchField: FC<WfsSearchFieldProps> = ({
   } = useWfs({
     baseUrl,
     minChars,
-    onFetchError,
+    onFetchError: onFetchErrorInternal,
+    onFetchSuccess,
     searchTerm,
     searchConfig
   });
@@ -223,6 +228,10 @@ export const WfsSearchField: FC<WfsSearchFieldProps> = ({
         value={searchTerm}
       />
     );
+  }
+
+  if (!visible) {
+    return null;
   }
 
   return (
