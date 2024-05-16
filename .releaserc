@@ -3,6 +3,10 @@
     {
       "name": "main",
       "prerelease": true
+    },
+    {
+      "name": "next",
+      "prerelease": true
     }
   ],
   "plugins": [
