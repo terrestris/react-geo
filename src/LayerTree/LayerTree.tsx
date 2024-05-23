@@ -3,43 +3,18 @@ import './LayerTree.less';
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import {
-  Tree,
-  TreeDataNode
-} from 'antd';
-import {
-  BasicDataNode,
-  DataNode,
-  TreeProps} from 'antd/lib/tree';
-import _isEqual from 'lodash/isEqual';
+import { Tree, TreeDataNode } from 'antd';
+import { BasicDataNode, DataNode, TreeProps } from 'antd/lib/tree';
 import _isFunction from 'lodash/isFunction';
-import _isNumber from 'lodash/isNumber';
 import { getUid } from 'ol';
-import {
-  EventsKey as OlEventsKey,
-} from 'ol/events';
+import { EventsKey as OlEventsKey } from 'ol/events';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
-import {
-  unByKey
-} from 'ol/Observable';
-import {
-  NodeDragEventParams
-} from 'rc-tree/lib/contextTypes';
-import {
-  EventDataNode
-} from 'rc-tree/lib/interface';
-import {
-  AllowDropOptions,
-  CheckInfo
-} from 'rc-tree/lib/Tree';
-import React, {
-  Key,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import { unByKey } from 'ol/Observable';
+import { NodeDragEventParams } from 'rc-tree/lib/contextTypes';
+import { EventDataNode } from 'rc-tree/lib/interface';
+import { AllowDropOptions, CheckInfo } from 'rc-tree/lib/Tree';
+import React, { Key, useCallback, useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../constants';
 
@@ -82,8 +57,6 @@ const LayerTree: React.FC<LayerTreeProps> = ({
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
-  const olListenerKeys = useRef<OlEventsKey[]>([]);
-
   const map = useMap();
 
   const getVisibleLayerKeys = useCallback(() => {
@@ -100,9 +73,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
       visibleLayers = visibleLayers.filter(filterFunction);
     }
 
-    const visibleKeys = visibleLayers.map(getUid);
-
-    return visibleKeys;
+    return visibleLayers.map(getUid);
   }, [filterFunction, layerGroup, map]);
 
   const getTreeNodeTitle = useCallback((layer: OlLayerBase) => {
@@ -112,14 +83,6 @@ const LayerTree: React.FC<LayerTreeProps> = ({
       return layer.get('name');
     }
   }, [nodeTitleRenderer]);
-
-  const hasListener = useCallback((key: OlEventsKey) => {
-    return olListenerKeys.current.some(listenerKey => {
-      return listenerKey.target === key.target
-        && listenerKey.type === key.type
-        && listenerKey.listener === key.listener;
-    });
-  }, []);
 
   const treeNodeFromLayer = useCallback((layer: OlLayerBase) => {
     let childNodes: TreeDataNode[] = [];
@@ -175,106 +138,77 @@ const LayerTree: React.FC<LayerTreeProps> = ({
     }
   }, []);
 
-  const updateTreeNodes = useCallback(() => {
-    setTreeData(treeNodesFromLayerGroup());
-  }, [treeNodesFromLayerGroup]);
-
   const updateCheckedKeys = useCallback(() => {
     setCheckedKeys(getVisibleLayerKeys());
   }, [getVisibleLayerKeys]);
 
   const updateTree = useCallback(() => {
-    updateTreeNodes();
+    setTreeData(treeNodesFromLayerGroup());
     updateCheckedKeys();
-  }, [updateTreeNodes, updateCheckedKeys]);
+  }, [updateCheckedKeys, treeNodesFromLayerGroup]);
 
   useEffect(() => {
     updateTree();
   }, [updateTree]);
 
-  const registerLayerListeners = useCallback((layer: OlLayerBase) => {
+  const registerLayerListeners = useCallback((layer: OlLayerBase): OlEventsKey[] => {
     if (filterFunction && [layer].filter(filterFunction).length === 0) {
-      return;
+      return [];
     }
 
-    if (!(hasListener({ target: layer, type: 'propertychange', listener: updateTree }))) {
-      const evtKey = layer.on('propertychange', updateTree);
-      olListenerKeys.current.push(evtKey);
-    }
+    const keys: OlEventsKey[] = [];
+
+    keys.push(layer.on('propertychange', updateTree));
 
     if (layer instanceof OlLayerGroup) {
       const layerCollection = layer.getLayers();
 
-      if (!(hasListener({ target: layerCollection, type: 'add', listener: updateTree }))) {
-        const addEvtKey = layerCollection.on('add', updateTree);
-        olListenerKeys.current.push(addEvtKey);
-      }
-      if (!(hasListener({ target: layerCollection, type: 'remove', listener: updateTree }))) {
-        const removeEvtKey = layerCollection.on('remove', updateTree);
-        olListenerKeys.current.push(removeEvtKey);
-      }
-      if (!(hasListener({ target: layer, type: 'change:layers', listener: updateTree }))) {
-        const changeEvtKey = layer.on('change:layers', updateTree);
-        olListenerKeys.current.push(changeEvtKey);
-      }
+      keys.push(layerCollection.on('add', updateTree));
+      keys.push(layerCollection.on('remove', updateTree));
+      keys.push(layer.on('change:layers', updateTree));
 
       for (const lay of layerCollection.getArray()) {
-        registerLayerListeners(lay);
+        keys.push(...registerLayerListeners(lay));
       }
     } else {
-      if (!(hasListener({ target: layer, type: 'change:visible', listener: updateCheckedKeys }))) {
-        const evtKey = layer.on('change:visible', updateCheckedKeys);
-        olListenerKeys.current.push(evtKey);
-      }
+      keys.push(layer.on('change:visible', updateCheckedKeys));
     }
-  }, [filterFunction, hasListener, updateTree, updateCheckedKeys]);
+    return keys;
+  }, [filterFunction, updateTree, updateCheckedKeys]);
 
-  const registerAllLayerListeners = useCallback(() => {
+  const registerAllLayerListeners = useCallback((): OlEventsKey[] => {
     if (!map) {
-      return;
+      return [];
     }
 
     const lGroup = layerGroup ? layerGroup : map.getLayerGroup();
 
-    registerLayerListeners(lGroup);
+    return registerLayerListeners(lGroup);
 
   }, [layerGroup, map, registerLayerListeners]);
-
-  const unregisterAllLayerListeners = useCallback(() => {
-    unByKey(olListenerKeys.current);
-  }, []);
-
-  useEffect(() => {
-    registerAllLayerListeners();
-
-    return () => {
-      unregisterAllLayerListeners();
-    };
-  }, [registerAllLayerListeners, unregisterAllLayerListeners]);
 
   // Reregister all layer listeners if the treeData changes, this is e.g. required if a layer becomes
   // a child of a layer group that isn't part of the treeData yet.
   useEffect(() => {
-    unregisterAllLayerListeners();
-    registerAllLayerListeners();
-  }, [treeData, registerAllLayerListeners, unregisterAllLayerListeners]);
+    const keys = registerAllLayerListeners();
+    return () => {
+      unByKey(keys);
+    };
+  }, [treeData, registerAllLayerListeners]);
 
   useEffect(() => {
     if (!map) {
       return;
     }
 
-    map.getView().on('change:resolution', onChangeResolution);
+    const key = map.getView().on('change:resolution', onChangeResolution);
 
     return () => {
-      map.getView().un('change:resolution', onChangeResolution);
+      unByKey(key);
     };
   }, [map, onChangeResolution]);
 
-  const onCheck = (keys: {
-    checked: Key[];
-    halfChecked: Key[];
-  } | Key[], info: CheckInfo<TreeDataNode>) => {
+  const onCheck = useCallback((_: any, info: CheckInfo<TreeDataNode>) => {
     if (!map) {
       return;
     }
@@ -294,9 +228,9 @@ const LayerTree: React.FC<LayerTreeProps> = ({
     }
 
     setLayerVisibility(layer, checked);
-  };
+  }, [map, setLayerVisibility]);
 
-  const onDrop = (info: NodeDragEventParams<DataNode> & {
+  const onDrop = useCallback((info: NodeDragEventParams<DataNode> & {
     dragNode: EventDataNode<DataNode>;
     dragNodesKeys: Key[];
     dropPosition: number;
@@ -359,15 +293,15 @@ const LayerTree: React.FC<LayerTreeProps> = ({
     } else if (dropPositionRelative === 1) {
       dropCollection.insertAt(dropLayerIndex, dragLayer);
     }
-  };
+  }, [map]);
 
-  const allowDrop = (options: AllowDropOptions<TreeDataNode>) => {
+  const allowDrop = useCallback((options: AllowDropOptions<TreeDataNode>) => {
     const dropNode = options.dropNode;
     const dropPositionRelative = options.dropPosition;
 
     // Don't allow dropping on a layer node.
     return !(dropPositionRelative === 0 && !dropNode.children);
-  };
+  }, []);
 
   const finalClassName = className
     ? `${className} ${defaultClassName}`
