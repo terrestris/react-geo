@@ -1,3 +1,10 @@
+# [24.0.0-next.6](https://github.com/terrestris/react-geo/compare/v24.0.0-next.5...v24.0.0-next.6) (2024-05-23)
+
+
+### Features
+
+* allow CoordinateInfo to request Feature Info in json format ([18e2a6f](https://github.com/terrestris/react-geo/commit/18e2a6f9457413a21ddedf1875c734085378a8a4))
+
 # [24.0.0-next.5](https://github.com/terrestris/react-geo/compare/v24.0.0-next.4...v24.0.0-next.5) (2024-05-16)
 
 
