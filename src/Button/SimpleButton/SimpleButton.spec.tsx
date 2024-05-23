@@ -1,45 +1,43 @@
-import TestUtil from '../../Util/TestUtil';
+import { fireEvent, render, screen } from '@testing-library/react';
+import React from 'react';
 
 import SimpleButton from './SimpleButton';
 
 describe('<SimpleButton />', () => {
+
   it('is defined', () => {
-    expect(SimpleButton).not.toBeUndefined();
+    expect(SimpleButton).toBeDefined();
   });
 
-  it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(SimpleButton);
-    expect(wrapper).not.toBeUndefined();
+  it('can rendered', () => {
+    render(<SimpleButton />);
+    expect(screen.getByRole('button')).toBeVisible();
   });
 
   it('allows to set some props', () => {
-    const wrapper = TestUtil.mountComponent(SimpleButton);
+    render(
+      <SimpleButton
+        type="default"
+        shape="circle"
+        size="small"
+        disabled={true}
+      />
+    );
 
-    wrapper.setProps({
-      type: 'secondary',
-      shape: 'circle',
-      size: 'small',
-      disabled: true
-    });
-
-    expect(wrapper.props().type).toBe('secondary');
-    expect(wrapper.props().shape).toBe('circle');
-    expect(wrapper.props().size).toBe('small');
-    expect(wrapper.props().disabled).toBe(true);
-
-    expect(wrapper.find('button.ant-btn-secondary').length).toBe(1);
-    expect(wrapper.find('button.ant-btn-circle').length).toBe(1);
-    expect(wrapper.find('button.ant-btn-sm').length).toBe(1);
-    expect(wrapper.find('button', {disabled: true}).length).toBe(1);
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass('ant-btn-default');
+    expect(button).toHaveClass('ant-btn-circle');
+    expect(button).toHaveClass('ant-btn-sm');
+    expect(button).toBeDisabled();
   });
 
   it('calls a given click callback method onClick', () => {
     const onClick = jest.fn();
-    const wrapper = TestUtil.mountComponent(SimpleButton, {onClick});
+    render(<SimpleButton onClick={onClick} />);
 
-    wrapper.find('button').simulate('click');
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
 
     expect(onClick).toHaveBeenCalledTimes(1);
   });
-
 });

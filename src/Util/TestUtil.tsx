@@ -1,14 +1,10 @@
-import * as React from 'react';
-import { mount, shallow, ShallowWrapper, ReactWrapper, MountRendererProps } from 'enzyme';
-import OlView from 'ol/View';
-import OlMap from 'ol/Map';
-import OlSourceVector from 'ol/source/Vector';
-import OlLayerVector from 'ol/layer/Vector';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
+import OlLayerVector from 'ol/layer/Vector';
+import OlMap from 'ol/Map';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
-
-type Wrapper =  ShallowWrapper | ReactWrapper;
+import OlSourceVector from 'ol/source/Vector';
+import OlView from 'ol/View';
 
 /**
  * A set of some useful static helper methods.
@@ -20,28 +16,6 @@ export class TestUtil {
   static mapDivId = 'map';
   static mapDivHeight = 256;
   static mapDivWidth = 256;
-
-  /**
-   * Mounts the given component.
-   *
-   * @param Component The Component to render.
-   * @param props The props to be used.
-   * @param options The options to be set.
-   */
-  static mountComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
-    return mount(<Component {...props}/>, options);
-  };
-
-  /**
-   * Mounts the given component (shallowly).
-   *
-   * @param Component The Component to render.
-   * @param props The props to be used.
-   * @param options The options to be set.
-   */
-  static shallowComponent = (Component: any, props?: any, options?: MountRendererProps): Wrapper => {
-    return shallow(<Component {...props}/>, options);
-  };
 
   /**
    * Creates and applies a map <div> element to the body.
@@ -140,7 +114,7 @@ export class TestUtil {
       clientY: position.top + y + TestUtil.mapDivHeight / 2,
       shiftKey
     });
-    const olEvt = OlMapBrowserEvent(type, map, event, dragging);
+    const olEvt = new OlMapBrowserEvent(type, map, event, dragging);
     map.handleMapBrowserEvent(olEvt);
   };
 
@@ -162,7 +136,7 @@ export class TestUtil {
   /**
    * Returns a point feature with a random position.
    */
-  static generatePointFeature = (props = {
+  static generatePointFeature = (props: {[k: string]: any} = {
     ATTR_1: Math.random() * 100,
     ATTR_2: 'Borsigplatz 9',
     ATTR_3: 'Dortmund'

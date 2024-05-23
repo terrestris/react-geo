@@ -1,21 +1,20 @@
 This demonstrates the use of the DrawButton.
 
 ```jsx
-import { useEffect, useState } from 'react';
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlSourceOsm from 'ol/source/OSM';
-import { fromLonLat } from 'ol/proj';
-
-import MapContext from '@terrestris/react-geo/dist/Context/MapContext/MapContext'
 import DrawButton from '@terrestris/react-geo/dist/Button/DrawButton/DrawButton';
 import ToggleGroup from '@terrestris/react-geo/dist/Button/ToggleGroup/ToggleGroup';
 import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext'
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOsm from 'ol/source/OSM';
+import OlView from 'ol/View';
+import { useEffect, useState } from 'react';
 
 const DrawButtonExample = () => {
 
+  const [selected, setSelected] = useState();
   const [map, setMap] = useState();
 
   useEffect(() => {
@@ -48,44 +47,49 @@ const DrawButtonExample = () => {
         />
         <div>
           <span>Select a digitize type:</span>
-          <ToggleGroup>
+          <ToggleGroup
+            selected={selected}
+            onChange={(evt, value) => {
+              setSelected(value)
+            }}
+          >
             <DrawButton
-              name="drawPoint"
+              value="drawPoint"
               drawType="Point"
             >
               Draw point
             </DrawButton>
 
             <DrawButton
-              name="drawLine"
+              value="drawLine"
               drawType="LineString"
             >
               Draw line
             </DrawButton>
 
             <DrawButton
-              name="drawPolygon"
+              value="drawPolygon"
               drawType="Polygon"
             >
               Draw polygon
             </DrawButton>
 
             <DrawButton
-              name="drawCircle"
+              value="drawCircle"
               drawType="Circle"
             >
               Draw circle
             </DrawButton>
 
             <DrawButton
-              name="drawRectangle"
+              value="drawRectangle"
               drawType="Rectangle"
             >
               Draw rectangle
             </DrawButton>
 
             <DrawButton
-              name="drawText"
+              value="drawText"
               drawType="Text"
             >
               Draw text label

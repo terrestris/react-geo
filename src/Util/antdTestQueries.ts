@@ -1,15 +1,17 @@
-import { buildQueries, queryAllByTitle } from '@testing-library/react';
+// @ts-nocheck
+import {buildQueries, queryAllByTitle} from '@testing-library/react';
 
 const allAntdDropdownOptionQuery = (container) => {
+  // eslint-disable-next-line testing-library/no-node-access
   return container.querySelectorAll('.ant-select-dropdown-option');
 };
 
 const allAntdDropdownOptionByTextQuery = (container, text: string) => {
+  // eslint-disable-next-line testing-library/no-node-access
   const dropdowns = Array.from(container.querySelectorAll('.ant-select-dropdown'));
   // eslint-disable-next-line testing-library/prefer-screen-queries
-  const options = dropdowns.map(dropdown => queryAllByTitle(dropdown, text))
+  return dropdowns.map(dropdown => queryAllByTitle(<HTMLElement>dropdown, text))
     .reduce((acc, val) => val !== null ? acc.concat(val) : acc, []);
-  return options;
 };
 
 const multipleError = () => 'Found multiple antd dropdown options.';
@@ -71,16 +73,15 @@ const [
 ] = buildDocumentByTextQueries(allAntdDropdownOptionByTextQuery, multipleError, missingError);
 
 export {
-  queryAllAntdDropdownOption,
-  queryAntdDropdownOption,
-  getAllAntdDropdownOption,
-  getAntdDropdownOption,
   findAllAntdDropdownOption,
-  findAntdDropdownOption,
-  queryAllAntdDropdownOptionByText,
-  queryAntdDropdownOptionByText,
-  getAllAntdDropdownOptionByText,
-  getAntdDropdownOptionByText,
   findAllAntdDropdownOptionByText,
-  findAntdDropdownOptionByText
-};
+  findAntdDropdownOption,
+  findAntdDropdownOptionByText,
+  getAllAntdDropdownOption,
+  getAllAntdDropdownOptionByText,
+  getAntdDropdownOption,
+  getAntdDropdownOptionByText,
+  queryAllAntdDropdownOption,
+  queryAllAntdDropdownOptionByText,
+  queryAntdDropdownOption,
+  queryAntdDropdownOptionByText};

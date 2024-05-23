@@ -1,4 +1,9 @@
-import TestUtil from '../Util/TestUtil';
+import {
+  render,
+  screen
+} from '@testing-library/react';
+import * as React from 'react';
+
 import CircleMenu from './CircleMenu';
 
 describe('<CircleMenu />', () => {
@@ -7,71 +12,92 @@ describe('<CircleMenu />', () => {
   });
 
   it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(CircleMenu, {
-      children: ['A', 'B'],
-      position: [0, 0]
-    });
-    expect(wrapper).toBeDefined();
+    const { container } = render(
+      <CircleMenu
+        position={[100, 100]}
+      >
+        <span>A</span>
+        <span>B</span>
+      </CircleMenu>
+    );
+
+    expect(container).toBeVisible();
   });
 
   it('contains the passed children', () => {
-    const wrapper = TestUtil.mountComponent(CircleMenu, {
-      children: ['A', 'B'],
-      position: [0, 0]
-    });
-    expect(wrapper.find('CircleMenuItem').length).toBe(2);
-    expect(wrapper.find('CircleMenuItem').at(0).props().children).toBe('A');
-    expect(wrapper.find('CircleMenuItem').at(1).props().children).toBe('B');
+    render(
+      <CircleMenu
+        position={[100, 100]}
+      >
+        <span role="option">A</span>
+        <span role="option">B</span>
+      </CircleMenu>
+    );
+
+    const children = screen.getAllByRole('option');
+
+    expect(children).toHaveLength(2);
+    expect(children[0]).toHaveTextContent('A');
+    expect(children[1]).toHaveTextContent('B');
   });
 
-  it('applies the transformation on update', () => {
+  it('applies the transformation on update', async () => {
     const animationDuration = 1;
-    const wrapper = TestUtil.mountComponent(CircleMenu, {
-      children: ['A', 'B'],
-      position: [0, 0],
-      animationDuration: animationDuration
-    });
-    const instance = wrapper.instance();
-    const transformationSpy = jest.spyOn(instance, 'applyTransformation');
 
-    wrapper.setProps({
-      position: [100, 100]
-    });
+    const { rerender } = render(
+      <CircleMenu
+        position={[0, 0]}
+        animationDuration={animationDuration}
+        role="menu"
+      >
+        <span role="option">A</span>
+        <span role="option">B</span>
+      </CircleMenu>
+    );
 
-    expect.assertions(1);
+    let menu = screen.getByRole('menu');
 
-    return new Promise(resolve => {
-      setTimeout(resolve, animationDuration + 100);
-    })
-      .then(() => {
-        expect(transformationSpy).toHaveBeenCalledTimes(1);
-        transformationSpy.mockRestore();
-      });
+    expect(menu).toHaveStyle('transition: all 1ms; top: -50px; left: -50px');
+
+    rerender(
+      <CircleMenu
+        position={[100, 100]}
+        animationDuration={animationDuration}
+        role="menu"
+      >
+        <span role="option">A</span>
+        <span role="option">B</span>
+      </CircleMenu>
+    );
+
+    await new Promise(resolve => setTimeout(resolve, animationDuration + 100));
+
+    menu = screen.getByRole('menu');
+
+    expect(menu).toHaveStyle('transition: all 1ms; top: 50px; left: 50px');
   });
 
   describe('applyTransformation', () => {
-    it('applies the transformation to the ref', () => {
+    it('applies the transformation to the ref', async () => {
       const diameter = 1337;
       const animationDuration = 1;
-      const wrapper = TestUtil.mountComponent(CircleMenu, {
-        diameter: diameter,
-        children: ['A', 'B'],
-        position: [0, 0],
-        animationDuration: animationDuration
-      });
-      const instance = wrapper.instance();
+      render(
+        <CircleMenu
+          position={[0, 0]}
+          animationDuration={animationDuration}
+          diameter={diameter}
+          role="menu"
+        >
+          <span role="option">A</span>
+          <span role="option">B</span>
+        </CircleMenu>
+      );
 
-      instance.applyTransformation();
+      await new Promise(resolve => setTimeout(resolve, animationDuration + 100));
 
-      expect.assertions(2);
+      const menu = screen.getByRole('menu');
 
-      return new Promise(resolve => {
-        setTimeout(resolve, animationDuration + 100);
-      })
-        .then(() => {
-          expect(instance._ref).toHaveStyle('width: 1337px');
-          expect(instance._ref).toHaveStyle('height: 1337px');
-        });
+      expect(menu).toHaveStyle('width: 1337px; height: 1337px');
     });
   });
 

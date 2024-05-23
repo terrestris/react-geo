@@ -1,156 +1,24 @@
-import OlSourceVector from 'ol/source/Vector';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import OlFeature from 'ol/Feature';
 import OlLayerVector from 'ol/layer/Vector';
-import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
+import OlMap from 'ol/Map';
+import OlSourceVector from 'ol/source/Vector';
+import OlStyle from 'ol/style/Style';
+import React from 'react';
 
 import TestUtil from '../../Util/TestUtil';
-
+import { defaultFeatureGridLayerName } from '../commonGrid';
 import FeatureGrid from './FeatureGrid';
-import OlGeometry from 'ol/geom/Geometry';
-import { MapBrowserEvent } from 'ol';
 
 describe('<FeatureGrid />', () => {
-  let map;
-  let features;
+  let map: OlMap;
+  let features: OlFeature[];
 
   beforeEach(() => {
     map = TestUtil.createMap();
-    features = [
-      {id: 1, name: 'Shinji Kagawa'},
-      {id: 2, name: 'Marco Reus'},
-      {id: 3, name: 'Roman Weidenfeller'}
-    ].map((prop) => TestUtil.generatePointFeature(prop));
-
-  });
-
-  afterEach(() => {
-    TestUtil.removeMap(map);
-    features = [];
-  });
-
-  it('is defined', () => {
-    expect(FeatureGrid).not.toBeUndefined();
-  });
-
-  it('can be rendered', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid);
-    expect(wrapper).not.toBeUndefined();
-  });
-
-  it('initializes a vector layer on mount (if map prop is given)', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map});
-
-    const layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === wrapper.prop('layerName'));
-
-    expect(layerCand).toHaveLength(1);
-    expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
-    expect((wrapper.instance() as FeatureGrid)._source).toBeInstanceOf(OlSourceVector);
-    expect((wrapper.instance() as FeatureGrid)._layer).toBeInstanceOf(OlLayerVector);
-
-    const wrapperWithoutMap = TestUtil.mountComponent(FeatureGrid);
-
-    expect((wrapperWithoutMap.instance() as FeatureGrid)._source).toBeNull();
-    expect((wrapperWithoutMap.instance() as FeatureGrid)._layer).toBeNull();
-  });
-
-  it('initializes a vector layer if it\'s not already added to the map only', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map});
-
-    (wrapper.instance() as FeatureGrid).initVectorLayer(map);
-
-    const layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === wrapper.prop('layerName'));
-
-    expect(layerCand).toHaveLength(1);
-    expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
-    expect((wrapper.instance() as FeatureGrid)._source).toBeInstanceOf(OlSourceVector);
-    expect((wrapper.instance() as FeatureGrid)._layer).toBeInstanceOf(OlLayerVector);
-  });
-
-  it('sets the given featureStyle to the featurelayer', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-    expect((wrapper.instance() as FeatureGrid)._layer?.getStyle()).toEqual(wrapper.prop('featureStyle'));
-  });
-
-  it('removes the vector layer from the map on unmount', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map});
-
-    const layerName = wrapper.prop('layerName');
-
-    wrapper.unmount();
-
-    const layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === layerName);
-
-    expect(layerCand).toHaveLength(0);
-  });
-
-  it('registers a pointermove and singleclick map event handler on mount', () => {
-    const mapOnSpy = jest.spyOn(map, 'on');
-
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, selectable: true});
-
-    const onPointerMove = (wrapper.instance() as FeatureGrid).onMapPointerMove;
-    const onMapSingleClick = (wrapper.instance() as FeatureGrid).onMapSingleClick;
-
-    expect(mapOnSpy).toHaveBeenCalledTimes(2);
-    expect(mapOnSpy).toHaveBeenCalledWith('pointermove', onPointerMove);
-    expect(mapOnSpy).toHaveBeenCalledWith('singleclick', onMapSingleClick);
-
-    mapOnSpy.mockRestore();
-  });
-
-  it('unregisters a pointermove and singleclick map event handler on unmount', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, selectable: true});
-
-    const mapUnSpy = jest.spyOn(map, 'un');
-    const onPointerMove = (wrapper.instance() as FeatureGrid).onMapPointerMove;
-    const onMapSingleClick = (wrapper.instance() as FeatureGrid).onMapSingleClick;
-
-    wrapper.unmount();
-
-    expect(mapUnSpy).toHaveBeenCalledTimes(2);
-    expect(mapUnSpy).toHaveBeenCalledWith('pointermove', onPointerMove);
-    expect(mapUnSpy).toHaveBeenCalledWith('singleclick', onMapSingleClick);
-
-    mapUnSpy.mockRestore();
-  });
-
-  it('generates the column definition out of the given features and takes attributeBlacklist into account', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-
-    const got = (wrapper.instance() as FeatureGrid).getColumnDefs();
-
-    const exp = [{
-      dataIndex: 'id',
-      key: 'id',
-      title: 'id'
-    }, {
-      dataIndex: 'name',
-      key: 'name',
-      title: 'name'
-    }];
-
-    expect(got).toEqual(exp);
-
-    wrapper.setProps({
-      attributeBlacklist: ['id']
-    });
-
-    const gotBlacklisted = (wrapper.instance() as FeatureGrid).getColumnDefs();
-
-    const expBlacklisted = [{
-      dataIndex: 'name',
-      key: 'name',
-      title: 'name'
-    }];
-
-    expect(gotBlacklisted).toEqual(expBlacklisted);
-  });
-
-  it('generates the appropriate data to render', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-
-    const got = (wrapper.instance() as FeatureGrid).getTableData();
-
-    const expRows = [{
+    features = [{
       id: 1,
       name: 'Shinji Kagawa'
     }, {
@@ -159,232 +27,183 @@ describe('<FeatureGrid />', () => {
     }, {
       id: 3,
       name: 'Roman Weidenfeller'
-    }];
-
-    expRows.forEach((row, idx) => {
-      expect(row.id).toEqual(got[idx].id);
-      expect(row.name).toEqual(got[idx].name);
-    });
+    }].map((prop) => TestUtil.generatePointFeature(prop));
   });
 
-  it('fits the map to show all given features', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-
-    const mapViewFitSpy = jest.spyOn(map.getView(), 'fit');
-
-    (wrapper.instance() as FeatureGrid).zoomToFeatures(features);
-
-    const featGeometries: OlGeometry[] = [];
-    features.forEach(feature => {
-      if (feature.getGeometry()) {
-        featGeometries.push(feature.getGeometry());
-      }
-    });
-
-    expect(mapViewFitSpy).toHaveBeenCalledWith(new OlGeomGeometryCollection(featGeometries).getExtent());
+  afterEach(() => {
+    TestUtil.removeMap(map);
+    features = [];
   });
 
-  it('highlights all given features', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-
-    (wrapper.instance() as FeatureGrid).highlightFeatures(features);
-
-    features.forEach(feature => {
-      expect(feature.getStyle()).toEqual(wrapper.prop('highlightStyle'));
-    });
+  it('is defined', () => {
+    expect(FeatureGrid).toBeDefined();
   });
 
-  it('unhighlight all given features, but takes selection into account', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-    const selectedFeatureUid = features[0].ol_uid;
+  it('can be rendered', () => {
+    const { container } = render(
+      <FeatureGrid
+        features={features}
+      />
+    );
 
-    wrapper.setState({selectedRowKeys: [selectedFeatureUid]});
-    (wrapper.instance() as FeatureGrid).unhighlightFeatures(features);
-
-    features.forEach(feature => {
-      if (feature.ol_uid === selectedFeatureUid) {
-        expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
-      } else {
-        expect(feature.getStyle()).toBe(undefined);
-      }
-    });
+    expect(container).toBeVisible();
   });
 
-  it('selects all given features', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
+  it('initializes a vector layer on mount', () => {
+    let layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === defaultFeatureGridLayerName);
 
-    (wrapper.instance() as FeatureGrid).selectFeatures(features);
+    expect(layerCand).toHaveLength(0);
 
-    features.forEach(feature => {
-      expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
-    });
+    renderInMapContext(map, (
+      <FeatureGrid
+        features={features}
+      />
+    ));
+
+    layerCand = map.getLayers().getArray().filter(layer => layer.get('name') === defaultFeatureGridLayerName);
+
+    expect(layerCand).toHaveLength(1);
+    expect(layerCand[0]).toBeInstanceOf(OlLayerVector);
   });
 
-  it('resets all given features to default feature style', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
+  it('sets the given featureStyle to the featurelayer', () => {
+    const featureStyle = new OlStyle();
 
-    (wrapper.instance() as FeatureGrid).resetFeatureStyles();
+    renderInMapContext(map, (
+      <FeatureGrid
+        features={features}
+        featureStyle={featureStyle}
+      />
+    ));
 
-    features.forEach(feature => {
-      expect(feature.getStyle()).toBe(undefined);
-    });
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
+
+    expect((layerCand as OlLayerVector<OlSourceVector>)?.getStyle()).toBe(featureStyle);
   });
 
-  it('sets the appropriate select style to a feature if selection in grid changes', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-    const selectedRowKeys = [features[0].ol_uid, features[1].ol_uid];
+  it('removes the vector layer from the map on unmount', () => {
+    const { unmount } = renderInMapContext(map, (
+      <FeatureGrid
+        features={features}
+      />
+    ));
 
-    (wrapper.instance() as FeatureGrid).onSelectChange(selectedRowKeys);
+    unmount();
 
-    features.forEach(feature => {
-      if (selectedRowKeys.includes(feature.ol_uid)) {
-        expect(feature.getStyle()).toEqual(wrapper.prop('selectStyle'));
-      } else {
-        expect(feature.getStyle()).toBe(undefined);
-      }
-    });
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
-    expect(wrapper.state('selectedRowKeys')).toEqual(selectedRowKeys);
+    expect(layerCand).toBeUndefined();
   });
 
-  it('returns the feature for a given row key', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-    const rowKey = features[1].ol_uid;
+  it('renders the given features (in the layer and the grid)', () => {
+    renderInMapContext(map, (
+      <FeatureGrid
+        features={features}
+      />
+    ));
 
-    expect((wrapper.instance() as FeatureGrid).getFeatureFromRowKey(rowKey)).toEqual(features[1]);
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
+
+    expect((layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures()).toHaveLength(3);
+
+    expect(screen.getByText('Shinji Kagawa')).toBeVisible();
+    expect(screen.getByText('Marco Reus')).toBeVisible();
+    expect(screen.getByText('Roman Weidenfeller')).toBeVisible();
   });
 
-  it('selects the feature on row click', () => {
-    const onRowClickSpy = jest.fn();
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features, onRowClick: onRowClickSpy});
-    const clickedRow = {
-      key: features[0].ol_uid
-    };
-    const zoomToFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'zoomToFeatures');
+  it('respects the attributeBlacklist', () => {
+    renderInMapContext(map, (
+      <FeatureGrid
+        features={features}
+        attributeBlacklist={['name']}
+      />
+    ));
 
-    (wrapper.instance() as FeatureGrid).onRowClick(clickedRow);
-
-    expect(onRowClickSpy).toHaveBeenCalled();
-    expect(zoomToFeaturesSpy).toHaveBeenCalled();
-
-    onRowClickSpy.mockRestore();
-    zoomToFeaturesSpy.mockRestore();
+    expect(screen.queryByText('Shinji Kagawa')).not.toBeInTheDocument();
+    expect(screen.queryByText('Marco Reus')).not.toBeInTheDocument();
+    expect(screen.queryByText('Roman Weidenfeller')).not.toBeInTheDocument();
   });
 
-  it('highlights the feature on row mouse over', () => {
-    const onRowMouseOverSpy = jest.fn();
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features, onRowMouseOver: onRowMouseOverSpy});
-    const clickedRow = {
-      key: features[0].ol_uid
-    };
-    const highlightFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'highlightFeatures');
+  it('applies the feature hover style to the hovered table row', async () => {
+    const hoverStyle = new OlStyle();
 
-    (wrapper.instance() as FeatureGrid).onRowMouseOver(clickedRow);
+    renderInMapContext(map, (
+      <FeatureGrid
+        features={features}
+        highlightStyle={hoverStyle}
+      />
+    ));
 
-    expect(onRowMouseOverSpy).toHaveBeenCalled();
-    expect(highlightFeaturesSpy).toHaveBeenCalled();
+    const row = screen.getByText('Shinji Kagawa');
 
-    onRowMouseOverSpy.mockRestore();
-    highlightFeaturesSpy.mockRestore();
+    await userEvent.hover(row);
+
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
+    const featCand = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures()
+      .find(feat => feat.get('name') === 'Shinji Kagawa');
+
+    expect(featCand?.getStyle()).toBe(hoverStyle);
   });
 
-  it('unhighlights the feature on row mouse out', () => {
-    const onRowMouseOutSpy = jest.fn();
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features, onRowMouseOut: onRowMouseOutSpy});
-    const clickedRow = {
-      key: features[0].ol_uid
-    };
-    const unhighlightFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'unhighlightFeatures');
+  it('applies the feature select style to the clicked table row', async () => {
+    const selectStyle = new OlStyle();
 
-    (wrapper.instance() as FeatureGrid).onRowMouseOut(clickedRow);
+    renderInMapContext(map, (
+      <FeatureGrid
+        features={features}
+        selectable={true}
+        selectStyle={selectStyle}
+      />
+    ));
 
-    expect(onRowMouseOutSpy).toHaveBeenCalled();
-    expect(unhighlightFeaturesSpy).toHaveBeenCalled();
+    const rows = screen.getAllByRole('checkbox');
+    // Ignore the first one ("Select all")
+    rows.shift();
 
-    onRowMouseOutSpy.mockRestore();
-    unhighlightFeaturesSpy.mockRestore();
+    for (const row of rows) {
+      await userEvent.click(row);
+    }
+
+    const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
+
+    const feats = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures() || [];
+
+    for (const feat of feats) {
+      expect(feat.getStyle()).toBe(selectStyle);
+    }
   });
 
-  it('handles the change of props', () => {
-    const wrapper = TestUtil.mountComponent(FeatureGrid);
+  it('zooms to the feature of the clicked table row', async () => {
+    renderInMapContext(map, (
+      <FeatureGrid
+        features={features}
+      />
+    ));
 
-    expect((wrapper.instance() as FeatureGrid)._source).toBeNull();
-    expect((wrapper.instance() as FeatureGrid)._layer).toBeNull();
+    const row = screen.getByText('Shinji Kagawa');
 
-    wrapper.setProps({
-      map: map
-    });
+    expect(map.getView().getZoom()).toBeCloseTo(17, 0.05);
 
-    expect((wrapper.instance() as FeatureGrid)._source).toBeInstanceOf(OlSourceVector);
-    expect((wrapper.instance() as FeatureGrid)._layer).toBeInstanceOf(OlLayerVector);
+    await userEvent.click(row);
 
-    expect((wrapper.instance() as FeatureGrid)._source?.getFeatures()).toEqual([]);
-
-    const zoomToFeaturesSpy = jest.spyOn((wrapper.instance() as FeatureGrid), 'zoomToFeatures');
-
-    wrapper.setProps({
-      features: features,
-      zoomToExtent: true
-    });
-
-    expect((wrapper.instance() as FeatureGrid)._source?.getFeatures()).toEqual(features);
-    expect(zoomToFeaturesSpy).toHaveBeenCalled();
-
-    zoomToFeaturesSpy.mockRestore();
-
-    const mapOnSpy = jest.spyOn(map, 'on');
-
-    wrapper.setProps({
-      selectable: true
-    });
-
-    expect(mapOnSpy).toHaveBeenCalled();
-
-    mapOnSpy.mockRestore();
-
-    const mapUnSpy = jest.spyOn(map, 'un');
-
-    wrapper.setProps({
-      selectable: false
-    });
-
-    expect(mapUnSpy).toHaveBeenCalled();
-    expect(wrapper.state('selectedRowKeys')).toEqual([]);
-
-    mapUnSpy.mockRestore();
+    expect(map.getView().getZoom()).toBeCloseTo(28);
   });
 
-  it('sets the highlight style to any hovered feature', () => {
-    const getFeaturesAtPixelSpy = jest.spyOn(map, 'getFeaturesAtPixel')
-      .mockImplementation(() => [features[0]]);
+  it('respects the column definition override', async () => {
+    renderInMapContext(map, (
+      <FeatureGrid
+        features={features}
+        columns={[{
+          key: 'name',
+          dataIndex: 'name',
+          title: 'Name override'
+        }]}
+      />
+    ));
 
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
+    const columnTitle = screen.getByText('Name override');
 
-    (wrapper.instance() as FeatureGrid).onMapPointerMove({
-      pixel: [19, 19]
-    } as unknown as MapBrowserEvent<MouseEvent>);
-
-    expect(features[0].getStyle()).toEqual(wrapper.prop('highlightStyle'));
-
-    expect(features[1].getStyle()).toEqual(undefined);
-    expect(features[2].getStyle()).toEqual(undefined);
-
-    getFeaturesAtPixelSpy.mockRestore();
+    expect(columnTitle).toBeVisible();
   });
-
-  it('sets the select style to any clicked/selected feature', () => {
-    const getFeaturesAtPixelSpy = jest.spyOn(map, 'getFeaturesAtPixel')
-      .mockImplementation(() => [features[0]]);
-
-    const wrapper = TestUtil.mountComponent(FeatureGrid, {map, features});
-
-    (wrapper.instance() as FeatureGrid).onMapSingleClick({
-      pixel: [19, 19]
-    } as unknown as MapBrowserEvent<MouseEvent>);
-
-    expect(features[0].getStyle()).toEqual(wrapper.prop('selectStyle'));
-
-    getFeaturesAtPixelSpy.mockRestore();
-  });
-
 });
+

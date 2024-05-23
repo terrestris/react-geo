@@ -1,9 +1,1 @@
-import { useContext } from 'react';
-import OlMap from 'ol/Map';
-import MapContext from '../Context/MapContext/MapContext';
-
-export const useMap = (): OlMap|null => {
-  return useContext(MapContext);
-};
-
-export default useMap;
+// This file is only present so the example appears in the styleguide, the implementation is in @terrestris/react-util

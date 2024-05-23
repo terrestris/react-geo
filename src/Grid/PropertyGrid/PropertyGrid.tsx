@@ -1,17 +1,16 @@
-import * as React from 'react';
+import './PropertyGrid.less';
 
 import { Table } from 'antd';
 import { TableProps } from 'antd/lib/table';
-
-import OlGeometry from 'ol/geom/Geometry';
-import OlFeature from 'ol/Feature';
-import { getUid } from 'ol';
-
 import _get from 'lodash/get';
+import { getUid } from 'ol';
+import OlFeature from 'ol/Feature';
+import OlGeometry from 'ol/geom/Geometry';
+import React, {
+  useMemo
+} from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './PropertyGrid.less';
 
 type AttributeNames = {
   [key: string]: string;
@@ -21,16 +20,16 @@ interface OwnProps {
   /**
    * Title of the attribute name column
    */
-  attributeNameColumnTitle: string;
+  attributeNameColumnTitle?: string;
   /**
    * Value in percent representing the width of the attribute name column
    * The width of attribute value column wil be calculated depending in this
    */
-  attributeNameColumnWidthInPercent: number;
+  attributeNameColumnWidthInPercent?: number;
   /**
    * Title of the attribute value column
    */
-  attributeValueColumnTitle: string;
+  attributeValueColumnTitle?: string;
   /**
    * A CSS class which should be added.
    */
@@ -49,110 +48,83 @@ interface OwnProps {
   feature: OlFeature<OlGeometry>;
 }
 
-export type PropertyGridProps = OwnProps & TableProps<any>;
+export type PropertyGridProps<T = any> = OwnProps & TableProps<T>;
+
+const defaultClassName = `${CSS_PREFIX}propertygrid`;
 
 /**
- * Class representing a feature grid showing the attribute values of a simple feature.
- *
- * @class PropertyGrid
- * @extends React.Component
+ * Component representing a feature grid showing the attribute values of a simple feature.
  */
-class PropertyGrid extends React.Component<PropertyGridProps> {
+const PropertyGrid: React.FC<PropertyGridProps> = ({
+  attributeNameColumnTitle = 'Attribute name',
+  attributeNameColumnWidthInPercent = 50,
+  attributeValueColumnTitle = 'Attribute value',
+  className,
+  attributeFilter,
+  attributeNames,
+  feature,
+  ...passThroughProps
+}) => {
 
-  static defaultProps = {
-    attributeNameColumnTitle: 'Attribute name',
-    attributeNameColumnWidthInPercent: 50,
-    attributeValueColumnTitle: 'Attribute value'
-  };
+  const dataSource = useMemo(() => {
+    let filter = attributeFilter;
 
-  /**
-   * The CSS-className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}propertygrid`;
-
-  /**
-   * Generates the datasource out of the given feature.
-   */
-  getDataSource() {
-    let attributeFilter = this.props.attributeFilter;
-
-    if (!attributeFilter) {
-      attributeFilter = this.props.feature.getKeys().filter((attrName: string) => attrName !== 'geometry');
+    if (!filter) {
+      filter = feature.getKeys().filter((attrName: string) => attrName !== 'geometry');
     }
 
-    const dataSource = attributeFilter.map((attr: any) => {
-      const fid = getUid(this.props.feature);
+    return filter.map((attr: any) => {
+      const fid = getUid(feature);
 
       return {
-        attributeName: (this.props.attributeNames && _get(this.props.attributeNames, attr)) ?
-          _get(this.props.attributeNames, attr) :
+        attributeName: (attributeNames && _get(attributeNames, attr)) ?
+          _get(attributeNames, attr) :
           attr,
-        attributeValue: this.props.feature.get(attr),
+        attributeValue: feature.get(attr),
         key: `ATTR_${attr}_fid_${fid}`
       };
     });
+  }, [attributeFilter, attributeNames, feature]);
 
-    return dataSource;
-  }
-
-  isUrl(value: string) {
+  const isUrl = (value: string) => {
     return /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/.test(value);
-  }
+  };
 
-  /**
-   * Generates the column definition for the given feature.
-   */
-  getColumns() {
-    const columns: TableProps<any>["columns"] = [{
-      title: this.props.attributeNameColumnTitle,
+  const columns = useMemo(() => {
+    return [{
+      title: attributeNameColumnTitle,
       dataIndex: 'attributeName',
       key: 'attributeName',
-      width: `${this.props.attributeNameColumnWidthInPercent}%`
+      width: `${attributeNameColumnWidthInPercent}%`
     }, {
-      title: this.props.attributeValueColumnTitle,
+      title: attributeValueColumnTitle,
       dataIndex: 'attributeValue',
       key: 'attributeValue',
-      width: `${100 - this.props.attributeNameColumnWidthInPercent}%`,
-      render: (value) => {
-        if (this.isUrl(value)) {
+      width: `${100 - attributeNameColumnWidthInPercent}%`,
+      render: (value: any) => {
+        if (isUrl(value)) {
           return <a href={value} target="_blank">{value}</a>;
         } else {
           return value;
         }
       }
     }];
+  }, [attributeNameColumnTitle, attributeNameColumnWidthInPercent, attributeValueColumnTitle]);
 
-    return columns;
-  }
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
-  /**
-   * The render function.
-   *
-   * @return The element.
-   */
-  render() {
-    const {
-      className,
-      feature,
-      ...passThroughProps
-    } = this.props;
-
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
-
-    return (
-      <Table
-        className={finalClassName}
-        rowKey={record => record.key}
-        dataSource={this.getDataSource()}
-        columns={this.getColumns()}
-        pagination={false}
-        {...passThroughProps}
-      />
-    );
-  }
-}
+  return (
+    <Table
+      className={finalClassName}
+      rowKey={record => record.key}
+      dataSource={dataSource}
+      columns={columns}
+      pagination={false}
+      {...passThroughProps}
+    />
+  );
+};
 
 export default PropertyGrid;

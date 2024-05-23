@@ -1,5 +1,1 @@
-import OlMap from 'ol/Map';
-import React from 'react';
-
-const MapContext = React.createContext<OlMap|null>(null);
-export default MapContext;
+// This file is only present so the example appears in the styleguide, the implementation is in @terrestris/react-util

@@ -1,174 +1,92 @@
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
+import './ToggleGroup.less';
 
 import _isFunction from 'lodash/isFunction';
+import React, {
+  isValidElement,
+  MouseEvent,
+  ReactElement
+} from 'react';
 
 import { CSS_PREFIX } from '../../constants';
-
-import './ToggleGroup.less';
 import { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 
-export interface ToggleGroupProps {
+export type ToggleGroupProps<T extends ToggleButtonProps = ToggleButtonProps> = {
   /**
-   * The orientation of the children.
+   * The orientation of the children. Default is to 'vertical'.
    */
-  orientation: 'vertical' | 'horizontal';
-  /**
-   * Whether it's allowed to deselect a children or not.
-   */
-  allowDeselect: boolean;
+  orientation?: 'vertical' | 'horizontal';
+
   /**
    * The className which should be added.
    */
   className?: string;
+
   /**
-   * The name of this group.
-   */
-  name?: string;
-  /**
-   * The value fo the `name` attribute of the children to select/press
-   * initially.
+   * The value fo the `value` attribute of the children to select/press
+   * initially. If not given, no child is set as selected.
    * Note: This prop will have full control over the pressed prop on its children. Setting select/pressed on the
    * children props directly will have no effect.
    */
-  selectedName?: string;
+  selected?: string;
+
   /**
    * Callback function for onChange.
    */
-  onChange?: (childProps: any) => void;
+  onChange?: (evt: MouseEvent<HTMLButtonElement>, value?: string) => void;
+
   /**
    * The children of this group. Typically a set of `ToggleButton`s.
    */
-  children?: React.ReactElement[];
-}
+  children?: ReactElement<T>[];
+} & Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>;
 
-export interface ToggleGroupState {
-  selectedName?: string;
-}
+export const ToggleGroupContext = React.createContext<boolean>(false);
 
-/**
- * A group for toggle components (e.g. buttons)
- *
- * @class The ToggleGroup
- * @extends React.Component
- *
- */
-class ToggleGroup extends React.Component<ToggleGroupProps, ToggleGroupState> {
+export const ToggleGroup: React.FC<ToggleGroupProps> = ({
+  orientation = 'vertical',
+  className,
+  selected,
+  onChange = () => {},
+  children,
+  ...passThroughProps
+}) => {
 
-  /**
-   * The default properties.
-   */
-  static defaultProps = {
-    orientation: 'vertical',
-    allowDeselect: true
+  const internalClassName = `${CSS_PREFIX}togglegroup`;
+
+  const finalClassName = className
+    ? `${className} ${internalClassName}`
+    : internalClassName;
+
+  const orientationClass = (orientation === 'vertical')
+    ? 'vertical-toggle-group'
+    : 'horizontal-toggle-group';
+
+  const handleChange = (evt: MouseEvent<HTMLButtonElement>, buttonValue?: string) => {
+    onChange(evt, selected === buttonValue ? undefined : buttonValue);
   };
 
-  /**
-   * The child context types.
-   */
-  static childContextTypes = {
-    toggleGroup: PropTypes.object
-  };
+  return (
+    <div
+      className={`${finalClassName} ${orientationClass}`}
+      {...passThroughProps}
+    >
+      {
+        children
+          ?.map(child => {
+            if (!isValidElement(child)) {
+              return null;
+            }
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  _className = `${CSS_PREFIX}togglegroup`;
-
-  /**
-   * The constructor.
-   *
-   * @param props The properties.
-   */
-  constructor(props: ToggleGroupProps) {
-    super(props);
-
-    /**
-     * The initial state.
-     */
-    this.state = {
-      selectedName: props.selectedName
-    };
-  }
-
-  /**
-   * Update selectedName in state if property was changed
-   *
-   * @param prevProps Previous props
-   */
-  componentDidUpdate(prevProps: ToggleGroupProps) {
-    if (prevProps.selectedName !== this.props.selectedName) {
-      this.setState({
-        selectedName: this.props.selectedName
-      });
-    }
-  }
-
-  /**
-   * Returns the context for the children.
-   *
-   * @return The child context.
-   */
-  getChildContext() {
-    return {
-      toggleGroup: {
-        name: this.props.name,
-        selectedName: this.state.selectedName,
-        onChange: this.onChange
+            return React.cloneElement<ToggleButtonProps>(child, {
+              key: child.props.value,
+              onChange: handleChange,
+              pressed: selected === child.props.value
+            });
+          })
+          .filter(child => child !== null)
       }
-    };
-  }
-
-  /**
-   * The onChange handler.
-   *
-   * @param childProps The properties of the children.
-   */
-  onChange = (childProps: ToggleButtonProps) => {
-    if (_isFunction(this.props.onChange)) {
-      this.props.onChange(childProps);
-    }
-    // Allow deselect.
-    if (this.props.allowDeselect && (childProps.name === this.state.selectedName)) {
-      this.setState({ selectedName: undefined });
-    } else {
-      this.setState({ selectedName: childProps.name });
-    }
-  };
-
-  /**
-   * The render function.
-   */
-  render() {
-    const { orientation, children } = this.props;
-    const className = this.props.className
-      ? `${this.props.className} ${this._className}`
-      : this._className;
-    const orientationClass = (orientation === 'vertical')
-      ? 'vertical-toggle-group'
-      : 'horizontal-toggle-group';
-
-    const childrenWithProps = React.Children.map(children, child => {
-      const item = child as React.ReactElement<ToggleButtonProps>;
-      if (React.isValidElement(item)) {
-        // pass the press state through to child components
-        return React.cloneElement(item, {
-          pressed: this.state.selectedName === item.props.name
-        });
-      } else {
-        return child;
-      }
-    });
-
-    return (
-      <div
-        className={`${className} ${orientationClass}`}
-      >
-        {childrenWithProps}
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default ToggleGroup;

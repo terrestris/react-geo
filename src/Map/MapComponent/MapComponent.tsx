@@ -1,13 +1,12 @@
+import OlMap from 'ol/Map';
 import React, {
   useCallback
 } from 'react';
 
-import OlMap from 'ol/Map';
-
-export interface MapComponentProps extends React.ComponentProps<'div'> {
+export type MapComponentProps = React.ComponentProps<'div'> & {
   map: OlMap;
   mapDivId?: string;
-}
+};
 
 export const MapComponent: React.FC<MapComponentProps> = ({
   map,

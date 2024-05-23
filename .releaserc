@@ -1,8 +1,15 @@
 {
   "branches": [
-    "main",
-    "next",
-    "15.x.x"
+    {
+      "name": "main",
+      "prerelease": true,
+      "channel": "next"
+    },
+    {
+      "name": "next",
+      "prerelease": true
+    },
+    "release"
   ],
   "plugins": [
     "@semantic-release/commit-analyzer",

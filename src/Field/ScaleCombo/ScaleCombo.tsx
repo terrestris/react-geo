@@ -1,326 +1,165 @@
-import * as React from 'react';
+import './ScaleCombo.less';
+
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { Select } from 'antd';
-const Option = Select.Option;
-
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlMapEvent from 'ol/MapEvent';
-
-import _isInteger from 'lodash/isInteger';
+import { SelectProps } from 'antd/lib/select';
+import _clone from 'lodash/clone';
 import _isEmpty from 'lodash/isEmpty';
-import _isNil from 'lodash/isNil';
 import _isEqual from 'lodash/isEqual';
 import _isFunction from 'lodash/isFunction';
+import _isInteger from 'lodash/isInteger';
+import _isNil from 'lodash/isNil';
+import _isNumber from 'lodash/isNumber';
 import _reverse from 'lodash/reverse';
-import _clone from 'lodash/clone';
-
-import Logger from '@terrestris/base-util/dist/Logger';
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import { ObjectEvent as OlObjectEvent } from 'ol/Object';
+import OlView from 'ol/View';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
-import './ScaleCombo.less';
-import _isNumber from 'lodash/isNumber';
-
-interface ScaleComboProps {
-  /**
-   * A filter function to filter resolutions no options should be created
-   */
-  resolutionsFilter: (item: any, index?: number, resolutions?: number[]) => boolean;
-  /**
-   * Set to false to not listen to the map moveend event.
-   */
-  syncWithMap: boolean;
-  /**
-   * The scales.
-   */
-  scales: number[];
-  /**
-   * An optional CSS class which should be added.
-   */
-  className?: string;
-  /**
-   * The zoomLevel.
-   */
-  zoomLevel?: number;
-  /**
-   * The onZoomLevelSelect function. Pass a function if you want something
-   * different than the resolution of the passed map.
-   */
+type OwnProps = {
+  resolutionsFilter?: (item: any, index?: number, resolutions?: number[]) => boolean;
+  syncWithMap?: boolean;
+  scales?: number[];
   onZoomLevelSelect?: (zoomLevel: string) => void;
-  /**
-   * The resolutions.
-   */
   resolutions?: number[];
-  /**
-   * The map
-   */
-  map: OlMap;
-}
+};
 
-interface ScaleComboState {
-  /**
-   * The zoomLevel.
-   */
-  zoomLevel?: number;
-  /**
-   * The onZoomLevelSelect function. Pass a function if you want something
-   * different than the resolution of the passed map.
-   */
-  onZoomLevelSelect?: (zoomLevel: string) => void;
-  /**
-   * The scales.
-   */
-  scales: number[];
-}
+export type ScaleComboProps = SelectProps & OwnProps;
 
-/**
- * Class representing a scale combo to choose map scale via a dropdown menu.
- *
- * @class The ScaleCombo
- * @extends React.Component
- */
-class ScaleCombo extends React.Component<ScaleComboProps, ScaleComboState> {
+const defaultClassName = `${CSS_PREFIX}scalecombo`;
 
-  /**
-   * The default props
-   */
-  static defaultProps = {
-    resolutionsFilter: () => true,
-    scales: [],
-    syncWithMap: true
-  };
+const ScaleCombo: React.FC<ScaleComboProps> = ({
+  resolutionsFilter = () => true,
+  syncWithMap = true,
+  scales = [],
+  className,
+  onZoomLevelSelect,
+  resolutions,
+  ...passThroughProps
+}) => {
 
-  /**
-   * The className added to this component.
-   * @private
-   */
-  className = `${CSS_PREFIX}scalecombo`;
+  const [internalZoomLevel, setInternalZoomLevel] = useState<number>();
 
-  /**
-   * Create a scale combo.
-   * @constructs ScaleCombo
-   */
-  constructor(props: ScaleComboProps) {
-    super(props);
+  const map = useMap();
 
-    /**
-     * The default onZoomLevelSelect function sets the resolution of the passed
-     * map according to the selected Scale.
-     *
-     * @param selectedScale The selectedScale.
-     */
-    const defaultOnZoomLevelSelect = (selectedScale: string) => {
-      const mapView = props.map.getView();
-      const calculatedResolution = MapUtil.getResolutionForScale(
-        parseInt(selectedScale, 10), mapView.getProjection().getUnits()
-      );
-      mapView.setResolution(calculatedResolution);
-    };
-
-    this.state = {
-      zoomLevel: props.zoomLevel || props.map.getView().getZoom(),
-      onZoomLevelSelect: props.onZoomLevelSelect || defaultOnZoomLevelSelect,
-      scales: props.scales.length > 0 ? props.scales : this.getOptionsFromMap()
-    };
-
-    if (props.syncWithMap) {
-      props.map.on('moveend', this.zoomListener);
-    }
-  }
-
-  /**
-   * Invoked after the component is instantiated as well as when it
-   * receives new props. It should return an object to update state, or null
-   * to indicate that the new props do not require any state updates.
-   *
-   * @param nextProps The next properties.
-   * @param prevState The previous state.
-   */
-  static getDerivedStateFromProps(nextProps: ScaleComboProps, prevState: ScaleComboState) {
-    if (_isInteger(nextProps.zoomLevel) &&
-        !_isEqual(nextProps.zoomLevel, prevState.zoomLevel)) {
-      return {
-        zoomLevel: nextProps.zoomLevel
-      };
+  const getOptionsFromMap = useCallback(() => {
+    if (!map) {
+      return [];
     }
 
-    if (_isFunction(nextProps.onZoomLevelSelect) &&
-        !_isEqual(nextProps.onZoomLevelSelect, prevState.onZoomLevelSelect)) {
-      return {
-        onZoomLevelSelect: nextProps.onZoomLevelSelect
-      };
-    }
-
-    return null;
-  }
-
-  /**
-   * Invoked immediately after updating occurs. This method is not called for
-   * the initial render.
-   *
-   * @param prevProps The previous props.
-   */
-  componentDidUpdate(prevProps: ScaleComboProps) {
-    const {
-      map,
-      syncWithMap
-    } = this.props;
-
-    if (!_isEqual(syncWithMap, prevProps.syncWithMap)) {
-      if (syncWithMap) {
-        map.on('moveend', this.zoomListener);
-      } else {
-        map.un('moveend', this.zoomListener);
+    const optionScales: number[] = [];
+    const view = map.getView();
+    // use existing resolutions array if exists
+    const viewResolutions = view.getResolutions();
+    const pushScale = (s: number[], r: number, v: OlView) => {
+      const scale = MapUtil.getScaleForResolution(r, v.getProjection().getUnits());
+      if (!scale) {
+        return;
       }
-    }
-  }
+      const roundScale = MapUtil.roundScale(scale);
+      if (optionScales.includes(roundScale) ) {
+        return;
+      }
+      optionScales.push(roundScale);
+    };
 
-  /**
-   * Set the zoomLevel of the to the ScaleCombo.
-   *
-   * @param evt The 'moveend' event
-   * @private
-   */
-  zoomListener = (evt: OlMapEvent) => {
-    const zoom = (evt.target as OlMap).getView().getZoom();
+    if (_isEmpty(viewResolutions) || _isNil(viewResolutions)) {
+      for (let currentZoomLevel = view.getMaxZoom(); currentZoomLevel >= view.getMinZoom(); currentZoomLevel--) {
+        const resolution = view.getResolutionForZoom(currentZoomLevel);
+        if (resolutionsFilter(resolution)) {
+          pushScale(optionScales, resolution, view);
+        }
+      }
+    } else {
+      const reversedResolutions = _reverse(_clone(viewResolutions));
+      reversedResolutions
+        .filter(resolutionsFilter)
+        .forEach(resolution => pushScale(scales, resolution, view));
+    }
+
+    return optionScales;
+  }, [map, resolutionsFilter, scales]);
+
+  const zoomListener = useCallback((evt: OlObjectEvent) => {
+    const zoom = (evt.target as OlView).getZoom();
     let roundZoom = 0;
     if (_isNumber(zoom)) {
       roundZoom = Math.round(zoom);
     }
 
-    this.setState({
-      zoomLevel: roundZoom
-    });
-  };
+    setInternalZoomLevel(roundZoom);
+  }, []);
 
-  /**
-   * @function pushScaleOption: Helper function to create a {@link Option} scale component
-   * based on a resolution and the {@link OlView}
-   *
-   * @param scales The scales array to push the scale to.
-   * @param resolution map cresolution to generate the option for
-   * @param view The map view
-   *
-   */
-  pushScale = (scales: number[], resolution: number, view: OlView) => {
-    const scale = MapUtil.getScaleForResolution(resolution, view.getProjection().getUnits());
-    if (!scale) {
-      return;
-    }
-    const roundScale = MapUtil.roundScale(scale);
-    if (scales.includes(roundScale) ) {
-      return;
-    }
-    scales.push(roundScale);
-  };
+  const internalScales = useMemo(() => {
+    return scales.length > 0 ? scales : getOptionsFromMap();
+  }, [scales, getOptionsFromMap]);
 
-  /**
-   * Generates the scales to add as {@link Option} to the SelectField based on
-   * the given instance of {@link OlMap}.
-   *
-   * @return The array of scales.
-   */
-  getOptionsFromMap() {
-    const {
-      map,
-      resolutionsFilter
-    } = this.props;
-
+  useEffect(() => {
     if (!map) {
-      Logger.warn('Map component not found. Could not initialize options array.');
-      return [];
+      return;
     }
 
-    const scales: number[] = [];
-    const view = map.getView();
-    // use existing resolutions array if exists
-    const resolutions = view.getResolutions();
-
-    if (_isEmpty(resolutions) || _isNil(resolutions)) {
-      for (let currentZoomLevel = view.getMaxZoom(); currentZoomLevel >= view.getMinZoom(); currentZoomLevel--) {
-        const resolution = view.getResolutionForZoom(currentZoomLevel);
-        if (resolutionsFilter(resolution)) {
-          this.pushScale(scales, resolution, view);
-        }
-      }
+    if (syncWithMap) {
+      map.getView().on('change:resolution', zoomListener);
     } else {
-      const reversedResolutions = _reverse(_clone(resolutions));
-      reversedResolutions
-        .filter(resolutionsFilter)
-        .forEach((resolution) => {
-          this.pushScale(scales, resolution, view);
-        });
+      map.getView().un('change:resolution', zoomListener);
+    }
+  }, [map, syncWithMap, zoomListener]);
+
+  useEffect(() => {
+    setInternalZoomLevel(map?.getView().getZoom());
+  }, [map]);
+
+  const onZoomLevelSelectInternal = (selectedScale: string) => {
+    if (!map) {
+      return;
     }
 
-    return scales;
-  }
+    if (onZoomLevelSelect) {
+      onZoomLevelSelect(selectedScale);
+    } else {
+      // The default.
+      const mapView = map.getView();
+      const calculatedResolution = MapUtil.getResolutionForScale(
+        parseInt(selectedScale, 10), mapView.getProjection().getUnits()
+      );
+      mapView.setResolution(calculatedResolution);
+    }
+  };
 
-  /**
-   * Determine option element for provided zoom level out of array of valid options.
-   *
-   * @param zoom zoom level
-   *
-   * @return Option element for provided zoom level
-   */
-  determineOptionKeyForZoomLevel = (zoom: number): string | undefined => {
-    if (!_isInteger(zoom) || (this.state.scales.length - 1 - zoom) < 0) {
+  const determineOptionKeyForZoomLevel = (zoom: number): string | undefined => {
+    if (!_isInteger(zoom) || (internalScales.length - 1 - zoom) < 0) {
       return undefined;
     }
-    return this.state.scales[this.state.scales.length - 1 - zoom].toString();
+    return internalScales[internalScales.length - 1 - zoom].toString();
   };
 
-  /**
-   * The render function.
-   */
-  render() {
-    const {
-      map,
-      className,
-      onZoomLevelSelect: onZoomLevelSelectProp,
-      resolutions,
-      resolutionsFilter,
-      scales: scalesProp,
-      syncWithMap,
-      zoomLevel: zoomLevelProp,
-      ...passThroughProps
-    } = this.props;
+  const finalClassName = className
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
-    const {
-      onZoomLevelSelect,
-      scales,
-      zoomLevel
-    } = this.state;
-
-    const finalClassName = className
-      ? `${className} ${this.className}`
-      : this.className;
-
-    const options = scales.map(roundScale => {
-      return (
-        <Option
-          key={roundScale}
-          value={roundScale.toString()}
-        >
-          {`1:${roundScale.toLocaleString()}`}
-        </Option>
-      );
-    });
-
-    return (
-      <Select
-        showSearch
-        onChange={onZoomLevelSelect}
-        filterOption={(input, option) => option?.key?.toString().startsWith(input) ?? false}
-        value={this.determineOptionKeyForZoomLevel(zoomLevel ?? 0)}
-        size="small"
-        className={finalClassName}
-        {...passThroughProps}
-      >
-        {options}
-      </Select>
-    );
-  }
-}
+  return (
+    <Select
+      showSearch
+      onChange={onZoomLevelSelectInternal}
+      filterOption={(input, option) => option?.key?.toString().startsWith(input) ?? false}
+      value={determineOptionKeyForZoomLevel(internalZoomLevel ?? 0)}
+      size="small"
+      className={finalClassName}
+      options={internalScales.map(roundScale => ({
+        value: roundScale.toString(),
+        label: `1:${roundScale.toLocaleString()}`
+      }))}
+      {...passThroughProps}
+    />
+  );
+};
 
 export default ScaleCombo;

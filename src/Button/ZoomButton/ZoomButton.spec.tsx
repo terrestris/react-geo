@@ -1,16 +1,16 @@
-import TestUtil from '../../Util/TestUtil';
-import { actSetTimeout } from '../../Util/rtlTestUtils';
-import OlMap from 'ol/Map';
-
-import { render, screen } from '@testing-library/react';
-import * as React from 'react';
+import { actSetTimeout, renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import _isNil from 'lodash/isNil';
+import OlMap from 'ol/Map';
+import * as React from 'react';
 
+import TestUtil from '../../Util/TestUtil';
 import ZoomButton from './ZoomButton';
 
 describe('<ZoomButton />', () => {
 
-  let map;
+  let map: OlMap;
 
   beforeEach(() => {
     map = TestUtil.createMap();
@@ -21,41 +21,45 @@ describe('<ZoomButton />', () => {
   });
 
   it('can be rendered', () => {
-    const { container } = render(<ZoomButton map={map} />);
+    const { container } = renderInMapContext(map, <ZoomButton />);
     expect(container).toBeVisible();
   });
 
   it('zooms in when clicked', async () => {
-    render(
-      <ZoomButton map={map}>Zoom test</ZoomButton>
+    renderInMapContext(map,
+      <ZoomButton>Zoom test</ZoomButton>
     );
 
     const initialZoom = map.getView().getZoom();
-    const button = screen.getByText('Zoom test');
-    await userEvent.click(button);
+    if (!_isNil(initialZoom)) {
+      const button = screen.getByText('Zoom test');
+      await userEvent.click(button);
 
-    await actSetTimeout(300);
-    const newZoom = map.getView().getZoom();
-    expect(newZoom).toBe(initialZoom + 1);
+      await actSetTimeout(300);
+      const newZoom = map.getView().getZoom();
+      expect(newZoom).toBe(initialZoom + 1);
+    }
   });
 
   it('can be configured to zoom out', async () => {
-    render(
-      <ZoomButton map={map} delta={-1}>Zoom test</ZoomButton>
+    renderInMapContext(map,
+      <ZoomButton delta={-1}>Zoom test</ZoomButton>
     );
 
     const initialZoom = map.getView().getZoom();
-    const button = screen.getByText('Zoom test');
-    await userEvent.click(button);
+    if (!_isNil(initialZoom)) {
+      const button = screen.getByText('Zoom test');
+      await userEvent.click(button);
 
-    await actSetTimeout(300);
-    const newZoom = map.getView().getZoom();
-    expect(newZoom).toBe(initialZoom - 1);
+      await actSetTimeout(300);
+      const newZoom = map.getView().getZoom();
+      expect(newZoom).toBe(initialZoom - 1);
+    }
   });
 
   it('does not belch when map has no view', () => {
-    render(
-      <ZoomButton map={new OlMap(null)}>Zoom test</ZoomButton>
+    renderInMapContext(new OlMap(undefined),
+      <ZoomButton>Zoom test</ZoomButton>
     );
     const button = screen.getByText('Zoom test');
 
@@ -65,8 +69,8 @@ describe('<ZoomButton />', () => {
   });
 
   it('cancels already running animations', async () => {
-    render(
-      <ZoomButton map={map} animateOptions={{ duration: 250 }}>Zoom test</ZoomButton>
+    renderInMapContext(map,
+      <ZoomButton animateOptions={{ duration: 250 }}>Zoom test</ZoomButton>
     );
 
     const button = screen.getByText('Zoom test');
@@ -77,7 +81,7 @@ describe('<ZoomButton />', () => {
     await userEvent.click(button);
     await userEvent.click(button);
 
-    expect(view.cancelAnimations.mock.calls.length).toBe(2);
+    expect((view.cancelAnimations as jest.Mock).mock.calls.length).toBe(2);
   });
 
 });
