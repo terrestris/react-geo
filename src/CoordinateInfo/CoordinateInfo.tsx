@@ -21,23 +21,11 @@ export type CoordinateInfoProps = {
  *
  */
 export const CoordinateInfo: FC<CoordinateInfoProps> = ({
-  drillDown = true,
-  featureCount = 1,
-  fetchOpts = {},
-  onError = () => undefined,
-  onSuccess = () => undefined,
-  queryLayers = [],
-  resultRenderer = () => <></>
+  resultRenderer = () => <></>,
+  ...passThroughProps
 }) => {
 
-  const result = useCoordinateInfo({
-    drillDown,
-    featureCount,
-    fetchOpts,
-    onError,
-    onSuccess,
-    queryLayers,
-  });
+  const result = useCoordinateInfo(passThroughProps);
 
   if (_isNil(result)) {
     return null;
