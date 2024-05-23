@@ -1,5 +1,5 @@
 const path = require('path');
-const webpackCommonConf = require('./webpack.common.config.js');
+const webpackCommonConf = require('./webpack.common.config.cjs');
 const reactDogGenTypeScript = require('react-docgen-typescript');
 
 module.exports = {
