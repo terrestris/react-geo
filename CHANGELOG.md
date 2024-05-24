@@ -1,3 +1,10 @@
+# [24.0.0-main.2](https://github.com/terrestris/react-geo/compare/v24.0.0-main.1...v24.0.0-main.2) (2024-05-24)
+
+
+### Bug Fixes
+
+* add build info to readme ([#3866](https://github.com/terrestris/react-geo/issues/3866)) ([7b97b95](https://github.com/terrestris/react-geo/commit/7b97b9505623e7997c10ebe4b6f9db781755fcfc))
+
 # [24.0.0-main.1](https://github.com/terrestris/react-geo/compare/v23.5.0...v24.0.0-main.1) (2024-05-23)
 
 
