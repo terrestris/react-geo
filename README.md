@@ -21,7 +21,7 @@ For a full list of available components, their properties and examples see [here
 
 ### TypeScript
 
-The `react-geo` package includes TypeScript declarations as `*.d.ts` files.
+The `react-geo` package includes TypeScript declarations as `*.d.ts` files. The build itself is included in ESM format (currently ES2022).
 
 ### Styling
 
