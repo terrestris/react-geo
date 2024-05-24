@@ -122,6 +122,10 @@ const LayerTree: React.FC<LayerTreeProps> = ({
   }, []);
 
   const treeNodeFromLayer = useCallback((layer: OlLayerBase) => {
+    if (!map) {
+      return;
+    }
+
     let childNodes: TreeDataNode[] = [];
 
     if (filterFunction && [layer].filter(filterFunction).length === 0) {

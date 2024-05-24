@@ -6,10 +6,11 @@ import {
   UseSelectFeaturesProps
 } from '@terrestris/react-util/dist/Hooks/useSelectFeatures/useSelectFeatures';
 import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
-import OlFeature from 'ol/Feature';
+import OlFeature, {
+  FeatureLike as OlFeatureLike
+} from 'ol/Feature';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
-import OlVectorLayer from 'ol/layer/Vector';
-import OlVectorSource from 'ol/source/Vector';
+import OlLayerVector from 'ol/layer/Vector';
 import OlStyle from 'ol/style/Style';
 import React, {
   useCallback,
@@ -24,7 +25,7 @@ interface OwnProps {
    * The vector layer which will be used for digitize features.
    * The standard digitizeLayer can be retrieved via `DigitizeUtil.getDigitizeLayer(map)`.
    */
-  digitizeLayer?: OlVectorLayer<OlVectorSource<OlFeature>>;
+  digitizeLayer?: OlLayerVector<OlFeature>;
   /**
    * Listener function for the 'select' event of the ol.interaction.Select
    * if in `Copy` mode.
@@ -76,7 +77,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({
 
     AnimateUtil.moveFeature(
       map,
-      layer,
+      layer as OlLayerVector<OlFeatureLike>,
       copy,
       500,
       50,

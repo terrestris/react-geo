@@ -38,7 +38,7 @@ interface SearchResultsPanelProps extends Partial<CollapseProps> {
 }
 
 const SearchResultsPanel = (props: SearchResultsPanelProps) => {
-  const [highlightLayer, setHighlightLayer] = useState<OlLayerVector<OlSourceVector> | null>(null);
+  const [highlightLayer, setHighlightLayer] = useState<OlLayerVector<OlFeature> | null>(null);
   const map = useMap();
 
   const {
