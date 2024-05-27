@@ -60,7 +60,7 @@
     "lint:styleguide-fix": "eslint -c .eslintrc.styleguide.cjs src/ --fix",
     "prepare": "husky",
     "pretest": "npm run typecheck && npm run lint",
-    "start:styleguide": "styleguidist server",
+    "start:styleguide": "styleguidist --config styleguide.config.cjs server",
     "test": "npm run test:jest",
     "test:jest": "jest --maxWorkers=50% --coverage -c jest.config.cjs",
     "test:watch": "jest --watchAll -c jest.config.cjs",
