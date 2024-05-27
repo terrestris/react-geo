@@ -2,8 +2,8 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
 import {
   CellMouseOutEvent,
   CellMouseOverEvent,
