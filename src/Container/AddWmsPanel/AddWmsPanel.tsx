@@ -1,7 +1,7 @@
 import './AddWmsPanel.less';
 
 import Logger from '@terrestris/base-util/dist/Logger';
-import { WmsLayer } from '@terrestris/ol-util';
+import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { Checkbox } from 'antd';
 import React, { useState } from 'react';

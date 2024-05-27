@@ -1,6 +1,6 @@
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useOlInteraction } from '@terrestris/react-util/';
+import useOlInteraction from '@terrestris/react-util/dist/Hooks/useOlInteraction/useOlInteraction';
 import { DragRotateAndZoom } from 'ol/interaction.js';
 import React from 'react';
 
@@ -35,4 +35,5 @@ export const RotationButton: React.FC<RotationButtonProps> = ({
     />
   );
 };
+
 export default RotationButton;

@@ -1,4 +1,4 @@
-import { WmsLayer } from '@terrestris/ol-util';
+import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
 import { DatePicker, Popover, Select } from 'antd';
 import dayjs from 'dayjs';
 import _isEqual from 'lodash/isEqual';

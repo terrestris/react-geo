@@ -1,7 +1,8 @@
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Logger from '@terrestris/base-util/dist/Logger';
-import { MapUtil, WmsLayer } from '@terrestris/ol-util';
+import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import { Spin } from 'antd';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';

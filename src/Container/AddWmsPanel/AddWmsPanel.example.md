@@ -3,7 +3,7 @@ The capabilities of this WMS are fetched and parsed to OL layer instances using 
 An `AddWmsPanel` shows a list of the parsed layers and each checked layer (or the entire set) can be added to the map.
 
 ```jsx
-import { WmsLayer } from '@terrestris/ol-util';
+import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
 import CapabilitiesUtil from '@terrestris/ol-util/dist/CapabilitiesUtil/CapabilitiesUtil';
 import SimpleButton from '@terrestris/react-geo/dist/Button/SimpleButton/SimpleButton';
 import AddWmsPanel from '@terrestris/react-geo/dist/Container/AddWmsPanel/AddWmsPanel';
