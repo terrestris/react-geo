@@ -75,7 +75,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@terrestris/base-util": "^1.1.0",
     "@terrestris/ol-util": ">=18",
-    "@terrestris/react-util": "^5.2.0",
+    "@terrestris/react-util": "^6.0.0",
     "@types/geojson": "^7946.0.14",
     "@types/lodash": "^4.17.1",
     "ag-grid-community": "^31.3.1",
