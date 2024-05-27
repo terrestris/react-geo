@@ -1,3 +1,11 @@
+# [24.0.0-main.3](https://github.com/terrestris/react-geo/compare/v24.0.0-main.2...v24.0.0-main.3) (2024-05-27)
+
+
+### Bug Fixes
+
+* explicit imports ([40af413](https://github.com/terrestris/react-geo/commit/40af41342c1f6247f0203f9d8a825a3c67f22e2f))
+* update dependencies ([30d9b90](https://github.com/terrestris/react-geo/commit/30d9b90b18d35c6d8091cc86f520b454b76de954))
+
 # [24.0.0-main.2](https://github.com/terrestris/react-geo/compare/v24.0.0-main.1...v24.0.0-main.2) (2024-05-24)
 
 
