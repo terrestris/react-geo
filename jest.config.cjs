@@ -20,7 +20,8 @@ module.exports = {
     '<rootDir>/dist/'
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(ol|@camptocamp/inkmap|@terrestris/react-util|d3-selection|color-*[a-z]*)|(rc-*[a-z]*)/)'
+    'node_modules/(?!(ol|@camptocamp/inkmap|@terrestris/*[a-z]*-util|d3-selection|color-*[a-z]*)|(rc-*[a-z]*)|' +
+    'filter-obj|query-string|decode-uri-component|split-on-first|shpjs/)'
   ],
   setupFiles: [
     '<rootDir>/jest/__mocks__/matchMediaMock.js'

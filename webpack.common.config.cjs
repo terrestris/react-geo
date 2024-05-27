@@ -28,6 +28,11 @@ module.exports = {
       test: /\.(ts|tsx)$/,
       use: 'babel-loader'
     }, {
+      test: /\.m?js$/,
+      resolve: {
+        fullySpecified: false
+      }
+    }, {
       test: /\.css$/,
       use: [
         'style-loader',

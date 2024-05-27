@@ -2,7 +2,7 @@ import './AddWmsLayerEntry.less';
 
 import { faCopyright, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { WmsLayer } from '@terrestris/ol-util';
+import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
 import { Checkbox, Tooltip } from 'antd';
 import OlMap from 'ol/Map';
 import React, { useEffect, useState } from 'react';

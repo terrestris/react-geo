@@ -61,7 +61,8 @@ const CoordinateReferenceSystemCombo: FC<CRSComboProps> = ({
   ...passThroughOpts
 }) => {
 
-  const [projectionDefinitions, setProjectionDefinitions] = useState<Record<string, ProjectionDefinition>>({});
+  const [projectionDefinitions, setProjectionDefinitions] = useState<Record<string,
+    ProjectionDefinition | undefined>>({});
   const [searchValue, setSearchValue] = useState<string>();
   const [selected, setSelected] = useState<ProjectionDefinition>();
 
@@ -95,7 +96,7 @@ const CoordinateReferenceSystemCombo: FC<CRSComboProps> = ({
    * @param option The selected OptionData
    */
   const onCrsItemSelect = (_: string, option: DefaultOptionType) => {
-    const selectedProjection = _find(crsObjects, (p: ProjectionDefinition) => p.code === option.code);
+    const selectedProjection = _find(crsObjects, (p?: ProjectionDefinition) => p?.code === option.code);
     setSelected(selectedProjection);
     if (!_isNil(selectedProjection)) {
       setSearchValue(undefined);
@@ -110,7 +111,11 @@ const CoordinateReferenceSystemCombo: FC<CRSComboProps> = ({
    *
    * @return Option component to render
    */
-  const transformCrsObjectsToOptions = ([, projDefinition]: [string, ProjectionDefinition]) => {
+  const transformCrsObjectsToOptions = ([, projDefinition]: [string, ProjectionDefinition | undefined]) => {
+    if (!projDefinition) {
+      return;
+    }
+
     const epsgDescription = getEpsgDescription(projDefinition);
     return (
       <Option

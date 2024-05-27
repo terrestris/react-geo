@@ -1,10 +1,9 @@
 import './AddWmsPanel.less';
 
 import Logger from '@terrestris/base-util/dist/Logger';
-import { WmsLayer } from '@terrestris/ol-util';
+import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { Checkbox } from 'antd';
-import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import React, { useState } from 'react';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
@@ -63,8 +62,8 @@ export const AddWmsPanel: React.FC<AddWmsPanelProps> = ({
 
   const map = useMap();
 
-  const onSelectedLayersChange = (selection: CheckboxValueType[]) => {
-    const newSelection = selection.map(s => s as string);
+  const onSelectedLayersChange = (selection: string[]) => {
+    const newSelection = selection.map(s => s);
     onSelectionChange(newSelection);
     setSelectedWmsLayers(newSelection);
   };
@@ -122,7 +121,7 @@ export const AddWmsPanel: React.FC<AddWmsPanelProps> = ({
               <div role="listitem" key={idx}>
                 <AddWmsLayerEntry
                   wmsLayer={layer}
-                  map={map}
+                  map={map || undefined}
                 />
               </div>
             )
