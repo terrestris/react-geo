@@ -3,8 +3,15 @@ import './LayerTree.less';
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import { Tree, TreeDataNode } from 'antd';
-import { BasicDataNode, DataNode, TreeProps } from 'antd/lib/tree';
+import {
+  Tree,
+  TreeDataNode
+} from 'antd';
+import {
+  BasicDataNode,
+  DataNode,
+  TreeProps
+} from 'antd/lib/tree';
 import _isFunction from 'lodash/isFunction';
 import { getUid } from 'ol';
 import { EventsKey as OlEventsKey } from 'ol/events';
@@ -89,7 +96,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
       return;
     }
 
-    let childNodes: TreeDataNode[] = [];
+    let childNodes: TreeDataNode[]|undefined = undefined;
 
     if (filterFunction && [layer].filter(filterFunction).length === 0) {
       return;
@@ -108,10 +115,14 @@ const LayerTree: React.FC<LayerTreeProps> = ({
 
     return {
       key: getUid(layer),
-      title: getTreeNodeTitle(layer),
+      title: <div
+        onClick={e => e.stopPropagation()}
+      >
+        {getTreeNodeTitle(layer)}
+      </div>,
       className: MapUtil.layerInResolutionRange(layer, map) ? '' : 'out-of-range',
       // Required to identify a group layer/node.
-      children: layer instanceof OlLayerGroup ? childNodes : undefined
+      children: childNodes
     } as TreeDataNode;
   }, [map, getTreeNodeTitle, filterFunction]);
 

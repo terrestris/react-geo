@@ -1,4 +1,4 @@
-import { act,fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
@@ -6,7 +6,7 @@ import OlMap from 'ol/Map';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import * as React from 'react';
 
-import TestUtil from '../Util/TestUtil';;
+import TestUtil from '../Util/TestUtil';
 import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import userEvent from '@testing-library/user-event';
 
@@ -237,13 +237,13 @@ describe('<LayerTree />', () => {
       <LayerTree />
     );
 
-    const layer1Span = screen.queryByText('layer1');
-    const layer2Span = screen.queryByText('layer2');
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer1Node = screen.getByText('layer1').closest('.ant-tree-treenode')!;
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer2Node = screen.getByText('layer2').closest('.ant-tree-treenode')!;
 
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer1Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer2Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer1Node).toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer2Node).not.toHaveClass('ant-tree-treenode-checkbox-checked');
   });
 
   it('sets the layers visibility on check', async () => {
@@ -251,24 +251,24 @@ describe('<LayerTree />', () => {
       <LayerTree />
     );
 
-    const layer1Span = screen.getByText('layer1');
-    const layer2Span = screen.getByText('layer2');
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer1Node = screen.getByText('layer1').closest('.ant-tree-treenode')!;
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer2Node = screen.getByText('layer2').closest('.ant-tree-treenode')!;
 
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer1Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer2Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer1Node).toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer2Node).not.toHaveClass('ant-tree-treenode-checkbox-checked');
 
     expect(layer1.getVisible()).toBe(true);
     expect(layer2.getVisible()).toBe(false);
 
-    await userEvent.click(layer1Span);
-    await userEvent.click(layer2Span);
+    // eslint-disable-next-line testing-library/no-node-access
+    await userEvent.click(layer1Node.querySelector('.ant-tree-checkbox')!);
+    // eslint-disable-next-line testing-library/no-node-access
+    await userEvent.click(layer2Node.querySelector('.ant-tree-checkbox')!);
 
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer1Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer2Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer1Node).not.toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer2Node).toHaveClass('ant-tree-treenode-checkbox-checked');
 
     expect(layer1.getVisible()).toBe(false);
     expect(layer2.getVisible()).toBe(true);
@@ -279,23 +279,21 @@ describe('<LayerTree />', () => {
       <LayerTree />
     );
 
-    const layer1Span = screen.getByText('layer1');
-    const layer2Span = screen.getByText('layer2');
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer1Node = screen.getByText('layer1').closest('.ant-tree-treenode')!;
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer2Node = screen.getByText('layer2').closest('.ant-tree-treenode')!;
 
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer1Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer2Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer1Node).toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer2Node).not.toHaveClass('ant-tree-treenode-checkbox-checked');
 
     act(() => {
       layer1.setVisible(false);
       layer2.setVisible(true);
     });
 
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer1Span?.parentNode?.parentNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer2Span?.parentNode?.parentNode).toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer1Node).not.toHaveClass('ant-tree-treenode-checkbox-checked');
+    expect(layer2Node).toHaveClass('ant-tree-treenode-checkbox-checked');
   });
 
   it('sets the out-of-range class if the layer is not visible', () => {
@@ -303,17 +301,16 @@ describe('<LayerTree />', () => {
       <LayerTree />
     );
 
-    const layer1Span = screen.getByText('layer1');
-
     // eslint-disable-next-line testing-library/no-node-access
-    expect(layer1Span?.parentNode?.parentNode).toHaveClass('out-of-range');
+    const layer1Node = screen.getByText('layer1').closest('.ant-tree-treenode')!;
+
+    expect(layer1Node).toHaveClass('out-of-range');
 
     act(() => {
       map.getView().setZoom(10);
     });
 
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(layer1Span?.parentNode?.parentNode).not.toHaveClass('out-of-range');
+    expect(layer1Node).not.toHaveClass('out-of-range');
   });
 
   it('adds/removes layers to the tree if added/removed internally', () => {
@@ -374,11 +371,13 @@ describe('<LayerTree />', () => {
       <LayerTree />
     );
 
-    const layerSubGroupSpan = screen.getByText('layerSubGroup');
+    // eslint-disable-next-line testing-library/no-node-access
+    const layerSubGroupNode = screen.getByText('layerSubGroup').closest('.ant-tree-treenode')!;
 
     expect(layer3.getVisible()).toBe(false);
 
-    await userEvent.click(layerSubGroupSpan);
+    // eslint-disable-next-line testing-library/no-node-access
+    await userEvent.click(layerSubGroupNode.querySelector('.ant-tree-checkbox')!);
 
     expect(layer3.getVisible()).toBe(true);
   });
@@ -394,21 +393,18 @@ describe('<LayerTree />', () => {
       await userEvent.click(caret);
     }
 
-    const layerSubGroupSpan = screen.getByText('layerSubGroup');
+    // eslint-disable-next-line testing-library/no-node-access
+    const layerSubGroupNode = screen.getByText('layerSubGroup').closest('.ant-tree-treenode')!;
+
+    expect(layerSubGroupNode).not.toHaveClass('ant-tree-treenode-checkbox-checked');
 
     // eslint-disable-next-line testing-library/no-node-access
-    let layerSubGroupCheckbox = layerSubGroupSpan?.parentNode?.parentNode?.querySelector('.ant-tree-checkbox-checked');
-
-    expect(layerSubGroupCheckbox).toBe(null);
-
-    const layer3Span = screen.getByText('layer3');
-
-    await userEvent.click(layer3Span);
+    const layer3Node = screen.getByText('layer3').closest('.ant-tree-treenode')!;
 
     // eslint-disable-next-line testing-library/no-node-access
-    layerSubGroupCheckbox = layerSubGroupSpan?.parentNode?.parentNode?.querySelector('.ant-tree-checkbox-checked');
+    await userEvent.click(layer3Node.querySelector('.ant-tree-checkbox')!);
 
-    expect(layerSubGroupCheckbox).toBeInstanceOf(HTMLSpanElement);
+    expect(layerSubGroupNode).toHaveClass('ant-tree-treenode-checkbox-checked');
   });
 
   it('renders the layers in correct order', () => {
