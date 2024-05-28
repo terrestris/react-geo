@@ -31,7 +31,7 @@ type OwnProps = {
     selectedFeatures: OlFeature<OlGeometry>[]) => void;
 };
 
-export type FeatureGridProps<T> = OwnProps & RgCommonGridProps<T> & TableProps<T>;
+export type FeatureGridProps<T extends AnyObject = AnyObject> = OwnProps & RgCommonGridProps<T> & TableProps<T>;
 
 const defaultClassName = `${CSS_PREFIX}feature-grid`;
 
