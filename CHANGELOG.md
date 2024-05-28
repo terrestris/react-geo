@@ -1,3 +1,10 @@
+# [24.0.0-main.4](https://github.com/terrestris/react-geo/compare/v24.0.0-main.3...v24.0.0-main.4) (2024-05-28)
+
+
+### Bug Fixes
+
+* **LayerTree:** make contents of title clickable ([334e8aa](https://github.com/terrestris/react-geo/commit/334e8aac5467f90adfa9f22b56804d38d242f005))
+
 # [24.0.0-main.3](https://github.com/terrestris/react-geo/compare/v24.0.0-main.2...v24.0.0-main.3) (2024-05-27)
 
 
