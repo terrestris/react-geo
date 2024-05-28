@@ -30,16 +30,6 @@ interface OwnProps {
    */
   onSelect?: (item: NominatimPlace) => void;
   /**
-   * Indicate if we should render the input and results. When setting to false,
-   * you need to handle user input and result yourself
-   */
-  visible?: boolean;
-  /**
-   * The searchTerm may be given as prop. This is useful when setting
-   * `visible` to `false`.
-   */
-  searchTerm?: string;
-  /**
    * An optional CSS class which should be added.
    */
   className?: string;
@@ -75,7 +65,6 @@ export const NominatimSearch: FC<NominatimSearchProps> = ({
   renderOption,
   searchResultLanguage,
   viewBox,
-  visible = true,
   ...passThroughProps
 }) => {
 
@@ -167,10 +156,6 @@ export const NominatimSearch: FC<NominatimSearchProps> = ({
     }
   };
 
-  if (!visible) {
-    return null;
-  }
-
   return (
     <AutoComplete<string, any>
       className={className}
@@ -178,6 +163,7 @@ export const NominatimSearch: FC<NominatimSearchProps> = ({
       placeholder="Ortsname, Straßenname, Stadtteilname, POI usw."
       onChange={onValueChange}
       onSelect={onMenuItemSelected}
+      value={searchTerm}
       {...passThroughProps}
     >
       {

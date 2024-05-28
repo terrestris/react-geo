@@ -27,8 +27,7 @@ export type WfsSearchFieldProps = {
   onBeforeSearch?: (value: string) => string;
   onChange?: (val: OlFeature[] | undefined) => undefined;
   value?: OlFeature[] | undefined;
-  visible?: boolean;
-} & SearchConfig & Omit<WfsQueryArgs, 'searchConfig' | 'searchTerm'> & Omit<AutoCompleteProps, 'onChange'>;
+} & SearchConfig & Omit<WfsQueryArgs, 'searchConfig'|'searchTerm'> & Omit<AutoCompleteProps, 'onChange'>;
 
 const defaultClassName = `${CSS_PREFIX}wfssearch`;
 
@@ -64,7 +63,6 @@ export const WfsSearchField: FC<WfsSearchFieldProps> = ({
   wfsFormatOptions,
   onFetchError,
   onFetchSuccess,
-  visible,
   ...passThroughProps
 }) => {
 
@@ -228,10 +226,6 @@ export const WfsSearchField: FC<WfsSearchFieldProps> = ({
         value={searchTerm}
       />
     );
-  }
-
-  if (!visible) {
-    return null;
   }
 
   return (
