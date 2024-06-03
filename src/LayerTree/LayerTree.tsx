@@ -117,6 +117,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
       key: getUid(layer),
       title: <div
         onClick={e => e.stopPropagation()}
+        onDragStart={e => e.stopPropagation()}
       >
         {getTreeNodeTitle(layer)}
       </div>,
