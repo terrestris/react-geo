@@ -3,19 +3,19 @@ This demonstrates the usage of the SearchField with nominatim and wfs examples.
 ```jsx
 import SearchField from '@terrestris/react-geo/dist/Field/SearchField/SearchField';
 import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
-import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import {
+  createNominatimGetExtentFunction,
+  createNominatimGetValueFunction,
+  createNominatimSearchFunction,
+  createWfsSearchFunction,
+  MapContext
+} from '@terrestris/react-util';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import {fromLonLat} from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';
 import {useCallback, useEffect, useMemo, useState} from 'react';
-import {
-  createNominatimSearchFunction,
-  createNominatimGetValueFunction,
-  createNominatimGetExtentFunction,
-  createWfsSearchFunction
-} from "@terrestris/react-util";
 
 const SearchFieldExample = () => {
   const [map, setMap] = useState();
@@ -32,7 +32,7 @@ const SearchFieldExample = () => {
     attributeDetails: {
       'osm:osm-country-borders': {
         name: {
-        type: 'string',
+          type: 'string',
           exactSearch: false,
           matchCase: false
         }
@@ -66,7 +66,7 @@ const SearchFieldExample = () => {
     <MapContext.Provider value={map}>
 
       <div className="example-block" style={{ margin: '10px' }}>
-        <label>The NominatimSearch<br/>
+        <label>The NominatimSearch<br />
           <SearchField
             searchFunction={nominatimSearchFunction}
             getValue={nominatimGetValue}
@@ -77,7 +77,7 @@ const SearchFieldExample = () => {
       </div>
 
       <div className="example-block" style={{ margin: '10px' }}>
-        <label>The WfsSearch<br/>
+        <label>The WfsSearch<br />
           <SearchField
             searchFunction={wfsSearchFunction}
             getValue={wfsGetValue}
@@ -96,5 +96,5 @@ const SearchFieldExample = () => {
   );
 };
 
-<SearchFieldExample/>
+<SearchFieldExample />
 ```

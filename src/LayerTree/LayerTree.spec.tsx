@@ -1,4 +1,6 @@
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
@@ -7,9 +9,6 @@ import OlSourceTileWMS from 'ol/source/TileWMS';
 import * as React from 'react';
 
 import TestUtil from '../Util/TestUtil';
-import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
-import userEvent from '@testing-library/user-event';
-
 import LayerTree from './LayerTree';
 
 describe('<LayerTree />', () => {
