@@ -9,7 +9,7 @@ import OlMap from 'ol/Map';
 import {fromLonLat} from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   createNominatimSearchFunction,
   createNominatimGetValueFunction,
@@ -20,11 +20,11 @@ import {
 const SearchFieldExample = () => {
   const [map, setMap] = useState();
 
-  const nominatimSearchFunction = useCallback(createNominatimSearchFunction({}), []);
-  const nominatimGetValue = useCallback(createNominatimGetValueFunction(), []);
-  const nominatimGetExtent = useCallback(createNominatimGetExtentFunction(), []);
+  const nominatimSearchFunction = useMemo(() => createNominatimSearchFunction({}), []);
+  const nominatimGetValue = useMemo(() => createNominatimGetValueFunction(), []);
+  const nominatimGetExtent = useMemo(() => createNominatimGetExtentFunction(), []);
 
-  const wfsSearchFunction = useCallback(createWfsSearchFunction({
+  const wfsSearchFunction = useMemo(() => createWfsSearchFunction({
     baseUrl: 'https://ows-demo.terrestris.de/geoserver/osm/wfs',
     featureTypes: ['osm:osm-country-borders'],
     featureNS: 'osm',
