@@ -18,9 +18,7 @@ import AddWmsPanel from './Container/AddWmsPanel/AddWmsPanel';
 import CoordinateInfo from './CoordinateInfo/CoordinateInfo';
 import FeatureLabelModal from './FeatureLabelModal/FeatureLabelModal';
 import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
-import NominatimSearch from './Field/NominatimSearch/NominatimSearch';
 import ScaleCombo from './Field/ScaleCombo/ScaleCombo';
-import WfsSearchField from './Field/WfsSearchField/WfsSearchField';
 import AgFeatureGrid from './Grid/AgFeatureGrid/AgFeatureGrid';
 import FeatureGrid from './Grid/FeatureGrid/FeatureGrid';
 import PropertyGrid from './Grid/PropertyGrid/PropertyGrid';
@@ -32,6 +30,8 @@ import TimeLayerSliderPanel from './Panel/TimeLayerSliderPanel/TimeLayerSliderPa
 import LayerTransparencySlider from './Slider/LayerTransparencySlider/LayerTransparencySlider';
 import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider';
 import TimeSlider from './Slider/TimeSlider/TimeSlider';
+
+export { SearchField } from './Field/SearchField/SearchField';
 
 export {
   AddWmsLayerEntry,
@@ -54,7 +54,6 @@ export {
   MeasureButton,
   ModifyButton,
   MultiLayerSlider,
-  NominatimSearch,
   PropertyGrid,
   ScaleCombo,
   SearchResultsPanel,
@@ -65,7 +64,6 @@ export {
   ToggleButton,
   ToggleGroup,
   UploadButton,
-  WfsSearchField,
   ZoomButton,
   ZoomToExtentButton
 };
