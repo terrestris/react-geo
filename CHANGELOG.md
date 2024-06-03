@@ -1,3 +1,16 @@
+# [24.0.0-main.5](https://github.com/terrestris/react-geo/compare/v24.0.0-main.4...v24.0.0-main.5) (2024-06-03)
+
+
+### Features
+
+* unify functionality of WfsField and NominatimField into SearchField ([f83539b](https://github.com/terrestris/react-geo/commit/f83539bc7c01265c0fc9a9bdba191c7b25ed8f75))
+
+
+### BREAKING CHANGES
+
+* The `WfsField` and `NominatimField` hooks are removed.
+Please check the example for `SearchField`.
+
 # [24.0.0-main.4](https://github.com/terrestris/react-geo/compare/v24.0.0-main.3...v24.0.0-main.4) (2024-05-28)
 
 
