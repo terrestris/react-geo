@@ -1,69 +1,35 @@
-import BackgroundLayerChooser from './BackgroundLayerChooser/BackgroundLayerChooser';
-import CopyButton from './Button/CopyButton/CopyButton';
-import DeleteButton from './Button/DeleteButton/DeleteButton';
-import DrawButton from './Button/DrawButton/DrawButton';
-import GeoLocationButton from './Button/GeoLocationButton/GeoLocationButton';
-import MeasureButton from './Button/MeasureButton/MeasureButton';
-import ModifyButton from './Button/ModifyButton/ModifyButton';
-import SelectFeaturesButton from './Button/SelectFeaturesButton/SelectFeaturesButton';
-import SimpleButton from './Button/SimpleButton/SimpleButton';
-import ToggleButton from './Button/ToggleButton/ToggleButton';
-import ToggleGroup from './Button/ToggleGroup/ToggleGroup';
-import UploadButton from './Button/UploadButton/UploadButton';
-import ZoomButton from './Button/ZoomButton/ZoomButton';
-import ZoomToExtentButton from './Button/ZoomToExtentButton/ZoomToExtentButton';
-import CircleMenu from './CircleMenu/CircleMenu';
-import AddWmsLayerEntry from './Container/AddWmsPanel/AddWmsLayerEntry/AddWmsLayerEntry';
-import AddWmsPanel from './Container/AddWmsPanel/AddWmsPanel';
-import CoordinateInfo from './CoordinateInfo/CoordinateInfo';
-import FeatureLabelModal from './FeatureLabelModal/FeatureLabelModal';
-import CoordinateReferenceSystemCombo from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
-import ScaleCombo from './Field/ScaleCombo/ScaleCombo';
-import AgFeatureGrid from './Grid/AgFeatureGrid/AgFeatureGrid';
-import FeatureGrid from './Grid/FeatureGrid/FeatureGrid';
-import PropertyGrid from './Grid/PropertyGrid/PropertyGrid';
-import LayerSwitcher from './LayerSwitcher/LayerSwitcher';
-import LayerTree from './LayerTree/LayerTree';
-import Legend from './Legend/Legend';
-import SearchResultsPanel from './Panel/SearchResultsPanel/SearchResultsPanel';
-import TimeLayerSliderPanel from './Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
-import LayerTransparencySlider from './Slider/LayerTransparencySlider/LayerTransparencySlider';
-import MultiLayerSlider from './Slider/MultiLayerSlider/MultiLayerSlider';
-import TimeSlider from './Slider/TimeSlider/TimeSlider';
-
-export { SearchField } from './Field/SearchField/SearchField';
-
+export { BackgroundLayerChooser } from './BackgroundLayerChooser/BackgroundLayerChooser';
+export { default as CopyButton } from './Button/CopyButton/CopyButton';
+export { DeleteButton } from './Button/DeleteButton/DeleteButton';
+export { default as DrawButton } from './Button/DrawButton/DrawButton';
+export { GeoLocationButton } from './Button/GeoLocationButton/GeoLocationButton';
+export { MeasureButton } from './Button/MeasureButton/MeasureButton';
+export { ModifyButton } from './Button/ModifyButton/ModifyButton';
+export { default as SelectFeaturesButton } from './Button/SelectFeaturesButton/SelectFeaturesButton';
+export { default as SimpleButton } from './Button/SimpleButton/SimpleButton';
+export { ToggleButton } from './Button/ToggleButton/ToggleButton';
+export { ToggleGroup } from './Button/ToggleGroup/ToggleGroup';
+export { default as UploadButton } from './Button/UploadButton/UploadButton';
+export { default as ZoomButton } from './Button/ZoomButton/ZoomButton';
+export { default as ZoomToExtentButton } from './Button/ZoomToExtentButton/ZoomToExtentButton';
+export { CircleMenu } from './CircleMenu/CircleMenu';
+export { AddWmsLayerEntry } from './Container/AddWmsPanel/AddWmsLayerEntry/AddWmsLayerEntry';
+export { AddWmsPanel } from './Container/AddWmsPanel/AddWmsPanel';
+export { CoordinateInfo } from './CoordinateInfo/CoordinateInfo';
+export { FeatureLabelModal } from './FeatureLabelModal/FeatureLabelModal';
 export {
-  AddWmsLayerEntry,
-  AddWmsPanel,
-  AgFeatureGrid,
-  BackgroundLayerChooser,
-  CircleMenu,
-  CoordinateInfo,
-  CoordinateReferenceSystemCombo,
-  CopyButton,
-  DeleteButton,
-  DrawButton,
-  FeatureGrid,
-  FeatureLabelModal,
-  GeoLocationButton,
-  LayerSwitcher,
-  LayerTransparencySlider,
-  LayerTree,
-  Legend,
-  MeasureButton,
-  ModifyButton,
-  MultiLayerSlider,
-  PropertyGrid,
-  ScaleCombo,
-  SearchResultsPanel,
-  SelectFeaturesButton,
-  SimpleButton,
-  TimeLayerSliderPanel,
-  TimeSlider,
-  ToggleButton,
-  ToggleGroup,
-  UploadButton,
-  ZoomButton,
-  ZoomToExtentButton
-};
+  default as CoordinateReferenceSystemCombo
+} from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
+export { SearchField } from './Field/SearchField/SearchField';
+export { default as ScaleCombo } from './Field/ScaleCombo/ScaleCombo';
+export { AgFeatureGrid } from './Grid/AgFeatureGrid/AgFeatureGrid';
+export { FeatureGrid } from './Grid/FeatureGrid/FeatureGrid';
+export { default as PropertyGrid } from './Grid/PropertyGrid/PropertyGrid';
+export { LayerSwitcher } from './LayerSwitcher/LayerSwitcher';
+export { default as LayerTree } from './LayerTree/LayerTree';
+export { Legend } from './Legend/Legend';
+export { default as SearchResultsPanel } from './Panel/SearchResultsPanel/SearchResultsPanel';
+export { TimeLayerSliderPanel } from './Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
+export { default as LayerTransparencySlider } from './Slider/LayerTransparencySlider/LayerTransparencySlider';
+export { default as MultiLayerSlider } from './Slider/MultiLayerSlider/MultiLayerSlider';
+export { default as TimeSlider } from './Slider/TimeSlider/TimeSlider';

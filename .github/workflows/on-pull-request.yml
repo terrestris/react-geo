@@ -18,13 +18,16 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.npm
-        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+        key: "${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}"
         restore-keys: |
           ${{ runner.OS }}-node-
           ${{ runner.OS }}-
 
     - name: Install dependencies ⏬
       run: npm ci
+
+    - name: Run Tests 🧪
+      run: npm run check
 
     - name: Build artifacts 🏗️
       run: npm run build
