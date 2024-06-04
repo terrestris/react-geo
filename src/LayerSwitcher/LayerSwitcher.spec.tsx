@@ -78,7 +78,11 @@ describe('<LayerSwitcher />', () => {
 
   it('switches the visible layer on click', async () => {
     const { container } = renderInMapContext(map, <LayerSwitcher layers={layers} />);
-    const switcher = within(container).getByRole('button');
+
+    // eslint-disable-next-line testing-library/no-container,testing-library/no-node-access
+    const layerSwitcher = container.querySelector('.react-geo-layer-switcher');
+
+    const switcher = within(layerSwitcher).getByRole('button');
 
     const layer0visible = layers[0].getVisible();
     const layer1visible = layers[1].getVisible();
