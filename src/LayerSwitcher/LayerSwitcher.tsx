@@ -1,5 +1,6 @@
 import './LayerSwitcher.less';
 
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
@@ -25,10 +26,6 @@ export interface OwnProps {
    */
   layers: OlLayerBase[];
   /**
-   * The main map the layers should be synced with.
-   */
-  map: OlMap;
-  /**
    * The property that identifies the layer.
    */
   identifierProperty?: string;
@@ -47,11 +44,11 @@ export type LayerSwitcherProps = OwnProps & React.HTMLAttributes<HTMLDivElement>
 export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
   identifierProperty = 'name',
   labelProperty = 'name',
-  map,
   layers,
   className: classNameProp,
   ...passThroughProps
 }) => {
+  const map = useMap();
 
   const [switcherMap, setSwitcherMap] = useState<OlMap>();
 
@@ -67,19 +64,25 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
   const className = `${CSS_PREFIX}layer-switcher`;
 
   /**
-   * Sets the visiblity of the layers in the props.map and this._map.
+   * Sets the visibility of the layers in the map and the switcherMap.
    * Also sets the previewLayer in the state.
    */
   const updateLayerVisibility = useCallback(() => {
-    layers.forEach((l, i) => {
-      const visible = visibleLayerIndexRef.current === i;
-      l.setVisible(visible);
-      const clone = switcherMap?.getAllLayers()?.find(lc => lc.get(identifierProperty) === l.get(identifierProperty));
-      if (clone) {
-        clone.setVisible(visible);
-        if (visible) {
-          setPreviewLayer(clone);
-        }
+    layers.forEach((layer, i) => {
+      layer.setVisible(visibleLayerIndexRef.current === i);
+
+      const clone = switcherMap?.getAllLayers()
+        ?.find(lc => lc.get(identifierProperty) === layer.get(identifierProperty));
+
+      if (!clone) {
+        return;
+      }
+
+      if ((visibleLayerIndexRef.current + 1) % layers.length === i) {
+        clone.setVisible(true);
+        setPreviewLayer(clone);
+      } else {
+        clone.setVisible(false);
       }
     });
   }, [layers, identifierProperty, switcherMap]);
@@ -123,6 +126,10 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
   }, [switcherMap]);
 
   useEffect(() => {
+    if (!map) {
+      return;
+    }
+
     const mapClone =  new OlMap({
       view: map.getView(),
       controls: []
@@ -146,15 +153,9 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
   const onSwitcherClick = (evt: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     evt.stopPropagation();
 
-    layers.forEach((layer, index: number) => {
-      if (layer.getVisible()) {
-        if (layers.length - 1 === index) {
-          visibleLayerIndexRef.current = 0;
-        } else {
-          visibleLayerIndexRef.current = index + 1;
-        }
-      }
-    });
+    const index = layers.findIndex(layer => layer.getVisible());
+
+    visibleLayerIndexRef.current = (index + 1) % layers.length;
 
     updateLayerVisibility();
   };

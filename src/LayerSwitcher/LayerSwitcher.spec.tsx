@@ -1,4 +1,5 @@
-import { render, screen,within } from '@testing-library/react';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OlLayer from 'ol/layer/Layer';
 import OlLayerTile from 'ol/layer/Tile';
@@ -37,24 +38,24 @@ describe('<LayerSwitcher />', () => {
   });
 
   it('can be rendered', () => {
-    const { container } = render(<LayerSwitcher layers={layers} map={map} />);
+    const { container } = renderInMapContext(map, <LayerSwitcher layers={layers} />);
     expect(container).toBeVisible();
   });
 
   it('contains map element', () => {
-    const { container } = render(<LayerSwitcher layers={layers} map={map} />);
+    const { container } = renderInMapContext(map, <LayerSwitcher layers={layers} />);
     const mapElement = within(container).getByRole('menu');
     expect(mapElement).toBeVisible();
   });
 
   it('adds a custom className', () => {
-    render(<LayerSwitcher layers={layers} map={map} className="peter" />);
+    renderInMapContext(map, <LayerSwitcher layers={layers} className="peter" />);
     const firstChild = screen.getByRole('menu');
     expect(firstChild).toHaveClass('peter');
   });
 
   it('passes style prop', () => {
-    render(<LayerSwitcher layers={layers} map={map} style={{
+    renderInMapContext(map, <LayerSwitcher layers={layers} style={{
       backgroundColor: 'yellow',
       position: 'inherit'
     }} />);
@@ -68,7 +69,7 @@ describe('<LayerSwitcher />', () => {
   });
 
   it('sets all but one layer to invisible', () => {
-    render(<LayerSwitcher layers={layers} map={map} />);
+    renderInMapContext(map, <LayerSwitcher layers={layers} />);
     const layer0visibile = layers[0].getVisible();
     const layer1visibile = layers[1].getVisible();
     expect(layer0visibile && layer1visibile).toBe(false);
@@ -76,7 +77,7 @@ describe('<LayerSwitcher />', () => {
   });
 
   it('switches the visible layer on click', async () => {
-    const { container } = render(<LayerSwitcher layers={layers} map={map} />);
+    const { container } = renderInMapContext(map, <LayerSwitcher layers={layers} />);
     const switcher = within(container).getByRole('button');
 
     const layer0visible = layers[0].getVisible();
@@ -90,7 +91,7 @@ describe('<LayerSwitcher />', () => {
 
   it('assumes the first provided layer as visible if the initial visibility of all layers is false', () => {
     layers.forEach(l => l.setVisible(false));
-    render(<LayerSwitcher layers={layers} map={map} />);
+    renderInMapContext(map, <LayerSwitcher layers={layers} />);
     expect(layers[0].getVisible()).toBeTruthy();
   });
 
