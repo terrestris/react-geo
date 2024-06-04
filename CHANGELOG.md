@@ -1,3 +1,10 @@
+# [24.0.0-main.6](https://github.com/terrestris/react-geo/compare/v24.0.0-main.5...v24.0.0-main.6) (2024-06-04)
+
+
+### Bug Fixes
+
+* layerswitcher always shows next layer instead of current layer ([1350c97](https://github.com/terrestris/react-geo/commit/1350c97aaeeaaf7f34aa1f53a13268117328238d))
+
 # [24.0.0-main.5](https://github.com/terrestris/react-geo/compare/v24.0.0-main.4...v24.0.0-main.5) (2024-06-03)
 
 
