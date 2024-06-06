@@ -75,3 +75,39 @@ const StandaloneToggleButton = () => {
 
 <StandaloneToggleButton />
 ```
+
+A ToggleButton with a different type and a customized theme:
+
+```jsx
+import ToggleButton from '@terrestris/react-geo/dist/Button/ToggleButton/ToggleButton';
+import {ConfigProvider} from 'antd';
+import * as React from 'react';
+
+const StandaloneToggleButton = () => {
+  const [pressed, setPressed] = React.useState();
+
+  return (
+    <ConfigProvider theme={{
+      cssVar: true,
+      components: {
+        Button: {
+          defaultActiveBg: 'lightgreen'
+        }
+      },
+      token: {
+        colorBgBase: 'lightblue'
+      }
+    }}>
+      <ToggleButton
+        type="dashed"
+        pressed={pressed}
+        onChange={() => setPressed(!pressed)}
+      >
+        Toggle me
+      </ToggleButton>
+    </ConfigProvider>
+  );
+};
+
+<StandaloneToggleButton />
+```

@@ -20,8 +20,8 @@ export { FeatureLabelModal } from './FeatureLabelModal/FeatureLabelModal';
 export {
   default as CoordinateReferenceSystemCombo
 } from './Field/CoordinateReferenceSystemCombo/CoordinateReferenceSystemCombo';
-export { SearchField } from './Field/SearchField/SearchField';
 export { default as ScaleCombo } from './Field/ScaleCombo/ScaleCombo';
+export { SearchField } from './Field/SearchField/SearchField';
 export { AgFeatureGrid } from './Grid/AgFeatureGrid/AgFeatureGrid';
 export { FeatureGrid } from './Grid/FeatureGrid/FeatureGrid';
 export { default as PropertyGrid } from './Grid/PropertyGrid/PropertyGrid';

@@ -1,6 +1,7 @@
+import './ToggleButton.less';
+
 import {
   Button,
-  theme,
   Tooltip
 } from 'antd';
 import {
@@ -10,10 +11,6 @@ import {
 import React, {
   MouseEvent
 } from 'react';
-
-const { useToken } = theme;
-
-import _isFunction from 'lodash/isFunction';
 
 import { CSS_PREFIX } from '../../constants';
 import { SimpleButtonProps } from '../SimpleButton/SimpleButton';
@@ -58,11 +55,6 @@ interface OwnProps {
    * The onChange callback.
    */
   onChange?: (evt: MouseEvent<HTMLButtonElement>, value?: string) => void;
-
-  /**
-   * Sets button background to transparent instead of primary color.
-   */
-  buttonTransparent?: boolean;
 }
 
 export type ToggleButtonProps = OwnProps & Omit<SimpleButtonProps, 'onChange' | 'value'>;
@@ -82,11 +74,8 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
   value,
   onClick,
   onChange = () => {},
-  buttonTransparent = false,
   ...passThroughProps
 }) => {
-
-  const token = useToken();
 
   const handleChange = (evt: React.MouseEvent<HTMLButtonElement>) => {
     if (onClick) {
@@ -118,14 +107,6 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
       {...tooltipProps}
     >
       <Button
-        style={{
-          backgroundColor:
-            buttonTransparent
-              ? 'transparent'
-              : pressed
-                ? token.token.colorPrimaryActive
-                : token.token.colorPrimary
-        }}
         type={type}
         onClick={handleChange}
         onChange={onChange}
