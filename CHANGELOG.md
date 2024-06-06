@@ -1,3 +1,16 @@
+# [24.0.0-main.8](https://github.com/terrestris/react-geo/compare/v24.0.0-main.7...v24.0.0-main.8) (2024-06-06)
+
+
+### Bug Fixes
+
+* use antd css variables to make button active ([fe5504a](https://github.com/terrestris/react-geo/commit/fe5504ade04e6e33fbfbf6bc6b8d5288dda76900))
+
+
+### BREAKING CHANGES
+
+* This removes the buttonTransparent property.
+See the example on how to customize the color via the ConfigProvider.
+
 # [24.0.0-main.7](https://github.com/terrestris/react-geo/compare/v24.0.0-main.6...v24.0.0-main.7) (2024-06-06)
 
 
