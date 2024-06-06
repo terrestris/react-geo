@@ -1,3 +1,10 @@
+# [24.0.0-main.7](https://github.com/terrestris/react-geo/compare/v24.0.0-main.6...v24.0.0-main.7) (2024-06-06)
+
+
+### Bug Fixes
+
+* make property grid tighter ([1130d6e](https://github.com/terrestris/react-geo/commit/1130d6e66923cc2c8ca4307da446f39ce9749934))
+
 # [24.0.0-main.6](https://github.com/terrestris/react-geo/compare/v24.0.0-main.5...v24.0.0-main.6) (2024-06-04)
 
 
