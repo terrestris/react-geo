@@ -109,7 +109,7 @@ const CoordinateInfoExample = () => {
           };
 
           return (
-            Object.keys(features).length === 1 && features[Object.keys(features)[0]].length === 1 ?
+            features.length > 0 ?
               <div>
                 <div
                   style={{
@@ -155,8 +155,8 @@ const CoordinateInfoExample = () => {
                   >
                     <Statistic
                       title="State"
-                      value={getValue(features[Object.keys(features)[0]][0], 'STATE_NAME')
-                        || getValue(features[Object.keys(features)[0]][0], 'name')}
+                      value={getValue(features[0].feature, 'STATE_NAME')
+                        || getValue(features[0].feature, 'name')}
                     />
                   </Spin>
                   <Tooltip
@@ -166,7 +166,7 @@ const CoordinateInfoExample = () => {
                       style={{ marginTop: 16 }}
                       type="primary"
                       onClick={() => {
-                        copy(features[Object.keys(features)[0]][0].get('STATE_NAME'));
+                        copy(features[0].feature.get('STATE_NAME'));
                       }}
                       icon={
                         <FontAwesomeIcon
@@ -177,7 +177,9 @@ const CoordinateInfoExample = () => {
                   </Tooltip>
                 </div>
               </div> :
-              <span>Click on a state to get details about the clicked coordinate.</span>
+              <span>
+                Click on a state to get details about the clicked coordinate.
+              </span>
           );
         }}
       />
