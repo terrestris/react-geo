@@ -1,3 +1,30 @@
+# [24.0.0-main.9](https://github.com/terrestris/react-geo/compare/v24.0.0-main.8...v24.0.0-main.9) (2024-06-10)
+
+
+### Features
+
+* update coordinate button to use the new result value ([a41b996](https://github.com/terrestris/react-geo/commit/a41b9968ebe0c308381217f9be6093267893ffbb))
+
+
+### BREAKING CHANGES
+
+* The input of the render function is no longer grouped by featureType
+ but returns an object for each feature that contains the feature, the layer and the feature type.
+
+If you need the grouping, you can do the following
+
+```
+import { groupBy, mapValues } from 'lodash';
+
+<CoordinateInfo
+  resultRenderer={({ features }) => {
+    const grouped = groupBy(features, 'featureType');
+    const groupedAndMapped = mapValues(grouped, results => results.map(r => r.feature));
+    // ...
+  }}
+/>
+```
+
 # [24.0.0-main.8](https://github.com/terrestris/react-geo/compare/v24.0.0-main.7...v24.0.0-main.8) (2024-06-06)
 
 
