@@ -23,7 +23,7 @@ interface OwnProps {
   attributeNameColumnTitle?: string;
   /**
    * Value in percent representing the width of the attribute name column
-   * The width of attribute value column wil be calculated depending in this
+   * The width of the attribute value column will be calculated based on this
    */
   attributeNameColumnWidthInPercent?: number;
   /**
