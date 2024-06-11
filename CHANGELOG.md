@@ -1,3 +1,10 @@
+# [24.0.0-main.10](https://github.com/terrestris/react-geo/compare/v24.0.0-main.9...v24.0.0-main.10) (2024-06-11)
+
+
+### Bug Fixes
+
+* adjust some css nesting, allows for use of the table scroll property without breaking the css ([c7cc92c](https://github.com/terrestris/react-geo/commit/c7cc92cf07c6e5f46c91c6abb19d60451214aa80))
+
 # [24.0.0-main.9](https://github.com/terrestris/react-geo/compare/v24.0.0-main.8...v24.0.0-main.9) (2024-06-10)
 
 
