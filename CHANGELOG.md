@@ -1,3 +1,10 @@
+# [24.0.0-main.11](https://github.com/terrestris/react-geo/compare/v24.0.0-main.10...v24.0.0-main.11) (2024-06-12)
+
+
+### Bug Fixes
+
+* update react-util ([536b634](https://github.com/terrestris/react-geo/commit/536b634a836660c301cddabe6c866892263050d6))
+
 # [24.0.0-main.10](https://github.com/terrestris/react-geo/compare/v24.0.0-main.9...v24.0.0-main.10) (2024-06-11)
 
 
