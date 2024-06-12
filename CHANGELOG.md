@@ -1,3 +1,109 @@
+# [24.0.0](https://github.com/terrestris/react-geo/compare/v23.5.0...v24.0.0) (2024-06-12)
+
+
+### Bug Fixes
+
+* add build info to readme ([#3866](https://github.com/terrestris/react-geo/issues/3866)) ([7b97b95](https://github.com/terrestris/react-geo/commit/7b97b9505623e7997c10ebe4b6f9db781755fcfc))
+* adds null check ([5a78b77](https://github.com/terrestris/react-geo/commit/5a78b7736881da8d4970dca1673de16c55bff938))
+* adjust some css nesting, allows for use of the table scroll property without breaking the css ([c7cc92c](https://github.com/terrestris/react-geo/commit/c7cc92cf07c6e5f46c91c6abb19d60451214aa80))
+* adjust to breaking changes in latest version of react-util ([2711a63](https://github.com/terrestris/react-geo/commit/2711a6378c9186e9871e6e68d0b115d4b5d1284c))
+* adjust to change Key type in @types/react ([261ea52](https://github.com/terrestris/react-geo/commit/261ea52354359a6543ff4e96ce0b81b929f05c7d))
+* explicit imports ([40af413](https://github.com/terrestris/react-geo/commit/40af41342c1f6247f0203f9d8a825a3c67f22e2f))
+* layerswitcher always shows next layer instead of current layer ([1350c97](https://github.com/terrestris/react-geo/commit/1350c97aaeeaaf7f34aa1f53a13268117328238d))
+* **LayerTree:** make contents of title clickable ([334e8aa](https://github.com/terrestris/react-geo/commit/334e8aac5467f90adfa9f22b56804d38d242f005))
+* made use of olInteraction hook ([7b0732e](https://github.com/terrestris/react-geo/commit/7b0732e4cc67d5e6285727d9bc5681072b34fbe4))
+* make property grid tighter ([1130d6e](https://github.com/terrestris/react-geo/commit/1130d6e66923cc2c8ca4307da446f39ce9749934))
+* make use of dayjs, don't pass icon prop in LayerTreeNode ([c0cffa8](https://github.com/terrestris/react-geo/commit/c0cffa84ae196b22d27456fa6d97e3985e6136e4))
+* make use of UseMeasureProps ([e73bfa7](https://github.com/terrestris/react-geo/commit/e73bfa7da3f01c044f907ee32171c678fb2d6678))
+* readd changes that were lost in rebase ([f1c758f](https://github.com/terrestris/react-geo/commit/f1c758f0dad622c2e77f194e20f566062f952342))
+* remove the DigitizeButton ([7cf8263](https://github.com/terrestris/react-geo/commit/7cf82630eddced00249ade6fbf88b3535dec8086))
+* sets the transparent background to false again ([aad694f](https://github.com/terrestris/react-geo/commit/aad694ff8af64fba9683d0b3041dac69694f9c3c))
+* simplify regex ([106e2c0](https://github.com/terrestris/react-geo/commit/106e2c0e0a5b91f4f6e3101dd0a06952e262f951))
+* update dependencies ([30d9b90](https://github.com/terrestris/react-geo/commit/30d9b90b18d35c6d8091cc86f520b454b76de954))
+* update react-util ([536b634](https://github.com/terrestris/react-geo/commit/536b634a836660c301cddabe6c866892263050d6))
+* use antd css variables to make button active ([fe5504a](https://github.com/terrestris/react-geo/commit/fe5504ade04e6e33fbfbf6bc6b8d5288dda76900))
+
+
+### chore
+
+* migrate to typescript v5 ([bd8812f](https://github.com/terrestris/react-geo/commit/bd8812f481c1c9dd7a3afe1e22b4f31deb73ce9f))
+* refactor geolocation button ([f646ed5](https://github.com/terrestris/react-geo/commit/f646ed5ebfa05f50a7308b315a1bd455e3b11001))
+* update dependencies ([2515987](https://github.com/terrestris/react-geo/commit/2515987fe0bf4d3dc73f08a82676d3c15841423a))
+* update to ol 8 api ([fc1ff8c](https://github.com/terrestris/react-geo/commit/fc1ff8cb64d9d2ef0730c3ad73ea579e6fc76a1e))
+
+
+### Code Refactoring
+
+* class to function component ([3b13ce1](https://github.com/terrestris/react-geo/commit/3b13ce13285d07b86eb551461faa1ab16d73272c))
+* components FeatureGrid and AgFeatureGrid to function component ([ea48bb3](https://github.com/terrestris/react-geo/commit/ea48bb38101f13b5befdfeddf9ad622849d6cd41))
+* remove deprecated HOC components ([ce5bdb7](https://github.com/terrestris/react-geo/commit/ce5bdb771ee7441daa5ad6b9bdf749245b36e7b9))
+* remove Panel, Window and Titlebar components ([c749faa](https://github.com/terrestris/react-geo/commit/c749faa3614a051204e7dfab47c0617729d4a08e))
+* simplify the ToggleButton and ToggleGroup components ([14760f0](https://github.com/terrestris/react-geo/commit/14760f064d7f79aa03a1db942c9af19b74b95c5d))
+
+
+### Features
+
+* add visible option for WfsSearchField ([a26f844](https://github.com/terrestris/react-geo/commit/a26f84406de50e185b5b4f81eda5a255498cc92a))
+* adds a flag for transparent background of ToggleButton ([ef77c9d](https://github.com/terrestris/react-geo/commit/ef77c9dcef7a260cf103c6e0af8878b12441ab42))
+* adds a wfs layer and feature-info ([#3826](https://github.com/terrestris/react-geo/issues/3826)) ([38dabed](https://github.com/terrestris/react-geo/commit/38dabed4be41b0e116840ba3e0840b31fc3dc2d8))
+* adds the onSuccess callback to CoordinateInfo component ([1c0bec3](https://github.com/terrestris/react-geo/commit/1c0bec33c28105773432a6e6271c0f8e98768118))
+* allow CoordinateInfo to request Feature Info in json format ([18e2a6f](https://github.com/terrestris/react-geo/commit/18e2a6f9457413a21ddedf1875c734085378a8a4))
+* combine WfsSearch and WfsSearchInput to WfsSearchField ([a88b54b](https://github.com/terrestris/react-geo/commit/a88b54b17f97e7f7a7f1e987e20b927bbd4737dc))
+* introduce useNominatim hook ([f4c8597](https://github.com/terrestris/react-geo/commit/f4c8597ee29a854aece656676639dc3058e8f6f1))
+* pass through AutoComplete props ([698d913](https://github.com/terrestris/react-geo/commit/698d91337fb548b1feddcc9e0741d1b39b35ed9d))
+* pass through on fetch success callbacks ([0b624bd](https://github.com/terrestris/react-geo/commit/0b624bd018b98bac9d292ff7dc1ea022b7884b9b))
+* readd MapComponent, FloatingMapLogo and BackgroundLayerChooser ([a32aee4](https://github.com/terrestris/react-geo/commit/a32aee48673a74b4ee6c679c979bec85f554851b))
+* refactor code into `useDraw` hook ([cd657fe](https://github.com/terrestris/react-geo/commit/cd657fe2d6f009dad9937227c9112c0b58e603e9))
+* remove toolbar and user chip component ([3fe4ce2](https://github.com/terrestris/react-geo/commit/3fe4ce2a0e5fd99d0d9ce9525d2711df02d1bd7d))
+* render urls as anchor element ([9b63cd2](https://github.com/terrestris/react-geo/commit/9b63cd2b976272d3c291e21e6988c77da742d47d))
+* unify functionality of WfsField and NominatimField into SearchField ([f83539b](https://github.com/terrestris/react-geo/commit/f83539bc7c01265c0fc9a9bdba191c7b25ed8f75))
+* update coordinate button to use the new result value ([a41b996](https://github.com/terrestris/react-geo/commit/a41b9968ebe0c308381217f9be6093267893ffbb))
+* upgraded ol to v9 ([f2bd3d0](https://github.com/terrestris/react-geo/commit/f2bd3d0617685efe397c7bc22391b2e80822fa9d))
+* use `WmsLayer` from `ol-util` instead of `react-util` ([0abde72](https://github.com/terrestris/react-geo/commit/0abde72b1355907203b9cd2ce9017d4c3709f390))
+* use coordinateInfo hook ([7dddfce](https://github.com/terrestris/react-geo/commit/7dddfce96c9308da18137609617cc9ddde0a42b5))
+* use useProjFromEpsgIO hook ([741851d](https://github.com/terrestris/react-geo/commit/741851da773f7a52c6caf60df9113dfc6107206c))
+* use wfs hook ([189b0bb](https://github.com/terrestris/react-geo/commit/189b0bb92f13f14317b913724dad2ece3d4e6e4c))
+
+
+### BREAKING CHANGES
+
+* This removes the buttonTransparent property.
+See the example on how to customize the color via the ConfigProvider.
+* The input of the render function is no longer grouped by featureType
+ but returns an object for each feature that contains the feature, the layer and the feature type.
+
+If you need the grouping, you can do the following
+
+```
+import { groupBy, mapValues } from 'lodash';
+
+<CoordinateInfo
+  resultRenderer={({ features }) => {
+    const grouped = groupBy(features, 'featureType');
+    const groupedAndMapped = mapValues(grouped, results => results.map(r => r.feature));
+    // ...
+  }}
+/>
+```
+* The `WfsField` and `NominatimField` hooks are removed.
+Please check the example for `SearchField`.
+* removes props map and toggleOnClick
+* share common grid props among all grids
+* make use of new useWfs hook in react-util
+
+Co-authored-by: Amanda Sefu-Beierl <atsefu@gmail.com>
+* refactors CoordinateReferenceSystemCombo to use useProjFromEpsgIO for CCRS fetching
+* refactors CoordinateInfo as funnction compononent
+* update ol-util peer dependency
+* The pressed state of the ToggleButton is controlled now
+* Typescript configuration
+* use geolocation hook of react-util
+* the AddWmsLayerEntry accepts a map prop now (required for attributions)
+* These componentes are not available anymore
+* Panel, Window and Titlebar components are not existing anymore
+* mappify, loadify, isVisibleComponent HOCs as well as MapProvider class were removed
+* Removes the deprecated DigitizeButton in favour of the DrawButton
+
 # [24.0.0-main.11](https://github.com/terrestris/react-geo/compare/v24.0.0-main.10...v24.0.0-main.11) (2024-06-12)
 
 
