@@ -1,27 +1,31 @@
+The `CoordinateInfo` component is only a very shallow wrapper around the `useCoordinateInfo` hook of react-util.
+Often it might be easier to use the hook directly, see the second example on how it's done.
+
 ```jsx
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faCopy} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import CoordinateInfo from '@terrestris/react-geo/dist/CoordinateInfo/CoordinateInfo';
 import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import useCoordinateInfo from '@terrestris/react-util/dist/Hooks/useCoordinateInfo/useCoordinateInfo';
 import {
-  Button,
+  Button, Divider,
   Spin,
   Statistic,
   Tooltip
 } from 'antd';
 import * as copy from 'copy-to-clipboard';
 import GeoJSON from 'ol/format/GeoJSON.js';
-import { Vector as VectorLayer } from 'ol/layer.js';
+import {Vector as VectorLayer} from 'ol/layer.js';
 import OlLayerTile from 'ol/layer/Tile';
-import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
+import {bbox as bboxStrategy} from 'ol/loadingstrategy.js';
 import OlMap from 'ol/Map';
-import { fromLonLat } from 'ol/proj';
+import {fromLonLat} from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import VectorSource from 'ol/source/Vector.js';
 import OlView from 'ol/View';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 const wmsLayer = new OlLayerTile({
   name: 'States (USA)',
@@ -60,6 +64,93 @@ const vectorLayer = new VectorLayer({
   },
 });
 
+const queryLayers = [wmsLayer, vectorLayer];
+
+const getValue = (feature, key) => {
+  if (feature.getProperties().hasOwnProperty(key)) {
+    return feature.get(key);
+  }
+  return null;
+};
+
+const FeatureInfo = ({
+  features,
+  loading,
+  clickCoordinate
+}) => {
+  return !loading && features.length > 0 ?
+    <div>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Spin
+          spinning={loading}
+        >
+          <Statistic
+            title="Coordinate"
+            value={clickCoordinate.join(', ')}
+          />
+        </Spin>
+        <Tooltip
+          title="Copy to clipboard"
+        >
+          <Button
+            style={{marginTop: 16}}
+            type="primary"
+            onClick={() => {
+              copy(clickCoordinate.join(', '));
+            }}
+            icon={
+              <FontAwesomeIcon
+                icon={faCopy}
+              />
+            }
+          />
+        </Tooltip>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Spin
+          spinning={loading}
+        >
+          <Statistic
+            title="State"
+            value={getValue(features[0].feature, 'STATE_NAME')
+              || getValue(features[0].feature, 'name')}
+          />
+        </Spin>
+        <Tooltip
+          title="Copy to clipboard"
+        >
+          <Button
+            style={{marginTop: 16}}
+            type="primary"
+            onClick={() => {
+              copy(features[0].feature.get('STATE_NAME'));
+            }}
+            icon={
+              <FontAwesomeIcon
+                icon={faCopy}
+              />
+            }
+          />
+        </Tooltip>
+      </div>
+    </div> :
+    <span>
+      Click on a state to get details about the clicked coordinate.
+    </span>
+};
+
 const CoordinateInfoExample = () => {
 
   const [map, setMap] = useState();
@@ -93,99 +184,34 @@ const CoordinateInfoExample = () => {
           height: '400px'
         }}
       />
+      <Divider />
+      <h3>
+        Using the `CoordinateInfo` component
+      </h3>
       <CoordinateInfo
-        map={this.map}
-        queryLayers={[wmsLayer, vectorLayer]}
-        resultRenderer={(opts) => {
-          const features = opts.features;
-          const clickCoord = opts.clickCoordinate;
-          const loading = opts.loading;
-
-          const getValue = (feature, key) => {
-            if (feature.getProperties().hasOwnProperty(key)) {
-              return feature.get(key);
-            }
-            return null;
-          };
-
-          return (
-            features.length > 0 ?
-              <div>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <Spin
-                    spinning={loading}
-                  >
-                    <Statistic
-                      title="Coordinate"
-                      value={clickCoord.join(', ')}
-                    />
-                  </Spin>
-                  <Tooltip
-                    title="Copy to clipboard"
-                  >
-                    <Button
-                      style={{ marginTop: 16 }}
-                      type="primary"
-                      onClick={() => {
-                        copy(clickCoord.join(', '));
-                      }}
-                      icon={
-                        <FontAwesomeIcon
-                          icon={faCopy}
-                        />
-                      }
-                    />
-                  </Tooltip>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <Spin
-                    spinning={loading}
-                  >
-                    <Statistic
-                      title="State"
-                      value={getValue(features[0].feature, 'STATE_NAME')
-                        || getValue(features[0].feature, 'name')}
-                    />
-                  </Spin>
-                  <Tooltip
-                    title="Copy to clipboard"
-                  >
-                    <Button
-                      style={{ marginTop: 16 }}
-                      type="primary"
-                      onClick={() => {
-                        copy(features[0].feature.get('STATE_NAME'));
-                      }}
-                      icon={
-                        <FontAwesomeIcon
-                          icon={faCopy}
-                        />
-                      }
-                    />
-                  </Tooltip>
-                </div>
-              </div> :
-              <span>
-                Click on a state to get details about the clicked coordinate.
-              </span>
-          );
-        }}
+        queryLayers={queryLayers}
+        resultRenderer={(results => <FeatureInfo {...results} />)}
       />
+      <Divider />
+      <h3>
+        Using `useCoordinateInfo` in a custom component
+      </h3>
+      <MyCoordinateInfo />
     </MapContext.Provider>
   );
 };
 
+const MyCoordinateInfo = () => {
+  // The useCoordinateInfo hook needs to run inside a map context
+  const results = useCoordinateInfo({
+    queryLayers
+  });
+
+  return <FeatureInfo
+    {...results}
+  />;
+};
+
 <CoordinateInfoExample />;
 ```
+
