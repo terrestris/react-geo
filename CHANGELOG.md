@@ -1,3 +1,10 @@
+## [24.0.2](https://github.com/terrestris/react-geo/compare/v24.0.1...v24.0.2) (2024-06-19)
+
+
+### Bug Fixes
+
+* **CoordinateInfo:** update docs and react-util ([790e91b](https://github.com/terrestris/react-geo/commit/790e91ba33c43051943a36ccd7e94544fce66162))
+
 ## [24.0.1](https://github.com/terrestris/react-geo/compare/v24.0.0...v24.0.1) (2024-06-18)
 
 
