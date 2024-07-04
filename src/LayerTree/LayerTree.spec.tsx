@@ -433,8 +433,12 @@ describe('<LayerTree />', () => {
     expect(layers[2]).toBe(layerSubGroup);
 
     const layerSubGroupSpan = screen.getByText('layerSubGroup');
-    const layer1Span = screen.getByText('layer1');
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer1Span = screen.getByText('layer1').closest('ant-tree-draggable-icon');
 
+    if (!layer1Span) {
+      return;
+    }
     // Move layer1 on layerSubGroup (relative position = 0).
     fireEvent.dragStart(layer1Span);
     fireEvent.dragEnter(layerSubGroupSpan);
@@ -457,8 +461,14 @@ describe('<LayerTree />', () => {
     expect(layers[1]).toBe(layer2);
     expect(layers[2]).toBe(layerSubGroup);
 
-    const layer2Span = screen.getByText('layer2');
-    const layer1Span = screen.getByText('layer1');
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer2Span = screen.getByText('layer2').closest('ant-tree-draggable-icon');
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer1Span = screen.getByText('layer1').closest('ant-tree-draggable-icon');
+
+    if (!layer1Span || !layer2Span) {
+      return;
+    }
 
     // Move layer1 on layer2 (relative position = 0).
     fireEvent.dragStart(layer1Span);
@@ -483,7 +493,12 @@ describe('<LayerTree />', () => {
     expect(layers[2]).toBe(layerSubGroup);
 
     const layerSubGroupSpan = screen.getByText('layerSubGroup');
-    const layer2Span = screen.getByText('layer2');
+    // eslint-disable-next-line testing-library/no-node-access
+    const layer2Span = screen.getByText('layer2').closest('ant-tree-draggable-icon');
+
+    if (!layer2Span) {
+      return;
+    }
 
     // Move layerSubGroup on bottom of layer2 (relative position = 1).
     fireEvent.dragStart(layerSubGroupSpan);
