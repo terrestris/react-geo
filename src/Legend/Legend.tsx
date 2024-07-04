@@ -59,6 +59,10 @@ export interface BaseProps {
    * Additional headers to apply for the img request.
    */
   headers?: HeadersInit;
+  /**
+   * Defines whether the loading mask should be displayed or not. Per default the loading mask is active.
+   */
+  loadingMask?: boolean;
 }
 
 export type LegendProps = BaseProps & React.HTMLAttributes<HTMLDivElement>;
@@ -76,6 +80,7 @@ export const Legend: React.FC<LegendProps> = ({
   onError,
   errorMsg,
   headers,
+  loadingMask = true,
   ...passThroughProps
 }) => {
 
@@ -140,7 +145,7 @@ export const Legend: React.FC<LegendProps> = ({
       {...passThroughProps}
     >
       <Spin
-        spinning={loading}
+        spinning={loadingMask ? loading : false}
         indicator={(
           <FontAwesomeIcon
             icon={faCircleNotch}
