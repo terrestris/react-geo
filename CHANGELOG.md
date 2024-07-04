@@ -1,3 +1,10 @@
+## [24.1.1](https://github.com/terrestris/react-geo/compare/v24.1.0...v24.1.1) (2024-07-04)
+
+
+### Bug Fixes
+
+* fixing dragging from tree node ([#3894](https://github.com/terrestris/react-geo/issues/3894)) ([0094f45](https://github.com/terrestris/react-geo/commit/0094f453518f90c9b6f764b0a08999addd65d93c))
+
 # [24.1.0](https://github.com/terrestris/react-geo/compare/v24.0.2...v24.1.0) (2024-07-04)
 
 
