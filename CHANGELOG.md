@@ -1,3 +1,10 @@
+# [24.1.0](https://github.com/terrestris/react-geo/compare/v24.0.2...v24.1.0) (2024-07-04)
+
+
+### Features
+
+* make loading mask configurable ([#3895](https://github.com/terrestris/react-geo/issues/3895)) ([6687cdc](https://github.com/terrestris/react-geo/commit/6687cdc4a71d4dc4464f6b9bf442c339e88ed7e8))
+
 ## [24.0.2](https://github.com/terrestris/react-geo/compare/v24.0.1...v24.0.2) (2024-06-19)
 
 
