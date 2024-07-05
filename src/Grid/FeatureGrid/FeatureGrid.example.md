@@ -80,6 +80,89 @@ const FeatureGridExample = () => {
 <FeatureGridExample />
 ```
 
+This example demonstrates the usage of the FeatureGrid with draggable columns:
+
+```jsx
+import FeatureGrid from '@terrestris/react-geo/dist/Grid/FeatureGrid/FeatureGrid';
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
+import OlFormatGeoJSON from 'ol/format/GeoJSON';
+import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
+import { fromLonLat } from 'ol/proj';
+import OlSourceOSM from 'ol/source/OSM';
+import OlView from 'ol/View';
+import * as React from 'react';
+
+import federalStates from '../../../assets/federal-states-ger.json';
+
+const format = new OlFormatGeoJSON();
+const features = format.readFeatures(federalStates);
+
+const nameColumnRenderer = val => <a href={`https://en.wikipedia.org/wiki/${val}`}>{val}</a>;
+
+const FeatureGridExample = () => {
+  const map = new OlMap({
+    layers: [
+      new OlLayerTile({
+        name: 'OSM',
+        source: new OlSourceOSM()
+      })
+    ],
+    view: new OlView({
+      center: fromLonLat([37.40570, 8.81566]),
+      zoom: 4
+    })
+  });
+
+  return (
+    <MapContext.Provider value={map}>
+      <FeatureGrid
+        features={features}
+        zoomToExtent={true}
+        selectable={true}
+        draggableColumns={true}
+        attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
+        columns={[{
+          dataIndex: 'GEN',
+          title: 'Name',
+          render: nameColumnRenderer,
+          sorter: (a, b) => {
+            const nameA = a.GEN.toUpperCase();
+            const nameB = b.GEN.toUpperCase();
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+
+            return 0;
+          },
+          defaultSortOrder: 'ascend'
+        }, {
+          dataIndex: 'SHAPE_LENG',
+          title: 'Length',
+          render: val => Math.round(val)
+        }, {
+          dataIndex: 'SHAPE_AREA',
+          title: 'Area',
+          render: val => Math.round(val)
+        }]}
+      />
+      <MapComponent
+        map={map}
+        style={{
+          height: '400px'
+        }}
+      />
+    </MapContext.Provider>
+  );
+}
+
+<FeatureGridExample />
+```
+
 An example with a remote feature source.
 
 ```jsx
