@@ -1,3 +1,9 @@
+import {
+  closestCenter, DndContext, DragEndEvent, DragOverEvent, DragOverlay, PointerSensor,
+  UniqueIdentifier, useSensor, useSensors
+} from '@dnd-kit/core';
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
 import { Table } from 'antd';
@@ -25,9 +31,6 @@ import {
   defaultSelectStyle,
   RgCommonGridProps
 } from '../commonGrid';
-import { closestCenter, DndContext, DragEndEvent, DragOverEvent, DragOverlay, PointerSensor, UniqueIdentifier, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable';
-import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
 
 interface HeaderCellProps extends React.HTMLAttributes<HTMLTableCellElement> {
   id: string;
@@ -200,7 +203,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       }
     });
 
-    selectedFeatures.forEach((feature: OlFeature<OlGeometry>|RenderFeature) => {
+    selectedFeatures.forEach((feature: OlFeature<OlGeometry> | RenderFeature) => {
       if (feature instanceof RenderFeature) {
         return;
       }
@@ -281,10 +284,10 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
    * Returns the column definitions out of the attributes of the first
    * given feature.
   */
- const getColumnDefs = useCallback(() => {
-   const columnDefs: ColumnsType<T> = [];
-   if (features.length < 1) {
-     return [];
+  const getColumnDefs = useCallback(() => {
+    const columnDefs: ColumnsType<T> = [];
+    if (features.length < 1) {
+      return [];
     }
 
     const feature = features[0];
@@ -324,7 +327,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   /**
    * Returns the table row data from all the given features.
   */
- const getTableData = useCallback((): InternalTableRecord[] => {
+  const getTableData = useCallback((): InternalTableRecord[] => {
     return features.map(feature => {
       const properties = feature.getProperties();
       const filtered: typeof properties = Object.keys(properties)
@@ -561,7 +564,8 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       onDragOver={onDragOver}
       collisionDetection={closestCenter}
     >
-      <SortableContext items={convertKeysToIdentifiers(featureColumns.map((i) => i.key))} strategy={horizontalListSortingStrategy}>
+      <SortableContext items={convertKeysToIdentifiers(featureColumns.map((i) => i.key))}
+        strategy={horizontalListSortingStrategy}>
         <DragIndexContext.Provider value={dragIndex}>
           {table}
         </DragIndexContext.Provider>
