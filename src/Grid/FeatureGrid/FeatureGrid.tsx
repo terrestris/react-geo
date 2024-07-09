@@ -47,6 +47,9 @@ interface DragIndexState {
 }
 
 type OwnProps = {
+  /**
+   * When active the order of the columns can be changed dynamically using drag & drop.
+   */
   draggableColumns?: boolean;
   onRowSelectionChange?: (selectedRowKeys: Array<number | string | bigint>,
     selectedFeatures: OlFeature<OlGeometry>[]) => void;
@@ -99,13 +102,13 @@ const TableHeaderCell: React.FC<HeaderCellProps> = (props) => {
 };
 
 export const FeatureGrid = <T extends AnyObject = AnyObject,>({
-  attributeBlacklist = [],
+  attributeBlacklist,
   children,
   className,
-  columns = [],
+  columns,
   draggableColumns = false,
   featureStyle = defaultFeatureStyle,
-  features = [],
+  features,
   highlightStyle = defaultHighlightStyle,
   keyFunction = getUid,
   layerName = defaultFeatureGridLayerName,
@@ -128,13 +131,14 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [dragIndex, setDragIndex] = useState<DragIndexState>({ active: -1, over: -1 });
   const [featureColumns, setFeatureColumns] = useState<ColumnType<T>[]>(initialColumns);
+  const [columnDefinition, setColumnDefinition] = useState<ColumnsType<T>>([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 1,
-      },
-    }),
+        distance: 1
+      }
+    })
   );
 
   const map = useMap();
@@ -190,7 +194,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       layerFilter: (layerCand: OlLayerBase) => layerCand === layer
     }) || [];
 
-    features.forEach(feature => {
+    features?.forEach(feature => {
       const key = _kebabCase(keyFunction(feature));
       const sel = `.${defaultRowClassName}.${rowKeyClassNamePrefix}${key} > td`;
       const els = document.querySelectorAll(sel);
@@ -246,7 +250,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       map.on('singleclick', onMapSingleClick);
     }
 
-    if (zoomToExtent) {
+    if (zoomToExtent && features) {
       zoomToFeatures(features);
     }
 
@@ -261,6 +265,10 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
 
   useEffect(() => {
     layer?.getSource()?.clear();
+    if (!features) {
+      return;
+    }
+
     layer?.getSource()?.addFeatures(features);
 
     if (zoomToExtent) {
@@ -284,23 +292,26 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
    * Returns the column definitions out of the attributes of the first
    * given feature.
   */
-  const getColumnDefs = useCallback(() => {
+  useEffect(() => {
     const columnDefs: ColumnsType<T> = [];
-    if (features.length < 1) {
-      return [];
+    if (features && features.length < 1) {
+      return;
     }
 
-    const feature = features[0];
+    const feature = features?.[0];
+    const props = feature?.getProperties();
 
-    const props = feature.getProperties();
+    if (!props) {
+      return;
+    }
 
-    Object.keys(props).forEach(key => {
-      if (attributeBlacklist.includes(key)) {
-        return;
+    for (const key of Object.keys(props)) {
+      if (attributeBlacklist?.includes(key)) {
+        continue;
       }
 
       if (props[key] instanceof OlGeometry) {
-        return;
+        continue;
       }
 
       columnDefs.push({
@@ -309,25 +320,30 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
         key: key,
         ...columns?.find(col => (col as ColumnType<InternalTableRecord>).dataIndex === key)
       });
-    });
+    }
 
-    return columnDefs;
-  }, [columns, attributeBlacklist, features]);
+    setColumnDefinition(columnDefs);
+  }, [columns, features, attributeBlacklist]);
 
   useEffect(() => {
-    const columnDefs = getColumnDefs().map((column, i) => ({
+    const columnDefs = columnDefinition.map((column, i) => ({
       ...column,
       key: `${i}`,
       onHeaderCell: () => ({ id: `${i}` }),
-      onCell: () => ({ id: `${i}` }),
+      onCell: () => ({ id: `${i}` })
     }));
     setFeatureColumns(columnDefs);
-  }, [columns, getColumnDefs]);
+  }, [columnDefinition]);
 
   /**
    * Returns the table row data from all the given features.
   */
   const getTableData = useCallback((): InternalTableRecord[] => {
+
+    if (!features) {
+      return [];
+    }
+
     return features.map(feature => {
       const properties = feature.getProperties();
       const filtered: typeof properties = Object.keys(properties)
@@ -351,7 +367,12 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   /**
    * Returns the correspondig feature for the given table row key.
    */
-  const getFeatureFromRowKey = (key: number | string | bigint): OlFeature<OlGeometry> => {
+  const getFeatureFromRowKey = (key: number | string | bigint): OlFeature<OlGeometry> | null => {
+
+    if (!features) {
+      return null;
+    }
+
     const feature = features.filter(f => keyFunction(f) === key);
 
     return feature[0];
@@ -366,6 +387,10 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     }
 
     const feature = getFeatureFromRowKey(row.key);
+
+    if (!feature) {
+      return;
+    }
 
     if (_isFunction(onRowClickProp)) {
       onRowClickProp(row, feature);
@@ -385,6 +410,10 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
 
     const feature = getFeatureFromRowKey(row.key);
 
+    if (!feature) {
+      return;
+    }
+
     if (_isFunction(onRowMouseOverProp)) {
       onRowMouseOverProp(row, feature);
     }
@@ -401,6 +430,10 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     }
 
     const feature = getFeatureFromRowKey(row.key);
+
+    if (!feature) {
+      return;
+    }
 
     if (_isFunction(onRowMouseOutProp)) {
       onRowMouseOutProp(row, feature);
@@ -459,14 +492,20 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       return;
     }
 
-    features.forEach(feature => feature.setStyle(undefined));
+    features?.forEach(feature => feature.setStyle(undefined));
   };
 
   /**
    * Called if the selection changes.
    */
   const onSelectChange = (rowKeys: Key[]) => {
-    const selectedFeatures = rowKeys.map(key => getFeatureFromRowKey(key));
+    const selectedFeatures = rowKeys
+      .map(key => getFeatureFromRowKey(key))
+      .filter(feat => feat) as OlFeature<OlGeometry>[];
+
+    if (selectedFeatures.length === 0 ) {
+      return;
+    }
 
     if (_isFunction(onRowSelectionChange)) {
       onRowSelectionChange(rowKeys, selectedFeatures);
@@ -514,7 +553,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     setDragIndex({
       active: active.id,
       over: over?.id,
-      direction: overIndex > activeIndex ? 'right' : 'left',
+      direction: overIndex > activeIndex ? 'right' : 'left'
     });
   };
 
@@ -534,7 +573,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
 
   const draggableComponents = {
     header: { cell: TableHeaderCell },
-    body: { cell: TableBodyCell },
+    body: { cell: TableBodyCell }
   };
 
   const table = (
