@@ -1,3 +1,10 @@
+# [24.2.0](https://github.com/terrestris/react-geo/compare/v24.1.1...v24.2.0) (2024-07-11)
+
+
+### Features
+
+* fixing typo and trigger release for https://github.com/terrestris/react-geo/pull/3897 ([c726d5f](https://github.com/terrestris/react-geo/commit/c726d5f028cee16f8f5ec377ecf4c57bf9d8e81d))
+
 ## [24.1.1](https://github.com/terrestris/react-geo/compare/v24.1.0...v24.1.1) (2024-07-04)
 
 
