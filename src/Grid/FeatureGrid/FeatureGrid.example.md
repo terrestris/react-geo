@@ -163,7 +163,7 @@ const FeatureGridExample = () => {
 <FeatureGridExample />
 ```
 
-An example with a remote feature source.
+An example with a remote feature source:
 
 ```jsx
 import UrlUtil from '@terrestris/base-util/dist/UrlUtil/UrlUtil';
