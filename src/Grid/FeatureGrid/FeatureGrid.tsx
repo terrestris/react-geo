@@ -1,3 +1,9 @@
+import {
+  closestCenter, DndContext, DragEndEvent, DragOverEvent, DragOverlay, PointerSensor,
+  UniqueIdentifier, useSensor, useSensors
+} from '@dnd-kit/core';
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
 import { Table } from 'antd';
@@ -15,7 +21,7 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import RenderFeature from 'ol/render/Feature';
 import OlSourceVector from 'ol/source/Vector';
-import React, { Key, useCallback, useEffect, useState } from 'react';
+import React, { createContext, Key, useCallback, useContext, useEffect, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 import {
@@ -26,7 +32,25 @@ import {
   RgCommonGridProps
 } from '../commonGrid';
 
+interface HeaderCellProps extends React.HTMLAttributes<HTMLTableCellElement> {
+  id: string;
+}
+
+interface BodyCellProps extends React.HTMLAttributes<HTMLTableCellElement> {
+  id: string;
+}
+
+interface DragIndexState {
+  active: UniqueIdentifier;
+  over: UniqueIdentifier | undefined;
+  direction?: 'left' | 'right';
+}
+
 type OwnProps = {
+  /**
+   * When active the order of the columns can be changed dynamically using drag & drop.
+   */
+  draggableColumns?: boolean;
   onRowSelectionChange?: (selectedRowKeys: Array<number | string | bigint>,
     selectedFeatures: OlFeature<OlGeometry>[]) => void;
 };
@@ -41,13 +65,50 @@ const rowKeyClassNamePrefix = 'row-key-';
 
 const cellRowHoverClassName = 'ant-table-cell-row-hover';
 
+const DragIndexContext = createContext<DragIndexState>({ active: -1, over: -1 });
+
+const dragActiveStyle = (dragState: DragIndexState, id: string) => {
+  const { active, over, direction } = dragState;
+  // drag active style
+  let style: React.CSSProperties = {};
+  if (active && active === id) {
+    style = { backgroundColor: 'gray', opacity: 0.5 };
+  }
+  // dragover dashed style
+  else if (over && id === over && active !== over) {
+    style =
+      direction === 'right'
+        ? { borderRight: '1px dashed gray' }
+        : { borderLeft: '1px dashed gray' };
+  }
+  return style;
+};
+
+const TableBodyCell: React.FC<BodyCellProps> = (props) => {
+  const dragState = useContext<DragIndexState>(DragIndexContext);
+  return <td {...props} style={{ ...props.style, ...dragActiveStyle(dragState, props.id) }} />;
+};
+
+const TableHeaderCell: React.FC<HeaderCellProps> = (props) => {
+  const dragState = useContext(DragIndexContext);
+  const { attributes, listeners, setNodeRef, isDragging } = useSortable({ id: props.id });
+  const style: React.CSSProperties = {
+    ...props.style,
+    cursor: 'move',
+    ...(isDragging ? { position: 'relative', zIndex: 9999, userSelect: 'none' } : {}),
+    ...dragActiveStyle(dragState, props.id),
+  };
+  return <th {...props} ref={setNodeRef} style={style} {...attributes} {...listeners} />;
+};
+
 export const FeatureGrid = <T extends AnyObject = AnyObject,>({
-  attributeBlacklist = [],
+  attributeBlacklist,
   children,
   className,
   columns,
+  draggableColumns = false,
   featureStyle = defaultFeatureStyle,
-  features = [],
+  features,
   highlightStyle = defaultHighlightStyle,
   keyFunction = getUid,
   layerName = defaultFeatureGridLayerName,
@@ -62,9 +123,23 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   ...passThroughProps
 }: FeatureGridProps<T>): React.ReactElement | null => {
 
-  type InternalTableRecord = (T & {key?: string});
+  type InternalTableRecord = (T & { key?: string });
+  type SortableItemId = UniqueIdentifier | { id: UniqueIdentifier };
+
+  const initialColumns: ColumnType<T>[] = [];
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const [dragIndex, setDragIndex] = useState<DragIndexState>({ active: -1, over: -1 });
+  const [featureColumns, setFeatureColumns] = useState<ColumnType<T>[]>(initialColumns);
+  const [columnDefinition, setColumnDefinition] = useState<ColumnsType<T>>([]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 1
+      }
+    })
+  );
 
   const map = useMap();
 
@@ -119,7 +194,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       layerFilter: (layerCand: OlLayerBase) => layerCand === layer
     }) || [];
 
-    features.forEach(feature => {
+    features?.forEach(feature => {
       const key = _kebabCase(keyFunction(feature));
       const sel = `.${defaultRowClassName}.${rowKeyClassNamePrefix}${key} > td`;
       const els = document.querySelectorAll(sel);
@@ -132,7 +207,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       }
     });
 
-    selectedFeatures.forEach((feature: OlFeature<OlGeometry>|RenderFeature) => {
+    selectedFeatures.forEach((feature: OlFeature<OlGeometry> | RenderFeature) => {
       if (feature instanceof RenderFeature) {
         return;
       }
@@ -175,7 +250,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       map.on('singleclick', onMapSingleClick);
     }
 
-    if (zoomToExtent) {
+    if (zoomToExtent && features) {
       zoomToFeatures(features);
     }
 
@@ -190,6 +265,10 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
 
   useEffect(() => {
     layer?.getSource()?.clear();
+    if (!features) {
+      return;
+    }
+
     layer?.getSource()?.addFeatures(features);
 
     if (zoomToExtent) {
@@ -212,24 +291,27 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   /**
    * Returns the column definitions out of the attributes of the first
    * given feature.
-   */
-  const getColumnDefs = () => {
+  */
+  useEffect(() => {
     const columnDefs: ColumnsType<T> = [];
-    if (features.length < 1) {
+    if (features && features.length < 1) {
       return;
     }
 
-    const feature = features[0];
+    const feature = features?.[0];
+    const props = feature?.getProperties();
 
-    const props = feature.getProperties();
+    if (!props) {
+      return;
+    }
 
-    Object.keys(props).forEach(key => {
-      if (attributeBlacklist.includes(key)) {
-        return;
+    for (const key of Object.keys(props)) {
+      if (attributeBlacklist?.includes(key)) {
+        continue;
       }
 
       if (props[key] instanceof OlGeometry) {
-        return;
+        continue;
       }
 
       columnDefs.push({
@@ -238,20 +320,35 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
         key: key,
         ...columns?.find(col => (col as ColumnType<InternalTableRecord>).dataIndex === key)
       });
-    });
+    }
 
-    return columnDefs;
-  };
+    setColumnDefinition(columnDefs);
+  }, [columns, features, attributeBlacklist]);
+
+  useEffect(() => {
+    const columnDefs = columnDefinition.map((column, i) => ({
+      ...column,
+      key: `${i}`,
+      onHeaderCell: () => ({ id: `${i}` }),
+      onCell: () => ({ id: `${i}` })
+    }));
+    setFeatureColumns(columnDefs);
+  }, [columnDefinition]);
 
   /**
    * Returns the table row data from all the given features.
-   */
-  const getTableData = (): InternalTableRecord[] => {
+  */
+  const getTableData = useCallback((): InternalTableRecord[] => {
+
+    if (!features) {
+      return [];
+    }
+
     return features.map(feature => {
       const properties = feature.getProperties();
       const filtered: typeof properties = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
-        .reduce((obj: {[k: string]: any}, key) => {
+        .reduce((obj: { [k: string]: any }, key) => {
           obj[key] = properties[key];
           return obj;
         }, {});
@@ -261,12 +358,21 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
         ...filtered
       } as InternalTableRecord;
     });
-  };
+  }, [features, keyFunction]);
+
+  useEffect(() => {
+    getTableData();
+  }, [getTableData]);
 
   /**
    * Returns the correspondig feature for the given table row key.
    */
-  const getFeatureFromRowKey = (key: number | string | bigint): OlFeature<OlGeometry> => {
+  const getFeatureFromRowKey = (key: number | string | bigint): OlFeature<OlGeometry> | null => {
+
+    if (!features) {
+      return null;
+    }
+
     const feature = features.filter(f => keyFunction(f) === key);
 
     return feature[0];
@@ -281,6 +387,10 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     }
 
     const feature = getFeatureFromRowKey(row.key);
+
+    if (!feature) {
+      return;
+    }
 
     if (_isFunction(onRowClickProp)) {
       onRowClickProp(row, feature);
@@ -300,6 +410,10 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
 
     const feature = getFeatureFromRowKey(row.key);
 
+    if (!feature) {
+      return;
+    }
+
     if (_isFunction(onRowMouseOverProp)) {
       onRowMouseOverProp(row, feature);
     }
@@ -316,6 +430,10 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     }
 
     const feature = getFeatureFromRowKey(row.key);
+
+    if (!feature) {
+      return;
+    }
 
     if (_isFunction(onRowMouseOutProp)) {
       onRowMouseOutProp(row, feature);
@@ -374,14 +492,20 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       return;
     }
 
-    features.forEach(feature => feature.setStyle(undefined));
+    features?.forEach(feature => feature.setStyle(undefined));
   };
 
   /**
    * Called if the selection changes.
    */
   const onSelectChange = (rowKeys: Key[]) => {
-    const selectedFeatures = rowKeys.map(key => getFeatureFromRowKey(key));
+    const selectedFeatures = rowKeys
+      .map(key => getFeatureFromRowKey(key))
+      .filter(feat => feat) as OlFeature<OlGeometry>[];
+
+    if (selectedFeatures.length === 0 ) {
+      return;
+    }
 
     if (_isFunction(onRowSelectionChange)) {
       onRowSelectionChange(rowKeys, selectedFeatures);
@@ -412,22 +536,87 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     rowClassNameFn = record => `${finalRowClassName} ${rowKeyClassNamePrefix}${_kebabCase(record.key)}`;
   }
 
-  return (
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
+    if (active.id !== over?.id) {
+      setFeatureColumns((prevState) => {
+        const activeIndex = prevState.findIndex((i) => i.key === active?.id);
+        const overIndex = prevState.findIndex((i) => i.key === over?.id);
+        return arrayMove(prevState, activeIndex, overIndex);
+      });
+    }
+    setDragIndex({ active: -1, over: -1 });
+  };
+
+  const onDragOver = ({ active, over }: DragOverEvent) => {
+    const activeIndex = featureColumns.findIndex((i) => i.key === active.id);
+    const overIndex = featureColumns.findIndex((i) => i.key === over?.id);
+    setDragIndex({
+      active: active.id,
+      over: over?.id,
+      direction: overIndex > activeIndex ? 'right' : 'left'
+    });
+  };
+
+  const convertKeysToIdentifiers = (keys: (Key | undefined)[]): SortableItemId[] => {
+    return keys.map(key => {
+      if (key === undefined) {
+        return { id: 'defaultId' };
+      } else if (typeof key === 'bigint') {
+        return { id: key.toString() };
+      } else if (typeof key === 'number' || typeof key === 'string') {
+        return { id: key };
+      } else {
+        return key;
+      }
+    });
+  };
+
+  const draggableComponents = {
+    header: { cell: TableHeaderCell },
+    body: { cell: TableBodyCell }
+  };
+
+  const table = (
     <Table
       className={finalClassName}
-      columns={getColumnDefs()}
+      columns={featureColumns}
       dataSource={getTableData()}
-      onRow={(record: InternalTableRecord) => ({
+      onRow={(record) => ({
         onClick: () => onRowClick(record),
         onMouseOver: () => onRowMouseOver(record),
         onMouseOut: () => onRowMouseOut(record)
       })}
       rowClassName={rowClassNameFn}
       rowSelection={selectable ? rowSelection : undefined}
+      components={draggableColumns ? draggableComponents : undefined}
       {...passThroughProps}
     >
       {children}
     </Table>
+  );
+
+  return draggableColumns ? (
+    <DndContext
+      sensors={sensors}
+      modifiers={[restrictToHorizontalAxis]}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+      collisionDetection={closestCenter}
+    >
+      <SortableContext items={convertKeysToIdentifiers(featureColumns.map((i) => i.key))}
+        strategy={horizontalListSortingStrategy}>
+        <DragIndexContext.Provider value={dragIndex}>
+          {table}
+        </DragIndexContext.Provider>
+      </SortableContext>
+      <DragOverlay>
+        <th style={{ backgroundColor: 'gray', padding: 16 }}>
+          {featureColumns[featureColumns.findIndex((i) => i.key === dragIndex.active)]?.title as React.ReactNode}
+        </th>
+      </DragOverlay>
+    </DndContext>
+  ) : (
+    table
   );
 };
 
