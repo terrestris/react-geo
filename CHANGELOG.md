@@ -1,3 +1,10 @@
+## [24.2.1](https://github.com/terrestris/react-geo/compare/v24.2.0...v24.2.1) (2024-07-26)
+
+
+### Bug Fixes
+
+* husky deprecated call ([245a408](https://github.com/terrestris/react-geo/commit/245a4084ab4ff04b4a04cb0a4813f232e03c1317))
+
 # [24.2.0](https://github.com/terrestris/react-geo/compare/v24.1.1...v24.2.0) (2024-07-11)
 
 
