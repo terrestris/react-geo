@@ -1,3 +1,10 @@
+# [24.3.0](https://github.com/terrestris/react-geo/compare/v24.2.1...v24.3.0) (2024-07-31)
+
+
+### Features
+
+* adds a column filter ([aee7083](https://github.com/terrestris/react-geo/commit/aee7083b21c03b8b3e657ba80084f37b7fbb93db))
+
 ## [24.2.1](https://github.com/terrestris/react-geo/compare/v24.2.0...v24.2.1) (2024-07-26)
 
 
