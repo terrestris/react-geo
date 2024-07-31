@@ -51,6 +51,10 @@ type OwnProps = {
    * When active the order of the columns can be changed dynamically using drag & drop.
    */
   draggableColumns?: boolean;
+  /**
+   * Array of dataIndex names to filter
+   */
+  attributeFilter?: string[];
   onRowSelectionChange?: (selectedRowKeys: Array<number | string | bigint>,
     selectedFeatures: OlFeature<OlGeometry>[]) => void;
 };
@@ -103,6 +107,7 @@ const TableHeaderCell: React.FC<HeaderCellProps> = (props) => {
 
 export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   attributeBlacklist,
+  attributeFilter,
   children,
   className,
   columns,
@@ -294,18 +299,28 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   */
   useEffect(() => {
     const columnDefs: ColumnsType<T> = [];
-    if (features && features.length < 1) {
+    if (!features || features.length < 1) {
       return;
     }
 
-    const feature = features?.[0];
+    const feature = features[0];
     const props = feature?.getProperties();
 
     if (!props) {
       return;
     }
 
-    for (const key of Object.keys(props)) {
+    let filter = attributeFilter;
+
+    if (!filter) {
+      filter = feature.getKeys().filter((attrName: string) => attrName !== 'geometry');
+    }
+
+    for (const key of filter) {
+      if (!props.hasOwnProperty(key)) {
+        continue;
+      }
+
       if (attributeBlacklist?.includes(key)) {
         continue;
       }
@@ -323,7 +338,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     }
 
     setColumnDefinition(columnDefs);
-  }, [columns, features, attributeBlacklist]);
+  }, [columns, features, attributeFilter, attributeBlacklist]);
 
   useEffect(() => {
     const columnDefs = columnDefinition.map((column, i) => ({
