@@ -46,7 +46,7 @@ interface DragIndexState {
   direction?: 'left' | 'right';
 }
 
-type OwnProps = {
+type OwnProps<T extends AnyObject = AnyObject> = {
   /**
    * When active the order of the columns can be changed dynamically using drag & drop.
    */
@@ -55,11 +55,14 @@ type OwnProps = {
    * Array of dataIndex names to filter
    */
   attributeFilter?: string[];
+
+  onFeatureColumnsChanged?: (featureColumns: ColumnType<T>[]) => void;
+
   onRowSelectionChange?: (selectedRowKeys: Array<number | string | bigint>,
     selectedFeatures: OlFeature<OlGeometry>[]) => void;
 };
 
-export type FeatureGridProps<T extends AnyObject = AnyObject> = OwnProps & RgCommonGridProps<T> & TableProps<T>;
+export type FeatureGridProps<T extends AnyObject = AnyObject> = OwnProps<T> & RgCommonGridProps<T> & TableProps<T>;
 
 const defaultClassName = `${CSS_PREFIX}feature-grid`;
 
@@ -105,12 +108,13 @@ const TableHeaderCell: React.FC<HeaderCellProps> = (props) => {
   return <th {...props} ref={setNodeRef} style={style} {...attributes} {...listeners} />;
 };
 
-export const FeatureGrid = <T extends AnyObject = AnyObject,>({
+export const FeatureGrid = <T extends AnyObject = AnyObject>({
   attributeBlacklist,
   attributeFilter,
   children,
   className,
   columns,
+  onFeatureColumnsChanged,
   draggableColumns = false,
   featureStyle = defaultFeatureStyle,
   features,
@@ -350,6 +354,11 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     setFeatureColumns(columnDefs);
   }, [columnDefinition]);
 
+  useEffect(() => {
+    onFeatureColumnsChanged?.(featureColumns);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [featureColumns]);
+
   /**
    * Returns the table row data from all the given features.
   */
@@ -518,7 +527,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       .map(key => getFeatureFromRowKey(key))
       .filter(feat => feat) as OlFeature<OlGeometry>[];
 
-    if (selectedFeatures.length === 0 ) {
+    if (selectedFeatures.length === 0) {
       return;
     }
 
