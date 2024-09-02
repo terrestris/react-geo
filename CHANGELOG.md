@@ -1,3 +1,10 @@
+# [24.4.0](https://github.com/terrestris/react-geo/compare/v24.3.0...v24.4.0) (2024-09-02)
+
+
+### Features
+
+* add onFeatureSelect listener to modify button ([580849a](https://github.com/terrestris/react-geo/commit/580849a7cd43c1dd37427e63a2df0379a65d60cb))
+
 # [24.3.0](https://github.com/terrestris/react-geo/compare/v24.2.1...v24.3.0) (2024-07-31)
 
 
