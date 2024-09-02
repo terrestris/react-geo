@@ -46,7 +46,7 @@ interface OwnProps {
   editLabel?: boolean;
 }
 
-export type ModifyButtonProps = OwnProps & Omit<UseModifyProps, 'active' | 'onFeatureSelect'> &
+export type ModifyButtonProps = OwnProps & Omit<UseModifyProps, 'active'> &
   Partial<ToggleButtonProps>;
 
 /**
@@ -57,6 +57,7 @@ const defaultClassName = `${CSS_PREFIX}modifybutton`;
 export const ModifyButton: React.FC<ModifyButtonProps> = ({
   className,
   hitTolerance = 5,
+  onFeatureSelect,
   onModifyStart,
   onModifyEnd,
   onTranslateStart,
@@ -79,12 +80,13 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
 }) => {
   const [editLabelFeature, setEditLabelFeature] = useState<OlFeature<OlGeometry>|null>(null);
 
-  const onFeatureSelect = useCallback((event: OlSelectEvent) => {
+  const onFeatureSelectInternal = useCallback((event: OlSelectEvent) => {
     if (editLabel) {
       const labeled = event.selected.find(f => f.get('isLabel'));
       setEditLabelFeature(labeled || null);
     }
-  }, [editLabel]);
+    onFeatureSelect?.(event);
+  }, [editLabel, onFeatureSelect]);
 
   useModify({
     selectStyle,
@@ -98,7 +100,7 @@ export const ModifyButton: React.FC<ModifyButtonProps> = ({
     active: !!pressed,
     modifyInteractionConfig,
     translateInteractionConfig,
-    onFeatureSelect,
+    onFeatureSelect: onFeatureSelectInternal,
     hitTolerance
   });
 
