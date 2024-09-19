@@ -47,7 +47,7 @@ export type TimeLayerSliderPanelProps = {
   autoPlaySpeedOptions?: number[];
   initStartDate?: moment.Moment;
   initEndDate?: moment.Moment;
-}
+};
 
 export type TimeLayerSliderPanelState = {
   value: moment.Moment;
