@@ -32,5 +32,5 @@
   [BSD-2-Clause](https://github.com/terrestris/react-geo/blob/main/LICENSE).
 - [ ] I have followed the [guidelines for contributing](https://github.com/terrestris/react-geo/blob/main/CONTRIBUTING.md).
 - [ ] The proposed change fits to the content of the [Code of Conduct](https://github.com/terrestris/react-geo/blob/main/CODE_OF_CONDUCT.md).
-- [ ] I have added or updated tests and documentation, and the test suite passes (run `npm test` locally).
+- [ ] I have added or updated tests and documentation, and the test suite passes (run `npm run check` locally).
 - [ ] I have added a screenshot/screencast to illustrate the visual output of my update.
