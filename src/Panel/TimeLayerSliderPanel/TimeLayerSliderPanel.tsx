@@ -127,7 +127,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
       setCurrentValue(initEndDate);
       setEndDate(initEndDate);
       wmsTimeHandler(initEndDate);
-    }, []);
+    }, [initEndDate]);
 
     const onPlaybackSpeedChange = useCallback(
       (val: number | PlaybackSpeedType) => {
@@ -170,8 +170,10 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
     );
 
     useEffect(() => {
+      const handler = debouncedWmsTimeHandlerRef.current;
+
       return () => {
-        debouncedWmsTimeHandlerRef.current.cancel();
+        handler.cancel();
       };
     }, []);
 
