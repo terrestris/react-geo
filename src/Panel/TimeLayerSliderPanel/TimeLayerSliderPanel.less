@@ -1,22 +1,23 @@
 .time-layer-slider {
-  bottom: 35px;
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
+  gap: 15px;
   width: 100%;
   background-color: white;
-  border-bottom: 1px solid lightgray;
+  padding: 10px 0;
 
   button {
     margin-left: 5px;
   }
 
   .timeslider {
-    flex: 1;
-    margin: 10px;
+    flex: 1 1 0;
+    min-width: 0;
 
     &.ant-slider-with-marks {
-      margin: 10px 60px 20px 60px;
+      margin: 10px 20px 20px 20px;
     }
   }
 
@@ -26,8 +27,14 @@
     }
   }
 
-  .playback {
+  .playback,
+  .speed-picker {
     border-radius: 2px 0 0 2px;
+    flex: 0 0 auto;
+  }
+
+  .speed-picker {
+    margin-right: 20px;
   }
 
   .ant-select-selection {
@@ -39,21 +46,48 @@
 
   .time-value {
     text-align: center;
-    width: 100px;
-    padding: 0 10px;
     font-weight: bold;
+    flex: 0 0 auto;
+    overflow: hidden;
+    max-width: 100px;
+    font-size: 1.0em;
+    white-space: normal;
+    overflow-wrap: break-word;
+    display: inline-block;
   }
 
   &.no-layers-available {
     pointer-events: none;
-    opacity: .8;
+    opacity: 0.8;
     color: rgba(0, 0, 0, 0.35);
     .ant-slider-mark span,
     .ant-select {
-     color: rgba(0, 0, 0, 0.35);
+      color: rgba(0, 0, 0, 0.35);
     }
     button {
-      opacity: .5;
+      opacity: 0.5;
     }
+  }
+
+  .ant-slider-mark-text {
+    max-width: 80px;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: center;
+    font-size: small;
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .ant-slider-mark-text:hover {
+    overflow: visible;
+    white-space: normal;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    padding: 4px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    position: absolute;
   }
 }

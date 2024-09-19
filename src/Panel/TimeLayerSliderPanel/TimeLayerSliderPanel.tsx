@@ -23,20 +23,21 @@ import { TimeLayerAwareConfig } from '@terrestris/react-util/dist/Hooks/useTimeL
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import ToggleButton from '../../Button/ToggleButton/ToggleButton';
 import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
+import { debounce } from 'lodash';
 
-export interface Tooltips {
+export type Tooltips = {
   hours: string;
   days: string;
   weeks: string;
   months: string;
   years: string;
-  setToNow: string;
+  setToMostRecent: string;
   dataRange: string;
 }
 
 export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 
-export interface TimeLayerSliderPanelProps {
+export type TimeLayerSliderPanelProps = {
   className?: string;
   onChange?: (arg: moment.Moment) => void;
   timeAwareLayers: WmsLayer[];
@@ -48,7 +49,7 @@ export interface TimeLayerSliderPanelProps {
   initEndDate?: moment.Moment;
 }
 
-export interface TimeLayerSliderPanelState {
+export type TimeLayerSliderPanelState = {
   value: moment.Moment;
   playbackSpeed: number | PlaybackSpeedType;
   autoPlayActive: boolean;
@@ -65,9 +66,9 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
     onChange = () => {},
     timeAwareLayers = [],
     value = moment(moment.now()),
-    dateFormat = 'YYYY-MM-DD',
+    dateFormat = 'YYYY-MM-DD HH:mm',
     tooltips = {
-      setToNow: 'Set to now',
+      setToMostRecent: 'Set to most recent date',
       hours: 'Hours',
       days: 'Days',
       weeks: 'Weeks',
@@ -112,7 +113,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
         if (onChange) {
           onChange(newTime);
         }
-        wmsTimeHandler(val);
+        debouncedWmsTimeHandlerRef.current(val);
       },
       [onChange]
     );
@@ -122,11 +123,10 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
       setEndDate(end);
     }, []);
 
-    const setSliderToNow = useCallback(() => {
-      const now = moment().milliseconds(0);
-      setCurrentValue(now);
-      setEndDate(now);
-      wmsTimeHandler(now);
+    const setSliderToMostRecent = useCallback(() => {
+      setCurrentValue(initEndDate);
+      setEndDate(initEndDate);
+      wmsTimeHandler(initEndDate);
     }, []);
 
     const onPlaybackSpeedChange = useCallback(
@@ -164,6 +164,16 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
         }
       });
     };
+
+    const debouncedWmsTimeHandlerRef = useRef(
+      debounce(val => wmsTimeHandler(val), 300)
+    );
+
+    useEffect(() => {
+      return () => {
+        debouncedWmsTimeHandlerRef.current.cancel();
+      };
+    }, []);
 
     const timeSliderCustomHandler = useCallback(
       (val: any) => {
@@ -307,8 +317,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
     }, [timeSliderCustomHandler, value]);
 
     useEffect(() => {
-      setSliderToNow();
-    }, [setSliderToNow]);
+      setSliderToMostRecent();
+    }, [setSliderToMostRecent]);
 
     useEffect(() => {
       if (autoPlayActive) {
@@ -392,8 +402,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
           <SimpleButton
             type="primary"
             icon={<FontAwesomeIcon icon={faSync} />}
-            onClick={setSliderToNow}
-            tooltip={tooltips.setToNow}
+            onClick={setSliderToMostRecent}
+            tooltip={tooltips.setToMostRecent}
           />
         ) : null}
         <TimeSlider
@@ -406,8 +416,10 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
           marks={marks}
           onChange={onTimeChanged}
         />
-        <div className="time-value">
-          {currentValue.format('DD.MM.YYYY HH:mm:ss')}
+        <div
+          className="time-value"
+        >
+          {currentValue.format(dateFormat || 'DD.MM.YYYY HH:mm:ss')}
         </div>
         <ToggleButton
           type="primary"
@@ -423,6 +435,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
           defaultValue={1}
           className={extraCls + ' speed-picker'}
           onChange={onPlaybackSpeedChange}
+          popupMatchSelectWidth={false}
+          dropdownStyle={{ minWidth: '100px' }}
         >
           {speedOptions}
           <Option value="hours">{tooltips.hours}</Option>
