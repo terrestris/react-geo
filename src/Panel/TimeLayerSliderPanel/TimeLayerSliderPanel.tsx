@@ -1,29 +1,24 @@
+import './TimeLayerSliderPanel.less';
+
+import { faCalendar, faPauseCircle, faPlayCircle, faSync } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
+import { TimeLayerAwareConfig } from '@terrestris/react-util/dist/Hooks/useTimeLayerAware/useTimeLayerAware';
 import { DatePicker, Popover, Select } from 'antd';
 import dayjs from 'dayjs';
+import { debounce } from 'lodash';
 import _isEqual from 'lodash/isEqual';
 import _isFinite from 'lodash/isFinite';
 import moment, { Moment } from 'moment';
 import { getUid } from 'ol';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-const RangePicker = DatePicker.RangePicker;
-const Option = Select.Option;
-
-import './TimeLayerSliderPanel.less';
-
-import {
-  faCalendar,
-  faPauseCircle,
-  faPlayCircle,
-  faSync
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { TimeLayerAwareConfig } from '@terrestris/react-util/dist/Hooks/useTimeLayerAware/useTimeLayerAware';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import ToggleButton from '../../Button/ToggleButton/ToggleButton';
 import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
-import { debounce } from 'lodash';
+
+const RangePicker = DatePicker.RangePicker;
+const Option = Select.Option;
 
 export type Tooltips = {
   hours: string;
@@ -55,7 +50,7 @@ export type TimeLayerSliderPanelState = {
   autoPlayActive: boolean;
   startDate: moment.Moment;
   endDate: moment.Moment;
-}
+};
 
 /**
  * The panel combining all time slider related parts.
@@ -247,12 +242,12 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
         const newValue: Moment = currentValue.clone();
 
         if (_isFinite(playbackSpeed)) {
-          wmsTimeHandler(moment(
-            newValue.clone().add(playbackSpeed, 'seconds').format()
-          ));
-          setCurrentValue(moment(
-            newValue.clone().add(playbackSpeed, 'seconds').format()
-          ));
+          wmsTimeHandler(
+            moment(newValue.clone().add(playbackSpeed, 'seconds').format())
+          );
+          setCurrentValue(
+            moment(newValue.clone().add(playbackSpeed, 'seconds').format())
+          );
         } else {
           const time = moment(
             newValue
@@ -418,9 +413,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
           marks={marks}
           onChange={onTimeChanged}
         />
-        <div
-          className="time-value"
-        >
+        <div className="time-value">
           {currentValue.format(dateFormat || 'DD.MM.YYYY HH:mm:ss')}
         </div>
         <ToggleButton
