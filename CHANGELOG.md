@@ -1,3 +1,15 @@
+# [24.5.0](https://github.com/terrestris/react-geo/compare/v24.4.0...v24.5.0) (2024-09-19)
+
+
+### Bug Fixes
+
+* adds dependency and handler variable to use in cleanup function ([325c153](https://github.com/terrestris/react-geo/commit/325c153381202e727f3c029c31d1bb6081b883d1))
+
+
+### Features
+
+* tweaks the TimeLayerSliderPanel in design and functionality ([a8bad8e](https://github.com/terrestris/react-geo/commit/a8bad8e04988e7e75b8fadb46ad84cc21ab4a563))
+
 # [24.4.0](https://github.com/terrestris/react-geo/compare/v24.3.0...v24.4.0) (2024-09-02)
 
 
