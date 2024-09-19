@@ -1,42 +1,38 @@
+import './TimeLayerSliderPanel.less';
+
+import { faCalendar, faPauseCircle, faPlayCircle, faSync } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
+import { TimeLayerAwareConfig } from '@terrestris/react-util/dist/Hooks/useTimeLayerAware/useTimeLayerAware';
 import { DatePicker, Popover, Select } from 'antd';
 import dayjs from 'dayjs';
+import { debounce } from 'lodash';
 import _isEqual from 'lodash/isEqual';
 import _isFinite from 'lodash/isFinite';
 import moment, { Moment } from 'moment';
 import { getUid } from 'ol';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-const RangePicker = DatePicker.RangePicker;
-const Option = Select.Option;
-
-import './TimeLayerSliderPanel.less';
-
-import {
-  faCalendar,
-  faPauseCircle,
-  faPlayCircle,
-  faSync
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { TimeLayerAwareConfig } from '@terrestris/react-util/dist/Hooks/useTimeLayerAware/useTimeLayerAware';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import ToggleButton from '../../Button/ToggleButton/ToggleButton';
 import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
 
-export interface Tooltips {
+const RangePicker = DatePicker.RangePicker;
+const Option = Select.Option;
+
+export type Tooltips = {
   hours: string;
   days: string;
   weeks: string;
   months: string;
   years: string;
-  setToNow: string;
+  setToMostRecent: string;
   dataRange: string;
-}
+};
 
 export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 
-export interface TimeLayerSliderPanelProps {
+export type TimeLayerSliderPanelProps = {
   className?: string;
   onChange?: (arg: moment.Moment) => void;
   timeAwareLayers: WmsLayer[];
@@ -46,15 +42,15 @@ export interface TimeLayerSliderPanelProps {
   autoPlaySpeedOptions?: number[];
   initStartDate?: moment.Moment;
   initEndDate?: moment.Moment;
-}
+};
 
-export interface TimeLayerSliderPanelState {
+export type TimeLayerSliderPanelState = {
   value: moment.Moment;
   playbackSpeed: number | PlaybackSpeedType;
   autoPlayActive: boolean;
   startDate: moment.Moment;
   endDate: moment.Moment;
-}
+};
 
 /**
  * The panel combining all time slider related parts.
@@ -65,9 +61,9 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
     onChange = () => {},
     timeAwareLayers = [],
     value = moment(moment.now()),
-    dateFormat = 'YYYY-MM-DD',
+    dateFormat = 'YYYY-MM-DD HH:mm',
     tooltips = {
-      setToNow: 'Set to now',
+      setToMostRecent: 'Set to most recent date',
       hours: 'Hours',
       days: 'Days',
       weeks: 'Weeks',
@@ -112,7 +108,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
         if (onChange) {
           onChange(newTime);
         }
-        wmsTimeHandler(val);
+        debouncedWmsTimeHandlerRef.current(val);
       },
       [onChange]
     );
@@ -122,12 +118,11 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
       setEndDate(end);
     }, []);
 
-    const setSliderToNow = useCallback(() => {
-      const now = moment().milliseconds(0);
-      setCurrentValue(now);
-      setEndDate(now);
-      wmsTimeHandler(now);
-    }, []);
+    const setSliderToMostRecent = useCallback(() => {
+      setCurrentValue(initEndDate);
+      setEndDate(initEndDate);
+      wmsTimeHandler(initEndDate);
+    }, [initEndDate]);
 
     const onPlaybackSpeedChange = useCallback(
       (val: number | PlaybackSpeedType) => {
@@ -164,6 +159,18 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
         }
       });
     };
+
+    const debouncedWmsTimeHandlerRef = useRef(
+      debounce(val => wmsTimeHandler(val), 300)
+    );
+
+    useEffect(() => {
+      const handler = debouncedWmsTimeHandlerRef.current;
+
+      return () => {
+        handler.cancel();
+      };
+    }, []);
 
     const timeSliderCustomHandler = useCallback(
       (val: any) => {
@@ -235,12 +242,12 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
         const newValue: Moment = currentValue.clone();
 
         if (_isFinite(playbackSpeed)) {
-          wmsTimeHandler(moment(
-            newValue.clone().add(playbackSpeed, 'seconds').format()
-          ));
-          setCurrentValue(moment(
-            newValue.clone().add(playbackSpeed, 'seconds').format()
-          ));
+          wmsTimeHandler(
+            moment(newValue.clone().add(playbackSpeed, 'seconds').format())
+          );
+          setCurrentValue(
+            moment(newValue.clone().add(playbackSpeed, 'seconds').format())
+          );
         } else {
           const time = moment(
             newValue
@@ -307,8 +314,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
     }, [timeSliderCustomHandler, value]);
 
     useEffect(() => {
-      setSliderToNow();
-    }, [setSliderToNow]);
+      setSliderToMostRecent();
+    }, [setSliderToMostRecent]);
 
     useEffect(() => {
       if (autoPlayActive) {
@@ -392,8 +399,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
           <SimpleButton
             type="primary"
             icon={<FontAwesomeIcon icon={faSync} />}
-            onClick={setSliderToNow}
-            tooltip={tooltips.setToNow}
+            onClick={setSliderToMostRecent}
+            tooltip={tooltips.setToMostRecent}
           />
         ) : null}
         <TimeSlider
@@ -407,7 +414,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
           onChange={onTimeChanged}
         />
         <div className="time-value">
-          {currentValue.format('DD.MM.YYYY HH:mm:ss')}
+          {currentValue.format(dateFormat || 'DD.MM.YYYY HH:mm:ss')}
         </div>
         <ToggleButton
           type="primary"
@@ -423,6 +430,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
           defaultValue={1}
           className={extraCls + ' speed-picker'}
           onChange={onPlaybackSpeedChange}
+          popupMatchSelectWidth={false}
+          dropdownStyle={{ minWidth: '100px' }}
         >
           {speedOptions}
           <Option value="hours">{tooltips.hours}</Option>

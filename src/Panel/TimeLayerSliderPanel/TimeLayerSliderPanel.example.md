@@ -25,7 +25,7 @@ class TimeLayerSliderPanelExample extends React.Component {
       new OlLayerTile({
         extent: extent,
         type: 'WMSTime',
-        timeFormat: 'YYYY-MM-DDTHH:mm:ss.sssZ',
+        timeFormat: 'YYYY-MM-DDTHH:mm',
         roundToFullHours: true,
         source: new OlSourceTileWMS({
           attributions: ['Iowa State University'],
@@ -79,6 +79,7 @@ class TimeLayerSliderPanelExample extends React.Component {
           timeAwareLayers={this.layers}
           tooltips={tooltips}
           autoPlaySpeedOptions={[0.5, 1, 2, 3, 4, 5, 600]}
+          dateFormat='YYYY-MM-DD HH:mm'
         />
       </div>
     );
