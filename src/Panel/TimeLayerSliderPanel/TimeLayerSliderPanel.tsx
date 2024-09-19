@@ -33,7 +33,7 @@ export type Tooltips = {
   years: string;
   setToMostRecent: string;
   dataRange: string;
-}
+};
 
 export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 
