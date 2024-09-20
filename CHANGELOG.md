@@ -1,3 +1,15 @@
+# [25.0.0](https://github.com/terrestris/react-geo/compare/v24.5.0...v25.0.0) (2024-09-20)
+
+
+### chore
+
+* update to latest ol ([3d60731](https://github.com/terrestris/react-geo/commit/3d60731ced037703f22ad3b83232c3490ba250a2))
+
+
+### BREAKING CHANGES
+
+* required peer dependency for ol is now >= 10
+
 # [24.5.0](https://github.com/terrestris/react-geo/compare/v24.4.0...v24.5.0) (2024-09-19)
 
 
