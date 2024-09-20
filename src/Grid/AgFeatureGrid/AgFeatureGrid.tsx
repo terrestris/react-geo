@@ -101,7 +101,7 @@ interface OwnProps<T> {
 
 const defaultClassName = `${CSS_PREFIX}ag-feature-grid`;
 
-export type AgFeatureGridProps<T> = OwnProps<T> & RgCommonGridProps<T> & AgGridReactProps;
+export type AgFeatureGridProps<T> = OwnProps<T> & RgCommonGridProps<T> & Omit<AgGridReactProps, 'theme'>;
 
 /**
  * The AgFeatureGrid.

@@ -6,6 +6,7 @@ import OlPoint from 'ol/geom/Point';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
 import OlVectorLayer from 'ol/layer/Vector';
 import OlMap from 'ol/Map';
+import OlSourceVector from 'ol/source/Vector';
 import OlVectorSource from 'ol/source/Vector';
 import OlView from 'ol/View';
 import * as React from 'react';
@@ -17,7 +18,7 @@ describe('<SelectFeaturesButton />', () => {
 
   const coord = [829729, 6708850];
   let map: OlMap;
-  let layer: OlVectorLayer<OlFeature>;
+  let layer: OlVectorLayer<OlSourceVector>;
   let feature: OlFeature;
 
   beforeEach(() => {

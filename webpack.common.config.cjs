@@ -69,15 +69,7 @@ module.exports = {
   plugins: [
     new ForkTsCheckerWebpackPlugin({
       async: false
-    }),
-    // new CopyWebpackPlugin({
-    //   patterns: [
-    //     {
-    //       from: 'node_modules/@camptocamp/inkmap/dist/inkmap-worker.js',
-    //       to: 'build'
-    //     }
-    //   ]
-    // })
+    })
   ]
   // Uncomment the following lines if you're working with a linked
   // @terrestris/ol-util package (or any other package that requires ol
