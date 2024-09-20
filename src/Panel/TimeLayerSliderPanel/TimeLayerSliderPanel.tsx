@@ -1,16 +1,23 @@
 import './TimeLayerSliderPanel.less';
 
-import { faCalendar, faPauseCircle, faPlayCircle, faSync } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCalendar,
+  faPauseCircle,
+  faPlayCircle,
+  faSync
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
 import { TimeLayerAwareConfig } from '@terrestris/react-util/dist/Hooks/useTimeLayerAware/useTimeLayerAware';
-import { DatePicker, Popover, Select } from 'antd';
+import { DatePicker, Popover, Select, Spin } from 'antd';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import _isEqual from 'lodash/isEqual';
 import _isFinite from 'lodash/isFinite';
 import moment, { Moment } from 'moment';
 import { getUid } from 'ol';
+import { TileWMS } from 'ol/source';
+import ImageWMS from 'ol/source/ImageWMS';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
@@ -82,10 +89,13 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
     const [autoPlayActive, setAutoPlayActive] = useState(false);
     const [startDate, setStartDate] = useState<Moment>(initStartDate);
     const [endDate, setEndDate] = useState<Moment>(initEndDate);
+    const [loadingCount, setLoadingCount] = useState(0);
 
     const wmsTimeLayersRef = useRef<TimeLayerAwareConfig[]>([]);
     const intervalRef = useRef<number | undefined>(1000);
     const prevPropsRef = useRef<TimeLayerSliderPanelProps>();
+
+    const isLoading = loadingCount > 0;
 
     const wrapTimeSlider = useCallback(() => {
       const wmsTimeLayers: TimeLayerAwareConfig[] = [];
@@ -134,7 +144,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
     const wmsTimeHandler = (val: moment.Moment | string | [string, string]) => {
       wmsTimeLayersRef.current.forEach(config => {
         if (config.layer && config.layer.get('type') === 'WMSTime') {
-          const params = config.layer.getSource()?.getParams();
+          const source = config.layer.getSource();
+          const params = source?.getParams();
           let time;
           if (Array.isArray(val)) {
             time = val[0];
@@ -145,17 +156,23 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
             time = moment(time);
           }
           const timeFormat = config.layer.get('timeFormat');
+          let newTimeParam: string;
           if (
-            timeFormat.toLowerCase().indexOf('hh') > 0 &&
+            timeFormat.toLowerCase().includes('hh') &&
             config.layer.get('roundToFullHours')
           ) {
             time.set('minute', 0);
             time.set('second', 0);
-            params.TIME = time.toISOString();
+            newTimeParam = time.toISOString();
           } else {
-            params.TIME = time.format(timeFormat);
+            newTimeParam = time.format(timeFormat);
           }
-          config.layer.getSource()?.updateParams(params);
+
+          if (params.TIME !== newTimeParam) {
+            params.TIME = newTimeParam;
+            source?.updateParams(params);
+            source?.refresh();
+          }
         }
       });
     };
@@ -226,6 +243,59 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
 
       updateDataRange([newStartDate, newEndDate]);
     }, [timeAwareLayers, startDate, endDate, updateDataRange]);
+
+    useEffect(() => {
+      if (timeAwareLayers.length === 0) {
+        return;
+      }
+
+      const handleTileLoadStart = () => {
+        setLoadingCount(prevCount => prevCount + 1);
+      };
+      const handleTileLoadEnd = () => {
+        setLoadingCount(prevCount => Math.max(prevCount - 1, 0));
+      };
+      const handleImageLoadStart = () => {
+        setLoadingCount(prevCount => prevCount + 1);
+      };
+      const handleImageLoadEnd = () => {
+        setLoadingCount(prevCount => Math.max(prevCount - 1, 0));
+      };
+
+      timeAwareLayers.forEach(layer => {
+        if (layer.get('type') === 'WMSTime') {
+          const source = layer.getSource();
+
+          if (source instanceof TileWMS) {
+            source.on('tileloadstart', handleTileLoadStart);
+            source.on('tileloadend', handleTileLoadEnd);
+            source.on('tileloaderror', handleTileLoadEnd);
+          } else if (source instanceof ImageWMS) {
+            source.on('imageloadstart', handleImageLoadStart);
+            source.on('imageloadend', handleImageLoadEnd);
+            source.on('imageloaderror', handleImageLoadEnd);
+          }
+        }
+      });
+
+      return () => {
+        timeAwareLayers.forEach(layer => {
+          if (layer.get('type') === 'WMSTime') {
+            const source = layer.getSource();
+
+            if (source instanceof TileWMS) {
+              source.un('tileloadstart', handleTileLoadStart);
+              source.un('tileloadend', handleTileLoadEnd);
+              source.un('tileloaderror', handleTileLoadEnd);
+            } else if (source instanceof ImageWMS) {
+              source.un('imageloadstart', handleImageLoadStart);
+              source.un('imageloadend', handleImageLoadEnd);
+              source.un('imageloaderror', handleImageLoadEnd);
+            }
+          }
+        });
+      };
+    }, [timeAwareLayers]);
 
     useEffect(() => {
       window.clearInterval(intervalRef.current);
@@ -403,16 +473,21 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
             tooltip={tooltips.setToMostRecent}
           />
         ) : null}
-        <TimeSlider
-          className={`${extraCls} timeslider ${futureClass}`.trim()}
-          formatString={dateFormat}
-          defaultValue={startDateString}
-          min={startDateString}
-          max={endDateString}
-          value={valueString}
-          marks={marks}
-          onChange={onTimeChanged}
-        />
+        <div className="time-slider-container">
+          <TimeSlider
+            className={`${extraCls} timeslider ${futureClass}`.trim()}
+            formatString={dateFormat}
+            defaultValue={startDateString}
+            min={startDateString}
+            max={endDateString}
+            value={valueString}
+            marks={marks}
+            onChange={onTimeChanged}
+          />
+          <div className="spin-indicator">
+            <Spin spinning={isLoading} size="small" />
+          </div>
+        </div>
         <div className="time-value">
           {currentValue.format(dateFormat || 'DD.MM.YYYY HH:mm:ss')}
         </div>

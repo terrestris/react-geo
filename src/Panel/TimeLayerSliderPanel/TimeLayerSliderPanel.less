@@ -7,17 +7,39 @@
   width: 100%;
   background-color: white;
   padding: 10px 0;
+  position: relative;
 
   button {
     margin-left: 5px;
   }
 
-  .timeslider {
-    flex: 1 1 0;
-    min-width: 0;
+  .time-slider-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: relative;
 
-    &.ant-slider-with-marks {
-      margin: 10px 20px 20px 20px;
+    .timeslider {
+      flex: 1 1 0;
+      min-width: 0;
+
+      &.ant-slider-with-marks {
+        margin: 10px 20px 20px 20px;
+      }
+    }
+
+    .spin-indicator {
+      margin-left: 10px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .ant-spin {
+        width: 16px;
+        height: 16px;
+      }
     }
   }
 
@@ -50,7 +72,7 @@
     flex: 0 0 auto;
     overflow: hidden;
     max-width: 100px;
-    font-size: 1.0em;
+    font-size: 1em;
     white-space: normal;
     overflow-wrap: break-word;
     display: inline-block;
