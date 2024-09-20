@@ -21,7 +21,8 @@ module.exports = {
   ],
   transformIgnorePatterns: [
     'node_modules/(?!(ol|@camptocamp/inkmap|@terrestris/*[a-z]*-util|d3-selection|color-*[a-z]*)|(rc-*[a-z]*)|' +
-    'filter-obj|query-string|decode-uri-component|split-on-first|shpjs/)'
+    'filter-obj|query-string|decode-uri-component|split-on-first|shpjs/|rbush|quickselect|geostyler-openlayers-parser|' +
+    'geostyler-style)'
   ],
   setupFiles: [
     '<rootDir>/jest/__mocks__/matchMediaMock.js'

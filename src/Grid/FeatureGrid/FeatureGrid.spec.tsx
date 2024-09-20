@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import OlFeature from 'ol/Feature';
 import OlLayerVector from 'ol/layer/Vector';
 import OlMap from 'ol/Map';
+import OlSourceVector from 'ol/source/Vector';
 import OlStyle from 'ol/style/Style';
 import React from 'react';
 
@@ -77,7 +78,7 @@ describe('<FeatureGrid />', () => {
 
     const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
-    expect((layerCand as OlLayerVector<OlFeature>)?.getStyle()).toBe(featureStyle);
+    expect((layerCand as OlLayerVector<OlSourceVector>)?.getStyle()).toBe(featureStyle);
   });
 
   it('removes the vector layer from the map on unmount', () => {
@@ -103,7 +104,7 @@ describe('<FeatureGrid />', () => {
 
     const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
-    expect((layerCand as OlLayerVector<OlFeature>)?.getSource()?.getFeatures()).toHaveLength(3);
+    expect((layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures()).toHaveLength(3);
 
     expect(screen.getByText('Shinji Kagawa')).toBeVisible();
     expect(screen.getByText('Marco Reus')).toBeVisible();
@@ -138,7 +139,7 @@ describe('<FeatureGrid />', () => {
     await userEvent.hover(row);
 
     const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
-    const featCand = (layerCand as OlLayerVector<OlFeature>)?.getSource()?.getFeatures()
+    const featCand = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures()
       .find(feat => feat.get('name') === 'Shinji Kagawa');
 
     expect(featCand?.getStyle()).toBe(hoverStyle);
@@ -165,7 +166,7 @@ describe('<FeatureGrid />', () => {
 
     const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
-    const feats = (layerCand as OlLayerVector<OlFeature>)?.getSource()?.getFeatures() || [];
+    const feats = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures() || [];
 
     for (const feat of feats) {
       expect(feat.getStyle()).toBe(selectStyle);

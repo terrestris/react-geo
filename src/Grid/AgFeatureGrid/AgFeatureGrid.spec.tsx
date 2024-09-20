@@ -7,6 +7,7 @@ import OlGeometry from 'ol/geom/Geometry';
 import OlGeomGeometryCollection from 'ol/geom/GeometryCollection';
 import OlLayerVector from 'ol/layer/Vector';
 import OlMap from 'ol/Map';
+import OlSourceVector from 'ol/source/Vector';
 import OlStyle from 'ol/style/Style';
 import React from 'react';
 
@@ -77,7 +78,7 @@ describe('<AgFeatureGrid />', () => {
 
     const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
-    expect((layerCand as OlLayerVector<OlFeature>)?.getStyle()).toBe(featureStyle);
+    expect((layerCand as OlLayerVector<OlSourceVector>)?.getStyle()).toBe(featureStyle);
   });
 
   it('removes the vector layer from the map on unmount', () => {
@@ -103,7 +104,7 @@ describe('<AgFeatureGrid />', () => {
 
     const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
-    expect((layerCand as OlLayerVector<OlFeature>)?.getSource()?.getFeatures()).toHaveLength(3);
+    expect((layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures()).toHaveLength(3);
 
     data.forEach( ({ name }) => {
       expect(screen.getByText(name)).toBeVisible();
@@ -152,7 +153,7 @@ describe('<AgFeatureGrid />', () => {
 
     const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
 
-    const feats = (layerCand as OlLayerVector<OlFeature>)?.getSource()?.getFeatures() || [];
+    const feats = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures() || [];
 
     for (const feat of feats) {
       expect(feat.getStyle()).toBeDefined(); // TODO
@@ -186,7 +187,7 @@ describe('<AgFeatureGrid />', () => {
     await userEvent.hover(row);
 
     const layerCand = map.getLayers().getArray().find(layer => layer.get('name') === defaultFeatureGridLayerName);
-    const featCand = (layerCand as OlLayerVector<OlFeature>)?.getSource()?.getFeatures()
+    const featCand = (layerCand as OlLayerVector<OlSourceVector>)?.getSource()?.getFeatures()
       .find(feat => feat.get('name') === 'Shinji Kagawa');
 
     expect(featCand?.getStyle()).toBe(hoverStyle);
