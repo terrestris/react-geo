@@ -1,6 +1,3 @@
-// import {
-//   getAttributionsText
-// } from '@camptocamp/inkmap';
 import Logger from '@terrestris/base-util/dist/Logger';
 import { jsPDF } from 'jspdf';
 import _isString from 'lodash/isString';
