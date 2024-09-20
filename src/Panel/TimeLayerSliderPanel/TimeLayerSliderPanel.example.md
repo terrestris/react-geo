@@ -78,7 +78,7 @@ class TimeLayerSliderPanelExample extends React.Component {
           initEndDate={moment()}
           timeAwareLayers={this.layers}
           tooltips={tooltips}
-          autoPlaySpeedOptions={[0.5, 1, 2, 3, 4, 5, 600]}
+          autoPlaySpeedOptions={[0.5, 1, 2, 3]}
           dateFormat='YYYY-MM-DD HH:mm'
         />
       </div>

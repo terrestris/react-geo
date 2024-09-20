@@ -313,10 +313,10 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
 
         if (_isFinite(playbackSpeed)) {
           wmsTimeHandler(
-            moment(newValue.clone().add(playbackSpeed, 'seconds').format())
+            moment(newValue.clone().add(playbackSpeed, 'hours').format())
           );
           setCurrentValue(
-            moment(newValue.clone().add(playbackSpeed, 'seconds').format())
+            moment(newValue.clone().add(playbackSpeed, 'hours').format())
           );
         } else {
           const time = moment(
@@ -502,7 +502,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
           pressedIcon={<FontAwesomeIcon icon={faPauseCircle} />}
         />
         <Select
-          defaultValue={1}
+          defaultValue={'hours'}
           className={extraCls + ' speed-picker'}
           onChange={onPlaybackSpeedChange}
           popupMatchSelectWidth={false}
