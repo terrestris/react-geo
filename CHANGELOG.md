@@ -1,3 +1,11 @@
+# [25.1.0](https://github.com/terrestris/react-geo/compare/v25.0.0...v25.1.0) (2024-09-20)
+
+
+### Features
+
+* adds a loading spin for TimeLayerSliderPanel ([df98ab1](https://github.com/terrestris/react-geo/commit/df98ab1cd3593bcbfabd80632366d7bb922f5845))
+* adjust default value to hours ([52a43a1](https://github.com/terrestris/react-geo/commit/52a43a10bcc4a2b590a2690e58566f2c179792e5))
+
 # [25.0.0](https://github.com/terrestris/react-geo/compare/v24.5.0...v25.0.0) (2024-09-20)
 
 
