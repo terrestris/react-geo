@@ -1,3 +1,10 @@
+## [25.1.1](https://github.com/terrestris/react-geo/compare/v25.1.0...v25.1.1) (2024-10-14)
+
+
+### Bug Fixes
+
+* correct variable name for column definitions in checkbox selection check ([2c9f5ec](https://github.com/terrestris/react-geo/commit/2c9f5ec247f3e732872351be9741bc47a31ab8ee))
+
 # [25.1.0](https://github.com/terrestris/react-geo/compare/v25.0.0...v25.1.0) (2024-09-20)
 
 
