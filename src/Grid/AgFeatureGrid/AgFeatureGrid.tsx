@@ -572,8 +572,10 @@ export function AgFeatureGrid<T>({
         return columnDefs;
       }
       // check for checkbox column - if not present => add
-      const checkboxSelectionPresent = colDefs?.
-        some((colDef: ColDef<WithKey<T>>) => _has(colDef, 'checkboxSelection') && !_isNil(colDef.checkboxSelection));
+      const checkboxSelectionPresent = columnDefs?.
+        some((colDef: ColDef<WithKey<T>>) =>
+          _has(colDef, 'checkboxSelection') && !_isNil(colDef.checkboxSelection)
+        );
       if (checkboxSelectionPresent) {
         return columnDefs;
       }
