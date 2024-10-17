@@ -35,6 +35,7 @@ const SimpleButton: React.FC<SimpleButtonProps> = ({
   tooltipProps = {
     mouseEnterDelay: 1.5
   },
+  children,
   ...passThroughProps
 }) => {
 
@@ -50,9 +51,10 @@ const SimpleButton: React.FC<SimpleButtonProps> = ({
     >
       <Button
         className={finalClassName}
+        type={type}
         {...passThroughProps}
       >
-        {passThroughProps.children}
+        {children}
       </Button>
     </Tooltip>
   );
