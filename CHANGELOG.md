@@ -1,3 +1,10 @@
+## [25.1.2](https://github.com/terrestris/react-geo/compare/v25.1.1...v25.1.2) (2024-10-17)
+
+
+### Bug Fixes
+
+* pass type prop to button ([60270fd](https://github.com/terrestris/react-geo/commit/60270fd01858e8aff66505b1cc2b0001aafff775))
+
 ## [25.1.1](https://github.com/terrestris/react-geo/compare/v25.1.0...v25.1.1) (2024-10-14)
 
 
