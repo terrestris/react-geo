@@ -1,12 +1,16 @@
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-balham.css';
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-balham.css';
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
+import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import {
   CellMouseOutEvent,
   CellMouseOverEvent,
+  ColDef,
+  ColDefField,
+  ColGroupDef,
   GridApi,
   GridReadyEvent,
   RowClassParams,
@@ -14,9 +18,11 @@ import {
   RowNode,
   RowStyle,
   SelectionChangedEvent
-} from 'ag-grid-community';
-import { ColDef, ColDefField, ColGroupDef } from 'ag-grid-community';
-import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
+} from '@ag-grid-community/core';
+import {
+  AgGridReact,
+  AgGridReactProps
+} from '@ag-grid-community/react';
 import _differenceWith from 'lodash/differenceWith';
 import _has from 'lodash/has';
 import _isFunction from 'lodash/isFunction';
@@ -617,6 +623,9 @@ export function AgFeatureGrid<T>({
         rowData={passedRowData}
         rowSelection="multiple"
         suppressRowClickSelection
+        modules={[
+          ClientSideRowModelModule
+        ]}
         {...agGridPassThroughProps}
       />
     </div>
