@@ -1,10 +1,11 @@
+import React, {
+  FC
+} from 'react';
+
 import {
   type GeoLocation,
   useGeoLocation
 } from '@terrestris/react-util/dist/Hooks/useGeoLocation/useGeoLocation';
-import React, {
-  FC
-} from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
@@ -50,7 +51,7 @@ export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
 
   useGeoLocation({
     active: !!pressed,
-    enableTracking: pressed,
+    enableTracking: pressed && enableTracking,
     follow,
     onError,
     onGeoLocationChange,
