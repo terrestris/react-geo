@@ -13,6 +13,7 @@ import {
   ColGroupDef,
   GridApi,
   GridReadyEvent,
+  ModuleRegistry,
   RowClassParams,
   RowClickedEvent,
   RowNode,
@@ -108,6 +109,10 @@ interface OwnProps<T> {
 const defaultClassName = `${CSS_PREFIX}ag-feature-grid`;
 
 export type AgFeatureGridProps<T> = OwnProps<T> & RgCommonGridProps<T> & Omit<AgGridReactProps, 'theme'>;
+
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule
+]);
 
 /**
  * The AgFeatureGrid.
@@ -623,9 +628,6 @@ export function AgFeatureGrid<T>({
         rowData={passedRowData}
         rowSelection="multiple"
         suppressRowClickSelection
-        modules={[
-          ClientSideRowModelModule
-        ]}
         {...agGridPassThroughProps}
       />
     </div>
