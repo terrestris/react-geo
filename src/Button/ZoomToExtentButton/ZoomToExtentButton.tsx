@@ -1,12 +1,16 @@
-import logger from '@terrestris/base-util/dist/Logger';
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import * as React from 'react';
+
 import _isFinite from 'lodash/isFinite';
+
 import { Coordinate as OlCoordinate } from 'ol/coordinate';
 import { easeOut } from 'ol/easing';
 import { Extent as OlExtent } from 'ol/extent';
 import OlSimpleGeometry from 'ol/geom/SimpleGeometry';
 import { FitOptions as OlViewFitOptions } from 'ol/View';
-import * as React from 'react';
+
+import logger from '@terrestris/base-util/dist/Logger';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+
 
 import { CSS_PREFIX } from '../../constants';
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';

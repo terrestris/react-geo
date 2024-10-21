@@ -1,7 +1,8 @@
+import React, { CSSProperties, ReactNode } from 'react';
+
 import { Slider, SliderSingleProps } from 'antd';
 import _isArray from 'lodash/isArray';
 import moment from 'moment';
-import React, { CSSProperties, ReactNode } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -10,9 +11,7 @@ interface Mark {
   label?: ReactNode;
 }
 
-export type SliderMarks = {
-  [key: number]: ReactNode | Mark;
-};
+export type SliderMarks = Record<number, ReactNode | Mark>;
 interface OwnProps {
   useRange?: boolean;
   defaultValue: string | [string, string];
@@ -41,7 +40,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 }) => {
   const convert = (val: string[] | string): number | [number, number] => {
     return _isArray(val)
-      ? ((val as Array<string>).map(iso => moment(iso).unix()) as [
+      ? ((val as string[]).map(iso => moment(iso).unix()) as [
           number,
           number
         ])
@@ -54,7 +53,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     if (!mks) {
       return;
     }
-    let convertedMks: SliderSingleProps['marks'] = {};
+    const convertedMks: SliderSingleProps['marks'] = {};
     Object.keys(mks).forEach((key: string) => {
       if (!convertedMks) {
         return;

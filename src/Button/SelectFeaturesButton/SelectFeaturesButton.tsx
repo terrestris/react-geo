@@ -1,8 +1,9 @@
+import * as React from 'react';
+
 import {
   useSelectFeatures,
   UseSelectFeaturesProps
 } from '@terrestris/react-util/dist/Hooks/useSelectFeatures/useSelectFeatures';
-import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';

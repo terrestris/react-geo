@@ -5,7 +5,7 @@ import * as React from 'react';
 import { CSS_PREFIX } from '../../constants';
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';
 
-export type OwnProps = {
+export interface OwnProps {
   /**
    * The className which should be added.
    */
@@ -18,7 +18,7 @@ export type OwnProps = {
    * The onChange handler for the upload input field.
    */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-};
+}
 
 export type UploadButtonProps = OwnProps & SimpleButtonProps;
 

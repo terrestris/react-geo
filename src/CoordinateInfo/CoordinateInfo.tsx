@@ -1,9 +1,11 @@
+import React, { FC } from 'react';
+
+import _isNil from 'lodash/isNil';
+
 import useCoordinateInfo, {
   CoordinateInfoResult,
   UseCoordinateInfoArgs
 } from '@terrestris/react-util/dist/Hooks/useCoordinateInfo/useCoordinateInfo';
-import _isNil from 'lodash/isNil';
-import React, { FC } from 'react';
 
 export type CoordinateInfoProps = {
   /**

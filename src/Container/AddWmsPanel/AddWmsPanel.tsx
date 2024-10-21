@@ -1,15 +1,18 @@
 import './AddWmsPanel.less';
 
+import React, { useState } from 'react';
+
+import { Checkbox } from 'antd';
+
 import Logger from '@terrestris/base-util/dist/Logger';
 import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import { Checkbox } from 'antd';
-import React, { useState } from 'react';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
+
 import AddWmsLayerEntry from './AddWmsLayerEntry/AddWmsLayerEntry';
 
-export type AddWmsPanelProps = {
+export interface AddWmsPanelProps {
   /**
    * Array containing layers (e.g. `Capability.Layer.Layer` of ol capabilities
    * parser)
@@ -31,7 +34,7 @@ export type AddWmsPanelProps = {
    * Optional function being called when onAddSelectedLayers or onAddAllLayers
    * is triggered
    */
-  onLayerAddToMap?: (layers: Array<WmsLayer>) => void;
+  onLayerAddToMap?: (layers: WmsLayer[]) => void;
   /**
    * Optional function that is called if cancel button is clicked
    */
@@ -40,11 +43,11 @@ export type AddWmsPanelProps = {
    * Optional function that is called if selection has changed.
    */
   onSelectionChange?: (selection: string[]) => void;
-};
+}
 
 /**
  * Panel containing a (checkable) list of AddWmsLayerEntry instances.
- * This class can be used e.g with a result obtained by ol WMS capabilities
+ * This class can be used e.g. with a result obtained by ol WMS capabilities
  * parser, in particular objects in `Capability.Layer.Layer`
  *
  */
@@ -54,7 +57,7 @@ export const AddWmsPanel: React.FC<AddWmsPanelProps> = ({
   cancelText = 'Cancel',
   onCancel = undefined,
   onLayerAddToMap,
-  onSelectionChange = () => { },
+  onSelectionChange = () => undefined,
   wmsLayers = []
 }) => {
 

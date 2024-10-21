@@ -9,12 +9,13 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { transformExtent } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
-import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlSourceTileWMS from 'ol/source/TileWMS'
 import OlView from 'ol/View';
 import * as React from 'react';
 
 class TimeLayerSliderPanelExample extends React.Component {
 
+  debugger
   constructor(props) {
 
     super(props);

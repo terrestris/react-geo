@@ -1,7 +1,13 @@
 import './BackgroundLayerPreview.less';
 
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import React, {
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
+
 import { Spin } from 'antd';
+
 import { Coordinate } from 'ol/coordinate';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerImage from 'ol/layer/Image';
@@ -10,15 +16,13 @@ import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import { getUid } from 'ol/util';
 import OlView from 'ol/View';
-import React, {
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
+
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+
 
 import MapComponent from '../Map/MapComponent/MapComponent';
 
-export type BackgroundLayerPreviewProps = {
+export interface BackgroundLayerPreviewProps {
   width?: number;
   height?: number;
   layer: OlLayer;
@@ -27,7 +31,7 @@ export type BackgroundLayerPreviewProps = {
   zoom?: number;
   center?: Coordinate;
   backgroundLayerFilter: (l: OlLayerBase) => boolean;
-};
+}
 
 export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
   layer,

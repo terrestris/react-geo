@@ -136,7 +136,7 @@ export class TestUtil {
   /**
    * Returns a point feature with a random position.
    */
-  static generatePointFeature = (props: {[k: string]: any} = {
+  static generatePointFeature = (props: Record<string, any> = {
     ATTR_1: Math.random() * 100,
     ATTR_2: 'Borsigplatz 9',
     ATTR_3: 'Dortmund'

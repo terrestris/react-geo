@@ -1,6 +1,5 @@
 import './ToggleGroup.less';
 
-import _isFunction from 'lodash/isFunction';
 import React, {
   isValidElement,
   MouseEvent,
@@ -35,7 +34,7 @@ export type ToggleGroupProps<T extends ToggleButtonProps = ToggleButtonProps> = 
   onChange?: (evt: MouseEvent<HTMLButtonElement>, value?: string) => void;
 
   /**
-   * The children of this group. Typically a set of `ToggleButton`s.
+   * The children of this group. Typically, a set of `ToggleButton`s.
    */
   children?: ReactElement<T>[];
 } & Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>;
@@ -46,7 +45,7 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
   orientation = 'vertical',
   className,
   selected,
-  onChange = () => {},
+  onChange = () => undefined,
   children,
   ...passThroughProps
 }) => {

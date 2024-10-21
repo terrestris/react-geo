@@ -1,3 +1,13 @@
+import * as React from 'react';
+
+import {useCallback, useMemo} from 'react';
+
+import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+
+import OlVectorLayer from 'ol/layer/Vector';
+
+import OlSourceVector from 'ol/source/Vector';
+
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { usePropOrDefault } from '@terrestris/react-util/dist/Hooks/usePropOrDefault/usePropOrDefault';
 import {
@@ -5,11 +15,7 @@ import {
   UseSelectFeaturesProps
 } from '@terrestris/react-util/dist/Hooks/useSelectFeatures/useSelectFeatures';
 import { DigitizeUtil } from '@terrestris/react-util/dist/Util/DigitizeUtil';
-import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
-import OlVectorLayer from 'ol/layer/Vector';
-import OlSourceVector from 'ol/source/Vector';
-import * as React from 'react';
-import {useCallback, useMemo} from 'react';
+
 
 import { CSS_PREFIX } from '../../constants';
 import ToggleButton, {ToggleButtonProps} from '../ToggleButton/ToggleButton';

@@ -1,8 +1,12 @@
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import * as React from 'react';
+
 import _isNumber from 'lodash/isNumber';
+
 import { easeOut } from 'ol/easing';
 import { AnimationOptions as OlViewAnimationOptions } from 'ol/View';
-import * as React from 'react';
+
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+
 
 import { CSS_PREFIX } from '../../constants';
 import SimpleButton, { SimpleButtonProps } from '../SimpleButton/SimpleButton';

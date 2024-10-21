@@ -1,17 +1,21 @@
 import './CoordinateReferenceSystemCombo.less';
 
-import Logger from '@terrestris/base-util/dist/Logger';
-import {
-  ProjectionDefinition,
-  useProjFromEpsgIO
-} from '@terrestris/react-util/dist/Hooks/useProjFromEpsgIO/useProjFromEpsgIO';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+
 import { AutoComplete } from 'antd';
+
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
 import { DefaultOptionType } from 'antd/lib/select';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
 import _isNil from 'lodash/isNil';
-import React, { FC, useEffect, useMemo, useState } from 'react';
+
+import Logger from '@terrestris/base-util/dist/Logger';
+import {
+  ProjectionDefinition,
+  useProjFromEpsgIO
+} from '@terrestris/react-util/dist/Hooks/useProjFromEpsgIO/useProjFromEpsgIO';
+
 
 import { CSS_PREFIX } from '../../constants';
 

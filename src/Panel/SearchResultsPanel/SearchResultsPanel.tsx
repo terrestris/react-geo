@@ -1,19 +1,23 @@
 import './SearchResultsPanel.less';
 
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import React, { ReactNode, useEffect, useState } from 'react';
+
 import {
   Avatar,
   Collapse,
   CollapseProps,
   List
 } from 'antd';
+
 import _isEmpty from 'lodash/isEmpty';
 import OlFeature from 'ol/Feature';
 import BaseLayer from 'ol/layer/Base';
 import OlLayerVector from 'ol/layer/Vector';
 import OlSourceVector from 'ol/source/Vector';
 import OlStyle from 'ol/style/Style';
-import React, { ReactNode, useEffect, useState } from 'react';
+
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+
 
 const Panel = Collapse.Panel;
 const ListItem = List.Item;
@@ -150,7 +154,7 @@ const SearchResultsPanel = (props: SearchResultsPanelProps) => {
         <List
           size="small"
           dataSource={features.map((feat, idx) => {
-            let text: string = highlightSearchTerms(feat.get('title'));
+            const text: string = highlightSearchTerms(feat.get('title'));
             return {
               text,
               idx,

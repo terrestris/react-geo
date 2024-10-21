@@ -1,6 +1,6 @@
-import Logger from '@terrestris/base-util/dist/Logger';
 import { jsPDF } from 'jspdf';
-import _isString from 'lodash/isString';
+
+import Logger from '@terrestris/base-util/dist/Logger';
 
 const pdfPrintFunc = async (
   mapImgUrl: string,
@@ -54,7 +54,7 @@ const pdfPrintFunc = async (
           const response = await fetch(legendUrl);
           const blob = await response.blob();
           const base64 = URL.createObjectURL(blob);
-          let img: HTMLImageElement = new Image();
+          const img: HTMLImageElement = new Image();
           img.src = base64.toString();
           await img.decode();
 

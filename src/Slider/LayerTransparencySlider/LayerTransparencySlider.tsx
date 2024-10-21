@@ -1,7 +1,8 @@
+import * as React from 'react';
+
 import { Slider } from 'antd';
 import { SliderSingleProps } from 'antd/lib/slider';
 import OlLayerBase from 'ol/layer/Base';
-import * as React from 'react';
 
 export interface OwnProps {
   /**

@@ -1,9 +1,8 @@
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
+import React, { Key, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+
 import {
   CellMouseOutEvent,
   CellMouseOverEvent,
@@ -14,8 +13,8 @@ import {
   RowNode,
   RowStyle,
   SelectionChangedEvent
-} from 'ag-grid-community';
-import { ColDef, ColDefField, ColGroupDef } from 'ag-grid-community';
+  , ColDef, ColDefField, ColGroupDef } from 'ag-grid-community';
+
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import _differenceWith from 'lodash/differenceWith';
 import _has from 'lodash/has';
@@ -30,7 +29,11 @@ import OlLayerBase from 'ol/layer/Base';
 import OlLayerVector from 'ol/layer/Vector';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlSourceVector from 'ol/source/Vector';
-import React, { Key, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
+
 
 import { CSS_PREFIX } from '../../constants';
 import {
@@ -358,7 +361,7 @@ export function AgFeatureGrid<T>({
       const properties = feature.getProperties();
       const filtered = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
-        .reduce((obj: {[k: string]: any}, key) => {
+        .reduce((obj: Record<string, any>, key) => {
           obj[key] = properties[key];
           return obj;
         }, {});

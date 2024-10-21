@@ -1,12 +1,15 @@
-import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
+import * as React from 'react';
+
+import { useEffect, useState } from 'react';
+
 import { Modal, ModalProps } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
 
-type OwnProps = {
+import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
+
+interface OwnProps {
   feature: Feature<Geometry>;
   onOk: () => void;
   onCancel: () => void;
@@ -15,7 +18,7 @@ type OwnProps = {
    * If exceeded label will be divided into multiple lines. Optional.
    */
   maxLabelLineLength?: number;
-};
+}
 
 export type FeatureLabelModalProps = OwnProps & Omit<ModalProps, 'closable'|'visible'|'onOk'|'onCancel'>;
 
@@ -46,23 +49,27 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
     onOk();
   };
 
+  const onLabelChange = (e: any) => setLabel(e.target.value);
+
   if (!showPrompt) {
     return null;
   }
 
-  return <Modal
-    open={showPrompt}
-    closable={false}
-    onOk={onOkInternal}
-    onCancel={onCancel}
-    {...passThroughProps}
-  >
-    <TextArea
-      value={label}
-      onChange={e => setLabel(e.target.value)}
-      autoSize
-    />
-  </Modal>;
+  return (
+    <Modal
+      open={showPrompt}
+      closable={false}
+      onOk={onOkInternal}
+      onCancel={onCancel}
+      {...passThroughProps}
+    >
+      <TextArea
+        value={label}
+        onChange={onLabelChange}
+        autoSize
+      />
+    </Modal>
+  );
 };
 
 export default FeatureLabelModal;

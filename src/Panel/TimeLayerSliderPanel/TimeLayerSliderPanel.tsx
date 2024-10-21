@@ -1,5 +1,7 @@
 import './TimeLayerSliderPanel.less';
 
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+
 import {
   faCalendar,
   faPauseCircle,
@@ -7,8 +9,7 @@ import {
   faSync
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
-import { TimeLayerAwareConfig } from '@terrestris/react-util/dist/Hooks/useTimeLayerAware/useTimeLayerAware';
+
 import { DatePicker, Popover, Select, Spin } from 'antd';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
@@ -18,7 +19,9 @@ import moment, { Moment } from 'moment';
 import { getUid } from 'ol';
 import { TileWMS } from 'ol/source';
 import ImageWMS from 'ol/source/ImageWMS';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+
+import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
+import { TimeLayerAwareConfig } from '@terrestris/react-util/dist/Hooks/useTimeLayerAware/useTimeLayerAware';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import ToggleButton from '../../Button/ToggleButton/ToggleButton';
@@ -27,7 +30,7 @@ import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
 const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
 
-export type Tooltips = {
+export interface Tooltips {
   hours: string;
   days: string;
   weeks: string;
@@ -35,11 +38,11 @@ export type Tooltips = {
   years: string;
   setToMostRecent: string;
   dataRange: string;
-};
+}
 
 export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 
-export type TimeLayerSliderPanelProps = {
+export interface TimeLayerSliderPanelProps {
   className?: string;
   onChange?: (arg: moment.Moment) => void;
   timeAwareLayers: WmsLayer[];
@@ -49,15 +52,7 @@ export type TimeLayerSliderPanelProps = {
   autoPlaySpeedOptions?: number[];
   initStartDate?: moment.Moment;
   initEndDate?: moment.Moment;
-};
-
-export type TimeLayerSliderPanelState = {
-  value: moment.Moment;
-  playbackSpeed: number | PlaybackSpeedType;
-  autoPlayActive: boolean;
-  startDate: moment.Moment;
-  endDate: moment.Moment;
-};
+}
 
 /**
  * The panel combining all time slider related parts.
@@ -65,7 +60,7 @@ export type TimeLayerSliderPanelState = {
 export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
   ({
     className = '',
-    onChange = () => {},
+    onChange = () => undefined,
     timeAwareLayers = [],
     value = moment(moment.now()),
     dateFormat = 'YYYY-MM-DD HH:mm',
@@ -399,7 +394,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
     const endDateString = endDate.toISOString();
     const valueString = currentValue.toISOString();
     const mid = startDate!.clone().add(endDate!.diff(startDate) / 2);
-    const marks: { [k: string]: any } = {};
+    const marks: Record<string, any> = {};
     const futureClass = moment().isBefore(value) ? ' timeslider-in-future' : '';
     const extraCls = className ? className : '';
     const disabledCls = timeAwareLayers.length < 1 ? 'no-layers-available' : '';
@@ -525,10 +520,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
     if (!_isEqual(prevProps.timeAwareLayers, nextProps.timeAwareLayers)) {
       return false;
     }
-    if (!_isEqual(prevProps.tooltips, nextProps.tooltips)) {
-      return false;
-    }
-    return true;
+    return _isEqual(prevProps.tooltips, nextProps.tooltips);
   }
 );
 
