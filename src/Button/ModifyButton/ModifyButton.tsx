@@ -1,9 +1,12 @@
-import { useModify, UseModifyProps } from '@terrestris/react-util/dist/Hooks/useModify/useModify';
+import * as React from 'react';
+
+import {ReactNode, useCallback, useState} from 'react';
+
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
 import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
-import * as React from 'react';
-import {ReactNode, useCallback, useState} from 'react';
+
+import { useModify, UseModifyProps } from '@terrestris/react-util/dist/Hooks/useModify/useModify';
 
 import { CSS_PREFIX } from '../../constants';
 import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';

@@ -51,7 +51,7 @@ export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
 
   useGeoLocation({
     active: !!pressed,
-    enableTracking: pressed && enableTracking,
+    enableTracking: pressed,
     follow,
     onError,
     onGeoLocationChange,

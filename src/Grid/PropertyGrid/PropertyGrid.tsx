@@ -1,20 +1,19 @@
 import './PropertyGrid.less';
 
+import React, {
+  useMemo
+} from 'react';
+
 import { Table } from 'antd';
 import { TableProps } from 'antd/lib/table';
 import _get from 'lodash/get';
 import { getUid } from 'ol';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
-import React, {
-  useMemo
-} from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
-type AttributeNames = {
-  [key: string]: string;
-};
+type AttributeNames = Record<string, string>;
 
 interface OwnProps {
   /**

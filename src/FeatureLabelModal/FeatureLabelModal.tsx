@@ -1,12 +1,14 @@
-import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
-import { InputRef, Modal, ModalProps } from 'antd';
+import React, { FC , useEffect, useState } from 'react';
+
+
+import { Modal, ModalProps } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
-import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
 
-type OwnProps = {
+import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
+
+interface OwnProps {
   feature: Feature<Geometry>;
   onOk: () => void;
   onCancel: () => void;
@@ -15,11 +17,11 @@ type OwnProps = {
    * If exceeded label will be divided into multiple lines. Optional.
    */
   maxLabelLineLength?: number;
-};
+}
 
 export type FeatureLabelModalProps = OwnProps & Omit<ModalProps, 'closable'|'visible'|'onOk'|'onCancel'>;
 
-export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
+export const FeatureLabelModal: FC<FeatureLabelModalProps> = ({
   feature,
   onOk,
   onCancel,
@@ -28,8 +30,6 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
 }) => {
   const [label, setLabel] = useState<string>('');
   const [showPrompt, setShowPrompt] = useState<boolean>(false);
-
-  const inputRef = useRef<InputRef>(null);
 
   useEffect(() => {
     if (feature) {
@@ -48,29 +48,27 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
     onOk();
   };
 
+  const onLabelChange = (e: any) => setLabel(e.target.value);
+
   if (!showPrompt) {
     return null;
   }
 
-  return <Modal
-    open={showPrompt}
-    closable={false}
-    onOk={onOkInternal}
-    onCancel={onCancel}
-    afterOpenChange={(open) => {
-      if (open) {
-        inputRef.current?.focus();
-      }
-    }}
-    {...passThroughProps}
-  >
-    <TextArea
-      value={label}
-      onChange={e => setLabel(e.target.value)}
-      autoSize
-      ref={inputRef}
-    />
-  </Modal>;
+  return (
+    <Modal
+      open={showPrompt}
+      closable={false}
+      onOk={onOkInternal}
+      onCancel={onCancel}
+      {...passThroughProps}
+    >
+      <TextArea
+        value={label}
+        onChange={onLabelChange}
+        autoSize
+      />
+    </Modal>
+  );
 };
 
 export default FeatureLabelModal;

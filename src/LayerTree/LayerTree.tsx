@@ -1,12 +1,12 @@
 import './LayerTree.less';
 
-import Logger from '@terrestris/base-util/dist/Logger';
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import React, { Key, useCallback, useEffect, useState } from 'react';
+
 import {
   Tree,
   TreeDataNode
 } from 'antd';
+
 import {
   BasicDataNode,
   DataNode,
@@ -21,7 +21,11 @@ import { unByKey } from 'ol/Observable';
 import { NodeDragEventParams } from 'rc-tree/lib/contextTypes';
 import { EventDataNode } from 'rc-tree/lib/interface';
 import { AllowDropOptions, CheckInfo } from 'rc-tree/lib/Tree';
-import React, { Key, useCallback, useEffect, useState } from 'react';
+
+import Logger from '@terrestris/base-util/dist/Logger';
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+
 
 import { CSS_PREFIX } from '../constants';
 
@@ -125,12 +129,14 @@ const LayerTree: React.FC<LayerTreeProps> = ({
 
     return {
       key: getUid(layer),
-      title: <div
-        draggable={true}
-        onClick={e => e.stopPropagation()}
-      >
-        {getTreeNodeTitle(layer)}
-      </div>,
+      title: (
+        <div
+          draggable={true}
+          onClick={e => e.stopPropagation()}
+        >
+          {getTreeNodeTitle(layer)}
+        </div>
+      ),
       className: MapUtil.layerInResolutionRange(layer, map) ? '' : 'out-of-range',
       // Required to identify a group layer/node.
       children: childNodes

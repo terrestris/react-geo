@@ -1,15 +1,19 @@
-import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
-import { Slider } from 'antd';
-import { SliderSingleProps } from 'antd/lib/slider';
-import _isNumber from 'lodash/isNumber';
-import OlLayerBase from 'ol/layer/Base';
 import React, {
   useEffect
 } from 'react';
 
+import { Slider } from 'antd';
+
+import { SliderSingleProps } from 'antd/lib/slider';
+import _isNumber from 'lodash/isNumber';
+import OlLayerBase from 'ol/layer/Base';
+
+import { ArrayTwoOrMore } from '@terrestris/base-util/dist/types';
+
+
 import { CSS_PREFIX } from '../../constants';
 
-export type OwnProps = {
+export interface OwnProps {
   /**
    * The default value(s).
    */
@@ -26,7 +30,7 @@ export type OwnProps = {
    * An optional CSS class which should be added.
    */
   className?: string;
-};
+}
 
 export type MultiLayerSliderProps = OwnProps & SliderSingleProps;
 
@@ -50,7 +54,7 @@ const MultiLayerSlider: React.FC<MultiLayerSliderProps> = ({
       return '';
     }
     const layerIdx = getLayerIndexForSliderValue(val);
-    let tip: string = '';
+    let tip = '';
     if (layers[layerIdx]) {
       const opacity = Math.round(layers[layerIdx].get('opacity') * 100);
       const layer = layers[layerIdx];
@@ -93,7 +97,7 @@ const MultiLayerSlider: React.FC<MultiLayerSliderProps> = ({
   };
 
   const getMarks = () => {
-    const marks: {[index: number]: any} = {};
+    const marks: Record<number, any> = {};
     const length = layers.length - 1;
     layers.forEach((layer, index) => {
       const layername = (nameProperty ? layer.get(nameProperty) : undefined) ?? `Layer ${index + 1}`;

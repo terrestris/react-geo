@@ -1,13 +1,16 @@
 import './AddWmsLayerEntry.less';
 
-import { faCopyright, faInfo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
-import { Checkbox, Tooltip } from 'antd';
-import OlMap from 'ol/Map';
 import React, { useEffect, useState } from 'react';
 
-export type AddWmsLayerEntryProps = {
+import { faCopyright, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { Checkbox, Tooltip } from 'antd';
+import OlMap from 'ol/Map';
+
+import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
+
+export interface AddWmsLayerEntryProps {
   /**
    * The map.
    */
@@ -39,7 +42,7 @@ export type AddWmsLayerEntryProps = {
    * needed.
    */
   ariaLabelQueryable?: string;
-};
+}
 
 /**
  * Class representing a layer parsed from capabilities document.

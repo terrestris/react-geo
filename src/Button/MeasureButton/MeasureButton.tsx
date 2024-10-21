@@ -1,8 +1,8 @@
 import './MeasureButton.less';
 
-import useMeasure, { UseMeasureProps } from '@terrestris/react-util/dist/Hooks/useMeasure/useMeasure';
-import _isNil from 'lodash/isNil';
 import React, { FC } from 'react';
+
+import useMeasure, { UseMeasureProps } from '@terrestris/react-util/dist/Hooks/useMeasure/useMeasure';
 
 import { CSS_PREFIX } from '../../constants';
 import ToggleButton, { ToggleButtonProps } from '../ToggleButton/ToggleButton';
@@ -16,7 +16,7 @@ interface OwnProps {
 
 export type MeasureButtonProps = OwnProps & Partial<Omit<UseMeasureProps, 'active'>> & Partial<ToggleButtonProps>;
 
-const defaulClassName = `${CSS_PREFIX}measurebutton`;
+const defaultClassName = `${CSS_PREFIX}measurebutton`;
 
 export const MeasureButton: FC<MeasureButtonProps> = ({
   measureType = 'line',
@@ -44,7 +44,7 @@ export const MeasureButton: FC<MeasureButtonProps> = ({
 }) => {
 
   useMeasure({
-    active: !!pressed,
+    active: pressed,
     measureType,
     measureLayerName,
     fillColor,
@@ -63,8 +63,8 @@ export const MeasureButton: FC<MeasureButtonProps> = ({
   });
 
   const finalClassName = className
-    ? `${className} ${defaulClassName}`
-    : defaulClassName;
+    ? `${className} ${defaultClassName}`
+    : defaultClassName;
 
   return (
     <ToggleButton

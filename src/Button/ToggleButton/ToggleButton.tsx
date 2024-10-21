@@ -1,5 +1,9 @@
 import './ToggleButton.less';
 
+import React, {
+  MouseEvent
+} from 'react';
+
 import {
   Button,
   Tooltip
@@ -8,9 +12,6 @@ import {
   AbstractTooltipProps,
   TooltipPlacement
 } from 'antd/lib/tooltip';
-import React, {
-  MouseEvent
-} from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 import { SimpleButtonProps } from '../SimpleButton/SimpleButton';
@@ -73,7 +74,7 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
   children,
   value,
   onClick,
-  onChange = () => {},
+  onChange = () => undefined,
   ...passThroughProps
 }) => {
 
