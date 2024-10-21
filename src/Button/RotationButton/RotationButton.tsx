@@ -1,8 +1,11 @@
+import React from 'react';
+
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useOlInteraction from '@terrestris/react-util/dist/Hooks/useOlInteraction/useOlInteraction';
+
 import { DragRotateAndZoom } from 'ol/interaction.js';
-import React from 'react';
+
+import useOlInteraction from '@terrestris/react-util/dist/Hooks/useOlInteraction/useOlInteraction';
 
 import ToggleButton, {
   ToggleButtonProps
@@ -28,7 +31,7 @@ export const RotationButton: React.FC<RotationButtonProps> = ({
     <ToggleButton
       tooltip={tooltip}
       icon={<FontAwesomeIcon icon={faArrowsRotate} />}
-      pressedIcon={<FontAwesomeIcon icon={faArrowsRotate} />}
+      pressedIcon={pressedIcon}
       pressed={pressed}
       tooltipProps={tooltipProps}
       {...passThroughProps}
