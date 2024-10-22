@@ -1,28 +1,40 @@
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-balham.css';
+/* eslint-disable simple-import-sort/imports */
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-balham.css';
+/* eslint-enable simple-import-sort/imports */
 
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
+
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import {
   CellMouseOutEvent,
   CellMouseOverEvent,
+  ColDef,
+  ColDefField,
+  ColGroupDef,
   GridApi,
   GridReadyEvent,
+  ModuleRegistry,
   RowClassParams,
   RowClickedEvent,
   RowNode,
   RowStyle,
   SelectionChangedEvent
-} from 'ag-grid-community';
-import { ColDef, ColDefField, ColGroupDef } from 'ag-grid-community';
-import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
+} from '@ag-grid-community/core';
+import {
+  AgGridReact,
+  AgGridReactProps
+} from '@ag-grid-community/react';
+
 import _differenceWith from 'lodash/differenceWith';
 import _has from 'lodash/has';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
 import _isNumber from 'lodash/isNumber';
 import _isString from 'lodash/isString';
+
 import { getUid } from 'ol';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
@@ -30,6 +42,7 @@ import OlLayerBase from 'ol/layer/Base';
 import OlLayerVector from 'ol/layer/Vector';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlSourceVector from 'ol/source/Vector';
+
 import React, { Key, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
@@ -102,6 +115,10 @@ interface OwnProps<T> {
 const defaultClassName = `${CSS_PREFIX}ag-feature-grid`;
 
 export type AgFeatureGridProps<T> = OwnProps<T> & RgCommonGridProps<T> & Omit<AgGridReactProps, 'theme'>;
+
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule
+]);
 
 /**
  * The AgFeatureGrid.
