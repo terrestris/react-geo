@@ -1,3 +1,25 @@
+# [26.0.0](https://github.com/terrestris/react-geo/compare/v25.1.2...v26.0.0) (2024-10-22)
+
+
+### Bug Fixes
+
+* linting ([b268a97](https://github.com/terrestris/react-geo/commit/b268a976b68f7440146c5791ea77e5c82d4d18f8))
+* register client side row module by default ([17d7f6e](https://github.com/terrestris/react-geo/commit/17d7f6e3ff8afe09c12a5e4cccf62b31d686d9e7))
+
+
+### Code Refactoring
+
+* use ag-grid modules ([1ea6332](https://github.com/terrestris/react-geo/commit/1ea6332209cee366691100623676b8b29547737f))
+
+
+### BREAKING CHANGES
+
+* imports of ag-grid need to be adjusted, otherwise AG Grid will be included twice
+
+See
+- https://www.ag-grid.com/react-data-grid/modules/
+- https://www.ag-grid.com/react-data-grid/modules/#mixing-packages-and-modules
+
 ## [25.1.2](https://github.com/terrestris/react-geo/compare/v25.1.1...v25.1.2) (2024-10-17)
 
 
