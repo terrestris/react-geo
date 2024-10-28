@@ -76,7 +76,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@terrestris/base-util": "^2.0.0",
+    "@terrestris/base-util": "^3.0.0",
     "@terrestris/react-util": "^9.0.0",
     "@types/lodash": "^4.17.4",
     "jspdf": "^2.5.1",
