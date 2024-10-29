@@ -100,7 +100,7 @@
     "@semantic-release/git": "^10.0.1",
     "@terrestris/eslint-config-typescript": "^5.0.0",
     "@terrestris/eslint-config-typescript-react": "^2.0.0",
-    "@terrestris/ol-util": "^20.0.0",
+    "@terrestris/ol-util": "^21.0.0",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^16.0.1",
