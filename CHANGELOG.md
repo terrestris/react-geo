@@ -1,3 +1,16 @@
+# [26.1.0](https://github.com/terrestris/react-geo/compare/v26.0.0...v26.1.0) (2024-11-07)
+
+
+### Bug Fixes
+
+* dependency array ([7323b86](https://github.com/terrestris/react-geo/commit/7323b8605236134bba85ac028eae7d91c28bf401))
+* punctuation ([09d55d7](https://github.com/terrestris/react-geo/commit/09d55d7d5eeb6b60876cb6c2ff519298b683b02d))
+
+
+### Features
+
+* add optional layer visibility change callback ([1cf736c](https://github.com/terrestris/react-geo/commit/1cf736ccd4f82e47b22612ac58d90042775e5ccb))
+
 # [26.0.0](https://github.com/terrestris/react-geo/compare/v25.1.2...v26.0.0) (2024-10-22)
 
 
