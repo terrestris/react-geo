@@ -46,6 +46,11 @@ interface OwnProps {
    * the layer instance of the current tree node.
    */
   nodeTitleRenderer?: (layer: OlLayerBase) => React.ReactNode;
+
+  /**
+   * Callback function that will be called if the selection changes.
+   */
+  onLayerVisibilityChanged?: (layer: OlLayerBase, checked: boolean) => void;
 }
 
 const defaultClassName = `${CSS_PREFIX}layertree`;
@@ -57,6 +62,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
   layerGroup,
   nodeTitleRenderer,
   filterFunction,
+  onLayerVisibilityChanged,
   checkable = true,
   draggable = true,
   ...passThroughProps
@@ -245,7 +251,11 @@ const LayerTree: React.FC<LayerTreeProps> = ({
     }
 
     setLayerVisibility(layer, checked);
-  }, [map, setLayerVisibility]);
+
+    if (_isFunction(onLayerVisibilityChanged)) {
+      onLayerVisibilityChanged(layer, checked);
+    }
+  }, [map, setLayerVisibility, onLayerVisibilityChanged]);
 
   const onDrop = useCallback((info: NodeDragEventParams<DataNode> & {
     dragNode: EventDataNode<DataNode>;
