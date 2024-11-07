@@ -255,7 +255,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
     if (_isFunction(onLayerVisibilityChanged)) {
       onLayerVisibilityChanged(layer, checked);
     }
-  }, [map, setLayerVisibility]);
+  }, [map, setLayerVisibility, onLayerVisibilityChanged]);
 
   const onDrop = useCallback((info: NodeDragEventParams<DataNode> & {
     dragNode: EventDataNode<DataNode>;
