@@ -48,7 +48,7 @@ interface OwnProps {
   nodeTitleRenderer?: (layer: OlLayerBase) => React.ReactNode;
 
   /**
-   * Callback function, that will be called if the selection changes.
+   * Callback function that will be called if the selection changes.
    */
   onLayerVisibilityChanged?: (layer: OlLayerBase, checked: boolean) => void;
 }
