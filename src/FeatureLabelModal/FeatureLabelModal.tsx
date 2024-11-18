@@ -58,7 +58,9 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
     onOk={onOkInternal}
     onCancel={onCancel}
     afterOpenChange={(open) => {
-      open && inputRef.current?.focus();
+      if (open) {
+        inputRef.current?.focus();
+      }
     }}
     {...passThroughProps}
   >
