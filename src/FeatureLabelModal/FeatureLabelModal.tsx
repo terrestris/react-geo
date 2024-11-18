@@ -1,10 +1,10 @@
 import StringUtil from '@terrestris/base-util/dist/StringUtil/StringUtil';
-import { Modal, ModalProps } from 'antd';
+import { InputRef, Modal, ModalProps } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type OwnProps = {
   feature: Feature<Geometry>;
@@ -28,6 +28,8 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
 }) => {
   const [label, setLabel] = useState<string>('');
   const [showPrompt, setShowPrompt] = useState<boolean>(false);
+
+  const inputRef = useRef<InputRef>(null);
 
   useEffect(() => {
     if (feature) {
@@ -55,12 +57,16 @@ export const FeatureLabelModal: React.FC<FeatureLabelModalProps> = ({
     closable={false}
     onOk={onOkInternal}
     onCancel={onCancel}
+    afterOpenChange={(open) => {
+      open && inputRef.current?.focus();
+    }}
     {...passThroughProps}
   >
     <TextArea
       value={label}
       onChange={e => setLabel(e.target.value)}
       autoSize
+      ref={inputRef}
     />
   </Modal>;
 };
