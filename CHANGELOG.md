@@ -1,3 +1,11 @@
+## [26.1.1](https://github.com/terrestris/react-geo/compare/v26.1.0...v26.1.1) (2024-11-18)
+
+
+### Bug Fixes
+
+* enable drawbutton autofocus on text area ([c39ce54](https://github.com/terrestris/react-geo/commit/c39ce54014592ab866d7fed31b431ff1c96bc836))
+* linting warning ([898e764](https://github.com/terrestris/react-geo/commit/898e76428ca953106f0bf7fd5edb2d8977f8f2f5))
+
 # [26.1.0](https://github.com/terrestris/react-geo/compare/v26.0.0...v26.1.0) (2024-11-07)
 
 
