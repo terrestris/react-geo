@@ -1,9 +1,11 @@
 import './BackgroundLayerPreview.less';
 
+import { MapUtil } from '@terrestris/ol-util';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { Spin } from 'antd';
 import { Coordinate } from 'ol/coordinate';
 import OlLayerBase from 'ol/layer/Base';
+import OlLayerGroup from 'ol/layer/Group';
 import OlLayerImage from 'ol/layer/Image';
 import OlLayer from 'ol/layer/Layer';
 import OlLayerTile from 'ol/layer/Tile';
@@ -93,24 +95,40 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
   }, [zoom, center, previewMap]);
 
   const getBgLayersFromMap = (): OlLayer[] => {
-    return mainMap?.getLayerGroup()
-      .getLayers()
-      .getArray()
-      .filter(backgroundLayerFilter) as OlLayer[] || [];
+    const collectBgLayers = (layerGroup: OlLayerGroup | undefined): OlLayer[] => {
+      if (!layerGroup) {
+        return [];
+      }
+
+      const layers: OlLayer[] = [];
+      const layerArray = layerGroup.getLayers().getArray();
+
+      for (const l of layerArray) {
+        if (backgroundLayerFilter(l)) {
+          layers.push(l as OlLayer);
+        }
+
+        if (l instanceof OlLayerGroup) {
+          layers.push(...collectBgLayers(l));
+        }
+      }
+
+      return layers;
+    };
+
+    const mainLayerGroup = mainMap?.getLayerGroup();
+    return mainLayerGroup ? collectBgLayers(mainLayerGroup) : [];
   };
 
   const updateBgLayerVisibility = (evt: React.MouseEvent<HTMLDivElement>) => {
     const target = evt?.currentTarget;
     const layerId = target?.dataset?.uid;
 
-    if (!layerId) {
+    if (!layerId || !mainMap) {
       return;
     }
 
-    const newBgLayer = mainMap?.getLayerGroup()
-      .getLayers()
-      .getArray()
-      .find(l => getUid(l) === layerId);
+    const newBgLayer = MapUtil.getLayerByOlUid(mainMap, layerId);
 
     if (!newBgLayer) {
       return;
