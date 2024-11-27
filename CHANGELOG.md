@@ -1,3 +1,10 @@
+# [26.2.0](https://github.com/terrestris/react-geo/compare/v26.1.1...v26.2.0) (2024-11-27)
+
+
+### Features
+
+* support nested LayerGroups for background layer management ([60dc740](https://github.com/terrestris/react-geo/commit/60dc740ad76ca1911fb3867de240ea0360bb9146))
+
 ## [26.1.1](https://github.com/terrestris/react-geo/compare/v26.1.0...v26.1.1) (2024-11-18)
 
 
