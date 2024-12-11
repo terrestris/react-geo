@@ -1,3 +1,10 @@
+## [26.2.1](https://github.com/terrestris/react-geo/compare/v26.2.0...v26.2.1) (2024-12-11)
+
+
+### Bug Fixes
+
+* fix drag and drop in LayerTree ([25011cc](https://github.com/terrestris/react-geo/commit/25011cc31c9b6420f94885b395737cd020100559))
+
 # [26.2.0](https://github.com/terrestris/react-geo/compare/v26.1.1...v26.2.0) (2024-11-27)
 
 
