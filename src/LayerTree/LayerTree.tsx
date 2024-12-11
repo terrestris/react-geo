@@ -43,7 +43,11 @@ interface OwnProps {
   /**
    * A function that can be used to pass a custom node title. It can return
    * any renderable element (String, Number, Element etc.) and receives
-   * the layer instance of the current tree node.
+   * the layer instance of the current tree node. Please note: If you want
+   * to use draggable components in this element, you will have to stop
+   * drag events on these elements by setting `onDragStart`.
+   *
+   * See https://github.com/terrestris/react-geo/pull/4155
    */
   nodeTitleRenderer?: (layer: OlLayerBase) => React.ReactNode;
 
@@ -124,7 +128,6 @@ const LayerTree: React.FC<LayerTreeProps> = ({
       title: <div
         draggable={true}
         onClick={e => e.stopPropagation()}
-        onDragStart={e => {e.stopPropagation(); e.preventDefault();}}
       >
         {getTreeNodeTitle(layer)}
       </div>,
