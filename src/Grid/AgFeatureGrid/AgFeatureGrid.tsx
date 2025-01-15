@@ -1,14 +1,8 @@
-/* eslint-disable simple-import-sort/imports */
-import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-balham.css';
-/* eslint-enable simple-import-sort/imports */
-
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
-
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import {
+  AllCommunityModule,
   CellMouseOutEvent,
   CellMouseOverEvent,
   ColDef,
@@ -21,20 +15,18 @@ import {
   RowClickedEvent,
   RowNode,
   RowStyle,
-  SelectionChangedEvent
-} from '@ag-grid-community/core';
+  SelectionChangedEvent,
+  Theme,
+  themeBalham} from 'ag-grid-community';
 import {
   AgGridReact,
   AgGridReactProps
-} from '@ag-grid-community/react';
-
+} from 'ag-grid-react';
 import _differenceWith from 'lodash/differenceWith';
-import _has from 'lodash/has';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
 import _isNumber from 'lodash/isNumber';
 import _isString from 'lodash/isString';
-
 import { getUid } from 'ol';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
@@ -42,7 +34,6 @@ import OlLayerBase from 'ol/layer/Base';
 import OlLayerVector from 'ol/layer/Vector';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlSourceVector from 'ol/source/Vector';
-
 import React, { Key, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
@@ -65,11 +56,11 @@ interface OwnProps<T> {
    */
   height?: number | string;
   /**
-   * The theme to use for the grid. See
-   * https://www.ag-grid.com/javascript-grid-styling/ for available options.
-   * Note: CSS must be loaded to use the theme!
+   * The theme to use for the grid. See https://www.ag-grid.com/angular-data-grid/theming/ for available options
+   * and customization possibilities. Default is the balham theme.
+   * NOTE: AG-Grid CSS should *not* be imported.
    */
-  theme?: string;
+  theme?: Theme;
   /**
    * Custom column definitions to apply to the given column (mapping via key).
    */
@@ -117,7 +108,7 @@ const defaultClassName = `${CSS_PREFIX}ag-feature-grid`;
 export type AgFeatureGridProps<T> = OwnProps<T> & RgCommonGridProps<T> & Omit<AgGridReactProps, 'theme'>;
 
 ModuleRegistry.registerModules([
-  ClientSideRowModelModule
+  AllCommunityModule
 ]);
 
 /**
@@ -143,7 +134,7 @@ export function AgFeatureGrid<T>({
   rowStyleFn,
   selectStyle = defaultSelectStyle,
   selectable = false,
-  theme = 'ag-theme-balham',
+  theme = themeBalham,
   width,
   zoomToExtent = false,
   ...agGridPassThroughProps
@@ -169,17 +160,6 @@ export function AgFeatureGrid<T>({
     style: featureStyle
   }), [features, layerName], true);
 
-  const checkBoxColumnDefinition: ColDef<WithKey<T>> = useMemo(() => ({
-    checkboxSelection: true,
-    headerCheckboxSelection: true,
-    headerName: '',
-    lockPosition: true,
-    pinned: 'left',
-    suppressHeaderMenuButton: true,
-    suppressMovable: true,
-    width: 40
-  }), []);
-
   /**
    * Returns the currently selected row keys.
    *
@@ -190,8 +170,7 @@ export function AgFeatureGrid<T>({
       return [];
     }
 
-    const sr = gridApi.getSelectedRows();
-    return sr.map(row => row.key);
+    return gridApi.getSelectedRows()?.map(row => row.key) ?? [];
   }, [gridApi]);
 
   /**
@@ -326,11 +305,6 @@ export function AgFeatureGrid<T>({
     const feature = features[0];
     const props = feature.getProperties();
 
-    if (selectable) {
-      // adds select checkbox column
-      columns.push(checkBoxColumnDefinition);
-    }
-
     const colDefsFromFeature = Object.keys(props).map((key: string): ColDef<WithKey<T>> | undefined => {
       if (attributeBlacklist.includes(key)) {
         return;
@@ -363,7 +337,7 @@ export function AgFeatureGrid<T>({
       ...columns,
       ...(colDefsFromFeature.filter(c => !_isNil(c)) as ColDef<WithKey<T>>[])
     ];
-  }, [attributeBlacklist, features, selectable, checkBoxColumnDefinition]);
+  }, [attributeBlacklist, features]);
 
   /**
    * Returns the table row data from all the given features.
@@ -585,28 +559,12 @@ export function AgFeatureGrid<T>({
 
   const colDefs = useMemo(() => {
     if (!_isNil(columnDefs)) {
-      if (!selectable) {
-        return columnDefs;
-      }
-      // check for checkbox column - if not present => add
-      const checkboxSelectionPresent = columnDefs?.
-        some((colDef: ColDef<WithKey<T>>) =>
-          _has(colDef, 'checkboxSelection') && !_isNil(colDef.checkboxSelection)
-        );
-      if (checkboxSelectionPresent) {
-        return columnDefs;
-      }
-      return [
-        checkBoxColumnDefinition,
-        ...columnDefs
-      ];
+      return columnDefs;
     }
     return getColumnDefsFromFeature();
   }, [
-    checkBoxColumnDefinition,
     columnDefs,
-    getColumnDefsFromFeature,
-    selectable
+    getColumnDefsFromFeature
   ]);
 
   const passedRowData = useMemo(() => !_isNil(rowData) ? rowData : getRowData(), [
@@ -615,8 +573,8 @@ export function AgFeatureGrid<T>({
   ]);
 
   const finalClassName = className
-    ? `${className} ${defaultClassName} ${theme}`
-    : `${defaultClassName} ${theme}`;
+    ? `${className} ${defaultClassName}`
+    : `${defaultClassName}`;
 
   return (
     <div
@@ -632,8 +590,11 @@ export function AgFeatureGrid<T>({
         onRowClicked={onRowClickInner}
         onSelectionChanged={onSelectionChanged}
         rowData={passedRowData}
-        rowSelection="multiple"
-        suppressRowClickSelection
+        rowSelection={selectable ? {
+          mode: 'multiRow',
+          enableClickSelection: false
+        } : undefined}
+        theme={theme}
         {...agGridPassThroughProps}
       />
     </div>
