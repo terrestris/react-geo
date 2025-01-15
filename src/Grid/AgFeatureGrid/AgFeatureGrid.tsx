@@ -1,7 +1,6 @@
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
-
 import {
   AllCommunityModule,
   CellMouseOutEvent,
@@ -17,20 +16,17 @@ import {
   RowNode,
   RowStyle,
   SelectionChangedEvent,
-  themeBalham,
-  Theme
-} from 'ag-grid-community';
+  Theme,
+  themeBalham} from 'ag-grid-community';
 import {
   AgGridReact,
   AgGridReactProps
 } from 'ag-grid-react';
-
 import _differenceWith from 'lodash/differenceWith';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
 import _isNumber from 'lodash/isNumber';
 import _isString from 'lodash/isString';
-
 import { getUid } from 'ol';
 import OlFeature from 'ol/Feature';
 import OlGeometry from 'ol/geom/Geometry';
@@ -38,7 +34,6 @@ import OlLayerBase from 'ol/layer/Base';
 import OlLayerVector from 'ol/layer/Vector';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import OlSourceVector from 'ol/source/Vector';
-
 import React, { Key, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
@@ -596,7 +591,7 @@ export function AgFeatureGrid<T>({
         onSelectionChanged={onSelectionChanged}
         rowData={passedRowData}
         rowSelection={selectable ? {
-          mode: "multiRow",
+          mode: 'multiRow',
           enableClickSelection: false
         } : undefined}
         theme={theme}
