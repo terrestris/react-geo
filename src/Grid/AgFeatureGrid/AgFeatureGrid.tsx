@@ -165,17 +165,6 @@ export function AgFeatureGrid<T>({
     style: featureStyle
   }), [features, layerName], true);
 
-  const checkBoxColumnDefinition: ColDef<WithKey<T>> = useMemo(() => ({
-    checkboxSelection: true,
-    headerCheckboxSelection: true,
-    headerName: '',
-    lockPosition: true,
-    pinned: 'left',
-    suppressHeaderMenuButton: true,
-    suppressMovable: true,
-    width: 40
-  }), []);
-
   /**
    * Returns the currently selected row keys.
    *
@@ -321,11 +310,6 @@ export function AgFeatureGrid<T>({
     const feature = features[0];
     const props = feature.getProperties();
 
-    if (selectable) {
-      // adds select checkbox column
-      columns.push(checkBoxColumnDefinition);
-    }
-
     const colDefsFromFeature = Object.keys(props).map((key: string): ColDef<WithKey<T>> | undefined => {
       if (attributeBlacklist.includes(key)) {
         return;
@@ -358,7 +342,7 @@ export function AgFeatureGrid<T>({
       ...columns,
       ...(colDefsFromFeature.filter(c => !_isNil(c)) as ColDef<WithKey<T>>[])
     ];
-  }, [attributeBlacklist, features, selectable, checkBoxColumnDefinition]);
+  }, [attributeBlacklist, features]);
 
   /**
    * Returns the table row data from all the given features.
@@ -611,10 +595,10 @@ export function AgFeatureGrid<T>({
         onRowClicked={onRowClickInner}
         onSelectionChanged={onSelectionChanged}
         rowData={passedRowData}
-        rowSelection={{
+        rowSelection={selectable ? {
           mode: "multiRow",
           enableClickSelection: false
-        }}
+        } : undefined}
         theme={theme}
         {...agGridPassThroughProps}
       />
