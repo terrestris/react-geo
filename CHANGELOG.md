@@ -1,3 +1,21 @@
+# [27.0.0](https://github.com/terrestris/react-geo/compare/v26.2.1...v27.0.0) (2025-01-15)
+
+
+### Bug Fixes
+
+* remove unneeded checkbox column ([3fc107a](https://github.com/terrestris/react-geo/commit/3fc107a839221ea1c1f7ae864767078d8fd2171a))
+
+
+### Features
+
+* update ag-grid and use theming via js api ([10bbdc0](https://github.com/terrestris/react-geo/commit/10bbdc0d5d6ca98198159ed2e65284a97a964c9f))
+
+
+### BREAKING CHANGES
+
+* The theme property of the AgFeatureGrid has changed to an AG-Grid Theme object.
+Any CSS imports from AG-Grid have to be removed.
+
 ## [26.2.1](https://github.com/terrestris/react-geo/compare/v26.2.0...v26.2.1) (2024-12-11)
 
 
