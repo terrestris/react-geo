@@ -23,12 +23,23 @@ For a full list of available components, their properties and examples see [here
 
 The `react-geo` package includes TypeScript declarations as `*.d.ts` files. The build itself is included in ESM format (currently ES2022).
 
-### Styling
+### Ant-Design ConfigProvider
 
-`react-geo` supports dynamic theming [via CSS variables](https://4x.ant.design/docs/react/customize-theme-variable) and requires the following import inside your project.
+`react-geo` supports [dynamic theming](https://ant.design/docs/react/customize-theme) of the Toggle Button via the antd `ConfigProvider`.
 
-```css
-@import '~antd/dist/antd.variable.min.css';
+```tsx
+<ConfigProvider
+  theme={{
+    cssVar: true,
+    Component: {
+      Button: {
+        primaryActive: '#0958d9'
+      }
+    }
+  }}
+>
+  //...
+</ConfigProvider>
 ```
 
 ## Workshop
