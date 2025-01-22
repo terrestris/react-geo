@@ -2,88 +2,131 @@ This example demonstrates the usage of the TimeLayerSliderPanel
 (Data: IEM generated CONUS composite of NWS NEXRAD WSR-88D level III base reflectivity, Iowa State University)
 
 ```jsx
+import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import TimeLayerSliderPanel from '@terrestris/react-geo/dist/Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
+import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import moment from 'moment';
 import { getCenter } from 'ol/extent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
-import { transformExtent } from 'ol/proj';
+import { transformExtent } from 'ol/proj'
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
-import * as React from 'react';
+import {
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 
-class TimeLayerSliderPanelExample extends React.Component {
+const TimeLayerSliderPanelExample = () => {
 
-  constructor(props) {
+  var extent = useMemo(() => transformExtent([-126, 24, -66, 50], 'EPSG:4326', 'EPSG:3857'), []);
 
-    super(props);
+  const [value, setValue] = useState();
+  const [map, setMap] = useState();
 
-    this.mapDivId = `map-${Math.random()}`;
-    var extent = transformExtent([-126, 24, -66, 50], 'EPSG:4326', 'EPSG:3857');
-    this.layers = [
-      new OlLayerTile({
-        extent: extent,
-        type: 'WMSTime',
-        timeFormat: 'YYYY-MM-DDTHH:mm',
-        roundToFullHours: true,
-        source: new OlSourceTileWMS({
-          attributions: ['Iowa State University'],
-          url: '//mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi',
-          params: {LAYERS: 'nexrad-n0r-wmst'}
-        })
-      })
-    ];
+  const timeLayer = useMemo(() => new OlLayerTile({
+    extent: extent,
+    type: 'WMSTime',
+    timeFormat: 'YYYY-MM-DDTHH:mm',
+    roundToFullHours: true,
+    source: new OlSourceTileWMS({
+      attributions: ['Iowa State University'],
+      url: '//mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi',
+      params: {LAYERS: 'nexrad-n0r-wmst'}
+    })
+  }), [extent]);
 
-    this.map = new OlMap({
+
+  const timeLayer2 = useMemo(() => new OlLayerTile({
+    extent: extent,
+    type: 'WMSTime',
+    timeFormat: 'YYYY-MM-DDTHH:mm',
+    roundToFullHours: true,
+    source: new OlSourceTileWMS({
+      attributions: ['Iowa State University'],
+      url: '//mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi',
+      params: {LAYERS: 'nexrad-n0r-wmst'}
+    })
+  }), [extent]);
+
+  const timeLayer3 = useMemo(() => new OlLayerTile({
+    extent: extent,
+    type: 'WMSTime',
+    timeFormat: 'YYYY-MM-DDTHH:mm',
+    roundToFullHours: true,
+    source: new OlSourceTileWMS({
+      attributions: ['Iowa State University'],
+      url: '//mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi',
+      params: {LAYERS: 'nexrad-n0r-wmst'}
+    })
+  }), [extent]);
+
+  useEffect(() => {
+    const newMap = new OlMap({
       layers: [
         new OlLayerTile({
-          name: 'OSM',
+          properties: {
+            name: 'OSM'
+          },
           source: new OlSourceOSM()
         }),
-        ...this.layers
+        timeLayer,
+        timeLayer2,
+        timeLayer3
       ],
       view: new OlView({
         center: getCenter(extent),
         zoom: 4
       })
     });
-  }
 
-  componentDidMount() {
-    this.map.setTarget(this.mapDivId);
-  }
+    setMap(newMap);
+  }, [extent, timeLayer, timeLayer2, timeLayer3]);
 
-  render() {
-    const tooltips = {
-      setToNow: 'Set to now',
-      hours: 'Hours',
-      days: 'Days',
-      weeks: 'Weeks',
-      months: 'Months',
-      years: 'Years',
-      dataRange: 'Set data range'
-    };
+  const tooltips = {
+    setToNow: 'Set to now',
+    hours: 'Hours',
+    days: 'Days',
+    weeks: 'Weeks',
+    months: 'Months',
+    years: 'Years',
+    dataRange: 'Set data range'
+  };
 
-    return (
-      <div>
-        <div
-          id={this.mapDivId}
+  const initStartDate = moment().subtract(3, 'hours');
+  const initEndDate = moment();
+
+  const onTimeChanged = (newTimeValue) => setValue(newTimeValue);
+
+  useEffect(() => {
+    setValue(moment().subtract(1, 'hours'))
+  }, []);
+
+  return (
+    <div>
+      <MapContext.Provider value={map}>
+        <MapComponent
+          map={map}
           style={{
+            position: 'relative',
             height: '400px'
           }}
         />
         <TimeLayerSliderPanel
-          initStartDate={moment().subtract(3, 'hours')}
-          initEndDate={moment()}
-          timeAwareLayers={this.layers}
+          initStartDate={initStartDate}
+          initEndDate={initEndDate}
+          timeAwareLayers={[timeLayer, timeLayer2, timeLayer3]}
           tooltips={tooltips}
           autoPlaySpeedOptions={[0.5, 1, 2, 3]}
           dateFormat='YYYY-MM-DD HH:mm'
+          value={value}
+          onChange={onTimeChanged}
         />
-      </div>
-    );
-  }
+      </MapContext.Provider>
+    </div>
+  );
 }
 
 <TimeLayerSliderPanelExample />
