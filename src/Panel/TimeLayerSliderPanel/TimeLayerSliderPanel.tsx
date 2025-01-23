@@ -31,13 +31,14 @@ export type TimeLayerSliderPanelTooltips = {
   dataRange: string;
   days: string;
   hours: string;
+  minutes: string;
   months: string;
   setToMostRecent: string;
   weeks: string;
   years: string;
 };
 
-export type PlaybackSpeedUnit = 'hours' | 'days' | 'weeks' | 'months' | 'years';
+export type PlaybackSpeedUnit = 'minute' | 'hours' | 'days' | 'weeks' | 'months' | 'years';
 
 export type TimeLayerSliderPanelProps = {
   autoPlaySpeedOptions?: number[];
@@ -59,6 +60,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   timeAwareLayers = [],
   tooltips = {
     setToMostRecent: 'Set to most recent date',
+    minutes: 'Minutes',
     hours: 'Hours',
     days: 'Days',
     weeks: 'Weeks',
@@ -402,14 +404,16 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       >
         {speedOptions}
       </Select>
+      <span>x</span>
       <Select<PlaybackSpeedUnit>
         className={extraCls + ' speed-picker'}
-        defaultValue={'hours'}
+        defaultValue={'minute'}
         dropdownStyle={{ minWidth: '100px' }}
         onChange={onPlaybackUnitChange}
         popupMatchSelectWidth={false}
         value={playbackSpeedUnit}
       >
+        <Option value="minutes">{tooltips.minutes}</Option>
         <Option value="hours">{tooltips.hours}</Option>
         <Option value="days">{tooltips.days}</Option>
         <Option value="weeks">{tooltips.weeks}</Option>
