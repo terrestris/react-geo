@@ -249,7 +249,6 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       const newValue = value.clone();
 
       if (_isFinite(playbackSpeed)) {
-        wmsTimeHandler(newValue.clone().add(playbackSpeed, playbackSpeedUnit));
         onTimeChanged(newValue.clone().add(playbackSpeed, playbackSpeedUnit));
       } else {
         const time = dayjs(
@@ -258,13 +257,11 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
             .add(1, playbackSpeedUnit)
             .format()
         );
-        wmsTimeHandler(time);
         onTimeChanged(time);
       }
     }, 1000);
-
     return () => clearInterval(interval);
-  }, [autoPlayActive, value, endDate, playbackSpeed, wmsTimeHandler, onChange, playbackSpeedUnit, onTimeChanged]);
+  }, [autoPlayActive, endDate, playbackSpeed, wmsTimeHandler, onChange, playbackSpeedUnit, onTimeChanged, value]);
 
   useEffect(() => {
     setStartDate(min);
@@ -276,6 +273,11 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       findRangeForLayers();
     }
   }, [timeAwareLayers, findRangeForLayers]);
+
+  useEffect(() => {
+    // update time for all time aware layers if value changes
+    wmsTimeHandler(value);
+  }, [value, wmsTimeHandler]);
 
   const futureClass = useMemo(() => {
     if (Array.isArray(value)) {
