@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlSourceTileWMS from 'ol/source/TileWMS';
@@ -40,8 +40,8 @@ describe('<TimeLayerSliderPanel />', () => {
 
   it('can be rendered', () => {
     const { container } = render(<TimeLayerSliderPanel
-      initStartDate={moment().subtract(3, 'hours')}
-      initEndDate={moment()}
+      min={dayjs().subtract(3, 'hours')}
+      max={dayjs()}
       timeAwareLayers={[]}
     />);
     expect(container).toBeVisible();
@@ -49,8 +49,8 @@ describe('<TimeLayerSliderPanel />', () => {
 
   it('autoplay button is visible', () => {
     render(<TimeLayerSliderPanel
-      initStartDate={moment().subtract(3, 'hours')}
-      initEndDate={moment()}
+      min={dayjs().subtract(3, 'hours')}
+      max={dayjs()}
       timeAwareLayers={[]}
     />);
 
@@ -60,8 +60,8 @@ describe('<TimeLayerSliderPanel />', () => {
 
   it('autoplay can be toggled', async () => {
     render(<TimeLayerSliderPanel
-      initStartDate={moment().subtract(3, 'hours')}
-      initEndDate={moment()}
+      min={dayjs().subtract(3, 'hours')}
+      max={dayjs()}
       timeAwareLayers={[testLayer]}
     />);
 

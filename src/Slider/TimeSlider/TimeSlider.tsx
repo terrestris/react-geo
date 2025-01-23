@@ -1,116 +1,117 @@
-import { Slider, SliderSingleProps } from 'antd';
+import { Slider } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
 import _isArray from 'lodash/isArray';
-import moment from 'moment';
-import React, { CSSProperties, ReactNode } from 'react';
+import _isFunction from 'lodash/isFunction';
+import { MarkObj } from 'rc-slider/lib/Marks';
+import React, { useMemo } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
-interface Mark {
-  style?: CSSProperties;
-  label?: ReactNode;
-}
-
-export type SliderMarks = {
-  [key: number]: ReactNode | Mark;
+export type TimeSliderMark= {
+  timestamp: Dayjs;
+  markConfig: MarkObj;
 };
+
 interface OwnProps {
-  useRange?: boolean;
-  defaultValue: string | [string, string];
-  min: string;
-  max: string;
-  onChange: (val: string | [string, string]) => void;
-  value: string | [string, string];
-  formatString: string;
   className?: string;
-  marks: SliderSingleProps['marks'];
+  defaultValue?: Dayjs | [Dayjs, Dayjs];
+  formatString?: string;
+  marks?: TimeSliderMark[];
+  max?: Dayjs;
+  min?: Dayjs;
+  onChange?: (val: Dayjs | [Dayjs, Dayjs]) => void;
+  onChangeComplete?: (val: Dayjs | [Dayjs, Dayjs]) => void;
+  useRange?: boolean;
+  value?: Dayjs | [Dayjs, Dayjs];
 }
 
 export type TimeSliderProps = OwnProps;
 
 const TimeSlider: React.FC<TimeSliderProps> = ({
-  useRange = false,
-  defaultValue = moment().toISOString(),
-  min = moment().subtract(1, 'hour').toISOString(),
-  max = moment().toISOString(),
-  onChange = () => undefined,
-  value = moment().toISOString(),
-  formatString = 'DD.MM. HH:mm',
   className,
+  defaultValue = dayjs(),
+  formatString = 'DD.MM. HH:mm',
   marks,
+  max = dayjs(),
+  min = dayjs().subtract(1, 'hour'),
+  onChange = () => undefined,
+  onChangeComplete = () => undefined,
+  useRange = false,
+  value = dayjs(),
   ...passThroughProps
 }) => {
-  const convert = (val: string[] | string): number | [number, number] => {
+
+  const maxUnixTimestamp = useMemo(() => dayjs(max).unix(), [max]);
+  const minUnixTimestamp = useMemo(() => dayjs(min).unix(), [min]);
+
+  const convertDayjsToUnix = (val: Dayjs[] | Dayjs): number | [number, number] => {
     return _isArray(val)
-      ? ((val as Array<string>).map(iso => moment(iso).unix()) as [
-          number,
-          number
-        ])
-      : (moment(val).unix() as number);
+      ? val.map(iso => iso.unix()) as [number, number]
+      : val.unix();
   };
 
-  const convertMarks = (
-    mks: SliderSingleProps['marks']
-  ): SliderSingleProps['marks'] => {
-    if (!mks) {
+  const convertedMarks: Record<number, MarkObj> | undefined = useMemo(() => {
+    if (!marks) {
       return;
     }
-    let convertedMks: SliderSingleProps['marks'] = {};
-    Object.keys(mks).forEach((key: string) => {
-      if (!convertedMks) {
+    let convertedMks: Record<number, MarkObj> = {};
+    marks.forEach((mark) => {
+      const convertedTimestamp = convertDayjsToUnix(mark.timestamp);
+      if (Array.isArray(convertedTimestamp)) {
         return;
       }
-      const convertedKey = convert([key]) as number; // Assuming key is ISOString
-      convertedMks[convertedKey] = mks[key];
+      convertedMks[convertedTimestamp] = mark.markConfig;
     });
     return convertedMks;
-  };
+  }, [marks]);
 
   const formatTimestamp = (unix: number): string => {
-    return unix ? moment(unix * 1000).format(formatString) : '';
+    return unix ? dayjs(unix * 1000).format(formatString) : '';
   };
 
   const valueUpdated = (val: number | number[]) => {
-    onChange(
-      _isArray(val)
-        ? [
-          moment(val[0] * 1000).toISOString(),
-          moment(val[1] * 1000).toISOString()
-        ]
-        : moment(val * 1000).toISOString()
-    );
+    const updatedValue = _isArray(val)
+      ? [dayjs(val[0] * 1000), dayjs(val[1] * 1000)] as [Dayjs, Dayjs]
+      : dayjs(val * 1000);
+
+    if (_isFunction(onChange)) {
+      onChange(updatedValue);
+    }
+    if (_isFunction(onChangeComplete)) {
+      onChangeComplete(updatedValue);
+    }
   };
 
-  const finalClassName = className
-    ? `${className} ${CSS_PREFIX}timeslider`
-    : `${CSS_PREFIX}timeslider`;
-  const convertedMarks = convertMarks(marks);
+  const finalClassName = className ? `${className} ${CSS_PREFIX}timeslider` : `${CSS_PREFIX}timeslider`;
 
   return useRange ? (
     <Slider
       className={finalClassName}
-      defaultValue={convert(defaultValue) as [number, number]}
-      range={true}
-      min={moment(min).unix()}
-      max={moment(max).unix()}
-      tooltip={{ formatter: val => formatTimestamp(val as number) }}
-      onChange={(val: number[]) => valueUpdated(val)}
-      value={convert(value) as [number, number]}
+      defaultValue={convertDayjsToUnix(defaultValue) as [number, number]}
       marks={convertedMarks}
+      max={maxUnixTimestamp}
+      min={minUnixTimestamp}
+      onChange={valueUpdated}
+      onChangeComplete={valueUpdated}
+      range={true}
+      tooltip={{ formatter: val => formatTimestamp(val as number) }}
+      value={convertDayjsToUnix(value) as [number, number]}
       {...passThroughProps}
     />
   ) : (
     <Slider
       className={finalClassName}
-      defaultValue={convert(defaultValue) as number}
+      defaultValue={convertDayjsToUnix(defaultValue) as number}
+      marks={convertedMarks}
+      max={maxUnixTimestamp}
+      min={minUnixTimestamp}
+      onChange={valueUpdated}
+      onChangeComplete={valueUpdated}
       range={false}
-      min={moment(min).unix()}
-      max={moment(max).unix()}
       tooltip={{
         formatter: val => formatTimestamp(val as number)
       }}
-      onChange={(val: number) => valueUpdated(val as number)}
-      value={convert(value) as number}
-      marks={convertedMarks}
+      value={convertDayjsToUnix(value) as number}
       {...passThroughProps}
     />
   );
