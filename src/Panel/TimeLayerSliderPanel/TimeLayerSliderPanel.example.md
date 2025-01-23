@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import { getCenter } from 'ol/extent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
-import { transformExtent } from 'ol/proj'
+import { transformExtent } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
