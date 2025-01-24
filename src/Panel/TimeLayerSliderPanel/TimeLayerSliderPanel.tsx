@@ -7,529 +7,423 @@ import {
   faSync
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import logger from '@terrestris/base-util/dist/Logger';
 import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
-import { TimeLayerAwareConfig } from '@terrestris/react-util/dist/Hooks/useTimeLayerAware/useTimeLayerAware';
 import { DatePicker, Popover, Select, Spin } from 'antd';
-import dayjs from 'dayjs';
-import { debounce } from 'lodash';
-import _isEqual from 'lodash/isEqual';
+import dayjs, { Dayjs } from 'dayjs';
+import minmax from 'dayjs/plugin/minMax';
 import _isFinite from 'lodash/isFinite';
-import moment, { Moment } from 'moment';
-import { getUid } from 'ol';
-import { TileWMS } from 'ol/source';
-import ImageWMS from 'ol/source/ImageWMS';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import _isFunction from 'lodash/isFunction';
+import _isNil from 'lodash/isNil';
+import {ImageWMS, TileWMS} from 'ol/source';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import ToggleButton from '../../Button/ToggleButton/ToggleButton';
-import TimeSlider from '../../Slider/TimeSlider/TimeSlider';
+import TimeSlider, {TimeSliderMark, TimeSliderProps} from '../../Slider/TimeSlider/TimeSlider';
+
+dayjs.extend(minmax);
 
 const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
 
-export type Tooltips = {
-  hours: string;
-  days: string;
-  weeks: string;
-  months: string;
-  years: string;
-  setToMostRecent: string;
+export type TimeLayerSliderPanelTooltips = {
   dataRange: string;
+  days: string;
+  hours: string;
+  minutes: string;
+  months: string;
+  setToMostRecent: string;
+  weeks: string;
+  years: string;
 };
 
-export type PlaybackSpeedType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
+export type PlaybackSpeedUnit = 'minute' | 'hours' | 'days' | 'weeks' | 'months' | 'years';
 
 export type TimeLayerSliderPanelProps = {
-  className?: string;
-  onChange?: (arg: moment.Moment) => void;
-  timeAwareLayers: WmsLayer[];
-  value?: moment.Moment;
-  dateFormat?: string;
-  tooltips?: Tooltips;
   autoPlaySpeedOptions?: number[];
-  initStartDate?: moment.Moment;
-  initEndDate?: moment.Moment;
-};
-
-export type TimeLayerSliderPanelState = {
-  value: moment.Moment;
-  playbackSpeed: number | PlaybackSpeedType;
-  autoPlayActive: boolean;
-  startDate: moment.Moment;
-  endDate: moment.Moment;
-};
+  timeAwareLayers: WmsLayer[];
+  tooltips?: TimeLayerSliderPanelTooltips;
+} & TimeSliderProps & React.HTMLAttributes<HTMLDivElement>;
 
 /**
  * The panel combining all time slider related parts.
  */
-export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = memo(
-  ({
-    className = '',
-    onChange = () => {},
-    timeAwareLayers = [],
-    value = moment(moment.now()),
-    dateFormat = 'YYYY-MM-DD HH:mm',
-    tooltips = {
-      setToMostRecent: 'Set to most recent date',
-      hours: 'Hours',
-      days: 'Days',
-      weeks: 'Weeks',
-      months: 'Months',
-      years: 'Years',
-      dataRange: 'Set data range'
-    },
-    autoPlaySpeedOptions = [0.5, 1, 2, 5, 10, 100, 300],
-    initStartDate = moment(moment.now()),
-    initEndDate = moment(moment.now()).add(1, 'days')
-  }) => {
-    const [currentValue, setCurrentValue] = useState<Moment>(value);
-    const [playbackSpeed, setPlaybackSpeed] = useState<
-      number | PlaybackSpeedType
-    >(1);
-    const [autoPlayActive, setAutoPlayActive] = useState(false);
-    const [startDate, setStartDate] = useState<Moment>(initStartDate);
-    const [endDate, setEndDate] = useState<Moment>(initEndDate);
-    const [loadingCount, setLoadingCount] = useState(0);
+export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
+  autoPlaySpeedOptions = [0.5, 1, 2, 5, 10, 100, 300],
+  className,
+  formatString = 'YYYY-MM-DD HH:mm',
+  max = dayjs(),
+  min = dayjs().add(1, 'days'),
+  onChange,
+  onChangeComplete,
+  timeAwareLayers = [],
+  tooltips = {
+    setToMostRecent: 'Set to most recent date',
+    minutes: 'Minutes',
+    hours: 'Hours',
+    days: 'Days',
+    weeks: 'Weeks',
+    months: 'Months',
+    years: 'Years',
+    dataRange: 'Set data range'
+  },
+  value = dayjs()
+}) => {
 
-    const wmsTimeLayersRef = useRef<TimeLayerAwareConfig[]>([]);
-    const intervalRef = useRef<number | undefined>(1000);
-    const prevPropsRef = useRef<TimeLayerSliderPanelProps>();
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
+  const [playbackSpeedUnit, setPlaybackSpeedUnit] = useState<PlaybackSpeedUnit>('hours');
+  const [autoPlayActive, setAutoPlayActive] = useState(false);
+  const [startDate, setStartDate] = useState<Dayjs>(min);
+  const [endDate, setEndDate] = useState<Dayjs>(max);
+  const [loadingCount, setLoadingCount] = useState(0);
 
-    const isLoading = loadingCount > 0;
+  const isLoading = loadingCount > 0;
 
-    const wrapTimeSlider = useCallback(() => {
-      const wmsTimeLayers: TimeLayerAwareConfig[] = [];
-      timeAwareLayers.forEach(l => {
-        if (l.get('type') === 'WMSTime') {
-          wmsTimeLayers.push({ layer: l });
+  const autoPlay = () => setAutoPlayActive(prevState => !prevState);
+
+  const onTimeChanged = useCallback((val: Dayjs | [Dayjs, Dayjs]) => {
+    if (_isFunction(onChange)) {
+      onChange(val);
+    }
+    if (_isFunction(onChangeComplete)) {
+      onChangeComplete(val);
+    }
+  }, [onChange, onChangeComplete]);
+
+  const updateDataRange = ([start, end]: [Dayjs, Dayjs]) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
+
+  const setSliderToMostRecent = () => {
+    setEndDate(max);
+    wmsTimeHandler(max);
+    onTimeChanged(max);
+  };
+
+  const onPlaybackSpeedChange= (val: number) => setPlaybackSpeed(val);
+
+  const wmsTimeHandler = useCallback((val: Dayjs | [Dayjs, Dayjs]) => {
+    timeAwareLayers.forEach(layer => {
+      if (!_isNil(layer) && layer.get('type') === 'WMSTime') {
+        const source = layer.getSource();
+        const params = source?.getParams();
+        let time: Dayjs;
+        if (Array.isArray(val)) {
+          time = val[0];
+        } else {
+          time = val;
         }
-      });
-      wmsTimeLayersRef.current = wmsTimeLayers;
-    }, [timeAwareLayers]);
 
-    const autoPlay = useCallback(() => {
-      setAutoPlayActive(prevState => !prevState);
-    }, []);
-
-    const onTimeChanged = useCallback(
-      (val: string | [string, string]) => {
-        const newTime = moment(val);
-        setCurrentValue(newTime);
-        if (onChange) {
-          onChange(newTime);
+        if (!time.isValid()) {
+          logger.warn(`Invalid time value: ${time}`);
+          return;
         }
-        debouncedWmsTimeHandlerRef.current(val);
-      },
-      [onChange]
-    );
 
-    const updateDataRange = useCallback(([start, end]: [Moment, Moment]) => {
-      setStartDate(start);
-      setEndDate(end);
-    }, []);
-
-    const setSliderToMostRecent = useCallback(() => {
-      setCurrentValue(initEndDate);
-      setEndDate(initEndDate);
-      wmsTimeHandler(initEndDate);
-    }, [initEndDate]);
-
-    const onPlaybackSpeedChange = useCallback(
-      (val: number | PlaybackSpeedType) => {
-        setPlaybackSpeed(val);
-      },
-      []
-    );
-
-    const wmsTimeHandler = (val: moment.Moment | string | [string, string]) => {
-      wmsTimeLayersRef.current.forEach(config => {
-        if (config.layer && config.layer.get('type') === 'WMSTime') {
-          const source = config.layer.getSource();
-          const params = source?.getParams();
-          let time;
-          if (Array.isArray(val)) {
-            time = val[0];
-          } else {
-            time = val;
-          }
-          if (!moment.isMoment(time)) {
-            time = moment(time);
-          }
-          const timeFormat = config.layer.get('timeFormat');
-          let newTimeParam: string;
-          if (
-            timeFormat.toLowerCase().includes('hh') &&
-            config.layer.get('roundToFullHours')
-          ) {
-            time.set('minute', 0);
-            time.set('second', 0);
-            newTimeParam = time.toISOString();
-          } else {
-            newTimeParam = time.format(timeFormat);
-          }
-
-          if (params.TIME !== newTimeParam) {
-            params.TIME = newTimeParam;
-            source?.updateParams(params);
-            source?.refresh();
-          }
+        const timeFormat = layer.get('timeFormat');
+        let newTimeParam: string;
+        if (
+          timeFormat.toLowerCase().includes('hh') &&
+            layer.get('roundToFullHours')
+        ) {
+          time.set('minute', 0);
+          time.set('second', 0);
+          newTimeParam = time.toISOString();
+        } else {
+          newTimeParam = time.format(timeFormat);
         }
-      });
+
+        if (params.TIME !== newTimeParam) {
+          params.TIME = newTimeParam;
+          source?.updateParams(params);
+          source?.refresh();
+        }
+      }
+    });
+  }, [timeAwareLayers]);
+
+  const findRangeForLayers = useCallback(() => {
+    if (timeAwareLayers.length === 0) {
+      return;
+    }
+
+    const startDatesFromLayers: Dayjs[] = [];
+    const endDatesFromLayers: Dayjs[] = [];
+
+    timeAwareLayers.forEach(l => {
+      const layerType = l.get('type');
+      if (layerType === 'WMSTime') {
+        const layerStartDate = l.get('startDate');
+        const layerEndDate = l.get('endDate');
+        let sdm;
+        let edm;
+        if (layerStartDate) {
+          sdm = dayjs(layerStartDate);
+        }
+        if (layerEndDate) {
+          edm = dayjs(layerEndDate);
+        }
+        if (sdm) {
+          startDatesFromLayers.push(sdm);
+        }
+        if (edm) {
+          endDatesFromLayers.push(edm);
+        }
+      }
+    });
+
+    const newStartDate = startDatesFromLayers.length > 0 ? dayjs.min(startDatesFromLayers): startDate;
+    const newEndDate = endDatesFromLayers.length > 0 ? dayjs.max(endDatesFromLayers) : endDate;
+    if (!_isNil(newStartDate) && !_isNil(newEndDate)) {
+      updateDataRange([newStartDate, newEndDate]);
+    }
+  }, [endDate, startDate, timeAwareLayers]);
+
+  const onPlaybackUnitChange = (unit: PlaybackSpeedUnit) => setPlaybackSpeedUnit(unit);
+
+  useEffect(() => {
+    if (timeAwareLayers.length === 0) {
+      return;
+    }
+
+    const handleTileLoadStart = () => {
+      setLoadingCount(prevCount => prevCount + 1);
+    };
+    const handleTileLoadEnd = () => {
+      setLoadingCount(prevCount => Math.max(prevCount - 1, 0));
+    };
+    const handleImageLoadStart = () => {
+      setLoadingCount(prevCount => prevCount + 1);
+    };
+    const handleImageLoadEnd = () => {
+      setLoadingCount(prevCount => Math.max(prevCount - 1, 0));
     };
 
-    const debouncedWmsTimeHandlerRef = useRef(
-      debounce(val => wmsTimeHandler(val), 300)
-    );
+    timeAwareLayers.forEach(layer => {
+      if (layer.get('type') === 'WMSTime') {
+        const source = layer.getSource();
 
-    useEffect(() => {
-      const handler = debouncedWmsTimeHandlerRef.current;
-
-      return () => {
-        handler.cancel();
-      };
-    }, []);
-
-    const timeSliderCustomHandler = useCallback(
-      (val: any) => {
-        const currentMoment = moment(val).milliseconds(0);
-        if (!currentMoment.isSame(currentValue)) {
-          const newValue = currentMoment.clone();
-          if (onChange) {
-            onChange(newValue);
-          }
+        if (source instanceof TileWMS) {
+          source.on('tileloadstart', handleTileLoadStart);
+          source.on('tileloadend', handleTileLoadEnd);
+          source.on('tileloaderror', handleTileLoadEnd);
+        } else if (source instanceof ImageWMS) {
+          source.on('imageloadstart', handleImageLoadStart);
+          source.on('imageloadend', handleImageLoadEnd);
+          source.on('imageloaderror', handleImageLoadEnd);
         }
-      },
-      [currentValue, onChange]
-    );
-
-    const findRangeForLayers = useCallback(() => {
-      if (timeAwareLayers.length === 0) {
-        return;
       }
+    });
 
-      const startDatesFromLayers: moment.Moment[] = [];
-      const endDatesFromLayers: moment.Moment[] = [];
-
-      timeAwareLayers.forEach(l => {
-        const layerType = l.get('type');
-        if (layerType === 'WMSTime') {
-          const layerStartDate = l.get('startDate');
-          const layerEndDate = l.get('endDate');
-          let sdm;
-          let edm;
-          if (layerStartDate) {
-            sdm = moment(layerStartDate);
-          }
-          if (layerEndDate) {
-            edm = moment(layerEndDate);
-          }
-          if (sdm) {
-            startDatesFromLayers.push(sdm);
-          }
-          if (edm) {
-            endDatesFromLayers.push(edm);
-          }
-        }
-      });
-
-      const newStartDate =
-        startDatesFromLayers.length > 0
-          ? moment.min(startDatesFromLayers)
-          : startDate;
-      const newEndDate =
-        endDatesFromLayers.length > 0
-          ? moment.max(endDatesFromLayers)
-          : endDate;
-
-      updateDataRange([newStartDate, newEndDate]);
-    }, [timeAwareLayers, startDate, endDate, updateDataRange]);
-
-    useEffect(() => {
-      if (timeAwareLayers.length === 0) {
-        return;
-      }
-
-      const handleTileLoadStart = () => {
-        setLoadingCount(prevCount => prevCount + 1);
-      };
-      const handleTileLoadEnd = () => {
-        setLoadingCount(prevCount => Math.max(prevCount - 1, 0));
-      };
-      const handleImageLoadStart = () => {
-        setLoadingCount(prevCount => prevCount + 1);
-      };
-      const handleImageLoadEnd = () => {
-        setLoadingCount(prevCount => Math.max(prevCount - 1, 0));
-      };
-
+    return () => {
       timeAwareLayers.forEach(layer => {
         if (layer.get('type') === 'WMSTime') {
           const source = layer.getSource();
 
           if (source instanceof TileWMS) {
-            source.on('tileloadstart', handleTileLoadStart);
-            source.on('tileloadend', handleTileLoadEnd);
-            source.on('tileloaderror', handleTileLoadEnd);
+            source.un('tileloadstart', handleTileLoadStart);
+            source.un('tileloadend', handleTileLoadEnd);
+            source.un('tileloaderror', handleTileLoadEnd);
           } else if (source instanceof ImageWMS) {
-            source.on('imageloadstart', handleImageLoadStart);
-            source.on('imageloadend', handleImageLoadEnd);
-            source.on('imageloaderror', handleImageLoadEnd);
+            source.un('imageloadstart', handleImageLoadStart);
+            source.un('imageloadend', handleImageLoadEnd);
+            source.un('imageloaderror', handleImageLoadEnd);
           }
         }
       });
+    };
+  }, [timeAwareLayers]);
 
-      return () => {
-        timeAwareLayers.forEach(layer => {
-          if (layer.get('type') === 'WMSTime') {
-            const source = layer.getSource();
+  useEffect(() => {
+    if (!autoPlayActive || Array.isArray(value)) {
+      return;
+    }
 
-            if (source instanceof TileWMS) {
-              source.un('tileloadstart', handleTileLoadStart);
-              source.un('tileloadend', handleTileLoadEnd);
-              source.un('tileloaderror', handleTileLoadEnd);
-            } else if (source instanceof ImageWMS) {
-              source.un('imageloadstart', handleImageLoadStart);
-              source.un('imageloadend', handleImageLoadEnd);
-              source.un('imageloaderror', handleImageLoadEnd);
-            }
-          }
-        });
-      };
-    }, [timeAwareLayers]);
-
-    useEffect(() => {
-      window.clearInterval(intervalRef.current);
-      if (!autoPlayActive) {
+    const interval = window.setInterval(() => {
+      if (value >= endDate) {
+        clearInterval(interval);
+        setAutoPlayActive(false);
         return;
       }
+      const newValue = value.clone();
 
-      intervalRef.current = window.setInterval(() => {
-        if (currentValue >= endDate) {
-          clearInterval(intervalRef.current);
-          setAutoPlayActive(false);
-          return;
-        }
-        const newValue: Moment = currentValue.clone();
-
-        if (_isFinite(playbackSpeed)) {
-          wmsTimeHandler(
-            moment(newValue.clone().add(playbackSpeed, 'hours').format())
-          );
-          setCurrentValue(
-            moment(newValue.clone().add(playbackSpeed, 'hours').format())
-          );
-        } else {
-          const time = moment(
-            newValue
-              .clone()
-              .add(1, playbackSpeed as moment.unitOfTime.DurationConstructor)
-              .format()
-          );
-          wmsTimeHandler(time);
-          setCurrentValue(time);
-        }
-      }, 1000);
-
-      return () => {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-        }
-      };
-    }, [autoPlayActive, currentValue, endDate, playbackSpeed]);
-
-    useEffect(() => {
-      wrapTimeSlider();
-      return () => {
-        if (intervalRef.current !== null) {
-          clearInterval(intervalRef.current);
-        }
-      };
-    }, [wrapTimeSlider]);
-
-    useEffect(() => {
-      if (autoPlayActive) {
-        autoPlay();
+      if (_isFinite(playbackSpeed)) {
+        onTimeChanged(newValue.clone().add(playbackSpeed, playbackSpeedUnit));
+      } else {
+        const time = dayjs(
+          newValue
+            .clone()
+            .add(1, playbackSpeedUnit)
+            .format()
+        );
+        onTimeChanged(time);
       }
-      return () => {
-        if (intervalRef.current !== null) {
-          clearInterval(intervalRef.current);
-        }
-      };
-    }, [autoPlayActive, autoPlay]);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [autoPlayActive, endDate, playbackSpeed, wmsTimeHandler, onChange, playbackSpeedUnit, onTimeChanged, value]);
 
-    useEffect(() => {
-      setStartDate(initStartDate);
-      setEndDate(initEndDate);
-    }, [initStartDate, initEndDate]);
+  useEffect(() => {
+    setStartDate(min);
+    setEndDate(max);
+  }, [min, max]);
 
-    useEffect(() => {
-      const prevProps = prevPropsRef.current;
-      if (prevProps && prevProps.timeAwareLayers) {
-        prevProps.timeAwareLayers.forEach((pl, i) => {
-          if (timeAwareLayers) {
-            const tpl = timeAwareLayers[i];
-            if (!_isEqual(getUid(pl), getUid(tpl))) {
-              wrapTimeSlider();
-              findRangeForLayers();
-            }
-          }
-        });
-      }
+  useEffect(() => {
+    if (!_isNil(timeAwareLayers)) {
+      findRangeForLayers();
+    }
+  }, [timeAwareLayers, findRangeForLayers]);
 
-      prevPropsRef.current = { timeAwareLayers };
-    }, [timeAwareLayers, findRangeForLayers, wrapTimeSlider]);
+  useEffect(() => {
+    // update time for all time aware layers if value changes
+    wmsTimeHandler(value);
+  }, [value, wmsTimeHandler]);
 
-    useEffect(() => {
-      timeSliderCustomHandler(value);
-    }, [timeSliderCustomHandler, value]);
+  const futureClass = useMemo(() => {
+    if (Array.isArray(value)) {
+      return '';
+    }
+    return dayjs().isBefore(value) ? ' timeslider-in-future' : '';
+  }, [value]);
+  const extraCls = className ?? '';
+  const disabledCls = useMemo(() => {
+    return timeAwareLayers.length < 1 ? 'no-layers-available' : '';
+  }, [timeAwareLayers]);
 
-    useEffect(() => {
-      setSliderToMostRecent();
-    }, [setSliderToMostRecent]);
-
-    useEffect(() => {
-      if (autoPlayActive) {
-        autoPlay();
-      }
-    }, [playbackSpeed, autoPlayActive, autoPlay]);
-
-    const resetVisible = true;
-
-    const startDateString = startDate.toISOString();
-    const endDateString = endDate.toISOString();
-    const valueString = currentValue.toISOString();
+  const marks: TimeSliderMark[] = useMemo(() => {
+    if (_isNil(startDate) || _isNil(endDate)) {
+      return [];
+    }
     const mid = startDate!.clone().add(endDate!.diff(startDate) / 2);
-    const marks: { [k: string]: any } = {};
-    const futureClass = moment().isBefore(value) ? ' timeslider-in-future' : '';
-    const extraCls = className ? className : '';
-    const disabledCls = timeAwareLayers.length < 1 ? 'no-layers-available' : '';
-
-    marks[startDateString] = {
-      label: startDate!.format(dateFormat)
-    };
-    marks[endDateString] = {
-      label: endDate!.format(dateFormat),
-      style: {
-        left: 'unset',
-        right: 0,
-        transform: 'translate(50%)'
+    return [{
+      timestamp: startDate,
+      markConfig: {
+        label: startDate.format(formatString)
       }
-    };
-    marks[mid.toISOString()] = {
-      label: mid.format(dateFormat)
-    };
+    }, {
+      timestamp: mid,
+      markConfig: {
+        label: mid.format(formatString)
+      }
+    },{
+      timestamp: endDate,
+      markConfig: {
+        label: endDate.format(formatString),
+        style: {
+          left: 'unset',
+          right: 0,
+          transform: 'translate(50%)'
+        }
+      }
+    }] satisfies TimeSliderMark[];
+  }, [endDate, formatString, startDate]);
 
-    const speedOptions = autoPlaySpeedOptions.map(function (val: number) {
-      return (
-        <Option
-          key={val}
-          value={val}
-        >
-          {val}
-        </Option>
-      );
-    });
-
+  const speedOptions = useMemo(() => autoPlaySpeedOptions.map(function (val: number) {
     return (
-      <div className={`time-layer-slider ${disabledCls}`.trim()}>
-        <Popover
-          placement="topRight"
-          title={tooltips.dataRange}
-          trigger="click"
-          content={
-            <RangePicker
-              showTime={{ format: 'HH:mm' }}
-              defaultValue={[
-                dayjs(startDate.toISOString()),
-                dayjs(endDate.toISOString())
-              ]}
-              onOk={range => {
-                if (!range) {
-                  return;
-                }
-                const [start, end] = range;
-                if (!start || !end) {
-                  return;
-                }
-
-                updateDataRange([
-                  moment(start.toISOString()),
-                  moment(end.toISOString())
-                ]);
-              }}
-            />
-          }
-        >
-          <SimpleButton
-            className="change-datarange-button"
-            icon={<FontAwesomeIcon icon={faCalendar} />}
-          />
-        </Popover>
-        {resetVisible ? (
-          <SimpleButton
-            type="primary"
-            icon={<FontAwesomeIcon icon={faSync} />}
-            onClick={setSliderToMostRecent}
-            tooltip={tooltips.setToMostRecent}
-          />
-        ) : null}
-        <div className="time-slider-container">
-          <TimeSlider
-            className={`${extraCls} timeslider ${futureClass}`.trim()}
-            formatString={dateFormat}
-            defaultValue={startDateString}
-            min={startDateString}
-            max={endDateString}
-            value={valueString}
-            marks={marks}
-            onChange={onTimeChanged}
-          />
-          <div className="spin-indicator">
-            <Spin spinning={isLoading} size="small" />
-          </div>
-        </div>
-        <div className="time-value">
-          {currentValue.format(dateFormat || 'DD.MM.YYYY HH:mm:ss')}
-        </div>
-        <ToggleButton
-          type="primary"
-          icon={<FontAwesomeIcon icon={faPlayCircle} />}
-          className={extraCls + ' playback'}
-          pressed={autoPlayActive}
-          onChange={autoPlay}
-          tooltip={autoPlayActive ? 'Pause' : 'Autoplay'}
-          aria-label={autoPlayActive ? 'Pause' : 'Autoplay'}
-          pressedIcon={<FontAwesomeIcon icon={faPauseCircle} />}
-        />
-        <Select
-          defaultValue={'hours'}
-          className={extraCls + ' speed-picker'}
-          onChange={onPlaybackSpeedChange}
-          popupMatchSelectWidth={false}
-          dropdownStyle={{ minWidth: '100px' }}
-        >
-          {speedOptions}
-          <Option value="hours">{tooltips.hours}</Option>
-          <Option value="days">{tooltips.days}</Option>
-          <Option value="weeks">{tooltips.weeks}</Option>
-          <Option value="months">{tooltips.months}</Option>
-          <Option value="years">{tooltips.years}</Option>
-        </Select>
-      </div>
+      <Option
+        key={val}
+        value={val}
+      >
+        {val}
+      </Option>
     );
-  },
-  (prevProps, nextProps) => {
-    if (!_isEqual(prevProps.value, nextProps.value)) {
-      return false;
-    }
-    if (!_isEqual(prevProps.timeAwareLayers, nextProps.timeAwareLayers)) {
-      return false;
-    }
-    if (!_isEqual(prevProps.tooltips, nextProps.tooltips)) {
-      return false;
-    }
-    return true;
-  }
-);
+  }), [autoPlaySpeedOptions]);
+
+  return (
+    <div className={`time-layer-slider ${disabledCls}`.trim()}>
+      <Popover
+        placement="topRight"
+        title={tooltips.dataRange}
+        trigger="click"
+        content={
+          <RangePicker
+            defaultValue={[startDate, endDate]}
+            onOk={range => {
+              if (!range) {
+                return;
+              }
+              const [start, end] = range;
+              if (!start || !end) {
+                return;
+              }
+
+              updateDataRange([start, end]);
+            }}
+            showTime={{ format: 'HH:mm' }}
+          />
+        }
+      >
+        <SimpleButton
+          className="change-datarange-button"
+          icon={<FontAwesomeIcon icon={faCalendar} />}
+        />
+      </Popover>
+      <SimpleButton
+        icon={<FontAwesomeIcon icon={faSync} />}
+        onClick={setSliderToMostRecent}
+        tooltip={tooltips.setToMostRecent}
+        type="primary"
+      />
+      <div className="time-slider-container">
+        <TimeSlider
+          className={`${extraCls} timeslider ${futureClass}`.trim()}
+          defaultValue={startDate}
+          formatString={formatString}
+          marks={marks}
+          max={endDate}
+          min={startDate}
+          onChangeComplete={onTimeChanged}
+          value={value}
+        />
+        <div className="spin-indicator">
+          <Spin spinning={isLoading} size="small" />
+        </div>
+      </div>
+      {
+        !Array.isArray(value) && (
+          <div className="time-value">
+            {value.format(formatString || 'DD.MM.YYYY HH:mm:ss')}
+          </div>
+        )
+      }
+      <ToggleButton
+        aria-label={autoPlayActive ? 'Pause' : 'Autoplay'}
+        className={extraCls + ' playback'}
+        icon={<FontAwesomeIcon icon={faPlayCircle} />}
+        onChange={autoPlay}
+        pressed={autoPlayActive}
+        pressedIcon={<FontAwesomeIcon icon={faPauseCircle} />}
+        tooltip={autoPlayActive ? 'Pause' : 'Autoplay'}
+        type="primary"
+      />
+      <Select<number>
+        className={extraCls + ' speed-picker'}
+        defaultValue={1}
+        dropdownStyle={{ minWidth: '100px' }}
+        onChange={onPlaybackSpeedChange}
+        popupMatchSelectWidth={false}
+        value={playbackSpeed}
+      >
+        {speedOptions}
+      </Select>
+      <span>x</span>
+      <Select<PlaybackSpeedUnit>
+        className={extraCls + ' speed-picker'}
+        defaultValue={'minute'}
+        dropdownStyle={{ minWidth: '100px' }}
+        onChange={onPlaybackUnitChange}
+        popupMatchSelectWidth={false}
+        value={playbackSpeedUnit}
+      >
+        <Option value="minutes">{tooltips.minutes}</Option>
+        <Option value="hours">{tooltips.hours}</Option>
+        <Option value="days">{tooltips.days}</Option>
+        <Option value="weeks">{tooltips.weeks}</Option>
+        <Option value="months">{tooltips.months}</Option>
+        <Option value="years">{tooltips.years}</Option>
+      </Select>
+    </div>
+  );
+};
 
 export default TimeLayerSliderPanel;

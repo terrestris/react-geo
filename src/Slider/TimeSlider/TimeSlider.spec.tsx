@@ -2,10 +2,10 @@ import '@testing-library/jest-dom/jest-globals';
 import '@testing-library/jest-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React from 'react';
 
-import TimeSlider from './TimeSlider';
+import TimeSlider, {TimeSliderMark} from './TimeSlider';
 
 describe('<TimeSlider />', () => {
   it('is defined', () => {
@@ -15,22 +15,22 @@ describe('<TimeSlider />', () => {
   it('can be rendered', () => {
     const { container } = render(
       <TimeSlider
-        defaultValue={''}
-        min={''}
-        max={''}
-        onChange={() => {}}
-        value={''}
-        formatString={''}
+        defaultValue={dayjs()}
+        formatString={'DD.MM.YYYY HH:mm'}
         marks={undefined}
+        max={dayjs()}
+        min={dayjs()}
+        onChange={() => {}}
+        value={dayjs()}
       />
     );
     expect(container).toBeVisible();
   });
 
   it('initializes and displays values correctly', () => {
-    const defaultValue = moment().subtract(30, 'minutes').toISOString();
-    const minValue = moment().subtract(1, 'hour').toISOString();
-    const maxValue = moment().toISOString();
+    const defaultValue = dayjs().subtract(30, 'minutes');
+    const minValue = dayjs().subtract(1, 'hour');
+    const maxValue = dayjs();
     const formatString = 'DD.MM.YYYY HH:mm';
 
     render(
@@ -48,23 +48,23 @@ describe('<TimeSlider />', () => {
     const slider = screen.getByRole('slider');
     expect(slider).toHaveAttribute(
       'aria-valuemin',
-      expect.stringContaining(moment(minValue).unix().toString())
+      expect.stringContaining(minValue.unix().toString())
     );
     expect(slider).toHaveAttribute(
       'aria-valuemax',
-      expect.stringContaining(moment(maxValue).unix().toString())
+      expect.stringContaining(maxValue.unix().toString())
     );
   });
 
   it('calls onChange', () => {
     const onChangeMock = jest.fn();
-    const defaultValue = moment().subtract(30, 'minutes').toISOString();
+    const defaultValue = dayjs().subtract(30, 'minutes');
 
     render(
       <TimeSlider
         defaultValue={defaultValue}
-        min={moment().subtract(1, 'hour').toISOString()}
-        max={moment().toISOString()}
+        min={dayjs().subtract(1, 'hour')}
+        max={dayjs()}
         onChange={onChangeMock}
         value={defaultValue}
         formatString={'DD.MM.YYYY HH:mm'}
@@ -82,21 +82,32 @@ describe('<TimeSlider />', () => {
   });
 
   it('displays marks', () => {
-    const marks = {
-      [moment().subtract(1, 'hour').toISOString()]: '-1hr',
-      [moment().subtract(30, 'minutes').toISOString()]: '-30mins',
-      [moment().toISOString()]: 'Now'
-    };
+    const marks: TimeSliderMark[] = [{
+      timestamp: dayjs().subtract(1, 'hour'),
+      markConfig: {
+        label: '-1hr'
+      }
+    }, {
+      timestamp: dayjs().subtract(30, 'minutes'),
+      markConfig: {
+        label: '-30mins'
+      }
+    }, {
+      timestamp: dayjs(),
+      markConfig: {
+        label: 'Now'
+      }
+    }];
 
     render(
       <TimeSlider
-        defaultValue={moment().subtract(30, 'minutes').toISOString()}
-        min={moment().subtract(1, 'hour').toISOString()}
-        max={moment().toISOString()}
-        onChange={() => {}}
-        value={moment().toISOString()}
+        defaultValue={dayjs().subtract(30, 'minutes')}
         formatString={'DD.MM.YYYY HH:mm'}
         marks={marks}
+        max={dayjs()}
+        min={dayjs().subtract(1, 'hour')}
+        onChange={() => {}}
+        value={dayjs()}
       />
     );
 
@@ -107,15 +118,15 @@ describe('<TimeSlider />', () => {
 
   it('displays tooltip on hover', async () => {
     const formatString = 'DD.MM.YYYY HH:mm';
-    const value = moment().subtract(30, 'minutes').unix();
+    const value = dayjs().subtract(30, 'minutes').unix();
 
     render(
       <TimeSlider
-        defaultValue={moment(value * 1000).toISOString()}
-        min={moment().subtract(1, 'hour').toISOString()}
-        max={moment().toISOString()}
+        defaultValue={dayjs(value * 1000)}
+        min={dayjs().subtract(1, 'hour')}
+        max={dayjs()}
         onChange={() => {}}
-        value={moment(value * 1000).toISOString()}
+        value={dayjs(value * 1000)}
         formatString={formatString}
         marks={undefined}
       />
@@ -124,7 +135,7 @@ describe('<TimeSlider />', () => {
     const slider = screen.getByRole('slider');
     fireEvent.mouseOver(slider);
     expect(
-      screen.getByText(moment(value * 1000).format(formatString))
+      screen.getByText(dayjs(value * 1000).format(formatString))
     ).toBeInTheDocument();
   });
 });
