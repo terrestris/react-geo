@@ -1,3 +1,24 @@
+# [29.0.0](https://github.com/terrestris/react-geo/compare/v28.0.0...v29.0.0) (2025-01-24)
+
+
+### Bug Fixes
+
+* @babel/plugin-syntax-dynamic-import is included in @babel/preset-env in ES2020 ([86a9a64](https://github.com/terrestris/react-geo/commit/86a9a64e8d25e95bf6967c882910eadaf676d383))
+* add no-debugger rule ([6ce69a1](https://github.com/terrestris/react-geo/commit/6ce69a17ce802aef48b18e438d3241fa32ec863b))
+* enable tracking only if passed explicitely ([e2d03ff](https://github.com/terrestris/react-geo/commit/e2d03fff5cd514a726a0a6b429cfced46ded146f))
+* pass default icon to component ([bbf3abb](https://github.com/terrestris/react-geo/commit/bbf3abbaeb34b7d30991d4867c4b6a03699ad58f))
+* pass type prop correctly to button ([cc2ab13](https://github.com/terrestris/react-geo/commit/cc2ab13c9df99be957edb28f41d65dabb222f957))
+
+
+### chore
+
+* **eslint:** upgrade to v9 ([565c5da](https://github.com/terrestris/react-geo/commit/565c5daa39e90d9c8fa90edf97011ad808f015eb))
+
+
+### BREAKING CHANGES
+
+* **eslint:** upgrade eslint to v9
+
 # [28.0.0](https://github.com/terrestris/react-geo/compare/v27.0.0...v28.0.0) (2025-01-24)
 
 
