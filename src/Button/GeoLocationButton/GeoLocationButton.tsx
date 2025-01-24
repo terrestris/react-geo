@@ -39,19 +39,19 @@ export type GeoLocationButtonProps = OwnProps & Partial<ToggleButtonProps>;
 
 export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
   className,
-  follow = false,
   enableTracking = false,
-  onGeoLocationChange = () => undefined,
+  follow = false,
   onError = () => undefined,
+  onGeoLocationChange = () => undefined,
+  pressed,
   showMarker = true,
   trackingOptions,
-  pressed,
   ...passThroughProps
 }) => {
 
   useGeoLocation({
     active: !!pressed,
-    enableTracking: pressed,
+    enableTracking: pressed && enableTracking,
     follow,
     onError,
     onGeoLocationChange,

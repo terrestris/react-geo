@@ -3,6 +3,7 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
 import eslintReact from 'eslint-plugin-react';
+import eslintMarkdown from 'eslint-plugin-markdown';
 import eslintTerrestris from '@terrestris/eslint-config-typescript';
 import eslintReactTerrestris from '@terrestris/eslint-config-typescript-react';
 import eslint from '@eslint/js';
@@ -53,6 +54,8 @@ export default tsEslint.config({
     ...eslintTerrestris.rules,
     ...eslintReactTerrestris.rules,
     ...reactHooks.configs.recommended.rules,
+    ...eslintMarkdown.configs.recommended.rules,
+    'no-debugger': 'error',
     'react/jsx-closing-tag-location': ['warn'],
     'react/jsx-closing-bracket-location': ['warn'],
     'react-hooks/rules-of-hooks': ['warn'],
