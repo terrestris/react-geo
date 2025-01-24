@@ -1,7 +1,8 @@
-import OlMap from 'ol/Map';
 import React, {
   useCallback
 } from 'react';
+
+import OlMap from 'ol/Map';
 
 export type MapComponentProps = React.ComponentProps<'div'> & {
   map: OlMap;

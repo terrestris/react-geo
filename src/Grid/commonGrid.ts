@@ -5,7 +5,7 @@ import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
 import OlStyle from 'ol/style/Style';
 
-export type RgCommonGridProps<RowType> = {
+export interface RgCommonGridProps<RowType> {
   /**
    * The features to show in the grid and the map (if set).
    */
@@ -65,9 +65,9 @@ export type RgCommonGridProps<RowType> = {
    * Callback function, that will be called on rowmouseout.
    */
   onRowMouseOut?: (row: RowType, feature: OlFeature<OlGeometry>, additionalArgs?: any) => void;
-};
+}
 
-export const defaultFeatureGridLayerName: string = 'react-geo-feature-grid-layer';
+export const defaultFeatureGridLayerName = 'react-geo-feature-grid-layer';
 
 export const defaultFeatureStyle = new OlStyle({
   fill: new OlStyleFill({
@@ -89,7 +89,7 @@ export const defaultFeatureStyle = new OlStyle({
   })
 });
 
-export const highlightFillColor: string = 'rgba(230, 247, 255, 0.8)';
+export const highlightFillColor = 'rgba(230, 247, 255, 0.8)';
 
 export const defaultHighlightStyle = new OlStyle({
   fill: new OlStyleFill({

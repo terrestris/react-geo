@@ -1,12 +1,16 @@
 import './LayerSwitcher.less';
 
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import OlLayerBase from 'ol/layer/Base';
+
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlTileSource from 'ol/source/Tile';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+
 
 import { CSS_PREFIX } from '../constants';
 import MapComponent from '../Map/MapComponent/MapComponent';

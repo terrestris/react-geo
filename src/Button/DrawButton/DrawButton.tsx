@@ -1,14 +1,20 @@
+import * as React from 'react';
+
+import {ReactNode, useCallback, useState} from 'react';
+
+import OlFeature from 'ol/Feature';
+
+import OlGeometry from 'ol/geom/Geometry';
+
+import {
+  DrawEvent
+} from 'ol/interaction/Draw';
+
 import { useDraw, UseDrawProps } from '@terrestris/react-util/dist/Hooks/useDraw/useDraw';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import {usePropOrDefault} from '@terrestris/react-util/dist/Hooks/usePropOrDefault/usePropOrDefault';
 import {DigitizeUtil} from '@terrestris/react-util/dist/Util/DigitizeUtil';
-import OlFeature from 'ol/Feature';
-import OlGeometry from 'ol/geom/Geometry';
-import {
-  DrawEvent
-} from 'ol/interaction/Draw';
-import * as React from 'react';
-import {ReactNode, useCallback, useState} from 'react';
+
 
 import { CSS_PREFIX } from '../../constants';
 import { FeatureLabelModal } from '../../FeatureLabelModal/FeatureLabelModal';

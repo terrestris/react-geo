@@ -1,16 +1,17 @@
+import React, { useMemo } from 'react';
+
 import { Slider } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import _isArray from 'lodash/isArray';
 import _isFunction from 'lodash/isFunction';
 import { MarkObj } from 'rc-slider/lib/Marks';
-import React, { useMemo } from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
-export type TimeSliderMark= {
+export interface TimeSliderMark {
   timestamp: Dayjs;
   markConfig: MarkObj;
-};
+}
 
 interface OwnProps {
   className?: string;
@@ -54,7 +55,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     if (!marks) {
       return;
     }
-    let convertedMks: Record<number, MarkObj> = {};
+    const convertedMks: Record<number, MarkObj> = {};
     marks.forEach((mark) => {
       const convertedTimestamp = convertDayjsToUnix(mark.timestamp);
       if (Array.isArray(convertedTimestamp)) {

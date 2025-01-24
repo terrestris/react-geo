@@ -1,14 +1,18 @@
 import './SearchField.less';
 
-import { SearchFunction, SearchOptions,useSearch } from '@terrestris/react-util';
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
 import { AutoComplete, Spin } from 'antd';
+
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
 import { Feature,FeatureCollection, GeoJsonProperties, Geometry } from 'geojson';
 import { Extent } from 'ol/extent';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import { transformExtent } from 'ol/proj';
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
+import { SearchFunction, SearchOptions,useSearch } from '@terrestris/react-util';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+
 
 import { CSS_PREFIX } from '../../constants';
 

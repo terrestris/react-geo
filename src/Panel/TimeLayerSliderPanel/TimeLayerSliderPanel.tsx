@@ -1,5 +1,7 @@
 import './TimeLayerSliderPanel.less';
 
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
+
 import {
   faCalendar,
   faPauseCircle,
@@ -7,8 +9,7 @@ import {
   faSync
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import logger from '@terrestris/base-util/dist/Logger';
-import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
+
 import { DatePicker, Popover, Select, Spin } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import minmax from 'dayjs/plugin/minMax';
@@ -16,7 +17,9 @@ import _isFinite from 'lodash/isFinite';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
 import {ImageWMS, TileWMS} from 'ol/source';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import logger from '@terrestris/base-util/dist/Logger';
+import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
 
 import SimpleButton from '../../Button/SimpleButton/SimpleButton';
 import ToggleButton from '../../Button/ToggleButton/ToggleButton';
@@ -27,7 +30,7 @@ dayjs.extend(minmax);
 const RangePicker = DatePicker.RangePicker;
 const Option = Select.Option;
 
-export type TimeLayerSliderPanelTooltips = {
+export interface TimeLayerSliderPanelTooltips{
   dataRange: string;
   days: string;
   hours: string;
@@ -36,7 +39,7 @@ export type TimeLayerSliderPanelTooltips = {
   setToMostRecent: string;
   weeks: string;
   years: string;
-};
+}
 
 export type PlaybackSpeedUnit = 'minute' | 'hours' | 'days' | 'weeks' | 'months' | 'years';
 

@@ -1,13 +1,13 @@
+import React, {
+  useState
+} from 'react';
+
+import { jsPDF } from 'jspdf';
+
 import Logger from '@terrestris/base-util/dist/Logger';
 import { InkmapPrintSpec } from '@terrestris/ol-util/dist/LayerUtil/InkmapTypes';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 import { PrintUtil } from '@terrestris/react-util/dist/Util/PrintUtil';
-import { jsPDF } from 'jspdf';
-import _isFinite from 'lodash/isFinite';
-import _isString from 'lodash/isString';
-import React, {
-  useState
-} from 'react';
 
 import SimpleButton, {
   SimpleButtonProps

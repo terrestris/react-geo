@@ -1,11 +1,12 @@
+import * as React from 'react';
+
 import { Button, Tooltip } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
 import { AbstractTooltipProps, TooltipPlacement } from 'antd/lib/tooltip';
-import * as React from 'react';
 
 import { CSS_PREFIX } from '../../constants';
 
-export type OwnProps = {
+export interface OwnProps {
   /**
    * Additional [antd tooltip](https://ant.design/components/tooltip/)
    * properties to pass to the tooltip component. Note: The props `title`
@@ -21,7 +22,7 @@ export type OwnProps = {
    * The position of the tooltip.
    */
   tooltipPlacement?: TooltipPlacement;
-};
+}
 
 export type SimpleButtonProps = OwnProps & ButtonProps;
 

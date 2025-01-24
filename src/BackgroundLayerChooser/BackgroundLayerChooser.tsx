@@ -1,11 +1,17 @@
 import './BackgroundLayerChooser.less';
 
+import React, {
+  useEffect,
+  useRef,
+  useState
+} from 'react';
+
 import {
   faBan,
   faChevronLeft,
   faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+
 import OlOverviewMap from 'ol/control/OverviewMap';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
@@ -19,16 +25,13 @@ import OlSourceTileWMS from 'ol/source/TileWMS';
 import { getUid } from 'ol/util';
 import OlView from 'ol/View';
 import { apply as applyMapboxStyle } from 'ol-mapbox-style';
-import React, {
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 
 import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPreview';
 import SimpleButton from '../Button/SimpleButton/SimpleButton';
 
-export type BackgroundLayerChooserProps = {
+export interface BackgroundLayerChooserProps {
   /**
    * Array of layers to be displayed in the BackgroundLayerChooser.
    */
@@ -53,7 +56,7 @@ export type BackgroundLayerChooserProps = {
    * Sets the title of the No-Background Button
    */
   noBackgroundTitle?: string;
-};
+}
 
 /**
  * This component supports TileWMS and ImageWMS layers. Besides that, mapbox vector tile layers are

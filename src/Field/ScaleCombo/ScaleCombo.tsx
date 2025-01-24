@@ -1,19 +1,5 @@
 import './ScaleCombo.less';
 
-import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import { Select } from 'antd';
-import { SelectProps } from 'antd/lib/select';
-import _clone from 'lodash/clone';
-import _isEmpty from 'lodash/isEmpty';
-import _isEqual from 'lodash/isEqual';
-import _isFunction from 'lodash/isFunction';
-import _isInteger from 'lodash/isInteger';
-import _isNil from 'lodash/isNil';
-import _isNumber from 'lodash/isNumber';
-import _reverse from 'lodash/reverse';
-import { ObjectEvent as OlObjectEvent } from 'ol/Object';
-import OlView from 'ol/View';
 import React, {
   useCallback,
   useEffect,
@@ -21,15 +7,31 @@ import React, {
   useState
 } from 'react';
 
+import { Select } from 'antd';
+
+import { SelectProps } from 'antd/lib/select';
+import _clone from 'lodash/clone';
+import _isEmpty from 'lodash/isEmpty';
+import _isInteger from 'lodash/isInteger';
+import _isNil from 'lodash/isNil';
+import _isNumber from 'lodash/isNumber';
+import _reverse from 'lodash/reverse';
+import { ObjectEvent as OlObjectEvent } from 'ol/Object';
+import OlView from 'ol/View';
+
+import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+
+
 import { CSS_PREFIX } from '../../constants';
 
-type OwnProps = {
+interface OwnProps {
   resolutionsFilter?: (item: any, index?: number, resolutions?: number[]) => boolean;
   syncWithMap?: boolean;
   scales?: number[];
   onZoomLevelSelect?: (zoomLevel: string) => void;
   resolutions?: number[];
-};
+}
 
 export type ScaleComboProps = SelectProps & OwnProps;
 
@@ -41,6 +43,8 @@ const ScaleCombo: React.FC<ScaleComboProps> = ({
   scales = [],
   className,
   onZoomLevelSelect,
+  // required for proper definition of passthrough
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   resolutions,
   ...passThroughProps
 }) => {

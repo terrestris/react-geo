@@ -1,14 +1,16 @@
+import React, { createContext, Key, useCallback, useContext, useEffect, useState } from 'react';
+
 import {
   closestCenter, DndContext, DragEndEvent, DragOverEvent, DragOverlay, PointerSensor,
   UniqueIdentifier, useSensor, useSensors
 } from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
 import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable';
-import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
+
 import { Table } from 'antd';
 import { AnyObject } from 'antd/lib/_util/type';
 import { ColumnsType, ColumnType, TableProps } from 'antd/lib/table';
+import _has from 'lodash/has';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
 import _kebabCase from 'lodash/kebabCase';
@@ -21,7 +23,9 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import RenderFeature from 'ol/render/Feature';
 import OlSourceVector from 'ol/source/Vector';
-import React, { createContext, Key, useCallback, useContext, useEffect, useState } from 'react';
+
+import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
+import useOlLayer from '@terrestris/react-util/dist/Hooks/useOlLayer/useOlLayer';
 
 import { CSS_PREFIX } from '../../constants';
 import {
@@ -46,7 +50,7 @@ interface DragIndexState {
   direction?: 'left' | 'right';
 }
 
-type OwnProps = {
+interface OwnProps {
   /**
    * When active the order of the columns can be changed dynamically using drag & drop.
    */
@@ -55,9 +59,9 @@ type OwnProps = {
    * Array of dataIndex names to filter
    */
   attributeFilter?: string[];
-  onRowSelectionChange?: (selectedRowKeys: Array<number | string | bigint>,
+  onRowSelectionChange?: (selectedRowKeys: (number | string | bigint)[],
     selectedFeatures: OlFeature<OlGeometry>[]) => void;
-};
+}
 
 export type FeatureGridProps<T extends AnyObject = AnyObject> = OwnProps & RgCommonGridProps<T> & TableProps<T>;
 
@@ -317,7 +321,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
     }
 
     for (const key of filter) {
-      if (!props.hasOwnProperty(key)) {
+      if (!_has(props, key)) {
         continue;
       }
 
@@ -363,7 +367,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       const properties = feature.getProperties();
       const filtered: typeof properties = Object.keys(properties)
         .filter(key => !(properties[key] instanceof OlGeometry))
-        .reduce((obj: { [k: string]: any }, key) => {
+        .reduce((obj: Record<string, any>, key) => {
           obj[key] = properties[key];
           return obj;
         }, {});
@@ -619,7 +623,8 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       collisionDetection={closestCenter}
     >
       <SortableContext items={convertKeysToIdentifiers(featureColumns.map((i) => i.key))}
-        strategy={horizontalListSortingStrategy}>
+        strategy={horizontalListSortingStrategy}
+      >
         <DragIndexContext.Provider value={dragIndex}>
           {table}
         </DragIndexContext.Provider>

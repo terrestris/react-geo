@@ -36,7 +36,7 @@ describe('<GeoLocationButton />', () => {
     });
 
     it('can be rendered', () => {
-      const { container } = render(<GeoLocationButton />);
+      const { container } = render(<GeoLocationButton  />);
       expect(container).toBeVisible();
     });
 
@@ -48,6 +48,7 @@ describe('<GeoLocationButton />', () => {
           showMarker={false}
           onGeoLocationChange={callback}
           pressed={false}
+          enableTracking={true}
         />
       ));
 
@@ -55,6 +56,7 @@ describe('<GeoLocationButton />', () => {
         showMarker={false}
         onGeoLocationChange={callback}
         pressed={true}
+        enableTracking={true}
       />);
 
       act(() => {
@@ -71,6 +73,7 @@ describe('<GeoLocationButton />', () => {
         showMarker={false}
         onGeoLocationChange={callback}
         pressed={false}
+        enableTracking={true}
       />));
 
       expect(callback).toBeCalledTimes(0);
@@ -79,6 +82,7 @@ describe('<GeoLocationButton />', () => {
         showMarker={false}
         onGeoLocationChange={callback}
         pressed={true}
+        enableTracking={true}
       />);
 
       act(() => {
@@ -103,12 +107,14 @@ describe('<GeoLocationButton />', () => {
         showMarker={false}
         onGeoLocationChange={callback}
         pressed={false}
+        enableTracking={true}
       />);
 
       rerenderInMapContext(<GeoLocationButton
         showMarker={false}
         onGeoLocationChange={callback}
         pressed={true}
+        enableTracking={true}
       />);
 
       const coordinates = [ 47.12, -64.99 ];
