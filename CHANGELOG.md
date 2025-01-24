@@ -1,3 +1,22 @@
+# [28.0.0](https://github.com/terrestris/react-geo/compare/v27.0.0...v28.0.0) (2025-01-24)
+
+
+### Bug Fixes
+
+* remove momentjs and homogenize props of timeslader and its panel ([6de4ff9](https://github.com/terrestris/react-geo/commit/6de4ff919feccceb9a66ea3e30d26a14389d65ba))
+* update time for all time aware layers if value changes ([255d8b8](https://github.com/terrestris/react-geo/commit/255d8b80624011323b1684d7783f83ffc893595a))
+* value update in time slider panel ([4eefb99](https://github.com/terrestris/react-geo/commit/4eefb9938069d965c9aebe8bd6be028a24cccefc))
+
+
+### Features
+
+* support minutes in autoplay and seperate speed from unit ([6519b5c](https://github.com/terrestris/react-geo/commit/6519b5c3ba1adfe07b5633a9d9173a645b8f5a02))
+
+
+### BREAKING CHANGES
+
+* MomentJS is replaced by DayJS
+
 # [27.0.0](https://github.com/terrestris/react-geo/compare/v26.2.1...v27.0.0) (2025-01-15)
 
 
