@@ -1,3 +1,10 @@
+## [29.0.1](https://github.com/terrestris/react-geo/compare/v29.0.0...v29.0.1) (2025-01-27)
+
+
+### Bug Fixes
+
+* initial range determination in time layer slider panel ([7adc84a](https://github.com/terrestris/react-geo/commit/7adc84a6acc6c27732b7ed2126e11e0ac37da0f6))
+
 # [29.0.0](https://github.com/terrestris/react-geo/compare/v28.0.0...v29.0.0) (2025-01-24)
 
 
