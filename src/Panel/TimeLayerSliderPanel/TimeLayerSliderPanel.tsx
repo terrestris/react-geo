@@ -57,7 +57,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   className,
   formatString = 'YYYY-MM-DD HH:mm',
   max = dayjs(),
-  min = dayjs().add(1, 'days'),
+  min = dayjs().subtract(1, 'days'),
   onChange,
   onChangeComplete,
   timeAwareLayers = [],
@@ -77,8 +77,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [playbackSpeedUnit, setPlaybackSpeedUnit] = useState<PlaybackSpeedUnit>('hours');
   const [autoPlayActive, setAutoPlayActive] = useState(false);
-  const [startDate, setStartDate] = useState<Dayjs>(min);
-  const [endDate, setEndDate] = useState<Dayjs>(max);
+  const [startDate, setStartDate] = useState<Dayjs>();
+  const [endDate, setEndDate] = useState<Dayjs>();
   const [loadingCount, setLoadingCount] = useState(0);
 
   const isLoading = loadingCount > 0;
@@ -176,12 +176,12 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       }
     });
 
-    const newStartDate = startDatesFromLayers.length > 0 ? dayjs.min(startDatesFromLayers): startDate;
-    const newEndDate = endDatesFromLayers.length > 0 ? dayjs.max(endDatesFromLayers) : endDate;
+    const newStartDate = startDatesFromLayers.length > 0 ? dayjs.min(startDatesFromLayers): min;
+    const newEndDate = endDatesFromLayers.length > 0 ? dayjs.max(endDatesFromLayers) : max;
     if (!_isNil(newStartDate) && !_isNil(newEndDate)) {
       updateDataRange([newStartDate, newEndDate]);
     }
-  }, [endDate, startDate, timeAwareLayers]);
+  }, [timeAwareLayers, min, max]);
 
   const onPlaybackUnitChange = (unit: PlaybackSpeedUnit) => setPlaybackSpeedUnit(unit);
 
@@ -239,7 +239,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   }, [timeAwareLayers]);
 
   useEffect(() => {
-    if (!autoPlayActive || Array.isArray(value)) {
+    if (!autoPlayActive || Array.isArray(value) || _isNil(endDate)) {
       return;
     }
 
@@ -267,15 +267,10 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   }, [autoPlayActive, endDate, playbackSpeed, wmsTimeHandler, onChange, playbackSpeedUnit, onTimeChanged, value]);
 
   useEffect(() => {
-    setStartDate(min);
-    setEndDate(max);
-  }, [min, max]);
-
-  useEffect(() => {
-    if (!_isNil(timeAwareLayers)) {
+    if (!_isNil(timeAwareLayers) && _isNil(startDate) && _isNil(endDate)) {
       findRangeForLayers();
     }
-  }, [timeAwareLayers, findRangeForLayers]);
+  }, [timeAwareLayers, findRangeForLayers, startDate, endDate]);
 
   useEffect(() => {
     // update time for all time aware layers if value changes
