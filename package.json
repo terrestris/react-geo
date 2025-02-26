@@ -99,7 +99,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@stylistic/eslint-plugin": "^2.13.0",
-    "@terrestris/eslint-config-typescript": "^7.0.0",
+    "@terrestris/eslint-config-typescript": "^9.0.0",
     "@terrestris/eslint-config-typescript-react": "^3.0.0",
     "@terrestris/ol-util": "^21.0.0",
     "@testing-library/dom": "^10.1.0",
