@@ -78,7 +78,7 @@
     "@types/lodash": "^4.17.4",
     "ag-grid-react": "^33.0.4",
     "dayjs": "^1.11.13",
-    "jspdf": "^2.5.1",
+    "jspdf": "^3.0.0",
     "lodash": "^4.17.21",
     "proj4": "^2.11.0",
     "prop-types": "^15.8.1"
