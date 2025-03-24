@@ -1,3 +1,15 @@
+# [30.0.0](https://github.com/terrestris/react-geo/compare/v29.0.1...v30.0.0) (2025-03-24)
+
+
+### Bug Fixes
+
+* **deps:** update react-util and ol-util beside OpenLayers ([c7acd34](https://github.com/terrestris/react-geo/commit/c7acd34ffe36b0af2ef7703633d29d19a0560579))
+
+
+### BREAKING CHANGES
+
+* **deps:** CoordinateInfo requires active property and layer filtering using functions
+
 ## [29.0.1](https://github.com/terrestris/react-geo/compare/v29.0.0...v29.0.1) (2025-01-27)
 
 
