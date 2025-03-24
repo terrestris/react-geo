@@ -1,5 +1,6 @@
 The `CoordinateInfo` component is only a very shallow wrapper around the `useCoordinateInfo` hook of react-util.
 Often it might be easier to use the hook directly, see the second example on how it's done.
+Layer filter (property `layerFilter`) is not needed here as the `useCoordinateInfo` hook is already configured to query all layers by default.
 
 ```jsx
 import {faCopy} from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +10,8 @@ import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapCompone
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import useCoordinateInfo from '@terrestris/react-util/dist/Hooks/useCoordinateInfo/useCoordinateInfo';
 import {
-  Button, Divider,
+  Button,
+  Divider,
   Spin,
   Statistic,
   Tooltip
@@ -189,7 +191,7 @@ const CoordinateInfoExample = () => {
         Using the `CoordinateInfo` component
       </h3>
       <CoordinateInfo
-        queryLayers={queryLayers}
+        active={true}
         resultRenderer={(results => <FeatureInfo {...results} />)}
       />
       <Divider />
@@ -204,7 +206,7 @@ const CoordinateInfoExample = () => {
 const MyCoordinateInfo = () => {
   // The useCoordinateInfo hook needs to run inside a map context
   const results = useCoordinateInfo({
-    queryLayers
+    active: true
   });
 
   return <FeatureInfo

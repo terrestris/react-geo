@@ -9,7 +9,9 @@ describe('<CoordinateInfo />', () => {
   });
 
   it('can be rendered', () => {
-    const { container } = render(<CoordinateInfo />);
+    const { container } = render(<CoordinateInfo
+      active={false}
+    />);
     expect(container).toBeVisible();
   });
 });
