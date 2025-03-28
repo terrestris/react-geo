@@ -6,6 +6,7 @@ on:
       - main
       - next
       - 15.x.x
+      - 24.x.x
 
 jobs:
   release:
