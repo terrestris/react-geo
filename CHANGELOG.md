@@ -1,3 +1,10 @@
+## [24.5.1](https://github.com/terrestris/react-geo/compare/v24.5.0...v24.5.1) (2025-03-28)
+
+
+### Bug Fixes
+
+* fixes a zoom error in LayerSwitcher ([45fe63e](https://github.com/terrestris/react-geo/commit/45fe63e15981ad2b88aa88d5c807281c8305f9ca))
+
 # [24.5.0](https://github.com/terrestris/react-geo/compare/v24.4.0...v24.5.0) (2024-09-19)
 
 
