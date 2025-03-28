@@ -8,6 +8,7 @@ import OlLayerGroup from 'ol/layer/Group';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
 import OlTileSource from 'ol/source/Tile';
+import View from 'ol/View';
 
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 
@@ -134,13 +135,57 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
       return;
     }
 
-    const mapClone =  new OlMap({
-      view: map.getView(),
+    const mainView = map.getView();
+    const projection = mainView.getProjection();
+    if (!projection) {
+      return;
+    }
+
+    // clone view properties so preview map has the same view as the main map
+    // but is separated from the main view to prevent event errors
+    const viewProps = {
+      projection,
+      center: mainView.getCenter(),
+      zoom: mainView.getZoom(),
+      rotation: mainView.getRotation(),
+      minZoom: mainView.getMinZoom(),
+      maxZoom: mainView.getMaxZoom(),
+      minResolution: mainView.getMinResolution(),
+      maxResolution: mainView.getMaxResolution(),
+      extent: mainView.get('extent')
+    };
+
+    const mapClone = new OlMap({
+      view: new View(viewProps),
       controls: []
     });
 
     setSwitcherMap(mapClone);
   }, [map]);
+
+  useEffect(() => {
+    if (!map || !switcherMap) {
+      return;
+    }
+
+    const mainView = map.getView();
+    const previewView = switcherMap.getView();
+
+    const synchronizeViews = () => {
+      previewView.setCenter(mainView.getCenter());
+      previewView.setZoom(mainView.getZoom() ?? 0);
+    };
+
+    synchronizeViews();
+
+    mainView.on('change:center', synchronizeViews);
+    mainView.on('change:resolution', synchronizeViews);
+
+    return () => {
+      mainView.un('change:center', synchronizeViews);
+      mainView.un('change:resolution', synchronizeViews);
+    };
+  }, [map, switcherMap]);
 
   useEffect(() => {
     if (switcherMap) {
