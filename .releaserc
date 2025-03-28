@@ -1,6 +1,7 @@
 {
   "branches": [
     "main",
+    "24.x.x",
     {
       "name": "next",
       "prerelease": true
