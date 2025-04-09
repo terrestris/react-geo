@@ -165,7 +165,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   /**
    * Selects the selected feature in the map and in the grid.
    */
-  const onMapSingleClick = useCallback((olEvt: OlMapBrowserEvent<MouseEvent>) => {
+  const onMapSingleClick = useCallback((olEvt: OlMapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>) => {
     if (!map) {
       return;
     }
@@ -194,7 +194,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   /**
    * Highlights the feature beneath the cursor on the map and in the grid.
    */
-  const onMapPointerMove = useCallback((olEvt: OlMapBrowserEvent<MouseEvent>) => {
+  const onMapPointerMove = useCallback((olEvt: OlMapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>) => {
     if (!map) {
       return;
     }
