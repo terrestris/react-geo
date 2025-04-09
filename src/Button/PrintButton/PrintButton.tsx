@@ -2,48 +2,34 @@ import React, {
   useState
 } from 'react';
 
-import { jsPDF } from 'jspdf';
-
-import Logger from '@terrestris/base-util/dist/Logger';
-import { InkmapPrintSpec } from '@terrestris/ol-util/dist/LayerUtil/InkmapTypes';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-import { PrintUtil } from '@terrestris/react-util/dist/Util/PrintUtil';
+import { PdfPrintSpec, PngPrintSpec, PrintSpec, PrintUtil } from '@terrestris/react-util/dist/Util/PrintUtil';
 
 import SimpleButton, {
   SimpleButtonProps
 } from '../SimpleButton/SimpleButton';
 
-interface OwnProps {
-  onProgressChange?: (val: number) => void;
-  outputFileName?: string;
+export type PrintButtonProps = Omit<PrintSpec, 'map'> & {
   format?: 'png' | 'pdf';
-  dpi?: number;
-  mapSize: InkmapPrintSpec['size'];
-  northArrow?: InkmapPrintSpec['northArrow'];
-  attributions?: InkmapPrintSpec['attributions'];
-  scaleBar?: InkmapPrintSpec['scaleBar'];
-  title?: string;
-  legendTitle?: string;
-  pdfPrintFunc?: (mapImgUrl: string, pdfSpec: any, title: string, legendTitle: string) => Promise<jsPDF>;
-}
+} & Partial<PdfPrintSpec> & Partial<PngPrintSpec> & SimpleButtonProps;
 
-export type PrintButtonProps = OwnProps & SimpleButtonProps;
-
-const PrintButton: React.FC<PrintButtonProps> = ({
+export const PrintButton: React.FC<PrintButtonProps> = ({
   attributions = 'bottom-right',
+  dpi = 120,
+  extent,
+  extentPadding,
+  format = 'png',
+  legendTitle = 'Legend',
+  mapSize,
   northArrow = 'top-right',
+  onProgressChange,
+  outputFileName = 'react-geo-image',
+  pdfPrintFunc,
   scaleBar = {
     position: 'bottom-left',
     units: 'metric'
   },
-  dpi = 120,
-  onProgressChange,
-  outputFileName = 'react-geo-image',
-  mapSize,
-  format = 'png',
   title = 'Print',
-  legendTitle = 'Legend',
-  pdfPrintFunc = undefined,
   ...passThroughProps
 }) => {
 
@@ -56,36 +42,42 @@ const PrintButton: React.FC<PrintButtonProps> = ({
     }
     if (format === 'png') {
       setLoading(true);
-      await PrintUtil.printPng(
-        map,
-        mapSize,
-        onProgressChange,
-        format,
-        outputFileName,
-        dpi,
-        format,
+      const pngPrintSpec: PngPrintSpec = {
         attributions,
-        scaleBar
-      );
-      setLoading(false);
-    } else if (pdfPrintFunc) {
-      setLoading(true);
-      await PrintUtil.printPdf(
+        dpi,
+        extent,
+        extentPadding,
+        format,
         map,
         mapSize,
-        pdfPrintFunc,
         onProgressChange,
-        format,
         outputFileName,
-        dpi,
-        northArrow,
-        scaleBar,
-        title,
-        legendTitle
-      );
+        scaleBar
+      };
+      await PrintUtil.printPng(pngPrintSpec);
       setLoading(false);
-    } else {
-      Logger.error('Error while creating the printout, missing `pdfPrintFunc` property');
+      return;
+    }
+    if (pdfPrintFunc && format === 'pdf') {
+      setLoading(true);
+      const pdfPrintSpec: PdfPrintSpec = {
+        dpi,
+        extent,
+        extentPadding,
+        format,
+        legendTitle,
+        map,
+        mapSize,
+        northArrow,
+        onProgressChange,
+        outputFileName,
+        pdfPrintFunc,
+        scaleBar,
+        title
+      };
+      await PrintUtil.printPdf(pdfPrintSpec);
+      setLoading(false);
+      return;
     }
   };
 

@@ -48,7 +48,7 @@ const PrintButtonExample = () => {
             [4e6, 2e6],
             [8e6, 4e6],
           ],
-        },
+        }
       },
       {
         type: 'Feature',
@@ -57,6 +57,15 @@ const PrintButtonExample = () => {
           coordinates: [
             [4e6, 2e6],
             [8e6, -2e6],
+          ],
+        },
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [-0.52e6, 7e6], [-0.8e6, 7.5e6]
           ],
         },
       },
@@ -211,6 +220,8 @@ const PrintButtonExample = () => {
     setMap(newMap);
   }, [geojson]);
 
+  const extent = [-0.52e6, 7e6, -0.8e6, 7.5e6];
+
   if (!map) {
     return null;
   }
@@ -283,6 +294,22 @@ const PrintButtonExample = () => {
           mapSize={[277, 370, 'mm']}
         >
           Print map A3 Portrait
+        </PrintButton>
+        <PrintButton
+          extent={extent}
+          format='pdf'
+          legendTitle='A4 Portrait Legend'
+          mapSize={[190, 247, 'mm']}
+          northArrow={true}
+          onProgressChange={setProgress}
+          pdfPrintFunc={A4Portrait}
+          scaleBar={true}
+          style={{
+            margin: '10px 10px 0 0'
+          }}
+          title='Print map A4 centered on line feature'
+        >
+          Print map A4 centered on line feature
         </PrintButton>
       </MapContext.Provider>
       <Progress percent={progress} />
