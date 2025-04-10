@@ -1,3 +1,15 @@
+# [30.1.0](https://github.com/terrestris/react-geo/compare/v30.0.1...v30.1.0) (2025-04-10)
+
+
+### Bug Fixes
+
+* typings tue to update of OpenLayers to 10.5.0 and pin ol-mapbox-style version ([291bacc](https://github.com/terrestris/react-geo/commit/291bacc7c8ae092f1f9fc6d6f5699d32b99283b7))
+
+
+### Features
+
+* **printbutton:** use typings defined in react-util ([656964e](https://github.com/terrestris/react-geo/commit/656964eca55d2ab438ddf678e09e99f181af5d55))
+
 ## [30.0.1](https://github.com/terrestris/react-geo/compare/v30.0.0...v30.0.1) (2025-03-28)
 
 
