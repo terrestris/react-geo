@@ -94,7 +94,9 @@ interface OwnProps<T> {
    * selected in the map. The function receives the olEvt and the selected
    * features (if any).
    */
-  onMapSingleClick?: (olEvt: OlMapBrowserEvent<MouseEvent>, selectedFeatures: OlFeature<OlGeometry>[]) => void;
+  onMapSingleClick?: (
+    olEvt: OlMapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>, selectedFeatures: OlFeature<OlGeometry>[]
+  ) => void;
   /*
    * A Function that is called once the grid is ready.
    */
@@ -257,7 +259,7 @@ export function AgFeatureGrid<T>({
    *
    * @param olEvt The ol event.
    */
-  const onMapSingleClickInner = useCallback((olEvt: OlMapBrowserEvent<MouseEvent>) => {
+  const onMapSingleClickInner = useCallback((olEvt: OlMapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>) => {
     if (_isNil(map)) {
       return;
     }

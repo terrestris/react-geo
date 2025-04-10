@@ -29,7 +29,6 @@ describe('<PrintButton />', () => {
   });
 
   describe('#Basics', () => {
-
     it('is defined', () => {
       expect(PrintButton).not.toBeUndefined();
     });
@@ -41,12 +40,16 @@ describe('<PrintButton />', () => {
   });
 
   describe('#Printing', () => {
-
     it('prints a png image', async () => {
       renderInMapContext(map, <PrintButton mapSize={[0, 0]}>Print test</PrintButton>);
       const button = screen.getByText('Print test');
       await userEvent.click(button);
     });
 
+    it('prints a png image when an extent is given', async () => {
+      renderInMapContext(map, <PrintButton mapSize={[0, 0]} extent={[-1, -1, 0.9, 0.9]}>Print test</PrintButton>);
+      const button = screen.getByText('Print test');
+      await userEvent.click(button);
+    });
   });
 });
