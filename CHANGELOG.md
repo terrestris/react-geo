@@ -1,3 +1,10 @@
+## [30.2.1](https://github.com/terrestris/react-geo/compare/v30.2.0...v30.2.1) (2025-04-14)
+
+
+### Bug Fixes
+
+* expose onCutEnd callback in DrawCutButton ([0c8baf4](https://github.com/terrestris/react-geo/commit/0c8baf450cc778e1d063f2f117588123216d4cb5))
+
 # [30.2.0](https://github.com/terrestris/react-geo/compare/v30.1.1...v30.2.0) (2025-04-14)
 
 
