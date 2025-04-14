@@ -7,7 +7,11 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": ["es7", "dom", "esnext"],
+    "lib": [
+      "es2023",
+      "dom",
+      "esnext"
+    ],
     "module": "ES2022",
     "moduleResolution": "node",
     "strict": true,

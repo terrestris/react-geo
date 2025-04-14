@@ -52,6 +52,7 @@ const DrawButtonExample = () => {
             onChange={(evt, value) => {
               setSelected(value)
             }}
+            orientation="horizontal"
           >
             <DrawButton
               value="drawPoint"
