@@ -1,3 +1,10 @@
+## [30.1.1](https://github.com/terrestris/react-geo/compare/v30.1.0...v30.1.1) (2025-04-14)
+
+
+### Bug Fixes
+
+* set current promise to undefined after resolving it ([d63a9b4](https://github.com/terrestris/react-geo/commit/d63a9b43d5bee44678b7ef3ae3f6ad1279b37cfe))
+
 # [30.1.0](https://github.com/terrestris/react-geo/compare/v30.0.1...v30.1.0) (2025-04-10)
 
 
