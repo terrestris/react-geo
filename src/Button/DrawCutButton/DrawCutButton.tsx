@@ -30,6 +30,11 @@ interface OwnProps {
    */
   digitizeLayer?: OlVectorLayer<OlVectorSource>;
   /**
+   * This callback is called after the cut was performed with all changed features. Removed features geometry is set to
+   * undefined.
+   */
+  onCutEnd?: (changed: OlFeature[]) => void;
+  /**
    * Text to show in the Popconfirm after drawing the cut.
    */
   popConfirmText?: string;
@@ -57,6 +62,7 @@ export const DrawCutButton: FC<DrawCutProps> = ({
   digitizeLayer,
   drawStyle,
   className,
+  onCutEnd,
   pressed,
   popConfirmProps,
   highlightStyle = defaultHighlightStyle,
@@ -100,7 +106,8 @@ export const DrawCutButton: FC<DrawCutProps> = ({
     digitizeLayer,
     drawStyle,
     active: !!pressed,
-    onCutStart
+    onCutStart,
+    onCutEnd
   });
 
   const finalClassName = className
