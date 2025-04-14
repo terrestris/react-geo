@@ -1,3 +1,10 @@
+# [30.2.0](https://github.com/terrestris/react-geo/compare/v30.1.1...v30.2.0) (2025-04-14)
+
+
+### Features
+
+* **DrawCutButton:** highlight the cut geometry ([0cf52f1](https://github.com/terrestris/react-geo/commit/0cf52f1277fd4b1c3c17301942b25326b70925b7))
+
 ## [30.1.1](https://github.com/terrestris/react-geo/compare/v30.1.0...v30.1.1) (2025-04-14)
 
 
