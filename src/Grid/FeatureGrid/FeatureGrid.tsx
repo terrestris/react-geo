@@ -50,7 +50,14 @@ interface DragIndexState {
   direction?: 'left' | 'right';
 }
 
-interface OwnProps {
+interface OwnProps<RecordType = AnyObject> {
+  /**
+   * Custom column definitions to apply to the given column (mapping via key).
+   * See https://ant.design/components/table/#Column.
+   *
+   * To control the columns manually, pass the `columns` prop to the table.
+   */
+  columnDefs?: ColumnsType<RecordType>;
   /**
    * When active the order of the columns can be changed dynamically using drag & drop.
    */
@@ -63,7 +70,7 @@ interface OwnProps {
     selectedFeatures: OlFeature<OlGeometry>[]) => void;
 }
 
-export type FeatureGridProps<T extends AnyObject = AnyObject> = OwnProps & RgCommonGridProps<T> & TableProps<T>;
+export type FeatureGridProps<T extends AnyObject = AnyObject> = OwnProps<T> & RgCommonGridProps<T> & TableProps<T>;
 
 const defaultClassName = `${CSS_PREFIX}feature-grid`;
 
@@ -114,7 +121,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
   attributeFilter,
   children,
   className,
-  columns,
+  columnDefs,
   draggableColumns = false,
   featureStyle = defaultFeatureStyle,
   features,
@@ -302,7 +309,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
    * given feature.
   */
   useEffect(() => {
-    const columnDefs: ColumnsType<T> = [];
+    const colDefs: ColumnsType<T> = [];
     if (!features || features.length < 1) {
       return;
     }
@@ -333,25 +340,25 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
         continue;
       }
 
-      columnDefs.push({
+      colDefs.push({
         title: key,
         dataIndex: key,
         key: key,
-        ...columns?.find(col => (col as ColumnType<InternalTableRecord>).dataIndex === key)
+        ...columnDefs?.find(col => (col as ColumnType<InternalTableRecord>).dataIndex === key)
       });
     }
 
-    setColumnDefinition(columnDefs);
-  }, [columns, features, attributeFilter, attributeBlacklist]);
+    setColumnDefinition(colDefs);
+  }, [columnDefs, features, attributeFilter, attributeBlacklist]);
 
   useEffect(() => {
-    const columnDefs = columnDefinition.map((column, i) => ({
+    const colDefs = columnDefinition.map((column, i) => ({
       ...column,
       key: `${i}`,
       onHeaderCell: () => ({ id: `${i}` }),
       onCell: () => ({ id: `${i}` })
     }));
-    setFeatureColumns(columnDefs);
+    setFeatureColumns(colDefs);
   }, [columnDefinition]);
 
   /**
