@@ -1,3 +1,15 @@
+# [31.0.0](https://github.com/terrestris/react-geo/compare/v30.2.1...v31.0.0) (2025-05-20)
+
+
+### Bug Fixes
+
+* allow to override column definition again ([815e2e0](https://github.com/terrestris/react-geo/commit/815e2e00c0f90407ae0bcf4edeeaa7093549e9f7))
+
+
+### BREAKING CHANGES
+
+* Make use of the "columnDefs" instead of the "columns" prop if needed
+
 ## [30.2.1](https://github.com/terrestris/react-geo/compare/v30.2.0...v30.2.1) (2025-04-14)
 
 
