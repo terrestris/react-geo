@@ -40,7 +40,7 @@ const FeatureGridExample = () => {
         zoomToExtent={true}
         selectable={true}
         attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
-        columns={[{
+        columnDefs={[{
           dataIndex: 'GEN',
           title: 'Name',
           render: nameColumnRenderer,
@@ -123,7 +123,7 @@ const FeatureGridExample = () => {
         selectable={true}
         draggableColumns={true}
         attributeBlacklist={['gml_id', 'USE', 'RS', 'RS_ALT']}
-        columns={[{
+        columnDefs={[{
           dataIndex: 'GEN',
           title: 'Name',
           render: nameColumnRenderer,
@@ -335,7 +335,7 @@ const RemoteFeatureGrid = ({
       highlightStyle={feat => getFeatureStyle(feat, 'rgb(230, 247, 255)')}
       selectStyle={feat => getFeatureStyle(feature, 'rgb(24, 144, 255)')}
       onChange={onTableChange}
-      columns={[{
+      columnDefs={[{
         dataIndex: 'name',
         sorter: true,
         sortOrder: sorter.order,

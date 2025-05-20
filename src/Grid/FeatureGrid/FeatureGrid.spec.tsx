@@ -193,7 +193,7 @@ describe('<FeatureGrid />', () => {
     renderInMapContext(map, (
       <FeatureGrid
         features={features}
-        columns={[{
+        columnDefs={[{
           key: 'name',
           dataIndex: 'name',
           title: 'Name override'
