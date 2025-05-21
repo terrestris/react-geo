@@ -1,3 +1,10 @@
+## [31.0.1](https://github.com/terrestris/react-geo/compare/v31.0.0...v31.0.1) (2025-05-21)
+
+
+### Bug Fixes
+
+* **deps:** update react-util ([eb3a98e](https://github.com/terrestris/react-geo/commit/eb3a98e8946ca7e147d5250016da86b51e893672))
+
 # [31.0.0](https://github.com/terrestris/react-geo/compare/v30.2.1...v31.0.0) (2025-05-20)
 
 
