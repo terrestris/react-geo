@@ -76,7 +76,7 @@ export const DrawCutButton: FC<DrawCutProps> = ({
   const highlightLayer = useOlLayer(() => new OlVectorLayer({
     source: new OlVectorSource(),
     style: highlightStyle
-  }), []);
+  }), [highlightStyle]);
 
   const onCutStart = useCallback((geom: OlGeometry) => {
     if (promise.current) {
