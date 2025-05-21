@@ -1,3 +1,18 @@
+# [32.0.0](https://github.com/terrestris/react-geo/compare/v31.0.1...v32.0.0) (2025-05-21)
+
+
+### Bug Fixes
+
+* fire delete event after removal of feature from source ([cf4d375](https://github.com/terrestris/react-geo/commit/cf4d3756edd6e96103a20b9b9964f81ef28d2a42))
+* fire digitize buttons end-events after the action is performed ([3d227e8](https://github.com/terrestris/react-geo/commit/3d227e8c66930b0ef479c807ed2c2c3d257831cf))
+
+
+### BREAKING CHANGES
+
+* The `onFeatureRemove` callback of the `DeleteButton` and the `onFeatureCopy`callback of the
+`CopyButton` are now called AFTER the action has been performed
+* The `onFeatureRemove` callback of the `DeleteButton` is now called AFTER the feature has been removed.
+
 ## [31.0.1](https://github.com/terrestris/react-geo/compare/v31.0.0...v31.0.1) (2025-05-21)
 
 
