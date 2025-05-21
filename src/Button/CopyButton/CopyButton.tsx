@@ -67,8 +67,6 @@ const CopyButton: React.FC<CopyButtonProps> = ({
   const layers = useMemo(() => layer ? [layer] : [], [layer]);
 
   const onFeatureSelect = useCallback((event: OlSelectEvent) => {
-    onFeatureCopy?.(event);
-
     const feat = event.selected[0];
 
     if (!feat || !layer || !map) {
@@ -78,6 +76,8 @@ const CopyButton: React.FC<CopyButtonProps> = ({
     const copy = feat.clone();
 
     layer.getSource()?.addFeature(copy);
+
+    onFeatureCopy?.(event);
 
     AnimateUtil.moveFeature(
       map,

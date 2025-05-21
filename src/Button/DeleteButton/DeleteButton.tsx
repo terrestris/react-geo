@@ -68,9 +68,9 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
     if (!layer) {
       return;
     }
-    onFeatureRemove?.(event);
     const feat = event.selected[0];
     layer.getSource()?.removeFeature(feat);
+    onFeatureRemove?.(event);
   }, [layer, onFeatureRemove]);
 
   useSelectFeatures({
