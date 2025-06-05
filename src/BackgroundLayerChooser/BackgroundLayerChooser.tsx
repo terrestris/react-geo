@@ -1,5 +1,3 @@
-import './BackgroundLayerChooser.less';
-
 import React, {
   useEffect,
   useRef,
@@ -9,7 +7,8 @@ import React, {
 import {
   faBan,
   faChevronLeft,
-  faChevronRight} from '@fortawesome/free-solid-svg-icons';
+  faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import OlOverviewMap from 'ol/control/OverviewMap';
@@ -24,12 +23,15 @@ import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import { getUid } from 'ol/util';
 import OlView from 'ol/View';
+
 import { apply as applyMapboxStyle } from 'ol-mapbox-style';
 
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 
 import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPreview';
 import SimpleButton from '../Button/SimpleButton/SimpleButton';
+
+import './BackgroundLayerChooser.less';
 
 export interface BackgroundLayerChooserProps {
   /**
@@ -56,6 +58,11 @@ export interface BackgroundLayerChooserProps {
    * Sets the title of the No-Background Button
    */
   noBackgroundTitle?: string;
+  /**
+   * A function that renders the title of the layer.
+   * If not provided, the layer's name will be used.
+   */
+  titleRenderer?: (layer: OlLayer) => React.ReactNode;
 }
 
 /**
@@ -72,7 +79,8 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   buttonTooltip = 'Change background layer',
   initiallySelectedLayer,
   noBackgroundTitle = 'No Background',
-  backgroundLayerFilter = (l: OlLayerBase) => !!l.get('isBackgroundLayer')
+  backgroundLayerFilter = (l: OlLayerBase) => !!l.get('isBackgroundLayer'),
+  titleRenderer
 }) => {
   const map = useMap();
 
@@ -207,6 +215,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
                   backgroundLayerFilter={backgroundLayerFilter}
                   zoom={zoom}
                   center={center}
+                  titleRenderer={titleRenderer}
                 />
               ))
             }
@@ -280,7 +289,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
             <span
               className="layer-title"
             >
-              {selectedLayer.get('name')}
+              {titleRenderer ? titleRenderer(selectedLayer) : selectedLayer.get('name')}
             </span> :
             <span
               className="layer-title"
