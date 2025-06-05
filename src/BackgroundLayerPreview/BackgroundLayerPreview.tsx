@@ -19,6 +19,7 @@ import { getUid } from 'ol/util';
 import OlView from 'ol/View';
 
 import { MapUtil } from '@terrestris/ol-util';
+
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 
 import MapComponent from '../Map/MapComponent/MapComponent';
@@ -32,6 +33,7 @@ export interface BackgroundLayerPreviewProps {
   zoom?: number;
   center?: Coordinate;
   backgroundLayerFilter: (l: OlLayerBase) => boolean;
+  titleRenderer?: (layer: OlLayer) => React.ReactNode;
 }
 
 export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
@@ -42,7 +44,8 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
   onClick,
   zoom,
   center,
-  backgroundLayerFilter
+  backgroundLayerFilter,
+  titleRenderer
 }) => {
 
   const [loading, setLoading] = useState(false);
@@ -180,7 +183,7 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
         <span
           className="layer-title"
         >
-          {layer.get('name')}
+          {titleRenderer ? titleRenderer(layer) : layer.get('name')}
         </span>
       </Spin>
     </div>
