@@ -1,3 +1,10 @@
+## [32.1.1](https://github.com/terrestris/react-geo/compare/v32.1.0...v32.1.1) (2025-06-05)
+
+
+### Bug Fixes
+
+* readd support for wmts layers/sources ([65d6aee](https://github.com/terrestris/react-geo/commit/65d6aee6626c1c8b3513a43b750a7325b5ba22ab))
+
 # [32.1.0](https://github.com/terrestris/react-geo/compare/v32.0.0...v32.1.0) (2025-06-05)
 
 
