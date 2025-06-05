@@ -21,6 +21,8 @@ import { ObjectEvent } from 'ol/Object';
 import OlSourceImageWMS from 'ol/source/ImageWMS';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlSourceWMTS from 'ol/source/WMTS';
+import OlTilegridWMTS from 'ol/tilegrid/WMTS';
 import { getUid } from 'ol/util';
 import OlView from 'ol/View';
 
@@ -129,7 +131,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
     let ovLayer: OlLayer | OlLayerGroup | null = null;
 
     if (selectedLayer instanceof OlLayerTile) {
-      let newSource: OlSourceOSM | OlSourceTileWMS | null = null;
+      let newSource: OlSourceOSM | OlSourceTileWMS | OlSourceWMTS | null = null;
 
       if (selectedLayerSource instanceof OlSourceTileWMS) {
         newSource = new OlSourceTileWMS({
@@ -139,6 +141,25 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
         });
       } else if (selectedLayerSource instanceof OlSourceOSM) {
         newSource = new OlSourceOSM();
+      } else if (selectedLayerSource instanceof OlSourceWMTS) {
+        const newTileGrid = selectedLayerSource.getTileGrid() as OlTilegridWMTS | null;
+
+        if (!newTileGrid) {
+          return;
+        }
+
+        newSource = new OlSourceWMTS({
+          url: selectedLayerSource.getUrls()?.[0],
+          layer: selectedLayerSource.getLayer(),
+          matrixSet: selectedLayerSource.getMatrixSet(),
+          format: selectedLayerSource.getFormat(),
+          tileGrid: newTileGrid,
+          style: selectedLayerSource.getStyle(),
+          requestEncoding: selectedLayerSource.getRequestEncoding(),
+          version: selectedLayerSource.getVersion(),
+          dimensions: selectedLayerSource.getDimensions(),
+          wrapX: selectedLayerSource.getWrapX()
+        });
       }
 
       if (newSource) {
