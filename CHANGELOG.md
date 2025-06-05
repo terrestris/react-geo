@@ -1,3 +1,10 @@
+# [32.1.0](https://github.com/terrestris/react-geo/compare/v32.0.0...v32.1.0) (2025-06-05)
+
+
+### Features
+
+* allow to pass custom title renderer ([ddc1d16](https://github.com/terrestris/react-geo/commit/ddc1d16d8f67bd0820eb29935a8d658ff770d4b0))
+
 # [32.0.0](https://github.com/terrestris/react-geo/compare/v31.0.1...v32.0.0) (2025-05-21)
 
 
