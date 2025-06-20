@@ -123,12 +123,12 @@ describe('<TimeSlider />', () => {
     render(
       <TimeSlider
         defaultValue={dayjs(value * 1000)}
-        min={dayjs().subtract(1, 'hour')}
-        max={dayjs()}
-        onChange={() => {}}
-        value={dayjs(value * 1000)}
         formatString={formatString}
         marks={undefined}
+        max={dayjs()}
+        min={dayjs().subtract(1, 'hour')}
+        onChange={() => {}}
+        value={dayjs(value * 1000)}
       />
     );
 

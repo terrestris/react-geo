@@ -2,8 +2,10 @@ import React, { useMemo } from 'react';
 
 import { Slider } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
+import { Duration, parse, toSeconds } from 'iso8601-duration';
 import _isArray from 'lodash/isArray';
 import _isFunction from 'lodash/isFunction';
+import _isNil from 'lodash/isNil';
 import { MarkObj } from 'rc-slider/lib/Marks';
 
 import { CSS_PREFIX } from '../../constants';
@@ -16,9 +18,11 @@ export interface TimeSliderMark {
 interface OwnProps {
   className?: string;
   defaultValue?: Dayjs | [Dayjs, Dayjs];
+  duration?: Duration | string;
   formatString?: string;
   marks?: TimeSliderMark[];
   max?: Dayjs;
+  maxNumberOfMarks?: number;
   min?: Dayjs;
   onChange?: (val: Dayjs | [Dayjs, Dayjs]) => void;
   onChangeComplete?: (val: Dayjs | [Dayjs, Dayjs]) => void;
@@ -31,6 +35,7 @@ export type TimeSliderProps = OwnProps;
 const TimeSlider: React.FC<TimeSliderProps> = ({
   className,
   defaultValue = dayjs(),
+  duration,
   formatString = 'DD.MM. HH:mm',
   marks,
   max = dayjs(),
@@ -83,6 +88,16 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     }
   };
 
+  const step = useMemo(() => {
+    if (_isNil(duration)) {
+      return null;
+    }
+    if (typeof duration === 'string') {
+      return toSeconds(parse(duration));
+    }
+    return toSeconds(duration);
+  }, [duration]);
+
   const finalClassName = className ? `${className} ${CSS_PREFIX}timeslider` : `${CSS_PREFIX}timeslider`;
 
   return useRange ? (
@@ -95,6 +110,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       onChange={valueUpdated}
       onChangeComplete={valueUpdated}
       range={true}
+      step={step}
       tooltip={{ formatter: val => formatTimestamp(val as number) }}
       value={convertDayjsToUnix(value) as [number, number]}
       {...passThroughProps}
@@ -109,6 +125,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       onChange={valueUpdated}
       onChangeComplete={valueUpdated}
       range={false}
+      step={step}
       tooltip={{
         formatter: val => formatTimestamp(val as number)
       }}
