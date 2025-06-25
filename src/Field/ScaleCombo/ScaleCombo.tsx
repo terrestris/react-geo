@@ -15,7 +15,6 @@ import _isEmpty from 'lodash/isEmpty';
 import _isInteger from 'lodash/isInteger';
 import _isNil from 'lodash/isNil';
 import _isNumber from 'lodash/isNumber';
-import _reverse from 'lodash/reverse';
 import { ObjectEvent as OlObjectEvent } from 'ol/Object';
 import OlView from 'ol/View';
 
@@ -82,7 +81,7 @@ const ScaleCombo: React.FC<ScaleComboProps> = ({
         }
       }
     } else {
-      const reversedResolutions = _reverse(_clone(viewResolutions));
+      const reversedResolutions = _clone(viewResolutions).reverse();
       reversedResolutions
         .filter(resolutionsFilter)
         .forEach(resolution => pushScale(scales, resolution, view));
