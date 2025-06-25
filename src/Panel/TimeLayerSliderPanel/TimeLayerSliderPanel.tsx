@@ -63,6 +63,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   duration,
   formatString,
   max = dayjs(),
+  markFormatString,
   maxNumberOfMarks = 10,
   min = dayjs().subtract(1, 'days'),
   onChange,
@@ -349,17 +350,17 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       return [{
         timestamp: startDate,
         markConfig: {
-          label: startDate.format(formatStringInternal)
+          label: startDate.format(markFormatString ?? formatStringInternal)
         }
       }, {
         timestamp: mid,
         markConfig: {
-          label: mid.format(formatStringInternal)
+          label: mid.format(markFormatString ?? formatStringInternal)
         }
       },{
         timestamp: endDate,
         markConfig: {
-          label: endDate.format(formatStringInternal),
+          label: endDate.format(markFormatString ?? formatStringInternal),
           style: {
             left: 'unset',
             right: 0,
@@ -373,7 +374,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
     const durationBasedMarks: TimeSliderMark[] = [{
       timestamp: startDate,
       markConfig: {
-        label: startDate.format(formatStringInternal)
+        label: startDate.format(markFormatString ?? formatStringInternal)
       }
     }];
 
@@ -383,7 +384,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       durationBasedMarks.push({
         timestamp: nextCandidate,
         markConfig: {
-          label: nextCandidate.format(formatStringInternal)
+          label: nextCandidate.format(markFormatString ?? formatStringInternal)
         }
       });
       nextCandidate = dayjs(end(durationInst, nextCandidate.toDate()));
@@ -397,7 +398,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
     }
 
     return durationBasedMarks;
-  }, [startDate, endDate, durationInternal, formatStringInternal, maxNumberOfMarks]);
+  }, [startDate, endDate, durationInternal, markFormatString, formatStringInternal, maxNumberOfMarks]);
 
   const speedOptions = useMemo(() => autoPlaySpeedOptions.map(function (val: number) {
     return (
@@ -451,6 +452,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
           defaultValue={startDate}
           duration={durationInternal}
           formatString={formatStringInternal}
+          markFormatString={markFormatString}
           marks={marks}
           max={endDate}
           min={startDate}
@@ -464,7 +466,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       {
         !Array.isArray(value) && (
           <div className="time-value">
-            {value.format(formatStringInternal || 'DD.MM.YYYY HH:mm:ss')}
+            {value.format(markFormatString ?? formatStringInternal ?? 'DD.MM.YYYY HH:mm:ss')}
           </div>
         )
       }

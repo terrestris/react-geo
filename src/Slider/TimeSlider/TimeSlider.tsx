@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { Slider } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
@@ -21,6 +21,7 @@ interface OwnProps {
   duration?: Duration | string;
   formatString?: string;
   marks?: TimeSliderMark[];
+  markFormatString?: string;
   max?: Dayjs;
   maxNumberOfMarks?: number;
   min?: Dayjs;
@@ -37,6 +38,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   defaultValue = dayjs(),
   duration,
   formatString = 'DD.MM. HH:mm',
+  markFormatString,
   marks,
   max = dayjs(),
   min = dayjs().subtract(1, 'hour'),
@@ -71,9 +73,9 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     return convertedMks;
   }, [marks]);
 
-  const formatTimestamp = (unix: number): string => {
-    return unix ? dayjs(unix * 1000).format(formatString) : '';
-  };
+  const formatTimestamp = useCallback((unix: number): string => {
+    return unix ? dayjs(unix * 1000).format(markFormatString ?? formatString) : '';
+  }, [markFormatString, formatString]);
 
   const valueUpdated = (val: number | number[]) => {
     const updatedValue = _isArray(val)

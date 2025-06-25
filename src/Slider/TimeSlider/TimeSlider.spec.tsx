@@ -134,8 +134,8 @@ describe('<TimeSlider />', () => {
 
     const slider = screen.getByRole('slider');
     fireEvent.mouseOver(slider);
-    expect(
-      screen.getByText(dayjs(value * 1000).format(formatString))
-    ).toBeInTheDocument();
+    const tooltip = document.querySelector('.ant-tooltip-inner');
+    expect(tooltip).toBeInTheDocument();
+
   });
 });

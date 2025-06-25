@@ -6,10 +6,10 @@ import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapCompone
 import TimeLayerSliderPanel from '@terrestris/react-geo/dist/Panel/TimeLayerSliderPanel/TimeLayerSliderPanel';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import dayjs from 'dayjs';
-import { getCenter } from 'ol/extent';
+import {getCenter} from 'ol/extent';
 import OlLayerTile from 'ol/layer/Tile';
 import OlMap from 'ol/Map';
-import { transformExtent } from 'ol/proj';
+import {transformExtent} from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
@@ -29,9 +29,14 @@ const TimeLayerSliderPanelExample = () => {
   ], []);
 
   const [value, setValue] = useState();
-  const [value2, setValue2] = useState();
+  const [valueExample2, setValueExample2] = useState();
   const [map, setMap] = useState();
   const [mapWithDuration, setMapWithDuration] = useState();
+
+  const actualTime = dayjs();
+  const actualTimeFloored = actualTime.minute() >= 30
+    ? actualTime.add(1, 'hour').startOf('hour')
+    : actualTime.startOf('hour');
 
   const timeLayer = useMemo(() => new OlLayerTile({
     extent: transformExtent([-126, 24, -66, 50], 'EPSG:4326', 'EPSG:3857'),
@@ -49,8 +54,8 @@ const TimeLayerSliderPanelExample = () => {
     type: 'WMSTime',
     timeFormat: 'ISO8601',
     duration: 'PT1H',
-    startDate: '2025-06-18T18:00:00.000Z',
-    endDate: '2025-06-27T12:00:00.000Z',
+    startDate: actualTimeFloored.subtract(1, 'day').toISOString(),
+    endDate: actualTimeFloored.add(1, 'day').toISOString(),
     source: new OlSourceTileWMS({
       url: 'https://maps.dwd.de/geoserver/wms',
       params: {LAYERS: 'dwd:Icon_reg025_fd_sl_T2M'}
@@ -108,18 +113,18 @@ const TimeLayerSliderPanelExample = () => {
     dataRange: 'Set data range'
   };
 
-  const initStartDate = dayjs().subtract(3, 'hours');
-  const initEndDate = dayjs();
-  
+  const initStartDate = dayjs('2006-06-23T03:10:00Z');
+  const initEndDate = dayjs('2006-06-23T03:10:00Z').add(2, 'hours');
+
   const onTimeChanged = (newTimeValue) => setValue(newTimeValue);
-  const onTimeChanged2 = (newTimeValue) => setValue2(newTimeValue);
+  const onTimeChanged2 = (newTimeValue) => setValueExample2(newTimeValue);
 
   useEffect(() => {
-    setValue(dayjs().subtract(1, 'hours'))
+    setValue(dayjs('2006-06-23T03:10:00Z').subtract(1, 'hours'))
   }, []);
 
   useEffect(() => {
-    setValue2(dayjs().subtract(1, 'hours'))
+    setValueExample2(actualTimeFloored)
   }, []);
 
   return (
@@ -137,7 +142,8 @@ const TimeLayerSliderPanelExample = () => {
           <TimeLayerSliderPanel
             autoPlaySpeedOptions={[0.5, 1, 2, 3, 5]}
             onChangeComplete={onTimeChanged}
-            formatString='YYYY-MM-DD HH:mm'
+            formatString='ISO8601'
+            markFormatString="DD.MM.YYYY HH:mm"
             max={initEndDate}
             min={initStartDate}
             timeAwareLayers={[timeLayer]}
@@ -147,7 +153,7 @@ const TimeLayerSliderPanelExample = () => {
         </MapContext.Provider>
       </div>
       <br/>
-      <hr />
+      <hr/>
       <br/>
       <h1>Example including duration</h1>
       <div>
@@ -161,9 +167,11 @@ const TimeLayerSliderPanelExample = () => {
           />
           <TimeLayerSliderPanel
             autoPlaySpeedOptions={[0.5, 1, 2, 3, 5]}
+            markFormatString="DD.MM.YYYY HH:mm"
+            maxNumberOfMarks={5}
             onChangeComplete={onTimeChanged2}
             timeAwareLayers={[timeLayerDuration]}
-            value={value2}
+            value={valueExample2}
           />
         </MapContext.Provider>
       </div>
@@ -171,5 +179,5 @@ const TimeLayerSliderPanelExample = () => {
   );
 }
 
-<TimeLayerSliderPanelExample />
+<TimeLayerSliderPanelExample/>
 ```
