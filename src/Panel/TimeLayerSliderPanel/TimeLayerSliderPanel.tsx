@@ -13,9 +13,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DatePicker, Popover, Select, Spin } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import minmax from 'dayjs/plugin/minMax';
+import { parse, end, Duration } from 'iso8601-duration';
 import _isFinite from 'lodash/isFinite';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
+import _isString from 'lodash/isString';
 import {ImageWMS, TileWMS} from 'ol/source';
 
 import logger from '@terrestris/base-util/dist/Logger';
@@ -49,14 +51,20 @@ export type TimeLayerSliderPanelProps = {
   tooltips?: TimeLayerSliderPanelTooltips;
 } & TimeSliderProps & React.HTMLAttributes<HTMLDivElement>;
 
+const defaultTimeFormat = 'DD.MM.YYYY HH:mm:ss';
+const iso8601Format = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]';
+
 /**
  * The panel combining all time slider related parts.
  */
 export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   autoPlaySpeedOptions = [0.5, 1, 2, 5, 10, 100, 300],
   className,
-  formatString = 'YYYY-MM-DD HH:mm',
+  duration,
+  formatString,
   max = dayjs(),
+  markFormatString,
+  maxNumberOfMarks = 10,
   min = dayjs().subtract(1, 'days'),
   onChange,
   onChangeComplete,
@@ -81,7 +89,50 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   const [endDate, setEndDate] = useState<Dayjs>();
   const [loadingCount, setLoadingCount] = useState(0);
 
-  const isLoading = loadingCount > 0;
+  const isLoading = useMemo(() => loadingCount > 0, [loadingCount]);
+
+  const parseDuration = useCallback((d: string | Duration): Duration | undefined => {
+    if (_isString(d)) {
+      return parse(d);
+    }
+    return d;
+  }, []);
+
+  const parseTimeFormat = useCallback((tf?: string): string => {
+    if (_isNil(tf)) {
+      return defaultTimeFormat;
+    }
+    if (tf?.toLocaleLowerCase() === 'iso8601') {
+      return iso8601Format;
+    }
+    return tf;
+  }, []);
+
+  const durationInternal = useMemo(() => {
+    if (!_isNil(duration)) {
+      return parseDuration(duration);
+    }
+
+    if (!_isNil(timeAwareLayers) && timeAwareLayers.length > 0) {
+      // Currently we only support a single time aware layer.
+      return parseDuration(timeAwareLayers[0].get('duration'));
+    }
+
+    return undefined;
+  }, [duration, timeAwareLayers, parseDuration]);
+
+  const formatStringInternal = useMemo((): string => {
+    if (!_isNil(formatString)) {
+      return parseTimeFormat(formatString);
+    }
+
+    if (!_isNil(timeAwareLayers) && timeAwareLayers.length > 0) {
+      // Currently we only support a single time aware layer.
+      return parseTimeFormat(timeAwareLayers[0].get('timeFormat'));
+    }
+
+    return defaultTimeFormat; // Default format
+  }, [formatString, parseTimeFormat, timeAwareLayers]);
 
   const autoPlay = () => setAutoPlayActive(prevState => !prevState);
 
@@ -94,9 +145,9 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
     }
   }, [onChange, onChangeComplete]);
 
-  const updateDataRange = ([start, end]: [Dayjs, Dayjs]) => {
-    setStartDate(start);
-    setEndDate(end);
+  const updateDataRange = ([startDayjs, endDayjs]: [Dayjs, Dayjs]) => {
+    setStartDate(startDayjs);
+    setEndDate(endDayjs);
   };
 
   const setSliderToMostRecent = () => {
@@ -124,17 +175,16 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
           return;
         }
 
-        const timeFormat = layer.get('timeFormat');
         let newTimeParam: string;
         if (
-          timeFormat.toLowerCase().includes('hh') &&
-            layer.get('roundToFullHours')
+          formatStringInternal?.toLowerCase().includes('hh') &&
+          layer.get('roundToFullHours')
         ) {
           time.set('minute', 0);
           time.set('second', 0);
           newTimeParam = time.toISOString();
         } else {
-          newTimeParam = time.format(timeFormat);
+          newTimeParam = time.format(formatStringInternal);
         }
 
         if (params.TIME !== newTimeParam) {
@@ -144,7 +194,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
         }
       }
     });
-  }, [timeAwareLayers]);
+  }, [timeAwareLayers, formatStringInternal]);
 
   const findRangeForLayers = useCallback(() => {
     if (timeAwareLayers.length === 0) {
@@ -273,9 +323,12 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   }, [timeAwareLayers, findRangeForLayers, startDate, endDate]);
 
   useEffect(() => {
+    if (_isNil(formatStringInternal)) {
+      return;
+    }
     // update time for all time aware layers if value changes
     wmsTimeHandler(value);
-  }, [value, wmsTimeHandler]);
+  }, [value, formatStringInternal, wmsTimeHandler]);
 
   const futureClass = useMemo(() => {
     if (Array.isArray(value)) {
@@ -293,28 +346,59 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       return [];
     }
     const mid = startDate!.clone().add(endDate!.diff(startDate) / 2);
-    return [{
+    if (_isNil(durationInternal)) {
+      return [{
+        timestamp: startDate,
+        markConfig: {
+          label: startDate.format(markFormatString ?? formatStringInternal)
+        }
+      }, {
+        timestamp: mid,
+        markConfig: {
+          label: mid.format(markFormatString ?? formatStringInternal)
+        }
+      },{
+        timestamp: endDate,
+        markConfig: {
+          label: endDate.format(markFormatString ?? formatStringInternal),
+          style: {
+            left: 'unset',
+            right: 0,
+            transform: 'translate(50%)'
+          }
+        }
+      }] satisfies TimeSliderMark[];
+    }
+
+    // If a duration is given, we create marks for the start, end and every possible step in between.
+    const durationBasedMarks: TimeSliderMark[] = [{
       timestamp: startDate,
       markConfig: {
-        label: startDate.format(formatString)
+        label: startDate.format(markFormatString ?? formatStringInternal)
       }
-    }, {
-      timestamp: mid,
-      markConfig: {
-        label: mid.format(formatString)
-      }
-    },{
-      timestamp: endDate,
-      markConfig: {
-        label: endDate.format(formatString),
-        style: {
-          left: 'unset',
-          right: 0,
-          transform: 'translate(50%)'
+    }];
+
+    const durationInst = durationInternal;
+    let nextCandidate = dayjs(end(durationInst, startDate.toDate()));
+    while (nextCandidate.isBefore(endDate) || nextCandidate.isSame(endDate)) {
+      durationBasedMarks.push({
+        timestamp: nextCandidate,
+        markConfig: {
+          label: nextCandidate.format(markFormatString ?? formatStringInternal)
         }
-      }
-    }] satisfies TimeSliderMark[];
-  }, [endDate, formatString, startDate]);
+      });
+      nextCandidate = dayjs(end(durationInst, nextCandidate.toDate()));
+    }
+
+    if (durationBasedMarks.length > maxNumberOfMarks) {
+      const step = Math.ceil(durationBasedMarks.length / maxNumberOfMarks);
+      // If we have more marks than the maximum, we reduce the number of marks
+      // by taking only every nth mark.
+      return durationBasedMarks.filter((_, index) => index % step === 0);
+    }
+
+    return durationBasedMarks;
+  }, [startDate, endDate, durationInternal, markFormatString, formatStringInternal, maxNumberOfMarks]);
 
   const speedOptions = useMemo(() => autoPlaySpeedOptions.map(function (val: number) {
     return (
@@ -340,12 +424,12 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
               if (!range) {
                 return;
               }
-              const [start, end] = range;
-              if (!start || !end) {
+              const [startRange, endRange] = range;
+              if (!startRange || !endRange) {
                 return;
               }
 
-              updateDataRange([start, end]);
+              updateDataRange([startRange, endRange]);
             }}
             showTime={{ format: 'HH:mm' }}
           />
@@ -366,7 +450,9 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
         <TimeSlider
           className={`${extraCls} timeslider ${futureClass}`.trim()}
           defaultValue={startDate}
-          formatString={formatString}
+          duration={durationInternal}
+          formatString={formatStringInternal}
+          markFormatString={markFormatString}
           marks={marks}
           max={endDate}
           min={startDate}
@@ -380,7 +466,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       {
         !Array.isArray(value) && (
           <div className="time-value">
-            {value.format(formatString || 'DD.MM.YYYY HH:mm:ss')}
+            {value.format(markFormatString ?? formatStringInternal ?? 'DD.MM.YYYY HH:mm:ss')}
           </div>
         )
       }

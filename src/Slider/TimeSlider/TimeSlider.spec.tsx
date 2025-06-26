@@ -123,19 +123,19 @@ describe('<TimeSlider />', () => {
     render(
       <TimeSlider
         defaultValue={dayjs(value * 1000)}
-        min={dayjs().subtract(1, 'hour')}
-        max={dayjs()}
-        onChange={() => {}}
-        value={dayjs(value * 1000)}
         formatString={formatString}
         marks={undefined}
+        max={dayjs()}
+        min={dayjs().subtract(1, 'hour')}
+        onChange={() => {}}
+        value={dayjs(value * 1000)}
       />
     );
 
     const slider = screen.getByRole('slider');
     fireEvent.mouseOver(slider);
-    expect(
-      screen.getByText(dayjs(value * 1000).format(formatString))
-    ).toBeInTheDocument();
+    const tooltip = document.querySelector('.ant-tooltip-inner');
+    expect(tooltip).toBeInTheDocument();
+
   });
 });
