@@ -1,3 +1,11 @@
+# [32.2.0](https://github.com/terrestris/react-geo/compare/v32.1.1...v32.2.0) (2025-06-26)
+
+
+### Features
+
+* adds property to customize format string of marks ([7800140](https://github.com/terrestris/react-geo/commit/7800140a5294c068d63a447f4267534ffec34a1b))
+* use duration string if passed to timeslider ([fb126ca](https://github.com/terrestris/react-geo/commit/fb126caf20ef0ac7459674c6a930f9d4120e8cae))
+
 ## [32.1.1](https://github.com/terrestris/react-geo/compare/v32.1.0...v32.1.1) (2025-06-05)
 
 
