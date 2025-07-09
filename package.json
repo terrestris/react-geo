@@ -76,7 +76,7 @@
     "@terrestris/base-util": "^3.0.0",
     "@terrestris/react-util": "^12.1.1",
     "@types/lodash": "^4.17.4",
-    "ag-grid-react": "^33.0.4",
+    "ag-grid-react": "^34.0.1",
     "dayjs": "^1.11.13",
     "iso8601-duration": "^2.1.2",
     "jspdf": "^3.0.1",
