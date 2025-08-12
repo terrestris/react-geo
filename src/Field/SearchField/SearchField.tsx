@@ -1,18 +1,17 @@
 import './SearchField.less';
 
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { AutoComplete, Spin } from 'antd';
 
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
-import { Feature,FeatureCollection, GeoJsonProperties, Geometry } from 'geojson';
+import { Feature, FeatureCollection, GeoJsonProperties, Geometry } from 'geojson';
 import { Extent } from 'ol/extent';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import { transformExtent } from 'ol/proj';
 
-import { SearchFunction, SearchOptions,useSearch } from '@terrestris/react-util';
+import { SearchFunction, SearchOptions, useSearch } from '@terrestris/react-util';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-
 
 import { CSS_PREFIX } from '../../constants';
 
@@ -23,12 +22,16 @@ export type SearchProps<
 > = {
   searchFunction: SearchFunction<G, T, C>;
   searchOptions?: SearchOptions<G, T, C>;
-  getValue: (feature: Feature<G, T>) => string;
+  getValue?: (feature: Feature<G, T>) => string;
   /**
    * An onSelect function which gets called with the selected item as it is
-   * returned by nominatim.
+   * returned by the search function.
    */
   onSelect?: (feature: Feature<G, T>) => void;
+  /**
+   * A function which gets called with the search results if the search is completed.
+   */
+  onSearchCompleted?: (featureCollection: FeatureCollection<G, T> | undefined) => void;
   /**
    * An optional CSS class which should be added.
    */
@@ -40,10 +43,11 @@ export type SearchProps<
   onClear?: () => void;
   zoomToFeature?: boolean;
   getExtent?: (feature: Feature<G, T>) => Extent;
+  autoCompleteDisabled?: boolean;
 } & Omit<AutoCompleteProps, 'onSelect'|'onSearch'|'onChange'|'onClear'|'notFoundContent'>;
 
 /**
- * The NominatimSearch.
+ * The SearchField.
  */
 export function SearchField<
   G extends Geometry = Geometry,
@@ -52,10 +56,12 @@ export function SearchField<
 >({
   className = `${CSS_PREFIX}search`,
   onSelect,
-  getValue,
+  onSearchCompleted,
+  getValue = () => '',
   searchFunction,
   searchOptions = {},
   zoomToFeature = true,
+  autoCompleteDisabled = false,
   getExtent,
   ...passThroughProps
 }: SearchProps<G, T, C>): ReactElement {
@@ -67,6 +73,12 @@ export function SearchField<
     featureCollection,
     loading
   } = useSearch<G, T, C>(searchFunction, searchTerm, searchOptions);
+
+  useEffect(() => {
+    if (onSearchCompleted) {
+      onSearchCompleted(featureCollection);
+    }
+  }, [featureCollection, onSearchCompleted]);
 
   const options = useMemo(
     () => featureCollection?.features.map(f => ({
@@ -107,7 +119,13 @@ export function SearchField<
   return (
     <AutoComplete
       className={className}
-      allowClear={true}
+      allowClear
+      classNames={{
+        popup: {
+          root: autoCompleteDisabled ? 'autocomplete-disabled' : undefined
+        }
+      }}
+      popupRender={autoCompleteDisabled ? () => <></> : undefined}
       onSearch={text =>
         setSearchTerm(text)
       }
