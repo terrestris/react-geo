@@ -1,3 +1,10 @@
+# [32.3.0](https://github.com/terrestris/react-geo/compare/v32.2.0...v32.3.0) (2025-08-12)
+
+
+### Features
+
+* allow search field with external data display ([e2d51e7](https://github.com/terrestris/react-geo/commit/e2d51e7e16de7b43d944601f31007c0c6afc4710))
+
 # [32.2.0](https://github.com/terrestris/react-geo/compare/v32.1.1...v32.2.0) (2025-06-26)
 
 
