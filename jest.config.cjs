@@ -21,7 +21,7 @@ module.exports = {
   ],
   transformIgnorePatterns: [
     'node_modules/(?!(ol|@camptocamp/inkmap|@terrestris/*[a-z]*-util|d3-selection|color-*[a-z]*)|(rc-*[a-z]*)|' +
-    'filter-obj|query-string|decode-uri-component|split-on-first|shpjs/|rbush|quickselect|geostyler-openlayers-parser|' +
+    'filter-obj|query-string|decode-uri-component|split-on-first|shpjs/|rbush|quickselect|geostyler-openlayers-parser|ol-mapbox-style|pbf|' +
     'geostyler-style|geotiff|quick-lru|quickselect|jsts)'
   ],
   setupFiles: [
@@ -36,7 +36,9 @@ module.exports = {
   },
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
-    '!src/**/*example*.*'
+    '!src/**/*example*.*',
+    '!src/**/*.d.ts',
+    '!src/index.ts'
   ],
   coverageDirectory: '<rootDir>/coverage',
   testEnvironment: 'jsdom',
