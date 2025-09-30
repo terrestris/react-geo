@@ -53,7 +53,7 @@
     "clean:build": "rimraf ./build/*",
     "clean:dist": "rimraf ./dist/*",
     "clean:test": "rimraf ./coverage/*",
-    "lint": "npm rum clean && npm run lint:styleguide && npm run lint:src",
+    "lint": "npm run clean && npm run lint:styleguide && npm run lint:src",
     "lint:fix": "npm run lint:styleguide -- --fix && npm run lint:src -- --fix",
     "lint:src": "eslint -c eslint.config.mjs",
     "lint:styleguide": "eslint -c eslintrc.styleguide.mjs",
