@@ -38,7 +38,10 @@ module.exports = {
     'src/**/*.{ts,tsx}',
     '!src/**/*example*.*',
     '!src/**/*.d.ts',
-    '!src/index.ts'
+    '!src/index.ts',
+    '!src/Context/MapContext/MapContext.tsx', // only a placeholder
+    '!src/Hook/useDropTargetMap.ts', // only a placeholder
+    '!src/Hook/useMap.ts' // only a placeholder
   ],
   coverageDirectory: '<rootDir>/coverage',
   testEnvironment: 'jsdom',
