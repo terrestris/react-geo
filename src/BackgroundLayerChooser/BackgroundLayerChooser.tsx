@@ -115,9 +115,10 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
   }, [map, layerOptionsVisible]);
 
   useEffect(() => {
-    const activeLayerCand = layers.find(l => l.getVisible());
-
-    if (!initiallySelectedLayer) {
+    if (initiallySelectedLayer) {
+      setSelectedLayer(initiallySelectedLayer);
+    } else {
+      const activeLayerCand = layers.find(l => l.getVisible());
       setSelectedLayer(activeLayerCand as OlLayer);
     }
   }, [initiallySelectedLayer, layers]);
@@ -227,7 +228,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
         layerOptionsVisible && (
           <div className="layer-cards">
             {
-              layers.map(layer => (
+              layers.filter(backgroundLayerFilter).map(layer => (
                 <BackgroundLayerPreview
                   key={getUid(layer)}
                   activeLayer={selectedLayer}
