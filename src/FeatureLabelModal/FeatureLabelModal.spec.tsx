@@ -44,6 +44,7 @@ describe('<CopyButton />', () => {
         onCancel={onCancel}
       />
     );
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText('Test label')).toBeInTheDocument();
   });
 
