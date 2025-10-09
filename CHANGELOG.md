@@ -1,3 +1,10 @@
+## [32.3.1](https://github.com/terrestris/react-geo/compare/v32.3.0...v32.3.1) (2025-10-09)
+
+
+### Bug Fixes
+
+* conflate dublicated unittests ([2860ce9](https://github.com/terrestris/react-geo/commit/2860ce981f5820f5e95dec97fdaa95a735adf498))
+
 # [32.3.0](https://github.com/terrestris/react-geo/compare/v32.2.0...v32.3.0) (2025-08-12)
 
 
