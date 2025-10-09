@@ -7,8 +7,9 @@ import OlLayerGroup from 'ol/layer/Group';
 import OlSourceImageWMS from 'ol/source/ImageWMS';
 
 import React from 'react';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor, act, cleanup } from '@testing-library/react';
 
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import TestUtil from '../Util/TestUtil';
 import BackgroundLayerChooser from './BackgroundLayerChooser';
 
@@ -19,10 +20,10 @@ describe('BackgroundLayerChooser', () => {
   beforeEach(() => {
     layers = [
       new OlLayerTile({
-      source: new OlSourceOsm()
+        source: new OlSourceOsm()
       }),
       new OlLayerTile({
-      source: new OlSourceOsm()
+        source: new OlSourceOsm()
       })
     ];
     layers[0].set('name', 'Layer 1');
@@ -33,9 +34,11 @@ describe('BackgroundLayerChooser', () => {
   });
 
   afterEach(() => {
+    cleanup();
     map?.dispose();
     layers = [];
   });
+
   it('renders button and preview', () => {
     const { container } = render(<BackgroundLayerChooser layers={layers as any} />);
     expect(container.querySelector('.bg-layer-chooser')).toBeInTheDocument();
@@ -43,44 +46,23 @@ describe('BackgroundLayerChooser', () => {
     expect(container.querySelector('#overview-map')).toBeInTheDocument();
   });
 
-  it('shows layer options when button is clicked', () => {
-    const { container } = render(<BackgroundLayerChooser layers={layers as any} />);
-    fireEvent.click(container.querySelector('.bg-layer-chooser') as HTMLElement);
-    waitFor(() => {
-      expect(container.querySelectorAll('.bg-preview').length).toBe(2);
+  it('selects a layer and updates preview', async () => {
+    const { container } = renderInMapContext(map, <BackgroundLayerChooser layers={layers as any} />);
+    const btn = container.querySelector('.change-bg-btn');
+    await act(async () => {
+      btn && fireEvent.click(btn);
     });
-  });
 
-  it('selects a layer and updates preview', () => {
-    const { container } = render(<BackgroundLayerChooser layers={layers as any} />);
-    fireEvent.click(container.querySelector('.bg-layer-chooser') as HTMLElement);
-    waitFor(() => {
-      expect(container.querySelectorAll('.bg-preview').length).toBe(2);
-      fireEvent.click(container.querySelectorAll('.bg-preview')[1]);
+    const previews = await waitFor(() => container.querySelectorAll('.bg-preview'));
+    await waitFor(() => {
+      expect(previews.length).toBeGreaterThan(0);
     });
-    waitFor(() => {
-      expect(screen.getByText('Layer 1')).toBeInTheDocument();
-      expect(screen.getByText('Layer 2')).toBeInTheDocument();
+    await act(async () => {
+      previews[0] && fireEvent.click(previews[0]);
     });
-  });
 
-  it('renders no background button if allowEmptyBackground is true', () => {
-     const { container } = render(<BackgroundLayerChooser layers={layers as any} allowEmptyBackground />);
-    fireEvent.click(container.querySelector('.bg-layer-chooser') as HTMLElement);
-    waitFor(() => {
-      expect(screen.getByText('No Background')).toBeInTheDocument();
-    });
-  });
-
-  it('selects no background and updates preview', () => {
-    const { container } = render(<BackgroundLayerChooser layers={layers as any} allowEmptyBackground />);
-     fireEvent.click(container.querySelector('.bg-layer-chooser') as HTMLElement);
-    waitFor(() => {
-      const noBgButtons = screen.getAllByText('No Background');
-      fireEvent.click(noBgButtons[1]);
-    });
-    waitFor(() => {
-      expect(screen.getAllByText('No Background').length).toBeGreaterThan(0);
+    await waitFor(() => {
+      expect(container.querySelector('.bg-preview .layer-title')?.textContent).toBe('Layer 1');
     });
   });
 
@@ -140,6 +122,28 @@ describe('BackgroundLayerChooser', () => {
     });
     await waitFor(() => {
       expect(screen.getAllByText('No Background').length).toBeGreaterThan(0);
+    });
+  });
+
+  it('filters layers using backgroundLayerFilter', async () => {
+    const filter = (l: any) => l.get('name') === 'Layer 2';
+    const { container } = renderInMapContext(
+      map,
+      <BackgroundLayerChooser
+        layers={layers}
+        allowEmptyBackground={false}
+        backgroundLayerFilter={filter}
+      />
+    );
+    const btn = container.querySelector('.change-bg-btn');
+    await act(async () => {
+      btn && fireEvent.click(btn);
+    });
+    await waitFor(() => {
+      const previews = container.querySelectorAll('.layer-preview');
+      expect(previews.length).toBe(1);
+      const title = (previews[0] as Element).querySelector('.layer-title')?.textContent;
+      expect(title).toBe('Layer 2');
     });
   });
 });

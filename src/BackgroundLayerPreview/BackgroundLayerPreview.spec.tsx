@@ -1,8 +1,11 @@
 import React from 'react';
 import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import OlLayerTile from 'ol/layer/Tile';
+import OlLayerImage from 'ol/layer/Image';
+import OlLayerGroup from 'ol/layer/Group';
 import OlSourceOsm from 'ol/source/OSM';
 import OlMap from 'ol/Map';
+import ImageStatic from 'ol/source/ImageStatic';
 
 import TestUtil from '../Util/TestUtil';
 import BackgroundLayerPreview from './BackgroundLayerPreview';
@@ -28,6 +31,7 @@ describe('BackgroundLayerPreview', () => {
     );
     expect(screen.getByText('Test Layer')).toBeInTheDocument();
     expect(container.querySelector('.map')).toBeInTheDocument();
+    expect(container.querySelector('.layer-preview')).toBeInTheDocument();
   });
 
   it('calls onClick when clicked', () => {
@@ -60,6 +64,19 @@ describe('BackgroundLayerPreview', () => {
     waitFor(() => {
       expect(filter).toHaveBeenCalled();
     });
+  });
+
+  it('renders the title from layer name', () => {
+    const onClick = jest.fn();
+    const backgroundLayerFilter = () => true;
+    const { getByText } = render(
+      <BackgroundLayerPreview
+        layer={layer}
+        onClick={onClick}
+        backgroundLayerFilter={backgroundLayerFilter}
+      />
+    );
+    expect(getByText('Test Layer')).toBeInTheDocument();
   });
 
   it('renders custom title if titleRenderer is provided', () => {
@@ -98,5 +115,58 @@ describe('BackgroundLayerPreview', () => {
     );
     const mapDiv = container.querySelector('.map');
     expect(mapDiv).toHaveStyle({ width: '200px', height: '150px' });
+  });
+
+  it('renders with an Image layer', () => {
+    // Use a minimal valid Image source for OlLayerImage
+    const layer = new OlLayerImage({
+      source: new ImageStatic({
+        url: '',
+        imageExtent: [0, 0, 1, 1],
+        projection: 'EPSG:3857'
+      })
+    });
+    layer.set('name', 'ImageLayer');
+    const onClick = jest.fn();
+    const backgroundLayerFilter = () => true;
+    const { getByText } = render(
+      <BackgroundLayerPreview
+        layer={layer as any}
+        onClick={onClick}
+        backgroundLayerFilter={backgroundLayerFilter}
+      />
+    );
+    expect(getByText('ImageLayer')).toBeInTheDocument();
+  });
+
+  it('handles backgroundLayerFilter returning false', () => {
+    layer = new OlLayerTile({ source: new OlSourceOsm() });
+    layer.set('name', 'FilteredOut');
+    const onClick = jest.fn();
+    const backgroundLayerFilter = () => false;
+    const { getByText } = render(
+      <BackgroundLayerPreview
+        layer={layer as any}
+        onClick={onClick}
+        backgroundLayerFilter={backgroundLayerFilter}
+      />
+    );
+    expect(getByText('FilteredOut')).toBeInTheDocument();
+  });
+
+  it('handles a layer that is not Tile or Image', () => {
+    // Use a LayerGroup as a non-Tile/Image layer
+    const group = new OlLayerGroup();
+    group.set('name', 'GroupLayer');
+    const onClick = jest.fn();
+    const backgroundLayerFilter = () => true;
+    const { getByText } = render(
+      <BackgroundLayerPreview
+        layer={group as any}
+        onClick={onClick}
+        backgroundLayerFilter={backgroundLayerFilter}
+      />
+    );
+    expect(getByText('GroupLayer')).toBeInTheDocument();
   });
 });
