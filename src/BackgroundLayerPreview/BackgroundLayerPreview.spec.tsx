@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
+import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerImage from 'ol/layer/Image';
 import OlLayerGroup from 'ol/layer/Group';
@@ -36,32 +37,59 @@ describe('BackgroundLayerPreview', () => {
 
   it('calls onClick when clicked', () => {
     const onClick = jest.fn();
-    render(
+    renderInMapContext(map, (
       <BackgroundLayerPreview
         layer={layer}
         onClick={onClick}
         backgroundLayerFilter={() => true}
       />
-    );
-    fireEvent.click(screen.getByText('Test Layer').closest('.layer-preview')!);
-    waitFor(() => {
+    ));
+    const preview = screen.getByText('Test Layer').closest('.layer-preview')!;
+    // ensure React updates are flushed
+    act(() => {
+      fireEvent.click(preview);
+    });
+    return waitFor(() => {
       expect(onClick).toHaveBeenCalled();
     });
   });
 
-  it('calls backgroundLayerFilter on mouse events', () => {
+  it('calls backgroundLayerFilter on mouse events', async () => {
     const filter = jest.fn(() => true);
-    render(
+    renderInMapContext(map, (
       <BackgroundLayerPreview
         layer={layer}
         onClick={jest.fn()}
         backgroundLayerFilter={filter}
       />
-    );
+    ));
     const preview = screen.getByText('Test Layer').closest('.layer-preview')!;
-    fireEvent.mouseOver(preview);
-    fireEvent.mouseLeave(preview);
-    waitFor(() => {
+    act(() => {
+      fireEvent.mouseOver(preview);
+      fireEvent.mouseLeave(preview);
+    });
+    await waitFor(() => {
+      expect(filter).toHaveBeenCalled();
+    });
+  });
+
+  it('calls backgroundLayerFilter on focus and keyup Enter (keyboard)', async () => {
+    const filter = jest.fn(() => true);
+    renderInMapContext(map, (
+      <BackgroundLayerPreview
+        layer={layer}
+        onClick={jest.fn()}
+        backgroundLayerFilter={filter}
+      />
+    ));
+    const preview = screen.getByText('Test Layer').closest('.layer-preview')! as HTMLElement;
+    // simulate keyboard focus and Enter press to trigger update
+    act(() => {
+      preview.focus();
+      fireEvent.keyDown(preview, { key: 'Enter', code: 'Enter' });
+      fireEvent.keyUp(preview, { key: 'Enter', code: 'Enter' });
+    });
+    await waitFor(() => {
       expect(filter).toHaveBeenCalled();
     });
   });

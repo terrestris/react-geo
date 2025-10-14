@@ -222,6 +222,16 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
     setIsBackgroundImage(false);
   };
 
+  const emptyBackgroundWasFocusedRef = useRef(false);
+  const handleEmptyBgClick = () => {
+    selectedLayer?.setVisible(false);
+    setSelectedLayer(undefined);
+    // I am unsure why we do hide the layer options,
+    // it is different to what we do for the other layer cards
+    setLayerOptionsVisible(false);
+    setIsBackgroundImage(true);
+  };
+
   return (
     <div className="bg-layer-chooser">
       {
@@ -244,6 +254,8 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
             {
               allowEmptyBackground &&
                 <div
+                  role="button"
+                  tabIndex={0}
                   className={`no-background${selectedLayer ? '' : ' selected'}`}
                   onMouseOver={() => {
                     selectedLayer?.setVisible(false);
@@ -251,12 +263,25 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
                   onMouseLeave={() => {
                     selectedLayer?.setVisible(true);
                   }}
-                  onClick={() => {
-                    selectedLayer?.setVisible(false);
-                    setSelectedLayer(undefined);
-                    setLayerOptionsVisible(false);
-                    setIsBackgroundImage(true);
+                  onFocus={() => {
+                    emptyBackgroundWasFocusedRef.current = true;
                   }}
+                  onBlur={() => {
+                    emptyBackgroundWasFocusedRef.current = false;
+                  }}
+                  onKeyDown={(e) => {
+                    const isEnter = e.key === 'Enter' || e.code === 'Enter';
+                    const isSpace = e.key === ' ' || e.key === 'Spacebar' || e.code === 'Space';
+                    if (isEnter || isSpace) {
+                      if (isSpace) {
+                        e.preventDefault();
+                      }
+                      if (emptyBackgroundWasFocusedRef.current) {
+                        handleEmptyBgClick();
+                      }
+                    }
+                  }}
+                  onClick={handleEmptyBgClick}
                 >
                   <div
                     className="no-background-preview"
@@ -279,6 +304,7 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
         className={`change-bg-btn${layerOptionsVisible ? ' toggled' : ''}`}
         size="small"
         tooltip={buttonTooltip}
+        aria-expanded={layerOptionsVisible}
         icon={layerOptionsVisible ?
           <FontAwesomeIcon
             icon={faChevronRight}

@@ -38,7 +38,8 @@
     height: 128px;
     position: relative;
 
-    &:hover {
+    &:hover,
+    &:focus {
       outline: 2px solid #2f4f4f;
     }
 
@@ -68,7 +69,8 @@
       padding: 0 4px;
     }
 
-    &.selected {
+    &.selected
+    &:focus {
       span.layer-title {
         outline: 2px solid #2f4f4f;
         font-weight: bold;
