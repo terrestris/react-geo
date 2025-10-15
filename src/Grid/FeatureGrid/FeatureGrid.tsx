@@ -187,7 +187,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       const key = keyFunction(selectedFeature);
       if (rowKeys.includes(key)) {
         rowKeys = rowKeys.filter(rowKey => rowKey !== key);
-        selectedFeature.setStyle(undefined);
+        selectedFeature.setStyle();
       } else {
         rowKeys.push(key);
         selectedFeature.setStyle(selectStyle);
@@ -219,7 +219,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
-        feature.setStyle(undefined);
+        feature.setStyle();
       }
     });
 
@@ -492,7 +492,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       if (selectedRowKeys.includes(key)) {
         feature.setStyle(selectStyle);
       } else {
-        feature.setStyle(undefined);
+        feature.setStyle();
       }
     });
   };
@@ -518,7 +518,7 @@ export const FeatureGrid = <T extends AnyObject = AnyObject,>({
       return;
     }
 
-    features?.forEach(feature => feature.setStyle(undefined));
+    features?.forEach(feature => feature.setStyle());
   };
 
   /**

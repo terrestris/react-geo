@@ -221,7 +221,7 @@ export function AgFeatureGrid<T>({
         if (selectedRowKeys.includes(key)) {
           feature.setStyle(selectStyle);
         } else {
-          feature.setStyle(undefined);
+          feature.setStyle();
         }
       });
 
@@ -275,8 +275,7 @@ export function AgFeatureGrid<T>({
     selectedFeatures.forEach(selectedFeature => {
       const key = keyFunction(selectedFeature);
       if (selectedRowKeys?.includes(key)) {
-        selectedFeature.setStyle(undefined);
-
+        selectedFeature.setStyle();
         const node = getRowFromFeatureKey(key);
         if (node) {
           node.setSelected(false);
@@ -451,7 +450,7 @@ export function AgFeatureGrid<T>({
         if (selectedRowKeys?.includes(key)) {
           feature.setStyle(selectStyle);
         } else {
-          feature.setStyle(undefined);
+          feature.setStyle();
         }
       });
   };
@@ -473,7 +472,7 @@ export function AgFeatureGrid<T>({
    * Resets the style of all features.
    */
   const resetFeatureStyles = () => {
-    features.forEach(feature => feature.setStyle(undefined));
+    features.forEach(feature => feature.setStyle());
   };
 
   /**
