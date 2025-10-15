@@ -250,8 +250,6 @@ export function AgFeatureGrid<T>({
         backgroundColor: highlightFillColor
       };
     }
-
-    return;
   }, [highlightedRows, rowStyleFn]);
 
   /**
