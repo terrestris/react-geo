@@ -15,8 +15,6 @@
     border: 1px solid #808080;
     // suppress border on hover and focus
     border-right: none !important;
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
     border-radius: 0;
 
     &.toggled {
@@ -40,7 +38,8 @@
     height: 128px;
     position: relative;
 
-    &:hover {
+    &:hover,
+    &:focus {
       outline: 2px solid #2f4f4f;
     }
 
@@ -70,7 +69,8 @@
       padding: 0 4px;
     }
 
-    &.selected {
+    &.selected
+    &:focus {
       span.layer-title {
         outline: 2px solid #2f4f4f;
         font-weight: bold;
@@ -144,7 +144,7 @@
       color: #000;
       font-weight: bolder;
       text-align: center;
-      width: calc(100% - 2px);;
+      width: calc(100% - 2px);
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;

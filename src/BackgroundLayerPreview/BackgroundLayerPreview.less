@@ -2,11 +2,13 @@
   cursor: pointer;
   margin: auto 0;
 
-  &:hover {
+  &:hover,
+  &:focus {
     outline: 2px solid #2f4f4f;
   }
 
-  &.selected {
+  &.selected
+  &:focus {
     .layer-title {
       outline: 2px solid #2f4f4f;
       font-weight: bold;

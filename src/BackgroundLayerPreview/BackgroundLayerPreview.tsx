@@ -3,6 +3,7 @@ import './BackgroundLayerPreview.less';
 import React, {
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react';
 
@@ -126,7 +127,11 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
     return mainLayerGroup ? collectBgLayers(mainLayerGroup) : [];
   };
 
-  const updateBgLayerVisibility = (evt: React.MouseEvent<HTMLDivElement>) => {
+  type HandledEventType =
+    | React.MouseEvent<HTMLDivElement>
+    | React.FocusEvent<HTMLDivElement>
+    | React.KeyboardEvent<HTMLDivElement>;
+  const updateBgLayerVisibility = (evt: HandledEventType) => {
     const target = evt?.currentTarget;
     const layerId = target?.dataset?.uid;
 
@@ -143,7 +148,8 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
     getBgLayersFromMap().forEach(l => l.setVisible(false));
     newBgLayer.setVisible(true);
 
-    if (evt.type === 'click') {
+    // Treat keyboard activation (keydown) the same as click for selection
+    if (evt.type === 'click' || evt.type === 'keydown') {
       onClick(newBgLayer as OlLayer);
     }
   };
@@ -160,13 +166,36 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
     isActive = uid === activeUid;
   }
 
+  const focusedLayerRef = useRef<OlLayer | undefined>(undefined);
+
   return (
     <div
       className={`layer-preview${isActive ? ' selected' : ''}`}
       key={uid}
       data-uid={uid}
+      role="button"
+      tabIndex={0}
       onMouseOver={updateBgLayerVisibility}
       onMouseLeave={restoreBgLayerVisibility}
+      onFocus={() => {
+        focusedLayerRef.current = layer;
+      }}
+      onBlur={() => {
+        focusedLayerRef.current = undefined;
+      }}
+      onKeyDown={(e) => {
+        const isEnter = e.key === 'Enter' || e.code === 'Enter';
+        const isSpace = e.key === ' ' || e.key === 'Spacebar' || e.code === 'Space';
+        if (isEnter || isSpace) {
+          // prevent page scroll on space
+          if (isSpace) {
+            e.preventDefault();
+          }
+          if (focusedLayerRef.current) {
+            updateBgLayerVisibility(e as React.KeyboardEvent<HTMLDivElement>);
+          }
+        }
+      }}
       onClick={updateBgLayerVisibility}
     >
       <Spin
