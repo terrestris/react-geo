@@ -297,12 +297,12 @@ const LayerTree: React.FC<LayerTreeProps> = ({
     }
 
     const dragInfo = MapUtil.getLayerPositionInfo(dragLayer, map);
-    if (!dragInfo || !dragInfo?.groupLayer) {
+    if (!dragInfo?.groupLayer) {
       return;
     }
 
     const dropInfo = MapUtil.getLayerPositionInfo(dropLayer, map);
-    if (!dropInfo || !dropInfo?.groupLayer) {
+    if (!dropInfo?.groupLayer) {
       return;
     }
 
