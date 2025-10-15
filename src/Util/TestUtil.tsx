@@ -13,16 +13,16 @@ import OlView from 'ol/View';
  */
 export class TestUtil {
 
-  static mapDivId = 'map';
-  static mapDivHeight = 256;
-  static mapDivWidth = 256;
+  static readonly mapDivId = 'map';
+  static readonly mapDivHeight = 256;
+  static readonly mapDivWidth = 256;
 
   /**
    * Creates and applies a map <div> element to the body.
    *
    * @return {Element} The mounted <div> element.
    */
-  static mountMapDiv = () => {
+  static readonly mountMapDiv = () => {
     const div = document.createElement('div');
     const style = div.style;
 
@@ -41,7 +41,7 @@ export class TestUtil {
   /**
    * Removes the map div element from the body.
    */
-  static unmountMapDiv = () => {
+  static readonly unmountMapDiv = () => {
     let div = document.querySelector(`div#${TestUtil.mapDivId}`);
     if (!div) {
       return;
@@ -59,7 +59,7 @@ export class TestUtil {
    * @param [mapOpts] Additional options for the map to create.
    * @return The ol map.
    */
-  static createMap = (mapOpts?: any) => {
+  static readonly createMap = (mapOpts?: any) => {
     const source = new OlSourceVector();
     const layer = new OlLayerVector({source: source});
     const targetDiv = TestUtil.mountMapDiv();
@@ -85,7 +85,7 @@ export class TestUtil {
   /**
    * Removes the map.
    */
-  static removeMap =  (map: OlMap) => {
+  static readonly removeMap =  (map: OlMap) => {
     if (map instanceof OlMap) {
       map.dispose();
     }
@@ -124,7 +124,7 @@ export class TestUtil {
    * @param [properties] The properties to set.
    * @return {ol.layer.Vector} The layer.
    */
-  static createVectorLayer = (properties: any) => {
+  static readonly createVectorLayer = (properties: any) => {
     const source = new OlSourceVector();
     const layer = new OlLayerVector({source: source});
 
@@ -136,7 +136,7 @@ export class TestUtil {
   /**
    * Returns a point feature with a random position.
    */
-  static generatePointFeature = (props: Record<string, any> = {
+  static readonly generatePointFeature = (props: Record<string, any> = {
     ATTR_1: Math.random() * 100,
     ATTR_2: 'Borsigplatz 9',
     ATTR_3: 'Dortmund'
