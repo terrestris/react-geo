@@ -384,10 +384,8 @@ export function AgFeatureGrid<T>({
 
     if (_isFunction(onRowClick)) {
       onRowClick(row, feature, evt);
-    } else {
-      if (!_isNil(map)) {
-        MapUtil.zoomToFeatures(map,[feature]);
-      }
+    } else if (!_isNil(map)) {
+      MapUtil.zoomToFeatures(map,[feature]);
     }
   };
 
