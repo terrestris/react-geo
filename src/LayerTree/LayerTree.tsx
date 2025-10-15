@@ -148,7 +148,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
       return [];
     }
 
-    const lGroup = layerGroup ? layerGroup : map.getLayerGroup();
+    const lGroup = layerGroup ?? map.getLayerGroup();
 
     return lGroup.getLayers().getArray()
       .map(l => treeNodeFromLayer(l))
@@ -213,7 +213,7 @@ const LayerTree: React.FC<LayerTreeProps> = ({
       return [];
     }
 
-    const lGroup = layerGroup ? layerGroup : map.getLayerGroup();
+    const lGroup = layerGroup ?? map.getLayerGroup();
 
     return registerLayerListeners(lGroup);
 
