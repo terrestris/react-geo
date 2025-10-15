@@ -1,3 +1,16 @@
+# [32.4.0](https://github.com/terrestris/react-geo/compare/v32.3.1...v32.4.0) (2025-10-15)
+
+
+### Bug Fixes
+
+* remove duplicated CSS instructions ([09cedba](https://github.com/terrestris/react-geo/commit/09cedbaf6e619b2ee05a7e0e159d12b0e55ddc3b))
+* remove duplicated semicolon ([7b612f4](https://github.com/terrestris/react-geo/commit/7b612f4f8d68225f4e568efbf21e968cdf0f0e3d))
+
+
+### Features
+
+* add keyboard support for BackgroundLayerChooser and BackgroundLayerPreview ([ab20dd4](https://github.com/terrestris/react-geo/commit/ab20dd45e57f775cfcf1a751e866875ad4a95548))
+
 ## [32.3.1](https://github.com/terrestris/react-geo/compare/v32.3.0...v32.3.1) (2025-10-09)
 
 
