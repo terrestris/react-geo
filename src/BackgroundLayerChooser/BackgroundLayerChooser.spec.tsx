@@ -399,7 +399,7 @@ describe('BackgroundLayerChooser', () => {
     expect(innerBtn).toBeTruthy();
 
     // focus and press Enter using userEvent (more realistic)
-    innerBtn && innerBtn.focus();
+    innerBtn?.focus();
     // Ensure keyboard focus reached the button
     expect(document.activeElement).toBe(innerBtn);
 

@@ -276,7 +276,7 @@ export function AgFeatureGrid<T>({
 
     selectedFeatures.forEach(selectedFeature => {
       const key = keyFunction(selectedFeature);
-      if (selectedRowKeys && selectedRowKeys.includes(key)) {
+      if (selectedRowKeys?.includes(key)) {
         selectedFeature.setStyle(undefined);
 
         const node = getRowFromFeatureKey(key);
@@ -450,7 +450,7 @@ export function AgFeatureGrid<T>({
       .filter((f): f is OlFeature => !_isNil(f))
       .forEach(feature => {
         const key = keyFunction(feature);
-        if (selectedRowKeys && selectedRowKeys.includes(key)) {
+        if (selectedRowKeys?.includes(key)) {
           feature.setStyle(selectStyle);
         } else {
           feature.setStyle(undefined);
