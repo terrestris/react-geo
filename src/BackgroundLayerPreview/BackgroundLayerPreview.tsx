@@ -192,7 +192,7 @@ export const BackgroundLayerPreview: React.FC<BackgroundLayerPreviewProps> = ({
             e.preventDefault();
           }
           if (focusedLayerRef.current) {
-            updateBgLayerVisibility(e as React.KeyboardEvent<HTMLDivElement>);
+            updateBgLayerVisibility(e);
           }
         }
       }}
