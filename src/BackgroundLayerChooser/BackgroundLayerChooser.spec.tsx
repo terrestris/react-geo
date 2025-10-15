@@ -14,6 +14,7 @@ import userEvent from '@testing-library/user-event';
 
 import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
 import TestUtil from '../Util/TestUtil';
+
 // Prevent ol-mapbox-style from performing network requests during tests.
 jest.mock('ol-mapbox-style', () => ({
   apply: jest.fn(() => Promise.resolve({} as any))
@@ -118,7 +119,7 @@ describe('BackgroundLayerChooser', () => {
     }) as any;
     const tileWms = new OlLayerTile({ source: tileWmsSource });
     tileWms.set('name', 'TileWMS Layer');
-  tileWms.set('isBackgroundLayer', true);
+    tileWms.set('isBackgroundLayer', true);
 
     // create a WMTS instance and stub getTileGrid to prevent early return
     const wmtsSource = new OlSourceWMTS({} as any) as any;
@@ -126,7 +127,7 @@ describe('BackgroundLayerChooser', () => {
     wmtsSource.getUrls = () => ['http://example.com/wmts'];
     const wmtsLayer = new OlLayerTile({ source: wmtsSource });
     wmtsLayer.set('name', 'WMTS Layer');
-  wmtsLayer.set('isBackgroundLayer', true);
+    wmtsLayer.set('isBackgroundLayer', true);
 
     const { container } = renderInMapContext(map, <BackgroundLayerChooser layers={[tileWms, wmtsLayer] as any} />);
     // open options
