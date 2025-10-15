@@ -105,7 +105,7 @@ describe('<AddWmsPanel />', () => {
       const addAllLayersButton = screen.getByRole('button', { name: /add all layers/i });
       await userEvent.click(addAllLayersButton);
 
-      expect(callback).toBeCalledWith(testWmsLayers);
+      expect(callback).toHaveBeenCalledWith(testWmsLayers);
     });
   });
 
@@ -118,10 +118,10 @@ describe('<AddWmsPanel />', () => {
 
       const checkbox = screen.getByRole('checkbox', { name: testLayerTitle });
       await userEvent.click(checkbox);
-      expect(callback).toBeCalledWith([testLayerTitle]);
+      expect(callback).toHaveBeenCalledWith([testLayerTitle]);
 
       await userEvent.click(checkbox);
-      expect(callback).toBeCalledWith([]);
+      expect(callback).toHaveBeenCalledWith([]);
     });
 
     it('adds selected layers to the map', async () => {
@@ -156,7 +156,7 @@ describe('<AddWmsPanel />', () => {
       const addSelectedLayersButton = screen.getByRole('button', { name: /add selected layers/i });
       await userEvent.click(addSelectedLayersButton);
 
-      expect(callback).toBeCalledWith([testLayer]);
+      expect(callback).toHaveBeenCalledWith([testLayer]);
     });
   });
 
@@ -179,7 +179,7 @@ describe('<AddWmsPanel />', () => {
       expect(onCancelButton).toBeInTheDocument();
 
       await userEvent.click(onCancelButton);
-      expect(callback).toBeCalled();
+      expect(callback).toHaveBeenCalled();
     });
   });
 

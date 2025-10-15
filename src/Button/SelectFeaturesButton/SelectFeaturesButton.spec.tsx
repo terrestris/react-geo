@@ -82,7 +82,7 @@ describe('<SelectFeaturesButton />', () => {
 
       clickMap(map, 200, 200);
 
-      expect(selectSpy).toBeCalled();
+      expect(selectSpy).toHaveBeenCalled();
       const event: OlSelectEvent = selectSpy.mock.calls[0][0];
       expect(event.selected).toEqual([feature]);
 
