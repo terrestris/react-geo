@@ -145,7 +145,7 @@ export const Legend: React.FC<LegendProps> = ({
 
   return (
     <div
-      className={`${CSS_PREFIX}legend ${className ? className : ''}`}
+      className={`${CSS_PREFIX}legend ${className || ''}`}
       {...passThroughProps}
     >
       <Spin

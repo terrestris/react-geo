@@ -44,7 +44,7 @@ describe('<AddWmsLayerEntry />', () => {
     let icon;
     expect(() => {
       icon = screen.getByLabelText(labelIconQueryable);
-    }).not.toThrowError();
+    }).not.toThrow();
     expect(icon).toHaveClass('fa-info');
 
     testLayer.set('queryable', false);
@@ -54,7 +54,7 @@ describe('<AddWmsLayerEntry />', () => {
     render(<AddWmsLayerEntry wmsLayer={testLayer} />);
     expect(() => {
       screen.getByLabelText(labelIconQueryable);
-    }).toThrowError();
+    }).toThrow();
   });
 
   it('adds copyright icon if prop wmsLayer has filled wmsAttribution', () => {
@@ -66,7 +66,7 @@ describe('<AddWmsLayerEntry />', () => {
     let icon;
     expect(() => {
       icon = screen.getByLabelText(labelIconAttribution);
-    }).not.toThrowError();
+    }).not.toThrow();
     expect(icon).toHaveClass('fa-copyright');
 
     testLayer.getSource()?.setAttributions(undefined);
@@ -76,7 +76,7 @@ describe('<AddWmsLayerEntry />', () => {
     render(<AddWmsLayerEntry wmsLayer={testLayer} />);
     expect(() => {
       screen.getByLabelText(labelIconAttribution);
-    }).toThrowError();
+    }).toThrow();
   });
 
   it('includes abstract in description text if abstract property is set for layer', () => {
@@ -86,7 +86,9 @@ describe('<AddWmsLayerEntry />', () => {
     });
 
     render(<AddWmsLayerEntry wmsLayer={testLayer} />);
-    screen.getByText('OSM-WMS - by terrestris - abstract:');
+    expect(() => {
+      screen.getByText('OSM-WMS - by terrestris - abstract:');
+    }).not.toThrow();
   });
 
 });

@@ -106,7 +106,7 @@ describe('<DrawButton />', () => {
       clickMap(map, 100, 100);
 
       const dialog = screen.getByRole('dialog');
-      // expect(dialog).toBeVisible();
+      expect(dialog).toBeVisible();
 
       const input = screen.getByRole('textbox');
 
@@ -116,7 +116,7 @@ describe('<DrawButton />', () => {
 
       await userEvent.click(okButton);
 
-      // expect(dialog).not.toBeVisible();
+      expect(dialog).not.toBeVisible();
 
       expect(digitizeLayer.getSource()?.getFeatures()).toHaveLength(1);
 
@@ -134,7 +134,7 @@ describe('<DrawButton />', () => {
       clickMap(map, 100, 100);
 
       const dialog = screen.getByRole('dialog');
-      // expect(dialog).toBeVisible();
+      expect(dialog).toBeVisible();
 
       const input = screen.getByRole('textbox');
 
@@ -216,13 +216,13 @@ describe('<DrawButton />', () => {
       const startSpy = jest.fn();
       const endSpy = jest.fn();
 
-      expect(startSpy).not.toBeCalled();
-      expect(endSpy).not.toBeCalled();
+      expect(startSpy).not.toHaveBeenCalled();
+      expect(endSpy).not.toHaveBeenCalled();
 
       clickMap(map, 100, 100);
 
-      expect(startSpy).toBeCalledTimes(1);
-      expect(endSpy).not.toBeCalled();
+      expect(startSpy).toHaveBeenCalledTimes(1);
+      expect(endSpy).not.toHaveBeenCalled();
 
       clickMap(map, 120, 100);
 
@@ -230,8 +230,8 @@ describe('<DrawButton />', () => {
 
       doubleClickMap(map, 100, 120);
 
-      expect(startSpy).toBeCalledTimes(1);
-      expect(endSpy).toBeCalledTimes(1);
+      expect(startSpy).toHaveBeenCalledTimes(1);
+      expect(endSpy).toHaveBeenCalledTimes(1);
 
       const drawEndEvent = endSpy.mock.calls[0][0];
       const geometry = drawEndEvent.feature.getGeometry();

@@ -82,7 +82,7 @@ describe('BackgroundLayerPreview', () => {
         backgroundLayerFilter={filter}
       />
     ));
-    const preview = screen.getByText('Test Layer').closest('.layer-preview')! as HTMLElement;
+    const preview = screen.getByText('Test Layer').closest('.layer-preview') as HTMLElement;
     // simulate keyboard focus and Enter press to trigger update
     act(() => {
       preview.focus();

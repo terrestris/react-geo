@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import _isNil from 'lodash/isNil';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import React from 'react';

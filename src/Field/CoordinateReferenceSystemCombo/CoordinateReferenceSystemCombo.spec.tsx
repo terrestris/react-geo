@@ -51,8 +51,8 @@ describe('<CoordinateReferenceSystemCombo />', () => {
 
       await actSetTimeout(0);
 
-      expect(fetch).toBeCalled();
-      expect(fetch).toBeCalledWith(`${url}?format=json&q=25832`);
+      expect(fetch).toHaveBeenCalled();
+      expect(fetch).toHaveBeenCalledWith(`${url}?format=json&q=25832`);
     });
   });
 

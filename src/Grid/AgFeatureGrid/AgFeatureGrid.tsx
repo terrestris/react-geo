@@ -221,7 +221,7 @@ export function AgFeatureGrid<T>({
         if (selectedRowKeys.includes(key)) {
           feature.setStyle(selectStyle);
         } else {
-          feature.setStyle(undefined);
+          feature.setStyle();
         }
       });
 
@@ -250,7 +250,6 @@ export function AgFeatureGrid<T>({
         backgroundColor: highlightFillColor
       };
     }
-
     return;
   }, [highlightedRows, rowStyleFn]);
 
@@ -276,9 +275,8 @@ export function AgFeatureGrid<T>({
 
     selectedFeatures.forEach(selectedFeature => {
       const key = keyFunction(selectedFeature);
-      if (selectedRowKeys && selectedRowKeys.includes(key)) {
-        selectedFeature.setStyle(undefined);
-
+      if (selectedRowKeys?.includes(key)) {
+        selectedFeature.setStyle();
         const node = getRowFromFeatureKey(key);
         if (node) {
           node.setSelected(false);
@@ -387,10 +385,8 @@ export function AgFeatureGrid<T>({
 
     if (_isFunction(onRowClick)) {
       onRowClick(row, feature, evt);
-    } else {
-      if (!_isNil(map)) {
-        MapUtil.zoomToFeatures(map,[feature]);
-      }
+    } else if (!_isNil(map)) {
+      MapUtil.zoomToFeatures(map,[feature]);
     }
   };
 
@@ -450,10 +446,10 @@ export function AgFeatureGrid<T>({
       .filter((f): f is OlFeature => !_isNil(f))
       .forEach(feature => {
         const key = keyFunction(feature);
-        if (selectedRowKeys && selectedRowKeys.includes(key)) {
+        if (selectedRowKeys?.includes(key)) {
           feature.setStyle(selectStyle);
         } else {
-          feature.setStyle(undefined);
+          feature.setStyle();
         }
       });
   };
@@ -475,7 +471,7 @@ export function AgFeatureGrid<T>({
    * Resets the style of all features.
    */
   const resetFeatureStyles = () => {
-    features.forEach(feature => feature.setStyle(undefined));
+    features.forEach(feature => feature.setStyle());
   };
 
   /**

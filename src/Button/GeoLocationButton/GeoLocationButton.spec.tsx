@@ -8,7 +8,6 @@ import { render } from '@testing-library/react';
 import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
 import * as React from 'react';
-import { act } from 'react-dom/test-utils';
 
 import TestUtil from '../../Util/TestUtil';
 import GeoLocationButton from './GeoLocationButton';
@@ -59,11 +58,11 @@ describe('<GeoLocationButton />', () => {
         enableTracking={true}
       />);
 
-      act(() => {
+      React.act(() => {
         fireGeolocationListeners();
       });
 
-      expect(callback).toBeCalled();
+      expect(callback).toHaveBeenCalled();
     });
 
     it('can be pressed twice', async () => {
@@ -76,7 +75,7 @@ describe('<GeoLocationButton />', () => {
         enableTracking={true}
       />));
 
-      expect(callback).toBeCalledTimes(0);
+      expect(callback).toHaveBeenCalledTimes(0);
 
       rerenderInMapContext(<GeoLocationButton
         showMarker={false}
@@ -85,11 +84,11 @@ describe('<GeoLocationButton />', () => {
         enableTracking={true}
       />);
 
-      act(() => {
+      React.act(() => {
         fireGeolocationListeners();
       });
 
-      expect(callback).toBeCalledTimes(1);
+      expect(callback).toHaveBeenCalledTimes(1);
 
       render(<GeoLocationButton
         showMarker={false}
@@ -97,7 +96,7 @@ describe('<GeoLocationButton />', () => {
         pressed={false}
       />);
 
-      expect(callback).toBeCalledTimes(1);
+      expect(callback).toHaveBeenCalledTimes(1);
     });
 
     it('is called with the correct position', async () => {
@@ -119,7 +118,7 @@ describe('<GeoLocationButton />', () => {
 
       const coordinates = [ 47.12, -64.99 ];
 
-      act(() => {
+      React.act(() => {
         fireGeolocationListeners({
           coords: {
             longitude: coordinates[0],
@@ -131,7 +130,7 @@ describe('<GeoLocationButton />', () => {
         });
       });
 
-      expect(callback).toBeCalledWith({
+      expect(callback).toHaveBeenCalledWith({
         accuracy: 7,
         heading: 0,
         position: fromLonLat(coordinates),

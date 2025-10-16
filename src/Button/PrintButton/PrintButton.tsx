@@ -56,9 +56,7 @@ export const PrintButton: React.FC<PrintButtonProps> = ({
       };
       await PrintUtil.printPng(pngPrintSpec);
       setLoading(false);
-      return;
-    }
-    if (pdfPrintFunc && format === 'pdf') {
+    } else if (pdfPrintFunc && format === 'pdf') {
       setLoading(true);
       const pdfPrintSpec: PdfPrintSpec = {
         dpi,
@@ -77,7 +75,6 @@ export const PrintButton: React.FC<PrintButtonProps> = ({
       };
       await PrintUtil.printPdf(pdfPrintSpec);
       setLoading(false);
-      return;
     }
   };
 

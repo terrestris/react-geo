@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 
 import { Checkbox } from 'antd';
 
+import { getUid } from 'ol/util';
+
 import Logger from '@terrestris/base-util/dist/Logger';
 import { WmsLayer } from '@terrestris/ol-util/dist/typeUtils/typeUtils';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
@@ -120,8 +122,8 @@ export const AddWmsPanel: React.FC<AddWmsPanelProps> = ({
           onChange={onSelectedLayersChange}
         >
           {
-            wmsLayers.map((layer, idx) =>
-              <div role="listitem" key={idx}>
+            wmsLayers.map((layer) =>
+              <div role="listitem" key={getUid(layer)}>
                 <AddWmsLayerEntry
                   wmsLayer={layer}
                   map={map || undefined}

@@ -81,7 +81,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({
 
     AnimateUtil.moveFeature(
       map,
-      layer as OlLayerVector<OlSourceVector>,
+      layer,
       copy,
       500,
       50,

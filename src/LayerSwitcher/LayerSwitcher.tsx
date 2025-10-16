@@ -124,7 +124,7 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
     return () => {
       if (switcherMap) {
         switcherMap.getLayers().clear();
-        switcherMap.setTarget(undefined);
+        switcherMap.setTarget();
         setSwitcherMap(undefined);
       }
     };
