@@ -83,4 +83,64 @@ describe('<PropertyGrid />', () => {
     expect(link).toHaveAttribute('href', 'https://www.example.com');
   });
 
+  describe('isUrl behavior cases (URL-based impl)', () => {
+    const goodCases = [
+      'http://example.com',
+      'https://example.com/path?x=1',
+      '//example.com', // protocol-relative
+      'http://localhost:8080',
+      'http://example', // short host without dot
+      'http://sub.domain.co.uk',
+      'https://127.0.0.1',
+      'http://a.b',
+      'http://example.com/some/page.html#hash',
+      'https://example.com:8443/path',
+      'https://user:password@pasexample.com:8443/some/path?foo=bar&baz=qux',
+      'https://🪨🎸🤘'
+    ];
+
+    const badCases = [
+      'ftp://example.com',
+      'mailto:user@example.com',
+      'example.com', // bare host
+      '/relative/path',
+      '://missing-scheme.com',
+      '',
+      '   ',
+      'http://',
+      'http://.com',
+      '////weird'
+    ];
+
+    goodCases.forEach((value) => {
+      it(`treats '${value}' as URL (true)`, () => {
+        const feature = new OlFeature({ geometry: new OlGeomPoint([0, 0]), attr: value });
+        render(
+          <PropertyGrid
+            feature={feature}
+            attributeFilter={[ 'attr' ]}
+          />
+        );
+
+        const link = screen.queryByRole('link', { name: value });
+        expect(!!link).toBe(true);
+      });
+    });
+
+    badCases.forEach((value) => {
+      it(`treats '${value}' as non-URL (false)`, () => {
+        const feature = new OlFeature({ geometry: new OlGeomPoint([0, 0]), attr: value });
+        render(
+          <PropertyGrid
+            feature={feature}
+            attributeFilter={[ 'attr' ]}
+          />
+        );
+
+        const link = screen.queryByRole('link', { name: value });
+        expect(!!link).toBe(false);
+      });
+    });
+  });
+
 });
