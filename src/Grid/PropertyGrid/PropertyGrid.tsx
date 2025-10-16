@@ -85,8 +85,72 @@ const PropertyGrid: React.FC<PropertyGridProps> = ({
     });
   }, [attributeFilter, attributeNames, feature]);
 
-  const isUrl = (value: string) => {
-    return /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/.test(value);
+  /**
+   * Uses the WHATWG URL parser to validate candidate URLs and avoids
+   * catastrophic backtracking from complex regexes. We intentionally take a
+   * slightly more restrictive interpretation of "what counts as a URL" than
+   * some permissive parsers. This keeps the UI from treating visually-broken
+   * or odd inputs as links.
+   *
+   * Tightened checks applied (in addition to URL parsing):
+   * - reject empty or whitespace-only values
+   * - reject inputs with 3 or more leading slashes (e.g. "////weird")
+   * - accept only http: and https: schemes (reject ftp:, mailto:, etc.)
+   * - require a non-empty hostname
+   * - reject hostnames that start or end with a dot (".com", "example.")
+   * - reject hostnames containing consecutive dots ("example..com")
+   *
+   * Rationale: the WHATWG URL parser is safe and avoids regex backtracking
+   * issues; the extra checks above encode our UX decision to avoid treating
+   * malformed or surprising user input as clickable links. If you need a
+   * different policy (e.g. accept single-label hosts like "localhost"),
+   * extract this logic to a shared util and adjust the rules there.
+   *
+   * TODO: Extract this function into a shared utility package (e.g.
+   * @terrestris/base-util) so other components can reuse the same logic and
+   * we can add unit tests in isolation.
+   *
+   * @param {string} value - candidate string to test as URL
+   * @return {boolean} true if value is an http(s) URL with a hostname
+   */
+  const isUrl = (value: string): boolean => {
+    try {
+      // quick reject: non-strings or empty/whitespace
+      if (typeof value !== 'string' || value.trim() === '') {
+        return false;
+      }
+
+      // Reject inputs with 3 or more leading slashes (////weird)
+      // Allow exactly '//' (protocol-relative).
+      if (/^\/{3,}/.test(value)) {
+        return false;
+      }
+
+      // Support protocol-relative URLs like //example.com
+      const candidate = value.startsWith('//') ? `https:${value}` : value;
+      const u = new URL(candidate);
+
+      // Accept only http(s) URLs
+      if (u.protocol !== 'http:' && u.protocol !== 'https:') {
+        return false;
+      }
+
+      // Basic host presence check
+      const host = u.hostname || '';
+      if (!host) {
+        return false;
+      }
+
+      // Reject hostnames that start or end with a dot, or contain consecutive
+      // dots (e.g. ".com", "example..com")
+      if (host.startsWith('.') || host.endsWith('.') || host.includes('..')) {
+        return false;
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   const columns = useMemo(() => {
