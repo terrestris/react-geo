@@ -1,3 +1,11 @@
+# [32.5.0](https://github.com/terrestris/react-geo/compare/v32.4.0...v32.5.0) (2025-10-23)
+
+
+### Features
+
+* **deps:** update react-util ([cd1d518](https://github.com/terrestris/react-geo/commit/cd1d5189f0b2712d29626d9eab98b38b02994b24))
+* **MeasureButton:** add option and example to show lengths of segments ([0aef389](https://github.com/terrestris/react-geo/commit/0aef3895340fa69d08eea9c26d0d093505d64604))
+
 # [32.4.0](https://github.com/terrestris/react-geo/compare/v32.3.1...v32.4.0) (2025-10-15)
 
 
