@@ -69,6 +69,22 @@ const MeasureButtonExample = () => {
         </MeasureButton>
 
         <MeasureButton
+          value="line-segments"
+          measureType="line"
+          showSegmentLengths
+        >
+          Distance with segment labels
+        </MeasureButton>
+
+        <MeasureButton
+          value="polygon-segments"
+          measureType="polygon"
+          showSegmentLengths
+        >
+          Area with segment labels
+        </MeasureButton>
+
+        <MeasureButton
           value="multi"
           measureType="line"
           multipleDrawing
