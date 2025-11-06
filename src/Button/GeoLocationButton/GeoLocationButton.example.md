@@ -9,12 +9,12 @@ import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const GeoLocationButtonExample = () => {
 
   const [map, setMap] = useState();
-  const [pressed, setPressed] = useState();
+  const [pressed, setPressed] = useState(false);
 
   useEffect(() => {
     setMap(new OlMap({
@@ -31,6 +31,21 @@ const GeoLocationButtonExample = () => {
     }));
   }, []);
 
+  const handleGeoLocationChange = (isPressed) => {
+    setPressed(isPressed);
+  };
+
+  const handlePositionChange = (geolocation) => {
+    if (map && geolocation.position) {
+      map.getView().setCenter(geolocation.position);
+    }
+  };
+
+  const handleError = () => {
+    console.error('Geolocation failed');
+    setPressed(false);
+  };
+
   if (!map) {
     return null;
   }
@@ -44,11 +59,18 @@ const GeoLocationButtonExample = () => {
         }}
       />
       <GeoLocationButton
-        map={map}
         showMarker={true}
         follow={true}
+        enableTracking={true}
         pressed={pressed}
-        onChange={() => setPressed(!pressed)}
+        onChange={handleGeoLocationChange}
+        onGeoLocationChange={handlePositionChange}
+        onError={handleError}
+        trackingOptions={{
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000
+        }}
       >
         Track location
       </GeoLocationButton>
