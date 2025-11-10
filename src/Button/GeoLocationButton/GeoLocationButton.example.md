@@ -31,16 +31,6 @@ const GeoLocationButtonExample = () => {
     }));
   }, []);
 
-  const handleGeoLocationChange = (isPressed) => {
-    setPressed(isPressed);
-  };
-
-  const handlePositionChange = (geolocation) => {
-    if (map && geolocation.position) {
-      map.getView().setCenter(geolocation.position);
-    }
-  };
-
   const handleError = () => {
     console.error('Geolocation failed');
     setPressed(false);
@@ -63,14 +53,8 @@ const GeoLocationButtonExample = () => {
         follow={true}
         enableTracking={true}
         pressed={pressed}
-        onChange={handleGeoLocationChange}
-        onGeoLocationChange={handlePositionChange}
+        onPressedChange={setPressed}
         onError={handleError}
-        trackingOptions={{
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 60000
-        }}
       >
         Track location
       </GeoLocationButton>

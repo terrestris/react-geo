@@ -1,6 +1,4 @@
-import React, {
-  FC
-} from 'react';
+import React, { FC, useState } from 'react';
 
 import {
   type GeoLocation,
@@ -34,9 +32,9 @@ interface OwnProps {
    */
   enableTracking?: boolean;
   /**
-   * Will be called when the button is toggled
+   * Boolean callback for when the button is toggled outside of a ToggleGroup
    */
-  onChange?: (pressed: boolean) => void;
+  onPressedChange?: (pressed: boolean) => void;
 }
 
 export type GeoLocationButtonProps = OwnProps & Partial<ToggleButtonProps>;
@@ -51,13 +49,16 @@ export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
   pressed,
   showMarker = true,
   trackingOptions,
-  value,
+  onPressedChange,
   ...passThroughProps
 }) => {
+  const [internalPressed, setInternalPressed] = useState(false);
+  const isControlled = typeof pressed === 'boolean';
+  const effectivePressed = isControlled ? !!pressed : internalPressed;
 
   useGeoLocation({
-    active: !!pressed,
-    enableTracking: pressed && enableTracking,
+    active: effectivePressed,
+    enableTracking: effectivePressed && enableTracking,
     follow,
     onError,
     onGeoLocationChange,
@@ -69,25 +70,24 @@ export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
     ? `${className} ${CSS_PREFIX}geolocationbutton`
     : `${CSS_PREFIX}geolocationbutton`;
 
-  const handleToggleButtonChange = (evt: React.MouseEvent<HTMLButtonElement>, buttonValue?: string) => {
-    if (onChange) {
-      if (buttonValue !== undefined) {
-        // ToggleGroup context
-        (onChange as any)(evt, buttonValue);
-      } else {
-        // Standalone context
-        const newPressed = buttonValue !== undefined || !pressed;
-        onChange(newPressed);
-      }
+  const handleChange: ToggleButtonProps['onChange'] = (evt, value) => {
+    if (!isControlled) {
+      setInternalPressed(prevPressed => {
+        const nextPressed = !prevPressed;
+        onPressedChange?.(nextPressed);
+        return nextPressed;
+      });
+    } else {
+      onPressedChange?.(!effectivePressed);
     }
+    onChange?.(evt, value);
   };
 
   return (
     <ToggleButton
-      pressed={pressed}
+      pressed={effectivePressed}
       className={finalClassName}
-      onChange={handleToggleButtonChange}
-      value={value}
+      onChange={handleChange}
       {...passThroughProps}
     />
   );
