@@ -1,6 +1,4 @@
-import React, {
-  FC
-} from 'react';
+import React, { FC, useState } from 'react';
 
 import {
   type GeoLocation,
@@ -33,6 +31,10 @@ interface OwnProps {
    * Enable tracking of GeoLocations
    */
   enableTracking?: boolean;
+  /**
+   * Boolean callback for when the button is toggled outside of a ToggleGroup
+   */
+  onPressedChange?: (pressed: boolean) => void;
 }
 
 export type GeoLocationButtonProps = OwnProps & Partial<ToggleButtonProps>;
@@ -41,17 +43,22 @@ export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
   className,
   enableTracking = false,
   follow = false,
+  onChange,
   onError = () => undefined,
   onGeoLocationChange = () => undefined,
   pressed,
   showMarker = true,
   trackingOptions,
+  onPressedChange,
   ...passThroughProps
 }) => {
+  const [internalPressed, setInternalPressed] = useState(false);
+  const isControlled = typeof pressed === 'boolean';
+  const effectivePressed = isControlled ? !!pressed : internalPressed;
 
   useGeoLocation({
-    active: !!pressed,
-    enableTracking: pressed && enableTracking,
+    active: effectivePressed,
+    enableTracking: effectivePressed && enableTracking,
     follow,
     onError,
     onGeoLocationChange,
@@ -63,10 +70,24 @@ export const GeoLocationButton: FC<GeoLocationButtonProps> = ({
     ? `${className} ${CSS_PREFIX}geolocationbutton`
     : `${CSS_PREFIX}geolocationbutton`;
 
+  const handleChange: ToggleButtonProps['onChange'] = (evt, value) => {
+    if (!isControlled) {
+      setInternalPressed(prevPressed => {
+        const nextPressed = !prevPressed;
+        onPressedChange?.(nextPressed);
+        return nextPressed;
+      });
+    } else {
+      onPressedChange?.(!effectivePressed);
+    }
+    onChange?.(evt, value);
+  };
+
   return (
     <ToggleButton
-      pressed={pressed}
+      pressed={effectivePressed}
       className={finalClassName}
+      onChange={handleChange}
       {...passThroughProps}
     />
   );

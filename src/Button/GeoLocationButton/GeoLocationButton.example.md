@@ -9,12 +9,12 @@ import OlMap from 'ol/Map';
 import { fromLonLat } from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlView from 'ol/View';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const GeoLocationButtonExample = () => {
 
   const [map, setMap] = useState();
-  const [pressed, setPressed] = useState();
+  const [pressed, setPressed] = useState(false);
 
   useEffect(() => {
     setMap(new OlMap({
@@ -31,6 +31,11 @@ const GeoLocationButtonExample = () => {
     }));
   }, []);
 
+  const handleError = () => {
+    console.error('Geolocation failed');
+    setPressed(false);
+  };
+
   if (!map) {
     return null;
   }
@@ -44,11 +49,12 @@ const GeoLocationButtonExample = () => {
         }}
       />
       <GeoLocationButton
-        map={map}
         showMarker={true}
         follow={true}
+        enableTracking={true}
         pressed={pressed}
-        onChange={() => setPressed(!pressed)}
+        onPressedChange={setPressed}
+        onError={handleError}
       >
         Track location
       </GeoLocationButton>
