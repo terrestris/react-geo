@@ -1,3 +1,11 @@
+## [32.5.1](https://github.com/terrestris/react-geo/compare/v32.5.0...v32.5.1) (2025-11-12)
+
+
+### Bug Fixes
+
+* improve ToggleGroup integration and context detection for GeoLocationButton ([bd00146](https://github.com/terrestris/react-geo/commit/bd001464e7cb04fde53db6eaaeb69445efcdba5c))
+* unify toggle behavior for standalone and ToggleGroup use ([b6dd2dd](https://github.com/terrestris/react-geo/commit/b6dd2dd7d49753dba27da5681490ca677ed88145))
+
 # [32.5.0](https://github.com/terrestris/react-geo/compare/v32.4.0...v32.5.0) (2025-10-23)
 
 
