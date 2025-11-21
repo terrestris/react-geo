@@ -47,6 +47,8 @@ export type PlaybackSpeedUnit = 'minute' | 'hours' | 'days' | 'weeks' | 'months'
 
 export type TimeLayerSliderPanelProps = {
   autoPlaySpeedOptions?: number[];
+  playbackSpeedDefaultUnit?: PlaybackSpeedUnit;
+  playbackSpeedDefaultValue?: number;
   timeAwareLayers: WmsLayer[];
   tooltips?: TimeLayerSliderPanelTooltips;
 } & TimeSliderProps & React.HTMLAttributes<HTMLDivElement>;
@@ -68,6 +70,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   min = dayjs().subtract(1, 'days'),
   onChange,
   onChangeComplete,
+  playbackSpeedDefaultUnit = 'minute',
+  playbackSpeedDefaultValue = 1,
   timeAwareLayers = [],
   tooltips = {
     setToMostRecent: 'Set to most recent date',
@@ -482,7 +486,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       />
       <Select<number>
         className={extraCls + ' speed-picker'}
-        defaultValue={1}
+        defaultValue={playbackSpeedDefaultValue}
         dropdownStyle={{ minWidth: '100px' }}
         onChange={onPlaybackSpeedChange}
         popupMatchSelectWidth={false}
@@ -493,7 +497,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
       <span>x</span>
       <Select<PlaybackSpeedUnit>
         className={extraCls + ' speed-picker'}
-        defaultValue={'minute'}
+        defaultValue={playbackSpeedDefaultUnit}
         dropdownStyle={{ minWidth: '100px' }}
         onChange={onPlaybackUnitChange}
         popupMatchSelectWidth={false}
