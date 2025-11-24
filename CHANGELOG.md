@@ -1,3 +1,10 @@
+# [32.6.0](https://github.com/terrestris/react-geo/compare/v32.5.1...v32.6.0) (2025-11-24)
+
+
+### Features
+
+* configurable default values for playback ([3c164bb](https://github.com/terrestris/react-geo/commit/3c164bbc7ed727afdeef2865de5a8a41aa395833))
+
 ## [32.5.1](https://github.com/terrestris/react-geo/compare/v32.5.0...v32.5.1) (2025-11-12)
 
 
