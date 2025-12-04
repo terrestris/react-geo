@@ -276,8 +276,9 @@ const LayerTree: React.FC<LayerTreeProps> = ({
     const dragKey = info.dragNode.key as string;
     const dropPos = info.node.pos.split('-');
     const dropPosition = info.dropPosition;
+    const lastPos = Number.parseInt(dropPos[dropPos.length - 1], 10);
     // The drop position relative to the drop node, inside 0, top -1, bottom 1.
-    const dropPositionRelative = dropPosition - parseInt(dropPos[dropPos.length - 1], 10);
+    const dropPositionRelative = dropPosition - lastPos;
 
     // Reorder layers
     if (!map) {
