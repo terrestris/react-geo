@@ -86,8 +86,8 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
   value = dayjs()
 }) => {
 
-  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
-  const [playbackSpeedUnit, setPlaybackSpeedUnit] = useState<PlaybackSpeedUnit>('hours');
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(playbackSpeedDefaultValue);
+  const [playbackSpeedUnit, setPlaybackSpeedUnit] = useState<PlaybackSpeedUnit>(playbackSpeedDefaultUnit);
   const [autoPlayActive, setAutoPlayActive] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>();
   const [endDate, setEndDate] = useState<Dayjs>();

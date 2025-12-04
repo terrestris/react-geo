@@ -175,6 +175,34 @@ const TimeLayerSliderPanelExample = () => {
           />
         </MapContext.Provider>
       </div>
+      <br/>
+      <hr/>
+      <br/>
+      <h1>Example with default values for playback speed and time unit</h1>
+      <div>
+        <MapContext.Provider value={mapWithDuration}>
+          <MapComponent
+            map={mapWithDuration}
+            style={{
+              position: 'relative',
+              height: '400px'
+            }}
+          />
+          <TimeLayerSliderPanel
+            autoPlaySpeedOptions={[0.5, 1, 2, 3, 5]}
+            onChangeComplete={onTimeChanged}
+            formatString='ISO8601'
+            markFormatString="DD.MM.YYYY HH:mm"
+            max={initEndDate}
+            min={initStartDate}
+            playbackSpeedDefaultUnit="minutes"
+            playbackSpeedDefaultValue={3}
+            timeAwareLayers={[timeLayer]}
+            tooltips={tooltips}
+            value={value}
+          />
+        </MapContext.Provider>
+      </div>
     </div>
   );
 }
