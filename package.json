@@ -1,6 +1,6 @@
 {
   "name": "@terrestris/react-geo",
-  "version": "32.6.0",
+  "version": "32.6.1",
   "description": "A set of geo related modules. To use in combination with react, antd and ol.",
   "keywords": [
     "react",

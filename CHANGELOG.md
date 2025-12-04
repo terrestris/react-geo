@@ -1,3 +1,10 @@
+## [32.6.1](https://github.com/terrestris/react-geo/compare/v32.6.0...v32.6.1) (2025-12-04)
+
+
+### Bug Fixes
+
+* **TimeLayerSliderPanel:** pass default values for playback to state correctly ([8b09fba](https://github.com/terrestris/react-geo/commit/8b09fba03f7d2978f9844b31c932eb55719db561))
+
 # [32.6.0](https://github.com/terrestris/react-geo/compare/v32.5.1...v32.6.0) (2025-11-24)
 
 
