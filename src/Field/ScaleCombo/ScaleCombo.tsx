@@ -130,8 +130,9 @@ const ScaleCombo: React.FC<ScaleComboProps> = ({
     } else {
       // The default.
       const mapView = map.getView();
+      const scale = Number.parseInt(selectedScale, 10);
       const calculatedResolution = MapUtil.getResolutionForScale(
-        parseInt(selectedScale, 10), mapView.getProjection().getUnits()
+        scale, mapView.getProjection().getUnits()
       );
       mapView.setResolution(calculatedResolution);
     }
