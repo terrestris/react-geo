@@ -21,6 +21,11 @@ export type FloatingMapLogoProps = Exclude<React.ComponentProps<'img'>, 'src' | 
    * The image height
    */
   imageHeight?: string;
+
+  /**
+   * The alternative text for the image (used in the alt attribute)
+   */
+  imageAlt?: string;
 };
 
 export const FloatingMapLogo: React.FC<FloatingMapLogoProps> = ({
@@ -29,6 +34,7 @@ export const FloatingMapLogo: React.FC<FloatingMapLogoProps> = ({
   className,
   imageHeight,
   style,
+  imageAlt,
   ...passThroughProps
 }): JSX.Element => {
 
@@ -55,6 +61,7 @@ export const FloatingMapLogo: React.FC<FloatingMapLogoProps> = ({
       src={imageSrc}
       height={imageHeight}
       style={imgStyle}
+      alt={imageAlt || 'Map Logo'}
       {...passThroughProps}
     />
   );
