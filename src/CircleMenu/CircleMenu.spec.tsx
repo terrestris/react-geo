@@ -16,8 +16,8 @@ describe('<CircleMenu />', () => {
       <CircleMenu
         position={[100, 100]}
       >
-        <span>A</span>
-        <span>B</span>
+        <span role="option" aria-selected="false">A</span>
+        <span role="option" aria-selected="false">B</span>
       </CircleMenu>
     );
 
@@ -29,8 +29,8 @@ describe('<CircleMenu />', () => {
       <CircleMenu
         position={[100, 100]}
       >
-        <span role="option">A</span>
-        <span role="option">B</span>
+        <span role="option" aria-selected="false">A</span>
+        <span role="option" aria-selected="false">B</span>
       </CircleMenu>
     );
 
@@ -50,8 +50,8 @@ describe('<CircleMenu />', () => {
         animationDuration={animationDuration}
         role="menu"
       >
-        <span role="option">A</span>
-        <span role="option">B</span>
+        <span role="option" aria-selected="false">A</span>
+        <span role="option" aria-selected="false">B</span>
       </CircleMenu>
     );
 
@@ -65,8 +65,8 @@ describe('<CircleMenu />', () => {
         animationDuration={animationDuration}
         role="menu"
       >
-        <span role="option">A</span>
-        <span role="option">B</span>
+        <span role="option" aria-selected="false">A</span>
+        <span role="option" aria-selected="false">B</span>
       </CircleMenu>
     );
 
