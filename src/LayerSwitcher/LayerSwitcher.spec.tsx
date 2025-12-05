@@ -99,4 +99,40 @@ describe('<LayerSwitcher />', () => {
     expect(layers[0].getVisible()).toBeTruthy();
   });
 
+  it('switches the visible layer when Enter key is pressed on focused div', async () => {
+    const { container } = renderInMapContext(map, <LayerSwitcher layers={layers} />);
+
+    // eslint-disable-next-line testing-library/no-container,testing-library/no-node-access
+    const layerSwitcher = container.querySelector('.react-geo-layer-switcher');
+
+    const switcher = within(layerSwitcher).getByRole('button');
+
+    const layer0visible = layers[0].getVisible();
+    const layer1visible = layers[1].getVisible();
+
+    switcher.focus();
+    await userEvent.keyboard('{Enter}');
+
+    expect(layers[0].getVisible()).toBe(!layer0visible);
+    expect(layers[1].getVisible()).toBe(!layer1visible);
+  });
+
+  it('switches the visible layer when Space key is pressed on focused div', async () => {
+    const { container } = renderInMapContext(map, <LayerSwitcher layers={layers} />);
+
+    // eslint-disable-next-line testing-library/no-container,testing-library/no-node-access
+    const layerSwitcher = container.querySelector('.react-geo-layer-switcher');
+
+    const switcher = within(layerSwitcher).getByRole('button');
+
+    const layer0visible = layers[0].getVisible();
+    const layer1visible = layers[1].getVisible();
+
+    switcher.focus();
+    await userEvent.keyboard(' ');
+
+    expect(layers[0].getVisible()).toBe(!layer0visible);
+    expect(layers[1].getVisible()).toBe(!layer1visible);
+  });
+
 });
