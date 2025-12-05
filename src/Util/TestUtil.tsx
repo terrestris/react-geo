@@ -136,11 +136,13 @@ export class TestUtil {
   /**
    * Returns a point feature with a random position.
    */
-  static readonly generatePointFeature = (props: Record<string, any> = {
-    ATTR_1: Math.random() * 100,
-    ATTR_2: 'Borsigplatz 9',
-    ATTR_3: 'Dortmund'
-  }) => {
+  static readonly generatePointFeature = (props: Record<string, any>) => {
+    const defaultProps = {
+      ATTR_1: Math.random() * 100,
+      ATTR_2: 'Borsigplatz 9',
+      ATTR_3: 'Dortmund'
+    };
+    const finalProps = {...defaultProps, ...props};
     const coords = [
       Math.floor(Math.random() * 180) - 180,
       Math.floor(Math.random() * 90) - 90
@@ -150,7 +152,7 @@ export class TestUtil {
       geometry: geom
     });
 
-    feat.setProperties(props);
+    feat.setProperties(finalProps);
 
     return feat;
   };
