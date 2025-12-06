@@ -17,6 +17,7 @@ import OlLayerGroup from 'ol/layer/Group';
 import OlLayerImage from 'ol/layer/Image';
 import OlLayer from 'ol/layer/Layer';
 import OlLayerTile from 'ol/layer/Tile';
+import OlMap from 'ol/Map';
 import { ObjectEvent } from 'ol/Object';
 import OlSourceImageWMS from 'ol/source/ImageWMS';
 import OlSourceOSM from 'ol/source/OSM';
@@ -34,6 +35,181 @@ import BackgroundLayerPreview from '../BackgroundLayerPreview/BackgroundLayerPre
 import SimpleButton from '../Button/SimpleButton/SimpleButton';
 
 import './BackgroundLayerChooser.less';
+
+/**
+ * Clone tile-based sources (OSM, TileWMS, WMTS).
+ *
+ * @param {OlSourceOSM | OlSourceTileWMS | OlSourceWMTS | null} source
+ *   The source to clone.
+ *
+ * @returns {OlSourceOSM | OlSourceTileWMS | OlSourceWMTS | null}
+ *   A cloned source instance, or null if cloning is not possible.
+ */
+const cloneTileSource = (
+  source: OlSourceOSM | OlSourceTileWMS | OlSourceWMTS | null
+): OlSourceOSM | OlSourceTileWMS | OlSourceWMTS | null => {
+  if (source instanceof OlSourceTileWMS) {
+    return new OlSourceTileWMS({
+      url: source.getUrls()?.[0],
+      params: source.getParams(),
+      tileLoadFunction: source.getTileLoadFunction()
+    });
+  }
+
+  if (source instanceof OlSourceOSM) {
+    return new OlSourceOSM();
+  }
+
+  if (source instanceof OlSourceWMTS) {
+    const newTileGrid = source.getTileGrid() as OlTilegridWMTS | null;
+
+    if (!newTileGrid) {
+      return null;
+    }
+
+    return new OlSourceWMTS({
+      url: source.getUrls()?.[0],
+      layer: source.getLayer(),
+      matrixSet: source.getMatrixSet(),
+      format: source.getFormat(),
+      tileGrid: newTileGrid,
+      style: source.getStyle(),
+      requestEncoding: source.getRequestEncoding(),
+      version: source.getVersion(),
+      dimensions: source.getDimensions(),
+      wrapX: source.getWrapX()
+    });
+  }
+
+  return null;
+};
+
+/**
+ * Create an overview layer for a Tile layer.
+ *
+ * @param {OlLayerTile} layer
+ *   The selected tile layer to clone for the overview map.
+ *
+ * @returns {OlLayerTile | null}
+ *   A new tile layer instance for the overview, or null if cloning fails.
+ */
+const createOverviewLayerForTileLayer = (
+  layer: OlLayerTile
+): OlLayerTile | null => {
+  const newSource = cloneTileSource(layer.getSource() as any);
+
+  if (!newSource) {
+    return null;
+  }
+
+  return new OlLayerTile({
+    source: newSource
+  });
+};
+
+/**
+ * Create an overview layer for an ImageWMS layer.
+ *
+ * @param {OlLayerImage<OlSourceImageWMS>} layer
+ *   The selected image layer to replicate for the overview map.
+ *
+ * @returns {OlLayerImage<OlSourceImageWMS> | null}
+ *   A new image layer instance for the overview, or null if unsupported.
+ */
+const createOverviewLayerForImageLayer = (
+  layer: OlLayerImage<OlSourceImageWMS>
+): OlLayerImage<OlSourceImageWMS> | null => {
+  const selectedLayerSource = layer.getSource();
+
+  if (!(selectedLayerSource instanceof OlSourceImageWMS)) {
+    return null;
+  }
+
+  return new OlLayerImage<OlSourceImageWMS>({
+    source: selectedLayerSource
+  });
+};
+
+/**
+ * Create an overview layer for a group layer, including vector tile groups.
+ *
+ * @param {OlLayerGroup} layer
+ *   The selected group layer to replicate for the overview map.
+ *
+ * @returns {OlLayerGroup | null}
+ *   A new group layer instance for the overview, or null if unsupported.
+ */
+const createOverviewLayerForGroupLayer = (
+  layer: OlLayerGroup
+): OlLayerGroup | null => {
+  if (layer.get('isVectorTile')) {
+    const ovLayer = new OlLayerGroup();
+    applyMapboxStyle(ovLayer, layer.get('url'));
+    return ovLayer;
+  }
+
+  return new OlLayerGroup({
+    layers: layer.getLayers()
+  });
+};
+
+/**
+ * Determine the correct overview layer type for the provided selected layer.
+ *
+ * @param {OlLayer} selectedLayer
+ *   The layer chosen by the user as the base layer.
+ *
+ * @returns {OlLayer | OlLayerGroup | null}
+ *   A cloned overview layer, or null if the layer type is unsupported.
+ */
+const createOverviewLayer = (
+  selectedLayer: OlLayer
+): OlLayer | OlLayerGroup | null => {
+  if (selectedLayer instanceof OlLayerTile) {
+    return createOverviewLayerForTileLayer(selectedLayer);
+  }
+
+  if (selectedLayer instanceof OlLayerImage) {
+    return createOverviewLayerForImageLayer(selectedLayer as any);
+  }
+
+  if (selectedLayer instanceof OlLayerGroup) {
+    return createOverviewLayerForGroupLayer(selectedLayer);
+  }
+
+  return null;
+};
+
+/**
+ * Create the OpenLayers OverviewMap control containing a single overview layer.
+ *
+ * @param {OlMap} map
+ *   The main map instance to attach the control to.
+ *
+ * @param {HTMLElement} target
+ *   The DOM element to render the overview map into.
+ *
+ * @param {OlLayer | OlLayerGroup} overviewLayer
+ *   The layer to display inside the overview map.
+ *
+ * @returns {OlOverviewMap}
+ *   A fully constructed OverviewMap control.
+ */
+const createOverviewControl = (
+  map: OlMap,
+  target: HTMLElement,
+  overviewLayer: OlLayer | OlLayerGroup
+): OlOverviewMap => {
+  return new OlOverviewMap({
+    collapsible: false,
+    target,
+    className: 'ol-overviewmap react-geo-bg-layer-chooser-overviewmap',
+    layers: [overviewLayer],
+    view: new OlView({
+      projection: map.getView().getProjection()
+    })
+  });
+};
 
 export interface BackgroundLayerChooserProps {
   /**
@@ -127,93 +303,24 @@ export const BackgroundLayerChooser: React.FC<BackgroundLayerChooserProps> = ({
     if (!selectedLayer || !map) {
       return undefined;
     }
-    const selectedLayerSource = selectedLayer.getSource();
 
-    let ovLayer: OlLayer | OlLayerGroup | null = null;
+    const overviewLayer = createOverviewLayer(selectedLayer);
 
-    if (selectedLayer instanceof OlLayerTile) {
-      let newSource: OlSourceOSM | OlSourceTileWMS | OlSourceWMTS | null = null;
-
-      if (selectedLayerSource instanceof OlSourceTileWMS) {
-        newSource = new OlSourceTileWMS({
-          url: selectedLayerSource.getUrls()?.[0],
-          params: selectedLayerSource.getParams(),
-          tileLoadFunction: selectedLayerSource.getTileLoadFunction()
-        });
-      } else if (selectedLayerSource instanceof OlSourceOSM) {
-        newSource = new OlSourceOSM();
-      } else if (selectedLayerSource instanceof OlSourceWMTS) {
-        const newTileGrid = selectedLayerSource.getTileGrid() as OlTilegridWMTS | null;
-
-        if (!newTileGrid) {
-          return;
-        }
-
-        newSource = new OlSourceWMTS({
-          url: selectedLayerSource.getUrls()?.[0],
-          layer: selectedLayerSource.getLayer(),
-          matrixSet: selectedLayerSource.getMatrixSet(),
-          format: selectedLayerSource.getFormat(),
-          tileGrid: newTileGrid,
-          style: selectedLayerSource.getStyle(),
-          requestEncoding: selectedLayerSource.getRequestEncoding(),
-          version: selectedLayerSource.getVersion(),
-          dimensions: selectedLayerSource.getDimensions(),
-          wrapX: selectedLayerSource.getWrapX()
-        });
-      }
-
-      if (newSource) {
-        ovLayer = new OlLayerTile({
-          source: newSource
-        });
-      }
-    } else if (selectedLayer instanceof OlLayerImage) {
-      let newSource: OlSourceImageWMS | null = null;
-
-      if (selectedLayerSource instanceof OlSourceImageWMS) {
-        newSource = new OlSourceImageWMS({
-          url: selectedLayerSource.getUrl(),
-          params: selectedLayerSource.getParams(),
-          imageLoadFunction: selectedLayerSource.getImageLoadFunction()
-        });
-      }
-
-      if (newSource) {
-        ovLayer = new OlLayerImage({
-          source: selectedLayer.getSource()
-        });
-      }
-    } else if (selectedLayer instanceof OlLayerGroup) {
-      if (selectedLayer.get('isVectorTile')) {
-        ovLayer = new OlLayerGroup();
-        applyMapboxStyle(ovLayer, selectedLayer.get('url'));
-      } else {
-        ovLayer = new OlLayerGroup({
-          layers: selectedLayer.getLayers()
-        });
-      }
+    if (!overviewLayer || !mapTarget.current) {
+      return undefined;
     }
 
-    if (ovLayer && mapTarget.current) {
-      const overViewControl = new OlOverviewMap({
-        collapsible: false,
-        target: mapTarget.current,
-        className: 'ol-overviewmap react-geo-bg-layer-chooser-overviewmap',
-        layers: [ovLayer],
-        view: new OlView({
-          projection: map.getView().getProjection()
-        })
-      });
+    const overviewControl = createOverviewControl(
+      map as OlMap,
+      mapTarget.current,
+      overviewLayer
+    );
 
-      map.addControl(overViewControl);
+    map.addControl(overviewControl);
 
-      return () => {
-        map.removeControl(overViewControl);
-      };
-    }
-
-    return undefined;
+    return () => {
+      map.removeControl(overviewControl);
+    };
   }, [selectedLayer, map]);
 
   const onLayerSelect = (layer: OlLayer) => {
