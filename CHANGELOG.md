@@ -1,3 +1,15 @@
+# [32.7.0](https://github.com/terrestris/react-geo/compare/v32.6.1...v32.7.0) (2025-12-08)
+
+
+### Bug Fixes
+
+* give the floating map logo image a configurable alt text ([4409b19](https://github.com/terrestris/react-geo/commit/4409b1948de83214dec8d525a6370962246a0103))
+
+
+### Features
+
+* enable keyboard handling for LayerSwitcher component ([08b4497](https://github.com/terrestris/react-geo/commit/08b44972a73c7d52e0893dd0b871360442c88d95))
+
 ## [32.6.1](https://github.com/terrestris/react-geo/compare/v32.6.0...v32.6.1) (2025-12-04)
 
 
