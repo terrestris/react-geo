@@ -102,6 +102,31 @@ describe('BackgroundLayerChooser', () => {
     expect(screen.getByText('Image Layer')).toBeInTheDocument();
   });
 
+  it('handles OlLayerImage with a non-ImageWMS source gracefully', async () => {
+    // Create an OlLayerImage but override getSource to return a non-ImageWMS
+    const imageLayer = new OlLayerImage({} as any);
+    imageLayer.set('name', 'ImgNonWMS');
+    (imageLayer as any).getSource = () => new OlSourceOsm();
+    imageLayer.set('isBackgroundLayer', true);
+
+    const { container } = renderInMapContext(map, <BackgroundLayerChooser layers={[imageLayer] as any} />);
+    const btn = container.querySelector('.change-bg-btn');
+    await act(async () => {
+      btn && fireEvent.click(btn);
+    });
+
+    // there should be a preview we can click to select even if no overview was added
+    const previews = await waitFor(() => container.querySelectorAll('.layer-preview'));
+    expect(previews.length).toBeGreaterThan(0);
+    await act(async () => {
+      (previews[0] as HTMLElement).click();
+    });
+
+    await waitFor(() => {
+      expect(container.querySelector('.bg-preview .layer-title')?.textContent).toBe('ImgNonWMS');
+    });
+  });
+
   it('handles OlLayerGroup as background', async () => {
     const groupLayer = new OlLayerGroup({
       layers: [layers[0], layers[1]]
