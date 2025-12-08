@@ -199,15 +199,23 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
     updateLayerVisibility();
   }, [switcherMap, cloneLayer, layers, updateLayerVisibility]);
 
+  const cycle = () => {
+    const index = layers.findIndex(layer => layer.getVisible());
+    visibleLayerIndexRef.current = (index + 1) % layers.length;
+    updateLayerVisibility();
+  }
+
   const onSwitcherClick = (evt: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     evt.stopPropagation();
-
-    const index = layers.findIndex(layer => layer.getVisible());
-
-    visibleLayerIndexRef.current = (index + 1) % layers.length;
-
-    updateLayerVisibility();
+    cycle();
   };
+
+  const onSwitcherKeyDown = (evt: React.KeyboardEvent<HTMLDivElement>) => {
+    if (evt.key === 'Enter' || evt.key === ' ') {
+      evt.preventDefault();
+      cycle();
+    }
+  }
 
   const finalClassName = classNameProp
     ? `${className} ${classNameProp}`
@@ -226,6 +234,8 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
       <div
         className="clip"
         onClick={onSwitcherClick}
+        onKeyDown={onSwitcherKeyDown}
+        tabIndex={0}
         role="button"
       >
         <MapComponent
