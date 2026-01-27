@@ -28,7 +28,7 @@ export const PrintButton: React.FC<PrintButtonProps> = (props) => {
     dpi = 120,
     extent,
     extentPadding,
-    format, // plese note: setting a default here breaks the typing
+    format, // please note: setting a default here breaks the typing
     legendTitle = 'Legend',
     mapSize,
     northArrow = 'top-right',
