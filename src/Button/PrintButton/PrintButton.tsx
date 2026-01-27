@@ -9,29 +9,38 @@ import SimpleButton, {
   SimpleButtonProps
 } from '../SimpleButton/SimpleButton';
 
-export type PrintButtonProps = Omit<PrintSpec, 'map'> & {
-  format?: 'png' | 'pdf';
-} & Partial<PdfPrintSpec> & Partial<PngPrintSpec> & SimpleButtonProps;
+type BaseProps = Omit<PrintSpec, 'map'> & SimpleButtonProps;
 
-export const PrintButton: React.FC<PrintButtonProps> = ({
-  attributions = 'bottom-right',
-  dpi = 120,
-  extent,
-  extentPadding,
-  format = 'png',
-  legendTitle = 'Legend',
-  mapSize,
-  northArrow = 'top-right',
-  onProgressChange,
-  outputFileName = 'react-geo-image',
-  pdfPrintFunc,
-  scaleBar = {
-    position: 'bottom-left',
-    units: 'metric'
-  },
-  title = 'Print',
-  ...passThroughProps
-}) => {
+type PngProps = Omit<PngPrintSpec, 'map' | 'format'> & {
+  format?: 'png';
+};
+
+type PdfProps = Omit<PdfPrintSpec, 'map' | 'format' | 'pdfPrintFunc'> & {
+  format: 'pdf';
+  pdfPrintFunc: PdfPrintSpec['pdfPrintFunc'];
+};
+
+export type PrintButtonProps = BaseProps & (PngProps | PdfProps);
+
+export const PrintButton: React.FC<PrintButtonProps> = (props) => {
+  const {
+    attributions = 'bottom-right',
+    dpi = 120,
+    extent,
+    extentPadding,
+    format, // plese note: setting a default here breaks the typing
+    legendTitle = 'Legend',
+    mapSize,
+    northArrow = 'top-right',
+    onProgressChange,
+    outputFileName = 'react-geo-image',
+    scaleBar = {
+      position: 'bottom-left',
+      units: 'metric'
+    },
+    title = 'Print',
+    ...passThroughProps
+  } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
   const map = useMap();
@@ -40,23 +49,8 @@ export const PrintButton: React.FC<PrintButtonProps> = ({
     if (!map) {
       return;
     }
-    if (format === 'png') {
-      setLoading(true);
-      const pngPrintSpec: PngPrintSpec = {
-        attributions,
-        dpi,
-        extent,
-        extentPadding,
-        format,
-        map,
-        mapSize,
-        onProgressChange,
-        outputFileName,
-        scaleBar
-      };
-      await PrintUtil.printPng(pngPrintSpec);
-      setLoading(false);
-    } else if (pdfPrintFunc && format === 'pdf') {
+    if (format === 'pdf') {
+      const { pdfPrintFunc } = props;
       setLoading(true);
       const pdfPrintSpec: PdfPrintSpec = {
         dpi,
@@ -74,6 +68,23 @@ export const PrintButton: React.FC<PrintButtonProps> = ({
         title
       };
       await PrintUtil.printPdf(pdfPrintSpec);
+      setLoading(false);
+    } else {
+      // format = "png" or undefined -> "png"
+      setLoading(true);
+      const pngPrintSpec: PngPrintSpec = {
+        attributions,
+        dpi,
+        extent,
+        extentPadding,
+        format: 'png',
+        map,
+        mapSize,
+        onProgressChange,
+        outputFileName,
+        scaleBar
+      };
+      await PrintUtil.printPng(pngPrintSpec);
       setLoading(false);
     }
   };
