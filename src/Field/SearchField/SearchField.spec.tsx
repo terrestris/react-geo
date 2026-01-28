@@ -5,11 +5,11 @@ import OlFeature from 'ol/Feature';
 import OlPoint from 'ol/geom/Point';
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen, within } from '@testing-library/react';
 
 import { SearchField, SearchProps } from './SearchField';
 
-describe('<CopyButton />', () => {
+describe('<SearchField />', () => {
   const coord = [1, 2];
   let map: OlMap;
   let feature: OlFeature<OlPoint>;
@@ -53,7 +53,7 @@ describe('<CopyButton />', () => {
   it('can be rendered', () => {
     const { container } = renderInMapContext(map, <SearchField searchFunction={jest.fn()} />);
 
-    const button = container.querySelector('.ant-select-selection-search');
+    const button = within(container).getByRole('combobox');
     expect(button).toBeVisible();
   });
 
@@ -89,6 +89,6 @@ describe('<CopyButton />', () => {
     fireEvent.change(input, { target: { value: 'A' } });
     // Wait a bit to ensure popup would have rendered if enabled
     await new Promise(res => setTimeout(res, 300));
-    expect(screen.queryByText('A')).not.toBeInTheDocument();
+    expect(screen.queryByText('A')).not.toBeVisible();
   });
 });
