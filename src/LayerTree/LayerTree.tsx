@@ -2,6 +2,10 @@ import './LayerTree.less';
 
 import React, { Key, useCallback, useEffect, useState } from 'react';
 
+import { NodeDragEventParams } from '@rc-component/tree/lib/contextTypes';
+import { EventDataNode } from '@rc-component/tree/lib/interface';
+import { AllowDropOptions, CheckInfo } from '@rc-component/tree/lib/Tree';
+
 import {
   Tree,
   TreeDataNode
@@ -18,14 +22,10 @@ import { EventsKey as OlEventsKey } from 'ol/events';
 import OlLayerBase from 'ol/layer/Base';
 import OlLayerGroup from 'ol/layer/Group';
 import { unByKey } from 'ol/Observable';
-import { NodeDragEventParams } from 'rc-tree/lib/contextTypes';
-import { EventDataNode } from 'rc-tree/lib/interface';
-import { AllowDropOptions, CheckInfo } from 'rc-tree/lib/Tree';
 
 import Logger from '@terrestris/base-util/dist/Logger';
 import MapUtil from '@terrestris/ol-util/dist/MapUtil/MapUtil';
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
-
 
 import { CSS_PREFIX } from '../constants';
 

@@ -70,7 +70,8 @@ const LayerSwitcherExample = () => {
               position: 'absolute',
               bottom: '10px',
               left: '10px',
-              zIndex: 2
+              zIndex: 2,
+              backgroundColor: 'yellow'
             }}
             map={map}
             layers={map.getLayers().getArray()}

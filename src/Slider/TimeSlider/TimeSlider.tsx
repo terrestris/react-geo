@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo } from 'react';
 
+import { MarkObj } from '@rc-component/slider/lib/Marks';
+
 import { Slider } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { Duration, parse, toSeconds } from 'iso8601-duration';
 import _isArray from 'lodash/isArray';
 import _isFunction from 'lodash/isFunction';
 import _isNil from 'lodash/isNil';
-import { MarkObj } from 'rc-slider/lib/Marks';
 
 import { CSS_PREFIX } from '../../constants';
 

@@ -20,9 +20,9 @@ module.exports = {
     '<rootDir>/dist/'
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(ol|@camptocamp/inkmap|@terrestris/*[a-z]*-util|d3-selection|color-*[a-z]*)|(rc-*[a-z]*)|' +
+    'node_modules/(?!(ol|@camptocamp/inkmap|@terrestris/*[a-z]*-util|d3-selection|color-*[a-z]*)|@rc-component/*[a-z]*|' +
     'filter-obj|query-string|decode-uri-component|split-on-first|shpjs/|rbush|quickselect|geostyler-openlayers-parser|' +
-    'geostyler-style|geotiff|pbf|quick-lru|quickselect|jsts)'
+    'geostyler-style|geotiff|pbf|quick-lru|quickselect|jsts|kdbush|geokdbush)'
   ],
   setupFiles: [
     '<rootDir>/jest/__mocks__/matchMediaMock.js'

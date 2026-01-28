@@ -51,7 +51,9 @@ describe('<ScaleCombo />', () => {
       />
     ));
 
-    const options = screen.getAllByText((text, element) => element?.tagName === 'DIV' && /1:/.test(text));
+    const options = screen.getAllByText((text, element) =>
+      Boolean(element?.classList.contains('ant-select-item-option-content')) && /1:/.test(text)
+    );
 
     expect(options).toHaveLength(testResolutions.length);
     TestUtil.removeMap(map);

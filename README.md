@@ -28,6 +28,7 @@ The `react-geo` package includes TypeScript declarations as `*.d.ts` files. The 
 `react-geo` supports [dynamic theming](https://ant.design/docs/react/customize-theme) of the Toggle Button via the antd `ConfigProvider`.
 
 ```tsx
+import {ConfigProvider} from 'antd';
 <ConfigProvider
   theme={{
     cssVar: true,
