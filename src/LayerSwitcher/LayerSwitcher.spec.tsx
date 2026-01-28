@@ -61,7 +61,7 @@ describe('<LayerSwitcher />', () => {
     }} />);
     const firstChild = screen.getByRole('menu');
     expect(firstChild).toHaveStyle({
-      backgroundColor: 'yellow'
+      "background-color": 'rgb(255, 255, 0)'
     });
     expect(firstChild).toHaveStyle({
       position: 'inherit'
