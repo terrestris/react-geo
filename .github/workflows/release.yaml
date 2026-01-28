@@ -21,20 +21,24 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout sources 🔰
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Setup Node.js 👷🏻
-        uses: actions/setup-node@v4
+      - name: Setup Node.js 24 🧮
+        uses: actions/setup-node@v6
         with:
           node-version: 24
 
       - name: Install dependencies ⏬
         run: npm ci
 
-      - name: Build artifacts 🏗️
+      - name: Check cryptographic signatures for dependencies 🔐
+        run: npm audit signatures
+
+      - name: Build project 🏗
         run: npm run build
 
-      - name: Release 🚀
+      - name: Semantic Release 🚀
+        id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: npx semantic-release
