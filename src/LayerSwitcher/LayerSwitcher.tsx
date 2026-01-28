@@ -77,7 +77,7 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
       layer.setVisible(visibleLayerIndexRef.current === i);
 
       const clone = switcherMap?.getAllLayers()
-        ?.find(lc => lc.get(identifierProperty) === layer.get(identifierProperty));
+        ?.find((lc) => lc.get(identifierProperty) === layer.get(identifierProperty));
 
       if (!clone) {
         return;
@@ -203,7 +203,7 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
     const index = layers.findIndex(layer => layer.getVisible());
     visibleLayerIndexRef.current = (index + 1) % layers.length;
     updateLayerVisibility();
-  }
+  };
 
   const onSwitcherClick = (evt: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     evt.stopPropagation();
@@ -215,7 +215,7 @@ export const LayerSwitcher: React.FC<LayerSwitcherProps> = ({
       evt.preventDefault();
       cycle();
     }
-  }
+  };
 
   const finalClassName = classNameProp
     ? `${className} ${classNameProp}`
