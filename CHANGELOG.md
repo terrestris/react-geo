@@ -1,3 +1,29 @@
+# [33.0.0](https://github.com/terrestris/react-geo/compare/v32.7.0...v33.0.0) (2026-01-28)
+
+
+### Bug Fixes
+
+* add configuration for trusted publisher for npm ([5e1fb79](https://github.com/terrestris/react-geo/commit/5e1fb79f3e04d2cebd29e974d3e6dc7c468212f2))
+* add semantic release dependencies ([da47480](https://github.com/terrestris/react-geo/commit/da474807015e95ebc8bb7c322e06c1caaa9c6851))
+* fix tests for antd v6 dependencies ([35139e8](https://github.com/terrestris/react-geo/commit/35139e8e9e307e210f22650845c91994a0fbedd1))
+* migrate from rc-* to @rc-component/* ([42d4a16](https://github.com/terrestris/react-geo/commit/42d4a16c06b13d83699a4fc403b0f912a926858d))
+* print button typing ([4ae47bc](https://github.com/terrestris/react-geo/commit/4ae47bc432fcd0affb08d7938f05eb7501888b36))
+* styleguide error ([70f5386](https://github.com/terrestris/react-geo/commit/70f5386fc80114fb2441de3350911b39fc7b8b2e))
+* typo ([51fb1c9](https://github.com/terrestris/react-geo/commit/51fb1c92ff8416c86fd37b1e9ddc9b985fb4d359))
+* unit tests after ant-design v6 dom changes ([64f95fa](https://github.com/terrestris/react-geo/commit/64f95fa90dc179ed8932308f353567b66f671e95))
+* update action versions ([084261f](https://github.com/terrestris/react-geo/commit/084261f2b6744af6d7726d52f196df581d079209))
+* update node to v24 ([dd0e48d](https://github.com/terrestris/react-geo/commit/dd0e48d2ce312234fce0e5f5e1e9f4d5f1f398bf))
+
+
+### Features
+
+* update antd to v6 ([05ca74a](https://github.com/terrestris/react-geo/commit/05ca74a289ffd3afdebcb9bc2bec08554e6325cd))
+
+
+### BREAKING CHANGES
+
+* Requires an update to antd v6, see https://ant.design/docs/react/migration-v6
+
 # [32.7.0](https://github.com/terrestris/react-geo/compare/v32.6.1...v32.7.0) (2025-12-08)
 
 
