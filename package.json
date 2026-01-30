@@ -124,7 +124,7 @@
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "buffer": "^6.0.3",
     "canvas": "^3.2.1",
-    "chokidar": "^4.0.0",
+    "chokidar": "^5.0.0",
     "copy-to-clipboard": "^3.3.3",
     "copy-webpack-plugin": "^13.0.0",
     "copyfiles": "^2.4.1",
