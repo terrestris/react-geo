@@ -20,13 +20,17 @@ import * as copy from 'copy-to-clipboard';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import {Vector as VectorLayer} from 'ol/layer.js';
 import OlLayerTile from 'ol/layer/Tile';
+import OlLayerImage from 'ol/layer/Image';
 import {bbox as bboxStrategy} from 'ol/loadingstrategy.js';
 import OlMap from 'ol/Map';
 import {fromLonLat} from 'ol/proj';
 import OlSourceOSM from 'ol/source/OSM';
 import OlSourceTileWMS from 'ol/source/TileWMS';
+import OlSourceImageWMS from 'ol/source/ImageWMS';
 import VectorSource from 'ol/source/Vector.js';
 import OlView from 'ol/View';
+import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS.js';
+import WMTSCapabilities from 'ol/format/WMTSCapabilities.js';
 import React, {useEffect, useState} from 'react';
 
 const wmsLayer = new OlLayerTile({
@@ -80,6 +84,18 @@ const FeatureInfo = ({
   loading,
   clickCoordinate
 }) => {
+  if (loading) {
+    return <Spin
+      spinning={loading}
+    >
+      Loading...
+    </Spin>;
+  }
+  if (!features) {
+    return <span>
+      No features found at the clicked coordinate.
+    </span>;
+  }
   return !loading && features.length > 0 ?
     <div>
       <div
@@ -125,9 +141,9 @@ const FeatureInfo = ({
           spinning={loading}
         >
           <Statistic
-            title="State"
+            title="Determined value"
             value={getValue(features[0].feature, 'STATE_NAME')
-              || getValue(features[0].feature, 'name')}
+              || getValue(features[0].feature, 'name') || getValue(features[0].feature, 'GRAY_INDEX')}
           />
         </Spin>
         <Tooltip
@@ -153,9 +169,44 @@ const FeatureInfo = ({
     </span>
 };
 
+const PointerRestResult = ({
+  features,
+  loading,
+  clickCoordinate
+}) => {
+  if (loading) {
+    return <Spin
+      spinning={loading}
+    >
+      Loading...
+    </Spin>;
+  }
+
+  if (!features || !Array.isArray(features) || features.length === 0 ) {
+    return <span>
+      No features found at the clicked coordinate.
+    </span>;
+  }
+
+  return (
+    <ul>
+      {
+        features.map(ft => {
+          return (
+            <li>
+                Value for feature type { ft.featureType }: {ft.feature.get('STATE_NAME') || ft.feature.get('name') || ft.feature.get('GRAY_INDEX')}
+            </li>
+          )
+        })
+      }
+    </ul>
+  );
+}
+
 const CoordinateInfoExample = () => {
 
   const [map, setMap] = useState();
+  const [map2, setMap2] = useState();
 
   useEffect(() => {
     setMap(new OlMap({
@@ -172,42 +223,114 @@ const CoordinateInfoExample = () => {
         zoom: 4
       })
     }));
+    setMap2(new OlMap({
+      layers: [
+        new OlLayerTile({
+          name: 'OSM',
+          source: new OlSourceOSM()
+        }),
+        wmsLayer
+      ],
+      view: new OlView({
+        center: fromLonLat([-99.4031637, 38.3025695]),
+        zoom: 4
+      })
+    }));
   }, []);
 
-  if (!map) {
+  const getInfoFormat = (layer) => {
+    if (layer.get('featureInfoTemplates')) {
+      return Object.keys(layer.get('featureInfoTemplates')) [0];
+    }
+    return 'application/json';
+  };
+
+  useEffect(() => {
+    if (map2) {
+    fetch('https://tiles.geoservice.dlr.de/service/wmts?request=getCapabilities')
+      .then((response) => response.text())
+      .then((text) => {
+        const parser = new WMTSCapabilities();
+        const capabilities = parser.read(text);
+        const options = optionsFromCapabilities(capabilities, {
+          layer: 'TDM90_AM2',
+          matrixSet: 'EPSG:3857',
+          projection: map.getView().getProjection()
+        });
+        const layer = new OlLayerTile({
+            source: new WMTS(options),
+            name: 'TDM90 Amplitude Min (AM2)'
+          });
+
+        const layerConfig = capabilities.Contents.Layer.find(l => l.Identifier === 'TDM90_AM2');
+        const featureInfoFormat = layerConfig.ResourceURL.find(r => r.format.indexOf('gml') > -1);
+
+        if (layer && layerConfig && featureInfoFormat) {
+          layer.set('featureInfoTemplates', {
+            [featureInfoFormat.format]: featureInfoFormat.template
+          })
+          map2.addLayer(layer);
+        }
+      });
+    }
+  }, [map2]);
+
+  if (!map || !map2) {
     return null;
   }
 
   return (
-    <MapContext.Provider value={map}>
-      <MapComponent
-        map={map}
-        pointerRestInterval={500}
-        style={{
-          height: '400px'
-        }}
-      />
+    <>
+      <MapContext.Provider value={map}>
+        <MapComponent
+          map={map}
+          style={{
+            height: '400px'
+          }}
+        />
+        <Divider />
+        <h3>
+          Using `useCoordinateInfo` in a custom component - triggered on map click 
+        </h3>
+        <MyCoordinateInfo />
+      </MapContext.Provider>
       <Divider />
-      <h3>
-        Using the `CoordinateInfo` component
-      </h3>
-      <CoordinateInfo
-        active={true}
-        resultRenderer={(results => <FeatureInfo {...results} />)}
-      />
-      <Divider />
-      <h3>
-        Using `useCoordinateInfo` in a custom component
-      </h3>
-      <MyCoordinateInfo />
-    </MapContext.Provider>
+      <MapContext.Provider value={map2}>
+        <MapComponent
+          map={map2}
+          firePointerRest
+          pointerRestInterval={250}
+          style={{
+            height: '400px'
+          }}
+        />
+        <Divider />
+        <h3>
+          Using the `CoordinateInfo` component  - triggered on pointer rest event
+        </h3>
+        <CoordinateInfo
+          active
+          drillDown
+          registerOnClick={false}
+          registerOnPointerMove
+          registerOnPointerRest
+          getInfoFormat={getInfoFormat}
+          resultRenderer={(results => <PointerRestResult {...results} />)}
+        />
+        <Divider />
+      </MapContext.Provider>
+    </>
   );
 };
 
 const MyCoordinateInfo = () => {
   // The useCoordinateInfo hook needs to run inside a map context
   const results = useCoordinateInfo({
-    active: true
+    active: true,
+    drillDown: true,
+    registerOnClick: true,
+    registerOnPointerMove: false,
+    registerOnPointerRest: false
   });
 
   return <FeatureInfo
