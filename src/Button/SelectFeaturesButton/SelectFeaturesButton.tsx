@@ -23,15 +23,15 @@ export type SelectFeaturesButtonProps = OwnProps & Omit<UseSelectFeaturesProps, 
 const defaultClassName = `${CSS_PREFIX}selectbutton`;
 
 const SelectFeaturesButton: React.FC<SelectFeaturesButtonProps> = ({
-  selectStyle,
-  selectInteractionConfig,
   className,
-  onFeatureSelect,
-  hitTolerance = 5,
-  layers,
   clearAfterSelect = false,
   featuresCollection,
+  hitTolerance = 5,
+  layers,
+  onFeatureSelect,
   pressed,
+  selectInteractionConfig,
+  selectStyle,
   ...passThroughProps
 }) => {
 

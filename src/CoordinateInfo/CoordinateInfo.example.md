@@ -182,6 +182,7 @@ const CoordinateInfoExample = () => {
     <MapContext.Provider value={map}>
       <MapComponent
         map={map}
+        pointerRestInterval={500}
         style={{
           height: '400px'
         }}
