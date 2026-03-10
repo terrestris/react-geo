@@ -8,10 +8,10 @@ import {
 import _debounce from 'lodash/debounce';
 
 import OlMap from 'ol/Map';
+import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 import {
   Pixel
 } from 'ol/pixel';
-import OlMapBrowserEvent from 'ol/MapBrowserEvent';
 
 export type MapComponentProps = ComponentProps<'div'> & {
   firePointerRest?: boolean;
@@ -22,7 +22,7 @@ export type MapComponentProps = ComponentProps<'div'> & {
 };
 
 export const MapComponent: FC<MapComponentProps> = ({
-  firePointerRest = true,
+  firePointerRest = false,
   pointerRestInterval = 1,
   pointerRestTolerance = 1,
   map,
