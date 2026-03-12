@@ -1,3 +1,20 @@
+# [33.1.0](https://github.com/terrestris/react-geo/compare/v33.0.0...v33.1.0) (2026-03-12)
+
+
+### Bug Fixes
+
+* adds tests for MapComponent ([e57c113](https://github.com/terrestris/react-geo/commit/e57c11356a2fb5b99940a14951762d99189bfe1c))
+* broken tests of FeatureGrid and SearchField ([9b35c17](https://github.com/terrestris/react-geo/commit/9b35c17fd94c0abae4fcfb1859b728acead44d8a))
+* extract checkPointerRest to callback and create new MapBrowserEvent ([14f12cd](https://github.com/terrestris/react-geo/commit/14f12cd7d87d3528a6888f911e6642936c8a6ab5))
+* set firePointerRest to false since currently not emitted ([661b1a2](https://github.com/terrestris/react-geo/commit/661b1a2bbb8900ace4a720eacbb3b696667cc502))
+
+
+### Features
+
+* adds example for registerOnPointerMove and registerOnPointeRest of useCoodinateInfoHook ([0f1e358](https://github.com/terrestris/react-geo/commit/0f1e358018e9454bc767eb4a9c5e2132c38762c3))
+* register pointermove map event on mapcomponent ([c362c2e](https://github.com/terrestris/react-geo/commit/c362c2ef1f37e5ce84da6638711da53a7b0babbd))
+* update react-util to version 12.4.1 ([26bc7a4](https://github.com/terrestris/react-geo/commit/26bc7a41c3c16cffd6041c5f878655e3bb96ad8a))
+
 # [33.0.0](https://github.com/terrestris/react-geo/compare/v32.7.0...v33.0.0) (2026-01-28)
 
 
