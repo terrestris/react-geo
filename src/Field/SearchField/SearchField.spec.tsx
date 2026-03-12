@@ -83,12 +83,16 @@ describe('<SearchField />', () => {
     });
   });
 
-   it('disables autocomplete popup if autoCompleteDisabled is true', async () => {
+  it('disables autocomplete popup if autoCompleteDisabled is true', async () => {
     render(<SearchField searchFunction={jest.fn()} autoCompleteDisabled={true} />);
     const input = screen.getByRole('combobox');
-    fireEvent.change(input, { target: { value: 'A' } });
-    // Wait a bit to ensure popup would have rendered if enabled
+    const value = 'Test';
+    fireEvent.change(input, { target: { value } });
+
     await new Promise(res => setTimeout(res, 300));
-    expect(screen.queryByText('A')).not.toBeVisible();
+
+    // The popup list should not be rendered when autoCompleteDisabled is true
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
+
 });

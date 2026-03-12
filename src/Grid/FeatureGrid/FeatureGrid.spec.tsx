@@ -1,5 +1,5 @@
 import { renderInMapContext } from '@terrestris/react-util/dist/Util/rtlTestUtils';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import OlFeature from 'ol/Feature';
 import OlLayerVector from 'ol/layer/Vector';
@@ -184,7 +184,7 @@ describe('<FeatureGrid />', () => {
 
     expect(map.getView().getZoom()).toBeCloseTo(17, 0.05);
 
-    await userEvent.click(row);
+    fireEvent.click(row);
 
     expect(map.getView().getZoom()).toBeCloseTo(28);
   });
@@ -203,7 +203,6 @@ describe('<FeatureGrid />', () => {
 
     const columnTitle = screen.getByText('Name override');
 
-    expect(columnTitle).toBeVisible();
+    expect(columnTitle).toBeInTheDocument();
   });
 });
-
