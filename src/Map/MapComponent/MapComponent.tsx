@@ -44,39 +44,42 @@ export const MapComponent: FC<MapComponentProps> = ({
     }
   }, [map]);
 
+  const checkPointerRest = useCallback((olEvt: OlMapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>): void => {
+
+    if (olEvt.dragging || !isMouseOverMapEl) {
+      return;
+    }
+    const target: EventTarget | null = olEvt?.originalEvent?.target;
+    if (target && (target as HTMLElement).tagName?.toLowerCase() !== 'canvas') {
+      return;
+    }
+
+    const pixel: Pixel = olEvt.pixel;
+
+    if (lastPointerPixel) {
+      const deltaX: number = Math.abs(lastPointerPixel[0] - pixel[0]);
+      const deltaY: number = Math.abs(lastPointerPixel[1] - pixel[1]);
+
+      if (deltaX > pointerRestTolerance || deltaY > pointerRestTolerance) {
+        setLastPointerPixel(pixel);
+      } else {
+        return;
+      }
+    } else {
+      setLastPointerPixel(pixel);
+    }
+
+    const pointerRestEvent = new OlMapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>(
+      'pointerrest', map, olEvt.originalEvent
+    );
+
+    map.dispatchEvent(pointerRestEvent);
+  }, [isMouseOverMapEl, lastPointerPixel, map, pointerRestTolerance]);
+
   useEffect(() => {
     if (!map) {
       return;
     }
-
-    const checkPointerRest = (olEvt: OlMapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>): void => {
-
-      if (olEvt.dragging || !isMouseOverMapEl) {
-        return;
-      }
-      const target: EventTarget | null = olEvt?.originalEvent?.target;
-      if (target && (target as HTMLElement).tagName?.toLowerCase() !== 'canvas') {
-        return;
-      }
-
-      const pixel: Pixel = olEvt.pixel;
-
-      if (lastPointerPixel) {
-        const deltaX: number = Math.abs(lastPointerPixel[0] - pixel[0]);
-        const deltaY: number = Math.abs(lastPointerPixel[1] - pixel[1]);
-
-        if (deltaX > pointerRestTolerance || deltaY > pointerRestTolerance) {
-          setLastPointerPixel(pixel);
-        } else {
-          return;
-        }
-      } else {
-        setLastPointerPixel(pixel);
-      }
-
-      olEvt.type = 'pointerrest';
-      map.dispatchEvent(olEvt);
-    };
 
     const debouncedCheckPointerRest: DebouncedFunc<(
       evt: OlMapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>
@@ -97,7 +100,7 @@ export const MapComponent: FC<MapComponentProps> = ({
       }
     };
 
-  }, [map, firePointerRest, isMouseOverMapEl, pointerRestInterval, lastPointerPixel, pointerRestTolerance]);
+  }, [checkPointerRest, firePointerRest, map, pointerRestInterval]);
 
   if (!map) {
     return <></>;
