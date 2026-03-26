@@ -439,10 +439,13 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
           />
         }
       >
-        <SimpleButton
-          className="change-datarange-button"
-          icon={<FontAwesomeIcon icon={faCalendar} />}
-        />
+        <span>
+          <SimpleButton
+            className="change-datarange-button"
+            style={{ width: 'auto' }}
+            icon={<FontAwesomeIcon icon={faCalendar} />}
+          />
+        </span>
       </Popover>
       <SimpleButton
         icon={<FontAwesomeIcon icon={faSync} />}
