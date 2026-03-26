@@ -1,8 +1,7 @@
 import React, { FC , useEffect, useState } from 'react';
 
 
-import { Modal, ModalProps } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
+import { Input, Modal, ModalProps } from 'antd';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
 
@@ -20,6 +19,8 @@ interface OwnProps {
 }
 
 export type FeatureLabelModalProps = OwnProps & Omit<ModalProps, 'closable'|'visible'|'onOk'|'onCancel'>;
+
+const { TextArea } = Input;
 
 export const FeatureLabelModal: FC<FeatureLabelModalProps> = ({
   feature,
