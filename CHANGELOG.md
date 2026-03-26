@@ -1,3 +1,10 @@
+## [33.1.1](https://github.com/terrestris/react-geo/compare/v33.1.0...v33.1.1) (2026-03-26)
+
+
+### Bug Fixes
+
+* import TextArea from antd Input instead of separate import ([47a9885](https://github.com/terrestris/react-geo/commit/47a9885f2cbf2acc1b957a604b35ff2e4299fbcd))
+
 # [33.1.0](https://github.com/terrestris/react-geo/compare/v33.0.0...v33.1.0) (2026-03-12)
 
 
