@@ -1,3 +1,10 @@
+## [33.1.2](https://github.com/terrestris/react-geo/compare/v33.1.1...v33.1.2) (2026-03-26)
+
+
+### Bug Fixes
+
+* popover for data range button ([4642de0](https://github.com/terrestris/react-geo/commit/4642de048af7e3d047b2d2bd1b6dfc1c294c2521))
+
 ## [33.1.1](https://github.com/terrestris/react-geo/compare/v33.1.0...v33.1.1) (2026-03-26)
 
 
