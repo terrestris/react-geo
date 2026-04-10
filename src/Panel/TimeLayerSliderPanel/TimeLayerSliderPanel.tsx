@@ -448,6 +448,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
         </span>
       </Popover>
       <SimpleButton
+        className="sync-button"
         icon={<FontAwesomeIcon icon={faSync} />}
         onClick={setSliderToMostRecent}
         tooltip={tooltips.setToMostRecent}
