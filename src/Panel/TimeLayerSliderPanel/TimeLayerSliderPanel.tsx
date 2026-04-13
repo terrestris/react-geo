@@ -397,7 +397,7 @@ export const TimeLayerSliderPanel: React.FC<TimeLayerSliderPanelProps> = ({
     if (durationBasedMarks.length > maxNumberOfMarks) {
       const step = Math.ceil(durationBasedMarks.length / maxNumberOfMarks);
       // If we have more marks than the maximum, we reduce the number of marks
-      // by taking only every nth mark.
+      // by taking only every nth mark. 
       return durationBasedMarks.filter((_, index) => index % step === 0);
     }
 
