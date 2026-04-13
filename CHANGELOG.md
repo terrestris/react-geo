@@ -1,3 +1,10 @@
+## [33.1.3](https://github.com/terrestris/react-geo/compare/v33.1.2...v33.1.3) (2026-04-13)
+
+
+### Bug Fixes
+
+* trigger release for sync button styling ([c30b340](https://github.com/terrestris/react-geo/commit/c30b3406454652bbd5d2a9977148254330c4f723))
+
 ## [33.1.2](https://github.com/terrestris/react-geo/compare/v33.1.1...v33.1.2) (2026-03-26)
 
 
