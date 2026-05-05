@@ -125,7 +125,7 @@
     "buffer": "^6.0.3",
     "canvas": "^3.2.1",
     "chokidar": "^5.0.0",
-    "copy-to-clipboard": "^3.3.3",
+    "copy-to-clipboard": "^4.0.2",
     "copy-webpack-plugin": "^14.0.0",
     "copyfiles": "^2.4.1",
     "css-loader": "^7.1.2",
