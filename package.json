@@ -86,7 +86,7 @@
     "prop-types": "^15.8.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.25.7",
+    "@babel/cli": "^8.0.0",
     "@babel/core": "^7.25.8",
     "@babel/eslint-parser": "^7.25.8",
     "@babel/plugin-transform-modules-commonjs": "^7.25.7",
