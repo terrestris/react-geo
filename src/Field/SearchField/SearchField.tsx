@@ -1,11 +1,11 @@
-import './SearchField.less';
-
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { AutoComplete, Spin } from 'antd';
 
 import { AutoCompleteProps } from 'antd/lib/auto-complete';
+
 import { Feature, FeatureCollection, GeoJsonProperties, Geometry } from 'geojson';
+import _isNil from 'lodash/isNil';
 import { Extent } from 'ol/extent';
 import OlFormatGeoJSON from 'ol/format/GeoJSON';
 import { transformExtent } from 'ol/proj';
@@ -14,6 +14,8 @@ import { SearchFunction, SearchOptions, useSearch } from '@terrestris/react-util
 import useMap from '@terrestris/react-util/dist/Hooks/useMap/useMap';
 
 import { CSS_PREFIX } from '../../constants';
+
+import './SearchField.less';
 
 export type SearchProps<
   G extends Geometry = Geometry,
@@ -80,13 +82,15 @@ export function SearchField<
     }
   }, [featureCollection, onSearchCompleted]);
 
-  const options = useMemo(
-    () => featureCollection?.features.map(f => ({
+  const options = useMemo(() => {
+    if (_isNil(featureCollection) || !Array.isArray(featureCollection.features) || loading) {
+      return [];
+    }
+    return featureCollection.features.map(f => ({
       label: getValue(f),
       value: getValue(f)
-    })),
-    [featureCollection, getValue]
-  );
+    }));
+  }, [featureCollection, getValue, loading]);
 
   const onMenuItemSelected = useCallback((value: string) => {
     const selected = featureCollection?.features.find(f => getValue(f) === value);
@@ -126,9 +130,9 @@ export function SearchField<
         }
       }}
       popupRender={autoCompleteDisabled ? () => <></> : undefined}
-      onSearch={text =>
-        setSearchTerm(text)
-      }
+      showSearch={{
+        onSearch: text => setSearchTerm(text)
+      }}
       onClear={() =>
         setSearchTerm('')
       }
