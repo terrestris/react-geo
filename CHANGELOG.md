@@ -1,3 +1,10 @@
+## [33.1.4](https://github.com/terrestris/react-geo/compare/v33.1.3...v33.1.4) (2026-09-02)
+
+
+### Bug Fixes
+
+* adds null check for feature collection in search field ([5a61829](https://github.com/terrestris/react-geo/commit/5a618294af7f975e563baa11b6e7dd3adbc33e4e))
+
 ## [33.1.3](https://github.com/terrestris/react-geo/compare/v33.1.2...v33.1.3) (2026-04-13)
 
 
