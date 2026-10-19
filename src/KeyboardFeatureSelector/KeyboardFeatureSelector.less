@@ -1,0 +1,21 @@
+.map-crosshair,
+.react-geo-keyboard-feature-selector-crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  pointer-events: none;
+  z-index: 10;
+  background:
+    linear-gradient(#000, #000) center / 2px 100% no-repeat,
+    linear-gradient(#000, #000) center / 100% 2px no-repeat;
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
+}
+
+.ol-viewport:focus-visible,
+div:focus-visible > .ol-viewport {
+  outline: 3px solid #005fcc;
+  outline-offset: -3px;
+}
