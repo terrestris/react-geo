@@ -1,11 +1,10 @@
-The `CoordinateInfo` component is only a very shallow wrapper around the `useCoordinateInfo` hook of react-util.
-Often it might be easier to use the hook directly, see the second example on how it's done.
-Layer filter (property `layerFilter`) is not needed here as the `useCoordinateInfo` hook is already configured to query all layers by default.
+The first map uses `useCoordinateInfo` directly for click-driven queries. The second uses the `CoordinateInfo` component for pointer-rest queries. The third adds `KeyboardFeatureSelector`: focus that map, pan with the arrow keys, hold `Shift` for larger steps, and press `Enter` or `Space` to query features at the map center.
 
 ```jsx
 import {faCopy} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import CoordinateInfo from '@terrestris/react-geo/dist/CoordinateInfo/CoordinateInfo';
+import KeyboardFeatureSelector from '@terrestris/react-geo/dist/KeyboardFeatureSelector/KeyboardFeatureSelector';
 import MapComponent from '@terrestris/react-geo/dist/Map/MapComponent/MapComponent';
 import MapContext from '@terrestris/react-util/dist/Context/MapContext/MapContext';
 import useCoordinateInfo from '@terrestris/react-util/dist/Hooks/useCoordinateInfo/useCoordinateInfo';
@@ -207,6 +206,7 @@ const CoordinateInfoExample = () => {
 
   const [map, setMap] = useState();
   const [map2, setMap2] = useState();
+  const [map3, setMap3] = useState();
 
   useEffect(() => {
     setMap(new OlMap({
@@ -229,6 +229,20 @@ const CoordinateInfoExample = () => {
           name: 'OSM',
           source: new OlSourceOSM()
         }),
+        wmsLayer
+      ],
+      view: new OlView({
+        center: fromLonLat([-99.4031637, 38.3025695]),
+        zoom: 4
+      })
+    }));
+    setMap3(new OlMap({
+      layers: [
+        new OlLayerTile({
+          name: 'OSM',
+          source: new OlSourceOSM()
+        }),
+        vectorLayer,
         wmsLayer
       ],
       view: new OlView({
@@ -275,7 +289,7 @@ const CoordinateInfoExample = () => {
     }
   }, [map2]);
 
-  if (!map || !map2) {
+  if (!map || !map2 || !map3) {
     return null;
   }
 
@@ -290,7 +304,7 @@ const CoordinateInfoExample = () => {
         />
         <Divider />
         <h3>
-          Using `useCoordinateInfo` in a custom component - triggered on map click 
+          Using `useCoordinateInfo` in a custom component - triggered on map click
         </h3>
         <MyCoordinateInfo />
       </MapContext.Provider>
@@ -318,6 +332,24 @@ const CoordinateInfoExample = () => {
           resultRenderer={(results => <PointerRestResult {...results} />)}
         />
         <Divider />
+      <MapContext.Provider value={map3}>
+        <MapComponent
+          map={map3}
+          style={{
+            height: '400px'
+          }}
+        />
+        <KeyboardFeatureSelector
+          clickEventType="click"
+          helpText="Use arrow keys to pan, Shift plus an arrow for larger steps, and Enter or Space to query the map center."
+        />
+        <Divider />
+        <h3>
+          Using `KeyboardFeatureSelector` with `useCoordinateInfo` - triggered on keyboard input
+        </h3>
+        <MyCoordinateInfo />
+      </MapContext.Provider>
+      <Divider />
       </MapContext.Provider>
     </>
   );
